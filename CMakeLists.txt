@@ -44,8 +44,10 @@ if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
   include(GoogleTest)
   find_package(GTest REQUIRED)
+  add_subdirectory(./test)
+
   file(GLOB_RECURSE JSONTOOLKIT_CXX_FILES 
-    include/*.h backends/*.cc backends/*.h)
+    include/*.h backends/*.cc backends/*.h test/*.cc test/*.h)
   find_program(CLANG_FORMAT_BIN NAMES clang-format)
   if(CLANG_FORMAT_BIN)
     add_custom_target(clang_format
