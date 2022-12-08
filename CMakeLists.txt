@@ -11,4 +11,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_subdirectory(./backends/rapidjson)
+# Options
+set(JSONTOOLKIT_BACKEND "rapidjson" CACHE STRING "Select the JSON backend")
+
+if(JSONTOOLKIT_BACKEND STREQUAL "rapidjson")
+  add_subdirectory(./backends/rapidjson)
+else()
+  message(FATAL_ERROR "Invalid JSON backend: ${JSONTOOLKIT_BACKEND}")
+endif()

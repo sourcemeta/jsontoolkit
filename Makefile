@@ -1,10 +1,11 @@
 .DEFAULT_GOAL = all
 CMAKE ?= cmake
 PRESET ?= debug
+BACKEND ?= rapidjson
 
 .PHONY: all
 all:
-	$(CMAKE) --preset $(PRESET) --log-context
+	$(CMAKE) --preset $(PRESET) --log-context -DJSONTOOLKIT_BACKEND=$(BACKEND)
 	$(CMAKE) --build --preset $(PRESET)
 
 .PHONY: clean
