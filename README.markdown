@@ -25,6 +25,7 @@ Using JSON Toolkit
 ```sh
 # Add the project as a submodule, in this case to deps/jsontoolkit
 $ git submodule add https://github.com/sourcemeta/jsontoolkit.git deps/jsontoolkit
+
 # Add the project as a CMake subdirectory
 add_subdirectory("${PROJECT_SOURCE_DIR}/deps/jsontoolkit")
 # Link your targets accordingly
