@@ -28,6 +28,18 @@ string(TOUPPER ${JSONTOOLKIT_BACKEND} JSONTOOLKIT_BACKEND_UPPER)
 target_compile_definitions(sourcemeta_jsontoolkit 
   PRIVATE JSONTOOLKIT_BACKEND_${JSONTOOLKIT_BACKEND_UPPER})
 
+# Installation
+include(GNUInstallDirs)
+target_include_directories(sourcemeta_jsontoolkit
+  INTERFACE
+    "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+install(TARGETS sourcemeta_jsontoolkit
+  EXPORT sourcemeta_jsontoolkit
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  COMPONENT jsontoolkit
+  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit")
+
 if(PROJECT_IS_TOP_LEVEL)
   file(GLOB_RECURSE JSONTOOLKIT_CXX_FILES 
     include/*.h backends/*.cc backends/*.h)
