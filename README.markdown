@@ -35,6 +35,13 @@ target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit)
 Building JSON Toolkit
 ---------------------
 
+**Dependencies**
+
+- RapidJSON
+  - On macOS: `brew install rapidjson`
+- GoogleTest
+  - On macOS: `brew install googletest`
+
 JSON Toolkit makes use of the [CMake](https://cmake.org) build system.  JSON
 Toolkit provides a set of CMake
 [presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html) to
