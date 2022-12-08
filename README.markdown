@@ -10,6 +10,20 @@ To solve this problem, JSON Toolkit aims to be a thin and interoperable
 frontend to multiple JSON implementations that provides an interface that
 resembles standard C++ containers.
 
+Using JSON Toolkit
+------------------
+
+### As a git submodule
+
+```sh
+# Add the project as a submodule, in this case to deps/jsontoolkit
+$ git submodule add https://github.com/sourcemeta/jsontoolkit.git deps/jsontoolkit
+# Add the project as a CMake subdirectory
+add_subdirectory("${PROJECT_SOURCE_DIR}/deps/jsontoolkit")
+# Link your targets accordingly
+target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit)
+```
+
 Building JSON Toolkit
 ---------------------
 
