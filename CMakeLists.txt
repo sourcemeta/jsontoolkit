@@ -41,6 +41,9 @@ install(TARGETS sourcemeta_jsontoolkit
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit")
 
 if(PROJECT_IS_TOP_LEVEL)
+  enable_testing()
+  include(GoogleTest)
+  find_package(GTest REQUIRED)
   file(GLOB_RECURSE JSONTOOLKIT_CXX_FILES 
     include/*.h backends/*.cc backends/*.h)
   find_program(CLANG_FORMAT_BIN NAMES clang-format)
