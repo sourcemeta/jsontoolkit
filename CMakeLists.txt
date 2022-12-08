@@ -11,17 +11,26 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Options
+# Backends
 set(JSONTOOLKIT_BACKEND "rapidjson" CACHE STRING "Select the JSON backend")
-
 if(JSONTOOLKIT_BACKEND STREQUAL "rapidjson")
   add_subdirectory(./backends/rapidjson)
 else()
   message(FATAL_ERROR "Invalid JSON backend: ${JSONTOOLKIT_BACKEND}")
 endif()
 
+# Common
+set_target_properties(sourcemeta_jsontoolkit
+  PROPERTIES PUBLIC_HEADER "${PROJECT_SOURCE_DIR}/include/jsontoolkit/json.h")
+target_include_directories(sourcemeta_jsontoolkit
+  PRIVATE "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>")
+string(TOUPPER ${JSONTOOLKIT_BACKEND} JSONTOOLKIT_BACKEND_UPPER)
+target_compile_definitions(sourcemeta_jsontoolkit 
+  PRIVATE JSONTOOLKIT_BACKEND_${JSONTOOLKIT_BACKEND_UPPER})
+
 if(PROJECT_IS_TOP_LEVEL)
-  file(GLOB_RECURSE JSONTOOLKIT_CXX_FILES backends/*.cc backends/*.h)
+  file(GLOB_RECURSE JSONTOOLKIT_CXX_FILES 
+    include/*.h backends/*.cc backends/*.h)
   find_program(CLANG_FORMAT_BIN NAMES clang-format)
   if(CLANG_FORMAT_BIN)
     add_custom_target(clang_format
