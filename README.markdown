@@ -10,8 +10,8 @@ To solve this problem, JSON Toolkit aims to be a thin and interoperable
 frontend to multiple JSON implementations that provides an interface that
 resembles standard C++ containers.
 
-Running locally
----------------
+Building JSON Toolkit
+---------------------
 
 JSON Toolkit makes use of the [CMake](https://cmake.org) build system.  JSON
 Toolkit provides a set of CMake
