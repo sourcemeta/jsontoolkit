@@ -1,4 +1,5 @@
 add_executable(sourcemeta_jsontoolkit_unit json_test.cc)
 target_link_libraries(sourcemeta_jsontoolkit_unit PRIVATE GTest::gtest)
+target_link_libraries(sourcemeta_jsontoolkit_unit PRIVATE GTest::gtest_main)
 target_link_libraries(sourcemeta_jsontoolkit_unit PRIVATE sourcemeta_jsontoolkit)
 gtest_discover_tests(sourcemeta_jsontoolkit_unit)
