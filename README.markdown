@@ -51,10 +51,11 @@ configure, build and test the project:
 cmake --list-presets
 ```
 
-You can configure and build the project using a given preset as follows:
+You can configure, build and test the project using a given preset as follows:
 
 ```sh
 # Find the backend id in the "Supported backends" section
 cmake --preset <preset> -DJSONTOOLKIT_BACKEND=<backend-id>
 cmake --build --preset <preset>
+ctest --preset <preset>
 ```
