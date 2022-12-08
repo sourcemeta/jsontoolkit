@@ -10,6 +10,13 @@ To solve this problem, JSON Toolkit aims to be a thin and interoperable
 frontend to multiple JSON implementations that provides an interface that
 resembles standard C++ containers.
 
+Supported backends
+------------------
+
+| Name      | CMake ID    | URL                   |
+|-----------|-------------|-----------------------|
+| RapidJSON | `rapidjson` | https://rapidjson.org |
+
 Using JSON Toolkit
 ------------------
 
@@ -30,7 +37,7 @@ Building JSON Toolkit
 JSON Toolkit makes use of the [CMake](https://cmake.org) build system.  JSON
 Toolkit provides a set of CMake
 [presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html) to
-configure, build and test the project.
+configure, build and test the project:
 
 ```sh
 cmake --list-presets
