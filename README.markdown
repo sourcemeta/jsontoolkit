@@ -46,6 +46,7 @@ cmake --list-presets
 You can configure and build the project using a given preset as follows:
 
 ```sh
-cmake --preset <preset> -DJSONTOOLKIT_BACKEND=<backend>
+# Find the backend id in the "Supported backends" section
+cmake --preset <preset> -DJSONTOOLKIT_BACKEND=<backend-id>
 cmake --build --preset <preset>
 ```
