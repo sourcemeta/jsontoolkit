@@ -1,15 +1,23 @@
 #include <jsontoolkit/json.h>
 
 sourcemeta::jsontoolkit::JSON::JSON(const std::string &json)
-    : is_top_level{true} {
+    : is_top_level{true}, is_owned{true} {
   rapidjson::Document *document = new rapidjson::Document();
   document->Parse(json);
   this->data = document;
   this->allocator = &document->GetAllocator();
 }
 
+sourcemeta::jsontoolkit::JSON::JSON(
+    rapidjson::Value *const value,
+    rapidjson::Document::AllocatorType *value_allocator)
+    : data{value}, allocator{value_allocator},
+      is_top_level{false}, is_owned{false} {}
+
 sourcemeta::jsontoolkit::JSON::~JSON() {
-  if (this->is_top_level) {
+  if (!this->is_owned) {
+    return;
+  } else if (this->is_top_level) {
     delete static_cast<rapidjson::Document *>(this->data);
   } else {
     delete this->data;

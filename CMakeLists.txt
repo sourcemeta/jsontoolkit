@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.21)
-project("JSON Toolkit" VERSION 0.0.1 LANGUAGES CXX 
+project("JSON Toolkit" VERSION 0.0.1 LANGUAGES CXX
   DESCRIPTION "A multi-backend JSON library for modern C++")
 
 # Global options
-set(JSONTOOLKIT_CXX_FLAGS -Wall -Wextra -Werror -Wpedantic 
+set(JSONTOOLKIT_CXX_FLAGS -Wall -Wextra -Werror -Wpedantic
   -Wshadow -Wdouble-promotion -Wconversion -Wunused-parameter)
 
 # Specify the C++ standard
@@ -25,8 +25,8 @@ set_target_properties(sourcemeta_jsontoolkit
 target_include_directories(sourcemeta_jsontoolkit
   PRIVATE "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>")
 string(TOUPPER ${JSONTOOLKIT_BACKEND} JSONTOOLKIT_BACKEND_UPPER)
-target_compile_definitions(sourcemeta_jsontoolkit 
-  PRIVATE JSONTOOLKIT_BACKEND_${JSONTOOLKIT_BACKEND_UPPER})
+target_compile_definitions(sourcemeta_jsontoolkit
+  PUBLIC JSONTOOLKIT_BACKEND_${JSONTOOLKIT_BACKEND_UPPER})
 
 # Installation
 include(GNUInstallDirs)
@@ -46,7 +46,7 @@ if(PROJECT_IS_TOP_LEVEL)
   find_package(GTest REQUIRED)
   add_subdirectory(./test)
 
-  file(GLOB_RECURSE JSONTOOLKIT_CXX_FILES 
+  file(GLOB_RECURSE JSONTOOLKIT_CXX_FILES
     include/*.h backends/*.cc backends/*.h test/*.cc test/*.h)
   find_program(CLANG_FORMAT_BIN NAMES clang-format)
   if(CLANG_FORMAT_BIN)
