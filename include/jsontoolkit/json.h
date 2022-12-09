@@ -23,6 +23,7 @@ public:
 private:
 #if defined(JSONTOOLKIT_BACKEND_RAPIDJSON)
   rapidjson::Value *data;
+  rapidjson::Document::AllocatorType *allocator;
 #endif
 };
 } // namespace sourcemeta::jsontoolkit
