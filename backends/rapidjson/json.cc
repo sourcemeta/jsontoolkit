@@ -11,7 +11,7 @@ sourcemeta::jsontoolkit::JSON::JSON(const std::string &json)
 
 sourcemeta::jsontoolkit::JSON::JSON(
     rapidjson::Value *const value,
-    rapidjson::Document::AllocatorType *value_allocator)
+    rapidjson::Document::AllocatorType *const value_allocator)
     : data{value}, allocator{value_allocator},
       is_top_level{false}, is_owned{false} {}
 

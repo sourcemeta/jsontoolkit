@@ -24,7 +24,7 @@ public:
 private:
 #if defined(JSONTOOLKIT_BACKEND_RAPIDJSON)
   JSON(rapidjson::Value *const value,
-       rapidjson::Document::AllocatorType *value_allocator);
+       rapidjson::Document::AllocatorType *const value_allocator);
   rapidjson::Value *data;
   rapidjson::Document::AllocatorType *allocator;
   const bool is_top_level{true};
