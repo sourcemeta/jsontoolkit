@@ -26,8 +26,8 @@ private:
        rapidjson::Document::AllocatorType *value_allocator);
   rapidjson::Value *data;
   rapidjson::Document::AllocatorType *allocator;
-  const bool is_top_level = true;
-  const bool is_owned = true;
+  const bool is_top_level{true};
+  const bool is_owned{true};
 #endif
 };
 } // namespace sourcemeta::jsontoolkit
