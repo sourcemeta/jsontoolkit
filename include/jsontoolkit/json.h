@@ -18,6 +18,7 @@ public:
   ~JSON();
 
   auto is_boolean() const -> bool;
+  auto is_object() const -> bool;
 
 private:
 #if defined(JSONTOOLKIT_BACKEND_RAPIDJSON)
