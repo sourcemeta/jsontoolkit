@@ -19,6 +19,7 @@ public:
 
   auto is_boolean() const -> bool;
   auto is_object() const -> bool;
+  auto at(const std::string &key) const -> const JSON;
 
 private:
 #if defined(JSONTOOLKIT_BACKEND_RAPIDJSON)

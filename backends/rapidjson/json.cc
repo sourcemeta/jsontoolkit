@@ -1,3 +1,4 @@
+#include <cassert>
 #include <jsontoolkit/json.h>
 
 sourcemeta::jsontoolkit::JSON::JSON(const std::string &json)
@@ -30,4 +31,11 @@ auto sourcemeta::jsontoolkit::JSON::is_boolean() const -> bool {
 
 auto sourcemeta::jsontoolkit::JSON::is_object() const -> bool {
   return this->data->IsObject();
+}
+
+auto sourcemeta::jsontoolkit::JSON::at(const std::string &key) const
+    -> const sourcemeta::jsontoolkit::JSON {
+  assert(this->is_object());
+  return sourcemeta::jsontoolkit::JSON{&(this->data)->operator[](key),
+                                       this->allocator};
 }
