@@ -17,12 +17,11 @@ public:
   JSON(const std::string &json);
   ~JSON();
 
+  auto is_boolean() const -> bool;
+
 private:
 #if defined(JSONTOOLKIT_BACKEND_RAPIDJSON)
   rapidjson::Value *data;
-  rapidjson::Document::AllocatorType *allocator;
-  const bool is_top_level = false;
-  const bool is_owned = true;
 #endif
 };
 } // namespace sourcemeta::jsontoolkit
