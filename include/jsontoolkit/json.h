@@ -24,6 +24,7 @@ private:
 #if defined(JSONTOOLKIT_BACKEND_RAPIDJSON)
   rapidjson::Value *data;
   rapidjson::Document::AllocatorType *allocator;
+  const bool is_top_level = true;
 #endif
 };
 } // namespace sourcemeta::jsontoolkit
