@@ -15,11 +15,14 @@ namespace sourcemeta::jsontoolkit {
 class JSON {
 public:
   JSON(const std::string &json);
+  JSON(const JSON &other);
   ~JSON();
 
   auto is_boolean() const -> bool;
   auto is_object() const -> bool;
   auto at(const std::string &key) const -> const JSON;
+
+  auto operator==(const JSON &value) const -> bool;
 
 private:
 #if defined(JSONTOOLKIT_BACKEND_RAPIDJSON)
