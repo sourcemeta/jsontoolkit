@@ -56,10 +56,12 @@ TEST(JSON, proper_copy_equivalence_constructor) {
   sourcemeta::jsontoolkit::JSON document{"{ \"foo\": true }"};
   EXPECT_TRUE(document.is_object());
   EXPECT_TRUE(document.at("foo").is_boolean());
+  EXPECT_TRUE(document.at("foo").to_boolean());
 
   sourcemeta::jsontoolkit::JSON copy{document};
   EXPECT_TRUE(copy.is_object());
   EXPECT_TRUE(copy.at("foo").is_boolean());
+  EXPECT_TRUE(copy.at("foo").to_boolean());
 
   EXPECT_TRUE(document == copy);
 }
