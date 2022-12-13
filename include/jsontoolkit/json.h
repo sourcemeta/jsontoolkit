@@ -19,6 +19,7 @@ public:
   ~JSON();
 
   auto is_boolean() const -> bool;
+  auto to_boolean() const -> bool;
   auto is_object() const -> bool;
   auto at(const std::string &key) const -> const JSON;
 

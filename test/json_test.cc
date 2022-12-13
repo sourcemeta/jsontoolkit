@@ -11,6 +11,16 @@ TEST(JSON, is_boolean_false) {
   EXPECT_TRUE(document.is_boolean());
 }
 
+TEST(JSON, to_boolean_true) {
+  const sourcemeta::jsontoolkit::JSON document{"true"};
+  EXPECT_TRUE(document.to_boolean());
+}
+
+TEST(JSON, to_boolean_false) {
+  const sourcemeta::jsontoolkit::JSON document{"false"};
+  EXPECT_FALSE(document.to_boolean());
+}
+
 TEST(JSON, is_boolean_object) {
   const sourcemeta::jsontoolkit::JSON document{"{}"};
   EXPECT_FALSE(document.is_boolean());

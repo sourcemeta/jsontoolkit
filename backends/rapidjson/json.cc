@@ -37,6 +37,10 @@ auto sourcemeta::jsontoolkit::JSON::is_boolean() const -> bool {
   return this->data->IsBool();
 }
 
+auto sourcemeta::jsontoolkit::JSON::to_boolean() const -> bool {
+  return this->data->GetBool();
+}
+
 auto sourcemeta::jsontoolkit::JSON::is_object() const -> bool {
   return this->data->IsObject();
 }
