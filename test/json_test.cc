@@ -462,6 +462,57 @@ TEST(CATEGORY, nullptr) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_null(document));
 }
 
+TEST(CATEGORY, null_parse_valid) {
+  const auto document{sourcemeta::jsontoolkit::parse("null")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_null(document));
+}
+
+TEST(CATEGORY, null_valid_with_padding) {
+  const auto document{sourcemeta::jsontoolkit::parse("   null   ")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_null(document));
+}
+
+TEST(CATEGORY, null_more_than_needed) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("nulll"), std::domain_error);
+}
+
+TEST(CATEGORY, null_incomplete_1) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("nul"), std::domain_error);
+}
+
+TEST(CATEGORY, null_incomplete_2) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("nu"), std::domain_error);
+}
+
+TEST(CATEGORY, null_incomplete_3) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("n"), std::domain_error);
+}
+
+TEST(CATEGORY, null_equality_with_literal) {
+  const auto left{sourcemeta::jsontoolkit::from(nullptr)};
+  const auto right{sourcemeta::jsontoolkit::from(nullptr)};
+  const auto extra{sourcemeta::jsontoolkit::from(false)};
+  EXPECT_EQ(left, right);
+  EXPECT_FALSE(left == extra);
+  EXPECT_FALSE(right == extra);
+}
+
+TEST(CATEGORY, null_equality_with_padding) {
+  const auto left{sourcemeta::jsontoolkit::parse("null")};
+  const auto right{sourcemeta::jsontoolkit::parse("   null  ")};
+  const auto extra{sourcemeta::jsontoolkit::from(false)};
+  EXPECT_EQ(left, right);
+  EXPECT_FALSE(left == extra);
+  EXPECT_FALSE(right == extra);
+}
+
+// TEST(CATEGORY, null_stringify) {
+// sourcemeta::jsontoolkit::JSON<std::string> document{nullptr};
+// std::ostringstream stream;
+// stream << document;
+// EXPECT_EQ(stream.str(), "null");
+// }
+
 // TEST(CATEGORY, set_null) {
 // sourcemeta::jsontoolkit::JSON<std::string> document{true};
 // EXPECT_FALSE(document.is_null());
@@ -469,67 +520,4 @@ TEST(CATEGORY, nullptr) {
 // document = nullptr;
 // EXPECT_TRUE(document.is_null());
 // EXPECT_EQ(document, nullptr);
-// }
-
-// TEST(CATEGORY, valid) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"null"};
-// EXPECT_TRUE(document.is_null());
-// EXPECT_EQ(document, nullptr);
-// }
-
-// TEST(CATEGORY, valid_with_padding) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"   null   "};
-// EXPECT_TRUE(document.is_null());
-// EXPECT_EQ(document, nullptr);
-// }
-
-// TEST(CATEGORY, more_than_needed) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"nulll"};
-// EXPECT_THROW(document.is_null(), std::domain_error);
-// }
-
-// TEST(CATEGORY, incomplete_1) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"nul"};
-// EXPECT_THROW(document.is_null(), std::domain_error);
-// }
-
-// TEST(CATEGORY, incomplete_2) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"nu"};
-// EXPECT_THROW(document.is_null(), std::domain_error);
-// }
-
-// TEST(CATEGORY, incomplete_3) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"n"};
-// EXPECT_THROW(document.is_null(), std::domain_error);
-// }
-
-// TEST(CATEGORY, equality_with_literal) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{nullptr};
-// left.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> right{nullptr};
-// right.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> extra{false};
-// extra.parse();
-// EXPECT_EQ(left, right);
-// EXPECT_FALSE(left == extra);
-// EXPECT_FALSE(right == extra);
-// }
-
-// TEST(CATEGORY, equality_with_padding) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{"null"};
-// left.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> right{"  null  "};
-// right.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> extra{"false"};
-// extra.parse();
-// EXPECT_EQ(left, right);
-// EXPECT_FALSE(left == extra);
-// EXPECT_FALSE(right == extra);
-// }
-
-// TEST(CATEGORY, stringify) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{nullptr};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "null");
 // }
