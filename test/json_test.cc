@@ -401,62 +401,55 @@ TEST(CATEGORY, false_string) {
   EXPECT_EQ(document, false);
 }
 
-// TEST(CATEGORY, true_string_padded) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"  true  "};
-// EXPECT_TRUE(document.is_boolean());
-// EXPECT_EQ(document, true);
-// }
+TEST(CATEGORY, true_string_padded) {
+  const auto document{sourcemeta::jsontoolkit::parse("  true   ")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(document));
+  EXPECT_EQ(document, true);
+}
 
-// TEST(CATEGORY, false_string_padded) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"  false  "};
-// EXPECT_TRUE(document.is_boolean());
-// EXPECT_EQ(document, false);
-// }
+TEST(CATEGORY, false_string_padded) {
+  const auto document{sourcemeta::jsontoolkit::parse("   false   ")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(document));
+  EXPECT_EQ(document, false);
+}
 
-// TEST(CATEGORY, true_more_than_needed) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"truee"};
-// EXPECT_THROW(document.is_boolean(), std::domain_error);
-// }
+TEST(CATEGORY, true_more_than_needed) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("truee"), std::domain_error);
+}
 
-// TEST(CATEGORY, true_incomplete_1) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"tru"};
-// EXPECT_THROW(document.is_boolean(), std::domain_error);
-// }
+TEST(CATEGORY, true_incomplete_1) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("tru"), std::domain_error);
+}
 
-// TEST(CATEGORY, true_incomplete_2) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"tr"};
-// EXPECT_THROW(document.is_boolean(), std::domain_error);
-// }
+TEST(CATEGORY, true_incomplete_2) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("tr"), std::domain_error);
+}
 
-// TEST(CATEGORY, true_incomplete_3) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"t"};
-// EXPECT_THROW(document.is_boolean(), std::domain_error);
-// }
+TEST(CATEGORY, true_incomplete_3) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("t"), std::domain_error);
+}
 
-// TEST(CATEGORY, false_more_than_needed) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"falsee"};
-// EXPECT_THROW(document.is_boolean(), std::domain_error);
-// }
+TEST(CATEGORY, false_more_than_needed) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("falsee"), std::domain_error);
+}
 
-// TEST(CATEGORY, false_incomplete_1) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"fals"};
-// EXPECT_THROW(document.is_boolean(), std::domain_error);
-// }
+TEST(CATEGORY, false_incomplete_1) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("fals"), std::domain_error);
+}
 
-// TEST(CATEGORY, false_incomplete_2) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"fal"};
-// EXPECT_THROW(document.is_boolean(), std::domain_error);
-// }
+TEST(CATEGORY, false_incomplete_2) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("fal"), std::domain_error);
+}
 
-// TEST(CATEGORY, false_incomplete_3) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"fa"};
-// EXPECT_THROW(document.is_boolean(), std::domain_error);
-// }
+TEST(CATEGORY, false_incomplete_3) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("fa"), std::domain_error);
+}
 
-// TEST(CATEGORY, false_incomplete_4) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"f"};
-// EXPECT_THROW(document.is_boolean(), std::domain_error);
-// }
+TEST(CATEGORY, false_incomplete_4) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("f"), std::domain_error);
+}
 
 // TEST(CATEGORY, false_literal_equality) {
 // sourcemeta::jsontoolkit::JSON<std::string> left{false};
