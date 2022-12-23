@@ -48,52 +48,77 @@ inline auto from(std::nullptr_t) -> rapidjson::Value {
   return result;
 }
 
-inline auto is_null(const rapidjson::Value &value) -> bool {
+template <typename Encoding, typename Allocator>
+inline auto is_null(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> bool {
   return value.IsNull();
 }
 
-inline auto is_boolean(const rapidjson::Value &value) -> bool {
+template <typename Encoding, typename Allocator>
+inline auto
+is_boolean(const rapidjson::GenericValue<Encoding, Allocator> &value) -> bool {
   return value.IsBool();
 }
 
-inline auto to_boolean(const rapidjson::Value &value) -> bool {
+template <typename Encoding, typename Allocator>
+inline auto
+to_boolean(const rapidjson::GenericValue<Encoding, Allocator> &value) -> bool {
   assert(is_boolean(value));
   return value.GetBool();
 }
 
-inline auto is_array(const rapidjson::Value &value) -> bool {
+template <typename Encoding, typename Allocator>
+inline auto is_array(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> bool {
   return value.IsArray();
 }
 
-inline auto is_object(const rapidjson::Value &value) -> bool {
+template <typename Encoding, typename Allocator>
+inline auto is_object(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> bool {
   return value.IsObject();
 }
 
-inline auto is_string(const rapidjson::Value &value) -> bool {
+template <typename Encoding, typename Allocator>
+inline auto is_string(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> bool {
   return value.IsString();
 }
 
-inline auto is_integer(const rapidjson::Value &value) -> bool {
+template <typename Encoding, typename Allocator>
+inline auto
+is_integer(const rapidjson::GenericValue<Encoding, Allocator> &value) -> bool {
   return value.IsInt64();
 }
 
-inline auto to_integer(const rapidjson::Value &value) -> std::int64_t {
+template <typename Encoding, typename Allocator>
+inline auto
+to_integer(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> std::int64_t {
   return value.GetInt64();
 }
 
-inline auto is_real(const rapidjson::Value &value) -> bool {
+template <typename Encoding, typename Allocator>
+inline auto is_real(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> bool {
   return value.IsDouble();
 }
 
-inline auto to_real(const rapidjson::Value &value) -> double {
+template <typename Encoding, typename Allocator>
+inline auto to_real(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> double {
   return value.GetDouble();
 }
 
-inline auto to_string(const rapidjson::Value &value) -> std::string {
+template <typename Encoding, typename Allocator>
+inline auto to_string(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> std::string {
   return value.GetString();
 }
 
-inline auto size(const rapidjson::Value &value) -> std::size_t {
+template <typename Encoding, typename Allocator>
+inline auto size(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> std::size_t {
   if (is_object(value)) {
     return value.MemberCount();
   }
@@ -102,28 +127,32 @@ inline auto size(const rapidjson::Value &value) -> std::size_t {
   return value.Size();
 }
 
-inline auto get(const rapidjson::Value &value, const std::size_t index)
-    -> const rapidjson::Value & {
+template <typename Encoding, typename Allocator>
+inline auto get(const rapidjson::GenericValue<Encoding, Allocator> &value,
+                const std::size_t index) -> const rapidjson::Value & {
   assert(is_array(value));
   assert(size(value) > index);
   return value[static_cast<rapidjson::SizeType>(index)];
 }
 
-inline auto defines(const rapidjson::Value &value, const std::string &key)
-    -> bool {
+template <typename Encoding, typename Allocator>
+inline auto defines(const rapidjson::GenericValue<Encoding, Allocator> &value,
+                    const std::string &key) -> bool {
   assert(is_object(value));
   return value.HasMember(key);
 }
 
-inline auto get(const rapidjson::Value &value, const std::string &key)
-    -> const rapidjson::Value & {
+template <typename Encoding, typename Allocator>
+inline auto get(const rapidjson::GenericValue<Encoding, Allocator> &value,
+                const std::string &key) -> const rapidjson::Value & {
   assert(is_object(value));
   assert(defines(value, key));
   return value[key];
 }
 
-template <typename CharT, typename Traits>
-inline auto stringify(const rapidjson::Value &value,
+template <typename Encoding, typename Allocator, typename CharT,
+          typename Traits>
+inline auto stringify(const rapidjson::GenericValue<Encoding, Allocator> &value,
                       std::basic_ostream<CharT, Traits> &stream)
     -> std::basic_ostream<CharT, Traits> & {
   rapidjson::OStreamWrapper ostream_wrapper{stream};
@@ -132,8 +161,9 @@ inline auto stringify(const rapidjson::Value &value,
   return stream;
 }
 
-template <typename CharT, typename Traits>
-inline auto prettify(const rapidjson::Value &value,
+template <typename Encoding, typename Allocator, typename CharT,
+          typename Traits>
+inline auto prettify(const rapidjson::GenericValue<Encoding, Allocator> &value,
                      std::basic_ostream<CharT, Traits> &stream)
     -> std::basic_ostream<CharT, Traits> & {
   rapidjson::OStreamWrapper ostream_wrapper{stream};
@@ -142,8 +172,10 @@ inline auto prettify(const rapidjson::Value &value,
   return stream;
 }
 
-inline auto contains(const rapidjson::Value &value,
-                     const rapidjson::Value &element) -> bool {
+template <typename Encoding, typename Allocator>
+inline auto
+contains(const rapidjson::GenericValue<Encoding, Allocator> &value,
+         const rapidjson::GenericValue<Encoding, Allocator> &element) -> bool {
   assert(is_array(value));
   for (rapidjson::Value::ConstValueIterator iterator = value.Begin();
        iterator != value.End(); ++iterator) {
@@ -155,8 +187,9 @@ inline auto contains(const rapidjson::Value &value,
   return false;
 }
 
-inline auto contains(const rapidjson::Value &value, const std::string &element)
-    -> bool {
+template <typename Encoding, typename Allocator>
+inline auto contains(const rapidjson::GenericValue<Encoding, Allocator> &value,
+                     const std::string &element) -> bool {
   return contains(value, from(element));
 }
 
