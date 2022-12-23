@@ -42,6 +42,16 @@ inline auto from(bool value) -> rapidjson::Value {
   return result;
 }
 
+inline auto from(std::nullptr_t) -> rapidjson::Value {
+  rapidjson::Value result;
+  result.SetNull();
+  return result;
+}
+
+inline auto is_null(const rapidjson::Value &value) -> bool {
+  return value.IsNull();
+}
+
 inline auto is_boolean(const rapidjson::Value &value) -> bool {
   return value.IsBool();
 }
