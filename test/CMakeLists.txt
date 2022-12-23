@@ -1,5 +1,5 @@
 macro(add_jsontoolkit_json_test backend)
-  add_executable(sourcemeta_jsontoolkit_json_unit_${backend} json_test.cc)
+  add_executable(sourcemeta_jsontoolkit_json_unit_${backend} json_test.cc json_stringify_test.cc)
   target_link_libraries(sourcemeta_jsontoolkit_json_unit_${backend} PRIVATE GTest::gtest)
   target_link_libraries(sourcemeta_jsontoolkit_json_unit_${backend} PRIVATE GTest::gtest_main)
   target_link_libraries(sourcemeta_jsontoolkit_json_unit_${backend} PRIVATE sourcemeta_jsontoolkit_json)

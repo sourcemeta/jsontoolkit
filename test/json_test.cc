@@ -325,35 +325,6 @@ TEST(CATEGORY, array_single_object_element_with_two_simple_keys) {
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(subvalue_2), 2);
 }
 
-TEST(CATEGORY, array_stringify_scalars_no_space) {
-  const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::stringify(document, stream);
-  EXPECT_EQ(stream.str(), "[1,2,3]");
-}
-
-TEST(CATEGORY, array_stringify_scalars_space_pretty) {
-  const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(), "[\n    1,\n    2,\n    3\n]");
-}
-
-TEST(CATEGORY, stringify_array_pretty) {
-  const auto document{sourcemeta::jsontoolkit::parse("[ 1, [2,3], 4 ]")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(),
-            "[\n    1,\n    [\n        2,\n        3\n    ],\n    4\n]");
-}
-
-TEST(CATEGORY, array_stringify_object_pretty) {
-  const auto document{sourcemeta::jsontoolkit::parse("[ { \"foo\": 1 } ]")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(), "[\n    {\n        \"foo\": 1\n    }\n]");
-}
-
 TEST(CATEGORY, array_contains_string_key_true) {
   const auto document{sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\" ]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::contains(document, "bar"));
