@@ -377,28 +377,29 @@ TEST(CATEGORY, true_bool) {
   const auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(document));
+  EXPECT_EQ(document, true);
 }
 
-// TEST(CATEGORY, false_bool) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{false};
-// EXPECT_TRUE(document.is_boolean());
-// EXPECT_FALSE(document.to_boolean());
-// EXPECT_EQ(document, false);
-// }
+TEST(CATEGORY, false_bool) {
+  const auto document{sourcemeta::jsontoolkit::from(false)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(document));
+  EXPECT_EQ(document, false);
+}
 
-// TEST(CATEGORY, true_string) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"true"};
-// EXPECT_TRUE(document.is_boolean());
-// EXPECT_TRUE(document.to_boolean());
-// EXPECT_EQ(document, true);
-// }
+TEST(CATEGORY, true_string) {
+  const auto document{sourcemeta::jsontoolkit::parse("true")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(document));
+  EXPECT_EQ(document, true);
+}
 
-// TEST(CATEGORY, false_string) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"false"};
-// EXPECT_TRUE(document.is_boolean());
-// EXPECT_FALSE(document.to_boolean());
-// EXPECT_EQ(document, false);
-// }
+TEST(CATEGORY, false_string) {
+  const auto document{sourcemeta::jsontoolkit::parse("false")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(document));
+  EXPECT_EQ(document, false);
+}
 
 // TEST(CATEGORY, true_string_padded) {
 // sourcemeta::jsontoolkit::JSON<std::string> document{"  true  "};
