@@ -36,6 +36,12 @@ inline auto from(const std::string &value) -> rapidjson::Value {
   return rapidjson::Value{value, document.GetAllocator()};
 }
 
+inline auto from(bool value) -> rapidjson::Value {
+  rapidjson::Value result;
+  result.SetBool(value);
+  return result;
+}
+
 inline auto is_boolean(const rapidjson::Value &value) -> bool {
   return value.IsBool();
 }
