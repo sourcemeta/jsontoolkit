@@ -451,29 +451,23 @@ TEST(CATEGORY, false_incomplete_4) {
   EXPECT_THROW(sourcemeta::jsontoolkit::parse("f"), std::domain_error);
 }
 
-// TEST(CATEGORY, false_literal_equality) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{false};
-// left.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> right{false};
-// right.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> extra{true};
-// extra.parse();
-// EXPECT_EQ(left, right);
-// EXPECT_FALSE(left == extra);
-// EXPECT_FALSE(right == extra);
-// }
+TEST(CATEGORY, false_literal_equality) {
+  const auto left{sourcemeta::jsontoolkit::from(false)};
+  const auto right{sourcemeta::jsontoolkit::from(false)};
+  const auto extra{sourcemeta::jsontoolkit::from(true)};
+  EXPECT_EQ(left, right);
+  EXPECT_FALSE(left == extra);
+  EXPECT_FALSE(right == extra);
+}
 
-// TEST(CATEGORY, true_literal_equality) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{true};
-// left.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> right{true};
-// right.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> extra{false};
-// extra.parse();
-// EXPECT_EQ(left, right);
-// EXPECT_FALSE(left == extra);
-// EXPECT_FALSE(right == extra);
-// }
+TEST(CATEGORY, true_literal_equality) {
+  const auto left{sourcemeta::jsontoolkit::from(true)};
+  const auto right{sourcemeta::jsontoolkit::from(true)};
+  const auto extra{sourcemeta::jsontoolkit::from(false)};
+  EXPECT_EQ(left, right);
+  EXPECT_FALSE(left == extra);
+  EXPECT_FALSE(right == extra);
+}
 
 // TEST(CATEGORY, false_equality_with_padding) {
 // sourcemeta::jsontoolkit::JSON<std::string> left{"false"};
