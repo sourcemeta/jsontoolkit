@@ -506,11 +506,11 @@ TEST(CATEGORY, null_equality_with_padding) {
   EXPECT_FALSE(right == extra);
 }
 
-// TEST(CATEGORY, set_null) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{true};
-// EXPECT_FALSE(document.is_null());
-// EXPECT_EQ(document, true);
-// document = nullptr;
-// EXPECT_TRUE(document.is_null());
-// EXPECT_EQ(document, nullptr);
-// }
+TEST(CATEGORY, set_null) {
+  auto document{sourcemeta::jsontoolkit::from(true)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_null(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  sourcemeta::jsontoolkit::set(document, nullptr);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_null(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_boolean(document));
+}

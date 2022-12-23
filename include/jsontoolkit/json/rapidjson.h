@@ -49,6 +49,12 @@ inline auto from(std::nullptr_t) -> rapidjson::Value {
 }
 
 template <typename Encoding, typename Allocator>
+inline auto set(rapidjson::GenericValue<Encoding, Allocator> &value,
+                std::nullptr_t) -> void {
+  value.SetNull();
+}
+
+template <typename Encoding, typename Allocator>
 inline auto is_null(const rapidjson::GenericValue<Encoding, Allocator> &value)
     -> bool {
   return value.IsNull();
