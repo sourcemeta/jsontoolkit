@@ -1,12 +1,13 @@
 #ifndef JSONTOOLKIT_JSON_RAPIDJSON_H_
 #define JSONTOOLKIT_JSON_RAPIDJSON_H_
 
-#include <cassert>   // assert
-#include <cstddef>   // std::size_t
-#include <cstdint>   // std::int64_t
-#include <ostream>   // std::basic_ostream
-#include <stdexcept> // std::domain_error
-#include <string>    // std::string
+#include <cassert>     // assert
+#include <cstddef>     // std::size_t
+#include <cstdint>     // std::int64_t
+#include <ostream>     // std::basic_ostream
+#include <stdexcept>   // std::domain_error
+#include <string>      // std::string
+#include <type_traits> // std::enable_if_t, std::is_same_v
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -52,6 +53,19 @@ template <typename Encoding, typename Allocator>
 inline auto set(rapidjson::GenericValue<Encoding, Allocator> &value,
                 std::nullptr_t) -> void {
   value.SetNull();
+}
+
+template <typename Encoding, typename Allocator>
+inline auto set(rapidjson::GenericValue<Encoding, Allocator> &value,
+                std::int64_t new_value) -> void {
+  value.SetInt64(new_value);
+}
+
+template <typename Encoding, typename Allocator, typename T,
+          typename = std::enable_if_t<std::is_same_v<T, double>>>
+inline auto set(rapidjson::GenericValue<Encoding, Allocator> &value,
+                T new_value) -> void {
+  value.SetDouble(new_value);
 }
 
 template <typename Encoding, typename Allocator>
