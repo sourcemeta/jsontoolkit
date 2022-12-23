@@ -58,3 +58,17 @@ TEST(CATEGORY, prettify_true) {
   sourcemeta::jsontoolkit::prettify(document, stream);
   EXPECT_EQ(stream.str(), "true");
 }
+
+TEST(CATEGORY, null_stringify) {
+  const auto document{sourcemeta::jsontoolkit::from(nullptr)};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "null");
+}
+
+TEST(CATEGORY, null_prettify) {
+  const auto document{sourcemeta::jsontoolkit::from(nullptr)};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::prettify(document, stream);
+  EXPECT_EQ(stream.str(), "null");
+}

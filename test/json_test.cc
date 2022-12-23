@@ -506,13 +506,6 @@ TEST(CATEGORY, null_equality_with_padding) {
   EXPECT_FALSE(right == extra);
 }
 
-// TEST(CATEGORY, null_stringify) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{nullptr};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "null");
-// }
-
 // TEST(CATEGORY, set_null) {
 // sourcemeta::jsontoolkit::JSON<std::string> document{true};
 // EXPECT_FALSE(document.is_null());
