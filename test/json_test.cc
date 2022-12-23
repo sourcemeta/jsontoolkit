@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <jsontoolkit/json.h>
+#include <sstream>   // std::ostringstream
 #include <stdexcept> // std::domain_error
 
 TEST(CATEGORY, is_boolean_true) {
