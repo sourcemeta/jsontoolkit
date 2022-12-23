@@ -363,14 +363,11 @@ TEST(CATEGORY, array_contains_string_key_false) {
   EXPECT_FALSE(sourcemeta::jsontoolkit::contains(document, "baz"));
 }
 
-// TEST(CATEGORY, array_equality_with_padding) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{"[1,2,3]"};
-// left.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> right{"   [ 1  , 2,  3 ]"};
-// right.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> extra{" [1,2,2]"};
-// extra.parse();
-// EXPECT_EQ(left, right);
-// EXPECT_FALSE(left == extra);
-// EXPECT_FALSE(right == extra);
-// }
+TEST(CATEGORY, array_equality_with_padding) {
+  const auto left{sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  const auto right{sourcemeta::jsontoolkit::parse("   [ 1  , 2,  3 ]")};
+  const auto extra{sourcemeta::jsontoolkit::parse(" [1,2,2]")};
+  EXPECT_EQ(left, right);
+  EXPECT_FALSE(left == extra);
+  EXPECT_FALSE(right == extra);
+}
