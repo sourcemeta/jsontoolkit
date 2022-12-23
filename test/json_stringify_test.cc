@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <jsontoolkit/json.h>
-#include <sstream>   // std::ostringstream
-#include <stdexcept> // std::domain_error
+#include <sstream> // std::ostringstream
 
 TEST(CATEGORY, array_stringify_scalars_no_space) {
   const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
@@ -30,4 +29,32 @@ TEST(CATEGORY, array_stringify_object_pretty) {
   std::ostringstream stream;
   sourcemeta::jsontoolkit::prettify(document, stream);
   EXPECT_EQ(stream.str(), "[\n    {\n        \"foo\": 1\n    }\n]");
+}
+
+TEST(CATEGORY, stringify_false) {
+  const auto document{sourcemeta::jsontoolkit::from(false)};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "false");
+}
+
+TEST(CATEGORY, stringify_true) {
+  const auto document{sourcemeta::jsontoolkit::from(true)};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "true");
+}
+
+TEST(CATEGORY, prettify_false) {
+  const auto document{sourcemeta::jsontoolkit::from(false)};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::prettify(document, stream);
+  EXPECT_EQ(stream.str(), "false");
+}
+
+TEST(CATEGORY, prettify_true) {
+  const auto document{sourcemeta::jsontoolkit::from(true)};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::prettify(document, stream);
+  EXPECT_EQ(stream.str(), "true");
 }

@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <jsontoolkit/json.h>
-#include <sstream>   // std::ostringstream
 #include <stdexcept> // std::domain_error
 
 TEST(CATEGORY, is_boolean_true) {
@@ -440,40 +439,20 @@ TEST(CATEGORY, true_literal_equality) {
   EXPECT_FALSE(right == extra);
 }
 
-// TEST(CATEGORY, false_equality_with_padding) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{"false"};
-// left.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> right{"  false  "};
-// right.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> extra{"true"};
-// extra.parse();
-// EXPECT_EQ(left, right);
-// EXPECT_FALSE(left == extra);
-// EXPECT_FALSE(right == extra);
-// }
+TEST(CATEGORY, false_equality_with_padding) {
+  const auto left{sourcemeta::jsontoolkit::parse("false")};
+  const auto right{sourcemeta::jsontoolkit::parse("  false  ")};
+  const auto extra{sourcemeta::jsontoolkit::parse("true")};
+  EXPECT_EQ(left, right);
+  EXPECT_FALSE(left == extra);
+  EXPECT_FALSE(right == extra);
+}
 
-// TEST(CATEGORY, true_equality_with_padding) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{"true"};
-// left.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> right{"  true  "};
-// right.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> extra{"false"};
-// extra.parse();
-// EXPECT_EQ(left, right);
-// EXPECT_FALSE(left == extra);
-// EXPECT_FALSE(right == extra);
-// }
-
-// TEST(CATEGORY, stringify_false) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{false};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "false");
-// }
-
-// TEST(CATEGORY, stringify_true) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{true};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "true");
-// }
+TEST(CATEGORY, true_equality_with_padding) {
+  const auto left{sourcemeta::jsontoolkit::parse("true")};
+  const auto right{sourcemeta::jsontoolkit::parse("  true  ")};
+  const auto extra{sourcemeta::jsontoolkit::parse("false")};
+  EXPECT_EQ(left, right);
+  EXPECT_FALSE(left == extra);
+  EXPECT_FALSE(right == extra);
+}
