@@ -1137,38 +1137,3 @@ TEST(CATEGORY, json_real_json_integer_equal) {
   const auto right{sourcemeta::jsontoolkit::parse("1")};
   EXPECT_EQ(left, right);
 }
-
-// TEST(CATEGORY, stringify_positive_integer) {
-// const auto document{sourcemeta::jsontoolkit::parse("54")};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "54");
-// }
-
-// TEST(CATEGORY, stringify_negative_integer) {
-// const auto document{sourcemeta::jsontoolkit::parse("-54")};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "-54");
-// }
-
-// TEST(CATEGORY, stringify_zero) {
-// const auto document{sourcemeta::jsontoolkit::parse("0")};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "0");
-// }
-
-// TEST(CATEGORY, stringify_positive_real) {
-// const auto document{sourcemeta::jsontoolkit::parse("5.4")};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "5.4");
-// }
-
-// TEST(CATEGORY, stringify_negative_real) {
-// const auto document{sourcemeta::jsontoolkit::parse("-5.4")};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "-5.4");
-// }

@@ -72,3 +72,38 @@ TEST(CATEGORY, null_prettify) {
   sourcemeta::jsontoolkit::prettify(document, stream);
   EXPECT_EQ(stream.str(), "null");
 }
+
+TEST(CATEGORY, stringify_positive_integer) {
+  const auto document{sourcemeta::jsontoolkit::parse("54")};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "54");
+}
+
+TEST(CATEGORY, stringify_negative_integer) {
+  const auto document{sourcemeta::jsontoolkit::parse("-54")};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "-54");
+}
+
+TEST(CATEGORY, stringify_zero) {
+  const auto document{sourcemeta::jsontoolkit::parse("0")};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "0");
+}
+
+TEST(CATEGORY, stringify_positive_real) {
+  const auto document{sourcemeta::jsontoolkit::parse("5.4")};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "5.4");
+}
+
+TEST(CATEGORY, stringify_negative_real) {
+  const auto document{sourcemeta::jsontoolkit::parse("-5.4")};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "-5.4");
+}
