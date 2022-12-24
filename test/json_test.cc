@@ -608,84 +608,70 @@ TEST(CATEGORY, string_integer_negative_long_integer) {
   EXPECT_EQ(document, -12345.0);
 }
 
-// TEST(CATEGORY, string_integer_minus_zero) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"-0"};
-// EXPECT_TRUE(document.is_integer());
-// EXPECT_FALSE(document.is_real());
-// EXPECT_EQ(document.to_integer(), 0);
-// EXPECT_EQ(document, 0);
-// EXPECT_EQ(document, 0.0);
-// }
+TEST(CATEGORY, string_integer_minus_zero) {
+  const auto document{sourcemeta::jsontoolkit::parse("-0")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), 0);
+  EXPECT_EQ(document, 0);
+  EXPECT_EQ(document, 0.0);
+}
 
-// TEST(CATEGORY, invalid_string_integer_trailing_minus) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"-0-"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, invalid_string_integer_trailing_minus) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("-0-"), std::domain_error);
+}
 
-// TEST(CATEGORY, invalid_string_integer_trailing_character) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"-0x"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, invalid_string_integer_trailing_character) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("-0x"), std::domain_error);
+}
 
-// TEST(CATEGORY, invalid_minus_in_between_integer) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"123-45"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, invalid_minus_in_between_integer) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("123-45"), std::domain_error);
+}
 
-// TEST(CATEGORY, invalid_double_minus) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"--123"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, invalid_double_minus) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("--123"), std::domain_error);
+}
 
-// TEST(CATEGORY, two_zeroes) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"00"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, two_zeroes) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("00"), std::domain_error);
+}
 
-// TEST(CATEGORY, multiple_zeroes) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"000"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, multiple_zeroes) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("000"), std::domain_error);
+}
 
-// TEST(CATEGORY, leading_zero_with_one_digit_integer) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"01"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, leading_zero_with_one_digit_integer) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("01"), std::domain_error);
+}
 
-// TEST(CATEGORY, leading_zero_with_two_digits_integer) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"012"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, leading_zero_with_two_digits_integer) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("012"), std::domain_error);
+}
 
-// TEST(CATEGORY, leading_period) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{".0"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, leading_period) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse(".0"), std::domain_error);
+}
 
-// TEST(CATEGORY, trailing_period) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"0."};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, trailing_period) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("0."), std::domain_error);
+}
 
-// TEST(CATEGORY, trailing_period_and_minus) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"0.-"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, trailing_period_and_minus) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("0.-"), std::domain_error);
+}
 
-// TEST(CATEGORY, double_minus_at_start) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"--5"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, double_minus_at_start) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("--5"), std::domain_error);
+}
 
-// TEST(CATEGORY, leading_minus_and_period) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"-.0"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, leading_minus_and_period) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("-.0"), std::domain_error);
+}
 
-// TEST(CATEGORY, multiple_leading_plus) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"++5"};
-// EXPECT_THROW(document.is_integer(), std::domain_error);
-// }
+TEST(CATEGORY, multiple_leading_plus) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("++5"), std::domain_error);
+}
 
 // TEST(CATEGORY, trailing_zero_positive) {
 // sourcemeta::jsontoolkit::JSON<std::string> document{"1.50000"};
