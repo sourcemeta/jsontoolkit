@@ -1106,29 +1106,37 @@ TEST(CATEGORY, exponential_notation_integer_3_real) {
   EXPECT_FALSE(document == 1);
 }
 
-// TEST(CATEGORY, integer_equality_with_padding) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{"5")};
-// left.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> right{"  5   ")};
-// right.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> extra{"  5.1 ")};
-// extra.parse();
-// EXPECT_EQ(left, right);
-// EXPECT_FALSE(left == extra);
-// EXPECT_FALSE(right == extra);
-// }
+TEST(CATEGORY, integer_equality_with_padding) {
+  const auto left{sourcemeta::jsontoolkit::parse("5")};
+  const auto right{sourcemeta::jsontoolkit::parse("   5   ")};
+  const auto extra{sourcemeta::jsontoolkit::parse("   5.1   ")};
+  EXPECT_EQ(left, right);
+  EXPECT_FALSE(left == extra);
+  EXPECT_FALSE(right == extra);
+}
 
-// TEST(CATEGORY, real_equality_with_padding) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{"5.4")};
-// left.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> right{"  5.4   ")};
-// right.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> extra{"  5 ")};
-// extra.parse();
-// EXPECT_EQ(left, right);
-// EXPECT_FALSE(left == extra);
-// EXPECT_FALSE(right == extra);
-// }
+TEST(CATEGORY, real_equality_with_padding) {
+  const auto left{sourcemeta::jsontoolkit::parse("5.4")};
+  const auto right{sourcemeta::jsontoolkit::parse("   5.4   ")};
+  const auto extra{sourcemeta::jsontoolkit::parse("   5   ")};
+  EXPECT_EQ(left, right);
+  EXPECT_FALSE(left == extra);
+  EXPECT_FALSE(right == extra);
+}
+
+// JSON has no distinction between integers and reals
+TEST(CATEGORY, json_integer_json_real_equal) {
+  const auto left{sourcemeta::jsontoolkit::parse("1")};
+  const auto right{sourcemeta::jsontoolkit::parse("1.0")};
+  EXPECT_EQ(left, right);
+}
+
+// JSON has no distinction between integers and reals
+TEST(CATEGORY, json_real_json_integer_equal) {
+  const auto left{sourcemeta::jsontoolkit::parse("1.0")};
+  const auto right{sourcemeta::jsontoolkit::parse("1")};
+  EXPECT_EQ(left, right);
+}
 
 // TEST(CATEGORY, stringify_positive_integer) {
 // const auto document{sourcemeta::jsontoolkit::parse("54")};
@@ -1163,22 +1171,4 @@ TEST(CATEGORY, exponential_notation_integer_3_real) {
 // std::ostringstream stream;
 // stream << document;
 // EXPECT_EQ(stream.str(), "-5.4");
-// }
-
-// // JSON has no distinction between integers and reals
-// TEST(CATEGORY, json_integer_json_real_equal) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{"1")};
-// sourcemeta::jsontoolkit::JSON<std::string> right{"1.0")};
-// left.parse();
-// right.parse();
-// EXPECT_EQ(left, right);
-// }
-
-// // JSON has no distinction between integers and reals
-// TEST(CATEGORY, json_real_json_integer_equal) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{"1.0")};
-// sourcemeta::jsontoolkit::JSON<std::string> right{"1")};
-// left.parse();
-// right.parse();
-// EXPECT_EQ(left, right);
 // }
