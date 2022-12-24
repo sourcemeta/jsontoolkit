@@ -169,6 +169,13 @@ inline auto defines(const rapidjson::GenericValue<Encoding, Allocator> &value,
 }
 
 template <typename Encoding, typename Allocator>
+inline auto erase(rapidjson::GenericValue<Encoding, Allocator> &value,
+                  const std::string &key) -> void {
+  assert(is_object(value));
+  value.EraseMember(key);
+}
+
+template <typename Encoding, typename Allocator>
 inline auto get(const rapidjson::GenericValue<Encoding, Allocator> &value,
                 const std::string &key) -> const rapidjson::Value & {
   assert(is_object(value));

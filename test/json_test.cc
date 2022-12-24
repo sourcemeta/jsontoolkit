@@ -1271,61 +1271,64 @@ TEST(Object, multiple_commas_with_spacing) {
                std::domain_error);
 }
 
-// TEST(Object, minified_one_true_boolean_element) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":true}")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
-// EXPECT_TRUE(document.at("foo").is_boolean());
-// EXPECT_TRUE(document.at("foo").to_boolean());
-// }
+TEST(Object, minified_one_true_boolean_element) {
+  const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  const auto &value1{sourcemeta::jsontoolkit::get(document, "foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
+}
 
-// TEST(Object, minified_one_false_boolean_element) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":false}")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
-// EXPECT_TRUE(document.at("foo").is_boolean());
-// EXPECT_FALSE(document.at("foo").to_boolean());
-// }
+TEST(Object, minified_one_false_boolean_element) {
+  const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":false}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  const auto &value1{sourcemeta::jsontoolkit::get(document, "foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(value1));
+}
 
-// TEST(Object, minified_two_boolean_values) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{\"foo\":true,\"bar\":false}")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("bar"));
-// EXPECT_TRUE(document.at("foo").is_boolean());
-// EXPECT_TRUE(document.at("foo").to_boolean());
-// EXPECT_TRUE(document.at("bar").is_boolean());
-// EXPECT_FALSE(document.at("bar").to_boolean());
-// }
+TEST(Object, minified_two_boolean_values) {
+  const auto document{
+      sourcemeta::jsontoolkit::parse("{\"foo\":true,\"bar\":false}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  const auto &value1{sourcemeta::jsontoolkit::get(document, "foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
+  const auto &value2{sourcemeta::jsontoolkit::get(document, "bar")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value2));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(value2));
+}
 
-// TEST(Object, must_delete_one_existent_key) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{\"foo\":true,\"bar\":false}")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("bar"));
-// document.erase("foo");
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_FALSE(sourcemeta::jsontoolkit::defines("foo"));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("bar"));
-// }
+TEST(Object, must_delete_one_existent_key) {
+  auto document{sourcemeta::jsontoolkit::parse("{\"foo\":true,\"bar\":false}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  sourcemeta::jsontoolkit::erase(document, "foo");
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+}
 
 // TEST(Object, must_delete_one_non_existent_key) {
 // const auto document{sourcemeta::jsontoolkit::parse(
 // "{\"foo\":true,\"bar\":false}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("bar"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
 // document.erase("xxx");
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("bar"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
 // }
 
 // TEST(Object, minified_one_array_element) {
@@ -1333,7 +1336,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // document{sourcemeta::jsontoolkit::parse("{\"foo\":[true,false]}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_array());
 // EXPECT_EQ(document.at("foo").size(), 2);
 // EXPECT_TRUE(document.at("foo").at(0).is_boolean());
@@ -1346,7 +1349,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":\"bar,baz\"}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar,baz");
 // }
@@ -1356,7 +1359,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // "{\"foo\":\"bar\\\"baz\"}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar\"baz");
 // }
@@ -1365,7 +1368,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"\":\"foo\"}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(""));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, ""));
 // EXPECT_TRUE(document.at("").is_string());
 // EXPECT_EQ(document.at(""), "foo");
 // }
@@ -1374,7 +1377,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo,bar\":\"baz\"}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo,bar"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo,bar"));
 // EXPECT_TRUE(document.at("foo,bar").is_string());
 // EXPECT_EQ(document.at("foo,bar"), "baz");
 // }
@@ -1383,7 +1386,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo bar\":\"baz\"}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo bar"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo bar"));
 // EXPECT_TRUE(document.at("foo bar").is_string());
 // EXPECT_EQ(document.at("foo bar"), "baz");
 // }
@@ -1393,7 +1396,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // "{\"foo\":\"{\\\"x\\\":1}\"}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "{\"x\":1}");
 // }
@@ -1403,9 +1406,9 @@ TEST(Object, multiple_commas_with_spacing) {
 // "    {   \"foo\"   :   true  }    ")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
-// EXPECT_TRUE(document.at("foo").is_boolean());
-// EXPECT_TRUE(document.at("foo").to_boolean());
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
 // }
 
 // TEST(Object, two_boolean_values_with_space) {
@@ -1413,10 +1416,10 @@ TEST(Object, multiple_commas_with_spacing) {
 // "{   \"foo\"  :   true    ,     \"bar\"   :   false}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("bar"));
-// EXPECT_TRUE(document.at("foo").is_boolean());
-// EXPECT_TRUE(document.at("foo").to_boolean());
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
 // EXPECT_TRUE(document.at("bar").is_boolean());
 // EXPECT_FALSE(document.at("bar").to_boolean());
 // }
@@ -1426,7 +1429,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // "{   \"foo\"   :  [  true  ,  false   ]   }")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_array());
 // EXPECT_EQ(document.at("foo").size(), 2);
 // EXPECT_TRUE(document.at("foo").at(0).is_boolean());
@@ -1458,10 +1461,10 @@ TEST(Object, multiple_commas_with_spacing) {
 // "{\"foo\":{\"bar\":true}}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_object());
 // EXPECT_EQ(document.at("foo").size(), 1);
-// EXPECT_TRUE(document.at("foo").defines("bar"));
+// EXPECT_TRUE(document.at("foo").defines(document, "bar"));
 // }
 
 // TEST(Object, empty_nested_object_with_new_line_before_end) {
@@ -1469,7 +1472,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // document.parse();
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("x"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "x"));
 // EXPECT_TRUE(document.at("x").is_object());
 // EXPECT_EQ(document.at("x").size(), 0);
 // }
@@ -1579,7 +1582,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
 // document.parse();
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar");
 
@@ -1588,7 +1591,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // document.assign("foo", value);
 
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "baz");
 // }
@@ -1597,7 +1600,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
 // document.parse();
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar");
 
@@ -1606,7 +1609,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // document.assign("foo", std::move(value));
 
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "baz");
 // }
@@ -1615,7 +1618,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
 // document.parse();
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar");
 
@@ -1624,7 +1627,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // document.assign("foo", value);
 
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_integer());
 // EXPECT_EQ(document.at("foo"), 1);
 // }
@@ -1633,7 +1636,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
 // document.parse();
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar");
 
@@ -1642,7 +1645,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // document.assign("foo", std::move(value));
 
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_integer());
 // EXPECT_EQ(document.at("foo"), 1);
 // }
@@ -1651,7 +1654,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
 // document.parse();
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar");
 
@@ -1659,7 +1662,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // document.assign("foo", value);
 
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "baz");
 // }
@@ -1668,7 +1671,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
 // document.parse();
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar");
 
@@ -1676,7 +1679,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // document.assign("foo", std::move(value));
 
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "baz");
 // }
@@ -1685,7 +1688,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
 // document.parse();
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar");
 
@@ -1694,11 +1697,11 @@ TEST(Object, multiple_commas_with_spacing) {
 
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
 
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar");
 
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("bar"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
 // EXPECT_TRUE(document.at("bar").is_string());
 // EXPECT_EQ(document.at("bar"), "baz");
 // }
@@ -1707,7 +1710,7 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
 // document.parse();
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar");
 
@@ -1716,11 +1719,11 @@ TEST(Object, multiple_commas_with_spacing) {
 
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
 
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_string());
 // EXPECT_EQ(document.at("foo"), "bar");
 
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("bar"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
 // EXPECT_TRUE(document.at("bar").is_string());
 // EXPECT_EQ(document.at("bar"), "baz");
 // }
@@ -1729,12 +1732,12 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // const std::string value{"baz")};
 // document.assign("bar", value);
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("bar"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
 // document.parse();
 // EXPECT_EQ(document.at("foo"), 1);
 // EXPECT_EQ(document.at("bar"), "baz");
@@ -1744,11 +1747,11 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // document.assign("bar", std::string{"baz"});
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("bar"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
 // document.parse();
 // EXPECT_EQ(document.at("foo"), 1);
 // EXPECT_EQ(document.at("bar"), "baz");
@@ -1758,19 +1761,19 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_integer());
 // const std::map<std::string, sourcemeta::jsontoolkit::JSON<std::string>>
 // value{
 // {"bar", 5}};
 // document.assign("xxx", value);
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_integer());
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("xxx"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "xxx"));
 // EXPECT_TRUE(document.at("xxx").is_object());
 // EXPECT_EQ(document.at("xxx").size(), 1);
-// EXPECT_TRUE(document.at("xxx").defines("bar"));
+// EXPECT_TRUE(document.at("xxx").defines(document, "bar"));
 // EXPECT_TRUE(document.at("xxx").at("bar").is_integer());
 // EXPECT_EQ(document.at("xxx").at("bar"), 5);
 // }
@@ -1779,18 +1782,18 @@ TEST(Object, multiple_commas_with_spacing) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_integer());
 // std::map<std::string, sourcemeta::jsontoolkit::JSON<std::string>> value{
 // {"bar", 5}};
 // document.assign("xxx", std::move(value));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("foo"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
 // EXPECT_TRUE(document.at("foo").is_integer());
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines("xxx"));
+// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "xxx"));
 // EXPECT_TRUE(document.at("xxx").is_object());
 // EXPECT_EQ(document.at("xxx").size(), 1);
-// EXPECT_TRUE(document.at("xxx").defines("bar"));
+// EXPECT_TRUE(document.at("xxx").defines(document, "bar"));
 // EXPECT_TRUE(document.at("xxx").at("bar").is_integer());
 // EXPECT_EQ(document.at("xxx").at("bar"), 5);
 // }
