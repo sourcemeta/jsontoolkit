@@ -1158,65 +1158,59 @@ TEST(Object, non_blank_object_string_not_empty) {
   EXPECT_FALSE(sourcemeta::jsontoolkit::empty(document));
 }
 
-// TEST(Object, empty_object_missing_left_curly) {
-// const auto document{sourcemeta::jsontoolkit::parse("}")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, empty_object_missing_left_curly) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("}"), std::domain_error);
+}
 
-// TEST(Object, empty_object_missing_right_curly) {
-// const auto document{sourcemeta::jsontoolkit::parse("{")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, empty_object_missing_right_curly) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{"), std::domain_error);
+}
 
-// TEST(Object, integer_key) {
-// const auto document{sourcemeta::jsontoolkit::parse("{1:false}")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, object_integer_key) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{1:false}"), std::domain_error);
+}
 
-// TEST(Object, colon_but_no_key) {
-// const auto document{sourcemeta::jsontoolkit::parse("{:false}")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, object_colon_but_no_key) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{:false}"), std::domain_error);
+}
 
-// TEST(Object, colon_but_no_key_with_space) {
-// const auto document{sourcemeta::jsontoolkit::parse("{  :  false  }")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, object_colon_but_no_key_with_space) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{  :    false}"),
+               std::domain_error);
+}
 
-// TEST(Object, colon_but_no_value) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"x\":}")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, object_colon_but_no_value) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"x\":}"), std::domain_error);
+}
 
-// TEST(Object, colon_but_no_value_with_space) {
-// const auto document{sourcemeta::jsontoolkit::parse("{   \"x\"   :   }")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, object_colon_but_no_value_with_space) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{    \"x\"  :   }"),
+               std::domain_error);
+}
 
-// TEST(Object, missing_key_left_quote) {
-// const auto document{sourcemeta::jsontoolkit::parse("{foo\":true}")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, object_missing_key_left_quote) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{foo\":true}"),
+               std::domain_error);
+}
 
-// TEST(Object, missing_key_right_quote) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo:true}")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, object_missing_key_right_quote) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo:true}"),
+               std::domain_error);
+}
 
-// TEST(Object, missing_key_both_quotes) {
-// const auto document{sourcemeta::jsontoolkit::parse("{foo:true}")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, object_missing_key_both_quotes) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{foo:true}"), std::domain_error);
+}
 
-// TEST(Object, missing_colon) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\" true}")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, object_missing_colon) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\" true}"),
+               std::domain_error);
+}
 
-// TEST(Object, multiple_colons) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\"::true}")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::size(document), std::domain_error);
-// }
+TEST(Object, object_multiple_colons) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\"::true}"),
+               std::domain_error);
+}
 
 // TEST(Object, parse_deep_success) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":true}")};
