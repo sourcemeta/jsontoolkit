@@ -1408,28 +1408,31 @@ TEST(CATEGORY, string_value_with_stringified_object) {
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "{\"x\":1}");
 }
 
-// TEST(CATEGORY, one_true_boolean_element_with_space) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "    {   \"foo\"   :   true  }    ")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
-// }
+TEST(CATEGORY, one_true_boolean_element_with_space) {
+  const auto document{
+      sourcemeta::jsontoolkit::parse("    {   \"foo\"   :   true  }    ")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  const auto &value1{sourcemeta::jsontoolkit::get(document, "foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
+}
 
-// TEST(CATEGORY, two_boolean_values_with_space) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{   \"foo\"  :   true    ,     \"bar\"   :   false}")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
-// EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
-// EXPECT_TRUE(document.at("bar").is_boolean());
-// EXPECT_FALSE(document.at("bar").to_boolean());
-// }
+TEST(CATEGORY, two_boolean_values_with_space) {
+  const auto document{sourcemeta::jsontoolkit::parse(
+      "{   \"foo\"  :   true    ,     \"bar\"   :   false}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  const auto &value1{sourcemeta::jsontoolkit::get(document, "foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
+  const auto &value2{sourcemeta::jsontoolkit::get(document, "bar")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value2));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(value2));
+}
 
 // TEST(CATEGORY, one_array_element_with_space) {
 // const auto document{sourcemeta::jsontoolkit::parse(
