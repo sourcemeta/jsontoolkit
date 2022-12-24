@@ -838,117 +838,99 @@ TEST(CATEGORY, multiple_leading_zeroes_real_number) {
   EXPECT_THROW(sourcemeta::jsontoolkit::parse("-00000.2"), std::domain_error);
 }
 
-// TEST(CATEGORY, large_positive_exponential_number) {
-// const auto document{sourcemeta::jsontoolkit::parse("1.0e28")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 1e28);
-// }
+TEST(CATEGORY, large_positive_exponential_number) {
+  const auto document{sourcemeta::jsontoolkit::parse("1.0e28")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 1e28);
+}
 
-// TEST(CATEGORY, leading_zero_real_number) {
-// const auto document{sourcemeta::jsontoolkit::parse("-0.2")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), -0.2);
-// }
+TEST(CATEGORY, leading_zero_real_number) {
+  const auto document{sourcemeta::jsontoolkit::parse("-0.2")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), -0.2);
+}
 
-// TEST(CATEGORY, large_negative_exponential_number) {
-// const auto document{sourcemeta::jsontoolkit::parse("-1.0e28")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), -1e28);
-// }
+TEST(CATEGORY, large_negative_exponential_number) {
+  const auto document{sourcemeta::jsontoolkit::parse("-1.0e28")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), -1e28);
+}
 
-// TEST(CATEGORY, large_positive_exponential_number_with_plus_exponent) {
-// const auto document{sourcemeta::jsontoolkit::parse("1.0e+28")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 1e28);
-// }
+TEST(CATEGORY, large_positive_exponential_number_with_plus_exponent) {
+  const auto document{sourcemeta::jsontoolkit::parse("1.0e+28")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 1e28);
+}
 
-// TEST(CATEGORY, large_negative_exponential_number_with_plus_exponent) {
-// const auto document{sourcemeta::jsontoolkit::parse("-1.0e+28")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), -1e28);
-// }
+TEST(CATEGORY, large_negative_exponential_number_with_plus_exponent) {
+  const auto document{sourcemeta::jsontoolkit::parse("-1.0e+28")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), -1e28);
+}
 
-// // Invalid exponential numbers
+TEST(CATEGORY, exponential_notation_error_double_upper_e) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3EE2"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_double_upper_e) {
-// const auto document{sourcemeta::jsontoolkit::parse("3EE2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_double_lower_e) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3ee2"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_double_lower_e) {
-// const auto document{sourcemeta::jsontoolkit::parse("3ee2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_double_mixed_e) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3eE2"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_double_mixed_e) {
-// const auto document{sourcemeta::jsontoolkit::parse("3eE2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_trailing_upper_e) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3E"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_trailing_upper_e) {
-// const auto document{sourcemeta::jsontoolkit::parse("3E")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_trailing_lower_e) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3e"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_trailing_lower_e) {
-// const auto document{sourcemeta::jsontoolkit::parse("3e")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_trailing_upper_e_minus) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3E-"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_trailing_upper_e_minus) {
-// const auto document{sourcemeta::jsontoolkit::parse("3E-")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_trailing_lower_e_minus) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3e-"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_trailing_lower_e_minus) {
-// const auto document{sourcemeta::jsontoolkit::parse("3e-")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_leading_upper_e) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("E2"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_leading_upper_e) {
-// const auto document{sourcemeta::jsontoolkit::parse("E2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_leading_lower_e) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("e2"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_leading_lower_e) {
-// const auto document{sourcemeta::jsontoolkit::parse("e2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_minus_leading_upper_e) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("-E2"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_minus_leading_upper_e) {
-// const auto document{sourcemeta::jsontoolkit::parse("-E2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_minus_leading_lower_e) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("-e2"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_minus_leading_lower_e) {
-// const auto document{sourcemeta::jsontoolkit::parse("-e2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_double_e_with_digits) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3E1E2"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_double_e_with_digits) {
-// const auto document{sourcemeta::jsontoolkit::parse("3E1E2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_left_e_space) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3 E2"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_left_e_space) {
-// const auto document{sourcemeta::jsontoolkit::parse("3 E2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_right_e_space) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3E 2"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_right_e_space) {
-// const auto document{sourcemeta::jsontoolkit::parse("3E 2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_double_minus_after_e) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3E--2"), std::domain_error);
+}
 
-// TEST(CATEGORY, exponential_notation_error_double_minus_after_e) {
-// const auto document{sourcemeta::jsontoolkit::parse("3E--2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
-
-// TEST(CATEGORY, exponential_notation_error_double_minus_with_digits_after_e) {
-// const auto document{sourcemeta::jsontoolkit::parse("3E-2-2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, exponential_notation_error_double_minus_with_digits_after_e) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("3E-2-2"), std::domain_error);
+}
 
 // TEST(CATEGORY, exponential_notation_plus_after_e) {
 // const auto document{sourcemeta::jsontoolkit::parse("3E+2")};
