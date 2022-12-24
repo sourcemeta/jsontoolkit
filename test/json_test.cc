@@ -531,29 +531,29 @@ TEST(CATEGORY, set_negative_real) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
 }
 
-// TEST(CATEGORY, set_negative_integral_real) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"true"};
-// EXPECT_TRUE(document.is_boolean());
-// document = -4.0;
-// EXPECT_FALSE(document.is_integer());
-// EXPECT_TRUE(document.is_real());
-// }
+TEST(CATEGORY, set_negative_integral_real) {
+  auto document{sourcemeta::jsontoolkit::from(true)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  sourcemeta::jsontoolkit::set(document, -4.0);
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+}
 
-// TEST(CATEGORY, set_positive_integer) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"true"};
-// EXPECT_TRUE(document.is_boolean());
-// document = 4;
-// EXPECT_TRUE(document.is_integer());
-// EXPECT_FALSE(document.is_real());
-// }
+TEST(CATEGORY, set_positive_integer) {
+  auto document{sourcemeta::jsontoolkit::from(true)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  sourcemeta::jsontoolkit::set(document, 4);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_real(document));
+}
 
-// TEST(CATEGORY, set_positive_real) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"true"};
-// EXPECT_TRUE(document.is_boolean());
-// document = 4.3;
-// EXPECT_FALSE(document.is_integer());
-// EXPECT_TRUE(document.is_real());
-// }
+TEST(CATEGORY, set_positive_real) {
+  auto document{sourcemeta::jsontoolkit::from(true)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  sourcemeta::jsontoolkit::set(document, 4.3);
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+}
 
 // TEST(CATEGORY, set_positive_integral_real) {
 // sourcemeta::jsontoolkit::JSON<std::string> document{"true"};
