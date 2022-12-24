@@ -555,58 +555,58 @@ TEST(CATEGORY, set_positive_real) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
 }
 
-// TEST(CATEGORY, set_positive_integral_real) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"true"};
-// EXPECT_TRUE(document.is_boolean());
-// document = 4.0;
-// EXPECT_FALSE(document.is_integer());
-// EXPECT_TRUE(document.is_real());
-// }
+TEST(CATEGORY, set_positive_integral_real) {
+  auto document{sourcemeta::jsontoolkit::from(true)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  sourcemeta::jsontoolkit::set(document, 4.0);
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+}
 
-// TEST(CATEGORY, string_integer_zero) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"0"};
-// EXPECT_TRUE(document.is_integer());
-// EXPECT_FALSE(document.is_real());
-// EXPECT_EQ(document.to_integer(), 0);
-// EXPECT_EQ(document, 0);
-// EXPECT_EQ(document, 0.0);
-// }
+TEST(CATEGORY, string_integer_zero) {
+  const auto document{sourcemeta::jsontoolkit::parse("0")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), 0);
+  EXPECT_EQ(document, 0);
+  EXPECT_EQ(document, 0.0);
+}
 
-// TEST(CATEGORY, string_integer_positive_single_digit_integer) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"3"};
-// EXPECT_TRUE(document.is_integer());
-// EXPECT_FALSE(document.is_real());
-// EXPECT_EQ(document.to_integer(), 3);
-// EXPECT_EQ(document, 3);
-// EXPECT_EQ(document, 3.0);
-// }
+TEST(CATEGORY, string_integer_positive_single_digit_integer) {
+  const auto document{sourcemeta::jsontoolkit::parse("3")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), 3);
+  EXPECT_EQ(document, 3);
+  EXPECT_EQ(document, 3.0);
+}
 
-// TEST(CATEGORY, string_integer_negative_single_digit_integer) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"-3"};
-// EXPECT_TRUE(document.is_integer());
-// EXPECT_FALSE(document.is_real());
-// EXPECT_EQ(document.to_integer(), -3);
-// EXPECT_EQ(document, -3);
-// EXPECT_EQ(document, -3.0);
-// }
+TEST(CATEGORY, string_integer_negative_single_digit_integer) {
+  const auto document{sourcemeta::jsontoolkit::parse("-3")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), -3);
+  EXPECT_EQ(document, -3);
+  EXPECT_EQ(document, -3.0);
+}
 
-// TEST(CATEGORY, string_integer_positive_long_integer) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"12345"};
-// EXPECT_TRUE(document.is_integer());
-// EXPECT_FALSE(document.is_real());
-// EXPECT_EQ(document.to_integer(), 12345);
-// EXPECT_EQ(document, 12345);
-// EXPECT_EQ(document, 12345.0);
-// }
+TEST(CATEGORY, string_integer_positive_long_integer) {
+  const auto document{sourcemeta::jsontoolkit::parse("12345")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), 12345);
+  EXPECT_EQ(document, 12345);
+  EXPECT_EQ(document, 12345.0);
+}
 
-// TEST(CATEGORY, string_integer_negative_long_integer) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"-12345"};
-// EXPECT_TRUE(document.is_integer());
-// EXPECT_FALSE(document.is_real());
-// EXPECT_EQ(document.to_integer(), -12345);
-// EXPECT_EQ(document, -12345);
-// EXPECT_EQ(document, -12345.0);
-// }
+TEST(CATEGORY, string_integer_negative_long_integer) {
+  const auto document{sourcemeta::jsontoolkit::parse("-12345")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), -12345);
+  EXPECT_EQ(document, -12345);
+  EXPECT_EQ(document, -12345.0);
+}
 
 // TEST(CATEGORY, string_integer_minus_zero) {
 // sourcemeta::jsontoolkit::JSON<std::string> document{"-0"};
