@@ -978,14 +978,12 @@ TEST(CATEGORY, exponential_notation_integer_4_upper) {
   EXPECT_EQ(document, -53000);
 }
 
-// TODO: Enable this
-// TEST(CATEGORY, exponential_notation_integer_5_upper) {
-// const auto document{sourcemeta::jsontoolkit::parse("6.72E9")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
-// EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 6720000000);
-// EXPECT_EQ(document, 6720000000);
-// }
+TEST(CATEGORY, exponential_notation_integer_5_upper) {
+  const auto document{sourcemeta::jsontoolkit::parse("6.72E9")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 6720000000);
+}
 
 TEST(CATEGORY, exponential_notation_integer_6_upper) {
   const auto document{sourcemeta::jsontoolkit::parse("2E-1")};
@@ -1046,14 +1044,12 @@ TEST(CATEGORY, exponential_notation_integer_4_lower) {
   EXPECT_EQ(document, -53000);
 }
 
-// TODO: Enable this
-// TEST(CATEGORY, exponential_notation_integer_5_lower) {
-// const auto document{sourcemeta::jsontoolkit::parse("6.72e9")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
-// EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 6720000000);
-// EXPECT_EQ(document, 6720000000);
-// }
+TEST(CATEGORY, exponential_notation_integer_5_lower) {
+  const auto document{sourcemeta::jsontoolkit::parse("6.72e9")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 6720000000);
+}
 
 TEST(CATEGORY, exponential_notation_integer_6_lower) {
   const auto document{sourcemeta::jsontoolkit::parse("2e-1")};
