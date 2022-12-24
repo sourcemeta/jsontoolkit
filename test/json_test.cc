@@ -798,66 +798,50 @@ TEST(CATEGORY, single_digit_negative_real_integer_trailing_zero) {
   EXPECT_EQ(document, -1);
 }
 
-// TEST(CATEGORY, multiple_sibling_periods) {
-// const auto document{sourcemeta::jsontoolkit::parse("123..56")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, multiple_sibling_periods) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("123..56"), std::domain_error);
+}
 
-// TEST(CATEGORY, multiple_separate_periods) {
-// const auto document{sourcemeta::jsontoolkit::parse("12.34.56")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
+TEST(CATEGORY, multiple_separate_periods) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("12.34.56"), std::domain_error);
+}
 
-// TEST(CATEGORY, string_integer_with_plus) {
-// const auto document{sourcemeta::jsontoolkit::parse("+5")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_integer(document),
-// std::domain_error);
-// }
+TEST(CATEGORY, string_integer_with_plus) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("+5"), std::domain_error);
+}
 
-// TEST(CATEGORY, string_zero_with_plus) {
-// const auto document{sourcemeta::jsontoolkit::parse("+0")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_integer(document),
-// std::domain_error);
-// }
+TEST(CATEGORY, string_zero_with_plus) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("+0"), std::domain_error);
+}
 
-// TEST(CATEGORY, negative_with_leading_zero) {
-// const auto document{sourcemeta::jsontoolkit::parse("-05")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_integer(document),
-// std::domain_error);
-// }
+TEST(CATEGORY, negative_with_leading_zero) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("-05"), std::domain_error);
+}
 
-// TEST(CATEGORY, negative_with_leading_zero_and_space) {
-// const auto document{sourcemeta::jsontoolkit::parse("-0 5")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_integer(document),
-// std::domain_error);
-// }
+TEST(CATEGORY, negative_with_leading_zero_and_space) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("-0 5"), std::domain_error);
+}
+
+TEST(CATEGORY, leading_zero_positive_integer_number) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("02"), std::domain_error);
+}
+
+TEST(CATEGORY, leading_zero_negative_integer_number) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("-02"), std::domain_error);
+}
+
+TEST(CATEGORY, two_leading_zeroes_real_number) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("-00.2"), std::domain_error);
+}
+
+TEST(CATEGORY, multiple_leading_zeroes_real_number) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("-00000.2"), std::domain_error);
+}
 
 // TEST(CATEGORY, large_positive_exponential_number) {
 // const auto document{sourcemeta::jsontoolkit::parse("1.0e28")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 1e28);
-// }
-
-// TEST(CATEGORY, leading_zero_positive_integer_number) {
-// const auto document{sourcemeta::jsontoolkit::parse("02")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_integer(document),
-// std::domain_error);
-// }
-
-// TEST(CATEGORY, leading_zero_negative_integer_number) {
-// const auto document{sourcemeta::jsontoolkit::parse("-02")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_integer(document),
-// std::domain_error);
-// }
-
-// TEST(CATEGORY, two_leading_zeroes_real_number) {
-// const auto document{sourcemeta::jsontoolkit::parse("-00.2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
-// }
-
-// TEST(CATEGORY, multiple_leading_zeroes_real_number) {
-// const auto document{sourcemeta::jsontoolkit::parse("-00000.2")};
-// EXPECT_THROW(sourcemeta::jsontoolkit::is_real(document), std::domain_error);
 // }
 
 // TEST(CATEGORY, leading_zero_real_number) {
