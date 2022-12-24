@@ -1140,23 +1140,23 @@ TEST(Object, empty_object_string) {
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
 }
 
-// TEST(Object, blank_object_string) {
-// const auto document{sourcemeta::jsontoolkit::parse("{    }")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
-// }
+TEST(Object, blank_object_string) {
+  const auto document{sourcemeta::jsontoolkit::parse("{    }")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+}
 
-// TEST(Object, blank_object_string_empty) {
-// const auto document{sourcemeta::jsontoolkit::parse("{    }")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_TRUE(document.empty());
-// }
+TEST(Object, blank_object_string_empty) {
+  const auto document{sourcemeta::jsontoolkit::parse("{    }")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::empty(document));
+}
 
-// TEST(Object, non_blank_object_string_not_empty) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_FALSE(document.empty());
-// }
+TEST(Object, non_blank_object_string_not_empty) {
+  const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::empty(document));
+}
 
 // TEST(Object, empty_object_missing_left_curly) {
 // const auto document{sourcemeta::jsontoolkit::parse("}")};

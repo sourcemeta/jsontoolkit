@@ -148,6 +148,12 @@ inline auto size(const rapidjson::GenericValue<Encoding, Allocator> &value)
 }
 
 template <typename Encoding, typename Allocator>
+inline auto empty(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> bool {
+  return size(value) == 0;
+}
+
+template <typename Encoding, typename Allocator>
 inline auto get(const rapidjson::GenericValue<Encoding, Allocator> &value,
                 const std::size_t index) -> const rapidjson::Value & {
   assert(is_array(value));
