@@ -1222,57 +1222,54 @@ TEST(Object, object_parse_deep_success) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
 }
 
-// TEST(Object, parse_deep_failure) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":true")};
-// EXPECT_THROW(document.parse(), std::domain_error);
-// }
+TEST(Object, object_parse_deep_failure) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\":true"),
+               std::domain_error);
+}
 
-// TEST(Object, parse_deep_failure_member) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":tru}")};
-// EXPECT_THROW(document.parse(), std::domain_error);
-// }
+TEST(Object, parse_deep_failure_member) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\":tru}"),
+               std::domain_error);
+}
 
-// TEST(Object, key_without_value) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\"}")};
-// EXPECT_THROW(document.parse(), std::domain_error);
-// }
+TEST(Object, key_without_value) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\"}"), std::domain_error);
+}
 
-// TEST(Object, key_without_value_after_valid_key) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\": 1,\"bar\"}")};
-// EXPECT_THROW(document.parse(), std::domain_error);
-// }
+TEST(Object, key_without_value_after_valid_key) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\": 1,\"bar\"}"),
+               std::domain_error);
+}
 
-// TEST(Object, trailing_comma_after_element) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{\"foo\": 1,\"bar\":0,}")};
-// EXPECT_THROW(document.parse(), std::domain_error);
-// }
+TEST(Object, trailing_comma_after_element) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\": 1,\"bar\":0,}"),
+               std::domain_error);
+}
 
-// TEST(Object, trailing_comma) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\": 1,}")};
-// EXPECT_THROW(document.parse(), std::domain_error);
-// }
+TEST(Object, trailing_comma) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\": 1,}"),
+               std::domain_error);
+}
 
-// TEST(Object, trailing_comma_with_spacing) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\": 1  ,   } ")};
-// EXPECT_THROW(document.parse(), std::domain_error);
-// }
+TEST(Object, trailing_comma_with_spacing) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\": 1  ,   } "),
+               std::domain_error);
+}
 
-// TEST(Object, trailing_comma_with_left_spacing) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\": 1  ,}")};
-// EXPECT_THROW(document.parse(), std::domain_error);
-// }
+TEST(Object, trailing_comma_with_left_spacing) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\": 1  ,}"),
+               std::domain_error);
+}
 
-// TEST(Object, multiple_commas) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\": 1,,,,,}")};
-// EXPECT_THROW(document.parse(), std::domain_error);
-// }
+TEST(Object, multiple_commas) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\": 1,,,,,}"),
+               std::domain_error);
+}
 
-// TEST(Object, multiple_commas_with_spacing) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{\"foo\": 1 ,  ,  , , }")};
-// EXPECT_THROW(document.parse(), std::domain_error);
-// }
+TEST(Object, multiple_commas_with_spacing) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("{\"foo\": 1 ,  ,  , , }"),
+               std::domain_error);
+}
 
 // TEST(Object, minified_one_true_boolean_element) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":true}")};
