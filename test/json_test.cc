@@ -1451,15 +1451,14 @@ TEST(CATEGORY, one_array_element_with_space) {
   EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(subvalue2));
 }
 
-// TEST(CATEGORY, nested_object_clear) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{\"foo\":{\"bar\":true}}")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// document.clear();
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
-// }
+TEST(CATEGORY, nested_object_clear) {
+  auto document{sourcemeta::jsontoolkit::parse("{\"foo\":{\"bar\":true}}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  sourcemeta::jsontoolkit::clear(document);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+}
 
 // TEST(CATEGORY, nested_object_clear_non_parsed) {
 // const auto document{sourcemeta::jsontoolkit::parse(

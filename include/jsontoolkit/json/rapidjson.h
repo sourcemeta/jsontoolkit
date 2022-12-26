@@ -226,6 +226,13 @@ inline auto contains(const rapidjson::GenericValue<Encoding, Allocator> &value,
   return contains(value, from(element));
 }
 
+// TODO: Support arrays too
+template <typename Encoding, typename Allocator>
+inline auto clear(rapidjson::GenericValue<Encoding, Allocator> &value) -> void {
+  assert(is_object(value));
+  value.EraseMember(value.MemberBegin());
+}
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif
