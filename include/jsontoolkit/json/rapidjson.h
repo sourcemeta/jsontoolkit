@@ -230,7 +230,7 @@ inline auto contains(const rapidjson::GenericValue<Encoding, Allocator> &value,
 template <typename Encoding, typename Allocator>
 inline auto clear(rapidjson::GenericValue<Encoding, Allocator> &value) -> void {
   assert(is_object(value));
-  value.EraseMember(value.MemberBegin());
+  value.EraseMember(value.MemberBegin(), value.MemberEnd());
 }
 
 } // namespace sourcemeta::jsontoolkit

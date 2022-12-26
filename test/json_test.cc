@@ -1460,6 +1460,19 @@ TEST(CATEGORY, nested_object_clear) {
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
 }
 
+TEST(CATEGORY, object_with_two_keys_clear) {
+  auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1,\"bar\":2}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  sourcemeta::jsontoolkit::clear(document);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "bar"));
+}
+
 // TEST(CATEGORY, nested_object_clear_non_parsed) {
 // const auto document{sourcemeta::jsontoolkit::parse(
 // "{\"foo\":{\"bar\":true}}")};
