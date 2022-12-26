@@ -1504,25 +1504,27 @@ TEST(CATEGORY, equality_with_padding) {
   EXPECT_FALSE(right == extra);
 }
 
-// TEST(CATEGORY, const_all_of_true) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{ \"foo\": 1, \"bar\": 2 }")};
-// document.parse();
-// const bool result =
-// std::all_of(document.to_object().cbegin(), document.to_object().cend(),
-// [](auto pair) { return pair.second.is_integer(); });
-// EXPECT_TRUE(result);
-// }
+TEST(CATEGORY, const_all_of_true) {
+  const auto document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  const bool result = std::all_of(
+      sourcemeta::jsontoolkit::cbegin(document),
+      sourcemeta::jsontoolkit::cend(document), [](const auto &pair) {
+        return sourcemeta::jsontoolkit::is_integer(pair.value);
+      });
+  EXPECT_TRUE(result);
+}
 
-// TEST(CATEGORY, const_all_of_false) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{ \"foo\": 1, \"bar\": \"2\" }")};
-// document.parse();
-// const bool result =
-// std::all_of(document.to_object().cbegin(), document.to_object().cend(),
-// [](auto pair) { return pair.second.is_integer(); });
-// EXPECT_FALSE(result);
-// }
+TEST(CATEGORY, const_all_of_false) {
+  const auto document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": \"2\" }")};
+  const bool result = std::all_of(
+      sourcemeta::jsontoolkit::cbegin(document),
+      sourcemeta::jsontoolkit::cend(document), [](const auto &pair) {
+        return sourcemeta::jsontoolkit::is_integer(pair.value);
+      });
+  EXPECT_FALSE(result);
+}
 
 // TEST(CATEGORY, const_all_of_on_const_instance) {
 // sourcemeta::jsontoolkit::JSON<std::string> source{

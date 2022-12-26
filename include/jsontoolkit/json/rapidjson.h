@@ -233,6 +233,20 @@ inline auto clear(rapidjson::GenericValue<Encoding, Allocator> &value) -> void {
   value.EraseMember(value.MemberBegin(), value.MemberEnd());
 }
 
+template <typename Encoding, typename Allocator>
+inline auto cbegin(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> rapidjson::Value::ConstMemberIterator {
+  assert(is_object(value));
+  return value.MemberBegin();
+}
+
+template <typename Encoding, typename Allocator>
+inline auto cend(const rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> rapidjson::Value::ConstMemberIterator {
+  assert(is_object(value));
+  return value.MemberEnd();
+}
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif
