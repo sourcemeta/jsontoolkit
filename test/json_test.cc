@@ -1526,17 +1526,6 @@ TEST(CATEGORY, const_all_of_false) {
   EXPECT_FALSE(result);
 }
 
-// TEST(CATEGORY, const_all_of_on_const_instance) {
-// sourcemeta::jsontoolkit::JSON<std::string> source{
-// "{ \"foo\": 1, \"bar\": 2 }")};
-// source.parse();
-// const const auto document{sourcemeta::jsontoolkit::parse(std::move(source)};
-// const bool result =
-// std::all_of(document.to_object().cbegin(), document.to_object().cend(),
-// [](auto pair) { return pair.second.is_integer(); });
-// EXPECT_TRUE(result);
-// }
-
 // TEST(CATEGORY, key_copy_assignment_same_type_parsed) {
 // const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
 // document.parse();

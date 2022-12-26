@@ -247,6 +247,20 @@ inline auto cend(const rapidjson::GenericValue<Encoding, Allocator> &value)
   assert(is_object(value));
   return value.MemberEnd();
 }
+
+template <typename Encoding, typename Allocator>
+inline auto begin(rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> rapidjson::Value::MemberIterator {
+  assert(is_object(value));
+  return value.MemberBegin();
+}
+
+template <typename Encoding, typename Allocator>
+inline auto end(rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> rapidjson::Value::MemberIterator {
+  assert(is_object(value));
+  return value.MemberEnd();
+}
 } // namespace object
 
 } // namespace sourcemeta::jsontoolkit
