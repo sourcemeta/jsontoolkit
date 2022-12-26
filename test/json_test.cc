@@ -1,3 +1,4 @@
+#include <algorithm> // std::all_of
 #include <gtest/gtest.h>
 #include <jsontoolkit/json.h>
 #include <stdexcept> // std::domain_error
@@ -1495,7 +1496,7 @@ TEST(CATEGORY, empty_nested_object_with_new_line_before_end) {
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value1), 0);
 }
 
-TEST(CATEGORY, equality_with_padding) {
+TEST(CATEGORY, object_equality_with_padding) {
   const auto left{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
   const auto right{sourcemeta::jsontoolkit::parse("  { \"foo\"   : 1 } ")};
   const auto extra{sourcemeta::jsontoolkit::parse(" { \"fo\":1 }")};
@@ -1504,7 +1505,17 @@ TEST(CATEGORY, equality_with_padding) {
   EXPECT_FALSE(right == extra);
 }
 
-TEST(CATEGORY, const_all_of_true) {
+TEST(CATEGORY, object_all_of_true) {
+  auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  const bool result = std::all_of(
+      sourcemeta::jsontoolkit::object::begin(document),
+      sourcemeta::jsontoolkit::object::end(document), [](auto &pair) {
+        return sourcemeta::jsontoolkit::is_integer(pair.value);
+      });
+  EXPECT_TRUE(result);
+}
+
+TEST(CATEGORY, object_const_all_of_true) {
   const auto document{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   const bool result = std::all_of(
@@ -1515,7 +1526,7 @@ TEST(CATEGORY, const_all_of_true) {
   EXPECT_TRUE(result);
 }
 
-TEST(CATEGORY, const_all_of_false) {
+TEST(CATEGORY, object_const_all_of_false) {
   const auto document{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": \"2\" }")};
   const bool result = std::all_of(
