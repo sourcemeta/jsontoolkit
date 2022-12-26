@@ -1473,104 +1473,36 @@ TEST(CATEGORY, object_with_two_keys_clear) {
   EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "bar"));
 }
 
-// TEST(CATEGORY, nested_object_clear_non_parsed) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{\"foo\":{\"bar\":true}}")};
-// document.clear();
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
-// }
+TEST(CATEGORY, minified_nested_object) {
+  const auto document{
+      sourcemeta::jsontoolkit::parse("{\"foo\":{\"bar\":true}}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  const auto &value1{sourcemeta::jsontoolkit::get(document, "foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(value1));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(value1), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(value1, "bar"));
+}
 
-// TEST(CATEGORY, minified_nested_object) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{\"foo\":{\"bar\":true}}")};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-// EXPECT_TRUE(document.at("foo").is_object());
-// EXPECT_EQ(document.at("foo").size(), 1);
-// EXPECT_TRUE(document.at("foo").defines(document, "bar"));
-// }
+TEST(CATEGORY, empty_nested_object_with_new_line_before_end) {
+  const auto document{sourcemeta::jsontoolkit::parse("{\"x\":{}\n}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "x"));
+  const auto &value1{sourcemeta::jsontoolkit::get(document, "x")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(value1));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(value1), 0);
+}
 
-// TEST(CATEGORY, empty_nested_object_with_new_line_before_end) {
-// sourcemeta::jsontoolkit::JSON<std::string> document("{\"x\":{}\n}");
-// document.parse();
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "x"));
-// EXPECT_TRUE(document.at("x").is_object());
-// EXPECT_EQ(document.at("x").size(), 0);
-// }
-
-// TEST(CATEGORY, equality_with_padding) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{"{\"foo\":1}")};
-// left.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> right{"  { \"foo\"   : 1 } ")};
-// right.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> extra{" { \"fo\":1 }")};
-// extra.parse();
-// EXPECT_EQ(left, right);
-// EXPECT_FALSE(left == extra);
-// EXPECT_FALSE(right == extra);
-// }
-
-// TEST(CATEGORY, stringify_single_scalar_no_space) {
-// const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "{\"foo\":1}");
-// }
-
-// TEST(CATEGORY, stringify_scalars_no_space) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{ \"foo\": 1, \"bar\": true }")};
-// std::ostringstream stream;
-// stream << document;
-// // Because order is irrelevant
-// const bool matches = stream.str() == "{\"foo\":1,\"bar\":true}" ||
-// stream.str() == "{\"bar\":true,\"foo\":1}";
-// EXPECT_TRUE(matches);
-// }
-
-// TEST(CATEGORY, stringify_single_scalar_pretty) {
-// const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
-// std::ostringstream stream;
-// stream << document.pretty();
-// EXPECT_EQ(stream.str(), "{\n  \"foo\": 1\n}");
-// }
-
-// TEST(CATEGORY, stringify_scalars_pretty) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{ \"foo\": 1, \"bar\": true }")};
-// std::ostringstream stream;
-// stream << document.pretty();
-// // Because order is irrelevant
-// const bool matches = stream.str() == "{\n  \"foo\": 1,\n  \"bar\": true\n}"
-// || stream.str() == "{\n  \"bar\": true,\n  \"foo\": 1\n}";
-// EXPECT_TRUE(matches);
-// }
-
-// TEST(CATEGORY, stringify_single_array_no_space) {
-// const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": [1,2] }")};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "{\"foo\":[1,2]}");
-// }
-
-// TEST(CATEGORY, stringify_single_array_pretty) {
-// const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": [1,2] }")};
-// std::ostringstream stream;
-// stream << document.pretty();
-// EXPECT_EQ(stream.str(), "{\n  \"foo\": [\n    1,\n    2\n  ]\n}");
-// }
-
-// TEST(CATEGORY, stringify_single_object_pretty) {
-// const auto document{sourcemeta::jsontoolkit::parse(
-// "{ \"foo\": {\"bar\":1} }")};
-// std::ostringstream stream;
-// stream << document.pretty();
-// EXPECT_EQ(stream.str(), "{\n  \"foo\": {\n    \"bar\": 1\n  }\n}");
-// }
+TEST(CATEGORY, equality_with_padding) {
+  const auto left{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
+  const auto right{sourcemeta::jsontoolkit::parse("  { \"foo\"   : 1 } ")};
+  const auto extra{sourcemeta::jsontoolkit::parse(" { \"fo\":1 }")};
+  EXPECT_EQ(left, right);
+  EXPECT_FALSE(left == extra);
+  EXPECT_FALSE(right == extra);
+}
 
 // TEST(CATEGORY, const_all_of_true) {
 // const auto document{sourcemeta::jsontoolkit::parse(
