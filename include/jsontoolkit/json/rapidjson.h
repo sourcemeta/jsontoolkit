@@ -241,18 +241,27 @@ inline auto clear(rapidjson::GenericValue<Encoding, Allocator> &value) -> void {
 }
 
 template <typename Encoding, typename Allocator>
-inline auto assign(rapidjson::GenericValue<Encoding, Allocator> &value,
+inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &root,
+                   rapidjson::GenericValue<Encoding, Allocator> &value,
                    const std::string &key,
                    const rapidjson::GenericValue<Encoding, Allocator> &member)
     -> void {
   assert(is_object(value));
-  rapidjson::GenericDocument<Encoding, Allocator> document;
-  value[key] = rapidjson::GenericValue<Encoding, Allocator>{
-      member, document.GetAllocator()};
+  auto &allocator{root.GetAllocator()};
+  if (defines(value, key)) {
+    value[key] =
+        rapidjson::GenericValue<Encoding, Allocator>{member, allocator};
+  } else {
+    value.AddMember(
+        from(key),
+        rapidjson::GenericValue<Encoding, Allocator>{member, allocator},
+        allocator);
+  }
 }
 
 template <typename Encoding, typename Allocator>
-inline auto assign(rapidjson::GenericValue<Encoding, Allocator> &value,
+inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &,
+                   rapidjson::GenericValue<Encoding, Allocator> &value,
                    const std::string &key,
                    rapidjson::GenericValue<Encoding, Allocator> &&member)
     -> void {
