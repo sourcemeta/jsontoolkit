@@ -1546,7 +1546,7 @@ TEST(CATEGORY, key_copy_assignment_same_type_parsed) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "bar");
   const auto new_value{sourcemeta::jsontoolkit::from("baz")};
-  sourcemeta::jsontoolkit::assign(document, document, "foo", new_value);
+  sourcemeta::jsontoolkit::assign(document, "foo", new_value);
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   const auto &value2{sourcemeta::jsontoolkit::get(document, "foo")};
@@ -1562,8 +1562,7 @@ TEST(CATEGORY, key_move_assignment_same_type_parsed) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "bar");
   const auto new_value{sourcemeta::jsontoolkit::from("baz")};
-  sourcemeta::jsontoolkit::assign(document, document, "foo",
-                                  std::move(new_value));
+  sourcemeta::jsontoolkit::assign(document, "foo", std::move(new_value));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   const auto &value2{sourcemeta::jsontoolkit::get(document, "foo")};
@@ -1579,7 +1578,7 @@ TEST(CATEGORY, key_copy_assignment_different_type_parsed) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "bar");
   const auto new_value{sourcemeta::jsontoolkit::from(1)};
-  sourcemeta::jsontoolkit::assign(document, document, "foo", new_value);
+  sourcemeta::jsontoolkit::assign(document, "foo", new_value);
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   const auto &value2{sourcemeta::jsontoolkit::get(document, "foo")};
@@ -1595,8 +1594,7 @@ TEST(CATEGORY, key_move_assignment_different_type_parsed) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "bar");
   const auto new_value{sourcemeta::jsontoolkit::from(1)};
-  sourcemeta::jsontoolkit::assign(document, document, "foo",
-                                  std::move(new_value));
+  sourcemeta::jsontoolkit::assign(document, "foo", std::move(new_value));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   const auto &value2{sourcemeta::jsontoolkit::get(document, "foo")};
@@ -1613,7 +1611,7 @@ TEST(CATEGORY, new_key_copy_assignment) {
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "bar");
 
   const auto new_value{sourcemeta::jsontoolkit::from("baz")};
-  sourcemeta::jsontoolkit::assign(document, document, "bar", new_value);
+  sourcemeta::jsontoolkit::assign(document, "bar", new_value);
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
 
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
@@ -1627,27 +1625,28 @@ TEST(CATEGORY, new_key_copy_assignment) {
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value3), "baz");
 }
 
-// TEST(CATEGORY, new_key_move_assignment) {
-// const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
-// document.parse();
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-// EXPECT_TRUE(document.at("foo").is_string());
-// EXPECT_EQ(document.at("foo"), "bar");
+TEST(CATEGORY, new_key_move_assignment) {
+  auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  const auto &value1{sourcemeta::jsontoolkit::get(document, "foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "bar");
 
-// sourcemeta::jsontoolkit::JSON<std::string> new_value{"\"baz\"")};
-// document.assign("bar", std::move(new_value));
+  const auto new_value{sourcemeta::jsontoolkit::from("baz")};
+  sourcemeta::jsontoolkit::assign(document, "bar", std::move(new_value));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
 
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  const auto &value2{sourcemeta::jsontoolkit::get(document, "foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value2));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value2), "bar");
 
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-// EXPECT_TRUE(document.at("foo").is_string());
-// EXPECT_EQ(document.at("foo"), "bar");
-
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
-// EXPECT_TRUE(document.at("bar").is_string());
-// EXPECT_EQ(document.at("bar"), "baz");
-// }
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  const auto &value3{sourcemeta::jsontoolkit::get(document, "bar")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value3));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value3), "baz");
+}
 
 // TEST(CATEGORY, assign_literal_lvalue_string) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};

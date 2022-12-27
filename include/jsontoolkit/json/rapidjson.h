@@ -269,6 +269,22 @@ inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &,
   value[key] = member;
 }
 
+template <typename Encoding, typename Allocator>
+inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &root,
+                   const std::string &key,
+                   const rapidjson::GenericValue<Encoding, Allocator> &member)
+    -> void {
+  return assign(root, root, key, member);
+}
+
+template <typename Encoding, typename Allocator>
+inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &root,
+                   const std::string &key,
+                   rapidjson::GenericValue<Encoding, Allocator> &&member)
+    -> void {
+  return assign(root, root, key, member);
+}
+
 namespace object {
 template <typename Encoding, typename Allocator>
 inline auto cbegin(const rapidjson::GenericValue<Encoding, Allocator> &value)
