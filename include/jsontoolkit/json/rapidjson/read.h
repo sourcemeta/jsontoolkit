@@ -1,5 +1,5 @@
-#ifndef JSONTOOLKIT_JSON_RAPIDJSON_H_
-#define JSONTOOLKIT_JSON_RAPIDJSON_H_
+#ifndef JSONTOOLKIT_JSON_RAPIDJSON_READ_H_
+#define JSONTOOLKIT_JSON_RAPIDJSON_READ_H_
 
 #include <cassert>     // assert
 #include <cstddef>     // std::size_t
@@ -54,25 +54,6 @@ inline auto from(std::int64_t value) -> rapidjson::Value {
   rapidjson::Value result;
   result.SetInt64(value);
   return result;
-}
-
-template <typename Encoding, typename Allocator>
-inline auto set(rapidjson::GenericValue<Encoding, Allocator> &value,
-                std::nullptr_t) -> void {
-  value.SetNull();
-}
-
-template <typename Encoding, typename Allocator>
-inline auto set(rapidjson::GenericValue<Encoding, Allocator> &value,
-                std::int64_t new_value) -> void {
-  value.SetInt64(new_value);
-}
-
-template <typename Encoding, typename Allocator, typename T,
-          typename = std::enable_if_t<std::is_same_v<T, double>>>
-inline auto set(rapidjson::GenericValue<Encoding, Allocator> &value,
-                T new_value) -> void {
-  value.SetDouble(new_value);
 }
 
 template <typename Encoding, typename Allocator>
@@ -176,13 +157,6 @@ inline auto defines(const rapidjson::GenericValue<Encoding, Allocator> &value,
 }
 
 template <typename Encoding, typename Allocator>
-inline auto erase(rapidjson::GenericValue<Encoding, Allocator> &value,
-                  const std::string &key) -> void {
-  assert(is_object(value));
-  value.EraseMember(key);
-}
-
-template <typename Encoding, typename Allocator>
 inline auto get(const rapidjson::GenericValue<Encoding, Allocator> &value,
                 const std::string &key) -> const rapidjson::Value & {
   assert(is_object(value));
@@ -232,88 +206,6 @@ inline auto contains(const rapidjson::GenericValue<Encoding, Allocator> &value,
                      const std::string &element) -> bool {
   return contains(value, from(element));
 }
-
-// TODO: Support arrays too
-template <typename Encoding, typename Allocator>
-inline auto clear(rapidjson::GenericValue<Encoding, Allocator> &value) -> void {
-  assert(is_object(value));
-  value.EraseMember(value.MemberBegin(), value.MemberEnd());
-}
-
-template <typename Encoding, typename Allocator>
-inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &root,
-                   rapidjson::GenericValue<Encoding, Allocator> &value,
-                   const std::string &key,
-                   const rapidjson::GenericValue<Encoding, Allocator> &member)
-    -> void {
-  assert(is_object(value));
-  auto &allocator{root.GetAllocator()};
-  if (defines(value, key)) {
-    value[key] =
-        rapidjson::GenericValue<Encoding, Allocator>{member, allocator};
-  } else {
-    value.AddMember(
-        from(key),
-        rapidjson::GenericValue<Encoding, Allocator>{member, allocator},
-        allocator);
-  }
-}
-
-template <typename Encoding, typename Allocator>
-inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &,
-                   rapidjson::GenericValue<Encoding, Allocator> &value,
-                   const std::string &key,
-                   rapidjson::GenericValue<Encoding, Allocator> &&member)
-    -> void {
-  assert(is_object(value));
-  value[key] = member;
-}
-
-template <typename Encoding, typename Allocator>
-inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &root,
-                   const std::string &key,
-                   const rapidjson::GenericValue<Encoding, Allocator> &member)
-    -> void {
-  return assign(root, root, key, member);
-}
-
-template <typename Encoding, typename Allocator>
-inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &root,
-                   const std::string &key,
-                   rapidjson::GenericValue<Encoding, Allocator> &&member)
-    -> void {
-  return assign(root, root, key, member);
-}
-
-namespace object {
-template <typename Encoding, typename Allocator>
-inline auto cbegin(const rapidjson::GenericValue<Encoding, Allocator> &value)
-    -> rapidjson::Value::ConstMemberIterator {
-  assert(is_object(value));
-  return value.MemberBegin();
-}
-
-template <typename Encoding, typename Allocator>
-inline auto cend(const rapidjson::GenericValue<Encoding, Allocator> &value)
-    -> rapidjson::Value::ConstMemberIterator {
-  assert(is_object(value));
-  return value.MemberEnd();
-}
-
-template <typename Encoding, typename Allocator>
-inline auto begin(rapidjson::GenericValue<Encoding, Allocator> &value)
-    -> rapidjson::Value::MemberIterator {
-  assert(is_object(value));
-  return value.MemberBegin();
-}
-
-template <typename Encoding, typename Allocator>
-inline auto end(rapidjson::GenericValue<Encoding, Allocator> &value)
-    -> rapidjson::Value::MemberIterator {
-  assert(is_object(value));
-  return value.MemberEnd();
-}
-} // namespace object
 
 } // namespace sourcemeta::jsontoolkit
 

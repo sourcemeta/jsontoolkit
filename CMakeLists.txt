@@ -18,7 +18,10 @@ option(JSONTOOLKIT_RAPIDJSON "Build with RapidJSON support" ON)
 set(JSONTOOLKIT_JSON_FILES include/jsontoolkit/json.h)
 if(JSONTOOLKIT_RAPIDJSON)
   include(cmake/rapidjson.cmake)
-  list(APPEND JSONTOOLKIT_JSON_FILES include/jsontoolkit/json/rapidjson.h)
+  list(APPEND JSONTOOLKIT_JSON_FILES
+    include/jsontoolkit/json/rapidjson/read.h
+    include/jsontoolkit/json/rapidjson/write.h
+    include/jsontoolkit/json/rapidjson/iterators.h)
 endif()
 add_library(sourcemeta_jsontoolkit_json INTERFACE ${JSONTOOLKIT_JSON_FILES})
 target_include_directories(sourcemeta_jsontoolkit_json INTERFACE include)
