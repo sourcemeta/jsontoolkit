@@ -15,7 +15,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(JSONTOOLKIT_RAPIDJSON "Build with RapidJSON support" ON)
 
 # JSON
-set(JSONTOOLKIT_JSON_FILES include/jsontoolkit/json.h)
+set(JSONTOOLKIT_JSON_FILES
+  include/jsontoolkit/read.h
+  include/jsontoolkit/write.h
+  include/jsontoolkit/iterators.h)
 if(JSONTOOLKIT_RAPIDJSON)
   include(cmake/rapidjson.cmake)
   list(APPEND JSONTOOLKIT_JSON_FILES

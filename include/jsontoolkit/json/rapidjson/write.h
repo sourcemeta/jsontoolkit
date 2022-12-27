@@ -1,6 +1,8 @@
 #ifndef JSONTOOLKIT_JSON_RAPIDJSON_WRITE_H_
 #define JSONTOOLKIT_JSON_RAPIDJSON_WRITE_H_
 
+#include "read.h"
+
 #include <cassert>     // assert
 #include <cstdint>     // std::int64_t
 #include <string>      // std::string

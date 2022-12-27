@@ -1,8 +1,12 @@
 #include <algorithm> // std::all_of
 #include <gtest/gtest.h>
-#include <jsontoolkit/json.h>
+#include <jsontoolkit/iterators.h>
+#include <jsontoolkit/read.h>
+#include <jsontoolkit/write.h>
 #include <stdexcept> // std::domain_error
 #include <utility>   // std::move
+
+// TODO: Separate tests by read/write/iterators
 
 TEST(CATEGORY, is_boolean_true) {
   const auto document{sourcemeta::jsontoolkit::parse("true")};
