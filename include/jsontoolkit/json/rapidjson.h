@@ -50,6 +50,12 @@ inline auto from(std::nullptr_t) -> rapidjson::Value {
   return result;
 }
 
+inline auto from(std::int64_t value) -> rapidjson::Value {
+  rapidjson::Value result;
+  result.SetInt64(value);
+  return result;
+}
+
 template <typename Encoding, typename Allocator>
 inline auto set(rapidjson::GenericValue<Encoding, Allocator> &value,
                 std::nullptr_t) -> void {
