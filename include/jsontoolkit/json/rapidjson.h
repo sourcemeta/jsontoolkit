@@ -233,6 +233,17 @@ inline auto clear(rapidjson::GenericValue<Encoding, Allocator> &value) -> void {
   value.EraseMember(value.MemberBegin(), value.MemberEnd());
 }
 
+template <typename Encoding, typename Allocator>
+inline auto assign(rapidjson::GenericValue<Encoding, Allocator> &value,
+                   const std::string &key,
+                   const rapidjson::GenericValue<Encoding, Allocator> &member)
+    -> void {
+  assert(is_object(value));
+  rapidjson::GenericDocument<Encoding, Allocator> document;
+  value[key] = rapidjson::GenericValue<Encoding, Allocator>{
+      member, document.GetAllocator()};
+}
+
 namespace object {
 template <typename Encoding, typename Allocator>
 inline auto cbegin(const rapidjson::GenericValue<Encoding, Allocator> &value)
