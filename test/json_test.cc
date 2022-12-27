@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 #include <jsontoolkit/json.h>
 #include <stdexcept> // std::domain_error
+#include <utility>   // std::move
 
 TEST(CATEGORY, is_boolean_true) {
   const auto document{sourcemeta::jsontoolkit::parse("true")};
@@ -1554,23 +1555,22 @@ TEST(CATEGORY, key_copy_assignment_same_type_parsed) {
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value2), "baz");
 }
 
-// TEST(CATEGORY, key_move_assignment_same_type_parsed) {
-// const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
-// document.parse();
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-// EXPECT_TRUE(document.at("foo").is_string());
-// EXPECT_EQ(document.at("foo"), "bar");
-
-// sourcemeta::jsontoolkit::JSON<std::string> value{"\"baz\"")};
-// value.parse();
-// document.assign("foo", std::move(value));
-
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-// EXPECT_TRUE(document.at("foo").is_string());
-// EXPECT_EQ(document.at("foo"), "baz");
-// }
+TEST(CATEGORY, key_move_assignment_same_type_parsed) {
+  auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  const auto &value1{sourcemeta::jsontoolkit::get(document, "foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "bar");
+  // TODO: Remove class constructor
+  const auto new_value{sourcemeta::jsontoolkit::from(std::string{"baz"})};
+  sourcemeta::jsontoolkit::assign(document, "foo", std::move(new_value));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  const auto &value2{sourcemeta::jsontoolkit::get(document, "foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value2));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value2), "baz");
+}
 
 // TEST(CATEGORY, key_copy_assignment_different_type_parsed) {
 // const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};

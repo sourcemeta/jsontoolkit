@@ -244,6 +244,15 @@ inline auto assign(rapidjson::GenericValue<Encoding, Allocator> &value,
       member, document.GetAllocator()};
 }
 
+template <typename Encoding, typename Allocator>
+inline auto assign(rapidjson::GenericValue<Encoding, Allocator> &value,
+                   const std::string &key,
+                   rapidjson::GenericValue<Encoding, Allocator> &&member)
+    -> void {
+  assert(is_object(value));
+  value[key] = member;
+}
+
 namespace object {
 template <typename Encoding, typename Allocator>
 inline auto cbegin(const rapidjson::GenericValue<Encoding, Allocator> &value)
