@@ -37,7 +37,8 @@ inline auto from(const std::string &value) -> rapidjson::Value {
   return rapidjson::Value{value, document.GetAllocator()};
 }
 
-inline auto from(bool value) -> rapidjson::Value {
+template <typename T, typename = std::enable_if_t<std::is_same_v<T, bool>>>
+inline auto from(T value) -> rapidjson::Value {
   rapidjson::Value result;
   result.SetBool(value);
   return result;
