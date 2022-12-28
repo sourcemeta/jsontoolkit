@@ -265,6 +265,19 @@ TEST(CATEGORY, array_equality_with_padding) {
   EXPECT_FALSE(right == extra);
 }
 
+TEST(CATEGORY, from_real_number) {
+  const auto document{sourcemeta::jsontoolkit::from(3.4)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 3.4);
+}
+
+TEST(CATEGORY, from_real_integral_number) {
+  const auto document{sourcemeta::jsontoolkit::from(3.0)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 3.0);
+}
+
 TEST(CATEGORY, true_bool) {
   const auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));

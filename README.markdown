@@ -65,7 +65,7 @@ using `auto`.
 
 <!-- TODO: Allow parsing from an input stream -->
 
-##### `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t)`
+##### `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t | double)`
 
 Create a JSON document from a set of supported C++ types. For example:
 
@@ -74,12 +74,12 @@ const auto my_null{sourcemeta::jsontoolkit::from(nullptr)};
 const auto my_string{sourcemeta::jsontoolkit::from("Foo Bar")};
 const auto my_bool{sourcemeta::jsontoolkit::from(true)};
 const auto my_integer{sourcemeta::jsontoolkit::from(4)};
+const auto my_real{sourcemeta::jsontoolkit::from(3.14)};
 ```
 
 These functions are particularly handy for scalar types when passing them to
 functions that modify the JSON document and take other JSON values as input.
 
-<!-- `(TODO) JSON from(double)` -->
 <!-- `(TODO) JSON from(const std::vector<???> &)` -->
 <!-- `(TODO) JSON from(const std::map<std::string, ???> &)` -->
 <!-- `(TODO) JSON from(const std::unordered_map<std::string, ???> &)` -->

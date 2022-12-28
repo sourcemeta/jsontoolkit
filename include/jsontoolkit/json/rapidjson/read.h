@@ -38,11 +38,6 @@ inline auto from(const std::string &value) -> rapidjson::Document {
   return document;
 }
 
-template <typename T, typename = std::enable_if_t<std::is_same_v<T, bool>>>
-inline auto from(T value) -> rapidjson::Document {
-  return value ? parse("true") : parse("false");
-}
-
 inline auto from(std::nullptr_t) -> rapidjson::Document {
   return parse("null");
 }
@@ -51,6 +46,20 @@ inline auto from(std::int64_t value) -> rapidjson::Document {
   rapidjson::Document document;
   document.SetInt64(value);
   return document;
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_same_v<T, double>, rapidjson::Document>
+from(T value) {
+  rapidjson::Document document;
+  document.SetDouble(value);
+  return document;
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_same_v<T, bool>, rapidjson::Document>
+from(T value) {
+  return value ? parse("true") : parse("false");
 }
 
 template <typename Encoding, typename Allocator>
