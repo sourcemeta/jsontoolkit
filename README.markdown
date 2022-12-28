@@ -49,58 +49,58 @@ underlying JSON types. It is recommended to refer to this type as `auto`.
 
 ### Creation
 
-##### `sourcemeta::jsontoolkit::parse(const std::string &source) -> JSON`
+##### `JSON sourcemeta::jsontoolkit::parse(const std::string &source)`
 
 Create a JSON document from a JSON string.
 
-##### `sourcemeta::jsontoolkit::from(const std::string &) -> JSON`
+##### `JSON sourcemeta::jsontoolkit::from(const std::string &)`
 
 Create a JSON string document from a string literal.
 
-##### `sourcemeta::jsontoolkit::from(std::nullptr_t) -> JSON`
+##### `JSON sourcemeta::jsontoolkit::from(std::nullptr_t)`
 
 Create a JSON null document from a `nullptr` literal.
 
-##### `sourcemeta::jsontoolkit::from(bool) -> JSON`
+##### `JSON sourcemeta::jsontoolkit::from(bool)`
 
 Create a JSON boolean document from a boolean literal.
 
-##### `sourcemeta::jsontoolkit::from(std::int64_t) -> JSON`
+##### `JSON sourcemeta::jsontoolkit::from(std::int64_t)`
 
 Create a JSON integer document from an `std::int64_t` literal.
 
-##### `(TODO) sourcemeta::jsontoolkit::from(double) -> JSON`
-##### `(TODO) sourcemeta::jsontoolkit::from(const std::vector<???> &) -> JSON`
-##### `(TODO) sourcemeta::jsontoolkit::from(const std::map<std::string, ???> &) -> JSON`
-##### `(TODO) sourcemeta::jsontoolkit::from(const std::unordered_map<std::string, ???> &) -> JSON`
+##### `(TODO) JSON sourcemeta::jsontoolkit::from(double)`
+##### `(TODO) JSON sourcemeta::jsontoolkit::from(const std::vector<???> &)`
+##### `(TODO) JSON sourcemeta::jsontoolkit::from(const std::map<std::string, ???> &)`
+##### `(TODO) JSON sourcemeta::jsontoolkit::from(const std::unordered_map<std::string, ???> &)`
 
 ### Types
 
-##### `sourcemeta::jsontoolkit::is_boolean(const JSON &) -> bool`
+##### `bool sourcemeta::jsontoolkit::is_boolean(const JSON &)`
 
 Check if the input JSON document is a boolean.
 
-##### `sourcemeta::jsontoolkit::is_null(const JSON &) -> bool`
+##### `bool sourcemeta::jsontoolkit::is_null(const JSON &)`
 
 Check if the input JSON document is null.
 
-##### `sourcemeta::jsontoolkit::is_array(const JSON &) -> bool`
+##### `bool sourcemeta::jsontoolkit::is_array(const JSON &)`
 
 Check if the input JSON document is an array.
 
-##### `sourcemeta::jsontoolkit::is_object(const JSON &) -> bool`
+##### `bool sourcemeta::jsontoolkit::is_object(const JSON &)`
 
 Check if the input JSON document is an object.
 
-##### `sourcemeta::jsontoolkit::is_string(const JSON &) -> bool`
+##### `bool sourcemeta::jsontoolkit::is_string(const JSON &)`
 
 Check if the input JSON document is a string.
 
-##### `sourcemeta::jsontoolkit::is_integer(const JSON &) -> bool`
+##### `bool sourcemeta::jsontoolkit::is_integer(const JSON &)`
 
 Check if the input JSON document is an integer.
 
-##### `sourcemeta::jsontoolkit::is_real(const JSON &) -> bool`
+##### `bool sourcemeta::jsontoolkit::is_real(const JSON &)`
 
 Check if the input JSON document is a real type.
 
