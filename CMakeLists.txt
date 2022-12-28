@@ -12,27 +12,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Options
-# TODO: Add a string option instead for specifying the backend
-option(JSONTOOLKIT_RAPIDJSON "Build with RapidJSON support" ON)
+set(JSONTOOLKIT_BACKEND "rapidjson" CACHE STRING "Set the JSON Toolkit backend")
 
 # JSON
-set(JSONTOOLKIT_JSON_FILES
+add_library(sourcemeta_jsontoolkit_json INTERFACE
   include/jsontoolkit/read.h
   include/jsontoolkit/write.h
-  include/jsontoolkit/iterators.h)
-if(JSONTOOLKIT_RAPIDJSON)
-  include(cmake/rapidjson.cmake)
-  list(APPEND JSONTOOLKIT_JSON_FILES
-    include/jsontoolkit/json/rapidjson/read.h
-    include/jsontoolkit/json/rapidjson/write.h
-    include/jsontoolkit/json/rapidjson/iterators.h)
-endif()
-add_library(sourcemeta_jsontoolkit_json INTERFACE ${JSONTOOLKIT_JSON_FILES})
+  include/jsontoolkit/iterators.h
+  include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/read.h
+  include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/write.h
+  include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/iterators.h)
 target_include_directories(sourcemeta_jsontoolkit_json INTERFACE include)
-if(JSONTOOLKIT_RAPIDJSON)
+include(cmake/${JSONTOOLKIT_BACKEND}.cmake)
+target_compile_definitions(sourcemeta_jsontoolkit_json INTERFACE
+  JSONTOOLKIT_BACKEND=${JSONTOOLKIT_BACKEND})
+if(JSONTOOLKIT_BACKEND STREQUAL "rapidjson")
   target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE rapidjson)
-  # TODO: Turn this into a JSONTOOLKIT_BACKEND string definition instead
-  target_compile_definitions(sourcemeta_jsontoolkit_json INTERFACE JSONTOOLKIT_RAPIDJSON)
 endif()
 
 if(PROJECT_IS_TOP_LEVEL)
