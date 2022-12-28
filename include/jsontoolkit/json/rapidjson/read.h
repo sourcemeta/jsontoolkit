@@ -44,10 +44,8 @@ inline auto from(T value) -> rapidjson::Document {
   return value ? parse("true") : parse("false");
 }
 
-inline auto from(std::nullptr_t) -> rapidjson::Value {
-  rapidjson::Value result;
-  result.SetNull();
-  return result;
+inline auto from(std::nullptr_t) -> rapidjson::Document {
+  return parse("null");
 }
 
 inline auto from(std::int64_t value) -> rapidjson::Value {
