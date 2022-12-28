@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Options
+# TODO: Add a string option instead for specifying the backend
 option(JSONTOOLKIT_RAPIDJSON "Build with RapidJSON support" ON)
 
 # JSON
@@ -30,6 +31,7 @@ add_library(sourcemeta_jsontoolkit_json INTERFACE ${JSONTOOLKIT_JSON_FILES})
 target_include_directories(sourcemeta_jsontoolkit_json INTERFACE include)
 if(JSONTOOLKIT_RAPIDJSON)
   target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE rapidjson)
+  # TODO: Turn this into a JSONTOOLKIT_BACKEND string definition instead
   target_compile_definitions(sourcemeta_jsontoolkit_json INTERFACE JSONTOOLKIT_RAPIDJSON)
 endif()
 
