@@ -66,6 +66,10 @@ The return type of this function is backend-specific. To write code that is
 portable across backends, it is recommended to treat this as an opaque type
 using `auto`.
 
+If parsing fails,
+[`std::domain_error`](https://en.cppreference.com/w/cpp/error/domain_error)
+with a human-friendly error string will be thrown.
+
 <!-- TODO: Allow parsing from an input stream -->
 
 #### `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t | double)`
@@ -127,31 +131,87 @@ std::cout << stream.str() << std::endl;
 
 #### `bool is_boolean(const JSON &)`
 
-Check if the input JSON document is a boolean.
+Check if the input JSON document is a boolean. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::parse("true")};
+assert(sourcemeta::jsontoolkit::is_boolean(document));
+```
 
 #### `bool is_null(const JSON &)`
 
-Check if the input JSON document is null.
+Check if the input JSON document is null. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::parse("null")};
+assert(sourcemeta::jsontoolkit::is_null(document));
+```
 
 #### `bool is_array(const JSON &)`
 
-Check if the input JSON document is an array.
+Check if the input JSON document is an array. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+assert(sourcemeta::jsontoolkit::is_array(document));
+```
 
 #### `bool is_object(const JSON &)`
 
-Check if the input JSON document is an object.
+Check if the input JSON document is an object. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+assert(sourcemeta::jsontoolkit::is_object(document));
+```
 
 #### `bool is_string(const JSON &)`
 
-Check if the input JSON document is a string.
+Check if the input JSON document is a string. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::parse("\"foo\"")};
+assert(sourcemeta::jsontoolkit::is_string(document));
+```
 
 #### `bool is_integer(const JSON &)`
 
-Check if the input JSON document is an integer.
+Check if the input JSON document is an integer. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::parse("5")};
+assert(sourcemeta::jsontoolkit::is_integer(document));
+```
 
 #### `bool is_real(const JSON &)`
 
-Check if the input JSON document is a real type.
+Check if the input JSON document is a real type. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::parse("3.14")};
+assert(sourcemeta::jsontoolkit::is_real(document));
+```
 
 ### Reading
 
