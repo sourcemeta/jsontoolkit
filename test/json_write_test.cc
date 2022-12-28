@@ -16,7 +16,8 @@ TEST(CATEGORY, set_null) {
 TEST(CATEGORY, set_negative_integer) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, -4);
+  // TODO: Remove this double document
+  sourcemeta::jsontoolkit::set(document, document, -4);
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_real(document));
 }
@@ -24,7 +25,8 @@ TEST(CATEGORY, set_negative_integer) {
 TEST(CATEGORY, set_negative_real) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, -4.3);
+  // TODO: Remove this double document
+  sourcemeta::jsontoolkit::set(document, document, -4.3);
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
 }
@@ -32,7 +34,8 @@ TEST(CATEGORY, set_negative_real) {
 TEST(CATEGORY, set_negative_integral_real) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, -4.0);
+  // TODO: Remove this double document
+  sourcemeta::jsontoolkit::set(document, document, -4.0);
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
 }
@@ -40,7 +43,8 @@ TEST(CATEGORY, set_negative_integral_real) {
 TEST(CATEGORY, set_positive_integer) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, 4);
+  // TODO: Remove this double document
+  sourcemeta::jsontoolkit::set(document, document, 4);
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_real(document));
 }
@@ -48,7 +52,8 @@ TEST(CATEGORY, set_positive_integer) {
 TEST(CATEGORY, set_positive_real) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, 4.3);
+  // TODO: Remove this double document
+  sourcemeta::jsontoolkit::set(document, document, 4.3);
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
 }
@@ -56,7 +61,8 @@ TEST(CATEGORY, set_positive_real) {
 TEST(CATEGORY, set_positive_integral_real) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, 4.0);
+  // TODO: Remove this double document
+  sourcemeta::jsontoolkit::set(document, document, 4.0);
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
 }
