@@ -13,6 +13,18 @@
 
 namespace sourcemeta::jsontoolkit {
 
+template <typename Encoding, typename Allocator>
+inline auto value(const rapidjson::GenericMember<Encoding, Allocator> &member)
+    -> const rapidjson::GenericValue<Encoding, Allocator> & {
+  return member.value;
+}
+
+template <typename Encoding, typename Allocator>
+inline auto value(rapidjson::GenericMember<Encoding, Allocator> &member)
+    -> rapidjson::GenericValue<Encoding, Allocator> & {
+  return member.value;
+}
+
 namespace object {
 template <typename Encoding, typename Allocator>
 inline auto cbegin(const rapidjson::GenericValue<Encoding, Allocator> &value)
