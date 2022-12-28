@@ -1,7 +1,7 @@
 .DEFAULT_GOAL = all
 CMAKE ?= cmake
 CTEST ?= ctest
-PRESET ?= debug
+PRESET ?= Debug
 BACKEND ?= rapidjson
 
 .PHONY: all
