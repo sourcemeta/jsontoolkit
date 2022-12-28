@@ -51,7 +51,19 @@ underlying JSON types. It is recommended to refer to this type as `auto`.
 
 ##### `JSON parse(const std::string &source)`
 
-Create a JSON document from a JSON string.
+Create a JSON document from a JSON string. For example, a JSON document that
+represents an array can be parsed as follows:
+
+```c++
+const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+assert(sourcemeta::jsontoolkit::is_array(document));
+```
+
+The return type of this function is backend-specific. To write code that is
+portable across backends, it is recommended to treat this as an opaque type
+using `auto`.
+
+<!-- TODO: Allow parsing from an input stream -->
 
 ##### `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t)`
 
