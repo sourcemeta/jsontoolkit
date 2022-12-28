@@ -35,15 +35,8 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/deps/jsontoolkit")
 target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit_json)
 ```
 
-Building JSON Toolkit
----------------------
-
-**Dependencies**
-
-- RapidJSON
-  - On macOS: `brew install rapidjson`
-- GoogleTest
-  - On macOS: `brew install googletest`
+Developing JSON Toolkit
+-----------------------
 
 JSON Toolkit makes use of the [CMake](https://cmake.org) build system. You can
 configure, build and test the project as follows:
@@ -54,3 +47,6 @@ cmake -S . -B ./build -DCMAKE_BUILD_TYPE=<Debug|Release> -DJSONTOOLKIT_BACKEND=<
 cmake --build ./build
 ctest --test-dir ./build
 ```
+
+Building and running the test suite requires the presence of
+[GoogleTest](https://google.github.io/googletest/) in the system.
