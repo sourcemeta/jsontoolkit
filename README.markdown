@@ -115,9 +115,6 @@ Check if the input JSON document is a real type.
 ##### `std::int64_t sourcemeta::jsontoolkit::to_integer(const JSON &)`
 ##### `double sourcemeta::jsontoolkit::to_real(const JSON &)`
 ##### `std::string sourcemeta::jsontoolkit::to_string(const JSON &)`
-
-#### Containers
-
 ##### `std::size_t sourcemeta::jsontoolkit::size(const JSON &)`
 ##### `bool sourcemeta::jsontoolkit::empty(const JSON &)`
 ##### `JSON& sourcemeta::jsontoolkit::get(const JSON &, std::size_t index)`
@@ -125,6 +122,20 @@ Check if the input JSON document is a real type.
 ##### `bool sourcemeta::jsontoolkit::defines(const JSON &, const std::string &key)`
 ##### `bool sourcemeta::jsontoolkit::contains(const JSON &, const JSON &element)`
 ##### `bool sourcemeta::jsontoolkit::contains(const JSON &, const std::string &element)`
+
+### Writing
+
+##### `(TODO) void sourcemeta::jsontoolkit::set(JSON &root, JSON &value, bool)`
+##### `void sourcemeta::jsontoolkit::set(JSON &root, JSON &value, std::nullptr_t)`
+##### `void sourcemeta::jsontoolkit::set(JSON &root, JSON &value, std::int64_t)`
+##### `void sourcemeta::jsontoolkit::set(JSON &root, JSON &value, double)`
+##### `void sourcemeta::jsontoolkit::set(JSON &root, JSON &value, const std::string &)`
+
+##### `void sourcemeta::jsontoolkit::erase(JSON &, const std::string &key)`
+##### `void sourcemeta::jsontoolkit::clear(JSON &)`
+
+##### `void sourcemeta::jsontoolkit::assign(JSON &root, JSON &value, const std::string &key, JSON &member)`
+##### `void sourcemeta::jsontoolkit::assign(JSON &root, JSON &value, const std::string &key, const std::string &member)`
 
 ### Iterators
 
