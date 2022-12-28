@@ -49,34 +49,34 @@ underlying JSON types. It is recommended to refer to this type as `auto`.
 
 ### Creation
 
-#### `sourcemeta::jsontoolkit::parse(const std::string &source) -> JSON`
+##### `sourcemeta::jsontoolkit::parse(const std::string &source) -> JSON`
 
 Create a JSON document from a JSON string.
 
-#### `sourcemeta::jsontoolkit::from(const std::string &) -> JSON`
+##### `sourcemeta::jsontoolkit::from(const std::string &) -> JSON`
 
 Create a JSON string document from a string literal.
 
-#### `sourcemeta::jsontoolkit::from(std::nullptr_t) -> JSON`
+##### `sourcemeta::jsontoolkit::from(std::nullptr_t) -> JSON`
 
 Create a JSON null document from a `nullptr` literal.
 
-#### `sourcemeta::jsontoolkit::from(bool) -> JSON`
+##### `sourcemeta::jsontoolkit::from(bool) -> JSON`
 
 Create a JSON boolean document from a boolean literal.
 
-#### `sourcemeta::jsontoolkit::from(std::int64_t) -> JSON`
+##### `sourcemeta::jsontoolkit::from(std::int64_t) -> JSON`
 
 Create a JSON integer document from an `std::int64_t` literal.
 
-#### `(TODO) sourcemeta::jsontoolkit::from(double) -> JSON`
-#### `(TODO) sourcemeta::jsontoolkit::from(const std::vector<???> &) -> JSON`
-#### `(TODO) sourcemeta::jsontoolkit::from(const std::map<std::string, ???> &) -> JSON`
-#### `(TODO) sourcemeta::jsontoolkit::from(const std::unordered_map<std::string, ???> &) -> JSON`
+##### `(TODO) sourcemeta::jsontoolkit::from(double) -> JSON`
+##### `(TODO) sourcemeta::jsontoolkit::from(const std::vector<???> &) -> JSON`
+##### `(TODO) sourcemeta::jsontoolkit::from(const std::map<std::string, ???> &) -> JSON`
+##### `(TODO) sourcemeta::jsontoolkit::from(const std::unordered_map<std::string, ???> &) -> JSON`
 
 ### Read
 
-#### `sourcemeta::jsontoolkit::is_boolean(const JSON &document) -> bool`
+##### `sourcemeta::jsontoolkit::is_boolean(const JSON &document) -> bool`
 
 ### Write
 
