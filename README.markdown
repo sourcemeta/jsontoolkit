@@ -138,9 +138,8 @@ Check if the input JSON document is a real type.
 
 ##### `void erase(JSON &, const std::string &key)`
 ##### `void clear(JSON &)`
-
-##### `(TODO REMOVE, use from) void assign(JSON &root, JSON &value, const std::string &key, JSON & | const std::string &)`
-##### `(TODO REMOVE, use from) void assign(JSON &root, const std::string &key, JSON & | const std::string &)`
+##### `void assign(JSON &root, JSON &value, const std::string &key, JSON &)`
+##### `void assign(JSON &root, const std::string &key, JSON &)`
 
 ### Iterators
 

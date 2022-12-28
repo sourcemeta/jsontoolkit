@@ -114,21 +114,6 @@ inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &root,
 }
 
 template <typename Encoding, typename Allocator>
-inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &root,
-                   rapidjson::GenericValue<Encoding, Allocator> &value,
-                   const std::string &key, const std::string &member) -> void {
-  return assign(root, value, key,
-                rapidjson::Value{member.c_str(), root.GetAllocator()});
-}
-
-template <typename Encoding, typename Allocator>
-inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &value,
-                   const std::string &key, const std::string &member) -> void {
-  return assign(value, key,
-                rapidjson::Value{member.c_str(), value.GetAllocator()});
-}
-
-template <typename Encoding, typename Allocator>
 inline auto assign(rapidjson::GenericDocument<Encoding, Allocator> &,
                    rapidjson::GenericValue<Encoding, Allocator> &value,
                    const std::string &key,
