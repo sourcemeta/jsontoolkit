@@ -24,6 +24,12 @@ inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &,
 }
 
 template <typename Encoding, typename Allocator>
+inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &value,
+                std::nullptr_t) -> void {
+  return set(value, value, nullptr);
+}
+
+template <typename Encoding, typename Allocator>
 inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &,
                 rapidjson::GenericValue<Encoding, Allocator> &value,
                 std::int64_t new_value) -> void {
