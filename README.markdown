@@ -96,7 +96,7 @@ functions that modify the JSON document and take other JSON values as input.
 Stringify the input JSON document into a given C++ standard output stream in
 compact mode. For example:
 
-```c+
+```c++
 #include <jsontoolkit/json.h>
 #include <iostream>
 #include <sstream>
@@ -112,7 +112,7 @@ std::cout << stream.str() << std::endl;
 Stringify the input JSON document into a given C++ standard output stream in
 pretty mode, indenting the output using 4 spaces. For example:
 
-```c+
+```c++
 #include <jsontoolkit/json.h>
 #include <iostream>
 #include <sstream>
