@@ -17,7 +17,8 @@
 namespace sourcemeta::jsontoolkit {
 
 template <typename Encoding, typename Allocator>
-inline auto set(rapidjson::GenericValue<Encoding, Allocator> &value,
+inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &,
+                rapidjson::GenericValue<Encoding, Allocator> &value,
                 std::nullptr_t) -> void {
   value.SetNull();
 }

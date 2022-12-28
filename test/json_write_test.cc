@@ -7,7 +7,8 @@ TEST(CATEGORY, set_null) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_null(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, nullptr);
+  // TODO: Remove this double document
+  sourcemeta::jsontoolkit::set(document, document, nullptr);
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_null(document));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_boolean(document));
 }
