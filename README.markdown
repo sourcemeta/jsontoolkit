@@ -49,7 +49,7 @@ underlying JSON types. It is recommended to refer to this type as `auto`.
 
 ### Conversion
 
-##### `JSON parse(const std::string &source)`
+#### `JSON parse(const std::string &source)`
 
 Create a JSON document from a JSON string. For example, a JSON document that
 represents an array can be parsed as follows:
@@ -68,9 +68,9 @@ using `auto`.
 
 <!-- TODO: Allow parsing from an input stream -->
 
-##### `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t | double)`
+#### `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t | double)`
 
-Create a JSON document from a set of supported C++ types. For example:
+Create a JSON document from a set of supported basic C++ types. For example:
 
 ```c++
 #include <jsontoolkit/json.h>
@@ -91,7 +91,7 @@ functions that modify the JSON document and take other JSON values as input.
 
 ### Stringify
 
-##### `void stringify(const JSON &, std::basic_ostream<C, T> &)`
+#### `void stringify(const JSON &, std::basic_ostream<C, T> &)`
 
 Stringify the input JSON document into a given C++ standard output stream in
 compact mode. For example:
@@ -107,7 +107,7 @@ sourcemeta::jsontoolkit::stringify(document, stream);
 std::cout << stream.str() << std::endl;
 ```
 
-##### `void prettify(const JSON &, std::basic_ostream<C, T> &)`
+#### `void prettify(const JSON &, std::basic_ostream<C, T> &)`
 
 Stringify the input JSON document into a given C++ standard output stream in
 pretty mode, indenting the output using 4 spaces. For example:
@@ -125,64 +125,64 @@ std::cout << stream.str() << std::endl;
 
 ### Types
 
-##### `bool is_boolean(const JSON &)`
+#### `bool is_boolean(const JSON &)`
 
 Check if the input JSON document is a boolean.
 
-##### `bool is_null(const JSON &)`
+#### `bool is_null(const JSON &)`
 
 Check if the input JSON document is null.
 
-##### `bool is_array(const JSON &)`
+#### `bool is_array(const JSON &)`
 
 Check if the input JSON document is an array.
 
-##### `bool is_object(const JSON &)`
+#### `bool is_object(const JSON &)`
 
 Check if the input JSON document is an object.
 
-##### `bool is_string(const JSON &)`
+#### `bool is_string(const JSON &)`
 
 Check if the input JSON document is a string.
 
-##### `bool is_integer(const JSON &)`
+#### `bool is_integer(const JSON &)`
 
 Check if the input JSON document is an integer.
 
-##### `bool is_real(const JSON &)`
+#### `bool is_real(const JSON &)`
 
 Check if the input JSON document is a real type.
 
 ### Reading
 
-##### `bool to_boolean(const JSON &)`
-##### `std::int64_t to_integer(const JSON &)`
-##### `double to_real(const JSON &)`
-##### `std::string to_string(const JSON &)`
-##### `std::size_t size(const JSON &)`
-##### `bool empty(const JSON &)`
-##### `JSON& get(const JSON &, std::size_t index | const std::string &key)`
-##### `bool defines(const JSON &, const std::string &key)`
+#### `bool to_boolean(const JSON &)`
+#### `std::int64_t to_integer(const JSON &)`
+#### `double to_real(const JSON &)`
+#### `std::string to_string(const JSON &)`
+#### `std::size_t size(const JSON &)`
+#### `bool empty(const JSON &)`
+#### `JSON& get(const JSON &, std::size_t index | const std::string &key)`
+#### `bool defines(const JSON &, const std::string &key)`
 
 ### Writing
 
-##### `(TODO REMOVE, use from) void set(JSON &root, JSON &value, std::nullptr_t | std::int64_t | double | const std::string &)`
-##### `(TODO REMOVE, use from) void set(JSON &root, std::nullptr_t | std::int64_t | double | const std::string &)`
+#### `(TODO REMOVE, use from) void set(JSON &root, JSON &value, std::nullptr_t | std::int64_t | double | const std::string &)`
+#### `(TODO REMOVE, use from) void set(JSON &root, std::nullptr_t | std::int64_t | double | const std::string &)`
 <!-- `(TODO) void set(JSON &root, JSON &value, bool)` -->
 
-##### `void erase(JSON &, const std::string &key)`
-##### `void clear(JSON &)`
-##### `void assign(JSON &root, JSON &value, const std::string &key, JSON &)`
-##### `void assign(JSON &root, const std::string &key, JSON &)`
+#### `void erase(JSON &, const std::string &key)`
+#### `void clear(JSON &)`
+#### `void assign(JSON &root, JSON &value, const std::string &key, JSON &)`
+#### `void assign(JSON &root, const std::string &key, JSON &)`
 
 ### Iterators
 
-##### `Iterator object::begin(JSON &)`
-##### `Iterator object::end(JSON &)`
-##### `ConstIterator object::cbegin(const JSON &)`
-##### `ConstIterator object::cend(const JSON &)`
-##### `JSON& value(const IteratorPair &)`
-##### `(TODO) std::string& key(const IteratorPair &)`
+#### `Iterator object::begin(JSON &)`
+#### `Iterator object::end(JSON &)`
+#### `ConstIterator object::cbegin(const JSON &)`
+#### `ConstIterator object::cend(const JSON &)`
+#### `JSON& value(const IteratorPair &)`
+#### `(TODO) std::string& key(const IteratorPair &)`
 
 Developing JSON Toolkit
 -----------------------
