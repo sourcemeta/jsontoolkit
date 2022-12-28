@@ -49,102 +49,102 @@ underlying JSON types. It is recommended to refer to this type as `auto`.
 
 ### Conversion
 
-##### `JSON sourcemeta::jsontoolkit::parse(const std::string &source)`
+##### `JSON parse(const std::string &source)`
 
 Create a JSON document from a JSON string.
 
-##### `JSON sourcemeta::jsontoolkit::from(const std::string &)`
+##### `JSON from(const std::string &)`
 
 Create a JSON string document from a string literal.
 
-##### `JSON sourcemeta::jsontoolkit::from(std::nullptr_t)`
+##### `JSON from(std::nullptr_t)`
 
 Create a JSON null document from a `nullptr` literal.
 
-##### `JSON sourcemeta::jsontoolkit::from(bool)`
+##### `JSON from(bool)`
 
 Create a JSON boolean document from a boolean literal.
 
-##### `JSON sourcemeta::jsontoolkit::from(std::int64_t)`
+##### `JSON from(std::int64_t)`
 
 Create a JSON integer document from an `std::int64_t` literal.
 
-##### `(TODO) JSON sourcemeta::jsontoolkit::from(double)`
-##### `(TODO) JSON sourcemeta::jsontoolkit::from(const std::vector<???> &)`
-##### `(TODO) JSON sourcemeta::jsontoolkit::from(const std::map<std::string, ???> &)`
-##### `(TODO) JSON sourcemeta::jsontoolkit::from(const std::unordered_map<std::string, ???> &)`
+##### `(TODO) JSON from(double)`
+##### `(TODO) JSON from(const std::vector<???> &)`
+##### `(TODO) JSON from(const std::map<std::string, ???> &)`
+##### `(TODO) JSON from(const std::unordered_map<std::string, ???> &)`
 
 ### Stringify
 
-##### `void sourcemeta::jsontoolkit::stringify(const JSON &, std::basic_ostream<C, T> &)`
-##### `void sourcemeta::jsontoolkit::prettify(const JSON &, std::basic_ostream<C, T> &)`
+##### `void stringify(const JSON &, std::basic_ostream<C, T> &)`
+##### `void prettify(const JSON &, std::basic_ostream<C, T> &)`
 
 ### Types
 
-##### `bool sourcemeta::jsontoolkit::is_boolean(const JSON &)`
+##### `bool is_boolean(const JSON &)`
 
 Check if the input JSON document is a boolean.
 
-##### `bool sourcemeta::jsontoolkit::is_null(const JSON &)`
+##### `bool is_null(const JSON &)`
 
 Check if the input JSON document is null.
 
-##### `bool sourcemeta::jsontoolkit::is_array(const JSON &)`
+##### `bool is_array(const JSON &)`
 
 Check if the input JSON document is an array.
 
-##### `bool sourcemeta::jsontoolkit::is_object(const JSON &)`
+##### `bool is_object(const JSON &)`
 
 Check if the input JSON document is an object.
 
-##### `bool sourcemeta::jsontoolkit::is_string(const JSON &)`
+##### `bool is_string(const JSON &)`
 
 Check if the input JSON document is a string.
 
-##### `bool sourcemeta::jsontoolkit::is_integer(const JSON &)`
+##### `bool is_integer(const JSON &)`
 
 Check if the input JSON document is an integer.
 
-##### `bool sourcemeta::jsontoolkit::is_real(const JSON &)`
+##### `bool is_real(const JSON &)`
 
 Check if the input JSON document is a real type.
 
 ### Reading
 
-##### `bool sourcemeta::jsontoolkit::to_boolean(const JSON &)`
-##### `std::int64_t sourcemeta::jsontoolkit::to_integer(const JSON &)`
-##### `double sourcemeta::jsontoolkit::to_real(const JSON &)`
-##### `std::string sourcemeta::jsontoolkit::to_string(const JSON &)`
-##### `std::size_t sourcemeta::jsontoolkit::size(const JSON &)`
-##### `bool sourcemeta::jsontoolkit::empty(const JSON &)`
-##### `JSON& sourcemeta::jsontoolkit::get(const JSON &, std::size_t index)`
-##### `JSON& sourcemeta::jsontoolkit::get(const JSON &, const std::string &key)`
-##### `bool sourcemeta::jsontoolkit::defines(const JSON &, const std::string &key)`
-##### `bool sourcemeta::jsontoolkit::contains(const JSON &, const JSON &element)`
-##### `bool sourcemeta::jsontoolkit::contains(const JSON &, const std::string &element)`
+##### `bool to_boolean(const JSON &)`
+##### `std::int64_t to_integer(const JSON &)`
+##### `double to_real(const JSON &)`
+##### `std::string to_string(const JSON &)`
+##### `std::size_t size(const JSON &)`
+##### `bool empty(const JSON &)`
+##### `JSON& get(const JSON &, std::size_t index)`
+##### `JSON& get(const JSON &, const std::string &key)`
+##### `bool defines(const JSON &, const std::string &key)`
+##### `bool contains(const JSON &, const JSON &element)`
+##### `bool contains(const JSON &, const std::string &element)`
 
 ### Writing
 
-##### `(TODO) void sourcemeta::jsontoolkit::set(JSON &root, JSON &value, bool)`
-##### `void sourcemeta::jsontoolkit::set(JSON &root, JSON &value, std::nullptr_t)`
-##### `void sourcemeta::jsontoolkit::set(JSON &root, JSON &value, std::int64_t)`
-##### `void sourcemeta::jsontoolkit::set(JSON &root, JSON &value, double)`
-##### `void sourcemeta::jsontoolkit::set(JSON &root, JSON &value, const std::string &)`
+##### `(TODO) void set(JSON &root, JSON &value, bool)`
+##### `void set(JSON &root, JSON &value, std::nullptr_t)`
+##### `void set(JSON &root, JSON &value, std::int64_t)`
+##### `void set(JSON &root, JSON &value, double)`
+##### `void set(JSON &root, JSON &value, const std::string &)`
 
-##### `void sourcemeta::jsontoolkit::erase(JSON &, const std::string &key)`
-##### `void sourcemeta::jsontoolkit::clear(JSON &)`
+##### `void erase(JSON &, const std::string &key)`
+##### `void clear(JSON &)`
 
-##### `void sourcemeta::jsontoolkit::assign(JSON &root, JSON &value, const std::string &key, JSON &member)`
-##### `void sourcemeta::jsontoolkit::assign(JSON &root, JSON &value, const std::string &key, const std::string &member)`
+##### `void assign(JSON &root, JSON &value, const std::string &key, JSON &member)`
+##### `void assign(JSON &root, JSON &value, const std::string &key, const std::string &member)`
 
 ### Iterators
 
-##### `Iterator sourcemeta::jsontoolkit::object::begin(JSON &)`
-##### `Iterator sourcemeta::jsontoolkit::object::end(JSON &)`
-##### `ConstIterator sourcemeta::jsontoolkit::object::cbegin(const JSON &)`
-##### `ConstIterator sourcemeta::jsontoolkit::object::cend(const JSON &)`
-##### `JSON& sourcemeta::jsontoolkit::value(const IteratorPair &)`
-##### `(TODO) std::string& sourcemeta::jsontoolkit::key(const IteratorPair &)`
+##### `Iterator object::begin(JSON &)`
+##### `Iterator object::end(JSON &)`
+##### `ConstIterator object::cbegin(const JSON &)`
+##### `ConstIterator object::cend(const JSON &)`
+##### `JSON& value(const IteratorPair &)`
+##### `(TODO) std::string& key(const IteratorPair &)`
 
 Developing JSON Toolkit
 -----------------------
