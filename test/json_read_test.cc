@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <jsontoolkit/read.h>
-#include <utility>   // std::move
+#include <utility> // std::move
 
 TEST(CATEGORY, is_boolean_true) {
   const auto document{sourcemeta::jsontoolkit::parse("true")};
