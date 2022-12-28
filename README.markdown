@@ -129,7 +129,6 @@ Check if the input JSON document is a real type.
 ##### `bool empty(const JSON &)`
 ##### `JSON& get(const JSON &, std::size_t index | const std::string &key)`
 ##### `bool defines(const JSON &, const std::string &key)`
-##### `(TODO REMOVE, use from) bool contains(const JSON &, const JSON & | const std::string &)`
 
 ### Writing
 

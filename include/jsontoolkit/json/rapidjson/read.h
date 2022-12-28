@@ -205,12 +205,6 @@ contains(const rapidjson::GenericValue<Encoding, Allocator> &value,
   return false;
 }
 
-template <typename Encoding, typename Allocator>
-inline auto contains(const rapidjson::GenericValue<Encoding, Allocator> &value,
-                     const std::string &element) -> bool {
-  return contains(value, from(element));
-}
-
 } // namespace sourcemeta::jsontoolkit
 
 #endif

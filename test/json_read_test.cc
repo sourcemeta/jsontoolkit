@@ -248,12 +248,14 @@ TEST(CATEGORY, array_single_object_element_with_two_simple_keys) {
 
 TEST(CATEGORY, array_contains_string_key_true) {
   const auto document{sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\" ]")};
-  EXPECT_TRUE(sourcemeta::jsontoolkit::contains(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::contains(
+      document, sourcemeta::jsontoolkit::from("bar")));
 }
 
 TEST(CATEGORY, array_contains_string_key_false) {
   const auto document{sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\" ]")};
-  EXPECT_FALSE(sourcemeta::jsontoolkit::contains(document, "baz"));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::contains(
+      document, sourcemeta::jsontoolkit::from("baz")));
 }
 
 TEST(CATEGORY, array_equality_with_padding) {
