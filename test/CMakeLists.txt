@@ -16,4 +16,4 @@ macro(add_jsontoolkit_json_test backend)
   gtest_discover_tests(sourcemeta_jsontoolkit_json_unit_${backend})
 endmacro()
 
-add_jsontoolkit_json_test(rapidjson)
+add_jsontoolkit_json_test(${JSONTOOLKIT_BACKEND})
