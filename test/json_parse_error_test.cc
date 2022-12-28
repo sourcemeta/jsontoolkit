@@ -1,8 +1,6 @@
-#include <algorithm> // std::all_of
 #include <gtest/gtest.h>
 #include <jsontoolkit/read.h>
 #include <stdexcept> // std::domain_error
-#include <utility>   // std::move
 
 TEST(CATEGORY, empty_array_incomplete_right) {
   EXPECT_THROW(sourcemeta::jsontoolkit::parse("["), std::domain_error);

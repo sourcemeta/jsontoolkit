@@ -1,7 +1,5 @@
-#include <algorithm> // std::all_of
 #include <gtest/gtest.h>
 #include <jsontoolkit/read.h>
-#include <stdexcept> // std::domain_error
 #include <utility>   // std::move
 
 TEST(CATEGORY, is_boolean_true) {
@@ -1008,28 +1006,6 @@ TEST(CATEGORY, object_equality_with_padding) {
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
-}
-
-TEST(CATEGORY, object_const_all_of_true) {
-  const auto document{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
-  const bool result = std::all_of(
-      sourcemeta::jsontoolkit::object::cbegin(document),
-      sourcemeta::jsontoolkit::object::cend(document), [](const auto &pair) {
-        return sourcemeta::jsontoolkit::is_integer(pair.value);
-      });
-  EXPECT_TRUE(result);
-}
-
-TEST(CATEGORY, object_const_all_of_false) {
-  const auto document{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": \"2\" }")};
-  const bool result = std::all_of(
-      sourcemeta::jsontoolkit::object::cbegin(document),
-      sourcemeta::jsontoolkit::object::cend(document), [](const auto &pair) {
-        return sourcemeta::jsontoolkit::is_integer(pair.value);
-      });
-  EXPECT_FALSE(result);
 }
 
 // TEST(CATEGORY, assign_literal_lvalue_string) {
