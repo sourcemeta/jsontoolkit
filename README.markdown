@@ -74,9 +74,35 @@ Create a JSON integer document from an `std::int64_t` literal.
 ##### `(TODO) sourcemeta::jsontoolkit::from(const std::map<std::string, ???> &) -> JSON`
 ##### `(TODO) sourcemeta::jsontoolkit::from(const std::unordered_map<std::string, ???> &) -> JSON`
 
-### Read
+### Types
 
-##### `sourcemeta::jsontoolkit::is_boolean(const JSON &document) -> bool`
+##### `sourcemeta::jsontoolkit::is_boolean(const JSON &) -> bool`
+
+Check if the input JSON document is a boolean.
+
+##### `sourcemeta::jsontoolkit::is_null(const JSON &) -> bool`
+
+Check if the input JSON document is null.
+
+##### `sourcemeta::jsontoolkit::is_array(const JSON &) -> bool`
+
+Check if the input JSON document is an array.
+
+##### `sourcemeta::jsontoolkit::is_object(const JSON &) -> bool`
+
+Check if the input JSON document is an object.
+
+##### `sourcemeta::jsontoolkit::is_string(const JSON &) -> bool`
+
+Check if the input JSON document is a string.
+
+##### `sourcemeta::jsontoolkit::is_integer(const JSON &) -> bool`
+
+Check if the input JSON document is an integer.
+
+##### `sourcemeta::jsontoolkit::is_real(const JSON &) -> bool`
+
+Check if the input JSON document is a real type.
 
 ### Write
 
