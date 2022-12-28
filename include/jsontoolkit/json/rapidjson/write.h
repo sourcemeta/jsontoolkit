@@ -36,12 +36,25 @@ inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &,
   value.SetInt64(new_value);
 }
 
+template <typename Encoding, typename Allocator>
+inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &value,
+                std::int64_t new_value) -> void {
+  return set(value, value, new_value);
+}
+
 template <typename Encoding, typename Allocator, typename T,
           typename = std::enable_if_t<std::is_same_v<T, double>>>
 inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &,
                 rapidjson::GenericValue<Encoding, Allocator> &value,
                 T new_value) -> void {
   value.SetDouble(new_value);
+}
+
+template <typename Encoding, typename Allocator, typename T,
+          typename = std::enable_if_t<std::is_same_v<T, double>>>
+inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &value,
+                T new_value) -> void {
+  return set(value, value, new_value);
 }
 
 template <typename Encoding, typename Allocator>
