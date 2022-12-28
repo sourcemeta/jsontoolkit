@@ -53,26 +53,14 @@ underlying JSON types. It is recommended to refer to this type as `auto`.
 
 Create a JSON document from a JSON string.
 
-##### `JSON from(const std::string &)`
+##### `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t)`
 
-Create a JSON string document from a string literal.
+Create a JSON document from a set of supported C++ types.
 
-##### `JSON from(std::nullptr_t)`
-
-Create a JSON null document from a `nullptr` literal.
-
-##### `JSON from(bool)`
-
-Create a JSON boolean document from a boolean literal.
-
-##### `JSON from(std::int64_t)`
-
-Create a JSON integer document from an `std::int64_t` literal.
-
-##### `(TODO) JSON from(double)`
-##### `(TODO) JSON from(const std::vector<???> &)`
-##### `(TODO) JSON from(const std::map<std::string, ???> &)`
-##### `(TODO) JSON from(const std::unordered_map<std::string, ???> &)`
+<!-- `(TODO) JSON from(double)` -->
+<!-- `(TODO) JSON from(const std::vector<???> &)` -->
+<!-- `(TODO) JSON from(const std::map<std::string, ???> &)` -->
+<!-- `(TODO) JSON from(const std::unordered_map<std::string, ???> &)` -->
 
 ### Stringify
 
