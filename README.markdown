@@ -52,5 +52,5 @@ configure, build and test the project as follows:
 # Find the backend id in the "Supported backends" section
 cmake -S . -B ./build -DCMAKE_BUILD_TYPE=<Debug|Release> -DJSONTOOLKIT_BACKEND=<backend-id>
 cmake --build ./build
-ctest --preset <preset>
+ctest --test-dir ./build
 ```
