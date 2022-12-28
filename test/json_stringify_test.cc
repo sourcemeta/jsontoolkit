@@ -167,42 +167,30 @@ TEST(CATEGORY, stringify_single_object_pretty) {
   EXPECT_EQ(stream.str(), "{\n    \"foo\": {\n        \"bar\": 1\n    }\n}");
 }
 
-// TEST(String, stringify_empty) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\""};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "\"\"");
-// std::ostringstream cstream;
-// cstream << std::as_const(document);
-// EXPECT_EQ(cstream.str(), "\"\"");
-// }
+TEST(CATEGORY, stringify_empty_string) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"\"")};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "\"\"");
+}
 
-// TEST(String, stringify_short_string) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\""};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "\"foo\"");
-// std::ostringstream cstream;
-// cstream << std::as_const(document);
-// EXPECT_EQ(cstream.str(), "\"foo\"");
-// }
+TEST(CATEGORY, stringify_short_string) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"foo\"")};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "\"foo\"");
+}
 
-// TEST(String, stringify_quote) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\\"\""};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "\"\\\"\"");
-// std::ostringstream cstream;
-// cstream << std::as_const(document);
-// EXPECT_EQ(cstream.str(), "\"\\\"\"");
-// }
+TEST(CATEGORY, stringify_quote) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"\\\"\"")};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "\"\\\"\"");
+}
 
-// TEST(String, stringify_unicode_solidus) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\u002F\""};
-// std::ostringstream stream;
-// stream << document;
-// EXPECT_EQ(stream.str(), "\"/\"");
-// std::ostringstream cstream;
-// cstream << std::as_const(document);
-// EXPECT_EQ(cstream.str(), "\"/\"");
-// }
+TEST(CATEGORY, stringify_unicode_solidus) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"\\u002F\"")};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "\"/\"");
+}
