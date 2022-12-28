@@ -32,9 +32,10 @@ inline auto parse(const std::string &json) -> rapidjson::Document {
   return document;
 }
 
-inline auto from(const std::string &value) -> rapidjson::Value {
+inline auto from(const std::string &value) -> rapidjson::Document {
   rapidjson::Document document;
-  return rapidjson::Value{value, document.GetAllocator()};
+  document.SetString(value.c_str(), document.GetAllocator());
+  return document;
 }
 
 // TODO: Make all from() return a Document instance and not a Value

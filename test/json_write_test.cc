@@ -219,36 +219,21 @@ TEST(CATEGORY, new_key_move_assignment) {
 TEST(CATEGORY, assignment_string_from_boolean) {
   auto document{sourcemeta::jsontoolkit::from(false)};
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_string(document));
+  // TODO: Get rid of this double "document"
   sourcemeta::jsontoolkit::set(document, document, "foo");
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
 }
 
-// TEST(CATEGORY, assignment_string_from_string) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\""};
-// EXPECT_TRUE(document.is_string());
-// EXPECT_EQ(document, "foo");
-// document = std::string{"bar"};
-// EXPECT_TRUE(document.is_string());
-// EXPECT_EQ(document, "bar");
-// }
-
-// TEST(CATEGORY, assignment_literal_from_boolean) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"false"};
-// EXPECT_FALSE(document.is_string());
-// document = "foo";
-// EXPECT_TRUE(document.is_string());
-// EXPECT_EQ(document, "foo");
-// }
-
-// TEST(CATEGORY, assignment_literal_from_string) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\""};
-// EXPECT_TRUE(document.is_string());
-// EXPECT_EQ(document, "foo");
-// document = "bar";
-// EXPECT_TRUE(document.is_string());
-// EXPECT_EQ(document, "bar");
-// }
+TEST(CATEGORY, assignment_string_from_string) {
+  auto document{sourcemeta::jsontoolkit::from("foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
+  // TODO: Get rid of this double "document"
+  sourcemeta::jsontoolkit::set(document, document, "bar");
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "bar");
+}
 
 // TEST(CATEGORY, assign_literal_lvalue_string) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
