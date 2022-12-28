@@ -528,3 +528,8 @@ TEST(CATEGORY, multiple_commas_with_spacing) {
 // sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\u0F 2F\""};
 // EXPECT_THROW(document.size(), std::domain_error);
 // }
+
+// TEST(CATEGORY, parse_deep_failure) {
+// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo"};
+// EXPECT_THROW(document.parse(), std::domain_error);
+// }
