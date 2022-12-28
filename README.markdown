@@ -35,6 +35,36 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/deps/jsontoolkit")
 target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit_json)
 ```
 
+Documentation
+-------------
+
+JSON Toolkit provides a set of functions under the `sourcemeta::jsontoolkit`
+namespace divided into three categories: read, write and iterators. You can
+include support for all of these collection of functions or only include the
+ones you need:
+
+```c++
+// TODO: Make this universal header work
+#include <jsontoolkit/json.h>
+// Or
+#include <jsontoolkit/read.h>
+#include <jsontoolkit/write.h>
+#include <jsontoolkit/iterators.h>
+// TODO: We should namespace these in json/?
+```
+
+The `JSON` type referred to by the functions below is a logical alias to the
+underlying JSON types. It is recommended to refer to this type as `auto`.
+
+### Read
+
+#### `sourcemeta::jsontoolkit::parse(const std::string &source) -> JSON`
+#### `sourcemeta::jsontoolkit::is_boolean(const JSON &document) -> bool`
+
+### Write
+
+### Iterators
+
 Developing JSON Toolkit
 -----------------------
 
