@@ -140,8 +140,8 @@ configure, build and test the project as follows:
 # Find the backend id in the "Supported backends" section
 cmake -S . -B ./build -DCMAKE_BUILD_TYPE=<Debug|Release> -DJSONTOOLKIT_BACKEND=<backend-id>
 cmake --build ./build
-ctest --test-dir ./build --output-on-failure
-```
+ctest --test-dir ./build --output-on-failure --progress
+``
 
 Building and running the test suite requires the presence of
 [GoogleTest](https://google.github.io/googletest/) in the system.
