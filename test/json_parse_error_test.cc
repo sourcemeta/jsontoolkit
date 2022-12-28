@@ -421,73 +421,72 @@ TEST(CATEGORY, invalid_with_double_quote) {
                std::domain_error);
 }
 
-// TEST(CATEGORY, invalid_control_characters) {
-// const auto document{sourcemeta::jsontoolkit::parse00{"\"foo \u0000 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse01{"\"foo \u0001 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse02{"\"foo \u0002 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse03{"\"foo \u0003 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse04{"\"foo \u0004 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse05{"\"foo \u0005 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse06{"\"foo \u0006 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse07{"\"foo \u0007 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse08{"\"foo \u0008 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse09{"\"foo \u0009 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse0A{"\"foo \u000A bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse0B{"\"foo \u000B bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse0C{"\"foo \u000C bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse0D{"\"foo \u000D bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse0E{"\"foo \u000E bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse0F{"\"foo \u000F bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse10{"\"foo \u0010 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse11{"\"foo \u0011 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse12{"\"foo \u0012 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse13{"\"foo \u0013 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse14{"\"foo \u0014 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse15{"\"foo \u0015 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse16{"\"foo \u0016 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse17{"\"foo \u0017 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse18{"\"foo \u0018 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse19{"\"foo \u0019 bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse1A{"\"foo \u001A bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse1B{"\"foo \u001B bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse1C{"\"foo \u001C bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse1D{"\"foo \u001D bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse1E{"\"foo \u001E bar\"")};
-// const auto document{sourcemeta::jsontoolkit::parse1F{"\"foo \u001F bar\"")};
-
-// EXPECT_THROW(document00.size(), std::domain_error);
-// EXPECT_THROW(document01.size(), std::domain_error);
-// EXPECT_THROW(document02.size(), std::domain_error);
-// EXPECT_THROW(document03.size(), std::domain_error);
-// EXPECT_THROW(document04.size(), std::domain_error);
-// EXPECT_THROW(document05.size(), std::domain_error);
-// EXPECT_THROW(document06.size(), std::domain_error);
-// EXPECT_THROW(document07.size(), std::domain_error);
-// EXPECT_THROW(document08.size(), std::domain_error);
-// EXPECT_THROW(document09.size(), std::domain_error);
-// EXPECT_THROW(document0A.size(), std::domain_error);
-// EXPECT_THROW(document0B.size(), std::domain_error);
-// EXPECT_THROW(document0C.size(), std::domain_error);
-// EXPECT_THROW(document0D.size(), std::domain_error);
-// EXPECT_THROW(document0E.size(), std::domain_error);
-// EXPECT_THROW(document0F.size(), std::domain_error);
-// EXPECT_THROW(document10.size(), std::domain_error);
-// EXPECT_THROW(document11.size(), std::domain_error);
-// EXPECT_THROW(document12.size(), std::domain_error);
-// EXPECT_THROW(document13.size(), std::domain_error);
-// EXPECT_THROW(document14.size(), std::domain_error);
-// EXPECT_THROW(document15.size(), std::domain_error);
-// EXPECT_THROW(document16.size(), std::domain_error);
-// EXPECT_THROW(document17.size(), std::domain_error);
-// EXPECT_THROW(document18.size(), std::domain_error);
-// EXPECT_THROW(document19.size(), std::domain_error);
-// EXPECT_THROW(document1A.size(), std::domain_error);
-// EXPECT_THROW(document1B.size(), std::domain_error);
-// EXPECT_THROW(document1C.size(), std::domain_error);
-// EXPECT_THROW(document1D.size(), std::domain_error);
-// EXPECT_THROW(document1E.size(), std::domain_error);
-// EXPECT_THROW(document1F.size(), std::domain_error);
-// }
+TEST(CATEGORY, invalid_control_characters) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0000 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0001 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0002 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0003 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0004 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0005 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0006 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0007 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0008 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0009 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u000A bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u000B bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u000C bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u000D bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u000E bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u000F bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0010 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0011 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0012 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0013 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0014 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0015 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0016 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0017 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0018 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u0019 bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u001A bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u001B bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u001C bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u001D bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u001E bar\""),
+               std::domain_error);
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo \u001F bar\""),
+               std::domain_error);
+}
 
 TEST(CATEGORY, invalid_code_point) {
   EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"\\uXXXX\""),
