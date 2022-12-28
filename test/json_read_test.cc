@@ -1008,134 +1008,128 @@ TEST(CATEGORY, object_equality_with_padding) {
   EXPECT_FALSE(right == extra);
 }
 
-// TEST(CATEGORY, empty_string) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "");
-// EXPECT_EQ(document, "");
-// EXPECT_EQ(document, std::string{""});
-// }
+TEST(CATEGORY, empty_string) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "");
+}
 
-// TEST(CATEGORY, string_parse_success) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\""};
-// document.parse();
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
-// EXPECT_EQ(document, "foo");
-// }
+TEST(CATEGORY, string_parse_success) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"foo\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
+}
 
-// TEST(CATEGORY, string_parse_non_empty) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
-// EXPECT_EQ(document, "foo");
-// EXPECT_EQ(document, std::string{"foo"});
-// }
+TEST(CATEGORY, string_parse_non_empty) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"foo\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
+}
 
-// TEST(CATEGORY, string_parse_padded) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"   \"foo\"    "};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
-// }
+TEST(CATEGORY, string_parse_padded) {
+  const auto document{sourcemeta::jsontoolkit::parse("   \"foo\"    ")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
+}
 
-// TEST(CATEGORY, string_parse_padded_internal) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"  foo  \""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "  foo  ");
-// }
+TEST(CATEGORY, string_parse_padded_internal) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"  foo  \"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "  foo  ");
+}
 
-// TEST(CATEGORY, string_escaped_quotes) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\\"foo\\\"\""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 5);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "\"foo\"");
-// }
+TEST(CATEGORY, string_escaped_quotes) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"\\\"foo\\\"\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 5);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "\"foo\"");
+}
 
-// TEST(CATEGORY, string_escaped_reverse_solidus) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\\\\bar\""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\\bar");
-// }
+TEST(CATEGORY, string_escaped_reverse_solidus) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"foo\\\\bar\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\\bar");
+}
 
-// TEST(CATEGORY, string_escaped_solidus) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\\/bar\""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo/bar");
-// }
+TEST(CATEGORY, string_escaped_solidus) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"foo\\/bar\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo/bar");
+}
 
-// TEST(CATEGORY, string_escaped_backspace) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\\bbar\""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\bbar");
-// }
+TEST(CATEGORY, string_escaped_backspace) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"foo\\bbar\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\bbar");
+}
 
-// TEST(CATEGORY, string_escaped_form_feed) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\\fbar\""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\fbar");
-// }
+TEST(CATEGORY, string_escaped_form_feed) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"foo\\fbar\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\fbar");
+}
 
-// TEST(CATEGORY, string_escaped_line_feed) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\\nbar\""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\nbar");
-// }
+TEST(CATEGORY, string_escaped_line_feed) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"foo\\nbar\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\nbar");
+}
 
-// TEST(CATEGORY, string_escaped_carriage_return) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\\rbar\""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\rbar");
-// }
+TEST(CATEGORY, string_escaped_carriage_return) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"foo\\rbar\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\rbar");
+}
 
-// TEST(CATEGORY, string_escaped_tab) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\\tbar\""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\tbar");
-// }
+TEST(CATEGORY, string_escaped_tab) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"foo\\tbar\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 7);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo\tbar");
+}
 
-// TEST(CATEGORY, string_unicode_code_points) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\u002F\""};
-// EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
-// EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "\u002F");
-// }
+TEST(CATEGORY, string_unicode_code_points) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"\\u002F\"")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "\u002F");
+}
 
-// TEST(CATEGORY, string_unicode_code_point_equality) {
-// sourcemeta::jsontoolkit::JSON<std::string> document1{"\"\\u002F\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document2{"\"\\u002f\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document3{"\"\\/\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document4{"\"/\""};
-// EXPECT_EQ(document1.to_string(), document2.to_string());
-// EXPECT_EQ(document2.to_string(), document3.to_string());
-// EXPECT_EQ(document3.to_string(), document4.to_string());
-// }
+TEST(CATEGORY, string_unicode_code_point_equality) {
+  const auto document1{sourcemeta::jsontoolkit::parse("\"\\u002F\"")};
+  const auto document2{sourcemeta::jsontoolkit::parse("\"\\u002f\"")};
+  const auto document3{sourcemeta::jsontoolkit::parse("\"\\/\"")};
+  const auto document4{sourcemeta::jsontoolkit::parse("\"/\"")};
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document1),
+            sourcemeta::jsontoolkit::to_string(document2));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document2),
+            sourcemeta::jsontoolkit::to_string(document3));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document3),
+            sourcemeta::jsontoolkit::to_string(document4));
+}
 
-// TEST(CATEGORY, string_equality_with_padding) {
-// sourcemeta::jsontoolkit::JSON<std::string> left{"\"foo\""};
-// left.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> right{"  \"foo\"  "};
-// right.parse();
-// sourcemeta::jsontoolkit::JSON<std::string> extra{"\"fooo\""};
-// extra.parse();
-// EXPECT_EQ(left, right);
-// EXPECT_FALSE(left == extra);
-// EXPECT_FALSE(right == extra);
-// }
+TEST(CATEGORY, string_equality_with_padding) {
+  const auto left{sourcemeta::jsontoolkit::parse("\"foo\"")};
+  const auto right{sourcemeta::jsontoolkit::parse("  \"foo\"  ")};
+  const auto extra{sourcemeta::jsontoolkit::parse("\"fooo\"")};
+  EXPECT_EQ(left, right);
+  EXPECT_FALSE(left == extra);
+  EXPECT_FALSE(right == extra);
+}
 
 // TEST(CATEGORY, to_string_not_modify_result) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\""};
+// const auto document{sourcemeta::jsontoolkit::parse("\"foo\"")};
 // sourcemeta::jsontoolkit::to_string(document)[0] = 'x';
 // EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
 // }

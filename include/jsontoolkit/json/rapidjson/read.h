@@ -129,10 +129,12 @@ inline auto size(const rapidjson::GenericValue<Encoding, Allocator> &value)
     -> std::size_t {
   if (is_object(value)) {
     return value.MemberCount();
+  } else if (is_array(value)) {
+    return value.Size();
   }
 
-  assert(is_array(value));
-  return value.Size();
+  assert(is_string(value));
+  return value.GetStringLength();
 }
 
 template <typename Encoding, typename Allocator>
