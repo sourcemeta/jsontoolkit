@@ -8,7 +8,9 @@ multiple JSON implementations work together.
 
 To solve this problem, JSON Toolkit aims to be a thin and interoperable
 frontend to multiple JSON implementations, with an interface that is inspired
-by standard C++ containers.
+by standard C++ containers. The intention is for libraries that make use of the
+JSON to depend on JSON Toolkit and thus transparently allow the end-user to
+swap the backend as required.
 
 Supported backends
 ------------------
