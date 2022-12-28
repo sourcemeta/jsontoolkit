@@ -71,11 +71,13 @@ inline auto erase(rapidjson::GenericValue<Encoding, Allocator> &value,
   value.EraseMember(key);
 }
 
-// TODO: Support arrays too
 template <typename Encoding, typename Allocator>
 inline auto clear(rapidjson::GenericValue<Encoding, Allocator> &value) -> void {
-  assert(is_object(value));
-  value.EraseMember(value.MemberBegin(), value.MemberEnd());
+  if (is_array(value)) {
+    value.Erase(value.Begin(), value.End());
+  } else {
+    value.EraseMember(value.MemberBegin(), value.MemberEnd());
+  }
 }
 
 template <typename Encoding, typename Allocator>

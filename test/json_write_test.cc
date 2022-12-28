@@ -235,6 +235,15 @@ TEST(CATEGORY, assignment_string_from_string) {
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "bar");
 }
 
+TEST(CATEGORY, array_clear) {
+  auto document{sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  sourcemeta::jsontoolkit::clear(document);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+}
+
 // TEST(CATEGORY, assign_literal_lvalue_string) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
