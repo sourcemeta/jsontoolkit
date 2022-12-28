@@ -67,7 +67,17 @@ using `auto`.
 
 ##### `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t)`
 
-Create a JSON document from a set of supported C++ types.
+Create a JSON document from a set of supported C++ types. For example:
+
+```c++
+const auto my_null{sourcemeta::jsontoolkit::from(nullptr)};
+const auto my_string{sourcemeta::jsontoolkit::from("Foo Bar")};
+const auto my_bool{sourcemeta::jsontoolkit::from(true)};
+const auto my_integer{sourcemeta::jsontoolkit::from(4)};
+```
+
+These functions are particularly handy for scalar types when passing them to
+functions that modify the JSON document and take other JSON values as input.
 
 <!-- `(TODO) JSON from(double)` -->
 <!-- `(TODO) JSON from(const std::vector<???> &)` -->
