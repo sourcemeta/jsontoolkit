@@ -9,7 +9,7 @@ all:
 	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE=$(PRESET) -DJSONTOOLKIT_BACKEND=$(BACKEND)
 	$(CMAKE) --build ./build --target clang_format
 	$(CMAKE) --build ./build
-	$(CTEST) --test-dir ./build
+	$(CTEST) --test-dir ./build --output-on-failure
 
 .PHONY: clean
 clean:
