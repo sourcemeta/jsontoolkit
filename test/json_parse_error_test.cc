@@ -391,74 +391,69 @@ TEST(CATEGORY, multiple_commas_with_spacing) {
                std::domain_error);
 }
 
-// TEST(String, no_right_quote) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo"};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, no_right_quote) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo"), std::domain_error);
+}
 
-// TEST(String, no_left_quote) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"foo\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, no_left_quote) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("foo\""), std::domain_error);
+}
 
-// TEST(String, no_single_quotes) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"'foo'"};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, no_single_quotes) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("'foo'"), std::domain_error);
+}
 
-// TEST(String, only_quote) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, only_quote) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\""), std::domain_error);
+}
 
-// TEST(String, escaped_invalid) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\\xbar\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, escaped_invalid) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo\\xbar\""),
+               std::domain_error);
+}
 
-// TEST(String, escaped_incomplete) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\\\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, escaped_incomplete) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo\\\""), std::domain_error);
+}
 
-// TEST(String, invalid_with_double_quote) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\"bar\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, invalid_with_double_quote) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo\"bar\""),
+               std::domain_error);
+}
 
-// TEST(String, invalid_control_characters) {
-// sourcemeta::jsontoolkit::JSON<std::string> document00{"\"foo \u0000 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document01{"\"foo \u0001 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document02{"\"foo \u0002 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document03{"\"foo \u0003 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document04{"\"foo \u0004 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document05{"\"foo \u0005 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document06{"\"foo \u0006 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document07{"\"foo \u0007 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document08{"\"foo \u0008 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document09{"\"foo \u0009 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document0A{"\"foo \u000A bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document0B{"\"foo \u000B bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document0C{"\"foo \u000C bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document0D{"\"foo \u000D bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document0E{"\"foo \u000E bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document0F{"\"foo \u000F bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document10{"\"foo \u0010 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document11{"\"foo \u0011 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document12{"\"foo \u0012 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document13{"\"foo \u0013 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document14{"\"foo \u0014 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document15{"\"foo \u0015 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document16{"\"foo \u0016 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document17{"\"foo \u0017 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document18{"\"foo \u0018 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document19{"\"foo \u0019 bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document1A{"\"foo \u001A bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document1B{"\"foo \u001B bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document1C{"\"foo \u001C bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document1D{"\"foo \u001D bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document1E{"\"foo \u001E bar\""};
-// sourcemeta::jsontoolkit::JSON<std::string> document1F{"\"foo \u001F bar\""};
+// TEST(CATEGORY, invalid_control_characters) {
+// const auto document{sourcemeta::jsontoolkit::parse00{"\"foo \u0000 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse01{"\"foo \u0001 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse02{"\"foo \u0002 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse03{"\"foo \u0003 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse04{"\"foo \u0004 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse05{"\"foo \u0005 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse06{"\"foo \u0006 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse07{"\"foo \u0007 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse08{"\"foo \u0008 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse09{"\"foo \u0009 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse0A{"\"foo \u000A bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse0B{"\"foo \u000B bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse0C{"\"foo \u000C bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse0D{"\"foo \u000D bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse0E{"\"foo \u000E bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse0F{"\"foo \u000F bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse10{"\"foo \u0010 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse11{"\"foo \u0011 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse12{"\"foo \u0012 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse13{"\"foo \u0013 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse14{"\"foo \u0014 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse15{"\"foo \u0015 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse16{"\"foo \u0016 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse17{"\"foo \u0017 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse18{"\"foo \u0018 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse19{"\"foo \u0019 bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse1A{"\"foo \u001A bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse1B{"\"foo \u001B bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse1C{"\"foo \u001C bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse1D{"\"foo \u001D bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse1E{"\"foo \u001E bar\"")};
+// const auto document{sourcemeta::jsontoolkit::parse1F{"\"foo \u001F bar\"")};
 
 // EXPECT_THROW(document00.size(), std::domain_error);
 // EXPECT_THROW(document01.size(), std::domain_error);
@@ -494,42 +489,37 @@ TEST(CATEGORY, multiple_commas_with_spacing) {
 // EXPECT_THROW(document1F.size(), std::domain_error);
 // }
 
-// TEST(String, invalid_code_point) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\uXXXX\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, invalid_code_point) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"\\uXXXX\""),
+               std::domain_error);
+}
 
-// TEST(String, invalid_lowercase_code_point) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\uqqqq\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, invalid_lowercase_code_point) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"\\uqqqq\""),
+               std::domain_error);
+}
 
-// TEST(String, incomplete_code_point_0) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\u\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, incomplete_code_point_0) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"\\u\""), std::domain_error);
+}
 
-// TEST(String, incomplete_code_point_1) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\u6\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, incomplete_code_point_1) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"\\u6\""), std::domain_error);
+}
 
-// TEST(String, incomplete_code_point_2) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\u2F\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, incomplete_code_point_2) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"\\u2F\""), std::domain_error);
+}
 
-// TEST(String, incomplete_code_point_3) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\u02F\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, incomplete_code_point_3) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"\\u02F\""), std::domain_error);
+}
 
-// TEST(String, incomplete_code_point_space) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"\\u0F 2F\""};
-// EXPECT_THROW(document.size(), std::domain_error);
-// }
+TEST(CATEGORY, incomplete_code_point_space) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"\\u0F 2F\""),
+               std::domain_error);
+}
 
-// TEST(CATEGORY, parse_deep_failure) {
-// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo"};
-// EXPECT_THROW(document.parse(), std::domain_error);
-// }
+TEST(CATEGORY, parse_deep_failure) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse("\"foo"), std::domain_error);
+}

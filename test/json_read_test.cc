@@ -1128,8 +1128,8 @@ TEST(CATEGORY, string_equality_with_padding) {
   EXPECT_FALSE(right == extra);
 }
 
-// TEST(CATEGORY, to_string_not_modify_result) {
-// const auto document{sourcemeta::jsontoolkit::parse("\"foo\"")};
-// sourcemeta::jsontoolkit::to_string(document)[0] = 'x';
-// EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
-// }
+TEST(CATEGORY, to_string_not_modify_result) {
+  const auto document{sourcemeta::jsontoolkit::parse("\"foo\"")};
+  sourcemeta::jsontoolkit::to_string(document)[0] = 'x';
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
+}
