@@ -6,10 +6,10 @@ a C++ library that uses JSON also means adopting their JSON implementation of
 choice. Otherwise, you would need to write (often inefficient) code to make
 multiple JSON implementations work together.
 
-To solve this problem, JSON Toolkit aims to be a thin and interoperable
-frontend to multiple JSON implementations, with an interface that is inspired
-by standard C++ containers. The intention is for libraries that make use of the
-JSON to depend on JSON Toolkit and thus transparently allow the end-user to
+To solve this problem, JSON Toolkit aims to be a thin and low-overhead frontend
+to multiple JSON implementations, with an interface that is inspired by
+standard C++ containers. The intention is for libraries that make use of the
+JSON to depend on JSON Toolkit and thus transparently allow the end-consumer to
 swap the backend as required.
 
 Supported backends
