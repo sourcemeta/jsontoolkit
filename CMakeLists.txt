@@ -26,9 +26,8 @@ target_include_directories(sourcemeta_jsontoolkit_json INTERFACE include)
 include(cmake/${JSONTOOLKIT_BACKEND}.cmake)
 target_compile_definitions(sourcemeta_jsontoolkit_json INTERFACE
   JSONTOOLKIT_BACKEND=${JSONTOOLKIT_BACKEND})
-if(JSONTOOLKIT_BACKEND STREQUAL "rapidjson")
-  target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE rapidjson)
-endif()
+target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE
+  ${JSONTOOLKIT_BACKEND})
 
 if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
