@@ -130,6 +130,13 @@ Check if the input JSON document is a real type.
 
 ### Iterators
 
+##### `Iterator sourcemeta::jsontoolkit::object::begin(JSON &)`
+##### `Iterator sourcemeta::jsontoolkit::object::end(JSON &)`
+##### `ConstIterator sourcemeta::jsontoolkit::object::cbegin(const JSON &)`
+##### `ConstIterator sourcemeta::jsontoolkit::object::cend(const JSON &)`
+##### `JSON& sourcemeta::jsontoolkit::value(const IteratorPair &)`
+##### `(TODO) std::string& sourcemeta::jsontoolkit::key(const IteratorPair &)`
+
 Developing JSON Toolkit
 -----------------------
 
