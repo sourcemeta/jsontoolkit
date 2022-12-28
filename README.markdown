@@ -43,20 +43,12 @@ Building JSON Toolkit
 - GoogleTest
   - On macOS: `brew install googletest`
 
-JSON Toolkit makes use of the [CMake](https://cmake.org) build system.  JSON
-Toolkit provides a set of CMake
-[presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html) to
-configure, build and test the project:
-
-```sh
-cmake --list-presets
-```
-
-You can configure, build and test the project using a given preset as follows:
+JSON Toolkit makes use of the [CMake](https://cmake.org) build system. You can
+configure, build and test the project as follows:
 
 ```sh
 # Find the backend id in the "Supported backends" section
-cmake --preset <preset> -DJSONTOOLKIT_BACKEND=<backend-id>
-cmake --build --preset <preset>
+cmake -S . -B ./build -DCMAKE_BUILD_TYPE=<Debug|Release> -DJSONTOOLKIT_BACKEND=<backend-id>
+cmake --build ./build
 ctest --preset <preset>
 ```
