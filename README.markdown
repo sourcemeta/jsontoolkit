@@ -15,9 +15,9 @@ swap the backend as required.
 Supported backends
 ------------------
 
-| Name      | CMake ID    | URL                   |
-|-----------|-------------|-----------------------|
-| RapidJSON | `rapidjson` | https://rapidjson.org |
+| Name      | CMake ID    | URL                   | Read | Write | Iterators |
+|-----------|-------------|-----------------------|------|-------|-----------|
+| RapidJSON | `rapidjson` | https://rapidjson.org | Y    | Y     | Y         |
 
 Using JSON Toolkit
 ------------------
