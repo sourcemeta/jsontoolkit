@@ -129,19 +129,19 @@ Check if the input JSON document is a real type.
 ##### `bool empty(const JSON &)`
 ##### `JSON& get(const JSON &, std::size_t index | const std::string &key)`
 ##### `bool defines(const JSON &, const std::string &key)`
-##### `bool contains(const JSON &, const JSON & | const std::string &)`
+##### `(TODO REMOVE, use from) bool contains(const JSON &, const JSON & | const std::string &)`
 
 ### Writing
 
-##### `void set(JSON &root, JSON &value, std::nullptr_t | std::int64_t | double | const std::string &)`
-##### `void set(JSON &root, std::nullptr_t | std::int64_t | double | const std::string &)`
+##### `(TODO REMOVE, use from) void set(JSON &root, JSON &value, std::nullptr_t | std::int64_t | double | const std::string &)`
+##### `(TODO REMOVE, use from) void set(JSON &root, std::nullptr_t | std::int64_t | double | const std::string &)`
 <!-- `(TODO) void set(JSON &root, JSON &value, bool)` -->
 
 ##### `void erase(JSON &, const std::string &key)`
 ##### `void clear(JSON &)`
 
-##### `void assign(JSON &root, JSON &value, const std::string &key, JSON & | const std::string &)`
-##### `void assign(JSON &root, const std::string &key, JSON & | const std::string &)`
+##### `(TODO REMOVE, use from) void assign(JSON &root, JSON &value, const std::string &key, JSON & | const std::string &)`
+##### `(TODO REMOVE, use from) void assign(JSON &root, const std::string &key, JSON & | const std::string &)`
 
 ### Iterators
 
