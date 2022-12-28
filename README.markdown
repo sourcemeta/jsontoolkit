@@ -53,6 +53,8 @@ underlying JSON types. It is recommended to refer to this type as `auto`.
 
 Create a JSON document from a JSON string.
 
+#### From C++ types
+
 ##### `JSON sourcemeta::jsontoolkit::from(const std::string &)`
 
 Create a JSON string document from a string literal.
@@ -104,7 +106,27 @@ Check if the input JSON document is an integer.
 
 Check if the input JSON document is a real type.
 
-### Write
+### Reading
+
+##### `bool sourcemeta::jsontoolkit::to_boolean(const JSON &)`
+##### `bool sourcemeta::jsontoolkit::to_integer(const JSON &)`
+##### `bool sourcemeta::jsontoolkit::to_real(const JSON &)`
+##### `bool sourcemeta::jsontoolkit::to_string(const JSON &)`
+
+#### Containers
+
+##### `std::size_t sourcemeta::jsontoolkit::size(const JSON &)`
+##### `bool sourcemeta::jsontoolkit::empty(const JSON &)`
+##### `JSON& sourcemeta::jsontoolkit::get(const JSON &, std::size_t index)`
+##### `JSON& sourcemeta::jsontoolkit::get(const JSON &, const std::string &key)`
+##### `bool sourcemeta::jsontoolkit::defines(const JSON &, const std::string &key)`
+##### `bool sourcemeta::jsontoolkit::contains(const JSON &, const JSON &element)`
+##### `bool sourcemeta::jsontoolkit::contains(const JSON &, const std::string &element)`
+
+### Stringify
+
+##### `std::basic_ostream<C, T>& sourcemeta::jsontoolkit::stringify(const JSON &, std::basic_ostream<C, T> &)`
+##### `std::basic_ostream<C, T>& sourcemeta::jsontoolkit::prettify(const JSON &, std::basic_ostream<C, T> &)`
 
 ### Iterators
 
