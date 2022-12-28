@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <jsontoolkit/read.h>
+#include <jsontoolkit/json/read.h>
 #include <sstream> // std::ostringstream
 
 TEST(CATEGORY, array_stringify_scalars_no_space) {

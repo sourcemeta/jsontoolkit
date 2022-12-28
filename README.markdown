@@ -39,18 +39,10 @@ Documentation
 -------------
 
 JSON Toolkit provides a set of functions under the `sourcemeta::jsontoolkit`
-namespace divided into three categories: read, write and iterators. You can
-include support for all of these collection of functions or only include the
-ones you need:
+namespace that are included as follows:
 
 ```c++
-// TODO: Make this universal header work
 #include <jsontoolkit/json.h>
-// Or
-#include <jsontoolkit/read.h>
-#include <jsontoolkit/write.h>
-#include <jsontoolkit/iterators.h>
-// TODO: We should namespace these in json/?
 ```
 
 The `JSON` type referred to by the functions below is a logical alias to the

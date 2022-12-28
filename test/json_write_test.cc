@@ -1,6 +1,6 @@
 #include <algorithm> // std::all_of
 #include <gtest/gtest.h>
-#include <jsontoolkit/write.h>
+#include <jsontoolkit/json/write.h>
 #include <utility> // std::move
 
 TEST(CATEGORY, set_null) {

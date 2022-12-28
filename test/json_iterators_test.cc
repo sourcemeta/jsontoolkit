@@ -1,7 +1,7 @@
 #include <algorithm> // std::all_of
 #include <gtest/gtest.h>
-#include <jsontoolkit/iterators.h>
-#include <jsontoolkit/read.h>
+#include <jsontoolkit/json/iterators.h>
+#include <jsontoolkit/json/read.h>
 
 TEST(CATEGORY, object_const_all_of_true) {
   const auto document{

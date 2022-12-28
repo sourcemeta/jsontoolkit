@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <jsontoolkit/read.h>
+#include <jsontoolkit/json/read.h>
 #include <stdexcept> // std::domain_error
 
 TEST(CATEGORY, empty_array_incomplete_right) {

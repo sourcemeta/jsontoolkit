@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <jsontoolkit/read.h>
+#include <jsontoolkit/json/read.h>
 #include <utility> // std::move
 
 TEST(CATEGORY, is_boolean_true) {

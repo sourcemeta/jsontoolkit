@@ -16,9 +16,10 @@ set(JSONTOOLKIT_BACKEND "rapidjson" CACHE STRING "Set the JSON Toolkit backend")
 
 # JSON
 add_library(sourcemeta_jsontoolkit_json INTERFACE
-  include/jsontoolkit/read.h
-  include/jsontoolkit/write.h
-  include/jsontoolkit/iterators.h
+  include/jsontoolkit/json.h
+  include/jsontoolkit/json/read.h
+  include/jsontoolkit/json/write.h
+  include/jsontoolkit/json/iterators.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/read.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/write.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/iterators.h)
