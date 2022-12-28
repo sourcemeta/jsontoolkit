@@ -125,8 +125,8 @@ Check if the input JSON document is a real type.
 
 ### Stringify
 
-##### `std::basic_ostream<C, T>& sourcemeta::jsontoolkit::stringify(const JSON &, std::basic_ostream<C, T> &)`
-##### `std::basic_ostream<C, T>& sourcemeta::jsontoolkit::prettify(const JSON &, std::basic_ostream<C, T> &)`
+##### `void sourcemeta::jsontoolkit::stringify(const JSON &, std::basic_ostream<C, T> &)`
+##### `void sourcemeta::jsontoolkit::prettify(const JSON &, std::basic_ostream<C, T> &)`
 
 ### Iterators
 

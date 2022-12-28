@@ -166,23 +166,19 @@ inline auto get(const rapidjson::GenericValue<Encoding, Allocator> &value,
 template <typename Encoding, typename Allocator, typename CharT,
           typename Traits>
 inline auto stringify(const rapidjson::GenericValue<Encoding, Allocator> &value,
-                      std::basic_ostream<CharT, Traits> &stream)
-    -> std::basic_ostream<CharT, Traits> & {
+                      std::basic_ostream<CharT, Traits> &stream) -> void {
   rapidjson::OStreamWrapper ostream_wrapper{stream};
   rapidjson::Writer<rapidjson::OStreamWrapper> writer{ostream_wrapper};
   value.Accept(writer);
-  return stream;
 }
 
 template <typename Encoding, typename Allocator, typename CharT,
           typename Traits>
 inline auto prettify(const rapidjson::GenericValue<Encoding, Allocator> &value,
-                     std::basic_ostream<CharT, Traits> &stream)
-    -> std::basic_ostream<CharT, Traits> & {
+                     std::basic_ostream<CharT, Traits> &stream) -> void {
   rapidjson::OStreamWrapper ostream_wrapper{stream};
   rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer{ostream_wrapper};
   value.Accept(writer);
-  return stream;
 }
 
 template <typename Encoding, typename Allocator>
