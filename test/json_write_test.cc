@@ -285,3 +285,37 @@ TEST(CATEGORY, new_key_move_assignment) {
 // EXPECT_TRUE(document.at("xxx").at("bar").is_integer());
 // EXPECT_EQ(document.at("xxx").at("bar"), 5);
 // }
+
+// TEST(String, assignment_string_from_boolean) {
+// sourcemeta::jsontoolkit::JSON<std::string> document{"false"};
+// EXPECT_FALSE(document.is_string());
+// document = std::string{"foo"};
+// EXPECT_TRUE(document.is_string());
+// EXPECT_EQ(document, "foo");
+// }
+
+// TEST(String, assignment_string_from_string) {
+// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\""};
+// EXPECT_TRUE(document.is_string());
+// EXPECT_EQ(document, "foo");
+// document = std::string{"bar"};
+// EXPECT_TRUE(document.is_string());
+// EXPECT_EQ(document, "bar");
+// }
+
+// TEST(String, assignment_literal_from_boolean) {
+// sourcemeta::jsontoolkit::JSON<std::string> document{"false"};
+// EXPECT_FALSE(document.is_string());
+// document = "foo";
+// EXPECT_TRUE(document.is_string());
+// EXPECT_EQ(document, "foo");
+// }
+
+// TEST(String, assignment_literal_from_string) {
+// sourcemeta::jsontoolkit::JSON<std::string> document{"\"foo\""};
+// EXPECT_TRUE(document.is_string());
+// EXPECT_EQ(document, "foo");
+// document = "bar";
+// EXPECT_TRUE(document.is_string());
+// EXPECT_EQ(document, "bar");
+// }
