@@ -7,8 +7,8 @@ choice. Otherwise, you would need to write (often inefficient) code to make
 multiple JSON implementations work together.
 
 To solve this problem, JSON Toolkit aims to be a thin and interoperable
-frontend to multiple JSON implementations, with an interface that resembles
-standard C++ containers.
+frontend to multiple JSON implementations, with an interface that is inspired
+by standard C++ containers.
 
 Supported backends
 ------------------
@@ -28,8 +28,9 @@ $ git submodule add https://github.com/sourcemeta/jsontoolkit.git deps/jsontoolk
 
 # Add the project as a CMake subdirectory
 add_subdirectory("${PROJECT_SOURCE_DIR}/deps/jsontoolkit")
+
 # Link your targets accordingly
-target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit)
+target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit_json)
 ```
 
 Building JSON Toolkit

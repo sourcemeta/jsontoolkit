@@ -6,9 +6,9 @@ BACKEND ?= rapidjson
 
 .PHONY: all
 all:
-	$(CMAKE) --preset $(PRESET) --log-context -DJSONTOOLKIT_BACKEND=$(BACKEND)
-	$(CMAKE) --build --preset $(PRESET) --target clang_format
-	$(CMAKE) --build --preset $(PRESET)
+	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE=$(PRESET)
+	$(CMAKE) --build ./build --target clang_format
+	$(CMAKE) --build ./build
 	$(CTEST) --preset $(PRESET)
 
 .PHONY: clean
