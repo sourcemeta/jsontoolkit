@@ -37,11 +37,10 @@ inline auto from(const std::string &value) -> rapidjson::Value {
   return rapidjson::Value{value, document.GetAllocator()};
 }
 
+// TODO: Make all from() return a Document instance and not a Value
 template <typename T, typename = std::enable_if_t<std::is_same_v<T, bool>>>
-inline auto from(T value) -> rapidjson::Value {
-  rapidjson::Value result;
-  result.SetBool(value);
-  return result;
+inline auto from(T value) -> rapidjson::Document {
+  return value ? parse("true") : parse("false");
 }
 
 inline auto from(std::nullptr_t) -> rapidjson::Value {

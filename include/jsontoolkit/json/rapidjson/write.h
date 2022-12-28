@@ -35,6 +35,15 @@ inline auto set(rapidjson::GenericValue<Encoding, Allocator> &value,
   value.SetDouble(new_value);
 }
 
+// TODO: Make all .set() functions take a root for consistency with this
+// function
+template <typename Encoding, typename Allocator>
+inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &root,
+                rapidjson::GenericValue<Encoding, Allocator> &value,
+                const std::string &new_value) -> void {
+  value.SetString(new_value.c_str(), root.GetAllocator());
+}
+
 template <typename Encoding, typename Allocator>
 inline auto erase(rapidjson::GenericValue<Encoding, Allocator> &value,
                   const std::string &key) -> void {
