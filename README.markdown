@@ -55,6 +55,9 @@ Create a JSON document from a JSON string. For example, a JSON document that
 represents an array can be parsed as follows:
 
 ```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
 const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
 assert(sourcemeta::jsontoolkit::is_array(document));
 ```
@@ -70,6 +73,8 @@ using `auto`.
 Create a JSON document from a set of supported C++ types. For example:
 
 ```c++
+#include <jsontoolkit/json.h>
+
 const auto my_null{sourcemeta::jsontoolkit::from(nullptr)};
 const auto my_string{sourcemeta::jsontoolkit::from("Foo Bar")};
 const auto my_bool{sourcemeta::jsontoolkit::from(true)};
@@ -87,7 +92,36 @@ functions that modify the JSON document and take other JSON values as input.
 ### Stringify
 
 ##### `void stringify(const JSON &, std::basic_ostream<C, T> &)`
+
+Stringify the input JSON document into a given C++ standard output stream in
+compact mode. For example:
+
+```c+
+#include <jsontoolkit/json.h>
+#include <iostream>
+#include <sstream>
+
+const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+std::ostringstream stream;
+sourcemeta::jsontoolkit::stringify(document, stream);
+std::cout << stream.str() << std::endl;
+```
+
 ##### `void prettify(const JSON &, std::basic_ostream<C, T> &)`
+
+Stringify the input JSON document into a given C++ standard output stream in
+pretty mode, indenting the output using 4 spaces. For example:
+
+```c+
+#include <jsontoolkit/json.h>
+#include <iostream>
+#include <sstream>
+
+const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+std::ostringstream stream;
+sourcemeta::jsontoolkit::prettify(document, stream);
+std::cout << stream.str() << std::endl;
+```
 
 ### Types
 
