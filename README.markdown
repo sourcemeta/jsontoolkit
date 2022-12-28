@@ -47,13 +47,11 @@ JSON Toolkit provides a set of (mostly `inline`) functions under the
 The `JSON` type referred to by the functions below is a logical alias to the
 underlying JSON types. It is recommended to refer to this type as `auto`.
 
-### Creation
+### Conversion
 
 ##### `JSON sourcemeta::jsontoolkit::parse(const std::string &source)`
 
 Create a JSON document from a JSON string.
-
-#### From C++ types
 
 ##### `JSON sourcemeta::jsontoolkit::from(const std::string &)`
 
@@ -75,6 +73,11 @@ Create a JSON integer document from an `std::int64_t` literal.
 ##### `(TODO) JSON sourcemeta::jsontoolkit::from(const std::vector<???> &)`
 ##### `(TODO) JSON sourcemeta::jsontoolkit::from(const std::map<std::string, ???> &)`
 ##### `(TODO) JSON sourcemeta::jsontoolkit::from(const std::unordered_map<std::string, ???> &)`
+
+### Stringify
+
+##### `void sourcemeta::jsontoolkit::stringify(const JSON &, std::basic_ostream<C, T> &)`
+##### `void sourcemeta::jsontoolkit::prettify(const JSON &, std::basic_ostream<C, T> &)`
 
 ### Types
 
@@ -109,9 +112,9 @@ Check if the input JSON document is a real type.
 ### Reading
 
 ##### `bool sourcemeta::jsontoolkit::to_boolean(const JSON &)`
-##### `bool sourcemeta::jsontoolkit::to_integer(const JSON &)`
-##### `bool sourcemeta::jsontoolkit::to_real(const JSON &)`
-##### `bool sourcemeta::jsontoolkit::to_string(const JSON &)`
+##### `std::int64_t sourcemeta::jsontoolkit::to_integer(const JSON &)`
+##### `double sourcemeta::jsontoolkit::to_real(const JSON &)`
+##### `std::string sourcemeta::jsontoolkit::to_string(const JSON &)`
 
 #### Containers
 
@@ -122,11 +125,6 @@ Check if the input JSON document is a real type.
 ##### `bool sourcemeta::jsontoolkit::defines(const JSON &, const std::string &key)`
 ##### `bool sourcemeta::jsontoolkit::contains(const JSON &, const JSON &element)`
 ##### `bool sourcemeta::jsontoolkit::contains(const JSON &, const std::string &element)`
-
-### Stringify
-
-##### `void sourcemeta::jsontoolkit::stringify(const JSON &, std::basic_ostream<C, T> &)`
-##### `void sourcemeta::jsontoolkit::prettify(const JSON &, std::basic_ostream<C, T> &)`
 
 ### Iterators
 
