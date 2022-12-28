@@ -219,8 +219,7 @@ TEST(CATEGORY, new_key_move_assignment) {
 TEST(CATEGORY, assignment_string_from_boolean) {
   auto document{sourcemeta::jsontoolkit::from(false)};
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_string(document));
-  // TODO: Get rid of this double "document"
-  sourcemeta::jsontoolkit::set(document, document, "foo");
+  sourcemeta::jsontoolkit::set(document, "foo");
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
 }
@@ -229,8 +228,7 @@ TEST(CATEGORY, assignment_string_from_string) {
   auto document{sourcemeta::jsontoolkit::from("foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
-  // TODO: Get rid of this double "document"
-  sourcemeta::jsontoolkit::set(document, document, "bar");
+  sourcemeta::jsontoolkit::set(document, "bar");
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "bar");
 }

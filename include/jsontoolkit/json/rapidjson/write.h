@@ -65,6 +65,12 @@ inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &root,
 }
 
 template <typename Encoding, typename Allocator>
+inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &value,
+                const std::string &new_value) -> void {
+  return set(value, value, new_value);
+}
+
+template <typename Encoding, typename Allocator>
 inline auto erase(rapidjson::GenericValue<Encoding, Allocator> &value,
                   const std::string &key) -> void {
   assert(is_object(value));
