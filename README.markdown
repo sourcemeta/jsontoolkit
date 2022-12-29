@@ -14,9 +14,9 @@ end-consumer swap them as required.
 Supported backends
 ------------------
 
-| Name      | CMake ID    | URL                   |
-|-----------|-------------|-----------------------|
-| RapidJSON | `rapidjson` | https://rapidjson.org |
+| Name      | CMake ID    | URL                   | Reading | Writing | Iterators |
+|-----------|-------------|-----------------------|---------|---------|-----------|
+| RapidJSON | `rapidjson` | https://rapidjson.org | Y       | Y       | Y         |
 
 Using JSON Toolkit
 ------------------
