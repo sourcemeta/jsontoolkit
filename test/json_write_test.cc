@@ -242,6 +242,34 @@ TEST(CATEGORY, array_clear) {
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
 }
 
+TEST(CATEGORY, array_set_child) {
+  auto document{sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 0)),
+            1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 1)),
+            2);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 2)),
+            3);
+  sourcemeta::jsontoolkit::set(document,
+                               sourcemeta::jsontoolkit::at(document, 1), 6);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 0)),
+            1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 1)),
+            6);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 2)),
+            3);
+}
+
 // TEST(CATEGORY, map_copy_constructor) {
 // const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));

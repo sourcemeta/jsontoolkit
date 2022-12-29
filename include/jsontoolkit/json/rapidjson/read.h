@@ -188,6 +188,22 @@ inline auto at(const rapidjson::GenericValue<Encoding, Allocator> &value,
   return value[key];
 }
 
+template <typename Encoding, typename Allocator>
+inline auto at(rapidjson::GenericValue<Encoding, Allocator> &value,
+               const std::size_t index) -> rapidjson::Value & {
+  assert(is_array(value));
+  assert(size(value) > index);
+  return value[static_cast<rapidjson::SizeType>(index)];
+}
+
+template <typename Encoding, typename Allocator>
+inline auto at(rapidjson::GenericValue<Encoding, Allocator> &value,
+               const std::string &key) -> rapidjson::Value & {
+  assert(is_object(value));
+  assert(defines(value, key));
+  return value[key];
+}
+
 template <typename Encoding, typename Allocator, typename CharT,
           typename Traits>
 inline auto stringify(const rapidjson::GenericValue<Encoding, Allocator> &value,
