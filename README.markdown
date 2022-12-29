@@ -403,6 +403,18 @@ assert(sourcemeta::jsontoolkit::to_integer(value) == 3);
 
 #### `bool defines(const JSON &, const std::string &key)`
 
+This function checks whether an input JSON object defines a specific key. This
+function is undefined is the input JSON instance is not an object. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+assert(sourcemeta::jsontoolkit::defines(document, "foo"));
+assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
+```
+
 ### Writing
 
 #### `(TODO REMOVE, use from) void set(JSON &root, JSON &value, std::nullptr_t | std::int64_t | double | const std::string &)`
