@@ -20,6 +20,12 @@ inline auto value(const rapidjson::GenericMember<Encoding, Allocator> &member)
 }
 
 template <typename Encoding, typename Allocator>
+inline auto key(rapidjson::GenericMember<Encoding, Allocator> &member)
+    -> rapidjson::GenericValue<Encoding, Allocator> & {
+  return member.name;
+}
+
+template <typename Encoding, typename Allocator>
 inline auto value(rapidjson::GenericMember<Encoding, Allocator> &member)
     -> rapidjson::GenericValue<Encoding, Allocator> & {
   return member.value;
