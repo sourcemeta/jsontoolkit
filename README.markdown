@@ -369,9 +369,39 @@ const auto &element{sourcemeta::jsontoolkit::at(my_array, 1)};
 assert(sourcemeta::jsontoolkit::to_integer(element) == 2);
 ```
 
-#### `bool defines(const JSON &, const std::string &key)`
+#### `JSON& front(const JSON &)`
 
-<!-- TODO: Implement front() / back() for arrays -->
+This function retrieves a reference to the first element of a JSON array. This
+function supports both `const` and non-`const` overloads. This function is
+undefined if the input JSON instance is not an array or if it is an empty
+array. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+const auto &value{sourcemeta::jsontoolkit::front(my_object)};
+assert(sourcemeta::jsontoolkit::to_integer(value) == 1);
+```
+
+#### `JSON& back(const JSON &)`
+
+This function retrieves a reference to the last element of a JSON array. This
+function supports both `const` and non-`const` overloads. This function is
+undefined if the input JSON instance is not an array or if it is an empty
+array. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+const auto &value{sourcemeta::jsontoolkit::back(my_object)};
+assert(sourcemeta::jsontoolkit::to_integer(value) == 3);
+```
+
+#### `bool defines(const JSON &, const std::string &key)`
 
 ### Writing
 
