@@ -260,6 +260,20 @@ assert(sourcemeta::jsontoolkit::to_boolean(document));
 ```
 
 #### `std::int64_t to_integer(const JSON &)`
+
+Convert a JSON instance into a signed integer value. The result of this
+function is undefined unless the JSON instance holds an integer value. For
+example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::from(5)};
+assert(sourcemeta::jsontoolkit::is_integer(document));
+assert(sourcemeta::jsontoolkit::to_integer(document) == 5);
+```
+
 #### `double to_real(const JSON &)`
 #### `std::string to_string(const JSON &)`
 #### `std::size_t size(const JSON &)`
