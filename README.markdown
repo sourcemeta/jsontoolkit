@@ -348,7 +348,30 @@ assert(sourcemeta::jsontoolkit::empty(my_string));
 ```
 
 #### `JSON& at(const JSON &, std::size_t index | const std::string &key)`
+
+This function retrieves a reference to an object value or an array element.
+This function supports both `const` and non-`const` overloads. The result of
+this function is undefined if the input JSON document is neither an object nor
+an array.
+
+For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto my_object{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+const auto &value{sourcemeta::jsontoolkit::at(my_object, "foo")};
+assert(sourcemeta::jsontoolkit::to_integer(value) == 1);
+
+const auto my_array{sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+const auto &element{sourcemeta::jsontoolkit::at(my_array, 1)};
+assert(sourcemeta::jsontoolkit::to_integer(element) == 2);
+```
+
 #### `bool defines(const JSON &, const std::string &key)`
+
+<!-- TODO: Implement front() / back() for arrays -->
 
 ### Writing
 
