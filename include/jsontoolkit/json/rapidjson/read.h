@@ -220,6 +220,22 @@ inline auto back(const rapidjson::GenericValue<Encoding, Allocator> &value)
   return value[value.Size() - 1];
 }
 
+template <typename Encoding, typename Allocator>
+inline auto front(rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> rapidjson::Value & {
+  assert(is_array(value));
+  assert(!empty(value));
+  return value[0];
+}
+
+template <typename Encoding, typename Allocator>
+inline auto back(rapidjson::GenericValue<Encoding, Allocator> &value)
+    -> rapidjson::Value & {
+  assert(is_array(value));
+  assert(!empty(value));
+  return value[value.Size() - 1];
+}
+
 template <typename Encoding, typename Allocator, typename CharT,
           typename Traits>
 inline auto stringify(const rapidjson::GenericValue<Encoding, Allocator> &value,

@@ -1172,3 +1172,19 @@ TEST(CATEGORY, const_array_back) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(back));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(back), 3);
 }
+
+TEST(CATEGORY, array_front) {
+  auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  auto &front{sourcemeta::jsontoolkit::front(document)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(front));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(front), 1);
+}
+
+TEST(CATEGORY, array_back) {
+  auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  auto &back{sourcemeta::jsontoolkit::back(document)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(back));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(back), 3);
+}
