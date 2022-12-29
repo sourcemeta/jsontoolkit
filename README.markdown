@@ -49,6 +49,8 @@ underlying JSON types. It is recommended to refer to this type as `auto`.
 
 ### Conversion
 
+A set of functions to create JSON instances from various types.
+
 #### `JSON parse(const std::basic_istream<C, T> &stream)`
 
 Create a JSON document from a C++ standard input stream. For example, a JSON
@@ -116,6 +118,8 @@ functions that modify the JSON document and take other JSON values as input.
 
 ### Stringify
 
+A set of functions to convert JSON instances into strings.
+
 #### `void stringify(const JSON &, std::basic_ostream<C, T> &)`
 
 Stringify the input JSON document into a given C++ standard output stream in
@@ -149,6 +153,8 @@ std::cout << stream.str() << std::endl;
 ```
 
 ### Types
+
+A set of functions to check the type of a given JSON instance.
 
 #### `bool is_boolean(const JSON &)`
 
@@ -236,7 +242,23 @@ assert(sourcemeta::jsontoolkit::is_real(document));
 
 ### Reading
 
+A set of functions to read JSON instances. None of these functions modify the
+input instance.
+
 #### `bool to_boolean(const JSON &)`
+
+Convert a JSON instance into a boolean value. The result of this function is
+undefined unless the JSON instance holds a boolean value. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::from(true)};
+assert(sourcemeta::jsontoolkit::is_boolean(document));
+assert(sourcemeta::jsontoolkit::to_boolean(document));
+```
+
 #### `std::int64_t to_integer(const JSON &)`
 #### `double to_real(const JSON &)`
 #### `std::string to_string(const JSON &)`
