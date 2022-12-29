@@ -4,6 +4,7 @@
 #include <cassert>     // assert
 #include <cstddef>     // std::size_t
 #include <cstdint>     // std::int64_t
+#include <istream>     // std::basic_istream
 #include <ostream>     // std::basic_ostream
 #include <stdexcept>   // std::domain_error
 #include <string>      // std::string
@@ -14,6 +15,7 @@
 #pragma clang diagnostic ignored "-Wambiguous-reversed-operator"
 #include <rapidjson/document.h>       // rapidjson::Value, rapidjson::Document
 #include <rapidjson/error/en.h>       // rapidjson::GetParseError_En
+#include <rapidjson/istreamwrapper.h> // rapidjson::IStreamWrapper
 #include <rapidjson/ostreamwrapper.h> // rapidjson::OStreamWrapper
 #include <rapidjson/prettywriter.h>   // rapidjson::PrettyWriter
 #include <rapidjson/writer.h>         // rapidjson::Writer
@@ -24,6 +26,20 @@ namespace sourcemeta::jsontoolkit {
 inline auto parse(const std::string &json) -> rapidjson::Document {
   rapidjson::Document document;
   document.Parse(json);
+  if (document.HasParseError()) {
+    throw std::domain_error(
+        rapidjson::GetParseError_En(document.GetParseError()));
+  }
+
+  return document;
+}
+
+template <typename CharT, typename Traits>
+inline auto parse(std::basic_istream<CharT, Traits> &stream)
+    -> rapidjson::Document {
+  rapidjson::IStreamWrapper istream_wrapper{stream};
+  rapidjson::Document document;
+  document.ParseStream(istream_wrapper);
   if (document.HasParseError()) {
     throw std::domain_error(
         rapidjson::GetParseError_En(document.GetParseError()));

@@ -1,6 +1,14 @@
 #include <gtest/gtest.h>
 #include <jsontoolkit/json/read.h>
+#include <sstream> // std::istringstream
 #include <utility> // std::move
+
+TEST(CATEGORY, parse_from_stream) {
+  std::istringstream stream{"true"};
+  const auto document{sourcemeta::jsontoolkit::parse(stream)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(document));
+}
 
 TEST(CATEGORY, is_boolean_true) {
   const auto document{sourcemeta::jsontoolkit::parse("true")};

@@ -49,6 +49,29 @@ underlying JSON types. It is recommended to refer to this type as `auto`.
 
 ### Conversion
 
+#### `JSON parse(const std::basic_istream<C, T> &stream)`
+
+Create a JSON document from a C++ standard input stream. For example, a JSON
+document that represents an array can be parsed as follows:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+#include <sstream>
+
+std::istringstream stream{"[ 1, 2, 3 ]"};
+const auto document{sourcemeta::jsontoolkit::parse(stream)};
+assert(sourcemeta::jsontoolkit::is_array(document));
+```
+
+The return type of this function is backend-specific. To write code that is
+portable across backends, it is recommended to treat this as an opaque type
+using `auto`.
+
+If parsing fails,
+[`std::domain_error`](https://en.cppreference.com/w/cpp/error/domain_error)
+with a human-friendly error string will be thrown.
+
 #### `JSON parse(const std::string &source)`
 
 Create a JSON document from a JSON string. For example, a JSON document that
@@ -69,8 +92,6 @@ using `auto`.
 If parsing fails,
 [`std::domain_error`](https://en.cppreference.com/w/cpp/error/domain_error)
 with a human-friendly error string will be thrown.
-
-<!-- TODO: Allow parsing from an input stream -->
 
 #### `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t | double)`
 
