@@ -166,14 +166,6 @@ inline auto empty(const rapidjson::GenericValue<Encoding, Allocator> &value)
 }
 
 template <typename Encoding, typename Allocator>
-inline auto get(const rapidjson::GenericValue<Encoding, Allocator> &value,
-                const std::size_t index) -> const rapidjson::Value & {
-  assert(is_array(value));
-  assert(size(value) > index);
-  return value[static_cast<rapidjson::SizeType>(index)];
-}
-
-template <typename Encoding, typename Allocator>
 inline auto defines(const rapidjson::GenericValue<Encoding, Allocator> &value,
                     const std::string &key) -> bool {
   assert(is_object(value));
@@ -181,8 +173,16 @@ inline auto defines(const rapidjson::GenericValue<Encoding, Allocator> &value,
 }
 
 template <typename Encoding, typename Allocator>
-inline auto get(const rapidjson::GenericValue<Encoding, Allocator> &value,
-                const std::string &key) -> const rapidjson::Value & {
+inline auto at(const rapidjson::GenericValue<Encoding, Allocator> &value,
+               const std::size_t index) -> const rapidjson::Value & {
+  assert(is_array(value));
+  assert(size(value) > index);
+  return value[static_cast<rapidjson::SizeType>(index)];
+}
+
+template <typename Encoding, typename Allocator>
+inline auto at(const rapidjson::GenericValue<Encoding, Allocator> &value,
+               const std::string &key) -> const rapidjson::Value & {
   assert(is_object(value));
   assert(defines(value, key));
   return value[key];

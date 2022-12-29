@@ -347,7 +347,7 @@ assert(sourcemeta::jsontoolkit::empty(my_array));
 assert(sourcemeta::jsontoolkit::empty(my_string));
 ```
 
-#### `JSON& get(const JSON &, std::size_t index | const std::string &key)`
+#### `JSON& at(const JSON &, std::size_t index | const std::string &key)`
 #### `bool defines(const JSON &, const std::string &key)`
 
 ### Writing
