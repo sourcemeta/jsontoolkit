@@ -327,6 +327,26 @@ assert(sourcemeta::jsontoolkit::size(my_string) == 3);
 ```
 
 #### `bool empty(const JSON &)`
+
+A convenience function to check whether the input JSON document is an empty
+object, empty array or empty string. The result of this function is undefined
+for other types of JSON instances.
+
+For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto my_object{sourcemeta::jsontoolkit::parse("{}")};
+const auto my_array{sourcemeta::jsontoolkit::parse("[]")};
+const auto my_string{sourcemeta::jsontoolkit::parse("\"\"")};
+
+assert(sourcemeta::jsontoolkit::empty(my_object));
+assert(sourcemeta::jsontoolkit::empty(my_array));
+assert(sourcemeta::jsontoolkit::empty(my_string));
+```
+
 #### `JSON& get(const JSON &, std::size_t index | const std::string &key)`
 #### `bool defines(const JSON &, const std::string &key)`
 
