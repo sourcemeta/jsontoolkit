@@ -305,6 +305,27 @@ assert(sourcemeta::jsontoolkit::to_string(document) == "foo");
 ```
 
 #### `std::size_t size(const JSON &)`
+
+If the input JSON instance is an object, return its number of pairs. If the
+input JSON instance is an array, return its number of elements. If the input
+JSON instance is a string, return its length. The result of this function is
+undefined for other types of JSON instances.
+
+For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto my_object{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+const auto my_array{sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+const auto my_string{sourcemeta::jsontoolkit::parse("\"foo\"")};
+
+assert(sourcemeta::jsontoolkit::size(my_object) == 1);
+assert(sourcemeta::jsontoolkit::size(my_array) == 2);
+assert(sourcemeta::jsontoolkit::size(my_string) == 3);
+```
+
 #### `bool empty(const JSON &)`
 #### `JSON& get(const JSON &, std::size_t index | const std::string &key)`
 #### `bool defines(const JSON &, const std::string &key)`
