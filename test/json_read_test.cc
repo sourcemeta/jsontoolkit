@@ -1156,3 +1156,19 @@ TEST(CATEGORY, to_string_not_modify_result) {
   sourcemeta::jsontoolkit::to_string(document)[0] = 'x';
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
 }
+
+TEST(CATEGORY, const_array_front) {
+  const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  const auto &front{sourcemeta::jsontoolkit::front(document)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(front));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(front), 1);
+}
+
+TEST(CATEGORY, const_array_back) {
+  const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  const auto &back{sourcemeta::jsontoolkit::back(document)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(back));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(back), 3);
+}
