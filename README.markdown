@@ -263,7 +263,7 @@ assert(sourcemeta::jsontoolkit::is_real(document));
 #### `ConstIterator object::cbegin(const JSON &)`
 #### `ConstIterator object::cend(const JSON &)`
 #### `JSON& value(const IteratorPair &)`
-#### `(TODO) std::string& key(const IteratorPair &)`
+#### `std::string& key(const IteratorPair &)`
 
 Developing JSON Toolkit
 -----------------------
