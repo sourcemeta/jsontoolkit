@@ -1,6 +1,12 @@
 #include <gtest/gtest.h>
 #include <jsontoolkit/json/read.h>
+#include <sstream>   // std::istringstream
 #include <stdexcept> // std::domain_error
+
+TEST(CATEGORY, input_stream_error) {
+  std::istringstream stream{"["};
+  EXPECT_THROW(sourcemeta::jsontoolkit::parse(stream), std::domain_error);
+}
 
 TEST(CATEGORY, empty_array_incomplete_right) {
   EXPECT_THROW(sourcemeta::jsontoolkit::parse("["), std::domain_error);
