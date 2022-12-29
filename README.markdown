@@ -275,7 +275,35 @@ assert(sourcemeta::jsontoolkit::to_integer(document) == 5);
 ```
 
 #### `double to_real(const JSON &)`
+
+Convert a JSON instance into an IEEE 64-bit floating-point value. The result of
+this function is undefined unless the JSON instance holds a real value. For
+example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::from(3.14)};
+assert(sourcemeta::jsontoolkit::is_real(document));
+assert(sourcemeta::jsontoolkit::to_real(document) == 3.14);
+```
+
 #### `std::string to_string(const JSON &)`
+
+Convert a JSON instance into a standard string value. The result of this
+function is undefined unless the JSON instance holds a string value. For
+example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const auto document{sourcemeta::jsontoolkit::from("foo")};
+assert(sourcemeta::jsontoolkit::is_string(document));
+assert(sourcemeta::jsontoolkit::to_string(document) == "foo");
+```
+
 #### `std::size_t size(const JSON &)`
 #### `bool empty(const JSON &)`
 #### `JSON& get(const JSON &, std::size_t index | const std::string &key)`
