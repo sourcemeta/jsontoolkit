@@ -8,21 +8,15 @@
 
 namespace sourcemeta::jsontoolkit {
 
-template <typename Encoding, typename Allocator>
-inline auto value(const rapidjson::GenericMember<Encoding, Allocator> &member)
-    -> const JSONValue & {
+inline auto value(const rapidjson::Value::Member &member) -> const JSONValue & {
   return member.value;
 }
 
-template <typename Encoding, typename Allocator>
-inline auto key(rapidjson::GenericMember<Encoding, Allocator> &member)
-    -> std::string {
+inline auto key(rapidjson::Value::Member &member) -> std::string {
   return member.name.GetString();
 }
 
-template <typename Encoding, typename Allocator>
-inline auto value(rapidjson::GenericMember<Encoding, Allocator> &member)
-    -> JSONValue & {
+inline auto value(rapidjson::Value::Member &member) -> JSONValue & {
   return member.value;
 }
 
