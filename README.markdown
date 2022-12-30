@@ -424,14 +424,10 @@ assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 
 ### Writing
 
-#### `(TODO REMOVE, use from) void set(JSON &root, JSON &value, std::nullptr_t | std::int64_t | double | const std::string &)`
-#### `(TODO REMOVE, use from) void set(JSON &root, std::nullptr_t | std::int64_t | double | const std::string &)`
-<!-- `(TODO) void set(JSON &root, JSON &value, bool)` -->
-
+#### `void set([JSON &root,] JSON &value, const JSON &other)`
+#### `void assign([JSON &root,] JSON &value, const std::string &key, JSON &)`
 #### `void erase(JSON &, const std::string &key)`
 #### `void clear(JSON &)`
-#### `void assign(JSON &root, JSON &value, const std::string &key, JSON &)`
-#### `void assign(JSON &root, const std::string &key, JSON &)`
 
 ### Iterators
 

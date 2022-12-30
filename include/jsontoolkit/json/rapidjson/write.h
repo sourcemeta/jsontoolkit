@@ -17,57 +17,28 @@
 namespace sourcemeta::jsontoolkit {
 
 template <typename Encoding, typename Allocator>
-inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &,
-                rapidjson::GenericValue<Encoding, Allocator> &value,
-                std::nullptr_t) -> void {
-  value.SetNull();
-}
-
-template <typename Encoding, typename Allocator>
-inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &value,
-                std::nullptr_t) -> void {
-  return set(value, value, nullptr);
-}
-
-template <typename Encoding, typename Allocator>
-inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &,
-                rapidjson::GenericValue<Encoding, Allocator> &value,
-                std::int64_t new_value) -> void {
-  value.SetInt64(new_value);
-}
-
-template <typename Encoding, typename Allocator>
-inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &value,
-                std::int64_t new_value) -> void {
-  return set(value, value, new_value);
-}
-
-template <typename Encoding, typename Allocator, typename T,
-          typename = std::enable_if_t<std::is_same_v<T, double>>>
-inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &,
-                rapidjson::GenericValue<Encoding, Allocator> &value,
-                T new_value) -> void {
-  value.SetDouble(new_value);
-}
-
-template <typename Encoding, typename Allocator, typename T,
-          typename = std::enable_if_t<std::is_same_v<T, double>>>
-inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &value,
-                T new_value) -> void {
-  return set(value, value, new_value);
-}
-
-template <typename Encoding, typename Allocator>
 inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &root,
                 rapidjson::GenericValue<Encoding, Allocator> &value,
-                const std::string &new_value) -> void {
-  value.SetString(new_value.c_str(), root.GetAllocator());
+                const rapidjson::GenericValue<Encoding, Allocator> &other)
+    -> void {
+  if (other.IsNull()) {
+    value.SetNull();
+  } else if (other.IsInt64()) {
+    value.SetInt64(other.GetInt64());
+  } else if (other.IsDouble()) {
+    value.SetDouble(other.GetDouble());
+  } else if (other.IsString()) {
+    value.SetString(other.GetString(), root.GetAllocator());
+  } else {
+    value.CopyFrom(other, root.GetAllocator());
+  }
 }
 
 template <typename Encoding, typename Allocator>
 inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &value,
-                const std::string &new_value) -> void {
-  return set(value, value, new_value);
+                const rapidjson::GenericValue<Encoding, Allocator> &other)
+    -> void {
+  return set(value, value, other);
 }
 
 template <typename Encoding, typename Allocator>

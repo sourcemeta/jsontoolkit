@@ -7,7 +7,8 @@ TEST(CATEGORY, set_null) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_null(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, nullptr);
+  sourcemeta::jsontoolkit::set(document,
+                               sourcemeta::jsontoolkit::from(nullptr));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_null(document));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_boolean(document));
 }
@@ -15,23 +16,25 @@ TEST(CATEGORY, set_null) {
 TEST(CATEGORY, set_negative_integer) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, -4);
+  sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(-4));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), -4);
 }
 
 TEST(CATEGORY, set_negative_real) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, -4.3);
+  sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(-4.3));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), -4.3);
 }
 
 TEST(CATEGORY, set_negative_integral_real) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, -4.0);
+  sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(-4.0));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
 }
@@ -39,7 +42,7 @@ TEST(CATEGORY, set_negative_integral_real) {
 TEST(CATEGORY, set_positive_integer) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, 4);
+  sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(4));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_real(document));
 }
@@ -47,7 +50,7 @@ TEST(CATEGORY, set_positive_integer) {
 TEST(CATEGORY, set_positive_real) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, 4.3);
+  sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(4.3));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
 }
@@ -55,7 +58,7 @@ TEST(CATEGORY, set_positive_real) {
 TEST(CATEGORY, set_positive_integral_real) {
   auto document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
-  sourcemeta::jsontoolkit::set(document, 4.0);
+  sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(4.0));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
 }
@@ -219,7 +222,7 @@ TEST(CATEGORY, new_key_move_assignment) {
 TEST(CATEGORY, assignment_string_from_boolean) {
   auto document{sourcemeta::jsontoolkit::from(false)};
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_string(document));
-  sourcemeta::jsontoolkit::set(document, "foo");
+  sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from("foo"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
 }
@@ -228,7 +231,7 @@ TEST(CATEGORY, assignment_string_from_string) {
   auto document{sourcemeta::jsontoolkit::from("foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
-  sourcemeta::jsontoolkit::set(document, "bar");
+  sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from("bar"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "bar");
 }
@@ -256,7 +259,8 @@ TEST(CATEGORY, array_set_child) {
                 sourcemeta::jsontoolkit::at(document, 2)),
             3);
   sourcemeta::jsontoolkit::set(document,
-                               sourcemeta::jsontoolkit::at(document, 1), 6);
+                               sourcemeta::jsontoolkit::at(document, 1),
+                               sourcemeta::jsontoolkit::from(6));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
