@@ -32,10 +32,13 @@ target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE
   ${JSONTOOLKIT_BACKEND})
 
 if(PROJECT_IS_TOP_LEVEL)
-  if(JSONBINPACK_TESTS)
-    enable_testing()
-    include(cmake/googletest.cmake)
-    add_subdirectory(./test)
-  endif()
   include(cmake/clang-format.cmake)
+  if(JSONTOOLKIT_TESTS)
+    enable_testing()
+  endif()
+endif()
+
+if(JSONTOOLKIT_TESTS)
+  include(cmake/googletest.cmake)
+  add_subdirectory(./test)
 endif()
