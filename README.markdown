@@ -44,15 +44,12 @@ target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit_jso
 Documentation
 -------------
 
-JSON Toolkit provides a set of (mostly `inline`) functions under the
-`sourcemeta::jsontoolkit` namespace that are included as follows:
+JSON Toolkit provides a set of (mostly `inline`) functions and aliases under
+the `sourcemeta::jsontoolkit` namespace that are included as follows:
 
 ```c++
 #include <jsontoolkit/json.h>
 ```
-
-The `JSON` type referred to by the functions below is a logical alias to the
-underlying JSON types. It is recommended to refer to this type as `auto`.
 
 ### Conversion
 

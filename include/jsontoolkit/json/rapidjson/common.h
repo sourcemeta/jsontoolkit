@@ -12,4 +12,8 @@
 #include <rapidjson/writer.h>         // rapidjson::Writer
 #pragma clang diagnostic pop
 
+namespace sourcemeta::jsontoolkit {
+using JSON = rapidjson::Document;
+}
+
 #endif

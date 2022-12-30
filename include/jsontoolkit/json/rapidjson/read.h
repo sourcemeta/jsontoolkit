@@ -14,7 +14,7 @@
 
 namespace sourcemeta::jsontoolkit {
 
-inline auto parse(const std::string &json) -> rapidjson::Document {
+inline auto parse(const std::string &json) -> JSON {
   rapidjson::Document document;
   document.Parse(json);
   if (document.HasParseError()) {
@@ -26,8 +26,7 @@ inline auto parse(const std::string &json) -> rapidjson::Document {
 }
 
 template <typename CharT, typename Traits>
-inline auto parse(std::basic_istream<CharT, Traits> &stream)
-    -> rapidjson::Document {
+inline auto parse(std::basic_istream<CharT, Traits> &stream) -> JSON {
   rapidjson::IStreamWrapper istream_wrapper{stream};
   rapidjson::Document document;
   document.ParseStream(istream_wrapper);
@@ -39,33 +38,29 @@ inline auto parse(std::basic_istream<CharT, Traits> &stream)
   return document;
 }
 
-inline auto from(const std::string &value) -> rapidjson::Document {
+inline auto from(const std::string &value) -> JSON {
   rapidjson::Document document;
   document.SetString(value.c_str(), document.GetAllocator());
   return document;
 }
 
-inline auto from(std::nullptr_t) -> rapidjson::Document {
-  return parse("null");
-}
+inline auto from(std::nullptr_t) -> JSON { return parse("null"); }
 
-inline auto from(std::int64_t value) -> rapidjson::Document {
+inline auto from(std::int64_t value) -> JSON {
   rapidjson::Document document;
   document.SetInt64(value);
   return document;
 }
 
 template <typename T>
-typename std::enable_if_t<std::is_same_v<T, double>, rapidjson::Document>
-from(T value) {
+typename std::enable_if_t<std::is_same_v<T, double>, JSON> from(T value) {
   rapidjson::Document document;
   document.SetDouble(value);
   return document;
 }
 
 template <typename T>
-typename std::enable_if_t<std::is_same_v<T, bool>, rapidjson::Document>
-from(T value) {
+typename std::enable_if_t<std::is_same_v<T, bool>, JSON> from(T value) {
   return value ? parse("true") : parse("false");
 }
 
