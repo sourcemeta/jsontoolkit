@@ -17,3 +17,12 @@ macro(add_jsontoolkit_json_test backend)
 endmacro()
 
 add_jsontoolkit_json_test(${JSONTOOLKIT_BACKEND})
+
+# JSON Test Suite
+# See https://github.com/nst/JSONTestSuite
+add_executable(sourcemeta_jsontoolkit_jsontestsuite jsontestsuite.cc)
+target_compile_definitions(sourcemeta_jsontoolkit_jsontestsuite
+  PRIVATE JSONTESTSUITE_PATH="${PROJECT_SOURCE_DIR}/vendor/jsontestsuite")
+target_link_libraries(sourcemeta_jsontoolkit_jsontestsuite PRIVATE GTest::gtest)
+target_link_libraries(sourcemeta_jsontoolkit_jsontestsuite PRIVATE sourcemeta_jsontoolkit_json)
+gtest_discover_tests(sourcemeta_jsontoolkit_jsontestsuite)
