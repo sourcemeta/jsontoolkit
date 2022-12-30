@@ -67,6 +67,11 @@ inline auto assign(JSON &root, const std::string &key, JSONValue &&member)
   return assign(root, root, key, member);
 }
 
+// TODO: Add .push_back()
+// TODO: Add .pop_back()
+// TODO: Add .make_object()
+// TODO: Add .make_array()
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif
