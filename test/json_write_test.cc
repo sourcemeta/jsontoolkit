@@ -13,6 +13,17 @@ TEST(CATEGORY, set_null) {
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_boolean(document));
 }
 
+TEST(CATEGORY, set_const_null) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_null(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  const sourcemeta::jsontoolkit::JSON new_value{
+      sourcemeta::jsontoolkit::from(nullptr)};
+  sourcemeta::jsontoolkit::set(document, new_value);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_null(document));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_boolean(document));
+}
+
 TEST(CATEGORY, set_negative_integer) {
   sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));

@@ -11,14 +11,19 @@
 
 namespace sourcemeta::jsontoolkit {
 
-// TODO: Add non-const alternatives to set()
-// TODO: Add efficient "move" overloads
-
 inline auto set(JSON &root, JSONValue &value, const JSONValue &other) -> void {
   value.CopyFrom(other, root.GetAllocator());
 }
 
 inline auto set(JSON &value, const JSONValue &other) -> void {
+  return set(value, value, other);
+}
+
+inline auto set(JSON &, JSONValue &value, JSONValue &&other) -> void {
+  value.Swap(other);
+}
+
+inline auto set(JSON &value, JSONValue &&other) -> void {
   return set(value, value, other);
 }
 
