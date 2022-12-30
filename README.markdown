@@ -343,7 +343,7 @@ assert(sourcemeta::jsontoolkit::empty(my_array));
 assert(sourcemeta::jsontoolkit::empty(my_string));
 ```
 
-#### `JSON& at([const] JSON & | [const] JSONValue &, std::size_t index | const std::string &key)`
+#### `JSONValue& at([const] JSON & | [const] JSONValue &, std::size_t index | const std::string &key)`
 
 This function retrieves a reference to an object value or an array element.
 This function supports both `const` and non-`const` overloads. The result of
@@ -365,7 +365,7 @@ const sourcemeta::jsontoolkit::JSONValue &element{sourcemeta::jsontoolkit::at(my
 assert(sourcemeta::jsontoolkit::to_integer(element) == 2);
 ```
 
-#### `JSON& front([const] JSON & | [const] JSONValue &)`
+#### `JSONValue& front([const] JSON & | [const] JSONValue &)`
 
 This function retrieves a reference to the first element of a JSON array. This
 function supports both `const` and non-`const` overloads. This function is
@@ -381,7 +381,7 @@ const sourcemeta::jsontoolkit::JSONValue &value{sourcemeta::jsontoolkit::front(m
 assert(sourcemeta::jsontoolkit::to_integer(value) == 1);
 ```
 
-#### `JSON& back([const] JSON & | [const] JSONValue &)`
+#### `JSONValue& back([const] JSON & | [const] JSONValue &)`
 
 This function retrieves a reference to the last element of a JSON array. This
 function supports both `const` and non-`const` overloads. This function is
