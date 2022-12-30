@@ -14,29 +14,20 @@ namespace sourcemeta::jsontoolkit {
 // TODO: Add non-const alternatives to set()
 // TODO: Add efficient "move" overloads
 
-template <typename Encoding, typename Allocator>
-inline auto set(JSON &root, rapidjson::GenericValue<Encoding, Allocator> &value,
-                const rapidjson::GenericValue<Encoding, Allocator> &other)
-    -> void {
+inline auto set(JSON &root, JSONValue &value, const JSONValue &other) -> void {
   value.CopyFrom(other, root.GetAllocator());
 }
 
-template <typename Encoding, typename Allocator>
-inline auto set(JSON &value,
-                const rapidjson::GenericValue<Encoding, Allocator> &other)
-    -> void {
+inline auto set(JSON &value, const JSONValue &other) -> void {
   return set(value, value, other);
 }
 
-template <typename Encoding, typename Allocator>
-inline auto erase(rapidjson::GenericValue<Encoding, Allocator> &value,
-                  const std::string &key) -> void {
+inline auto erase(JSONValue &value, const std::string &key) -> void {
   assert(is_object(value));
   value.EraseMember(key);
 }
 
-template <typename Encoding, typename Allocator>
-inline auto clear(rapidjson::GenericValue<Encoding, Allocator> &value) -> void {
+inline auto clear(JSONValue &value) -> void {
   if (is_array(value)) {
     value.Erase(value.Begin(), value.End());
   } else {
@@ -44,44 +35,29 @@ inline auto clear(rapidjson::GenericValue<Encoding, Allocator> &value) -> void {
   }
 }
 
-template <typename Encoding, typename Allocator>
-inline auto assign(JSON &root,
-                   rapidjson::GenericValue<Encoding, Allocator> &value,
-                   const std::string &key,
-                   const rapidjson::GenericValue<Encoding, Allocator> &member)
-    -> void {
+inline auto assign(JSON &root, JSONValue &value, const std::string &key,
+                   const JSONValue &member) -> void {
   assert(is_object(value));
   auto &allocator{root.GetAllocator()};
   if (defines(value, key)) {
-    value[key] =
-        rapidjson::GenericValue<Encoding, Allocator>{member, allocator};
+    value[key] = JSONValue{member, allocator};
   } else {
-    value.AddMember(
-        from(key),
-        rapidjson::GenericValue<Encoding, Allocator>{member, allocator},
-        allocator);
+    value.AddMember(from(key), JSONValue{member, allocator}, allocator);
   }
 }
 
-template <typename Encoding, typename Allocator>
-inline auto assign(JSON &root, const std::string &key,
-                   const rapidjson::GenericValue<Encoding, Allocator> &member)
+inline auto assign(JSON &root, const std::string &key, const JSONValue &member)
     -> void {
   return assign(root, root, key, member);
 }
 
-template <typename Encoding, typename Allocator>
-inline auto assign(JSON &, rapidjson::GenericValue<Encoding, Allocator> &value,
-                   const std::string &key,
-                   rapidjson::GenericValue<Encoding, Allocator> &&member)
-    -> void {
+inline auto assign(JSON &, JSONValue &value, const std::string &key,
+                   JSONValue &&member) -> void {
   assert(is_object(value));
   value[key] = member;
 }
 
-template <typename Encoding, typename Allocator>
-inline auto assign(JSON &root, const std::string &key,
-                   rapidjson::GenericValue<Encoding, Allocator> &&member)
+inline auto assign(JSON &root, const std::string &key, JSONValue &&member)
     -> void {
   return assign(root, root, key, member);
 }
