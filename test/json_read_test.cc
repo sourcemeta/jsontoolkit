@@ -36,7 +36,8 @@ TEST(CATEGORY, array_parse_deep_success) {
       sourcemeta::jsontoolkit::parse("[true]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value));
 }
 
@@ -45,7 +46,8 @@ TEST(CATEGORY, array_single_element_with_inner_space) {
       sourcemeta::jsontoolkit::parse("[    true    ]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value));
 }
 
@@ -54,7 +56,8 @@ TEST(CATEGORY, array_single_element_with_padding) {
       sourcemeta::jsontoolkit::parse("   [ true ]   ")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value));
 }
 
@@ -63,8 +66,10 @@ TEST(CATEGORY, array_two_elements_with_spacing) {
       sourcemeta::jsontoolkit::parse("[   true  ,   false   ]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
-  const auto &value_2{sourcemeta::jsontoolkit::at(document, 1)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_2{
+      sourcemeta::jsontoolkit::at(document, 1)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value_1));
   EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(value_2));
 }
@@ -74,12 +79,15 @@ TEST(CATEGORY, one_level_nested_array) {
       sourcemeta::jsontoolkit::parse("[[true],false]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
-  const auto &value_2{sourcemeta::jsontoolkit::at(document, 1)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_2{
+      sourcemeta::jsontoolkit::at(document, 1)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(value_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value_2));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value_1), 1);
-  const auto &subvalue_1{sourcemeta::jsontoolkit::at(value_1, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue_1{
+      sourcemeta::jsontoolkit::at(value_1, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(subvalue_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(subvalue_1));
   EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(value_2));
@@ -90,12 +98,15 @@ TEST(CATEGORY, one_level_nested_array_with_padding) {
       sourcemeta::jsontoolkit::parse("  [  [ true  ]  ,  false  ]  ")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
-  const auto &value_2{sourcemeta::jsontoolkit::at(document, 1)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_2{
+      sourcemeta::jsontoolkit::at(document, 1)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(value_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value_2));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value_1), 1);
-  const auto &subvalue_1{sourcemeta::jsontoolkit::at(value_1, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue_1{
+      sourcemeta::jsontoolkit::at(value_1, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(subvalue_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(subvalue_1));
   EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(value_2));
@@ -106,19 +117,24 @@ TEST(CATEGORY, two_levels_nested_array) {
       sourcemeta::jsontoolkit::parse("[true,[false,[true]]]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
-  const auto &value_2{sourcemeta::jsontoolkit::at(document, 1)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_2{
+      sourcemeta::jsontoolkit::at(document, 1)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(value_2));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value_2), 2);
-  const auto &subvalue_1{sourcemeta::jsontoolkit::at(value_2, 0)};
-  const auto &subvalue_2{sourcemeta::jsontoolkit::at(value_2, 1)};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue_1{
+      sourcemeta::jsontoolkit::at(value_2, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue_2{
+      sourcemeta::jsontoolkit::at(value_2, 1)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(subvalue_1));
   EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(subvalue_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(subvalue_2));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(subvalue_2), 1);
-  const auto &subsubvalue_1{sourcemeta::jsontoolkit::at(subvalue_2, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &subsubvalue_1{
+      sourcemeta::jsontoolkit::at(subvalue_2, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(subsubvalue_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(subsubvalue_1));
 }
@@ -128,19 +144,24 @@ TEST(CATEGORY, two_levels_nested_array_with_padding) {
       "  [  true , [  false  , [ true ]  ]  ] ")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
-  const auto &value_2{sourcemeta::jsontoolkit::at(document, 1)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_2{
+      sourcemeta::jsontoolkit::at(document, 1)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(value_2));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value_2), 2);
-  const auto &subvalue_1{sourcemeta::jsontoolkit::at(value_2, 0)};
-  const auto &subvalue_2{sourcemeta::jsontoolkit::at(value_2, 1)};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue_1{
+      sourcemeta::jsontoolkit::at(value_2, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue_2{
+      sourcemeta::jsontoolkit::at(value_2, 1)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(subvalue_1));
   EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(subvalue_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(subvalue_2));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(subvalue_2), 1);
-  const auto &subsubvalue_1{sourcemeta::jsontoolkit::at(subvalue_2, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &subsubvalue_1{
+      sourcemeta::jsontoolkit::at(subvalue_2, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(subsubvalue_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(subsubvalue_1));
 }
@@ -150,7 +171,8 @@ TEST(CATEGORY, array_of_single0_string) {
       sourcemeta::jsontoolkit::parse("[\"foo\"]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value_1), "foo");
 }
@@ -160,7 +182,8 @@ TEST(CATEGORY, array_comma_within_string_element) {
       sourcemeta::jsontoolkit::parse("[\"foo,bar\"]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value_1), "foo,bar");
 }
@@ -170,7 +193,8 @@ TEST(CATEGORY, boolean_array_within_string_element) {
       sourcemeta::jsontoolkit::parse("[\"[false,true]\"]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value_1), "[false,true]");
 }
@@ -180,7 +204,8 @@ TEST(CATEGORY, array_escaped_quote_within_string_element) {
       sourcemeta::jsontoolkit::parse("[\"foo\\\"bar\"]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value_1), "foo\"bar");
 }
@@ -190,7 +215,8 @@ TEST(CATEGORY, array_single_positive_integer_element) {
       sourcemeta::jsontoolkit::parse("[4]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(value_1), 4);
 }
@@ -200,7 +226,8 @@ TEST(CATEGORY, array_single_negative_integer_element) {
       sourcemeta::jsontoolkit::parse("[-4]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(value_1), -4);
 }
@@ -210,7 +237,8 @@ TEST(CATEGORY, array_single_positive_real_number_element) {
       sourcemeta::jsontoolkit::parse("[4.3]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_real(value_1), 4.3);
 }
@@ -220,7 +248,8 @@ TEST(CATEGORY, array_single_negative_real_number_element) {
       sourcemeta::jsontoolkit::parse("[-4.3]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_real(value_1), -4.3);
 }
@@ -230,7 +259,8 @@ TEST(CATEGORY, array_single_exponential_number_element) {
       sourcemeta::jsontoolkit::parse("[3e2]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_real(value_1), 300.0);
 }
@@ -240,7 +270,8 @@ TEST(CATEGORY, array_single_empty_object_element) {
       sourcemeta::jsontoolkit::parse("[{}]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value_1), 0);
 }
@@ -250,10 +281,12 @@ TEST(CATEGORY, array_single_object_element_with_one_simple_key) {
       sourcemeta::jsontoolkit::parse("[{\"foo\":1}]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value_1), 1);
-  const auto &subvalue_1{sourcemeta::jsontoolkit::at(value_1, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue_1{
+      sourcemeta::jsontoolkit::at(value_1, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(subvalue_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(subvalue_1), 1);
 }
@@ -263,11 +296,14 @@ TEST(CATEGORY, array_single_object_element_with_two_simple_keys) {
       sourcemeta::jsontoolkit::parse("[{\"foo\":1,\"bar\":2}]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
-  const auto &value_1{sourcemeta::jsontoolkit::at(document, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &value_1{
+      sourcemeta::jsontoolkit::at(document, 0)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(value_1));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value_1), 2);
-  const auto &subvalue_1{sourcemeta::jsontoolkit::at(value_1, "foo")};
-  const auto &subvalue_2{sourcemeta::jsontoolkit::at(value_1, "bar")};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue_1{
+      sourcemeta::jsontoolkit::at(value_1, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue_2{
+      sourcemeta::jsontoolkit::at(value_1, "bar")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(subvalue_1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(subvalue_2));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(subvalue_1), 1);
@@ -289,9 +325,12 @@ TEST(CATEGORY, array_contains_string_key_false) {
 }
 
 TEST(CATEGORY, array_equality_with_padding) {
-  const auto left{sourcemeta::jsontoolkit::parse("[1,2,3]")};
-  const auto right{sourcemeta::jsontoolkit::parse("   [ 1  , 2,  3 ]")};
-  const auto extra{sourcemeta::jsontoolkit::parse(" [1,2,2]")};
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("   [ 1  , 2,  3 ]")};
+  const sourcemeta::jsontoolkit::JSON extra{
+      sourcemeta::jsontoolkit::parse(" [1,2,2]")};
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
@@ -361,36 +400,47 @@ TEST(CATEGORY, false_string_padded) {
 }
 
 TEST(CATEGORY, false_literal_equality) {
-  const auto left{sourcemeta::jsontoolkit::from(false)};
-  const auto right{sourcemeta::jsontoolkit::from(false)};
-  const auto extra{sourcemeta::jsontoolkit::from(true)};
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::from(false)};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::from(false)};
+  const sourcemeta::jsontoolkit::JSON extra{
+      sourcemeta::jsontoolkit::from(true)};
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
 }
 
 TEST(CATEGORY, true_literal_equality) {
-  const auto left{sourcemeta::jsontoolkit::from(true)};
-  const auto right{sourcemeta::jsontoolkit::from(true)};
-  const auto extra{sourcemeta::jsontoolkit::from(false)};
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(true)};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::from(true)};
+  const sourcemeta::jsontoolkit::JSON extra{
+      sourcemeta::jsontoolkit::from(false)};
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
 }
 
 TEST(CATEGORY, false_equality_with_padding) {
-  const auto left{sourcemeta::jsontoolkit::parse("false")};
-  const auto right{sourcemeta::jsontoolkit::parse("  false  ")};
-  const auto extra{sourcemeta::jsontoolkit::parse("true")};
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("false")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("  false  ")};
+  const sourcemeta::jsontoolkit::JSON extra{
+      sourcemeta::jsontoolkit::parse("true")};
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
 }
 
 TEST(CATEGORY, true_equality_with_padding) {
-  const auto left{sourcemeta::jsontoolkit::parse("true")};
-  const auto right{sourcemeta::jsontoolkit::parse("  true  ")};
-  const auto extra{sourcemeta::jsontoolkit::parse("false")};
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("true")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("  true  ")};
+  const sourcemeta::jsontoolkit::JSON extra{
+      sourcemeta::jsontoolkit::parse("false")};
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
@@ -415,18 +465,24 @@ TEST(CATEGORY, null_valid_with_padding) {
 }
 
 TEST(CATEGORY, null_equality_with_literal) {
-  const auto left{sourcemeta::jsontoolkit::from(nullptr)};
-  const auto right{sourcemeta::jsontoolkit::from(nullptr)};
-  const auto extra{sourcemeta::jsontoolkit::from(false)};
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::from(nullptr)};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::from(nullptr)};
+  const sourcemeta::jsontoolkit::JSON extra{
+      sourcemeta::jsontoolkit::from(false)};
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
 }
 
 TEST(CATEGORY, null_equality_with_padding) {
-  const auto left{sourcemeta::jsontoolkit::parse("null")};
-  const auto right{sourcemeta::jsontoolkit::parse("   null  ")};
-  const auto extra{sourcemeta::jsontoolkit::from(false)};
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("null")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("   null  ")};
+  const sourcemeta::jsontoolkit::JSON extra{
+      sourcemeta::jsontoolkit::from(false)};
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
@@ -856,18 +912,23 @@ TEST(CATEGORY, exponential_notation_integer_3_real) {
 }
 
 TEST(CATEGORY, integer_equality_with_padding) {
-  const auto left{sourcemeta::jsontoolkit::parse("5")};
-  const auto right{sourcemeta::jsontoolkit::parse("   5   ")};
-  const auto extra{sourcemeta::jsontoolkit::parse("   5.1   ")};
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::parse("5")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("   5   ")};
+  const sourcemeta::jsontoolkit::JSON extra{
+      sourcemeta::jsontoolkit::parse("   5.1   ")};
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
 }
 
 TEST(CATEGORY, real_equality_with_padding) {
-  const auto left{sourcemeta::jsontoolkit::parse("5.4")};
-  const auto right{sourcemeta::jsontoolkit::parse("   5.4   ")};
-  const auto extra{sourcemeta::jsontoolkit::parse("   5   ")};
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("5.4")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("   5.4   ")};
+  const sourcemeta::jsontoolkit::JSON extra{
+      sourcemeta::jsontoolkit::parse("   5   ")};
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
@@ -875,15 +936,18 @@ TEST(CATEGORY, real_equality_with_padding) {
 
 // JSON has no distinction between integers and reals
 TEST(CATEGORY, json_integer_json_real_equal) {
-  const auto left{sourcemeta::jsontoolkit::parse("1")};
-  const auto right{sourcemeta::jsontoolkit::parse("1.0")};
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::parse("1")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("1.0")};
   EXPECT_EQ(left, right);
 }
 
 // JSON has no distinction between integers and reals
 TEST(CATEGORY, json_real_json_integer_equal) {
-  const auto left{sourcemeta::jsontoolkit::parse("1.0")};
-  const auto right{sourcemeta::jsontoolkit::parse("1")};
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("1.0")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("1")};
   EXPECT_EQ(left, right);
 }
 
@@ -921,7 +985,8 @@ TEST(CATEGORY, object_parse_deep_success) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
 }
@@ -932,7 +997,8 @@ TEST(CATEGORY, minified_one_true_boolean_element) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
 }
@@ -943,7 +1009,8 @@ TEST(CATEGORY, minified_one_false_boolean_element) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
   EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(value1));
 }
@@ -955,10 +1022,12 @@ TEST(CATEGORY, minified_two_boolean_values) {
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
-  const auto &value2{sourcemeta::jsontoolkit::at(document, "bar")};
+  const sourcemeta::jsontoolkit::JSONValue &value2{
+      sourcemeta::jsontoolkit::at(document, "bar")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value2));
   EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(value2));
 }
@@ -969,11 +1038,14 @@ TEST(CATEGORY, object_minified_one_array_element) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value1), 2);
-  const auto &subvalue1{sourcemeta::jsontoolkit::at(value1, 0)};
-  const auto &subvalue2{sourcemeta::jsontoolkit::at(value1, 1)};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue1{
+      sourcemeta::jsontoolkit::at(value1, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue2{
+      sourcemeta::jsontoolkit::at(value1, 1)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(subvalue1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(subvalue2));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(subvalue1));
@@ -986,7 +1058,8 @@ TEST(CATEGORY, object_string_value_with_comma) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "bar,baz");
 }
@@ -997,7 +1070,8 @@ TEST(CATEGORY, object_string_value_with_escaped_quote) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "bar\"baz");
 }
@@ -1008,7 +1082,8 @@ TEST(CATEGORY, empty_string_key) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, ""));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "foo");
 }
@@ -1019,7 +1094,8 @@ TEST(CATEGORY, string_key_with_comma) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo,bar"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo,bar")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo,bar")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "baz");
 }
@@ -1030,7 +1106,8 @@ TEST(CATEGORY, string_key_with_space) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo bar"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo bar")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo bar")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "baz");
 }
@@ -1041,7 +1118,8 @@ TEST(CATEGORY, string_value_with_stringified_object) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(value1), "{\"x\":1}");
 }
@@ -1052,7 +1130,8 @@ TEST(CATEGORY, one_true_boolean_element_with_space) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
 }
@@ -1064,10 +1143,12 @@ TEST(CATEGORY, two_boolean_values_with_space) {
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value1));
-  const auto &value2{sourcemeta::jsontoolkit::at(document, "bar")};
+  const sourcemeta::jsontoolkit::JSONValue &value2{
+      sourcemeta::jsontoolkit::at(document, "bar")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value2));
   EXPECT_FALSE(sourcemeta::jsontoolkit::to_boolean(value2));
 }
@@ -1078,11 +1159,14 @@ TEST(CATEGORY, one_array_element_with_space) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value1), 2);
-  const auto &subvalue1{sourcemeta::jsontoolkit::at(value1, 0)};
-  const auto &subvalue2{sourcemeta::jsontoolkit::at(value1, 1)};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue1{
+      sourcemeta::jsontoolkit::at(value1, 0)};
+  const sourcemeta::jsontoolkit::JSONValue &subvalue2{
+      sourcemeta::jsontoolkit::at(value1, 1)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(subvalue1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(subvalue1));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(subvalue2));
@@ -1095,7 +1179,8 @@ TEST(CATEGORY, minified_nested_object) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value1), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(value1, "bar"));
@@ -1107,15 +1192,19 @@ TEST(CATEGORY, empty_nested_object_with_new_line_before_end) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "x"));
-  const auto &value1{sourcemeta::jsontoolkit::at(document, "x")};
+  const sourcemeta::jsontoolkit::JSONValue &value1{
+      sourcemeta::jsontoolkit::at(document, "x")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(value1));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(value1), 0);
 }
 
 TEST(CATEGORY, object_equality_with_padding) {
-  const auto left{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
-  const auto right{sourcemeta::jsontoolkit::parse("  { \"foo\"   : 1 } ")};
-  const auto extra{sourcemeta::jsontoolkit::parse(" { \"fo\":1 }")};
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("  { \"foo\"   : 1 } ")};
+  const sourcemeta::jsontoolkit::JSON extra{
+      sourcemeta::jsontoolkit::parse(" { \"fo\":1 }")};
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
@@ -1251,9 +1340,12 @@ TEST(CATEGORY, string_unicode_code_point_equality) {
 }
 
 TEST(CATEGORY, string_equality_with_padding) {
-  const auto left{sourcemeta::jsontoolkit::parse("\"foo\"")};
-  const auto right{sourcemeta::jsontoolkit::parse("  \"foo\"  ")};
-  const auto extra{sourcemeta::jsontoolkit::parse("\"fooo\"")};
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("\"foo\"")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("  \"foo\"  ")};
+  const sourcemeta::jsontoolkit::JSON extra{
+      sourcemeta::jsontoolkit::parse("\"fooo\"")};
   EXPECT_EQ(left, right);
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
@@ -1270,7 +1362,8 @@ TEST(CATEGORY, const_array_front) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
-  const auto &front{sourcemeta::jsontoolkit::front(document)};
+  const sourcemeta::jsontoolkit::JSONValue &front{
+      sourcemeta::jsontoolkit::front(document)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(front));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(front), 1);
 }
@@ -1279,7 +1372,8 @@ TEST(CATEGORY, const_array_back) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
-  const auto &back{sourcemeta::jsontoolkit::back(document)};
+  const sourcemeta::jsontoolkit::JSONValue &back{
+      sourcemeta::jsontoolkit::back(document)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(back));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(back), 3);
 }
@@ -1288,7 +1382,8 @@ TEST(CATEGORY, array_front) {
   sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
-  auto &front{sourcemeta::jsontoolkit::front(document)};
+  sourcemeta::jsontoolkit::JSONValue &front{
+      sourcemeta::jsontoolkit::front(document)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(front));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(front), 1);
 }
@@ -1297,7 +1392,8 @@ TEST(CATEGORY, array_back) {
   sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
-  auto &back{sourcemeta::jsontoolkit::back(document)};
+  sourcemeta::jsontoolkit::JSONValue &back{
+      sourcemeta::jsontoolkit::back(document)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(back));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(back), 3);
 }
