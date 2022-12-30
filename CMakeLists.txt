@@ -13,6 +13,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Options
 set(JSONTOOLKIT_BACKEND "rapidjson" CACHE STRING "Set the JSON Toolkit backend")
+option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" ON)
 
 # JSON
 add_library(sourcemeta_jsontoolkit_json INTERFACE
@@ -31,8 +32,10 @@ target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE
   ${JSONTOOLKIT_BACKEND})
 
 if(PROJECT_IS_TOP_LEVEL)
-  enable_testing()
-  include(cmake/googletest.cmake)
-  add_subdirectory(./test)
+  if(JSONBINPACK_TESTS)
+    enable_testing()
+    include(cmake/googletest.cmake)
+    add_subdirectory(./test)
+  endif()
   include(cmake/clang-format.cmake)
 endif()
