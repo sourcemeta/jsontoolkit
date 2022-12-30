@@ -20,6 +20,18 @@ inline auto value(rapidjson::Value::Member &member) -> JSONValue & {
   return member.value;
 }
 
+inline auto cbegin_array(const JSONValue &value)
+    -> rapidjson::Value::ConstValueIterator {
+  assert(is_array(value));
+  return value.Begin();
+}
+
+inline auto cend_array(const JSONValue &value)
+    -> rapidjson::Value::ConstValueIterator {
+  assert(is_array(value));
+  return value.End();
+}
+
 inline auto cbegin_object(const JSONValue &value)
     -> rapidjson::Value::ConstMemberIterator {
   assert(is_object(value));

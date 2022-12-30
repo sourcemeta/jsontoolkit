@@ -1,7 +1,23 @@
-#include <algorithm> // std::all_of
+#include <algorithm> // std::all_of, std::for_each
 #include <gtest/gtest.h>
 #include <jsontoolkit/json/iterators.h>
 #include <jsontoolkit/json/read.h>
+
+TEST(CATEGORY, array_const_iterator_for_each) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  std::vector<std::int64_t> result;
+  std::for_each(sourcemeta::jsontoolkit::cbegin_array(document),
+                sourcemeta::jsontoolkit::cend_array(document),
+                [&result](const auto &element) {
+                  result.push_back(
+                      sourcemeta::jsontoolkit::to_integer(element));
+                });
+  EXPECT_EQ(result.size(), 3);
+  EXPECT_EQ(result.at(0), 1);
+  EXPECT_EQ(result.at(1), 2);
+  EXPECT_EQ(result.at(2), 3);
+}
 
 TEST(CATEGORY, object_const_all_of_true) {
   const sourcemeta::jsontoolkit::JSON document{
