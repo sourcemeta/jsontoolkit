@@ -1,6 +1,8 @@
 #ifndef JSONTOOLKIT_JSON_RAPIDJSON_READ_H_
 #define JSONTOOLKIT_JSON_RAPIDJSON_READ_H_
 
+#include "common.h"
+
 #include <cassert>     // assert
 #include <cstddef>     // std::size_t
 #include <cstdint>     // std::int64_t
@@ -9,17 +11,6 @@
 #include <stdexcept>   // std::domain_error
 #include <string>      // std::string
 #include <type_traits> // std::enable_if_t, std::is_same_v
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wambiguous-reversed-operator"
-#include <rapidjson/document.h>       // rapidjson::Value, rapidjson::Document
-#include <rapidjson/error/en.h>       // rapidjson::GetParseError_En
-#include <rapidjson/istreamwrapper.h> // rapidjson::IStreamWrapper
-#include <rapidjson/ostreamwrapper.h> // rapidjson::OStreamWrapper
-#include <rapidjson/prettywriter.h>   // rapidjson::PrettyWriter
-#include <rapidjson/writer.h>         // rapidjson::Writer
-#pragma clang diagnostic pop
 
 namespace sourcemeta::jsontoolkit {
 

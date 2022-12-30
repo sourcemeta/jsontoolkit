@@ -21,6 +21,7 @@ add_library(sourcemeta_jsontoolkit_json INTERFACE
   include/jsontoolkit/json/read.h
   include/jsontoolkit/json/write.h
   include/jsontoolkit/json/iterators.h
+  include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/common.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/read.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/write.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/iterators.h)

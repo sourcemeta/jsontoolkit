@@ -1,15 +1,10 @@
 #ifndef JSONTOOLKIT_JSON_RAPIDJSON_ITERATORS_H_
 #define JSONTOOLKIT_JSON_RAPIDJSON_ITERATORS_H_
 
+#include "common.h"
 #include "read.h"
 
 #include <cassert> // assert
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wambiguous-reversed-operator"
-#include <rapidjson/document.h> // rapidjson::Value, rapidjson::Document
-#pragma clang diagnostic pop
 
 namespace sourcemeta::jsontoolkit {
 

@@ -1,18 +1,13 @@
 #ifndef JSONTOOLKIT_JSON_RAPIDJSON_WRITE_H_
 #define JSONTOOLKIT_JSON_RAPIDJSON_WRITE_H_
 
+#include "common.h"
 #include "read.h"
 
 #include <cassert>     // assert
 #include <cstdint>     // std::int64_t
 #include <string>      // std::string
 #include <type_traits> // std::enable_if_t, std::is_same_v
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wambiguous-reversed-operator"
-#include <rapidjson/document.h> // rapidjson::Value, rapidjson::Document
-#pragma clang diagnostic pop
 
 namespace sourcemeta::jsontoolkit {
 
