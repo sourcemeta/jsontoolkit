@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
       continue;
     }
 
-#if JSONTOOLKIT_BACKEND == rapidjson
+#if defined(JSONTOOLKIT_BACKEND_RAPIDJSON)
     // TODO: Make this pass
     if (test_path.filename() == "n_multidigit_number_then_00.json") {
       continue;

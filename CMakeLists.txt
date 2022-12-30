@@ -28,6 +28,9 @@ target_include_directories(sourcemeta_jsontoolkit_json INTERFACE include)
 include(cmake/${JSONTOOLKIT_BACKEND}.cmake)
 target_compile_definitions(sourcemeta_jsontoolkit_json INTERFACE
   JSONTOOLKIT_BACKEND=${JSONTOOLKIT_BACKEND})
+string(TOUPPER ${JSONTOOLKIT_BACKEND} UPPER_JSONTOOLKIT_BACKEND)
+target_compile_definitions(sourcemeta_jsontoolkit_json INTERFACE
+  JSONTOOLKIT_BACKEND_${UPPER_JSONTOOLKIT_BACKEND})
 target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE
   ${JSONTOOLKIT_BACKEND})
 
