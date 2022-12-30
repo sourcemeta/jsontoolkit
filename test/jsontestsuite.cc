@@ -5,22 +5,6 @@
 #include <gtest/gtest.h>
 #include <stdexcept> // std::domain_error
 #include <string>    // std::string
-#include <utility>   // std::move
-
-// Heavily inspired by https://stackoverflow.com/a/116220
-static auto read_file(const std::filesystem::path path) -> std::string {
-  constexpr std::size_t buffer_size{4096};
-  std::ifstream stream{path.string()};
-  stream.exceptions(std::ios_base::badbit);
-  std::string buffer(buffer_size, '\0');
-  std::string output;
-  while (stream.read(&buffer[0], buffer_size)) {
-    output.append(buffer, 0,
-                  static_cast<std::string::size_type>(stream.gcount()));
-  }
-  return output.append(buffer, 0,
-                       static_cast<std::string::size_type>(stream.gcount()));
-}
 
 enum class JSONTestType { Accept, Reject };
 
@@ -31,15 +15,13 @@ public:
       : test_path{path}, type{category} {}
 
   void TestBody() override {
-    std::string raw_document{read_file(this->test_path)};
+    std::ifstream stream{this->test_path};
+    stream.exceptions(std::ios_base::badbit);
     if (this->type == JSONTestType::Accept) {
-      // TODO: Read from a file input stream instead
-      sourcemeta::jsontoolkit::parse(raw_document);
+      sourcemeta::jsontoolkit::parse(stream);
       SUCCEED();
     } else if (this->type == JSONTestType::Reject) {
-      // TODO: Read from a file input stream instead
-      EXPECT_THROW(sourcemeta::jsontoolkit::parse(raw_document),
-                   std::domain_error);
+      EXPECT_THROW(sourcemeta::jsontoolkit::parse(stream), std::domain_error);
     } else {
       FAIL() << "Invalid test type";
     }
@@ -56,7 +38,7 @@ int main(int argc, char **argv) {
       std::filesystem::path{JSONTESTSUITE_PATH} / "test_parsing";
   for (const std::filesystem::directory_entry &entry :
        std::filesystem::directory_iterator(test_parsing_path)) {
-    const std::filesystem::path test_path{std::move(entry.path())};
+    const std::filesystem::path test_path{entry.path()};
 
     // Ignore "maybe" for now
     // TODO: Find a way to support arbitrary precision integers/reals
