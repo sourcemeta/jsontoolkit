@@ -10,7 +10,7 @@ namespace sourcemeta::jsontoolkit {
 
 template <typename Encoding, typename Allocator>
 inline auto value(const rapidjson::GenericMember<Encoding, Allocator> &member)
-    -> const rapidjson::GenericValue<Encoding, Allocator> & {
+    -> const JSONValue & {
   return member.value;
 }
 
@@ -22,35 +22,29 @@ inline auto key(rapidjson::GenericMember<Encoding, Allocator> &member)
 
 template <typename Encoding, typename Allocator>
 inline auto value(rapidjson::GenericMember<Encoding, Allocator> &member)
-    -> rapidjson::GenericValue<Encoding, Allocator> & {
+    -> JSONValue & {
   return member.value;
 }
 
 namespace object {
-template <typename Encoding, typename Allocator>
-inline auto cbegin(const rapidjson::GenericValue<Encoding, Allocator> &value)
+inline auto cbegin(const JSONValue &value)
     -> rapidjson::Value::ConstMemberIterator {
   assert(is_object(value));
   return value.MemberBegin();
 }
 
-template <typename Encoding, typename Allocator>
-inline auto cend(const rapidjson::GenericValue<Encoding, Allocator> &value)
+inline auto cend(const JSONValue &value)
     -> rapidjson::Value::ConstMemberIterator {
   assert(is_object(value));
   return value.MemberEnd();
 }
 
-template <typename Encoding, typename Allocator>
-inline auto begin(rapidjson::GenericValue<Encoding, Allocator> &value)
-    -> rapidjson::Value::MemberIterator {
+inline auto begin(JSONValue &value) -> rapidjson::Value::MemberIterator {
   assert(is_object(value));
   return value.MemberBegin();
 }
 
-template <typename Encoding, typename Allocator>
-inline auto end(rapidjson::GenericValue<Encoding, Allocator> &value)
-    -> rapidjson::Value::MemberIterator {
+inline auto end(JSONValue &value) -> rapidjson::Value::MemberIterator {
   assert(is_object(value));
   return value.MemberEnd();
 }
