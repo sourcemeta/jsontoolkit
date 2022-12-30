@@ -23,12 +23,11 @@ TEST(CATEGORY, array_iterator_for_each) {
   sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
   std::vector<std::int64_t> result;
-  std::for_each(sourcemeta::jsontoolkit::begin_array(document),
-                sourcemeta::jsontoolkit::end_array(document),
-                [&result](const auto &element) {
-                  result.push_back(
-                      sourcemeta::jsontoolkit::to_integer(element));
-                });
+  std::for_each(
+      sourcemeta::jsontoolkit::begin_array(document),
+      sourcemeta::jsontoolkit::end_array(document), [&result](auto &element) {
+        result.push_back(sourcemeta::jsontoolkit::to_integer(element));
+      });
   EXPECT_EQ(result.size(), 3);
   EXPECT_EQ(result.at(0), 1);
   EXPECT_EQ(result.at(1), 2);
