@@ -108,10 +108,6 @@ const sourcemeta::jsontoolkit::JSON my_real{sourcemeta::jsontoolkit::from(3.14)}
 These functions are particularly handy for scalar types when passing them to
 functions that modify the JSON document and take other JSON values as input.
 
-<!-- `(TODO) JSON from(const std::vector<???> &)` -->
-<!-- `(TODO) JSON from(const std::map<std::string, ???> &)` -->
-<!-- `(TODO) JSON from(const std::unordered_map<std::string, ???> &)` -->
-
 ### Stringify
 
 A set of functions to convert JSON instances into strings.
