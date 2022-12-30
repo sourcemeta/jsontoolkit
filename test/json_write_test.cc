@@ -4,7 +4,7 @@
 #include <utility> // std::move
 
 TEST(CATEGORY, set_null) {
-  auto document{sourcemeta::jsontoolkit::from(true)};
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_null(document));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
   sourcemeta::jsontoolkit::set(document,
@@ -14,7 +14,7 @@ TEST(CATEGORY, set_null) {
 }
 
 TEST(CATEGORY, set_negative_integer) {
-  auto document{sourcemeta::jsontoolkit::from(true)};
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
   sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(-4));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
@@ -23,7 +23,7 @@ TEST(CATEGORY, set_negative_integer) {
 }
 
 TEST(CATEGORY, set_negative_real) {
-  auto document{sourcemeta::jsontoolkit::from(true)};
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
   sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(-4.3));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
@@ -32,7 +32,7 @@ TEST(CATEGORY, set_negative_real) {
 }
 
 TEST(CATEGORY, set_negative_integral_real) {
-  auto document{sourcemeta::jsontoolkit::from(true)};
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
   sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(-4.0));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
@@ -40,7 +40,7 @@ TEST(CATEGORY, set_negative_integral_real) {
 }
 
 TEST(CATEGORY, set_positive_integer) {
-  auto document{sourcemeta::jsontoolkit::from(true)};
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
   sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(4));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
@@ -48,7 +48,7 @@ TEST(CATEGORY, set_positive_integer) {
 }
 
 TEST(CATEGORY, set_positive_real) {
-  auto document{sourcemeta::jsontoolkit::from(true)};
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
   sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(4.3));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
@@ -56,7 +56,7 @@ TEST(CATEGORY, set_positive_real) {
 }
 
 TEST(CATEGORY, set_positive_integral_real) {
-  auto document{sourcemeta::jsontoolkit::from(true)};
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
   sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from(4.0));
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_integer(document));
@@ -64,7 +64,8 @@ TEST(CATEGORY, set_positive_integral_real) {
 }
 
 TEST(CATEGORY, must_delete_one_existent_key) {
-  auto document{sourcemeta::jsontoolkit::parse("{\"foo\":true,\"bar\":false}")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\":true,\"bar\":false}")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
@@ -76,7 +77,8 @@ TEST(CATEGORY, must_delete_one_existent_key) {
 }
 
 TEST(CATEGORY, must_delete_one_non_existent_key) {
-  auto document{sourcemeta::jsontoolkit::parse("{\"foo\":true,\"bar\":false}")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\":true,\"bar\":false}")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
@@ -88,7 +90,8 @@ TEST(CATEGORY, must_delete_one_non_existent_key) {
 }
 
 TEST(CATEGORY, nested_object_clear) {
-  auto document{sourcemeta::jsontoolkit::parse("{\"foo\":{\"bar\":true}}")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\":{\"bar\":true}}")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   sourcemeta::jsontoolkit::clear(document);
@@ -97,7 +100,8 @@ TEST(CATEGORY, nested_object_clear) {
 }
 
 TEST(CATEGORY, object_with_two_keys_clear) {
-  auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1,\"bar\":2}")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\":1,\"bar\":2}")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
@@ -110,7 +114,8 @@ TEST(CATEGORY, object_with_two_keys_clear) {
 }
 
 TEST(CATEGORY, key_copy_assignment_same_type_parsed) {
-  auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
@@ -126,7 +131,8 @@ TEST(CATEGORY, key_copy_assignment_same_type_parsed) {
 }
 
 TEST(CATEGORY, key_move_assignment_same_type_parsed) {
-  auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
@@ -142,7 +148,8 @@ TEST(CATEGORY, key_move_assignment_same_type_parsed) {
 }
 
 TEST(CATEGORY, key_copy_assignment_different_type_parsed) {
-  auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
@@ -158,7 +165,8 @@ TEST(CATEGORY, key_copy_assignment_different_type_parsed) {
 }
 
 TEST(CATEGORY, key_move_assignment_different_type_parsed) {
-  auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
@@ -174,7 +182,8 @@ TEST(CATEGORY, key_move_assignment_different_type_parsed) {
 }
 
 TEST(CATEGORY, new_key_copy_assignment) {
-  auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
@@ -197,7 +206,8 @@ TEST(CATEGORY, new_key_copy_assignment) {
 }
 
 TEST(CATEGORY, new_key_move_assignment) {
-  auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"bar\" }")};
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   const auto &value1{sourcemeta::jsontoolkit::at(document, "foo")};
@@ -220,7 +230,7 @@ TEST(CATEGORY, new_key_move_assignment) {
 }
 
 TEST(CATEGORY, assignment_string_from_boolean) {
-  auto document{sourcemeta::jsontoolkit::from(false)};
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(false)};
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_string(document));
   sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from("foo"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
@@ -228,7 +238,7 @@ TEST(CATEGORY, assignment_string_from_boolean) {
 }
 
 TEST(CATEGORY, assignment_string_from_string) {
-  auto document{sourcemeta::jsontoolkit::from("foo")};
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from("foo")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
   sourcemeta::jsontoolkit::set(document, sourcemeta::jsontoolkit::from("bar"));
@@ -237,7 +247,8 @@ TEST(CATEGORY, assignment_string_from_string) {
 }
 
 TEST(CATEGORY, array_clear) {
-  auto document{sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
   sourcemeta::jsontoolkit::clear(document);
@@ -246,7 +257,8 @@ TEST(CATEGORY, array_clear) {
 }
 
 TEST(CATEGORY, array_set_child) {
-  auto document{sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
@@ -275,7 +287,8 @@ TEST(CATEGORY, array_set_child) {
 }
 
 // TEST(CATEGORY, map_copy_constructor) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
+// const sourcemeta::jsontoolkit::JSON
+// document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
 // EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
@@ -296,7 +309,8 @@ TEST(CATEGORY, array_set_child) {
 // }
 
 // TEST(CATEGORY, map_move_constructor) {
-// const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
+// const sourcemeta::jsontoolkit::JSON
+// document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
 // EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
 // EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
 // EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
