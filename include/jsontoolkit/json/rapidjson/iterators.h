@@ -32,6 +32,16 @@ inline auto cend_array(const JSONValue &value)
   return value.End();
 }
 
+inline auto begin_array(JSONValue &value) -> rapidjson::Value::ValueIterator {
+  assert(is_array(value));
+  return value.Begin();
+}
+
+inline auto end_array(JSONValue &value) -> rapidjson::Value::ValueIterator {
+  assert(is_array(value));
+  return value.End();
+}
+
 inline auto cbegin_object(const JSONValue &value)
     -> rapidjson::Value::ConstMemberIterator {
   assert(is_object(value));
