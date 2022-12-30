@@ -29,8 +29,6 @@ inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &root,
     value.SetInt64(other.GetInt64());
   } else if (other.IsDouble()) {
     value.SetDouble(other.GetDouble());
-  } else if (other.IsString()) {
-    value.SetString(other.GetString(), root.GetAllocator());
   } else {
     value.CopyFrom(other, root.GetAllocator());
   }
