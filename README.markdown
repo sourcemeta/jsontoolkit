@@ -116,7 +116,7 @@ functions that modify the JSON document and take other JSON values as input.
 
 A set of functions to convert JSON instances into strings.
 
-#### `void stringify(const JSON &, std::basic_ostream<C, T> &)`
+#### `void stringify(const JSON & | const JSONValue &, std::basic_ostream<C, T> &)`
 
 Stringify the input JSON document into a given C++ standard output stream in
 compact mode. For example:
@@ -132,7 +132,7 @@ sourcemeta::jsontoolkit::stringify(document, stream);
 std::cout << stream.str() << std::endl;
 ```
 
-#### `void prettify(const JSON &, std::basic_ostream<C, T> &)`
+#### `void prettify(const JSON & | const JSONValue &, std::basic_ostream<C, T> &)`
 
 Stringify the input JSON document into a given C++ standard output stream in
 pretty mode, indenting the output using 4 spaces. For example:
@@ -152,7 +152,7 @@ std::cout << stream.str() << std::endl;
 
 A set of functions to check the type of a given JSON instance.
 
-#### `bool is_boolean(const JSON &)`
+#### `bool is_boolean(const JSON & | const JSONValue &)`
 
 Check if the input JSON document is a boolean. For example:
 
@@ -164,7 +164,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("tru
 assert(sourcemeta::jsontoolkit::is_boolean(document));
 ```
 
-#### `bool is_null(const JSON &)`
+#### `bool is_null(const JSON & | const JSONValue &)`
 
 Check if the input JSON document is null. For example:
 
@@ -176,7 +176,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("nul
 assert(sourcemeta::jsontoolkit::is_null(document));
 ```
 
-#### `bool is_array(const JSON &)`
+#### `bool is_array(const JSON & | const JSONValue &)`
 
 Check if the input JSON document is an array. For example:
 
@@ -188,7 +188,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1
 assert(sourcemeta::jsontoolkit::is_array(document));
 ```
 
-#### `bool is_object(const JSON &)`
+#### `bool is_object(const JSON & | const JSONValue &)`
 
 Check if the input JSON document is an object. For example:
 
@@ -200,7 +200,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \
 assert(sourcemeta::jsontoolkit::is_object(document));
 ```
 
-#### `bool is_string(const JSON &)`
+#### `bool is_string(const JSON & | const JSONValue &)`
 
 Check if the input JSON document is a string. For example:
 
@@ -212,7 +212,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("\"f
 assert(sourcemeta::jsontoolkit::is_string(document));
 ```
 
-#### `bool is_integer(const JSON &)`
+#### `bool is_integer(const JSON & | const JSONValue &)`
 
 Check if the input JSON document is an integer. For example:
 
@@ -224,7 +224,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("5")
 assert(sourcemeta::jsontoolkit::is_integer(document));
 ```
 
-#### `bool is_real(const JSON &)`
+#### `bool is_real(const JSON & | const JSONValue &)`
 
 Check if the input JSON document is a real type. For example:
 
@@ -241,7 +241,7 @@ assert(sourcemeta::jsontoolkit::is_real(document));
 A set of functions to read JSON instances. None of these functions modify the
 input instance.
 
-#### `bool to_boolean(const JSON &)`
+#### `bool to_boolean(const JSON & | const JSONValue &)`
 
 Convert a JSON instance into a boolean value. The result of this function is
 undefined unless the JSON instance holds a boolean value. For example:
@@ -255,7 +255,7 @@ assert(sourcemeta::jsontoolkit::is_boolean(document));
 assert(sourcemeta::jsontoolkit::to_boolean(document));
 ```
 
-#### `std::int64_t to_integer(const JSON &)`
+#### `std::int64_t to_integer(const JSON & | const JSONValue &)`
 
 Convert a JSON instance into a signed integer value. The result of this
 function is undefined unless the JSON instance holds an integer value. For
@@ -270,7 +270,7 @@ assert(sourcemeta::jsontoolkit::is_integer(document));
 assert(sourcemeta::jsontoolkit::to_integer(document) == 5);
 ```
 
-#### `double to_real(const JSON &)`
+#### `double to_real(const JSON & | const JSONValue &)`
 
 Convert a JSON instance into an IEEE 64-bit floating-point value. The result of
 this function is undefined unless the JSON instance holds a real value. For
@@ -285,7 +285,7 @@ assert(sourcemeta::jsontoolkit::is_real(document));
 assert(sourcemeta::jsontoolkit::to_real(document) == 3.14);
 ```
 
-#### `std::string to_string(const JSON &)`
+#### `std::string to_string(const JSON & | const JSONValue &)`
 
 Convert a JSON instance into a standard string value. The result of this
 function is undefined unless the JSON instance holds a string value. For
@@ -300,7 +300,7 @@ assert(sourcemeta::jsontoolkit::is_string(document));
 assert(sourcemeta::jsontoolkit::to_string(document) == "foo");
 ```
 
-#### `std::size_t size(const JSON &)`
+#### `std::size_t size(const JSON & | const JSONValue &)`
 
 If the input JSON instance is an object, return its number of pairs. If the
 input JSON instance is an array, return its number of elements. If the input
@@ -322,7 +322,7 @@ assert(sourcemeta::jsontoolkit::size(my_array) == 2);
 assert(sourcemeta::jsontoolkit::size(my_string) == 3);
 ```
 
-#### `bool empty(const JSON &)`
+#### `bool empty(const JSON & | const JSONValue &)`
 
 A convenience function to check whether the input JSON document is an empty
 object, empty array or empty string. The result of this function is undefined
@@ -343,7 +343,7 @@ assert(sourcemeta::jsontoolkit::empty(my_array));
 assert(sourcemeta::jsontoolkit::empty(my_string));
 ```
 
-#### `JSON& at([const] JSON &, std::size_t index | const std::string &key)`
+#### `JSON& at([const] JSON & | [const] JSONValue &, std::size_t index | const std::string &key)`
 
 This function retrieves a reference to an object value or an array element.
 This function supports both `const` and non-`const` overloads. The result of
@@ -365,7 +365,7 @@ const sourcemeta::jsontoolkit::JSONValue &element{sourcemeta::jsontoolkit::at(my
 assert(sourcemeta::jsontoolkit::to_integer(element) == 2);
 ```
 
-#### `JSON& front([const] JSON &)`
+#### `JSON& front([const] JSON & | [const] JSONValue &)`
 
 This function retrieves a reference to the first element of a JSON array. This
 function supports both `const` and non-`const` overloads. This function is
@@ -381,7 +381,7 @@ const sourcemeta::jsontoolkit::JSONValue &value{sourcemeta::jsontoolkit::front(m
 assert(sourcemeta::jsontoolkit::to_integer(value) == 1);
 ```
 
-#### `JSON& back([const] JSON &)`
+#### `JSON& back([const] JSON & | [const] JSONValue &)`
 
 This function retrieves a reference to the last element of a JSON array. This
 function supports both `const` and non-`const` overloads. This function is
@@ -397,7 +397,7 @@ const sourcemeta::jsontoolkit::JSONValue &value{sourcemeta::jsontoolkit::back(my
 assert(sourcemeta::jsontoolkit::to_integer(value) == 3);
 ```
 
-#### `bool defines(const JSON &, const std::string &key)`
+#### `bool defines(const JSON & | const JSONValue &, const std::string &key)`
 
 This function checks whether an input JSON object defines a specific key. This
 function is undefined is the input JSON instance is not an object. For example:
@@ -413,17 +413,17 @@ assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 
 ### Writing
 
-#### `void set([JSON &root,] JSON &value, const JSON &other)`
-#### `void assign([JSON &root,] JSON &value, const std::string &key, JSON &)`
-#### `void erase(JSON &, const std::string &key)`
-#### `void clear(JSON &)`
+#### `void set([JSON &root,] JSON &value | JSONValue &value, const JSON &other)`
+#### `void assign([JSON &root,] JSON &value | JSONValue &value, const std::string &key, JSON &)`
+#### `void erase(JSON & | JSONValue &, const std::string &key)`
+#### `void clear(JSON & | JSONValue &)`
 
 ### Iterators
 
-#### `Iterator object::begin(JSON &)`
-#### `Iterator object::end(JSON &)`
-#### `ConstIterator object::cbegin(const JSON &)`
-#### `ConstIterator object::cend(const JSON &)`
+#### `Iterator object::begin(JSON & | JSONValue &)`
+#### `Iterator object::end(JSON & | JSONValue &)`
+#### `ConstIterator object::cbegin(const JSON & | const JSONValue &)`
+#### `ConstIterator object::cend(const JSON & | const JSONValue &)`
 #### `JSON& value(const IteratorPair &)`
 #### `std::string& key(const IteratorPair &)`
 
