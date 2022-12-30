@@ -17,6 +17,7 @@
 namespace sourcemeta::jsontoolkit {
 
 // TODO: Add non-const alternatives to set()
+// TODO: Add efficient "move" overloads
 
 template <typename Encoding, typename Allocator>
 inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &root,
