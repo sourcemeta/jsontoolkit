@@ -67,6 +67,23 @@ inline auto assign(JSON &root, const std::string &key, JSONValue &&member)
   return assign(root, root, key, member);
 }
 
+// See https://github.com/Tencent/rapidjson/issues/1016
+inline auto push_front(JSON &root, JSONValue &value, const JSONValue &element)
+    -> void {
+  assert(is_array(value));
+  rapidjson::Value empty;
+  value.PushBack(empty, root.GetAllocator());
+  for (rapidjson::SizeType index = value.Size() - 1; index > 0; --index) {
+    value[index] = value[index - 1];
+  }
+
+  value[0].CopyFrom(element, root.GetAllocator());
+}
+
+inline auto push_front(JSON &root, const JSONValue &element) -> void {
+  return push_front(root, root, element);
+}
+
 inline auto push_back(JSON &root, JSONValue &value, const JSONValue &element)
     -> void {
   assert(is_array(value));
@@ -87,8 +104,6 @@ inline auto push_back(JSON &root, JSONValue &value, JSONValue &&element)
 inline auto push_back(JSON &root, JSONValue &&element) -> void {
   return push_back(root, root, element);
 }
-
-// TODO: Add .pop_back()
 
 inline auto make_object(JSONValue &value) -> void { value.SetObject(); }
 inline auto make_array(JSONValue &value) -> void { value.SetArray(); }

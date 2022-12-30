@@ -386,6 +386,59 @@ TEST(CATEGORY, array_push_back) {
             3);
 }
 
+TEST(CATEGORY, array_const_push_front) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[1,2]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 0)),
+            1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 1)),
+            2);
+  const sourcemeta::jsontoolkit::JSON new_element{
+      sourcemeta::jsontoolkit::from(3)};
+  sourcemeta::jsontoolkit::push_front(document, new_element);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 0)),
+            3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 1)),
+            1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 2)),
+            2);
+}
+
+TEST(CATEGORY, array_push_front) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[1,2]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 0)),
+            1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 1)),
+            2);
+  sourcemeta::jsontoolkit::push_front(document,
+                                      sourcemeta::jsontoolkit::from(3));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 0)),
+            3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 1)),
+            1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 2)),
+            2);
+}
+
 // TEST(CATEGORY, map_copy_constructor) {
 // const sourcemeta::jsontoolkit::JSON
 // document{sourcemeta::jsontoolkit::parse("{\"foo\":1}")};

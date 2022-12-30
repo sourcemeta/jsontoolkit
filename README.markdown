@@ -413,6 +413,7 @@ assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 #### `void assign([JSON &root,] JSON &value | JSONValue &value, const std::string &key, JSON & | JSONValue &)`
 #### `void erase(JSON & | JSONValue &, const std::string &key)`
 #### `void clear(JSON & | JSONValue &)`
+#### `void push_front([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
 #### `void push_back([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
 #### `void make_array(JSON & | JSONValue &)`
 #### `void make_object(JSON & | JSONValue &)`
