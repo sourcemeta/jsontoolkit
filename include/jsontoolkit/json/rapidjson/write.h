@@ -23,15 +23,7 @@ inline auto set(rapidjson::GenericDocument<Encoding, Allocator> &root,
                 rapidjson::GenericValue<Encoding, Allocator> &value,
                 const rapidjson::GenericValue<Encoding, Allocator> &other)
     -> void {
-  if (other.IsNull()) {
-    value.SetNull();
-  } else if (other.IsInt64()) {
-    value.SetInt64(other.GetInt64());
-  } else if (other.IsDouble()) {
-    value.SetDouble(other.GetDouble());
-  } else {
-    value.CopyFrom(other, root.GetAllocator());
-  }
+  value.CopyFrom(other, root.GetAllocator());
 }
 
 template <typename Encoding, typename Allocator>
