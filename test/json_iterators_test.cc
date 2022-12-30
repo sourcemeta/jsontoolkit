@@ -4,7 +4,7 @@
 #include <jsontoolkit/json/read.h>
 
 TEST(CATEGORY, object_const_all_of_true) {
-  const auto document{
+  const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   const bool result = std::all_of(
       sourcemeta::jsontoolkit::object::cbegin(document),
@@ -16,7 +16,7 @@ TEST(CATEGORY, object_const_all_of_true) {
 }
 
 TEST(CATEGORY, object_const_all_of_false) {
-  const auto document{
+  const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": \"2\" }")};
   const bool result = std::all_of(
       sourcemeta::jsontoolkit::object::cbegin(document),
@@ -28,7 +28,8 @@ TEST(CATEGORY, object_const_all_of_false) {
 }
 
 TEST(CATEGORY, object_all_of_true) {
-  auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   const bool result = std::all_of(
       sourcemeta::jsontoolkit::object::begin(document),
       sourcemeta::jsontoolkit::object::end(document), [](auto &pair) {
@@ -39,7 +40,8 @@ TEST(CATEGORY, object_all_of_true) {
 }
 
 TEST(CATEGORY, object_all_of_with_key_true) {
-  auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   const bool result = std::all_of(
       sourcemeta::jsontoolkit::object::begin(document),
       sourcemeta::jsontoolkit::object::end(document),
@@ -48,7 +50,8 @@ TEST(CATEGORY, object_all_of_with_key_true) {
 }
 
 TEST(CATEGORY, object_all_of_with_key_false) {
-  auto document{sourcemeta::jsontoolkit::parse("{ \"f\": 1, \"bar\": 2 }")};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"f\": 1, \"bar\": 2 }")};
   const bool result = std::all_of(
       sourcemeta::jsontoolkit::object::begin(document),
       sourcemeta::jsontoolkit::object::end(document),
