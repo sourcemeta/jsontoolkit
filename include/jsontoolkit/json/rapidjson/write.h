@@ -78,7 +78,16 @@ inline auto push_back(JSON &root, const JSONValue &element) -> void {
   return push_back(root, root, element);
 }
 
-// TODO: Add .push_back()
+inline auto push_back(JSON &root, JSONValue &value, JSONValue &&element)
+    -> void {
+  assert(is_array(value));
+  value.PushBack(element, root.GetAllocator());
+}
+
+inline auto push_back(JSON &root, JSONValue &&element) -> void {
+  return push_back(root, root, element);
+}
+
 // TODO: Add .pop_back()
 // TODO: Add .make_object()
 // TODO: Add .make_array()

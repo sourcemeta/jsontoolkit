@@ -414,9 +414,10 @@ assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 ### Writing
 
 #### `void set([JSON &root,] JSON &value | JSONValue &value, const JSON &other)`
-#### `void assign([JSON &root,] JSON &value | JSONValue &value, const std::string &key, JSON &)`
+#### `void assign([JSON &root,] JSON &value | JSONValue &value, const std::string &key, JSON & | JSONValue &)`
 #### `void erase(JSON & | JSONValue &, const std::string &key)`
 #### `void clear(JSON & | JSONValue &)`
+#### `void push_back([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
 
 ### Iterators
 
