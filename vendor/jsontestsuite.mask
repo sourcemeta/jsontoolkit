@@ -2,3 +2,4 @@
 ./results
 ./test_transform
 ./run_tests.py
+./README.md
