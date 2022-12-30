@@ -67,6 +67,17 @@ inline auto assign(JSON &root, const std::string &key, JSONValue &&member)
   return assign(root, root, key, member);
 }
 
+inline auto push_back(JSON &root, JSONValue &value, const JSONValue &element)
+    -> void {
+  assert(is_array(value));
+  value.PushBack(rapidjson::Value().CopyFrom(element, root.GetAllocator()),
+                 root.GetAllocator());
+}
+
+inline auto push_back(JSON &root, const JSONValue &element) -> void {
+  return push_back(root, root, element);
+}
+
 // TODO: Add .push_back()
 // TODO: Add .pop_back()
 // TODO: Add .make_object()
