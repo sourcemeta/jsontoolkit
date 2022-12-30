@@ -34,6 +34,13 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/deps/jsontoolkit")
 target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit_json)
 ```
 
+### CMake options
+
+| Option                | Type    | Default                     | Description                     |
+|-----------------------|---------|-----------------------------|---------------------------------|
+| `JSONTOOLKIT_BACKEND` | String  | `rapidjson`                 | The JSON implementation backend |
+| `JSONTOOLKIT_TESTS`   | Boolean | `ON` (for top-level builds) | Build the JSON Toolkit tests    |
+
 Documentation
 -------------
 
