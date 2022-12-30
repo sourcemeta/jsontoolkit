@@ -41,8 +41,6 @@ int main(int argc, char **argv) {
     const std::filesystem::path test_path{entry.path()};
 
     // Ignore "maybe" for now
-    // TODO: Find a way to support arbitrary precision integers/reals
-    // using a library like GMP.
     const char front = test_path.filename().string().front();
     if (front == 'i') {
       continue;
