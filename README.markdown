@@ -420,10 +420,10 @@ assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 
 ### Iterators
 
-#### `Iterator object::begin(JSON & | JSONValue &)`
-#### `Iterator object::end(JSON & | JSONValue &)`
-#### `ConstIterator object::cbegin(const JSON & | const JSONValue &)`
-#### `ConstIterator object::cend(const JSON & | const JSONValue &)`
+#### `Iterator begin_object(JSON & | JSONValue &)`
+#### `Iterator end_object(JSON & | JSONValue &)`
+#### `ConstIterator cbegin_object(const JSON & | const JSONValue &)`
+#### `ConstIterator cend_object(const JSON & | const JSONValue &)`
 #### `JSON& value(const IteratorPair &)`
 #### `std::string& key(const IteratorPair &)`
 

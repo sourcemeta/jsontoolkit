@@ -20,29 +20,27 @@ inline auto value(rapidjson::Value::Member &member) -> JSONValue & {
   return member.value;
 }
 
-namespace object {
-inline auto cbegin(const JSONValue &value)
+inline auto cbegin_object(const JSONValue &value)
     -> rapidjson::Value::ConstMemberIterator {
   assert(is_object(value));
   return value.MemberBegin();
 }
 
-inline auto cend(const JSONValue &value)
+inline auto cend_object(const JSONValue &value)
     -> rapidjson::Value::ConstMemberIterator {
   assert(is_object(value));
   return value.MemberEnd();
 }
 
-inline auto begin(JSONValue &value) -> rapidjson::Value::MemberIterator {
+inline auto begin_object(JSONValue &value) -> rapidjson::Value::MemberIterator {
   assert(is_object(value));
   return value.MemberBegin();
 }
 
-inline auto end(JSONValue &value) -> rapidjson::Value::MemberIterator {
+inline auto end_object(JSONValue &value) -> rapidjson::Value::MemberIterator {
   assert(is_object(value));
   return value.MemberEnd();
 }
-} // namespace object
 
 } // namespace sourcemeta::jsontoolkit
 
