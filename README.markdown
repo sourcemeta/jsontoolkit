@@ -418,6 +418,8 @@ assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 #### `void erase(JSON & | JSONValue &, const std::string &key)`
 #### `void clear(JSON & | JSONValue &)`
 #### `void push_back([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
+#### `void make_array(JSON & | JSONValue &)`
+#### `void make_object(JSON & | JSONValue &)`
 
 ### Iterators
 

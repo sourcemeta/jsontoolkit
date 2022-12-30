@@ -89,8 +89,9 @@ inline auto push_back(JSON &root, JSONValue &&element) -> void {
 }
 
 // TODO: Add .pop_back()
-// TODO: Add .make_object()
-// TODO: Add .make_array()
+
+inline auto make_object(JSONValue &value) -> void { value.SetObject(); }
+inline auto make_array(JSONValue &value) -> void { value.SetArray(); }
 
 } // namespace sourcemeta::jsontoolkit
 

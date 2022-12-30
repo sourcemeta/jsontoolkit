@@ -3,6 +3,22 @@
 #include <jsontoolkit/json/write.h>
 #include <utility> // std::move
 
+TEST(CATEGORY, make_array) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  sourcemeta::jsontoolkit::make_array(document);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+}
+
+TEST(CATEGORY, make_object) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(document));
+  sourcemeta::jsontoolkit::make_object(document);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+}
+
 TEST(CATEGORY, set_null) {
   sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_null(document));
