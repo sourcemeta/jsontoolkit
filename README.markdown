@@ -66,13 +66,9 @@ document that represents an array can be parsed as follows:
 #include <sstream>
 
 std::istringstream stream{"[ 1, 2, 3 ]"};
-const auto document{sourcemeta::jsontoolkit::parse(stream)};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(stream)};
 assert(sourcemeta::jsontoolkit::is_array(document));
 ```
-
-The return type of this function is backend-specific. To write code that is
-portable across backends, it is recommended to treat this as an opaque type
-using `auto`.
 
 If parsing fails,
 [`std::domain_error`](https://en.cppreference.com/w/cpp/error/domain_error)
@@ -87,13 +83,9 @@ represents an array can be parsed as follows:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
 assert(sourcemeta::jsontoolkit::is_array(document));
 ```
-
-The return type of this function is backend-specific. To write code that is
-portable across backends, it is recommended to treat this as an opaque type
-using `auto`.
 
 If parsing fails,
 [`std::domain_error`](https://en.cppreference.com/w/cpp/error/domain_error)
@@ -106,11 +98,11 @@ Create a JSON document from a set of supported basic C++ types. For example:
 ```c++
 #include <jsontoolkit/json.h>
 
-const auto my_null{sourcemeta::jsontoolkit::from(nullptr)};
-const auto my_string{sourcemeta::jsontoolkit::from("Foo Bar")};
-const auto my_bool{sourcemeta::jsontoolkit::from(true)};
-const auto my_integer{sourcemeta::jsontoolkit::from(4)};
-const auto my_real{sourcemeta::jsontoolkit::from(3.14)};
+const sourcemeta::jsontoolkit::JSON my_null{sourcemeta::jsontoolkit::from(nullptr)};
+const sourcemeta::jsontoolkit::JSON my_string{sourcemeta::jsontoolkit::from("Foo Bar")};
+const sourcemeta::jsontoolkit::JSON my_bool{sourcemeta::jsontoolkit::from(true)};
+const sourcemeta::jsontoolkit::JSON my_integer{sourcemeta::jsontoolkit::from(4)};
+const sourcemeta::jsontoolkit::JSON my_real{sourcemeta::jsontoolkit::from(3.14)};
 ```
 
 These functions are particularly handy for scalar types when passing them to
@@ -134,7 +126,7 @@ compact mode. For example:
 #include <iostream>
 #include <sstream>
 
-const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
 std::ostringstream stream;
 sourcemeta::jsontoolkit::stringify(document, stream);
 std::cout << stream.str() << std::endl;
@@ -150,7 +142,7 @@ pretty mode, indenting the output using 4 spaces. For example:
 #include <iostream>
 #include <sstream>
 
-const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
 std::ostringstream stream;
 sourcemeta::jsontoolkit::prettify(document, stream);
 std::cout << stream.str() << std::endl;
@@ -168,7 +160,7 @@ Check if the input JSON document is a boolean. For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::parse("true")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("true")};
 assert(sourcemeta::jsontoolkit::is_boolean(document));
 ```
 
@@ -180,7 +172,7 @@ Check if the input JSON document is null. For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::parse("null")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("null")};
 assert(sourcemeta::jsontoolkit::is_null(document));
 ```
 
@@ -192,7 +184,7 @@ Check if the input JSON document is an array. For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
 assert(sourcemeta::jsontoolkit::is_array(document));
 ```
 
@@ -204,7 +196,7 @@ Check if the input JSON document is an object. For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
 assert(sourcemeta::jsontoolkit::is_object(document));
 ```
 
@@ -216,7 +208,7 @@ Check if the input JSON document is a string. For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::parse("\"foo\"")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("\"foo\"")};
 assert(sourcemeta::jsontoolkit::is_string(document));
 ```
 
@@ -228,7 +220,7 @@ Check if the input JSON document is an integer. For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::parse("5")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("5")};
 assert(sourcemeta::jsontoolkit::is_integer(document));
 ```
 
@@ -240,7 +232,7 @@ Check if the input JSON document is a real type. For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::parse("3.14")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("3.14")};
 assert(sourcemeta::jsontoolkit::is_real(document));
 ```
 
@@ -258,7 +250,7 @@ undefined unless the JSON instance holds a boolean value. For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::from(true)};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
 assert(sourcemeta::jsontoolkit::is_boolean(document));
 assert(sourcemeta::jsontoolkit::to_boolean(document));
 ```
@@ -273,7 +265,7 @@ example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::from(5)};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(5)};
 assert(sourcemeta::jsontoolkit::is_integer(document));
 assert(sourcemeta::jsontoolkit::to_integer(document) == 5);
 ```
@@ -288,7 +280,7 @@ example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::from(3.14)};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(3.14)};
 assert(sourcemeta::jsontoolkit::is_real(document));
 assert(sourcemeta::jsontoolkit::to_real(document) == 3.14);
 ```
@@ -303,7 +295,7 @@ example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::from("foo")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from("foo")};
 assert(sourcemeta::jsontoolkit::is_string(document));
 assert(sourcemeta::jsontoolkit::to_string(document) == "foo");
 ```
@@ -321,9 +313,9 @@ For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto my_object{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
-const auto my_array{sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
-const auto my_string{sourcemeta::jsontoolkit::parse("\"foo\"")};
+const sourcemeta::jsontoolkit::JSON my_object{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+const sourcemeta::jsontoolkit::JSON my_array{sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+const sourcemeta::jsontoolkit::JSON my_string{sourcemeta::jsontoolkit::parse("\"foo\"")};
 
 assert(sourcemeta::jsontoolkit::size(my_object) == 1);
 assert(sourcemeta::jsontoolkit::size(my_array) == 2);
@@ -342,9 +334,9 @@ For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto my_object{sourcemeta::jsontoolkit::parse("{}")};
-const auto my_array{sourcemeta::jsontoolkit::parse("[]")};
-const auto my_string{sourcemeta::jsontoolkit::parse("\"\"")};
+const sourcemeta::jsontoolkit::JSON my_object{sourcemeta::jsontoolkit::parse("{}")};
+const sourcemeta::jsontoolkit::JSON my_array{sourcemeta::jsontoolkit::parse("[]")};
+const sourcemeta::jsontoolkit::JSON my_string{sourcemeta::jsontoolkit::parse("\"\"")};
 
 assert(sourcemeta::jsontoolkit::empty(my_object));
 assert(sourcemeta::jsontoolkit::empty(my_array));
@@ -364,12 +356,12 @@ For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto my_object{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
-const auto &value{sourcemeta::jsontoolkit::at(my_object, "foo")};
+const sourcemeta::jsontoolkit::JSON my_object{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+const sourcemeta::jsontoolkit::JSONValue &value{sourcemeta::jsontoolkit::at(my_object, "foo")};
 assert(sourcemeta::jsontoolkit::to_integer(value) == 1);
 
-const auto my_array{sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
-const auto &element{sourcemeta::jsontoolkit::at(my_array, 1)};
+const sourcemeta::jsontoolkit::JSON my_array{sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+const sourcemeta::jsontoolkit::JSONValue &element{sourcemeta::jsontoolkit::at(my_array, 1)};
 assert(sourcemeta::jsontoolkit::to_integer(element) == 2);
 ```
 
@@ -384,8 +376,8 @@ array. For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
-const auto &value{sourcemeta::jsontoolkit::front(my_object)};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+const sourcemeta::jsontoolkit::JSONValue &value{sourcemeta::jsontoolkit::front(my_object)};
 assert(sourcemeta::jsontoolkit::to_integer(value) == 1);
 ```
 
@@ -400,8 +392,8 @@ array. For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
-const auto &value{sourcemeta::jsontoolkit::back(my_object)};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+const sourcemeta::jsontoolkit::JSONValue &value{sourcemeta::jsontoolkit::back(my_object)};
 assert(sourcemeta::jsontoolkit::to_integer(value) == 3);
 ```
 
@@ -414,7 +406,7 @@ function is undefined is the input JSON instance is not an object. For example:
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-const auto document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
 assert(sourcemeta::jsontoolkit::defines(document, "foo"));
 assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 ```
