@@ -409,6 +409,16 @@ assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 
 ### Writing
 
+A set of functions to write to JSON instance. To accomodate for the memory
+model of some JSON implementations [^1], some of these functions need a
+reference to the root of the JSON document under modification. If you are
+modifying the top-level JSON document, then this additional argument is not
+necessary.
+
+[^1]: RapidJSON requires the root document allocator as an argument to many of
+  its writing functions for memory-efficiency. See
+  http://rapidjson.org/md_doc_dom.html#Allocator
+
 #### `void set([JSON &root,] JSON &value | JSONValue &value, const JSON &other)`
 #### `void assign([JSON &root,] JSON &value | JSONValue &value, const std::string &key, JSON & | JSONValue &)`
 #### `void erase(JSON & | JSONValue &, const std::string &key)`
