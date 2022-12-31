@@ -421,6 +421,19 @@ necessary.
   http://rapidjson.org/md_doc_dom.html#Allocator
 
 #### `void set([JSON &root,] JSON &value | JSONValue &value, const JSON &other)`
+
+This function sets a value to another JSON value. For example, the member of a
+JSON document can be transformed from a boolean to an integer as follows:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
+sourcemeta::jsontoolkit::JSONValue &member{sourcemeta::jsontoolkit::at(document, "foo")};
+sourcemeta::jsontoolkit::set(document, member, sourcemeta::jsontoolkit::from(2));
+```
+
 #### `void assign([JSON &root,] JSON &value | JSONValue &value, const std::string &key, JSON & | JSONValue &)`
 #### `void erase(JSON & | JSONValue &, const std::string &key)`
 #### `void clear(JSON & | JSONValue &)`
