@@ -416,7 +416,8 @@ modifying the top-level JSON document, then this additional argument is not
 necessary.
 
 [^1]: RapidJSON requires the root document allocator as an argument to many of
-  its writing functions for memory-efficiency. See
+  its writing functions, as RapidJSON values do not store a pointer to its
+  parent for memory-efficiency purposes. See
   http://rapidjson.org/md_doc_dom.html#Allocator
 
 #### `void set([JSON &root,] JSON &value | JSONValue &value, const JSON &other)`
