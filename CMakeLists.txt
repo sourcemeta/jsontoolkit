@@ -39,6 +39,7 @@ target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE
   ${JSONTOOLKIT_BACKEND})
 
 if(PROJECT_IS_TOP_LEVEL)
+  include(GNUInstallDirs)
   include(cmake/clang-format.cmake)
   if(JSONTOOLKIT_TESTS)
     enable_testing()
