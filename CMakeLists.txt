@@ -15,16 +15,23 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(JSONTOOLKIT_BACKEND "rapidjson" CACHE STRING "Set the JSON Toolkit backend")
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" ON)
 
+if(PROJECT_IS_TOP_LEVEL)
+  include(GNUInstallDirs)
+endif()
+
 # JSON
-add_library(sourcemeta_jsontoolkit_json INTERFACE
-  include/jsontoolkit/json.h
+set(JSONTOOLKIT_JSON_META_HEADERS
   include/jsontoolkit/json/read.h
   include/jsontoolkit/json/write.h
-  include/jsontoolkit/json/iterators.h
+  include/jsontoolkit/json/iterators.h)
+set(JSONTOOLKIT_JSON_BACKEND_HEADERS
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/common.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/read.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/write.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/iterators.h)
+add_library(sourcemeta_jsontoolkit_json INTERFACE
+  include/jsontoolkit/json.h
+  ${JSONTOOLKIT_JSON_META_HEADERS} ${JSONTOOLKIT_JSON_BACKEND_HEADERS})
 set_target_properties(sourcemeta_jsontoolkit_json
   PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/json.h")
 target_include_directories(sourcemeta_jsontoolkit_json
@@ -42,9 +49,12 @@ install(TARGETS sourcemeta_jsontoolkit_json
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   COMPONENT jsontoolkit
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit")
+install(FILES ${JSONTOOLKIT_JSON_META_HEADERS}
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json")
+install(FILES ${JSONTOOLKIT_JSON_BACKEND_HEADERS}
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json/${JSONTOOLKIT_BACKEND}")
 
 if(PROJECT_IS_TOP_LEVEL)
-  include(GNUInstallDirs)
   include(cmake/clang-format.cmake)
   if(JSONTOOLKIT_TESTS)
     enable_testing()
