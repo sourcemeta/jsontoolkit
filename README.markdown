@@ -422,10 +422,12 @@ assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 
 #### `Iterator begin_object(JSON & | JSONValue &)`
 #### `Iterator end_object(JSON & | JSONValue &)`
-#### `Iterator begin_array(JSON & | JSONValue &)`
-#### `Iterator end_array(JSON & | JSONValue &)`
 #### `ConstIterator cbegin_object(const JSON & | const JSONValue &)`
 #### `ConstIterator cend_object(const JSON & | const JSONValue &)`
+#### `Iterator begin_array(JSON & | JSONValue &)`
+#### `Iterator end_array(JSON & | JSONValue &)`
+#### `Iterator rbegin_array(JSON & | JSONValue &)`
+#### `Iterator rend_array(JSON & | JSONValue &)`
 #### `ConstIterator cbegin_array(const JSON & | const JSONValue &)`
 #### `ConstIterator cend_array(const JSON & | const JSONValue &)`
 #### `ConstIterator crbegin_array(const JSON & | const JSONValue &)`

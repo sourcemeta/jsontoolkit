@@ -49,6 +49,20 @@ inline auto crend_array(const JSONValue &value)
       value.Begin()};
 }
 
+// See https://github.com/Tencent/rapidjson/issues/678
+inline auto rbegin_array(JSONValue &value)
+    -> std::reverse_iterator<rapidjson::Value::ValueIterator> {
+  assert(is_array(value));
+  return std::reverse_iterator<rapidjson::Value::ValueIterator>{value.End()};
+}
+
+// See https://github.com/Tencent/rapidjson/issues/678
+inline auto rend_array(JSONValue &value)
+    -> std::reverse_iterator<rapidjson::Value::ValueIterator> {
+  assert(is_array(value));
+  return std::reverse_iterator<rapidjson::Value::ValueIterator>{value.Begin()};
+}
+
 inline auto begin_array(JSONValue &value) -> rapidjson::Value::ValueIterator {
   assert(is_array(value));
   return value.Begin();
