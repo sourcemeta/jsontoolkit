@@ -34,6 +34,22 @@ TEST(CATEGORY, array_iterator_for_each) {
   EXPECT_EQ(result.at(2), 3);
 }
 
+TEST(CATEGORY, array_reverse_const_iterator_for_each) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  std::vector<std::int64_t> result;
+  std::for_each(sourcemeta::jsontoolkit::crbegin_array(document),
+                sourcemeta::jsontoolkit::crend_array(document),
+                [&result](const auto &element) {
+                  result.push_back(
+                      sourcemeta::jsontoolkit::to_integer(element));
+                });
+  EXPECT_EQ(result.size(), 3);
+  EXPECT_EQ(result.at(0), 3);
+  EXPECT_EQ(result.at(1), 2);
+  EXPECT_EQ(result.at(2), 1);
+}
+
 TEST(CATEGORY, object_const_all_of_true) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};

@@ -4,7 +4,8 @@
 #include "common.h"
 #include "read.h"
 
-#include <cassert> // assert
+#include <cassert>  // assert
+#include <iterator> // std::reverse_iterator
 
 namespace sourcemeta::jsontoolkit {
 
@@ -30,6 +31,22 @@ inline auto cend_array(const JSONValue &value)
     -> rapidjson::Value::ConstValueIterator {
   assert(is_array(value));
   return value.End();
+}
+
+// See https://github.com/Tencent/rapidjson/issues/678
+inline auto crbegin_array(const JSONValue &value)
+    -> std::reverse_iterator<rapidjson::Value::ConstValueIterator> {
+  assert(is_array(value));
+  return std::reverse_iterator<rapidjson::Value::ConstValueIterator>{
+      value.End()};
+}
+
+// See https://github.com/Tencent/rapidjson/issues/678
+inline auto crend_array(const JSONValue &value)
+    -> std::reverse_iterator<rapidjson::Value::ConstValueIterator> {
+  assert(is_array(value));
+  return std::reverse_iterator<rapidjson::Value::ConstValueIterator>{
+      value.Begin()};
 }
 
 inline auto begin_array(JSONValue &value) -> rapidjson::Value::ValueIterator {

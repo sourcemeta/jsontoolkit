@@ -428,6 +428,8 @@ assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 #### `ConstIterator cend_object(const JSON & | const JSONValue &)`
 #### `ConstIterator cbegin_array(const JSON & | const JSONValue &)`
 #### `ConstIterator cend_array(const JSON & | const JSONValue &)`
+#### `ConstIterator crbegin_array(const JSON & | const JSONValue &)`
+#### `ConstIterator crend_array(const JSON & | const JSONValue &)`
 #### `JSON& value(const IteratorPair &)`
 #### `std::string& key(const IteratorPair &)`
 
