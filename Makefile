@@ -1,7 +1,12 @@
 .DEFAULT_GOAL = all
+
+# Programs
 CMAKE ?= cmake
 CTEST ?= ctest
 PRESET ?= Debug
+PANDOC ?= pandoc
+
+# Options
 BACKEND ?= rapidjson
 
 include vendor/vendorpull/targets.mk
@@ -17,3 +22,11 @@ all:
 .PHONY: clean
 clean:
 	$(CMAKE) -E rm -R -f build
+
+.PHONY: clean
+build:
+	mkdir $@
+build/www: | build
+	mkdir $@
+build/www/index.html: www/template.html README.markdown | build/www
+	$(PANDOC) --standalone --table-of-contents --toc-depth=4 --template $< $(word 2,$^) --output $@ --metadata title="JSON Toolkit"
