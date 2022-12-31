@@ -37,6 +37,11 @@ target_compile_definitions(sourcemeta_jsontoolkit_json INTERFACE
   JSONTOOLKIT_BACKEND_${UPPER_JSONTOOLKIT_BACKEND})
 target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE
   ${JSONTOOLKIT_BACKEND})
+install(TARGETS sourcemeta_jsontoolkit_json
+  EXPORT sourcemeta_jsontoolkit_json
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  COMPONENT jsontoolkit
+  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit")
 
 if(PROJECT_IS_TOP_LEVEL)
   include(GNUInstallDirs)
