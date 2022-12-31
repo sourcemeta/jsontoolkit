@@ -25,7 +25,12 @@ add_library(sourcemeta_jsontoolkit_json INTERFACE
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/read.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/write.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/iterators.h)
-target_include_directories(sourcemeta_jsontoolkit_json INTERFACE include)
+set_target_properties(sourcemeta_jsontoolkit_json
+  PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/json.h")
+target_include_directories(sourcemeta_jsontoolkit_json
+  INTERFACE
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 include(cmake/${JSONTOOLKIT_BACKEND}.cmake)
 string(TOUPPER ${JSONTOOLKIT_BACKEND} UPPER_JSONTOOLKIT_BACKEND)
 target_compile_definitions(sourcemeta_jsontoolkit_json INTERFACE
