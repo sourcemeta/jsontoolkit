@@ -12,6 +12,7 @@ all:
 	$(CMAKE) --build ./build --target clang_format
 	$(CMAKE) --build ./build
 	$(CTEST) --test-dir ./build --output-on-failure --progress
+	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose
 
 .PHONY: clean
 clean:
