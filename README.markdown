@@ -581,7 +581,10 @@ assert(sourcemeta::jsontoolkit::to_integer(value) == 4);
 ### Iterators
 
 A set of functions that provide a standard iterators interface over JSON for
-both objects and arrays.
+both objects and arrays. The `Iterator`, `ConstIterator` and `IteratorPair`
+types referred in this section are logical types that map to backend-specify
+iterator types. To write portable code across backends, it is recommended to
+always refer to these types using `auto`.
 
 #### Mutable object iterators
 
@@ -589,11 +592,51 @@ both objects and arrays.
 
 `Iterator end_object(JSON & | JSONValue &)`
 
+These functions provide mutable
+[random-access](https://en.cppreference.com/w/cpp/iterator/random_access_iterator)
+object iterators. The iteration order is not guaranteed. For example, every
+value of an object can be set to `true` as follows:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <algorithm>
+
+sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("{ \"foo\": false, \"bar\": false }")};
+std::for_each(sourcemeta::jsontoolkit::begin_object(document),
+              sourcemeta::jsontoolkit::end_object(document),
+              [](auto &pair) {
+                  sourcemeta::jsontoolkit::set(
+                    sourcemeta::jsontoolkit::value(element),
+                    sourcemeta::jsontoolkit::from("true"));
+              });
+```
+
 #### Const object iterators
 
 `ConstIterator cbegin_object(const JSON & | const JSONValue &)`
 
 `ConstIterator cend_object(const JSON & | const JSONValue &)`
+
+These functions provide immutable
+[random-access](https://en.cppreference.com/w/cpp/iterator/random_access_iterator)
+object iterators. The iteration order is not guaranteed. For example, the pairs
+of an object can be printed as follows:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <algorithm>
+#include <iostream>
+
+const sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("{ \"foo\": false, \"bar\": false }")};
+std::for_each(sourcemeta::jsontoolkit::cbegin_object(document),
+              sourcemeta::jsontoolkit::cend_object(document),
+              [](const auto &pair) {
+                std::cout << "Key: " << sourcemeta::jsontoolkit::key(element) << "\n";
+                std::cout << "Value: " << sourcemeta::jsontoolkit::value(element) << "\n";
+              });
+```
 
 #### Mutable array iterators
 
