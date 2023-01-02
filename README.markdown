@@ -580,6 +580,9 @@ assert(sourcemeta::jsontoolkit::to_integer(value) == 4);
 
 ### Iterators
 
+A set of functions that provide a standard iterators interface over JSON for
+both objects and arrays.
+
 #### Mutable object iterators
 
 `Iterator begin_object(JSON & | JSONValue &)`
