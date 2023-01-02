@@ -479,7 +479,17 @@ sourcemeta::jsontoolkit::set(document, member, sourcemeta::jsontoolkit::from(2))
 
 `void assign([JSON &root,] JSON &value | JSONValue &value, const std::string &key, JSON & | JSONValue &)`
 
-This function upserts the value of an object member.
+This function sets or updates an object key. This function is undefined is the
+input JSON instance is not an object. For example, an object can be updated to
+contain a new `bar` boolean member as follows:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
+sourcemeta::jsontoolkit::assign(document, "bar", sourcemeta::jsontoolkit::from(false));
+```
 
 #### Erase member
 
