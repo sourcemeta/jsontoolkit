@@ -607,6 +607,7 @@ std::for_each(sourcemeta::jsontoolkit::begin_object(document),
               sourcemeta::jsontoolkit::end_object(document),
               [](auto &pair) {
                   sourcemeta::jsontoolkit::set(
+                    document,
                     sourcemeta::jsontoolkit::value(element),
                     sourcemeta::jsontoolkit::from("true"));
               });
@@ -644,11 +645,51 @@ std::for_each(sourcemeta::jsontoolkit::cbegin_object(document),
 
 `Iterator end_array(JSON & | JSONValue &)`
 
+These functions provide mutable
+[bidirectional](https://en.cppreference.com/w/cpp/iterator/bidirectional_iterator)
+array iterators. The iteration order is from start to end. For example, every
+integer value of an array can be incremented as follows:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <algorithm>
+
+sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+std::for_each(sourcemeta::jsontoolkit::begin_array(document),
+              sourcemeta::jsontoolkit::end_array(document),
+              [](auto &element) {
+                  const auto current{sourcemeta::jsontoolkit::to_integer(element)};
+                  sourcemeta::jsontoolkit::set(
+                    document, element, sourcemeta::jsontoolkit::from(current + 1));
+              });
+```
+
 #### Reverse mutable array iterators
 
 `Iterator rbegin_array(JSON & | JSONValue &)`
 
 `Iterator rend_array(JSON & | JSONValue &)`
+
+These functions provide reverse mutable
+[bidirectional](https://en.cppreference.com/w/cpp/iterator/bidirectional_iterator)
+array iterators. The iteration order is from end to start. For example, every
+integer value of an array can be decremented as follows:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <algorithm>
+
+sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+std::for_each(sourcemeta::jsontoolkit::rbegin_array(document),
+              sourcemeta::jsontoolkit::rend_array(document),
+              [](auto &element) {
+                  const auto current{sourcemeta::jsontoolkit::to_integer(element)};
+                  sourcemeta::jsontoolkit::set(
+                    document, element, sourcemeta::jsontoolkit::from(current - 1));
+              });
+```
 
 #### Const array iterators
 
