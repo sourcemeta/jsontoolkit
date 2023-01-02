@@ -31,7 +31,7 @@ build/www: | build
 build/index.markdown: README.markdown | build/www
 	tail -n +4 $< < $< > $@
 build/www/index.html: www/template.html build/index.markdown | build/www
-	$(PANDOC) --standalone --table-of-contents --toc-depth=4 --template $< --output $@ --metadata title="JSON Toolkit" $(word 2,$^)
+	$(PANDOC) --standalone --table-of-contents --toc-depth=5 --template $< --output $@ --metadata title="JSON Toolkit" $(word 2,$^)
 build/www/style.min.css: www/main.scss | build/www
 	$(SASSC) --style compressed $< $@
 

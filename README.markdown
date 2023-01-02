@@ -18,8 +18,8 @@ Supported backends
 |-----------|-------------|-----------------------|---------|---------|-----------|
 | RapidJSON | `rapidjson` | https://rapidjson.org | Y       | Y       | Y         |
 
-Using JSON Toolkit
-------------------
+Usage
+-----
 
 ### As a git submodule
 
@@ -51,11 +51,13 @@ the `sourcemeta::jsontoolkit` namespace that are included as follows:
 #include <jsontoolkit/json.h>
 ```
 
-### Conversion
+### JSON
+
+#### Conversion
 
 A set of functions to encode and decode JSON instances.
 
-#### Parse from stream
+##### Parse from stream
 
 `JSON parse(const std::basic_istream<C, T> &stream)`
 
@@ -76,7 +78,7 @@ If parsing fails,
 [`std::domain_error`](https://en.cppreference.com/w/cpp/error/domain_error)
 with a human-friendly error string will be thrown.
 
-#### Parse from string
+##### Parse from string
 
 `JSON parse(const std::string &source)`
 
@@ -95,7 +97,7 @@ If parsing fails,
 [`std::domain_error`](https://en.cppreference.com/w/cpp/error/domain_error)
 with a human-friendly error string will be thrown.
 
-#### Create from type
+##### Create from type
 
 `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t | double)`
 
@@ -114,7 +116,7 @@ const sourcemeta::jsontoolkit::JSON my_real{sourcemeta::jsontoolkit::from(3.14)}
 These functions are particularly handy for scalar types when passing them to
 functions that modify the JSON document and take other JSON values as input.
 
-#### Stringify to stream
+##### Stringify to stream
 
 `void stringify(const JSON & | const JSONValue &, std::basic_ostream<C, T> &)`
 
@@ -132,7 +134,7 @@ sourcemeta::jsontoolkit::stringify(document, stream);
 std::cout << stream.str() << std::endl;
 ```
 
-#### Prettify to stream
+##### Prettify to stream
 
 `void prettify(const JSON & | const JSONValue &, std::basic_ostream<C, T> &)`
 
@@ -150,11 +152,11 @@ sourcemeta::jsontoolkit::prettify(document, stream);
 std::cout << stream.str() << std::endl;
 ```
 
-### Types
+#### Types
 
 A set of functions to check the type of a given JSON instance.
 
-#### Is boolean
+##### Is boolean
 
 `bool is_boolean(const JSON & | const JSONValue &)`
 
@@ -168,7 +170,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("tru
 assert(sourcemeta::jsontoolkit::is_boolean(document));
 ```
 
-#### Is null
+##### Is null
 
 `bool is_null(const JSON & | const JSONValue &)`
 
@@ -182,7 +184,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("nul
 assert(sourcemeta::jsontoolkit::is_null(document));
 ```
 
-#### Is array
+##### Is array
 
 `bool is_array(const JSON & | const JSONValue &)`
 
@@ -196,7 +198,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1
 assert(sourcemeta::jsontoolkit::is_array(document));
 ```
 
-#### Is object
+##### Is object
 
 `bool is_object(const JSON & | const JSONValue &)`
 
@@ -210,7 +212,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \
 assert(sourcemeta::jsontoolkit::is_object(document));
 ```
 
-#### Is string
+##### Is string
 
 `bool is_string(const JSON & | const JSONValue &)`
 
@@ -224,7 +226,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("\"f
 assert(sourcemeta::jsontoolkit::is_string(document));
 ```
 
-#### Is integer
+##### Is integer
 
 `bool is_integer(const JSON & | const JSONValue &)`
 
@@ -238,7 +240,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("5")
 assert(sourcemeta::jsontoolkit::is_integer(document));
 ```
 
-#### Is real
+##### Is real
 
 `bool is_real(const JSON & | const JSONValue &)`
 
@@ -252,12 +254,12 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("3.1
 assert(sourcemeta::jsontoolkit::is_real(document));
 ```
 
-### Reading
+#### Reading
 
 A set of functions to read JSON instances. None of these functions modify the
 input instance.
 
-#### To boolean
+##### To boolean
 
 `bool to_boolean(const JSON & | const JSONValue &)`
 
@@ -273,7 +275,7 @@ assert(sourcemeta::jsontoolkit::is_boolean(document));
 assert(sourcemeta::jsontoolkit::to_boolean(document));
 ```
 
-#### To integer
+##### To integer
 
 `std::int64_t to_integer(const JSON & | const JSONValue &)`
 
@@ -290,7 +292,7 @@ assert(sourcemeta::jsontoolkit::is_integer(document));
 assert(sourcemeta::jsontoolkit::to_integer(document) == 5);
 ```
 
-#### To real
+##### To real
 
 `double to_real(const JSON & | const JSONValue &)`
 
@@ -307,7 +309,7 @@ assert(sourcemeta::jsontoolkit::is_real(document));
 assert(sourcemeta::jsontoolkit::to_real(document) == 3.14);
 ```
 
-#### To string
+##### To string
 
 `std::string to_string(const JSON & | const JSONValue &)`
 
@@ -324,7 +326,7 @@ assert(sourcemeta::jsontoolkit::is_string(document));
 assert(sourcemeta::jsontoolkit::to_string(document) == "foo");
 ```
 
-#### Size
+##### Size
 
 `std::size_t size(const JSON & | const JSONValue &)`
 
@@ -348,7 +350,7 @@ assert(sourcemeta::jsontoolkit::size(my_array) == 2);
 assert(sourcemeta::jsontoolkit::size(my_string) == 3);
 ```
 
-#### Is empty
+##### Is empty
 
 `bool empty(const JSON & | const JSONValue &)`
 
@@ -371,7 +373,7 @@ assert(sourcemeta::jsontoolkit::empty(my_array));
 assert(sourcemeta::jsontoolkit::empty(my_string));
 ```
 
-#### Get element or member
+##### Get element or member
 
 `JSONValue& at([const] JSON & | [const] JSONValue &, std::size_t index | const std::string &key)`
 
@@ -395,7 +397,7 @@ const sourcemeta::jsontoolkit::JSONValue &element{sourcemeta::jsontoolkit::at(my
 assert(sourcemeta::jsontoolkit::to_integer(element) == 2);
 ```
 
-#### Get first element
+##### Get first element
 
 `JSONValue& front([const] JSON & | [const] JSONValue &)`
 
@@ -413,7 +415,7 @@ const sourcemeta::jsontoolkit::JSONValue &value{sourcemeta::jsontoolkit::front(m
 assert(sourcemeta::jsontoolkit::to_integer(value) == 1);
 ```
 
-#### Get last element
+##### Get last element
 
 `JSONValue& back([const] JSON & | [const] JSONValue &)`
 
@@ -431,7 +433,7 @@ const sourcemeta::jsontoolkit::JSONValue &value{sourcemeta::jsontoolkit::back(my
 assert(sourcemeta::jsontoolkit::to_integer(value) == 3);
 ```
 
-#### Defines member
+##### Defines member
 
 `bool defines(const JSON & | const JSONValue &, const std::string &key)`
 
@@ -447,7 +449,7 @@ assert(sourcemeta::jsontoolkit::defines(document, "foo"));
 assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 ```
 
-### Writing
+#### Writing
 
 A set of functions to write to JSON instance. To accomodate for the memory
 model of some JSON implementations [^1], some of these functions need a
@@ -460,7 +462,7 @@ necessary.
   parent for memory-efficiency purposes. See
   [http://rapidjson.org/md_doc_dom.html#Allocator](http://rapidjson.org/md_doc_dom.html#Allocator)
 
-#### Set instance
+##### Set instance
 
 `void set([JSON &root,] JSON &value | JSONValue &value, const JSON &other)`
 
@@ -490,7 +492,7 @@ sourcemeta::jsontoolkit::set(document, member, sourcemeta::jsontoolkit::from(2))
 
 `void make_object(JSON & | JSONValue &)`
 
-### Iterators
+#### Iterators
 
 `Iterator begin_object(JSON & | JSONValue &)`
 
