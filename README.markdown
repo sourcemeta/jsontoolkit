@@ -475,47 +475,79 @@ sourcemeta::jsontoolkit::JSONValue &member{sourcemeta::jsontoolkit::at(document,
 sourcemeta::jsontoolkit::set(document, member, sourcemeta::jsontoolkit::from(2));
 ```
 
+#### Set member
+
 `void assign([JSON &root,] JSON &value | JSONValue &value, const std::string &key, JSON & | JSONValue &)`
+
+This function upserts the value of an object member.
+
+#### Erase member
 
 `void erase(JSON & | JSONValue &, const std::string &key)`
 
+#### Clear
+
 `void clear(JSON & | JSONValue &)`
+
+#### Insert element to the front
 
 `void push_front([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
 
+#### Insert element to the back
+
 `void push_back([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
 
+#### Make the instance an array
+
 `void make_array(JSON & | JSONValue &)`
+
+#### Make the instance an object
 
 `void make_object(JSON & | JSONValue &)`
 
 ### Iterators
 
+#### Mutable object iterators
+
 `Iterator begin_object(JSON & | JSONValue &)`
 
 `Iterator end_object(JSON & | JSONValue &)`
+
+#### Const object iterators
 
 `ConstIterator cbegin_object(const JSON & | const JSONValue &)`
 
 `ConstIterator cend_object(const JSON & | const JSONValue &)`
 
+#### Mutable array iterators
+
 `Iterator begin_array(JSON & | JSONValue &)`
 
 `Iterator end_array(JSON & | JSONValue &)`
+
+#### Reverse mutable array iterators
 
 `Iterator rbegin_array(JSON & | JSONValue &)`
 
 `Iterator rend_array(JSON & | JSONValue &)`
 
+#### Const array iterators
+
 `ConstIterator cbegin_array(const JSON & | const JSONValue &)`
 
 `ConstIterator cend_array(const JSON & | const JSONValue &)`
+
+#### Reverse const array iterators
 
 `ConstIterator crbegin_array(const JSON & | const JSONValue &)`
 
 `ConstIterator crend_array(const JSON & | const JSONValue &)`
 
+#### Get object value
+
 `JSON& value(const IteratorPair &)`
+
+#### Get object key
 
 `std::string& key(const IteratorPair &)`
 
