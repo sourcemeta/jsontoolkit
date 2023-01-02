@@ -56,8 +56,15 @@ pre {
 }
 
 aside > div {
+  overflow-y: scroll;
+  overflow-x: hidden;
   position: fixed;
   right: 0;
   top: 0;
+  height: 100vh;
   transform: translateX(-50%);
+
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
 }
