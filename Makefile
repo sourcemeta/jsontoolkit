@@ -30,10 +30,12 @@ build/www: | build
 	mkdir $@
 build/index.markdown: README.markdown | build/www
 	tail -n +4 $< < $< > $@
+build/www/icon.svg: www/icon.svg | build/www
+	install -m 0644 $< $@
 build/www/index.html: www/template.html build/index.markdown | build/www
 	$(PANDOC) --standalone --table-of-contents --toc-depth=5 --template $< --output $@ --metadata title="JSON Toolkit" $(word 2,$^)
 build/www/style.min.css: www/main.scss | build/www
 	$(SASSC) --style compressed $< $@
 
 .PHONY: www
-www: build/www/index.html build/www/style.min.css
+www: build/www/index.html build/www/style.min.css build/www/icon.svg
