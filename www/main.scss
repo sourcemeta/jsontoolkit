@@ -38,6 +38,7 @@ pre {
   @extend .px-3;
   @extend .py-3;
   @extend .border;
+  @extend .rounded;
   background-color: $gray-100;
 }
 
