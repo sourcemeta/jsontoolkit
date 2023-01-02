@@ -570,9 +570,13 @@ assert(sourcemeta::jsontoolkit::to_integer(value) == 4);
 
 `void make_array(JSON & | JSONValue &)`
 
+<!-- TODO: Add example of pushing and constructing a new array on an object -->
+
 #### Make the instance an object
 
 `void make_object(JSON & | JSONValue &)`
+
+<!-- TODO: Add example of pushing and constructing a new object on an object -->
 
 ### Iterators
 
