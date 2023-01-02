@@ -1,3 +1,6 @@
+$headings-margin-bottom: 15px;
+$headings-line-height: 1.5;
+
 // Configuration
 @import "../node_modules/bootstrap/scss/functions";
 @import "../node_modules/bootstrap/scss/variables";
@@ -52,7 +55,8 @@ table {
 pre {
   @extend .px-3;
   @extend .py-3;
-  background-color: $gray-200;
+  @extend .border;
+  background-color: $gray-100;
 }
 
 aside > div {

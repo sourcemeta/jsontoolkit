@@ -458,7 +458,7 @@ necessary.
 [^1]: RapidJSON requires the root document allocator as an argument to many of
   its writing functions, as RapidJSON values do not store a pointer to its
   parent for memory-efficiency purposes. See
-  http://rapidjson.org/md_doc_dom.html#Allocator
+  [http://rapidjson.org/md_doc_dom.html#Allocator](http://rapidjson.org/md_doc_dom.html#Allocator)
 
 #### Set instance
 
