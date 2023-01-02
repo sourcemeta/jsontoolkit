@@ -476,33 +476,52 @@ sourcemeta::jsontoolkit::JSONValue &member{sourcemeta::jsontoolkit::at(document,
 sourcemeta::jsontoolkit::set(document, member, sourcemeta::jsontoolkit::from(2));
 ```
 
-#### `void assign([JSON &root,] JSON &value | JSONValue &value, const std::string &key, JSON & | JSONValue &)`
-#### `void erase(JSON & | JSONValue &, const std::string &key)`
-#### `void clear(JSON & | JSONValue &)`
-#### `void push_front([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
-#### `void push_back([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
-#### `void make_array(JSON & | JSONValue &)`
-#### `void make_object(JSON & | JSONValue &)`
+`void assign([JSON &root,] JSON &value | JSONValue &value, const std::string &key, JSON & | JSONValue &)`
+
+`void erase(JSON & | JSONValue &, const std::string &key)`
+
+`void clear(JSON & | JSONValue &)`
+
+`void push_front([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
+
+`void push_back([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
+
+`void make_array(JSON & | JSONValue &)`
+
+`void make_object(JSON & | JSONValue &)`
 
 ### Iterators
 
-#### `Iterator begin_object(JSON & | JSONValue &)`
-#### `Iterator end_object(JSON & | JSONValue &)`
-#### `ConstIterator cbegin_object(const JSON & | const JSONValue &)`
-#### `ConstIterator cend_object(const JSON & | const JSONValue &)`
-#### `Iterator begin_array(JSON & | JSONValue &)`
-#### `Iterator end_array(JSON & | JSONValue &)`
-#### `Iterator rbegin_array(JSON & | JSONValue &)`
-#### `Iterator rend_array(JSON & | JSONValue &)`
-#### `ConstIterator cbegin_array(const JSON & | const JSONValue &)`
-#### `ConstIterator cend_array(const JSON & | const JSONValue &)`
-#### `ConstIterator crbegin_array(const JSON & | const JSONValue &)`
-#### `ConstIterator crend_array(const JSON & | const JSONValue &)`
-#### `JSON& value(const IteratorPair &)`
-#### `std::string& key(const IteratorPair &)`
+`Iterator begin_object(JSON & | JSONValue &)`
 
-Developing JSON Toolkit
------------------------
+`Iterator end_object(JSON & | JSONValue &)`
+
+`ConstIterator cbegin_object(const JSON & | const JSONValue &)`
+
+`ConstIterator cend_object(const JSON & | const JSONValue &)`
+
+`Iterator begin_array(JSON & | JSONValue &)`
+
+`Iterator end_array(JSON & | JSONValue &)`
+
+`Iterator rbegin_array(JSON & | JSONValue &)`
+
+`Iterator rend_array(JSON & | JSONValue &)`
+
+`ConstIterator cbegin_array(const JSON & | const JSONValue &)`
+
+`ConstIterator cend_array(const JSON & | const JSONValue &)`
+
+`ConstIterator crbegin_array(const JSON & | const JSONValue &)`
+
+`ConstIterator crend_array(const JSON & | const JSONValue &)`
+
+`JSON& value(const IteratorPair &)`
+
+`std::string& key(const IteratorPair &)`
+
+Contributing
+------------
 
 JSON Toolkit makes use of the [CMake](https://cmake.org) build system. You can
 configure, build and test the project as follows:

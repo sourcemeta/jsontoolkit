@@ -29,4 +29,4 @@ build:
 build/www: | build
 	mkdir $@
 build/www/index.html: www/template.html README.markdown | build/www
-	$(PANDOC) --standalone --table-of-contents --toc-depth=3 --template $< $(word 2,$^) --output $@ --metadata title="JSON Toolkit"
+	$(PANDOC) --standalone --table-of-contents --toc-depth=4 --template $< $(word 2,$^) --output $@ --metadata title="JSON Toolkit"
