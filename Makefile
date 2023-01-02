@@ -5,6 +5,7 @@ CMAKE ?= cmake
 CTEST ?= ctest
 PRESET ?= Debug
 PANDOC ?= pandoc
+SASSC ?= sassc
 
 # Options
 BACKEND ?= rapidjson
@@ -23,10 +24,14 @@ all:
 clean:
 	$(CMAKE) -E rm -R -f build
 
-.PHONY: clean
 build:
 	mkdir $@
 build/www: | build
 	mkdir $@
 build/www/index.html: www/template.html README.markdown | build/www
 	$(PANDOC) --standalone --table-of-contents --toc-depth=4 --template $< $(word 2,$^) --output $@ --metadata title="JSON Toolkit"
+build/www/style.min.css: www/main.scss | build/www
+	$(SASSC) --style compressed $< $@
+
+.PHONY: www
+www: build/www/index.html build/www/style.min.css

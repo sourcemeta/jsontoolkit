@@ -1,0 +1,7 @@
+{
+  "name": "jsontoolkit",
+  "version": "0.0.0",
+  "dependencies": {
+    "bootstrap": "^5.2.3"
+  }
+}
