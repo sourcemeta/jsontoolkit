@@ -48,3 +48,16 @@ table {
   @extend .table;
   @extend .table-bordered;
 }
+
+pre {
+  @extend .px-3;
+  @extend .py-3;
+  background-color: $gray-200;
+}
+
+aside > div {
+  position: fixed;
+  right: 0;
+  top: 0;
+  transform: translateX(-50%);
+}
