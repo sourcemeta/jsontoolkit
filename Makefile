@@ -8,6 +8,8 @@ PANDOC ?= pandoc
 SASSC ?= sassc
 INSTALL ?= install
 CONVERT ?= convert
+MKDIR ?= mkdir
+TAIL ?= tail
 
 # Options
 BACKEND ?= rapidjson
@@ -37,11 +39,11 @@ www: build/www/index.html \
  	build/www/icon-512x512.png \
 	build/www/apple-touch-icon.png
 build:
-	mkdir $@
+	$(MKDIR) $@
 build/www: | build
-	mkdir $@
+	$(MKDIR) $@
 build/index.markdown: README.markdown | build/www
-	tail -n +4 $< < $< > $@
+	$(TAIL) -n +4 $< < $< > $@
 build/www/icon-%.png: www/icon.svg | build/www
 	$(CONVERT) -resize $(basename $(notdir $(subst icon-,,$@))) $< $@
 build/www/apple-touch-icon.png: build/www/icon-180x180.png | build/www
