@@ -54,3 +54,27 @@ aside > div {
     width: 0px;
   }
 }
+
+code.cpp .pp {
+  color: $red-600;
+}
+
+code.cpp .im {
+  color: $blue-600;
+}
+
+code.cpp .st {
+  color: $orange-400;
+}
+
+code.cpp .at {
+  color: $red-600;
+}
+
+code.cpp .dv {
+  color: $yellow-600;
+}
+
+code.cpp .fl {
+  color: $yellow-600;
+}
