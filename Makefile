@@ -29,7 +29,7 @@ build:
 build/www: | build
 	mkdir $@
 build/www/index.html: www/template.html README.markdown | build/www
-	$(PANDOC) --standalone --table-of-contents --toc-depth=4 --template $< $(word 2,$^) --output $@ --metadata title="JSON Toolkit"
+	$(PANDOC) --standalone --table-of-contents --toc-depth=4 --template $< --output $@ --metadata title="JSON Toolkit" < $(word 2,$^)
 build/www/style.min.css: www/main.scss | build/www
 	$(SASSC) --style compressed $< $@
 
