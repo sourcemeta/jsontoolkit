@@ -489,11 +489,25 @@ contain a new `bar` boolean member as follows:
 
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
 sourcemeta::jsontoolkit::assign(document, "bar", sourcemeta::jsontoolkit::from(false));
+assert(sourcemeta::jsontoolkit::defines(document, "foo"));
+assert(sourcemeta::jsontoolkit::defines(document, "bar"));
 ```
 
 #### Erase member
 
 `void erase(JSON & | JSONValue &, const std::string &key)`
+
+This function deletes an object key. This function is undefined is the
+input JSON instance is not an object. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
+sourcemeta::jsontoolkit::erase(document, "foo");
+assert(!sourcemeta::jsontoolkit::defines(document, "foo"));
+```
 
 #### Clear
 
