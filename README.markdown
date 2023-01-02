@@ -509,9 +509,25 @@ sourcemeta::jsontoolkit::erase(document, "foo");
 assert(!sourcemeta::jsontoolkit::defines(document, "foo"));
 ```
 
+<!-- TODO: What happens if the key does not exist? -->
+
 #### Clear
 
 `void clear(JSON & | JSONValue &)`
+
+This function deletes all members of an object, leaving it empty. This function
+is undefined is the input JSON instance is not an object. For example:
+
+<!-- TODO: Implement this for arrays -->
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
+sourcemeta::jsontoolkit::clear(document);
+assert(sourcemeta::jsontoolkit::empty(document));
+```
 
 #### Insert element to the front
 
