@@ -534,9 +534,37 @@ assert(sourcemeta::jsontoolkit::empty(document));
 
 `void push_front([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
 
+This function inserts a new element to the beginning of the given array. This
+function is undefined is the input JSON instance is not an array. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+sourcemeta::jsontoolkit::push_front(document, sourcemeta::jsontoolkit::from(0));
+assert(sourcemeta::jsontoolkit::size(document) == 4);
+sourcemeta::jsontoolkit::JSONValue &value{sourcemeta::jsontoolkit::front(document)};
+assert(sourcemeta::jsontoolkit::to_integer(value) == 0);
+```
+
 #### Insert element to the back
 
 `void push_back([JSON &root,] JSON &value | JSONValue &value, JSON & | JSONValue &)`
+
+This function inserts a new element to the end of the given array. This
+function is undefined is the input JSON instance is not an array. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+sourcemeta::jsontoolkit::push_front(document, sourcemeta::jsontoolkit::from(4));
+assert(sourcemeta::jsontoolkit::size(document) == 4);
+sourcemeta::jsontoolkit::JSONValue &value{sourcemeta::jsontoolkit::back(document)};
+assert(sourcemeta::jsontoolkit::to_integer(value) == 4);
+```
 
 #### Make the instance an array
 
