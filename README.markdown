@@ -637,8 +637,7 @@ std::for_each(sourcemeta::jsontoolkit::cbegin_object(document),
               sourcemeta::jsontoolkit::cend_object(document),
               [](const auto &pair) {
                 std::cout << "Key: "
-                          << sourcemeta::jsontoolkit::to_string(
-                              sourcemeta::jsontoolkit::key(element))
+                          << sourcemeta::jsontoolkit::key(element)
                           << "\n";
               });
 ```
@@ -757,9 +756,44 @@ std::for_each(sourcemeta::jsontoolkit::crbegin_array(document),
 
 `JSON& value(const IteratorPair &)`
 
+This function is a utility to retrieve the value of a member pair returned by
+an object iterator. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <algorithm>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("{ \"foo\": false, \"bar\": false }")};
+std::for_each(sourcemeta::jsontoolkit::cbegin_object(document),
+              sourcemeta::jsontoolkit::cend_object(document),
+              [](const auto &pair) {
+                assert(sourcemeta::jsontoolkit::is_boolean(
+                  sourcemeta::jsontoolkit::value(element)));
+              });
+```
+
 #### Get object key
 
 `std::string& key(const IteratorPair &)`
+
+This function is a utility to retrieve the key of a member pair returned by an
+object iterator. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <algorithm>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("{ \"foo\": false, \"bar\": false }")};
+std::for_each(sourcemeta::jsontoolkit::cbegin_object(document),
+              sourcemeta::jsontoolkit::cend_object(document),
+              [](const auto &pair) {
+                assert(sourcemeta::jsontoolkit::key(element).size() == 3);
+              });
+```
 
 Contributing
 ------------
