@@ -3,16 +3,27 @@
   <head>
     <meta charset="utf-8">
     <meta name="date" content='$date-meta$'>
-    <title>Foo Bar</title>
+    <title>JSON Toolkit</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css">
     <style>
-main {
-  max-width: 700px;
-  margin: 0 auto;
+body {
+  padding: 50px 0;
+}
+
+aside {
+  position: fixed;
+  right: 0;
 }
     </style>
   </head>
   <body>
-    <aside>$toc$</aside>
-    <main>$body$</main>
+    <div class="container">
+      <div class="row">
+        <main class="column column-75">$body$</main>
+        <aside class="column column-25">$toc$</aside>
+      </div>
+    </div>
   </body>
 </html>
