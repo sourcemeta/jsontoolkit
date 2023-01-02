@@ -11,13 +11,6 @@ low-overhead frontend to multiple JSON implementations. With JSON Toolkit,
 libraries can support multiple JSON backends and transparently let the
 end-consumer swap them as required.
 
-Supported backends
-------------------
-
-| Name                               | CMake ID    | Reading | Writing | Iterators |
-|------------------------------------|-------------|---------|---------|-----------|
-| [RapidJSON](https://rapidjson.org) | `rapidjson` | Y       | Y       | Y         |
-
 Usage
 -----
 
@@ -40,6 +33,12 @@ target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit_jso
 |-----------------------|---------|-------------|---------------------------------|
 | `JSONTOOLKIT_BACKEND` | String  | `rapidjson` | The JSON implementation backend |
 | `JSONTOOLKIT_TESTS`   | Boolean | `ON`        | Build the JSON Toolkit tests    |
+
+### Supported backends
+
+| Name                               | CMake ID    | Reading | Writing | Iterators |
+|------------------------------------|-------------|---------|---------|-----------|
+| [RapidJSON](https://rapidjson.org) | `rapidjson` | Y       | Y       | Y         |
 
 JSON
 ----
