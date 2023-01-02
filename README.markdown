@@ -473,6 +473,7 @@ JSON document can be transformed from a boolean to an integer as follows:
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
 sourcemeta::jsontoolkit::JSONValue &member{sourcemeta::jsontoolkit::at(document, "foo")};
 sourcemeta::jsontoolkit::set(document, member, sourcemeta::jsontoolkit::from(2));
+assert(sourcemeta::jsontoolkit::is_integer(document, "foo"));
 ```
 
 #### Set member
