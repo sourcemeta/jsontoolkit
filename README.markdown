@@ -594,8 +594,9 @@ always refer to these types using `auto`.
 
 These functions provide mutable
 [random-access](https://en.cppreference.com/w/cpp/iterator/random_access_iterator)
-object iterators. The iteration order is not guaranteed. For example, every
-value of an object can be set to `true` as follows:
+object iterators. The iteration order is not guaranteed. These functions are
+undefined if the given JSON instance is not an object. For example, every value
+of an object can be set to `true` as follows:
 
 ```c++
 #include <jsontoolkit/json.h>
@@ -621,7 +622,8 @@ std::for_each(sourcemeta::jsontoolkit::begin_object(document),
 
 These functions provide immutable
 [random-access](https://en.cppreference.com/w/cpp/iterator/random_access_iterator)
-object iterators. The iteration order is not guaranteed. For example, the pairs
+object iterators. The iteration order is not guaranteed. These functions are
+undefined if the given JSON instance is not an object. For example, the keys
 of an object can be printed as follows:
 
 ```c++
@@ -634,8 +636,10 @@ const sourcemeta::jsontoolkit::JSON document{
 std::for_each(sourcemeta::jsontoolkit::cbegin_object(document),
               sourcemeta::jsontoolkit::cend_object(document),
               [](const auto &pair) {
-                std::cout << "Key: " << sourcemeta::jsontoolkit::key(element) << "\n";
-                std::cout << "Value: " << sourcemeta::jsontoolkit::value(element) << "\n";
+                std::cout << "Key: "
+                          << sourcemeta::jsontoolkit::to_string(
+                              sourcemeta::jsontoolkit::key(element))
+                          << "\n";
               });
 ```
 
@@ -647,7 +651,8 @@ std::for_each(sourcemeta::jsontoolkit::cbegin_object(document),
 
 These functions provide mutable
 [bidirectional](https://en.cppreference.com/w/cpp/iterator/bidirectional_iterator)
-array iterators. The iteration order is from start to end. For example, every
+array iterators. The iteration order is from start to end. These functions are
+undefined if the given JSON instance is not an array. For example, every
 integer value of an array can be incremented as follows:
 
 ```c++
@@ -673,7 +678,8 @@ std::for_each(sourcemeta::jsontoolkit::begin_array(document),
 
 These functions provide reverse mutable
 [bidirectional](https://en.cppreference.com/w/cpp/iterator/bidirectional_iterator)
-array iterators. The iteration order is from end to start. For example, every
+array iterators. The iteration order is from end to start. These functions are
+undefined if the given JSON instance is not an array. For example, every
 integer value of an array can be decremented as follows:
 
 ```c++
@@ -697,11 +703,55 @@ std::for_each(sourcemeta::jsontoolkit::rbegin_array(document),
 
 `ConstIterator cend_array(const JSON & | const JSONValue &)`
 
+These functions provide immutable
+[bidirectional](https://en.cppreference.com/w/cpp/iterator/bidirectional_iterator)
+array iterators. The iteration order is from start to end. These functions are
+undefined if the given JSON instance is not an array. For example, the pairs of
+an array can be printed as follows:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <algorithm>
+#include <iostream>
+
+const sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+std::for_each(sourcemeta::jsontoolkit::cbegin_array(document),
+              sourcemeta::jsontoolkit::cend_array(document),
+              [](const auto &element) {
+                std::cout << "Element: "
+                          << sourcemeta::jsontoolkit::to_integer(element)
+                          << "\n";
+              });
+```
+
 #### Reverse const array iterators
 
 `ConstIterator crbegin_array(const JSON & | const JSONValue &)`
 
 `ConstIterator crend_array(const JSON & | const JSONValue &)`
+
+These functions provide reverse immutable
+[bidirectional](https://en.cppreference.com/w/cpp/iterator/bidirectional_iterator)
+array iterators. The iteration order is from end to start. These functions are
+undefined if the given JSON instance is not an array. For example, the pairs of
+an array can be printed in reverse as follows:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <algorithm>
+#include <iostream>
+
+const sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+std::for_each(sourcemeta::jsontoolkit::crbegin_array(document),
+              sourcemeta::jsontoolkit::crend_array(document),
+              [](const auto &element) {
+                std::cout << "Element: "
+                          << sourcemeta::jsontoolkit::to_integer(element)
+                          << "\n";
+              });
+```
 
 #### Get object value
 
