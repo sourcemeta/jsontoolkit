@@ -44,14 +44,14 @@ target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit_jso
 Documentation
 -------------
 
+### JSON
+
 JSON Toolkit provides a set of (mostly `inline`) functions and aliases under
 the `sourcemeta::jsontoolkit` namespace that are included as follows:
 
 ```c++
 #include <jsontoolkit/json.h>
 ```
-
-### JSON
 
 #### Conversion
 
