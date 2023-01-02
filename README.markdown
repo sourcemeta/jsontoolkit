@@ -509,7 +509,7 @@ sourcemeta::jsontoolkit::erase(document, "foo");
 assert(!sourcemeta::jsontoolkit::defines(document, "foo"));
 ```
 
-<!-- TODO: What happens if the key does not exist? -->
+This function does nothing if the given key does not exist.
 
 #### Clear
 
