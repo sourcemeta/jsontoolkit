@@ -51,6 +51,8 @@ aside > div {
   height: 100vh;
   transform: translateX(-15%);
 
+  // Hide scrollbar
+  scrollbar-width: none;
   &::-webkit-scrollbar {
     width: 0px;
   }
