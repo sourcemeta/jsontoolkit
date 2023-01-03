@@ -11,28 +11,28 @@
 
 namespace sourcemeta::jsontoolkit {
 
-inline auto set(JSON &root, JSONValue &value, const JSONValue &other) -> void {
+inline auto set(JSON &root, Value &value, const Value &other) -> void {
   value.CopyFrom(other, root.GetAllocator());
 }
 
-inline auto set(JSON &value, const JSONValue &other) -> void {
+inline auto set(JSON &value, const Value &other) -> void {
   return set(value, value, other);
 }
 
-inline auto set(JSON &, JSONValue &value, JSONValue &&other) -> void {
+inline auto set(JSON &, Value &value, Value &&other) -> void {
   value.Swap(other);
 }
 
-inline auto set(JSON &value, JSONValue &&other) -> void {
+inline auto set(JSON &value, Value &&other) -> void {
   return set(value, value, other);
 }
 
-inline auto erase(JSONValue &value, const std::string &key) -> void {
+inline auto erase(Value &value, const std::string &key) -> void {
   assert(is_object(value));
   value.EraseMember(key);
 }
 
-inline auto clear(JSONValue &value) -> void {
+inline auto clear(Value &value) -> void {
   if (is_array(value)) {
     value.Erase(value.Begin(), value.End());
   } else {
@@ -40,36 +40,34 @@ inline auto clear(JSONValue &value) -> void {
   }
 }
 
-inline auto assign(JSON &root, JSONValue &value, const std::string &key,
-                   const JSONValue &member) -> void {
+inline auto assign(JSON &root, Value &value, const std::string &key,
+                   const Value &member) -> void {
   assert(is_object(value));
   auto &allocator{root.GetAllocator()};
   if (defines(value, key)) {
-    value[key] = JSONValue{member, allocator};
+    value[key] = Value{member, allocator};
   } else {
-    value.AddMember(from(key), JSONValue{member, allocator}, allocator);
+    value.AddMember(from(key), Value{member, allocator}, allocator);
   }
 }
 
-inline auto assign(JSON &root, const std::string &key, const JSONValue &member)
+inline auto assign(JSON &root, const std::string &key, const Value &member)
     -> void {
   return assign(root, root, key, member);
 }
 
-inline auto assign(JSON &, JSONValue &value, const std::string &key,
-                   JSONValue &&member) -> void {
+inline auto assign(JSON &, Value &value, const std::string &key, Value &&member)
+    -> void {
   assert(is_object(value));
   value[key] = member;
 }
 
-inline auto assign(JSON &root, const std::string &key, JSONValue &&member)
-    -> void {
+inline auto assign(JSON &root, const std::string &key, Value &&member) -> void {
   return assign(root, root, key, member);
 }
 
 // See https://github.com/Tencent/rapidjson/issues/1016
-inline auto push_front(JSON &root, JSONValue &value, const JSONValue &element)
-    -> void {
+inline auto push_front(JSON &root, Value &value, const Value &element) -> void {
   assert(is_array(value));
   rapidjson::Value empty;
   value.PushBack(empty, root.GetAllocator());
@@ -80,33 +78,31 @@ inline auto push_front(JSON &root, JSONValue &value, const JSONValue &element)
   value[0].CopyFrom(element, root.GetAllocator());
 }
 
-inline auto push_front(JSON &root, const JSONValue &element) -> void {
+inline auto push_front(JSON &root, const Value &element) -> void {
   return push_front(root, root, element);
 }
 
-inline auto push_back(JSON &root, JSONValue &value, const JSONValue &element)
-    -> void {
+inline auto push_back(JSON &root, Value &value, const Value &element) -> void {
   assert(is_array(value));
   value.PushBack(rapidjson::Value().CopyFrom(element, root.GetAllocator()),
                  root.GetAllocator());
 }
 
-inline auto push_back(JSON &root, const JSONValue &element) -> void {
+inline auto push_back(JSON &root, const Value &element) -> void {
   return push_back(root, root, element);
 }
 
-inline auto push_back(JSON &root, JSONValue &value, JSONValue &&element)
-    -> void {
+inline auto push_back(JSON &root, Value &value, Value &&element) -> void {
   assert(is_array(value));
   value.PushBack(element, root.GetAllocator());
 }
 
-inline auto push_back(JSON &root, JSONValue &&element) -> void {
+inline auto push_back(JSON &root, Value &&element) -> void {
   return push_back(root, root, element);
 }
 
-inline auto make_object(JSONValue &value) -> void { value.SetObject(); }
-inline auto make_array(JSONValue &value) -> void { value.SetArray(); }
+inline auto make_object(Value &value) -> void { value.SetObject(); }
+inline auto make_array(Value &value) -> void { value.SetArray(); }
 
 } // namespace sourcemeta::jsontoolkit
 

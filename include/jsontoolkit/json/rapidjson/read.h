@@ -64,46 +64,36 @@ typename std::enable_if_t<std::is_same_v<T, bool>, JSON> from(T value) {
   return value ? parse("true") : parse("false");
 }
 
-inline auto is_null(const JSONValue &value) -> bool { return value.IsNull(); }
+inline auto is_null(const Value &value) -> bool { return value.IsNull(); }
 
-inline auto is_boolean(const JSONValue &value) -> bool {
-  return value.IsBool();
-}
+inline auto is_boolean(const Value &value) -> bool { return value.IsBool(); }
 
-inline auto to_boolean(const JSONValue &value) -> bool {
+inline auto to_boolean(const Value &value) -> bool {
   assert(is_boolean(value));
   return value.GetBool();
 }
 
-inline auto is_array(const JSONValue &value) -> bool { return value.IsArray(); }
+inline auto is_array(const Value &value) -> bool { return value.IsArray(); }
 
-inline auto is_object(const JSONValue &value) -> bool {
-  return value.IsObject();
-}
+inline auto is_object(const Value &value) -> bool { return value.IsObject(); }
 
-inline auto is_string(const JSONValue &value) -> bool {
-  return value.IsString();
-}
+inline auto is_string(const Value &value) -> bool { return value.IsString(); }
 
-inline auto is_integer(const JSONValue &value) -> bool {
-  return value.IsInt64();
-}
+inline auto is_integer(const Value &value) -> bool { return value.IsInt64(); }
 
-inline auto to_integer(const JSONValue &value) -> std::int64_t {
+inline auto to_integer(const Value &value) -> std::int64_t {
   return value.GetInt64();
 }
 
-inline auto is_real(const JSONValue &value) -> bool { return value.IsDouble(); }
+inline auto is_real(const Value &value) -> bool { return value.IsDouble(); }
 
-inline auto to_real(const JSONValue &value) -> double {
-  return value.GetDouble();
-}
+inline auto to_real(const Value &value) -> double { return value.GetDouble(); }
 
-inline auto to_string(const JSONValue &value) -> std::string {
+inline auto to_string(const Value &value) -> std::string {
   return value.GetString();
 }
 
-inline auto size(const JSONValue &value) -> std::size_t {
+inline auto size(const Value &value) -> std::size_t {
   if (is_object(value)) {
     return value.MemberCount();
   } else if (is_array(value)) {
@@ -114,65 +104,63 @@ inline auto size(const JSONValue &value) -> std::size_t {
   return value.GetStringLength();
 }
 
-inline auto empty(const JSONValue &value) -> bool { return size(value) == 0; }
+inline auto empty(const Value &value) -> bool { return size(value) == 0; }
 
-inline auto defines(const JSONValue &value, const std::string &key) -> bool {
+inline auto defines(const Value &value, const std::string &key) -> bool {
   assert(is_object(value));
   return value.HasMember(key);
 }
 
-inline auto at(const JSONValue &value, const std::size_t index)
-    -> const JSONValue & {
+inline auto at(const Value &value, const std::size_t index) -> const Value & {
   assert(is_array(value));
   assert(size(value) > index);
   return value[static_cast<rapidjson::SizeType>(index)];
 }
 
-inline auto at(const JSONValue &value, const std::string &key)
-    -> const JSONValue & {
+inline auto at(const Value &value, const std::string &key) -> const Value & {
   assert(is_object(value));
   assert(defines(value, key));
   return value[key];
 }
 
-inline auto at(JSONValue &value, const std::size_t index) -> JSONValue & {
+inline auto at(Value &value, const std::size_t index) -> Value & {
   assert(is_array(value));
   assert(size(value) > index);
   return value[static_cast<rapidjson::SizeType>(index)];
 }
 
-inline auto at(JSONValue &value, const std::string &key) -> JSONValue & {
+inline auto at(Value &value, const std::string &key) -> Value & {
   assert(is_object(value));
   assert(defines(value, key));
   return value[key];
 }
 
-inline auto front(const JSONValue &value) -> const JSONValue & {
+inline auto front(const Value &value) -> const Value & {
   assert(is_array(value));
   assert(!empty(value));
   return value[0];
 }
 
-inline auto back(const JSONValue &value) -> const JSONValue & {
+inline auto back(const Value &value) -> const Value & {
   assert(is_array(value));
   assert(!empty(value));
   return value[value.Size() - 1];
 }
 
-inline auto front(JSONValue &value) -> JSONValue & {
+inline auto front(Value &value) -> Value & {
   assert(is_array(value));
   assert(!empty(value));
   return value[0];
 }
 
-inline auto back(JSONValue &value) -> JSONValue & {
+inline auto back(Value &value) -> Value & {
   assert(is_array(value));
   assert(!empty(value));
   return value[value.Size() - 1];
 }
 
 template <typename CharT, typename Traits>
-inline auto stringify(const JSONValue &value,
+inline auto stringify(const Value &value,
                       std::basic_ostream<CharT, Traits> &stream) -> void {
   rapidjson::OStreamWrapper ostream_wrapper{stream};
   rapidjson::Writer<rapidjson::OStreamWrapper> writer{ostream_wrapper};
@@ -180,14 +168,14 @@ inline auto stringify(const JSONValue &value,
 }
 
 template <typename CharT, typename Traits>
-inline auto prettify(const JSONValue &value,
+inline auto prettify(const Value &value,
                      std::basic_ostream<CharT, Traits> &stream) -> void {
   rapidjson::OStreamWrapper ostream_wrapper{stream};
   rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer{ostream_wrapper};
   value.Accept(writer);
 }
 
-inline auto contains(const JSONValue &value, const JSONValue &element) -> bool {
+inline auto contains(const Value &value, const Value &element) -> bool {
   assert(is_array(value));
   for (rapidjson::Value::ConstValueIterator iterator = value.Begin();
        iterator != value.End(); ++iterator) {

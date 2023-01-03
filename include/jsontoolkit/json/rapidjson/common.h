@@ -14,7 +14,7 @@
 
 namespace sourcemeta::jsontoolkit {
 using JSON = rapidjson::Document;
-using JSONValue = rapidjson::Value;
+using Value = rapidjson::Value;
 } // namespace sourcemeta::jsontoolkit
 
 #endif
