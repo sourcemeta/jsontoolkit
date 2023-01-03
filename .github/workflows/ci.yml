@@ -1,0 +1,44 @@
+name: JSON Toolkit
+
+# Do not run this job for changes that only affect the website
+on:
+  push:
+    paths-ignore:
+      - 'www/**'
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - os: macos-11
+            cc: clang
+            cxx: clang++
+            backend: rapidjson
+          - os: ubuntu-22.04
+            cc: clang
+            cxx: clang++
+            backend: rapidjson
+
+    runs-on: ${{ matrix.platform.os }}
+    env:
+      CC: ${{ matrix.platform.cc }}
+      CXX: ${{ matrix.platform.cxx }}
+    steps:
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macos'
+        run: brew install googletest rapidjson clang-format
+        env:
+          HOMEBREW_NO_ANALYTICS: 1
+          HOMEBREW_NO_AUTO_UPDATE: 1
+      - name: Install dependencies (GNU/Linux)
+        if: runner.os == 'linux'
+        run: sudo apt-get install --yes googletest rapidjson-dev clang-format
+
+      - uses: actions/checkout@v3
+      - run: cmake --version
+      - run: cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DJSONTOOLKIT_BACKEND=${{ matrix.platform.backend }}
+      - run: cmake --build ./build --target clang_format
+      - run: cmake --build ./build
+      - run: ctest --test-dir ./build --output-on-failure

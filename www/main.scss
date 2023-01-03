@@ -1,0 +1,91 @@
+$headings-margin-bottom: 15px;
+$headings-line-height: 1.5;
+$code-color: #343a40;;
+$blue: #28C;
+$body-color: #808488;
+$headings-color: #1a1a1a;
+
+// Configuration
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/maps";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/utilities";
+
+// Layout & components
+@import "../node_modules/bootstrap/scss/root";
+@import "../node_modules/bootstrap/scss/reboot";
+@import "../node_modules/bootstrap/scss/type";
+@import "../node_modules/bootstrap/scss/images";
+@import "../node_modules/bootstrap/scss/containers";
+@import "../node_modules/bootstrap/scss/grid";
+@import "../node_modules/bootstrap/scss/tables";
+@import "../node_modules/bootstrap/scss/transitions";
+@import "../node_modules/bootstrap/scss/nav";
+
+// Helpers
+@import "../node_modules/bootstrap/scss/helpers";
+
+// Utilities
+@import "../node_modules/bootstrap/scss/utilities/api";
+
+table {
+  @extend .table;
+  @extend .table-bordered;
+}
+
+pre {
+  @extend .px-3;
+  @extend .py-3;
+  @extend .border;
+  @extend .rounded;
+  background-color: $gray-100;
+}
+
+aside > div {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  transform: translateX(-15%);
+
+  // Hide scrollbar
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+}
+
+code.cpp .pp {
+  color: $red-600;
+}
+
+code.cpp .im {
+  color: $blue-600;
+}
+
+code.cpp .st {
+  color: $orange-400;
+}
+
+code.cpp .at {
+  color: $red-600;
+}
+
+code.cpp .kw {
+  color: $red-600;
+}
+
+code.cpp .dv {
+  color: $yellow-600;
+}
+
+code.cpp .fl {
+  color: $yellow-600;
+}
+
+code.cpp .ot {
+  color: $purple-600;
+}
