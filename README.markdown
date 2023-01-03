@@ -601,17 +601,41 @@ sourcemeta::jsontoolkit::Value &value{sourcemeta::jsontoolkit::back(document)};
 assert(sourcemeta::jsontoolkit::to_integer(value) == 4);
 ```
 
-#### Make the instance an array
-
-`void make_array(JSON & | Value &)`
-
-<!-- TODO: Add example of pushing and constructing a new array on an object -->
-
 #### Make the instance an object
 
 `void make_object(JSON & | Value &)`
 
-<!-- TODO: Add example of pushing and constructing a new object on an object -->
+This function converts an existing JSON instance into an empty object. For
+example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
+assert(sourcemeta::jsontoolkit::is_boolean(document));
+sourcemeta::jsontoolkit::make_object(document);
+assert(sourcemeta::jsontoolkit::is_object(document));
+assert(sourcemeta::jsontoolkit::empty(document));
+```
+
+#### Make the instance an array
+
+`void make_array(JSON & | Value &)`
+
+This function converts an existing JSON instance into an empty array. For
+example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
+assert(sourcemeta::jsontoolkit::is_boolean(document));
+sourcemeta::jsontoolkit::make_array(document);
+assert(sourcemeta::jsontoolkit::is_array(document));
+assert(sourcemeta::jsontoolkit::empty(document));
+```
 
 ### Iterators
 
