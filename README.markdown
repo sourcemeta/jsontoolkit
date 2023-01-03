@@ -131,6 +131,8 @@ assert(sourcemeta::jsontoolkit::is_object(document));
 assert(sourcemeta::jsontoolkit::empty(document));
 ```
 
+This function is particularly handy for programatically constructing objects.
+
 #### Create array
 
 `JSON make_array()`
@@ -145,6 +147,8 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::make_array
 assert(sourcemeta::jsontoolkit::is_array(document));
 assert(sourcemeta::jsontoolkit::empty(document));
 ```
+
+This function is particularly handy for programatically constructing arrays.
 
 #### Stringify to stream
 
