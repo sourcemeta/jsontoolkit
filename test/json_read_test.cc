@@ -1396,3 +1396,16 @@ TEST(CATEGORY, array_back) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(back));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(back), 3);
 }
+
+TEST(CATEGORY, make_object_top_level) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::make_object()};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+}
+
+TEST(CATEGORY, make_array_top_level) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::make_array()};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+}

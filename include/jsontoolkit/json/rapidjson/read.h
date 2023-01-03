@@ -38,6 +38,18 @@ inline auto parse(std::basic_istream<CharT, Traits> &stream) -> JSON {
   return document;
 }
 
+inline auto make_object() -> JSON {
+  rapidjson::Document document;
+  document.SetObject();
+  return document;
+}
+
+inline auto make_array() -> JSON {
+  rapidjson::Document document;
+  document.SetArray();
+  return document;
+}
+
 inline auto from(const std::string &value) -> JSON {
   rapidjson::Document document;
   document.SetString(value.c_str(), document.GetAllocator());
