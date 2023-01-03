@@ -100,7 +100,8 @@ with a human-friendly error string will be thrown.
 
 `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t | double)`
 
-Create a JSON document from a set of supported basic C++ types. For example:
+This function creates a JSON document from a set of supported basic C++ types.
+For example:
 
 ```c++
 #include <jsontoolkit/json.h>
@@ -114,6 +115,36 @@ const sourcemeta::jsontoolkit::JSON my_real{sourcemeta::jsontoolkit::from(3.14)}
 
 These functions are particularly handy for scalar types when passing them to
 functions that modify the JSON document and take other JSON values as input.
+
+#### Create object
+
+`JSON make_object()`
+
+This function creates an empty JSON object. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::make_object()};
+assert(sourcemeta::jsontoolkit::is_object(document));
+assert(sourcemeta::jsontoolkit::empty(document));
+```
+
+#### Create array
+
+`JSON make_array()`
+
+This function creates an empty JSON array. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::make_array()};
+assert(sourcemeta::jsontoolkit::is_array(document));
+assert(sourcemeta::jsontoolkit::empty(document));
+```
 
 #### Stringify to stream
 
