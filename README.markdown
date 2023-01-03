@@ -518,18 +518,20 @@ This function does nothing if the given key does not exist.
 
 `void clear(JSON & | Value &)`
 
-This function deletes all members of an object, leaving it empty. This function
-is undefined is the input JSON instance is not an object. For example:
-
-<!-- TODO: Implement this for arrays -->
+This function deletes all members of an object or all elements of an array,
+leaving them empty. This function is undefined is the input JSON instance is
+not an object or an array. For example:
 
 ```c++
 #include <jsontoolkit/json.h>
 #include <cassert>
 
-sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
-sourcemeta::jsontoolkit::clear(document);
-assert(sourcemeta::jsontoolkit::empty(document));
+sourcemeta::jsontoolkit::JSON my_object{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
+sourcemeta::jsontoolkit::JSON my_array{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+sourcemeta::jsontoolkit::clear(my_object);
+sourcemeta::jsontoolkit::clear(my_array);
+assert(sourcemeta::jsontoolkit::empty(my_object));
+assert(sourcemeta::jsontoolkit::empty(my_array));
 ```
 
 #### Insert element to the front
