@@ -16,6 +16,11 @@ jobs:
             cc: clang
             cxx: clang++
             backend: rapidjson
+          # TODO: Build on GCC on Linux instead
+          - os: macos-11
+            cc: gcc
+            cxx: g++
+            backend: rapidjson
           - os: ubuntu-22.04
             cc: clang
             cxx: clang++
