@@ -36,7 +36,7 @@ jobs:
         if: runner.os == 'linux'
         run: sudo apt-get install --yes googletest rapidjson-dev clang-format
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: cmake --version
       - run: cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DJSONTOOLKIT_BACKEND=${{ matrix.platform.backend }}
       - run: cmake --build ./build --target clang_format
