@@ -57,8 +57,8 @@ int main(int argc, char **argv) {
         front == 'n' ? JSONTestType::Reject : JSONTestType::Accept;
 
     testing::RegisterTest(
-        "JSONTestSuite", test_path.filename().c_str(), nullptr, nullptr,
-        __FILE__, __LINE__,
+        "JSONTestSuite", test_path.filename().string().c_str(), nullptr,
+        nullptr, __FILE__, __LINE__,
         [=]() -> JSONTest * { return new JSONTest(test_path, type); });
   }
 
