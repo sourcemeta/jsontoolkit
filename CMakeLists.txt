@@ -57,6 +57,7 @@ install(FILES ${JSONTOOLKIT_JSON_BACKEND_HEADERS}
 
 if(JSONTOOLKIT_CONTRIB)
   add_subdirectory(./contrib/prettify)
+  add_subdirectory(./contrib/minify)
 endif()
 
 if(PROJECT_IS_TOP_LEVEL)
