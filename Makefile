@@ -19,7 +19,7 @@ include vendor/vendorpull/targets.mk
 .PHONY: all
 all:
 	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE=$(PRESET) \
-		-DJSONTOOLKIT_BACKEND=$(BACKEND) -DJSONTOOLKIT_CONTRIB=ON
+		-DJSONTOOLKIT_BACKEND=$(BACKEND) -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON
 	$(CMAKE) --build ./build --target clang_format
 	$(CMAKE) --build ./build
 	$(CTEST) --test-dir ./build --output-on-failure --progress
