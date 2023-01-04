@@ -29,6 +29,24 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/deps/jsontoolkit")
 target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit_json)
 ```
 
+### Using `FetchContent`
+
+```cmake
+cmake_minimum_required(VERSION 3.14)
+project(my_project)
+set(CMAKE_CXX_STANDARD 20)
+
+include(FetchContent)
+FetchContent_Declare(
+  jsontoolkit
+  URL https://github.com/sourcemeta/jsontoolkit/archive/<commit-sha>.zip
+  DOWNLOAD_EXTRACT_TIMESTAMP NO)
+FetchContent_MakeAvailable(jsontoolkit)
+
+add_executable(my_example ...)
+target_link_libraries(my_example PRIVATE sourcemeta_jsontoolkit_json)
+```
+
 ### CMake options
 
 | Option                | Type    | Default     | Description                               |
