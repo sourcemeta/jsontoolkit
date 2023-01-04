@@ -1,0 +1,4 @@
+add_executable(jsontoolkit_minify minify.cc)
+target_link_libraries(jsontoolkit_minify PRIVATE sourcemeta_jsontoolkit_json)
+set_target_properties(jsontoolkit_minify PROPERTIES
+  OUTPUT_NAME jsontoolkit-minify)
