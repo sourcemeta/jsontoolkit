@@ -14,7 +14,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Options
 set(JSONTOOLKIT_BACKEND "rapidjson" CACHE STRING "Set the JSON Toolkit backend")
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" ON)
-option(JSONTOOLKIT_CONTRIB "Build the JSON Toolkit extra programs" ON)
+option(JSONTOOLKIT_CONTRIB "Build the JSON Toolkit extra programs" OFF)
 
 if(PROJECT_IS_TOP_LEVEL)
   include(GNUInstallDirs)
