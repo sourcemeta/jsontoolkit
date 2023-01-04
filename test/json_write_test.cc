@@ -19,6 +19,44 @@ TEST(CATEGORY, make_object) {
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
 }
 
+TEST(CATEGORY, construct_object) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::make_object()};
+  sourcemeta::jsontoolkit::JSON child{sourcemeta::jsontoolkit::make_object()};
+  sourcemeta::jsontoolkit::assign(child, "bar",
+                                  sourcemeta::jsontoolkit::from(true));
+  sourcemeta::jsontoolkit::assign(document, "foo", child);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  const sourcemeta::jsontoolkit::Value &value1{
+      sourcemeta::jsontoolkit::at(document, "foo")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(value1));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(value1), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(value1, "bar"));
+  const sourcemeta::jsontoolkit::Value &value2{
+      sourcemeta::jsontoolkit::at(value1, "bar")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value2));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value2));
+}
+
+TEST(CATEGORY, construct_array) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::make_array()};
+  sourcemeta::jsontoolkit::JSON child{sourcemeta::jsontoolkit::make_array()};
+  sourcemeta::jsontoolkit::push_front(child, sourcemeta::jsontoolkit::from(1));
+  sourcemeta::jsontoolkit::push_front(document, child);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  const sourcemeta::jsontoolkit::Value &value1{
+      sourcemeta::jsontoolkit::front(document)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(value1));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(value1), 1);
+  const sourcemeta::jsontoolkit::Value &value2{
+      sourcemeta::jsontoolkit::front(value1)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(value2));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(value2), 1);
+}
+
 TEST(CATEGORY, set_null) {
   sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_null(document));
