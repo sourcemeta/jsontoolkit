@@ -49,11 +49,12 @@ target_link_libraries(my_example PRIVATE sourcemeta_jsontoolkit_json)
 
 ### CMake options
 
-| Option                | Type    | Default     | Description                               |
-|-----------------------|---------|-------------|-------------------------------------------|
-| `JSONTOOLKIT_BACKEND` | String  | `rapidjson` | The JSON implementation backend           |
-| `JSONTOOLKIT_TESTS`   | Boolean | `OFF`       | Build the JSON Toolkit tests              |
-| `JSONTOOLKIT_CONTRIB` | Boolean | `OFF`       | Build the JSON Toolkit `contrib` programs |
+| Option                     | Type    | Default     | Description                                      |
+|----------------------------|---------|-------------|--------------------------------------------------|
+| `JSONTOOLKIT_BACKEND`      | String  | `rapidjson` | The JSON implementation backend                  |
+| `JSONTOOLKIT_BACKEND_PATH` | String  |             | A custom path to the JSON implementation backend |
+| `JSONTOOLKIT_TESTS`        | Boolean | `OFF`       | Build the JSON Toolkit tests                     |
+| `JSONTOOLKIT_CONTRIB`      | Boolean | `OFF`       | Build the JSON Toolkit `contrib` programs        |
 
 ### Supported backends
 
