@@ -3,8 +3,12 @@ project("JSON Toolkit" VERSION 0.0.1 LANGUAGES CXX
   DESCRIPTION "A multi-backend JSON library for modern C++")
 
 # Global options
-add_compile_options(-Wall -Wextra -Werror -Wpedantic
-  -Wshadow -Wdouble-promotion -Wconversion -Wunused-parameter)
+if(MSVC)
+  add_compile_options(/options:strict /W4 /WX /WL /sdl)
+else()
+  add_compile_options(-Wall -Wextra -Werror -Wpedantic
+    -Wshadow -Wdouble-promotion -Wconversion -Wunused-parameter)
+endif()
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
