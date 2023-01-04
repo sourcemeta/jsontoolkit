@@ -3,7 +3,11 @@ set(MINIFY_BIN $<TARGET_FILE:jsontoolkit_minify>)
 set(JSONSCHEMA_WALKER_BIN $<TARGET_FILE:jsontoolkit_jsonschema_walker>)
 set(JSONSCHEMA_KEYWORDS_BIN $<TARGET_FILE:jsontoolkit_jsonschema_keywords>)
 
-set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.sh")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.bat")
+else()
+  set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.sh")
+endif()
 
 add_test(NAME prettify_invalid COMMAND
   "${PRETTIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/invalid.json")
