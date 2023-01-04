@@ -52,7 +52,7 @@ target_link_libraries(my_example PRIVATE sourcemeta_jsontoolkit_json)
 | Option                | Type    | Default     | Description                               |
 |-----------------------|---------|-------------|-------------------------------------------|
 | `JSONTOOLKIT_BACKEND` | String  | `rapidjson` | The JSON implementation backend           |
-| `JSONTOOLKIT_TESTS`   | Boolean | `ON`        | Build the JSON Toolkit tests              |
+| `JSONTOOLKIT_TESTS`   | Boolean | `OFF`       | Build the JSON Toolkit tests              |
 | `JSONTOOLKIT_CONTRIB` | Boolean | `OFF`       | Build the JSON Toolkit `contrib` programs |
 
 ### Supported backends
@@ -885,7 +885,8 @@ configure, build and test the project as follows:
 
 ```sh
 # Find the backend id in the "Supported backends" section
-cmake -S . -B ./build -DCMAKE_BUILD_TYPE=<Debug|Release> -DJSONTOOLKIT_BACKEND=<backend-id>
+cmake -S . -B ./build -DCMAKE_BUILD_TYPE=<Debug|Release> \
+  -DJSONTOOLKIT_BACKEND=<backend-id> -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON
 cmake --build ./build
 ctest --test-dir ./build --output-on-failure --progress
 ```
