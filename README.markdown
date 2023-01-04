@@ -11,7 +11,7 @@ low-overhead frontend to multiple JSON implementations. With JSON Toolkit,
 libraries can support multiple JSON backends and transparently let the
 end-consumer swap them as required.
 
-**JSON Toolkit targets C++20 and supports the Clang compiler.**
+**JSON Toolkit targets C++17 and supports the Clang compiler.**
 
 Usage
 -----
@@ -34,7 +34,7 @@ target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit_jso
 ```cmake
 cmake_minimum_required(VERSION 3.14)
 project(my_project)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 FetchContent_Declare(

@@ -7,7 +7,7 @@ add_compile_options(-Wall -Wextra -Werror -Wpedantic
   -Wshadow -Wdouble-promotion -Wconversion -Wunused-parameter)
 
 # Specify the C++ standard
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
