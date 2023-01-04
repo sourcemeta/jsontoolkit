@@ -31,10 +31,11 @@ target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit_jso
 
 ### CMake options
 
-| Option                | Type    | Default     | Description                     |
-|-----------------------|---------|-------------|---------------------------------|
-| `JSONTOOLKIT_BACKEND` | String  | `rapidjson` | The JSON implementation backend |
-| `JSONTOOLKIT_TESTS`   | Boolean | `ON`        | Build the JSON Toolkit tests    |
+| Option                | Type    | Default     | Description                               |
+|-----------------------|---------|-------------|-------------------------------------------|
+| `JSONTOOLKIT_BACKEND` | String  | `rapidjson` | The JSON implementation backend           |
+| `JSONTOOLKIT_TESTS`   | Boolean | `ON`        | Build the JSON Toolkit tests              |
+| `JSONTOOLKIT_CONTRIB` | Boolean | `ON`        | Build the JSON Toolkit `contrib` programs |
 
 ### Supported backends
 

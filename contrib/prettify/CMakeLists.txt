@@ -1,0 +1,4 @@
+add_executable(jsontoolkit_prettify prettify.cc)
+target_link_libraries(jsontoolkit_prettify PRIVATE sourcemeta_jsontoolkit_json)
+set_target_properties(jsontoolkit_prettify PROPERTIES
+  OUTPUT_NAME jsontoolkit-prettify)

@@ -14,6 +14,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Options
 set(JSONTOOLKIT_BACKEND "rapidjson" CACHE STRING "Set the JSON Toolkit backend")
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" ON)
+option(JSONTOOLKIT_CONTRIB "Build the JSON Toolkit extra programs" ON)
 
 if(PROJECT_IS_TOP_LEVEL)
   include(GNUInstallDirs)
@@ -54,6 +55,10 @@ install(FILES ${JSONTOOLKIT_JSON_META_HEADERS}
 install(FILES ${JSONTOOLKIT_JSON_BACKEND_HEADERS}
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json/${JSONTOOLKIT_BACKEND}")
 
+if(JSONTOOLKIT_CONTRIB)
+  add_subdirectory(./contrib/prettify)
+endif()
+
 if(PROJECT_IS_TOP_LEVEL)
   include(cmake/clang-format.cmake)
   if(JSONTOOLKIT_TESTS)
@@ -64,4 +69,7 @@ endif()
 if(JSONTOOLKIT_TESTS)
   include(cmake/googletest.cmake)
   add_subdirectory(./test)
+  if(JSONTOOLKIT_CONTRIB)
+    add_subdirectory(./test/contrib)
+  endif()
 endif()
