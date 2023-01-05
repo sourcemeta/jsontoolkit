@@ -2,7 +2,9 @@
 #include <jsontoolkit/jsonschema.h>
 
 #include <cassert>   // assert
-#include <stdexcept> // std::invalid_argument
+#include <future>    // std::future
+#include <sstream>   // std::ostringstream
+#include <stdexcept> // std::invalid_argument, std::runtime_error
 
 auto sourcemeta::jsontoolkit::is_schema(
     const sourcemeta::jsontoolkit::Value &schema) -> bool {
@@ -52,4 +54,71 @@ auto sourcemeta::jsontoolkit::metaschema(
   }
 
   return std::nullopt;
+}
+
+auto sourcemeta::jsontoolkit::vocabularies(
+    const sourcemeta::jsontoolkit::Value &schema,
+    const sourcemeta::jsontoolkit::schema_resolver_t &resolver)
+    -> std::future<std::unordered_map<std::string, bool>> {
+  std::promise<std::unordered_map<std::string, bool>> promise;
+
+  // If the meta-schema, as referenced by the schema, is not recognized, or is
+  // missing, then the behavior is implementation-defined. If the
+  // implementation proceeds with processing the schema, it MUST assume the
+  // use of the core vocabulary.
+  // https://json-schema.org/draft/2020-12/json-schema-core.html#section-8.1.2.1
+  std::unordered_map<std::string, bool> result{
+      {"https://json-schema.org/draft/2020-12/vocab/core", true}};
+
+  /*
+   * (1) Identify the schema's metaschema
+   */
+  const std::optional<std::string> metaschema_id{
+      sourcemeta::jsontoolkit::metaschema(schema)};
+  if (!metaschema_id.has_value()) {
+    promise.set_value(result);
+    return promise.get_future();
+  }
+
+  /*
+   * (2) Resolve the metaschema
+   */
+  std::future<std::optional<sourcemeta::jsontoolkit::JSON>> metaschema_future{
+      resolver(metaschema_id.value())};
+  const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
+      metaschema_future.get()};
+  if (!metaschema.has_value()) {
+    std::ostringstream error;
+    error << "Could not resolve schema: " << metaschema_id.value();
+    throw std::runtime_error(error.str());
+  }
+  const std::optional<std::string> resolved_id{
+      sourcemeta::jsontoolkit::id(metaschema.value())};
+  if (!resolved_id.has_value() ||
+      resolved_id.value() != metaschema_id.value()) {
+    std::ostringstream error;
+    error << "Resolved metaschema id does not match request: "
+          << metaschema_id.value();
+    throw std::runtime_error(error.str());
+  }
+
+  /*
+   * (3) Parse the "$vocabulary" keyword, if any
+   */
+  if (!sourcemeta::jsontoolkit::defines(metaschema.value(), "$vocabulary")) {
+    promise.set_value(result);
+    return promise.get_future();
+  }
+  const sourcemeta::jsontoolkit::Value &vocabulary_value{
+      sourcemeta::jsontoolkit::at(metaschema.value(), "$vocabulary")};
+  for (auto iterator = sourcemeta::jsontoolkit::cbegin_object(vocabulary_value);
+       iterator != sourcemeta::jsontoolkit::cend_object(vocabulary_value);
+       iterator++) {
+    result.insert({sourcemeta::jsontoolkit::key(*iterator),
+                   sourcemeta::jsontoolkit::to_boolean(
+                       sourcemeta::jsontoolkit::value(*iterator))});
+  }
+
+  promise.set_value(result);
+  return promise.get_future();
 }
