@@ -1,19 +1,19 @@
 set(PRETTIFY_BIN $<TARGET_FILE:jsontoolkit_prettify>)
 set(MINIFY_BIN $<TARGET_FILE:jsontoolkit_minify>)
 
+set(FAIL_BIN "${CMAKE_CURRENT_SOURCE_DIR}/fail.sh")
+set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.sh")
+
 add_test(NAME prettify_invalid COMMAND
-  "${CMAKE_CURRENT_SOURCE_DIR}/fail.sh"
-  "${PRETTIFY_BIN}"
+  "${FAIL_BIN}" "${PRETTIFY_BIN}"
   "${CMAKE_CURRENT_SOURCE_DIR}/invalid.json")
 
 add_test(NAME prettify_not_found COMMAND
-  "${CMAKE_CURRENT_SOURCE_DIR}/fail.sh"
-  "${PRETTIFY_BIN}"
+  "${FAIL_BIN}" "${PRETTIFY_BIN}"
   "${CMAKE_CURRENT_SOURCE_DIR}/non-existent.json")
 
 add_test(NAME prettify COMMAND
-  "${CMAKE_CURRENT_SOURCE_DIR}/is_same.sh"
-  "${PRETTIFY_BIN}"
+  "${IS_SAME_BIN}" "${PRETTIFY_BIN}"
   "${CMAKE_CURRENT_SOURCE_DIR}/prettify-output.json"
   "${CMAKE_CURRENT_SOURCE_DIR}/prettify-input.json")
 
@@ -26,18 +26,15 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "windows")
 endif()
 
 add_test(NAME minify_invalid COMMAND
-  "${CMAKE_CURRENT_SOURCE_DIR}/fail.sh"
-  "${MINIFY_BIN}"
+  "${FAIL_BIN}" "${MINIFY_BIN}"
   "${CMAKE_CURRENT_SOURCE_DIR}/invalid.json")
 
 add_test(NAME minify_not_found COMMAND
-  "${CMAKE_CURRENT_SOURCE_DIR}/fail.sh"
-  "${MINIFY_BIN}"
+  "${FAIL_BIN}" "${MINIFY_BIN}"
   "${CMAKE_CURRENT_SOURCE_DIR}/non-existent.json")
 
 add_test(NAME minify COMMAND
-  "${CMAKE_CURRENT_SOURCE_DIR}/is_same.sh"
-  "${MINIFY_BIN}"
+  "${IS_SAME_BIN}" "${MINIFY_BIN}"
   "${CMAKE_CURRENT_SOURCE_DIR}/minify-output.json"
   "${CMAKE_CURRENT_SOURCE_DIR}/minify-input.json")
 
