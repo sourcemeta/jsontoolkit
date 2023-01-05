@@ -53,12 +53,29 @@ target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE
 install(TARGETS sourcemeta_jsontoolkit_json
   EXPORT sourcemeta_jsontoolkit_json
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  COMPONENT jsontoolkit
+  COMPONENT json
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit")
 install(FILES ${JSONTOOLKIT_JSON_META_HEADERS}
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json")
 install(FILES ${JSONTOOLKIT_JSON_BACKEND_HEADERS}
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json/${JSONTOOLKIT_BACKEND}")
+
+# JSON Schema
+add_library(sourcemeta_jsontoolkit_jsonschema INTERFACE
+  include/jsontoolkit/jsonschema.h)
+set_target_properties(sourcemeta_jsontoolkit_jsonschema
+  PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/jsonschema.h")
+target_include_directories(sourcemeta_jsontoolkit_jsonschema
+  INTERFACE
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+target_link_libraries(sourcemeta_jsontoolkit_jsonschema INTERFACE
+  sourcemeta_jsontoolkit_json)
+install(TARGETS sourcemeta_jsontoolkit_jsonschema
+  EXPORT sourcemeta_jsontoolkit_jsonschema
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  COMPONENT jsonschema
+  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit")
 
 if(JSONTOOLKIT_CONTRIB)
   add_subdirectory(./contrib/prettify)
@@ -75,6 +92,7 @@ endif()
 if(JSONTOOLKIT_TESTS)
   include(cmake/googletest.cmake)
   add_subdirectory(./test/json)
+  add_subdirectory(./test/jsonschema)
   if(JSONTOOLKIT_CONTRIB)
     add_subdirectory(./test/contrib)
   endif()

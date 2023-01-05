@@ -878,6 +878,52 @@ std::for_each(sourcemeta::jsontoolkit::cbegin_object(document),
               });
 ```
 
+JSON Schema
+-----------
+
+JSON Toolkit aims to support the latest version of [JSON
+Schema](https://json-schema.org) at any given point in time. This functionality
+is included as follows:
+
+```c++
+#include <jsontoolkit/jsonschema.h>
+```
+
+Older JSON Schema versions will not be supported. Older JSON Schema documents
+can be automatically upgraded using a tool like
+[Alterschema](https://github.com/sourcemeta/alterschema).
+
+### General
+
+A set of functions that implement foundational utilities for JSON Schema
+support.
+
+#### Get metaschema
+
+`std::optional<std::string> metaschema(const JSON & | const Value &)`
+
+Get the metaschema corresponding to a JSON Schema instance. The result is empty
+if the metaschema cannot be determined.
+
+```c++
+#include <jsontoolkit/json.h>
+#include <jsontoolkit/jsonschema.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object"
+})JSON")};
+
+const std::optional<std::string> metaschema{sourcemeta::jsontoolkit::metaschema(document)};
+assert(metaschema.has_value());
+assert(metaschema.value() == "https://json-schema.org/draft/2020-12/schema");
+```
+
+If the input document is not a valid JSON Schema instance,
+[`std::invalid_argument`](https://en.cppreference.com/w/cpp/error/invalid_argument)
+will be thrown.
+
 Contributing
 ------------
 
