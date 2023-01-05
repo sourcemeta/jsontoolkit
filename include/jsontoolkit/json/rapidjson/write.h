@@ -8,6 +8,7 @@
 #include <cstdint>     // std::int64_t
 #include <string>      // std::string
 #include <type_traits> // std::enable_if_t, std::is_same_v
+#include <utility>     // std::move
 
 namespace sourcemeta::jsontoolkit {
 
@@ -56,14 +57,19 @@ inline auto assign(JSON &root, const std::string &key, const Value &member)
   return assign(root, root, key, member);
 }
 
-inline auto assign(JSON &, Value &value, const std::string &key, Value &&member)
-    -> void {
+inline auto assign(JSON &root, Value &value, const std::string &key,
+                   Value &&member) -> void {
   assert(is_object(value));
-  value[key] = member;
+  if (defines(value, key)) {
+    value[key] = member;
+  } else {
+    value.AddMember(from(key), Value{member, root.GetAllocator()},
+                    root.GetAllocator());
+  }
 }
 
 inline auto assign(JSON &root, const std::string &key, Value &&member) -> void {
-  return assign(root, root, key, member);
+  return assign(root, root, key, std::move(member));
 }
 
 // See https://github.com/Tencent/rapidjson/issues/1016
