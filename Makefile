@@ -22,7 +22,7 @@ all:
 		-DJSONTOOLKIT_BACKEND=$(BACKEND) -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON
 	$(CMAKE) --build ./build --target clang_format
 	$(CMAKE) --build ./build
-	$(CTEST) --test-dir ./build --output-on-failure --progress
+	$(CTEST) --test-dir ./build --build-config $(PRESET) --output-on-failure --progress
 	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose
 
 .PHONY: clean
