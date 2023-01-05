@@ -893,7 +893,7 @@ cmake --build ./build --target clang_format
 # Build the project
 cmake --build ./build
 # Run the test suite
-ctest --test-dir ./build --output-on-failure --progress
+ctest --test-dir ./build --build-config <Debug|Release> --output-on-failure --progress
 ```
 
 Building and running the test suite requires the presence of
