@@ -898,12 +898,28 @@ can be automatically upgraded using a tool like
 A set of functions that implement foundational utilities for JSON Schema
 support.
 
+#### Is schema
+
+`bool is_schema(const JSON & | const Value &)`
+
+This function returns true if the given JSON instance is of a schema-compatible
+type: an object or a boolean. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <jsontoolkit/jsonschema.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
+assert(sourcemeta::jsontoolkit::is_schema(document));
+```
+
 #### Get metaschema
 
 `std::optional<std::string> metaschema(const JSON & | const Value &)`
 
 Get the metaschema corresponding to a JSON Schema instance. The result is empty
-if the metaschema cannot be determined.
+if the metaschema cannot be determined. For example:
 
 ```c++
 #include <jsontoolkit/json.h>
