@@ -74,7 +74,7 @@ endif()
 
 if(JSONTOOLKIT_TESTS)
   include(cmake/googletest.cmake)
-  add_subdirectory(./test)
+  add_subdirectory(./test/json)
   if(JSONTOOLKIT_CONTRIB)
     add_subdirectory(./test/contrib)
   endif()
