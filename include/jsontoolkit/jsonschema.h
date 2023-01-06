@@ -9,6 +9,7 @@
 namespace sourcemeta::jsontoolkit {
 
 auto is_schema(const Value &schema) -> bool;
+auto id(const Value &schema) -> std::optional<std::string>;
 auto metaschema(const Value &schema) -> std::optional<std::string>;
 
 } // namespace sourcemeta::jsontoolkit
