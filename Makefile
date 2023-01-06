@@ -14,8 +14,6 @@ TAIL ?= tail
 # Options
 BACKEND ?= rapidjson
 
-include vendor/vendorpull/targets.mk
-
 .PHONY: all
 all:
 	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE=$(PRESET) \
