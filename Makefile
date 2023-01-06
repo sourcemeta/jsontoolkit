@@ -20,8 +20,8 @@ include vendor/vendorpull/targets.mk
 all:
 	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE=$(PRESET) \
 		-DJSONTOOLKIT_BACKEND=$(BACKEND) -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON
-	$(CMAKE) --build ./build --target clang_format
-	$(CMAKE) --build ./build
+	$(CMAKE) --build ./build --config $(PRESET) --target clang_format
+	$(CMAKE) --build ./build --config $(PRESET)
 	$(CTEST) --test-dir ./build --build-config $(PRESET) --output-on-failure --progress
 	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose
 

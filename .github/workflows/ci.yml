@@ -38,7 +38,12 @@ jobs:
 
       - uses: actions/checkout@v3
       - run: cmake --version
-      - run: cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DJSONTOOLKIT_BACKEND=${{ matrix.platform.backend }} -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON
-      - run: cmake --build ./build --target clang_format
-      - run: cmake --build ./build
+      - run: >
+          cmake -S . -B ./build
+          -DCMAKE_BUILD_TYPE=Release
+          -DJSONTOOLKIT_BACKEND=${{ matrix.platform.backend }}
+          -DJSONTOOLKIT_CONTRIB=ON
+          -DJSONTOOLKIT_TESTS=ON
+      - run: cmake --build ./build --config Release --target clang_format
+      - run: cmake --build ./build --config Release
       - run: ctest --test-dir ./build --build-config Release --output-on-failure

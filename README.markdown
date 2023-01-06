@@ -951,9 +951,9 @@ configure, build and test the project as follows:
 cmake -S . -B ./build -DCMAKE_BUILD_TYPE=<Debug|Release> \
   -DJSONTOOLKIT_BACKEND=<backend-id> -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON
 # Format the code
-cmake --build ./build --target clang_format
+cmake --build ./build --config <Debug|Release> --target clang_format
 # Build the project
-cmake --build ./build
+cmake --build ./build --config <Debug|Release>
 # Run the test suite
 ctest --test-dir ./build --build-config <Debug|Release> --output-on-failure --progress
 ```
