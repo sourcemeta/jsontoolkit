@@ -914,6 +914,29 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)
 assert(sourcemeta::jsontoolkit::is_schema(document));
 ```
 
+#### Get identifier
+
+`std::optional<std::string> id(const JSON & | const Value &)`
+
+This function returns the URI identifier of the given schema, if any. For
+example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <jsontoolkit/jsonschema.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON document{
+    sourcemeta::jsontoolkit::parse(R"JSON({
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sourcemeta.com/example-schema"
+})JSON")};
+
+std::optional<std::string> id{sourcemeta::jsontoolkit::id(document)};
+assert(id.has_value());
+assert(id.value() == "https://sourcemeta.com/example-schema");
+```
+
 #### Get metaschema
 
 `std::optional<std::string> metaschema(const JSON & | const Value &)`
