@@ -13,7 +13,7 @@ inline auto value(const rapidjson::Value::Member &member) -> const Value & {
   return member.value;
 }
 
-inline auto key(rapidjson::Value::Member &member) -> std::string {
+inline auto key(const rapidjson::Value::Member &member) -> std::string {
   return member.name.GetString();
 }
 

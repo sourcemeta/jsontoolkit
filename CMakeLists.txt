@@ -63,6 +63,7 @@ install(FILES ${JSONTOOLKIT_JSON_BACKEND_HEADERS}
 # JSON Schema
 add_library(sourcemeta_jsontoolkit_jsonschema
   include/jsontoolkit/jsonschema.h
+  include/jsontoolkit/jsonschema/resolver.h
   src/jsonschema.cc)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema
   PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/jsonschema.h")
@@ -77,6 +78,8 @@ install(TARGETS sourcemeta_jsontoolkit_jsonschema
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   COMPONENT jsonschema
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit")
+install(FILES include/jsontoolkit/jsonschema/resolver.h
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/jsonschema")
 
 if(JSONTOOLKIT_CONTRIB)
   add_subdirectory(./contrib/prettify)

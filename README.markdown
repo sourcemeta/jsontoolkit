@@ -963,6 +963,65 @@ If the input document is not a valid JSON Schema instance,
 [`std::invalid_argument`](https://en.cppreference.com/w/cpp/error/invalid_argument)
 will be thrown.
 
+### With resolver
+
+These functions need to reference other schemas by their URIs. To accomplish
+this in a generic and flexible way, these functions take a resolver function as
+arguments, of the type `schema_resolver_t`. This function takes a URI as an
+`std::string` and is expected to return an
+[`std::future`](https://en.cppreference.com/w/cpp/thread/future) of an
+[`std::optional`](https://en.cppreference.com/w/cpp/utility/optional) JSON
+document that represented the requested schema.
+
+You can implement resolvers to read from a local storage, to send HTTP
+requests, or anything your application might require.
+
+#### List vocabularies
+
+`std::future<std::unordered_map<std::string, bool>> vocabularies(const JSON & | const Value &, const schema_resolver_t &)`
+
+List the vocabularies that a specific schema makes use of. The resulting map
+values are set to `true` or `false` depending on whether the corresponding
+vocabulary is required or optional, respectively. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <jsontoolkit/jsonschema.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object"
+})JSON")};
+
+static auto my_resolver(const std::string &identifier)
+    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
+  std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
+
+  if (identifier == "https://json-schema.org/draft/2020-12/schema") {
+    // Resolve the schema somehow
+    promise.set_value(...);
+  }
+
+  return promise.get_future();
+}
+
+const std::unordered_map<std::string, bool> vocabularies{
+    sourcemeta::jsontoolkit::vocabularies(document, my_resolver).get()};
+
+assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/core"));
+assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/applicator"));
+assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/unevaluated"));
+assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/validation"));
+assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/meta-data"));
+assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/format-annotation"));
+assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/content"));
+```
+
+If the input document is not a valid JSON Schema instance or resolution fails,
+[`std::runtime_error`](https://en.cppreference.com/w/cpp/error/runtime_error)
+will be thrown.
+
 Contributing
 ------------
 
