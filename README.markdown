@@ -976,6 +976,9 @@ document that represented the requested schema.
 You can implement resolvers to read from a local storage, to send HTTP
 requests, or anything your application might require.
 
+Unless your resolver is trivial, it is recommend to create a callable object
+that implements the function interface.
+
 #### List vocabularies
 
 `std::future<std::unordered_map<std::string, bool>> vocabularies(const JSON & | const Value &, const schema_resolver_t &)`
