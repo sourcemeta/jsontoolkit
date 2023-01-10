@@ -11,6 +11,49 @@ TEST(JSON, parse_from_stream) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(document));
 }
 
+TEST(JSON, from_json_value) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 0)),
+            1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 1)),
+            2);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 2)),
+            3);
+
+  const sourcemeta::jsontoolkit::JSON new_document{
+      sourcemeta::jsontoolkit::from(document)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(new_document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(new_document), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(new_document, 0)),
+            1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(new_document, 1)),
+            2);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(new_document, 2)),
+            3);
+
+  // Old one remains the same
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 0)),
+            1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 1)),
+            2);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, 2)),
+            3);
+}
+
 TEST(JSON, is_boolean_true) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse("true")};
