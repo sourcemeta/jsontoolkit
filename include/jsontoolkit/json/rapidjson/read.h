@@ -50,6 +50,12 @@ inline auto make_array() -> JSON {
   return document;
 }
 
+inline auto from(const Value &value) -> JSON {
+  rapidjson::Document document;
+  document.CopyFrom(value, document.GetAllocator());
+  return document;
+}
+
 inline auto from(const std::string &value) -> JSON {
   rapidjson::Document document;
   document.SetString(value.c_str(), document.GetAllocator());

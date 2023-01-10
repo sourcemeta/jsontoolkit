@@ -116,6 +116,24 @@ If parsing fails,
 [`std::domain_error`](https://en.cppreference.com/w/cpp/error/domain_error)
 with a human-friendly error string will be thrown.
 
+#### Create from JSON
+
+`JSON from(const JSON & | const Value &)`
+
+This function creates a JSON document from another JSON document or value,
+effectively deep-copying it. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from("Foo Bar")};
+assert(sourcemeta::jsontoolkit::is_string(document));
+const sourcemeta::jsontoolkit::JSON copy{sourcemeta::jsontoolkit::from(document)};
+assert(sourcemeta::jsontoolkit::is_string(copy));
+assert(sourcemeta::jsontoolkit::to_string(copy) == sourcemeta::jsontoolkit::to_string(document));
+```
+
 #### Create from type
 
 `JSON from(std::nullptr_t | const std::string & | bool | std::int64_t | double)`
