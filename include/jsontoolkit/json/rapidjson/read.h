@@ -62,13 +62,19 @@ inline auto from(const std::string &value) -> JSON {
   return document;
 }
 
-inline auto from(std::nullptr_t) -> JSON { return parse("null"); }
-
-inline auto from(std::int64_t value) -> JSON {
+template <typename T>
+typename std::enable_if_t<std::is_same_v<T, std::int64_t>, JSON> from(T value) {
   rapidjson::Document document;
   document.SetInt64(value);
   return document;
 }
+
+template <typename T>
+typename std::enable_if_t<std::is_same_v<T, int>, JSON> from(T value) {
+  return from(static_cast<std::int64_t>(value));
+}
+
+inline auto from(std::nullptr_t) -> JSON { return parse("null"); }
 
 template <typename T>
 typename std::enable_if_t<std::is_same_v<T, double>, JSON> from(T value) {
