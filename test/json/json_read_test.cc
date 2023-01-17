@@ -379,6 +379,13 @@ TEST(JSON, array_equality_with_padding) {
   EXPECT_FALSE(right == extra);
 }
 
+TEST(JSON, from_zero) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(0)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), 0);
+}
+
 TEST(JSON, from_real_number) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::from(3.4)};
