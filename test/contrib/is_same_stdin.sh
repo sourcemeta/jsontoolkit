@@ -15,7 +15,7 @@ INPUT="$3"
 shift 3
 
 echo "Running: $PROGRAM $* < $INPUT" 1>&2
-CURRENT_OUTPUT="$("$PROGRAM" "$@" < "$INPUT" 2>&1)"
+CURRENT_OUTPUT="$("$PROGRAM" "$@" < "$INPUT")"
 EXPECTED_OUTPUT="$(cat "$EXPECTED")"
 
 if [ "$CURRENT_OUTPUT" != "$EXPECTED_OUTPUT" ]
