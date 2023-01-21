@@ -122,3 +122,10 @@ auto sourcemeta::jsontoolkit::vocabularies(
   promise.set_value(result);
   return promise.get_future();
 }
+
+auto sourcemeta::jsontoolkit::subschema_iterator(
+    const sourcemeta::jsontoolkit::Value &schema,
+    const sourcemeta::jsontoolkit::schema_walker_t &walker,
+    const std::unordered_map<std::string, bool> &vocabularies) -> SchemaWalker {
+  return sourcemeta::jsontoolkit::SchemaWalker{schema, walker, vocabularies};
+}

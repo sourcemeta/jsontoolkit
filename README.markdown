@@ -1054,7 +1054,7 @@ will be thrown.
 ### With resolver
 
 These functions need to reference other schemas by their URIs. To accomplish
-this in a generic and flexible way, these functions take a resolver function as
+this in a generic and flexible way, these functions take resolver functions as
 arguments, of the type `schema_resolver_t`. This function takes a URI as an
 `std::string` and is expected to return an
 [`std::future`](https://en.cppreference.com/w/cpp/thread/future) of an
@@ -1112,6 +1112,93 @@ assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/content"));
 If the input document is not a valid JSON Schema instance or resolution fails,
 [`std::runtime_error`](https://en.cppreference.com/w/cpp/error/runtime_error)
 will be thrown.
+
+### With walker
+
+For walking purposes, these functions need to understand which JSON Schema
+keywords declare other JSON Schema definitions. To accomplish this in a generic
+and flexible way that does not assume the use any vocabulary other than `core`,
+these functions take a walker function as argument, of the type
+`schema_walker_t`. This function takes a JSON Schema keyword as an `const
+std::string &` and the current set of vocabularies in use as a `const
+std::unordered_map<std::string, bool> &` and return a walker strategy that is
+one of the following:
+
+- `schema_walker_strategy_t::None`: The JSON Schema keyword is not an
+  applicator
+- `schema_walker_strategy_t::Value`: The JSON Schema keyword is an applicator
+  that takes a JSON Schema definition as an argument
+- `schema_walker_strategy_t::Elements`: The JSON Schema keyword is an
+  applicator that takes an arrat of JSON Schema definitions as an argument
+- `schema_walker_strategy_t::Members`: The JSON Schema keyword is an applicator
+  that takes an object as argument, whose values are JSON Schema definitions
+- `schema_walker_strategy_t::ValueOrElements`: The JSON Schema keyword is an
+  applicator that either takes a JSON Schema definition or an array of JSON
+  Schema definitions as an argument
+- `schema_walker_strategy_t::ElementsOrMembers`: The JSON Schema keyword is an
+  applicator that either takes an array of JSON Schema definitions or an object
+  whose values are JSON Schema definitions as an argument
+
+#### Walk subschemas
+
+`SchemaWalker subschema_iterator(const JSON & | const Value &, const schema_walker_t &, const std::unordered_map<std::string, bool> &vocabularies)`
+
+Return an read-only iterator over the subschemas of a given JSON Schema
+definition according to the applicators understood by the provided walker
+function and the vocabularies in use.
+
+For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <jsontoolkit/jsonschema.h>
+#include <iostream>
+
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "foo": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+})JSON")};
+
+// Define your own resolver
+static auto my_resolver(const std::string &)
+    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> { ... }
+
+// Fetch the vocabularies in use
+const std::unordered_map<std::string, bool> vocabularies{
+    sourcemeta::jsontoolkit::vocabularies(document, my_resolver).get()};
+
+// A sample walker that recognizes a few 2020-12 applicators
+static auto my_walker(const std::string &keyword,
+                        const std::unordered_map<std::string, bool> &vocabularies)
+    -> sourcemeta::jsontoolkit::schema_walker_strategy_t {
+  if (vocabularies.contains("https://json-schema.org/draft/2020-12/vocab/applicator")) {
+    if (keyword == "properties") {
+      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Members;
+    }
+
+    if (keyword == "items") {
+      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Value;
+    }
+  }
+
+  return sourcemeta::jsontoolkit::schema_walker_strategy_t::None;
+}
+
+// Print every subschema
+for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+         document, my_walker, vocabularies)) {
+  sourcemeta::jsontoolkit::prettify(subschema, std::cout);
+  std::cout << "\n";
+}
+```
 
 Contributing
 ------------

@@ -3,6 +3,7 @@
 
 #include <jsontoolkit/json.h>
 #include <jsontoolkit/jsonschema/resolver.h>
+#include <jsontoolkit/jsonschema/walker.h>
 
 #include <future>        // std::promise, std::future
 #include <optional>      // std::optional
@@ -17,6 +18,9 @@ auto id(const Value &schema) -> std::optional<std::string>;
 auto metaschema(const Value &schema) -> std::optional<std::string>;
 auto vocabularies(const Value &schema, const schema_resolver_t &resolver)
     -> std::future<std::unordered_map<std::string, bool>>;
+auto subschema_iterator(
+    const Value &schema, const schema_walker_t &walker,
+    const std::unordered_map<std::string, bool> &vocabularies) -> SchemaWalker;
 
 } // namespace sourcemeta::jsontoolkit
 

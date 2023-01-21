@@ -1,0 +1,5 @@
+add_executable(jsontoolkit_jsonschema_walker walker.cc)
+target_link_libraries(jsontoolkit_jsonschema_walker PRIVATE sourcemeta_jsontoolkit_json)
+target_link_libraries(jsontoolkit_jsonschema_walker PRIVATE sourcemeta_jsontoolkit_jsonschema)
+set_target_properties(jsontoolkit_jsonschema_walker PROPERTIES
+  OUTPUT_NAME jsontoolkit-jsonschema-walker)
