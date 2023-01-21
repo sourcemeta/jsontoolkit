@@ -693,6 +693,8 @@ always refer to these types using `auto`.
 
 `Iterator end_object(JSON & | Value &)`
 
+`ObjectIteratorWrapper object_iterator(JSON & | Value &)`
+
 These functions provide mutable
 [random-access](https://en.cppreference.com/w/cpp/iterator/random_access_iterator)
 object iterators. The iteration order is not guaranteed. These functions are
@@ -715,11 +717,29 @@ std::for_each(sourcemeta::jsontoolkit::begin_object(document),
               });
 ```
 
+The third function provides a convenience interface to range-based `for` loops.
+For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <iostream>
+
+sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+
+for (auto &pair : sourcemeta::jsontoolkit::object_iterator(document)) {
+  std::cout << sourcemeta::jsontoolkit::key(pair) << ": "
+    << sourcemeta::jsontoolkit::to_integer(sourcemeta::jsontoolkit::value(pair)) << "\n";
+}
+```
+
 #### Const object iterators
 
 `ConstIterator cbegin_object(const JSON & | const Value &)`
 
 `ConstIterator cend_object(const JSON & | const Value &)`
+
+`ConstObjectIteratorWrapper object_iterator(const JSON & | const Value &)`
 
 These functions provide immutable
 [random-access](https://en.cppreference.com/w/cpp/iterator/random_access_iterator)
@@ -743,11 +763,29 @@ std::for_each(sourcemeta::jsontoolkit::cbegin_object(document),
               });
 ```
 
+The third function provides a convenience interface to range-based `for` loops.
+For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <iostream>
+
+const sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+
+for (const auto &pair : sourcemeta::jsontoolkit::object_iterator(document)) {
+  std::cout << sourcemeta::jsontoolkit::key(pair) << ": "
+    << sourcemeta::jsontoolkit::to_integer(sourcemeta::jsontoolkit::value(pair)) << "\n";
+}
+```
+
 #### Mutable array iterators
 
 `Iterator begin_array(JSON & | Value &)`
 
 `Iterator end_array(JSON & | Value &)`
+
+`ArrayIteratorWrapper array_iterator(JSON & | Value &)`
 
 These functions provide mutable
 [bidirectional](https://en.cppreference.com/w/cpp/iterator/bidirectional_iterator)
@@ -768,6 +806,21 @@ std::for_each(sourcemeta::jsontoolkit::begin_array(document),
                   sourcemeta::jsontoolkit::set(
                     document, element, sourcemeta::jsontoolkit::from(current + 1));
               });
+```
+
+The third function provides a convenience interface to range-based `for` loops.
+For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <iostream>
+
+sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+
+for (auto &element : sourcemeta::jsontoolkit::array_iterator(document)) {
+  std::cout << sourcemeta::jsontoolkit::to_integer(element) << "\n";
+}
 ```
 
 #### Reverse mutable array iterators
@@ -803,6 +856,8 @@ std::for_each(sourcemeta::jsontoolkit::rbegin_array(document),
 
 `ConstIterator cend_array(const JSON & | const Value &)`
 
+`ConstArrayIteratorWrapper array_iterator(const JSON & | const Value &)`
+
 These functions provide immutable
 [bidirectional](https://en.cppreference.com/w/cpp/iterator/bidirectional_iterator)
 array iterators. The iteration order is from start to end. These functions are
@@ -823,6 +878,21 @@ std::for_each(sourcemeta::jsontoolkit::cbegin_array(document),
                           << sourcemeta::jsontoolkit::to_integer(element)
                           << "\n";
               });
+```
+
+The third function provides a convenience interface to range-based `for` loops.
+For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <iostream>
+
+const sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+
+for (const auto &element : sourcemeta::jsontoolkit::array_iterator(document)) {
+  std::cout << sourcemeta::jsontoolkit::to_integer(element) << "\n";
+}
 ```
 
 #### Reverse const array iterators
