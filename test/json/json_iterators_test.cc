@@ -2,6 +2,9 @@
 #include <gtest/gtest.h>
 #include <jsontoolkit/json/iterators.h>
 #include <jsontoolkit/json/read.h>
+#include <map>    // std::map
+#include <string> // std::string
+#include <vector> // std::vector
 
 TEST(JSON, array_const_iterator_for_each) {
   const sourcemeta::jsontoolkit::JSON document{
@@ -119,4 +122,63 @@ TEST(JSON, object_all_of_with_key_false) {
       sourcemeta::jsontoolkit::end_object(document),
       [](auto &pair) { return sourcemeta::jsontoolkit::key(pair).size() > 2; });
   EXPECT_FALSE(result);
+}
+
+TEST(JSON, const_array_iterator) {
+  std::vector<std::int64_t> result;
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  for (const auto &element :
+       sourcemeta::jsontoolkit::array_iterator(document)) {
+    result.push_back(sourcemeta::jsontoolkit::to_integer(element));
+  }
+
+  EXPECT_EQ(result.size(), 3);
+  EXPECT_EQ(result.at(0), 1);
+  EXPECT_EQ(result.at(1), 2);
+  EXPECT_EQ(result.at(2), 3);
+}
+
+TEST(JSON, array_iterator) {
+  std::vector<std::int64_t> result;
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  for (auto &element : sourcemeta::jsontoolkit::array_iterator(document)) {
+    result.push_back(sourcemeta::jsontoolkit::to_integer(element));
+  }
+
+  EXPECT_EQ(result.size(), 3);
+  EXPECT_EQ(result.at(0), 1);
+  EXPECT_EQ(result.at(1), 2);
+  EXPECT_EQ(result.at(2), 3);
+}
+
+TEST(JSON, const_object_iterator) {
+  std::map<std::string, std::int64_t> result;
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  for (const auto &pair : sourcemeta::jsontoolkit::object_iterator(document)) {
+    result.insert({sourcemeta::jsontoolkit::key(pair),
+                   sourcemeta::jsontoolkit::to_integer(
+                       sourcemeta::jsontoolkit::value(pair))});
+  }
+
+  EXPECT_EQ(result.size(), 2);
+  EXPECT_EQ(result.at("foo"), 1);
+  EXPECT_EQ(result.at("bar"), 2);
+}
+
+TEST(JSON, object_iterator) {
+  std::map<std::string, std::int64_t> result;
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  for (auto &pair : sourcemeta::jsontoolkit::object_iterator(document)) {
+    result.insert({sourcemeta::jsontoolkit::key(pair),
+                   sourcemeta::jsontoolkit::to_integer(
+                       sourcemeta::jsontoolkit::value(pair))});
+  }
+
+  EXPECT_EQ(result.size(), 2);
+  EXPECT_EQ(result.at("foo"), 1);
+  EXPECT_EQ(result.at("bar"), 2);
 }
