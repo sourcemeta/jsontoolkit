@@ -64,7 +64,9 @@ install(FILES ${JSONTOOLKIT_JSON_BACKEND_HEADERS}
 add_library(sourcemeta_jsontoolkit_jsonschema
   include/jsontoolkit/jsonschema.h
   include/jsontoolkit/jsonschema/resolver.h
-  src/jsonschema.cc)
+  include/jsontoolkit/jsonschema/walker.h
+  src/jsonschema.cc
+  src/jsonschema/walker.cc)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema
   PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/jsonschema.h")
 target_include_directories(sourcemeta_jsontoolkit_jsonschema
@@ -84,6 +86,7 @@ install(FILES include/jsontoolkit/jsonschema/resolver.h
 if(JSONTOOLKIT_CONTRIB)
   add_subdirectory(./contrib/prettify)
   add_subdirectory(./contrib/minify)
+  add_subdirectory(./contrib/jsonschema-walker)
 endif()
 
 if(PROJECT_IS_TOP_LEVEL)

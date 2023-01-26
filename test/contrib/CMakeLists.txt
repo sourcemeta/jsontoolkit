@@ -1,5 +1,6 @@
 set(PRETTIFY_BIN $<TARGET_FILE:jsontoolkit_prettify>)
 set(MINIFY_BIN $<TARGET_FILE:jsontoolkit_minify>)
+set(JSONSCHEMA_WALKER_BIN $<TARGET_FILE:jsontoolkit_jsonschema_walker>)
 
 set(FAIL_BIN "${CMAKE_CURRENT_SOURCE_DIR}/fail.sh")
 set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.sh")
@@ -44,4 +45,17 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     "${MINIFY_BIN}"
     "${CMAKE_CURRENT_SOURCE_DIR}/minify-output.json"
     "${CMAKE_CURRENT_SOURCE_DIR}/minify-input.json")
+endif()
+
+add_test(NAME jsonschema_walker_2020_12 COMMAND
+  "${IS_SAME_BIN}" "${JSONSCHEMA_WALKER_BIN}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas.txt"
+  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json")
+
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  add_test(NAME jsonschema_walker_2020_12_stdin COMMAND
+    "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.sh"
+    "${JSONSCHEMA_WALKER_BIN}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas.txt"
+    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json")
 endif()

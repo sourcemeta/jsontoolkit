@@ -2,7 +2,8 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_id_test.cc
   jsonschema_is_schema_test.cc
   jsonschema_metaschema_test.cc
-  jsonschema_vocabulary_test.cc)
+  jsonschema_vocabulary_test.cc
+  jsonschema_walker_test.cc)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE GTest::gtest)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
