@@ -1139,6 +1139,11 @@ one of the following:
   applicator that either takes an array of JSON Schema definitions or an object
   whose values are JSON Schema definitions as an argument
 
+For simplicity, we provide a default JSON Schema walker at
+`sourcemeta::jsontoolkit::default_schema_walker`. It is considered a good
+practice to create custom schema walkers that extend and delegate back to this
+default schema walker.
+
 #### Walk subschemas
 
 `SchemaWalker subschema_iterator(const JSON & | const Value &, const schema_walker_t &, const std::unordered_map<std::string, bool> &vocabularies)`
@@ -1175,26 +1180,9 @@ static auto my_resolver(const std::string &)
 const std::unordered_map<std::string, bool> vocabularies{
     sourcemeta::jsontoolkit::vocabularies(document, my_resolver).get()};
 
-// A sample walker that recognizes a few 2020-12 applicators
-static auto my_walker(const std::string &keyword,
-                        const std::unordered_map<std::string, bool> &vocabularies)
-    -> sourcemeta::jsontoolkit::schema_walker_strategy_t {
-  if (vocabularies.contains("https://json-schema.org/draft/2020-12/vocab/applicator")) {
-    if (keyword == "properties") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Members;
-    }
-
-    if (keyword == "items") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Value;
-    }
-  }
-
-  return sourcemeta::jsontoolkit::schema_walker_strategy_t::None;
-}
-
 // Print every subschema
 for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
-         document, my_walker, vocabularies)) {
+         document, sourcemeta::jsontoolkit::default_schema_walker, vocabularies)) {
   sourcemeta::jsontoolkit::prettify(subschema, std::cout);
   std::cout << "\n";
 }

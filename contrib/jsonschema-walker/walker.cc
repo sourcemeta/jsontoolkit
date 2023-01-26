@@ -103,56 +103,6 @@ static auto resolver(const std::string &identifier)
   return promise.get_future();
 }
 
-// Because standard "contains()" is introduced in C++20
-static auto contains(const std::unordered_map<std::string, bool> &map,
-                     const std::string &key) -> bool {
-  return map.find(key) != map.end();
-}
-
-static auto walker(const std::string &keyword,
-                   const std::unordered_map<std::string, bool> &vocabularies)
-    -> sourcemeta::jsontoolkit::schema_walker_strategy_t {
-  if (contains(vocabularies,
-               "https://json-schema.org/draft/2020-12/vocab/core") &&
-      keyword == "$defs") {
-    return sourcemeta::jsontoolkit::schema_walker_strategy_t::Members;
-  }
-
-  if (contains(vocabularies,
-               "https://json-schema.org/draft/2020-12/vocab/content") &&
-      keyword == "contentSchema") {
-    return sourcemeta::jsontoolkit::schema_walker_strategy_t::Value;
-  }
-
-  if (contains(vocabularies,
-               "https://json-schema.org/draft/2020-12/vocab/unevaluated")) {
-    if (keyword == "unevaluatedProperties" || keyword == "unevaluatedItems") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Value;
-    }
-  }
-
-  if (contains(vocabularies,
-               "https://json-schema.org/draft/2020-12/vocab/applicator")) {
-    if (keyword == "dependentSchemas" || keyword == "properties" ||
-        keyword == "patternProperties") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Members;
-    }
-
-    if (keyword == "allOf" || keyword == "anyOf" || keyword == "oneOf" ||
-        keyword == "prefixItems") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Elements;
-    }
-
-    if (keyword == "not" || keyword == "if" || keyword == "then" ||
-        keyword == "else" || keyword == "items" || keyword == "contains" ||
-        keyword == "additionalProperties" || keyword == "propertyNames") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Value;
-    }
-  }
-
-  return sourcemeta::jsontoolkit::schema_walker_strategy_t::None;
-}
-
 template <typename CharT, typename Traits>
 static auto walk(std::basic_istream<CharT, Traits> &stream) -> int {
   const sourcemeta::jsontoolkit::JSON document{
@@ -169,7 +119,8 @@ static auto walk(std::basic_istream<CharT, Traits> &stream) -> int {
       sourcemeta::jsontoolkit::vocabularies(document, resolver).get()};
 
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
-           document, walker, vocabularies)) {
+           document, sourcemeta::jsontoolkit::default_schema_walker,
+           vocabularies)) {
     sourcemeta::jsontoolkit::prettify(subschema, std::cout);
     std::cout << "\n";
   }
