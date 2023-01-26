@@ -15,13 +15,19 @@ TAIL ?= tail
 BACKEND ?= rapidjson
 
 .PHONY: all
-all:
-	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE=$(PRESET) \
-		-DJSONTOOLKIT_BACKEND=$(BACKEND) -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON
-	$(CMAKE) --build ./build --config $(PRESET) --target clang_format
-	$(CMAKE) --build ./build --config $(PRESET)
+all: configure compile
 	$(CTEST) --test-dir ./build --build-config $(PRESET) --output-on-failure --progress
 	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose
+
+.PHONY: configure
+configure:
+	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE=$(PRESET) \
+		-DJSONTOOLKIT_BACKEND=$(BACKEND) -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON
+
+.PHONY: compile
+compile:
+	$(CMAKE) --build ./build --config $(PRESET) --target clang_format
+	$(CMAKE) --build ./build --config $(PRESET)
 
 .PHONY: clean
 clean:
