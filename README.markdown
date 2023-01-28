@@ -1071,9 +1071,13 @@ that implements the function interface.
 
 `std::future<std::unordered_map<std::string, bool>> vocabularies(const JSON & | const Value &, const schema_resolver_t &)`
 
-List the vocabularies that a specific schema makes use of. The resulting map
-values are set to `true` or `false` depending on whether the corresponding
-vocabulary is required or optional, respectively. For example:
+`std::future<std::unordered_map<std::string, bool>> vocabularies(const JSON & | const Value &, const schema_resolver_t &, const std::string &default_metaschema)`
+
+List the vocabularies that a specific schema makes use of. If you set a default
+metaschema URI, this will be used if the given schema does not declare the
+`$schema` keyword. The resulting map values are set to `true` or `false`
+depending on whether the corresponding vocabulary is required or optional,
+respectively. For example:
 
 ```c++
 #include <jsontoolkit/json.h>

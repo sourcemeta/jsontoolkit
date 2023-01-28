@@ -86,6 +86,22 @@ TEST(jsonschema_vocabulary, core_vocabulary_boolean) {
       vocabularies, "https://json-schema.org/draft/2020-12/vocab/core");
 }
 
+TEST(jsonschema_vocabulary, default_metaschema_with_boolean) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(true)};
+  const std::unordered_map<std::string, bool> vocabularies{
+      sourcemeta::jsontoolkit::vocabularies(
+          document, test_resolver, "https://sourcemeta.com/metaschema_1")
+          .get()};
+  EXPECT_EQ(vocabularies.size(), 3);
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/core");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/applicator");
+  EXPECT_VOCABULARY_OPTIONAL(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/validation");
+}
+
 TEST(jsonschema_vocabulary, not_random_vocabulary_boolean) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::from(true)};
@@ -145,6 +161,20 @@ TEST(jsonschema_vocabulary, custom_metaschema_2) {
   })JSON")};
   const std::unordered_map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
+  EXPECT_EQ(vocabularies.size(), 1);
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/core");
+}
+
+TEST(jsonschema_vocabulary, real_metaschema_takes_precedence_over_default) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://sourcemeta.com/metaschema_2"
+  })JSON")};
+  const std::unordered_map<std::string, bool> vocabularies{
+      sourcemeta::jsontoolkit::vocabularies(
+          document, test_resolver, "https://sourcemeta.com/metaschema_1")
+          .get()};
   EXPECT_EQ(vocabularies.size(), 1);
   EXPECT_VOCABULARY_REQUIRED(
       vocabularies, "https://json-schema.org/draft/2020-12/vocab/core");
