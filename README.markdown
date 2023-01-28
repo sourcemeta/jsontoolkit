@@ -1150,11 +1150,11 @@ default schema walker.
 
 #### Walk subschemas
 
-`SchemaWalker subschema_iterator(const JSON & | const Value &, const schema_walker_t &, const std::unordered_map<std::string, bool> &vocabularies)`
+`SchemaWalker subschema_iterator(const JSON & | const Value &, const schema_walker_t &, const schema_resolver_t &)`
 
 Return an read-only iterator over the subschemas of a given JSON Schema
 definition according to the applicators understood by the provided walker
-function and the vocabularies in use.
+function.
 
 For example:
 
@@ -1180,13 +1180,9 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JS
 static auto my_resolver(const std::string &)
     -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> { ... }
 
-// Fetch the vocabularies in use
-const std::unordered_map<std::string, bool> vocabularies{
-    sourcemeta::jsontoolkit::vocabularies(document, my_resolver).get()};
-
 // Print every subschema
 for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
-         document, sourcemeta::jsontoolkit::default_schema_walker, vocabularies)) {
+         document, sourcemeta::jsontoolkit::default_schema_walker, my_resolver)) {
   sourcemeta::jsontoolkit::prettify(subschema, std::cout);
   std::cout << "\n";
 }

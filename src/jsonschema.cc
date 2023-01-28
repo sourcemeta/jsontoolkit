@@ -132,6 +132,8 @@ auto sourcemeta::jsontoolkit::vocabularies(
 auto sourcemeta::jsontoolkit::subschema_iterator(
     const sourcemeta::jsontoolkit::Value &schema,
     const sourcemeta::jsontoolkit::schema_walker_t &walker,
-    const std::unordered_map<std::string, bool> &vocabularies) -> SchemaWalker {
-  return sourcemeta::jsontoolkit::SchemaWalker{schema, walker, vocabularies};
+    const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
+    const std::optional<std::string> &default_metaschema) -> SchemaWalker {
+  return sourcemeta::jsontoolkit::SchemaWalker{schema, walker, resolver,
+                                               default_metaschema};
 }

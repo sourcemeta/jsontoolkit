@@ -115,12 +115,9 @@ static auto walk(std::basic_istream<CharT, Traits> &stream) -> int {
                  "only assume the presence of the 'core' vocabulary\n";
   }
 
-  const std::unordered_map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, resolver).get()};
-
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
            document, sourcemeta::jsontoolkit::default_schema_walker,
-           vocabularies)) {
+           resolver)) {
     sourcemeta::jsontoolkit::prettify(subschema, std::cout);
     std::cout << "\n";
   }
