@@ -58,7 +58,8 @@ auto sourcemeta::jsontoolkit::metaschema(
 
 auto sourcemeta::jsontoolkit::vocabularies(
     const sourcemeta::jsontoolkit::Value &schema,
-    const sourcemeta::jsontoolkit::schema_resolver_t &resolver)
+    const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
+    const std::optional<std::string> &default_metaschema)
     -> std::future<std::unordered_map<std::string, bool>> {
   std::promise<std::unordered_map<std::string, bool>> promise;
 
@@ -67,6 +68,8 @@ auto sourcemeta::jsontoolkit::vocabularies(
   // implementation proceeds with processing the schema, it MUST assume the
   // use of the core vocabulary.
   // https://json-schema.org/draft/2020-12/json-schema-core.html#section-8.1.2.1
+  // TODO: Do not assume 2020-12 core if the schema already has a
+  // non-2020-12 metaschema
   std::unordered_map<std::string, bool> result{
       {"https://json-schema.org/draft/2020-12/vocab/core", true}};
 
@@ -75,30 +78,33 @@ auto sourcemeta::jsontoolkit::vocabularies(
    */
   const std::optional<std::string> metaschema_id{
       sourcemeta::jsontoolkit::metaschema(schema)};
-  if (!metaschema_id.has_value()) {
+  if (!metaschema_id.has_value() && !default_metaschema.has_value()) {
     promise.set_value(result);
     return promise.get_future();
   }
+  const std::string &effective_metaschema_id{metaschema_id.has_value()
+                                                 ? metaschema_id.value()
+                                                 : default_metaschema.value()};
 
   /*
    * (2) Resolve the metaschema
    */
   std::future<std::optional<sourcemeta::jsontoolkit::JSON>> metaschema_future{
-      resolver(metaschema_id.value())};
+      resolver(effective_metaschema_id)};
   const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
       metaschema_future.get()};
   if (!metaschema.has_value()) {
     std::ostringstream error;
-    error << "Could not resolve schema: " << metaschema_id.value();
+    error << "Could not resolve schema: " << effective_metaschema_id;
     throw std::runtime_error(error.str());
   }
   const std::optional<std::string> resolved_id{
       sourcemeta::jsontoolkit::id(metaschema.value())};
   if (!resolved_id.has_value() ||
-      resolved_id.value() != metaschema_id.value()) {
+      resolved_id.value() != effective_metaschema_id) {
     std::ostringstream error;
     error << "Resolved metaschema id does not match request: "
-          << metaschema_id.value();
+          << effective_metaschema_id;
     throw std::runtime_error(error.str());
   }
 

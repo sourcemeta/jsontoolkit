@@ -17,7 +17,9 @@ namespace sourcemeta::jsontoolkit {
 auto is_schema(const Value &schema) -> bool;
 auto id(const Value &schema) -> std::optional<std::string>;
 auto metaschema(const Value &schema) -> std::optional<std::string>;
-auto vocabularies(const Value &schema, const schema_resolver_t &resolver)
+auto vocabularies(
+    const Value &schema, const schema_resolver_t &resolver,
+    const std::optional<std::string> &default_metaschema = std::nullopt)
     -> std::future<std::unordered_map<std::string, bool>>;
 auto subschema_iterator(
     const Value &schema, const schema_walker_t &walker,
