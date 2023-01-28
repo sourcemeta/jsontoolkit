@@ -21,9 +21,10 @@ auto vocabularies(
     const Value &schema, const schema_resolver_t &resolver,
     const std::optional<std::string> &default_metaschema = std::nullopt)
     -> std::future<std::unordered_map<std::string, bool>>;
-auto subschema_iterator(
-    const Value &schema, const schema_walker_t &walker,
-    const std::unordered_map<std::string, bool> &vocabularies) -> SchemaWalker;
+auto subschema_iterator(const Value &schema, const schema_walker_t &walker,
+                        const schema_resolver_t &resolver,
+                        const std::optional<std::string> &default_metaschema =
+                            std::nullopt) -> SchemaWalker;
 
 } // namespace sourcemeta::jsontoolkit
 
