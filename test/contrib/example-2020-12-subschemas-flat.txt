@@ -1,0 +1,18 @@
+{
+    "type": "object",
+    "properties": {
+        "first": {
+            "type": "string",
+            "description": "The person's first name."
+        },
+        "last": {
+            "type": "string",
+            "description": "The person's last name."
+        }
+    }
+}
+{
+    "description": "Age in years which must be equal to or greater than zero.",
+    "type": "integer",
+    "minimum": 0
+}

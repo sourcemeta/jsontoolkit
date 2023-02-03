@@ -47,15 +47,30 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     "${CMAKE_CURRENT_SOURCE_DIR}/minify-input.json")
 endif()
 
-add_test(NAME jsonschema_walker_2020_12 COMMAND
+add_test(NAME jsonschema_walker_deep_2020_12 COMMAND
   "${IS_SAME_BIN}" "${JSONSCHEMA_WALKER_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas.txt"
-  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json")
+  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-deep.txt"
+  deep "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json")
+
+add_test(NAME jsonschema_walker_flat_2020_12 COMMAND
+  "${IS_SAME_BIN}" "${JSONSCHEMA_WALKER_BIN}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-flat.txt"
+  flat "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json")
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  add_test(NAME jsonschema_walker_2020_12_stdin COMMAND
+  add_test(NAME jsonschema_walker_deep_2020_12_stdin COMMAND
     "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.sh"
     "${JSONSCHEMA_WALKER_BIN}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas.txt"
-    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json")
+    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-deep.txt"
+    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" deep)
+
+  add_test(NAME jsonschema_walker_flat_2020_12_stdin COMMAND
+    "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.sh"
+    "${JSONSCHEMA_WALKER_BIN}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-flat.txt"
+    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" flat)
 endif()
+
+add_test(NAME jsonschema_walker_invalid_mode COMMAND
+  "${FAIL_BIN}" "${JSONSCHEMA_WALKER_BIN}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" xxxxx)

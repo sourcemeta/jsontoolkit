@@ -1,10 +1,11 @@
 #include <jsontoolkit/json.h>
 #include <jsontoolkit/jsonschema.h>
 
-#include <cassert>   // assert
-#include <future>    // std::future
-#include <sstream>   // std::ostringstream
-#include <stdexcept> // std::invalid_argument, std::runtime_error
+#include <cassert>     // assert
+#include <future>      // std::future
+#include <sstream>     // std::ostringstream
+#include <stdexcept>   // std::invalid_argument, std::runtime_error
+#include <type_traits> // std::remove_reference_t
 
 auto sourcemeta::jsontoolkit::is_schema(
     const sourcemeta::jsontoolkit::Value &schema) -> bool {
@@ -133,7 +134,28 @@ auto sourcemeta::jsontoolkit::subschema_iterator(
     const sourcemeta::jsontoolkit::Value &schema,
     const sourcemeta::jsontoolkit::schema_walker_t &walker,
     const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
-    const std::optional<std::string> &default_metaschema) -> SchemaWalker {
-  return sourcemeta::jsontoolkit::SchemaWalker{schema, walker, resolver,
-                                               default_metaschema};
+    const std::optional<std::string> &default_metaschema)
+    -> SchemaWalker<std::remove_reference_t<decltype(schema)>> {
+  return {schema, walker, resolver, default_metaschema,
+          sourcemeta::jsontoolkit::schema_walker_type_t::Deep};
+}
+
+auto sourcemeta::jsontoolkit::flat_subschema_iterator(
+    const sourcemeta::jsontoolkit::Value &schema,
+    const sourcemeta::jsontoolkit::schema_walker_t &walker,
+    const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
+    const std::optional<std::string> &default_metaschema)
+    -> SchemaWalker<std::remove_reference_t<decltype(schema)>> {
+  return {schema, walker, resolver, default_metaschema,
+          sourcemeta::jsontoolkit::schema_walker_type_t::Flat};
+}
+
+auto sourcemeta::jsontoolkit::flat_subschema_iterator(
+    sourcemeta::jsontoolkit::Value &schema,
+    const sourcemeta::jsontoolkit::schema_walker_t &walker,
+    const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
+    const std::optional<std::string> &default_metaschema)
+    -> SchemaWalker<std::remove_reference_t<decltype(schema)>> {
+  return {schema, walker, resolver, default_metaschema,
+          sourcemeta::jsontoolkit::schema_walker_type_t::Flat};
 }

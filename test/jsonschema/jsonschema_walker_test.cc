@@ -445,3 +445,90 @@ TEST(jsonschema, walker_multi_metaschemas) {
     "foo": 1
   })JSON"));
 }
+
+TEST(jsonschema, walker_flat_const) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://sourcemeta.com/test-metaschema",
+    "schema": {
+      "schema": { "foo": 1 }
+    },
+    "schemaMap": {
+      "foo": {
+        "schema": { "foo": 2 }
+      }
+    }
+  })JSON")};
+
+  std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
+  for (const auto &subschema : sourcemeta::jsontoolkit::flat_subschema_iterator(
+           document, test_walker, test_resolver)) {
+    subschemas.push_back(sourcemeta::jsontoolkit::from(subschema));
+  }
+
+  EXPECT_EQ(subschemas.size(), 2);
+  EXPECT_EQ(subschemas.at(0), sourcemeta::jsontoolkit::parse(R"JSON({
+    "schema": { "foo": 1 }
+  })JSON"));
+  EXPECT_EQ(subschemas.at(1), sourcemeta::jsontoolkit::parse(R"JSON({
+    "schema": { "foo": 2 }
+  })JSON"));
+}
+
+TEST(jsonschema, walker_flat_non_const) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://sourcemeta.com/test-metaschema",
+    "schema": {
+      "schema": { "foo": 1 }
+    },
+    "schemaMap": {
+      "foo": {
+        "schema": { "foo": 2 }
+      }
+    }
+  })JSON")};
+
+  std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
+  for (sourcemeta::jsontoolkit::Value &subschema :
+       sourcemeta::jsontoolkit::flat_subschema_iterator(document, test_walker,
+                                                        test_resolver)) {
+    subschemas.push_back(sourcemeta::jsontoolkit::from(subschema));
+  }
+
+  EXPECT_EQ(subschemas.size(), 2);
+  EXPECT_EQ(subschemas.at(0), sourcemeta::jsontoolkit::parse(R"JSON({
+    "schema": { "foo": 1 }
+  })JSON"));
+  EXPECT_EQ(subschemas.at(1), sourcemeta::jsontoolkit::parse(R"JSON({
+    "schema": { "foo": 2 }
+  })JSON"));
+}
+
+TEST(jsonschema, walker_flat_non_const_modify) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://sourcemeta.com/test-metaschema",
+    "schema": {
+      "schema": { "foo": 1 }
+    },
+    "schemaMap": {
+      "foo": {
+        "schema": { "foo": 2 }
+      }
+    }
+  })JSON")};
+
+  for (sourcemeta::jsontoolkit::Value &subschema :
+       sourcemeta::jsontoolkit::flat_subschema_iterator(document, test_walker,
+                                                        test_resolver)) {
+    sourcemeta::jsontoolkit::set(document, subschema,
+                                 sourcemeta::jsontoolkit::from(true));
+  }
+
+  EXPECT_EQ(document, sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://sourcemeta.com/test-metaschema",
+    "schema": true,
+    "schemaMap": {
+      "foo": true
+    }
+  })JSON"));
+}

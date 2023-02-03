@@ -1152,9 +1152,18 @@ default schema walker.
 
 `SchemaWalker subschema_iterator(const JSON & | const Value &, const schema_walker_t &, const schema_resolver_t &)`
 
-Return an read-only iterator over the subschemas of a given JSON Schema
-definition according to the applicators understood by the provided walker
-function.
+`SchemaWalker flat_subschema_iterator(const JSON & | const Value &, const schema_walker_t &, const schema_resolver_t &)`
+
+`SchemaWalker flat_subschema_iterator(JSON & | Value &, const schema_walker_t &, const schema_resolver_t &)`
+
+Return an iterator over the subschemas of a given JSON Schema definition
+according to the applicators understood by the provided walker function.
+
+The `subschema_iterator` function recursively traverses over every subschema of
+the JSON Schema definition, including the top-level schema in a read-only mode.
+The `flat_subschema_iterator` functions traverse over the first-level of
+subschemas of the JSON Schema definition, ignoring the top-level schema in
+either read-only or read-write modes.
 
 For example:
 
@@ -1182,6 +1191,13 @@ static auto my_resolver(const std::string &)
 
 // Print every subschema
 for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+         document, sourcemeta::jsontoolkit::default_schema_walker, my_resolver)) {
+  sourcemeta::jsontoolkit::prettify(subschema, std::cout);
+  std::cout << "\n";
+}
+
+// Print the first-level subchemas
+for (const auto &subschema : sourcemeta::jsontoolkit::flat_subschema_iterator(
          document, sourcemeta::jsontoolkit::default_schema_walker, my_resolver)) {
   sourcemeta::jsontoolkit::prettify(subschema, std::cout);
   std::cout << "\n";

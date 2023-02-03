@@ -104,7 +104,8 @@ static auto resolver(const std::string &identifier)
 }
 
 template <typename CharT, typename Traits>
-static auto walk(std::basic_istream<CharT, Traits> &stream) -> int {
+static auto walk(const std::string &mode,
+                 std::basic_istream<CharT, Traits> &stream) -> int {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse(stream)};
 
@@ -115,25 +116,47 @@ static auto walk(std::basic_istream<CharT, Traits> &stream) -> int {
                  "only assume the presence of the 'core' vocabulary\n";
   }
 
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
-           document, sourcemeta::jsontoolkit::default_schema_walker,
-           resolver)) {
-    sourcemeta::jsontoolkit::prettify(subschema, std::cout);
-    std::cout << "\n";
+  if (mode == "deep") {
+    for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+             document, sourcemeta::jsontoolkit::default_schema_walker,
+             resolver)) {
+      sourcemeta::jsontoolkit::prettify(subschema, std::cout);
+      std::cout << "\n";
+    }
+  } else if (mode == "flat") {
+    for (const auto &subschema :
+         sourcemeta::jsontoolkit::flat_subschema_iterator(
+             document, sourcemeta::jsontoolkit::default_schema_walker,
+             resolver)) {
+      sourcemeta::jsontoolkit::prettify(subschema, std::cout);
+      std::cout << "\n";
+    }
+  } else {
+    std::cerr << "Unknown mode: " << mode << "\n";
+    return EXIT_FAILURE;
   }
 
   return EXIT_SUCCESS;
 }
 
+static auto help(const std::string &program) -> void {
+  std::cerr << "Usage: " << program << " <flat|deep> [input.json]\n";
+}
+
 auto main(int argc, char *argv[]) -> int {
+  if (argc == 1) {
+    help(argv[0]);
+    return EXIT_FAILURE;
+  }
+
   try {
-    if (argc == 1) {
-      return walk(std::cin);
+    if (argc == 2) {
+      return walk(argv[1], std::cin);
     } else {
-      const std::filesystem::path input{argv[1]};
+      const std::filesystem::path input{argv[2]};
       std::ifstream stream{std::filesystem::canonical(input)};
       stream.exceptions(std::ios_base::badbit);
-      return walk(stream);
+      return walk(argv[1], stream);
     }
   } catch (const std::exception &error) {
     std::cerr << "Error: " << error.what() << "\n";
