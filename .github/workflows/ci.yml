@@ -20,6 +20,10 @@ jobs:
             cc: clang
             cxx: clang++
             backend: rapidjson
+          - os: ubuntu-22.04
+            cc: gcc
+            cxx: g++
+            backend: rapidjson
 
     runs-on: ${{ matrix.platform.os }}
     env:
