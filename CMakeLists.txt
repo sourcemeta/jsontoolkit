@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.18)
 project("JSON Toolkit" VERSION 0.0.1 LANGUAGES CXX
   DESCRIPTION "A multi-backend JSON library for modern C++")
 
@@ -38,6 +38,8 @@ set(JSONTOOLKIT_JSON_BACKEND_HEADERS
 add_library(sourcemeta_jsontoolkit_json INTERFACE
   include/jsontoolkit/json.h
   ${JSONTOOLKIT_JSON_META_HEADERS} ${JSONTOOLKIT_JSON_BACKEND_HEADERS})
+set_target_properties(sourcemeta_jsontoolkit_json
+  PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(sourcemeta_jsontoolkit_json
   PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/json.h")
 target_include_directories(sourcemeta_jsontoolkit_json
