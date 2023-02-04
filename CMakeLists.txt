@@ -35,8 +35,8 @@ set(JSONTOOLKIT_JSON_BACKEND_HEADERS
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/read.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/write.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/iterators.h)
-add_library(sourcemeta_jsontoolkit_json INTERFACE
-  include/jsontoolkit/json.h
+add_library(sourcemeta_jsontoolkit_json INTERFACE)
+target_sources(sourcemeta_jsontoolkit_json INTERFACE include/jsontoolkit/json.h
   ${JSONTOOLKIT_JSON_META_HEADERS} ${JSONTOOLKIT_JSON_BACKEND_HEADERS})
 set_target_properties(sourcemeta_jsontoolkit_json
   PROPERTIES LINKER_LANGUAGE CXX)
