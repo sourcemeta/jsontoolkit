@@ -46,4 +46,7 @@ jobs:
           -DJSONTOOLKIT_TESTS=ON
       - run: cmake --build ./build --config Release --target clang_format
       - run: cmake --build ./build --config Release
-      - run: ctest --test-dir ./build --build-config Release --output-on-failure
+      # Not every CTest version supports the --test-dir option. If such option
+      # is not recognized, `ctest` will successfully exit finding no tests.
+      # Better to be sure and `cd` all the time here.
+      - run: cd ./build && ctest --build-config Release --output-on-failure
