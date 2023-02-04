@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.18)
 project("JSON Toolkit" VERSION 0.0.1 LANGUAGES CXX
   DESCRIPTION "A multi-backend JSON library for modern C++")
 
+# The PROJECT_IS_TOP_LEVEL handy variable is only
+# available on CMake >=3.21.
+if(NOT DEFINED PROJECT_IS_TOP_LEVEL AND "${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
+  set(PROJECT_IS_TOP_LEVEL YES)
+endif()
+
 # Global options
 if(MSVC)
   add_compile_options(/options:strict /W4 /WX /WL /sdl)
