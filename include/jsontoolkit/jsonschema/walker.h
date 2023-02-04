@@ -7,6 +7,12 @@
 
 namespace sourcemeta::jsontoolkit {
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+// For some strang reason, GCC on Debian 11 believes that a member of
+// an enum class (which is namespaced by definition), can shadow an
+// alias defined even on a different namespace.
+#pragma GCC diagnostic ignored "-Wshadow"
 enum class schema_walker_strategy_t {
   None,
   Value,
@@ -15,6 +21,8 @@ enum class schema_walker_strategy_t {
   ValueOrElements,
   ElementsOrMembers
 };
+#pragma GCC diagnostic pop
+#endif
 
 // Take a keyword + vocabularies in use and guide subschema walking
 using schema_walker_t = std::function<schema_walker_strategy_t(
