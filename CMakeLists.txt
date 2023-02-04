@@ -67,7 +67,6 @@ add_library(sourcemeta_jsontoolkit_jsonschema
   include/jsontoolkit/jsonschema/walker.h
   include/jsontoolkit/jsonschema/default_walker.h
   src/jsonschema.cc
-  src/jsonschema/walker.cc
   src/jsonschema/default_walker.cc)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema
   PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/jsonschema.h")
