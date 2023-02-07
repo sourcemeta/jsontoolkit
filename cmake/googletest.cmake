@@ -10,3 +10,10 @@ if(NOT GTest_FOUND)
   endif()
 endif()
 
+# Some GNU/Linux distros lack the namespace
+if(NOT TARGET GTest::gtest)
+  add_library(GTest::gtest ALIAS gtest)
+endif()
+if(NOT TARGET GTest::gtest_main)
+  add_library(GTest::gtest_main ALIAS gtest_main)
+endif()

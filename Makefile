@@ -14,9 +14,10 @@ TAIL ?= tail
 # Options
 BACKEND ?= rapidjson
 
+# Not every CTest version supports the --test-dir option
 .PHONY: all
 all: configure compile
-	$(CTEST) --test-dir ./build --build-config $(PRESET) --output-on-failure --progress
+	cd ./build && $(CTEST) --build-config $(PRESET) --output-on-failure --progress
 	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose
 
 .PHONY: configure
