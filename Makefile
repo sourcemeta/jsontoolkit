@@ -42,7 +42,8 @@ www: build/www/index.html \
 	build/www/manifest.webmanifest \
 	build/www/icon-192x192.png \
  	build/www/icon-512x512.png \
-	build/www/apple-touch-icon.png
+	build/www/apple-touch-icon.png \
+	build/www/CNAME
 build:
 	$(MKDIR) $@
 build/www: | build
@@ -54,6 +55,8 @@ build/www/icon-%.png: www/icon.svg | build/www
 build/www/apple-touch-icon.png: build/www/icon-180x180.png | build/www
 	$(INSTALL) -m 0664 $< $@
 build/www/manifest.webmanifest: www/manifest.webmanifest | build/www
+	$(INSTALL) -m 0664 $< $@
+build/www/CNAME: www/CNAME | build/www
 	$(INSTALL) -m 0664 $< $@
 build/www/favicon.ico: build/www/icon-32x32.png | build/www
 	$(CONVERT) $^ $@
