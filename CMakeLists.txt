@@ -104,6 +104,7 @@ if(JSONTOOLKIT_CONTRIB)
   add_subdirectory(./contrib/prettify)
   add_subdirectory(./contrib/minify)
   add_subdirectory(./contrib/jsonschema-walker)
+  add_subdirectory(./contrib/jsonschema-keywords)
 endif()
 
 if(PROJECT_IS_TOP_LEVEL)

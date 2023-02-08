@@ -1,6 +1,7 @@
 set(PRETTIFY_BIN $<TARGET_FILE:jsontoolkit_prettify>)
 set(MINIFY_BIN $<TARGET_FILE:jsontoolkit_minify>)
 set(JSONSCHEMA_WALKER_BIN $<TARGET_FILE:jsontoolkit_jsonschema_walker>)
+set(JSONSCHEMA_KEYWORDS_BIN $<TARGET_FILE:jsontoolkit_jsonschema_keywords>)
 
 set(FAIL_BIN "${CMAKE_CURRENT_SOURCE_DIR}/fail.sh")
 set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.sh")
@@ -74,3 +75,8 @@ endif()
 add_test(NAME jsonschema_walker_invalid_mode COMMAND
   "${FAIL_BIN}" "${JSONSCHEMA_WALKER_BIN}"
   "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" xxxxx)
+
+add_test(NAME jsonschema_keywords COMMAND
+  "${IS_SAME_BIN}" "${JSONSCHEMA_KEYWORDS_BIN}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/schemas/keyword-count.txt"
+  "${CMAKE_CURRENT_SOURCE_DIR}/schemas")
