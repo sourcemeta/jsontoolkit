@@ -82,6 +82,16 @@ target_include_directories(sourcemeta_jsontoolkit_jsonschema
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
   sourcemeta_jsontoolkit_json)
+
+# GCC does not allow the use of std::promise, std::future
+# without compiling with pthreads support.
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+  set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+  find_package(Threads REQUIRED)
+  target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC Threads::Threads)
+endif()
+
 install(TARGETS sourcemeta_jsontoolkit_jsonschema
   EXPORT sourcemeta_jsontoolkit_jsonschema
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
