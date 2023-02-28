@@ -57,6 +57,64 @@ auto sourcemeta::jsontoolkit::metaschema(
   return std::nullopt;
 }
 
+auto sourcemeta::jsontoolkit::dialect(
+    const sourcemeta::jsontoolkit::Value &schema,
+    const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
+    const std::optional<std::string> &default_metaschema)
+    -> std::future<std::optional<std::string>> {
+  assert(sourcemeta::jsontoolkit::is_schema(schema));
+
+  const std::optional<std::string> schema_id{
+      sourcemeta::jsontoolkit::id(schema)};
+  const std::optional<std::string> metaschema_id{
+      sourcemeta::jsontoolkit::metaschema(schema)};
+  const std::optional<std::string> &effective_metaschema_id{
+      metaschema_id.has_value() ? metaschema_id : default_metaschema};
+
+  if (effective_metaschema_id.has_value()) {
+    // For compatibility with older JSON Schema dialects that didn't support $id
+    if (effective_metaschema_id.value() ==
+            "http://json-schema.org/draft-00/hyper-schema#" ||
+        effective_metaschema_id.value() ==
+            "http://json-schema.org/draft-01/hyper-schema#" ||
+        effective_metaschema_id.value() ==
+            "http://json-schema.org/draft-02/hyper-schema#" ||
+        effective_metaschema_id.value() ==
+            "http://json-schema.org/draft-03/schema#" ||
+        effective_metaschema_id.value() ==
+            "http://json-schema.org/draft-04/schema#") {
+      std::promise<std::optional<std::string>> promise;
+      promise.set_value(effective_metaschema_id);
+      return promise.get_future();
+    }
+
+    // If the schema defines itself, then the schema is the dialect definition
+    if (schema_id.has_value() &&
+        schema_id.value() == effective_metaschema_id.value()) {
+      std::promise<std::optional<std::string>> promise;
+      promise.set_value(schema_id);
+      return promise.get_future();
+    }
+  }
+
+  if (effective_metaschema_id.has_value()) {
+    const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
+        resolver(effective_metaschema_id.value()).get()};
+    if (!metaschema.has_value()) {
+      std::ostringstream error;
+      error << "Could not resolve schema: " << effective_metaschema_id.value();
+      throw std::runtime_error(error.str());
+    }
+
+    return dialect(metaschema.value(), resolver,
+                   effective_metaschema_id.value());
+  }
+
+  std::promise<std::optional<std::string>> promise;
+  promise.set_value(std::nullopt);
+  return promise.get_future();
+}
+
 auto sourcemeta::jsontoolkit::vocabularies(
     const sourcemeta::jsontoolkit::Value &schema,
     const sourcemeta::jsontoolkit::schema_resolver_t &resolver,

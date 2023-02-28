@@ -1067,6 +1067,46 @@ requests, or anything your application might require.
 Unless your resolver is trivial, it is recommend to create a callable object
 that implements the function interface.
 
+#### Get dialect
+
+`std::future<std::optional<std::string>> dialect(const JSON & | const Value &, const schema_resolver_t &)`
+
+`std::future<std::optional<std::string>> dialect(const JSON & | const Value &, const schema_resolver_t &, const std::string &default_metaschema)`
+
+Get the dialect URI that applies to the given schema. If you set a default
+metaschema URI, this will be used if the given schema does not declare the
+`$schema` keyword. The result of this function is unset if its dialect could
+not be determined. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <jsontoolkit/jsonschema.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object"
+})JSON")};
+
+static auto my_resolver(const std::string &identifier)
+    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
+  std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
+
+  if (identifier == "https://json-schema.org/draft/2020-12/schema") {
+    // Resolve the schema somehow
+    promise.set_value(...);
+  }
+
+  return promise.get_future();
+}
+
+const std::optional<std::string> dialect{
+    sourcemeta::jsontoolkit::dialect(document, my_resolver).get()};
+
+assert(dialect.has_value());
+assert(dialect.value() == "https://json-schema.org/draft/2020-12/schema");
+```
+
 #### List vocabularies
 
 `std::future<std::unordered_map<std::string, bool>> vocabularies(const JSON & | const Value &, const schema_resolver_t &)`
