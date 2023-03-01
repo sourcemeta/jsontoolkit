@@ -125,8 +125,8 @@ auto sourcemeta::jsontoolkit::vocabularies(
   // If the meta-schema, as referenced by the schema, is not recognized, or is
   // missing, then the behavior is implementation-defined. If the
   // implementation proceeds with processing the schema, it MUST assume the
-  // use of the core vocabulary.
-  // https://json-schema.org/draft/2020-12/json-schema-core.html#section-8.1.2.1
+  // use of the vocabulary from the core specification.
+  // See https://json-schema.org/draft/2020-12/json-schema-core.html#section-8
   // TODO: Do not assume 2020-12 core if the schema already has a
   // non-2020-12 metaschema
   std::unordered_map<std::string, bool> result{
@@ -171,6 +171,16 @@ auto sourcemeta::jsontoolkit::vocabularies(
    * (3) Parse the "$vocabulary" keyword, if any
    */
   if (!sourcemeta::jsontoolkit::defines(metaschema.value(), "$vocabulary")) {
+    // Vocabularies from the core specification are assumed to be set
+    // if the $vocabulary keyword is not defined.
+    // See
+    // https://json-schema.org/draft/2020-12/json-schema-core.html#section-10
+    // See
+    // https://json-schema.org/draft/2020-12/json-schema-core.html#section-11
+    result.insert(
+        {"https://json-schema.org/draft/2020-12/vocab/applicator", true});
+    result.insert(
+        {"https://json-schema.org/draft/2020-12/vocab/unevaluated", true});
     promise.set_value(result);
     return promise.get_future();
   }
