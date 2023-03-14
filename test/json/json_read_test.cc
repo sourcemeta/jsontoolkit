@@ -1,5 +1,7 @@
+#include <cstdint> // std::uint64_t, std::int64_t
 #include <gtest/gtest.h>
 #include <jsontoolkit/json/read.h>
+#include <limits>  // std::numeric_limits
 #include <sstream> // std::istringstream
 #include <utility> // std::move
 
@@ -1458,4 +1460,25 @@ TEST(JSON, make_array_top_level) {
   sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::make_array()};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+}
+
+TEST(JSON, unsigned_integer) {
+  const std::uint64_t value{10};
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(value)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), 10);
+}
+
+TEST(JSON, unsigned_integer_64_bit_signed_max) {
+  const std::uint64_t value{std::numeric_limits<std::int64_t>::max()};
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(value)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document),
+            std::numeric_limits<std::int64_t>::max());
+}
+
+TEST(JSON, unsigned_integer_64_bit_signed_max_plus_1_fails) {
+  const std::uint64_t value{
+      static_cast<std::uint64_t>(std::numeric_limits<std::int64_t>::max()) + 1};
+  EXPECT_THROW(sourcemeta::jsontoolkit::from(value), std::overflow_error);
 }

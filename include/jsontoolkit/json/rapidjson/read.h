@@ -5,10 +5,11 @@
 
 #include <cassert>     // assert
 #include <cstddef>     // std::size_t
-#include <cstdint>     // std::int64_t
+#include <cstdint>     // std::int64_t, std::uint64_t
 #include <istream>     // std::basic_istream
+#include <limits>      // std::numeric_limits
 #include <ostream>     // std::basic_ostream
-#include <stdexcept>   // std::domain_error
+#include <stdexcept>   // std::domain_error, std::overflow_error
 #include <string>      // std::string
 #include <type_traits> // std::enable_if_t, std::is_same_v
 
@@ -66,6 +67,21 @@ template <typename T>
 typename std::enable_if_t<std::is_same_v<T, std::int64_t>, JSON> from(T value) {
   rapidjson::Document document;
   document.SetInt64(value);
+  return document;
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_same_v<T, std::uint64_t>, JSON>
+from(T value) {
+  rapidjson::Document document;
+
+  // Safe to cast
+  if (value <= std::numeric_limits<std::int64_t>::max()) {
+    document.SetInt64(static_cast<std::int64_t>(value));
+  } else {
+    throw std::overflow_error("The input unsigned integer is too large");
+  }
+
   return document;
 }
 
