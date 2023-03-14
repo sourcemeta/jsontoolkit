@@ -42,7 +42,9 @@ public:
     // not pass a default, then there is nothing we can do. We know
     // the current schema is a subschema, but cannot walk any further.
     if (!metaschema.has_value() && !default_metaschema.has_value()) {
-      this->subschemas.push_back(input);
+      if (this->walker_type != schema_walker_type_t::Flat) {
+        this->subschemas.push_back(input);
+      }
     } else {
       const std::string &effective_metaschema{metaschema.has_value()
                                                   ? metaschema.value()

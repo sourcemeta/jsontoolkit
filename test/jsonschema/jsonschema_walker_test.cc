@@ -532,3 +532,29 @@ TEST(jsonschema, walker_flat_non_const_modify) {
     }
   })JSON"));
 }
+
+TEST(jsonschema, walker_flat_const_no_metaschema) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse(R"JSON({ "foo": 1 })JSON")};
+
+  std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
+  for (const auto &subschema : sourcemeta::jsontoolkit::flat_subschema_iterator(
+           document, test_walker, test_resolver)) {
+    subschemas.push_back(sourcemeta::jsontoolkit::from(subschema));
+  }
+
+  EXPECT_EQ(subschemas.size(), 0);
+}
+
+TEST(jsonschema, walker_flat_non_const_no_metaschema) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse(R"JSON({ "foo": 1 })JSON")};
+
+  std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
+  for (auto &subschema : sourcemeta::jsontoolkit::flat_subschema_iterator(
+           document, test_walker, test_resolver)) {
+    subschemas.push_back(sourcemeta::jsontoolkit::from(subschema));
+  }
+
+  EXPECT_EQ(subschemas.size(), 0);
+}
