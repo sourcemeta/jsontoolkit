@@ -558,3 +558,24 @@ TEST(jsonschema, walker_flat_non_const_no_metaschema) {
 
   EXPECT_EQ(subschemas.size(), 0);
 }
+
+TEST(jsonschema, schema_walker_none_never_walks) {
+  const std::unordered_map<std::string, bool> vocabularies{
+      {"https://json-schema.org/draft/2020-12/vocab/core", true},
+      {"https://json-schema.org/draft/2020-12/vocab/applicator", true},
+      {"https://json-schema.org/draft/2020-12/vocab/unevaluated", true},
+      {"https://json-schema.org/draft/2020-12/vocab/validation", true},
+      {"https://json-schema.org/draft/2020-12/vocab/meta-data", true},
+      {"https://json-schema.org/draft/2020-12/vocab/format-annotation", true},
+      {"https://json-schema.org/draft/2020-12/vocab/content", true}};
+
+  EXPECT_EQ(
+      sourcemeta::jsontoolkit::schema_walker_none("properties", vocabularies),
+      sourcemeta::jsontoolkit::schema_walker_strategy_t::None);
+  EXPECT_EQ(sourcemeta::jsontoolkit::schema_walker_none("contentSchema",
+                                                        vocabularies),
+            sourcemeta::jsontoolkit::schema_walker_strategy_t::None);
+  EXPECT_EQ(sourcemeta::jsontoolkit::schema_walker_none("unevaluatedItems",
+                                                        vocabularies),
+            sourcemeta::jsontoolkit::schema_walker_strategy_t::None);
+}

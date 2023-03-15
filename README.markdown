@@ -1188,6 +1188,9 @@ For simplicity, we provide a default JSON Schema walker at
 practice to create custom schema walkers that extend and delegate back to this
 default schema walker.
 
+For certain specialized use cases, we also provide a JSON Schema walker that
+never walks at `sourcemeta::jsontoolkit::schema_walker_none`.
+
 #### Walk subschemas
 
 `SchemaWalker subschema_iterator(const JSON & | const Value &, const schema_walker_t &, const schema_resolver_t &)`

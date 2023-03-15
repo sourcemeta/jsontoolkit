@@ -8,6 +8,13 @@ auto contains(const std::unordered_map<std::string, bool> &map,
 }
 } // namespace
 
+// A stub walker that doesn't walk
+auto sourcemeta::jsontoolkit::schema_walker_none(
+    const std::string &, const std::unordered_map<std::string, bool> &)
+    -> sourcemeta::jsontoolkit::schema_walker_strategy_t {
+  return sourcemeta::jsontoolkit::schema_walker_strategy_t::None;
+}
+
 // TODO: Extend this default walker to recognize as many official
 // JSON Schema vocabularies as possible.
 auto sourcemeta::jsontoolkit::default_schema_walker(
