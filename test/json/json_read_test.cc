@@ -2,8 +2,10 @@
 #include <gtest/gtest.h>
 #include <jsontoolkit/json/read.h>
 #include <limits>  // std::numeric_limits
+#include <set>     // std::set
 #include <sstream> // std::istringstream
 #include <utility> // std::move
+#include <vector>  // std::vector
 
 TEST(JSON, parse_from_stream) {
   std::istringstream stream{"true"};
@@ -1481,4 +1483,121 @@ TEST(JSON, unsigned_integer_64_bit_signed_max_plus_1_fails) {
   const std::uint64_t value{
       static_cast<std::uint64_t>(std::numeric_limits<std::int64_t>::max()) + 1};
   EXPECT_THROW(sourcemeta::jsontoolkit::from(value), std::overflow_error);
+}
+
+TEST(JSON, defines_any_with_iterators_has_one) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  const std::vector<std::string> keys{"foo", "qux"};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines_any(document, keys.cbegin(),
+                                                   keys.cend()));
+}
+
+TEST(JSON, defines_any_with_iterators_has_two) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  const std::vector<std::string> keys{"foo", "baz"};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines_any(document, keys.cbegin(),
+                                                   keys.cend()));
+}
+
+TEST(JSON, defines_any_with_iterators_has_none) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  const std::vector<std::string> keys{"qux", "test"};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines_any(document, keys.cbegin(),
+                                                    keys.cend()));
+}
+
+TEST(JSON, defines_any_with_initializer_list_has_one) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines_any(document, {"foo", "qux"}));
+}
+
+TEST(JSON, defines_any_with_initializer_list_has_two) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines_any(document, {"foo", "baz"}));
+}
+
+TEST(JSON, defines_any_with_initializer_list_has_none) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines_any(document, {"qux", "test"}));
+}
+
+TEST(JSON, defines_any_with_vector_has_one) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  const std::vector<std::string> keys{"foo", "qux"};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines_any(document, keys));
+}
+
+TEST(JSON, defines_any_with_vector_has_two) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  const std::vector<std::string> keys{"foo", "baz"};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines_any(document, keys));
+}
+
+TEST(JSON, defines_any_with_vector_has_none) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  const std::vector<std::string> keys{"qux", "test"};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines_any(document, keys));
+}
+
+TEST(JSON, defines_any_with_set_has_one) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  const std::set<std::string> keys{"foo", "qux"};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines_any(document, keys));
+}
+
+TEST(JSON, defines_any_with_set_has_two) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  const std::set<std::string> keys{"foo", "baz"};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines_any(document, keys));
+}
+
+TEST(JSON, defines_any_with_set_has_none) {
+  const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  const std::set<std::string> keys{"qux", "test"};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines_any(document, keys));
 }

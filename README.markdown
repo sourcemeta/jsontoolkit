@@ -521,6 +521,39 @@ assert(sourcemeta::jsontoolkit::defines(document, "foo"));
 assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 ```
 
+#### Define any member
+
+`void defines_any(const JSON & | Value &, Iterator begin, Iterator end)`
+
+`void defines_any(const JSON & | Value &, const Collection<std::string> &)`
+
+`void defines_any(const JSON & | Value &, std::initializer_list<std::string>)`
+
+This function checks whether an input JSON object defines at least one given
+key. This function is undefined is the input JSON instance is not an object.
+There are variants for passing the set of object keys to check using iterators,
+initializer lists, or arbitrary collections of strings. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+#include <string>
+#include <vector>
+
+const sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": false, \"baz\": true }")};
+
+// With initializer lists
+assert(sourcemeta::jsontoolkit::defines_any(document, { "foo", "qux" }));
+
+// With collection
+const std::vector<std::string> keys{"foo", "qux"};
+assert(sourcemeta::jsontoolkit::defines_any(document, keys));
+
+// With iterators
+assert(sourcemeta::jsontoolkit::defines_any(document, keys.cbegin(), keys.cend()));
+```
+
 ### Writing
 
 A set of functions to write to JSON instance. To accomodate for the memory
