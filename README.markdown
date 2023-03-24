@@ -326,6 +326,23 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("3.1
 assert(sourcemeta::jsontoolkit::is_real(document));
 ```
 
+#### Is number
+
+`bool is_number(const JSON & | const Value &)`
+
+Check if the input JSON document is either an integer or a real type. For
+example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON real{sourcemeta::jsontoolkit::parse("3.14")};
+const sourcemeta::jsontoolkit::JSON integer{sourcemeta::jsontoolkit::parse("5")};
+assert(sourcemeta::jsontoolkit::is_number(real));
+assert(sourcemeta::jsontoolkit::is_number(integer));
+```
+
 ### Reading
 
 A set of functions to read JSON instances. None of these functions modify the

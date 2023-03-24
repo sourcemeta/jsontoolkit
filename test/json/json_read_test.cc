@@ -1601,3 +1601,51 @@ TEST(JSON, defines_any_with_set_has_none) {
   const std::set<std::string> keys{"qux", "test"};
   EXPECT_FALSE(sourcemeta::jsontoolkit::defines_any(document, keys));
 }
+
+TEST(JSON, is_number_zero) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(0)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_number(document));
+}
+
+TEST(JSON, is_number_zero_real) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(0.0)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_number(document));
+}
+
+TEST(JSON, is_number_positive_integer) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(5)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_number(document));
+}
+
+TEST(JSON, is_number_positive_real) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(5.3)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_number(document));
+}
+
+TEST(JSON, is_number_negative_integer) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(-5)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_number(document));
+}
+
+TEST(JSON, is_number_negative_real) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(-5.3)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_number(document));
+}
+
+TEST(JSON, is_number_string) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from("0")};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_number(document));
+}
+
+TEST(JSON, is_number_null) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(nullptr)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_number(document));
+}
