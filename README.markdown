@@ -707,7 +707,7 @@ function is undefined is the input JSON instance is not an array. For example:
 #include <cassert>
 
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
-sourcemeta::jsontoolkit::push_front(document, sourcemeta::jsontoolkit::from(4));
+sourcemeta::jsontoolkit::push_back(document, sourcemeta::jsontoolkit::from(4));
 assert(sourcemeta::jsontoolkit::size(document) == 4);
 sourcemeta::jsontoolkit::Value &value{sourcemeta::jsontoolkit::back(document)};
 assert(sourcemeta::jsontoolkit::to_integer(value) == 4);
