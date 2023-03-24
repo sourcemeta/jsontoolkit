@@ -587,6 +587,43 @@ assert(!sourcemeta::jsontoolkit::defines(document, "foo"));
 
 This function does nothing if the given key does not exist.
 
+#### Erase multiple members
+
+`void erase(JSON & | Value &, Iterator begin, Iterator end)`
+
+`void erase(JSON & | Value &, const Collection<std::string> &)`
+
+`void erase(JSON & | Value &, std::initializer_list<std::string>)`
+
+This function deletes a set of object keys. This function is undefined is the
+input JSON instance is not an object. There are variants for passing the set of
+object keys to erase using iterators, initializer lists, or arbitrary
+collections of strings. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+#include <string>
+#include <vector>
+
+sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": false, \"baz\": true }")};
+
+// With initializer lists
+sourcemeta::jsontoolkit::erase_many(document, { "foo", "bar" });
+
+// With collection
+const std::vector<std::string> keywords{"foo", "bar"};
+sourcemeta::jsontoolkit::erase_many(document, keywords);
+
+// With iterators
+sourcemeta::jsontoolkit::erase_many(document, keywords.cbegin(), keywords.cend());
+
+assert(!sourcemeta::jsontoolkit::defines(document, "foo"));
+assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
+assert(sourcemeta::jsontoolkit::defines(document, "baz"));
+```
+
 #### Clear
 
 `void clear(JSON & | Value &)`
