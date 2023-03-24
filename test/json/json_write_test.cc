@@ -1,7 +1,9 @@
 #include <algorithm> // std::all_of
 #include <gtest/gtest.h>
 #include <jsontoolkit/json/write.h>
+#include <set>     // std::set
 #include <utility> // std::move
+#include <vector>  // std::vector
 
 TEST(JSON, make_array) {
   sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
@@ -483,4 +485,75 @@ TEST(JSON, assign_move_empty_object) {
   sourcemeta::jsontoolkit::assign(document, "foo",
                                   sourcemeta::jsontoolkit::from(true));
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+}
+
+TEST(JSON, erase_many_with_set) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  const std::set<std::string> keywords{"foo", "baz"};
+  sourcemeta::jsontoolkit::erase_many(document, keywords);
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+}
+
+TEST(JSON, erase_many_with_vector) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  const std::vector<std::string> keywords{"foo", "baz"};
+  sourcemeta::jsontoolkit::erase_many(document, keywords);
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+}
+
+TEST(JSON, erase_many_with_initializer_list) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  sourcemeta::jsontoolkit::erase_many(document, {"foo", "baz"});
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+}
+
+TEST(JSON, erase_many_with_vector_iterators) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  const std::vector<std::string> keywords{"foo", "baz"};
+  sourcemeta::jsontoolkit::erase_many(document, keywords.cbegin(),
+                                      keywords.cend());
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+}
+
+TEST(JSON, erase_many_non_existent) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":true,\"bar\":false,\"baz\":true}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  sourcemeta::jsontoolkit::erase_many(document, {"foo", "qux"});
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
 }
