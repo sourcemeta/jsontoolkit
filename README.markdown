@@ -589,11 +589,11 @@ This function does nothing if the given key does not exist.
 
 #### Erase multiple members
 
-`void erase(JSON & | Value &, Iterator begin, Iterator end)`
+`void erase_many(JSON & | Value &, Iterator begin, Iterator end)`
 
-`void erase(JSON & | Value &, const Collection<std::string> &)`
+`void erase_many(JSON & | Value &, const Collection<std::string> &)`
 
-`void erase(JSON & | Value &, std::initializer_list<std::string>)`
+`void erase_many(JSON & | Value &, std::initializer_list<std::string>)`
 
 This function deletes a set of object keys. This function is undefined is the
 input JSON instance is not an object. There are variants for passing the set of
@@ -613,11 +613,11 @@ sourcemeta::jsontoolkit::JSON document{
 sourcemeta::jsontoolkit::erase_many(document, { "foo", "bar" });
 
 // With collection
-const std::vector<std::string> keywords{"foo", "bar"};
-sourcemeta::jsontoolkit::erase_many(document, keywords);
+const std::vector<std::string> keys{"foo", "bar"};
+sourcemeta::jsontoolkit::erase_many(document, keys);
 
 // With iterators
-sourcemeta::jsontoolkit::erase_many(document, keywords.cbegin(), keywords.cend());
+sourcemeta::jsontoolkit::erase_many(document, keys.cbegin(), keys.cend());
 
 assert(!sourcemeta::jsontoolkit::defines(document, "foo"));
 assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
