@@ -1649,3 +1649,11 @@ TEST(JSON, is_number_null) {
       sourcemeta::jsontoolkit::from(nullptr)};
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_number(document));
 }
+
+TEST(JSON, parse_from_size_t) {
+  const std::size_t value{5};
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(value)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), 5);
+}
