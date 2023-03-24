@@ -495,8 +495,8 @@ TEST(JSON, erase_many_with_set) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
-  const std::set<std::string> keywords{"foo", "baz"};
-  sourcemeta::jsontoolkit::erase_many(document, keywords);
+  const std::set<std::string> keys{"foo", "baz"};
+  sourcemeta::jsontoolkit::erase_many(document, keys);
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
 }
@@ -509,8 +509,8 @@ TEST(JSON, erase_many_with_vector) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
-  const std::vector<std::string> keywords{"foo", "baz"};
-  sourcemeta::jsontoolkit::erase_many(document, keywords);
+  const std::vector<std::string> keys{"foo", "baz"};
+  sourcemeta::jsontoolkit::erase_many(document, keys);
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
 }
@@ -536,9 +536,8 @@ TEST(JSON, erase_many_with_vector_iterators) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
-  const std::vector<std::string> keywords{"foo", "baz"};
-  sourcemeta::jsontoolkit::erase_many(document, keywords.cbegin(),
-                                      keywords.cend());
+  const std::vector<std::string> keys{"foo", "baz"};
+  sourcemeta::jsontoolkit::erase_many(document, keys.cbegin(), keys.cend());
   EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
 }
