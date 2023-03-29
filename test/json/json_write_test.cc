@@ -556,3 +556,87 @@ TEST(JSON, erase_many_non_existent) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
 }
+
+TEST(JSON, add_integer_integer) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(5)};
+  const sourcemeta::jsontoolkit::JSON value{sourcemeta::jsontoolkit::from(3)};
+  sourcemeta::jsontoolkit::add(document, value);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), 8);
+}
+
+TEST(JSON, add_integer_real) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(5)};
+  const sourcemeta::jsontoolkit::JSON value{sourcemeta::jsontoolkit::from(3.2)};
+  sourcemeta::jsontoolkit::add(document, value);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 8.2);
+}
+
+TEST(JSON, add_real_integer) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(3.2)};
+  const sourcemeta::jsontoolkit::JSON value{sourcemeta::jsontoolkit::from(2)};
+  sourcemeta::jsontoolkit::add(document, value);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 5.2);
+}
+
+TEST(JSON, add_real_real) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(3.2)};
+  const sourcemeta::jsontoolkit::JSON value{sourcemeta::jsontoolkit::from(2.0)};
+  sourcemeta::jsontoolkit::add(document, value);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(document), 5.2);
+}
+
+TEST(JSON, add_integer_integer_within_object) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\": 5}")};
+  const sourcemeta::jsontoolkit::JSON value{sourcemeta::jsontoolkit::from(3)};
+  sourcemeta::jsontoolkit::add(
+      document, sourcemeta::jsontoolkit::at(document, "foo"), value);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(
+      sourcemeta::jsontoolkit::at(document, "foo")));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
+                sourcemeta::jsontoolkit::at(document, "foo")),
+            8);
+}
+
+TEST(JSON, add_integer_real_within_object) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\": 5}")};
+  const sourcemeta::jsontoolkit::JSON value{sourcemeta::jsontoolkit::from(3.2)};
+  sourcemeta::jsontoolkit::add(
+      document, sourcemeta::jsontoolkit::at(document, "foo"), value);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(
+      sourcemeta::jsontoolkit::at(document, "foo")));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(
+                sourcemeta::jsontoolkit::at(document, "foo")),
+            8.2);
+}
+
+TEST(JSON, add_real_integer_within_object) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\": 3.2}")};
+  const sourcemeta::jsontoolkit::JSON value{sourcemeta::jsontoolkit::from(2)};
+  sourcemeta::jsontoolkit::add(
+      document, sourcemeta::jsontoolkit::at(document, "foo"), value);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(
+      sourcemeta::jsontoolkit::at(document, "foo")));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(
+                sourcemeta::jsontoolkit::at(document, "foo")),
+            5.2);
+}
+
+TEST(JSON, add_real_real_within_object) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\": 3.2}")};
+  const sourcemeta::jsontoolkit::JSON value{sourcemeta::jsontoolkit::from(2.0)};
+  sourcemeta::jsontoolkit::add(
+      document, sourcemeta::jsontoolkit::at(document, "foo"), value);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_real(
+      sourcemeta::jsontoolkit::at(document, "foo")));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_real(
+                sourcemeta::jsontoolkit::at(document, "foo")),
+            5.2);
+}
