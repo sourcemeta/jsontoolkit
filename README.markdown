@@ -766,6 +766,27 @@ assert(sourcemeta::jsontoolkit::is_array(document));
 assert(sourcemeta::jsontoolkit::empty(document));
 ```
 
+#### Add number
+
+`void add([JSON &root,] JSON &value | Value &value, const JSON & | const Value &)`
+
+This function adds a numeric JSON instance to another numeric JSON instance.
+
+This function is undefined is the input JSON instance or the additive JSON
+instance are not numbers. For example, a numeric JSON instance 3.2 can be added
+to a numeric JSON instance 5 as follows::
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(5)};
+const sourcemeta::jsontoolkit::JSON additive{sourcemeta::jsontoolkit::from(3.2)};
+sourcemeta::jsontoolkit::add(document, additive);
+assert(sourcemeta::jsontoolkit::is_real(document));
+assert(sourcemeta::jsontoolkit::to_real(document) == 8.2);
+```
+
 ### Iterators
 
 A set of functions that provide a standard iterators interface over JSON for
