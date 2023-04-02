@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 #include <jsontoolkit/json/iterators.h>
 #include <jsontoolkit/json/read.h>
+#include <jsontoolkit/json/write.h>
 #include <map>    // std::map
 #include <string> // std::string
 #include <vector> // std::vector
@@ -196,4 +197,41 @@ TEST(JSON, array_int_standard_sort) {
   EXPECT_EQ(sourcemeta::jsontoolkit::at(document, 0), 1);
   EXPECT_EQ(sourcemeta::jsontoolkit::at(document, 1), 2);
   EXPECT_EQ(sourcemeta::jsontoolkit::at(document, 2), 3);
+}
+
+TEST(JSON, erase_many_array_full) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  sourcemeta::jsontoolkit::erase_many(
+      document, sourcemeta::jsontoolkit::begin_array(document),
+      sourcemeta::jsontoolkit::end_array(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+}
+
+TEST(JSON, erase_many_array_partial) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  sourcemeta::jsontoolkit::erase_many(
+      document, std::next(sourcemeta::jsontoolkit::begin_array(document)),
+      sourcemeta::jsontoolkit::end_array(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::at(document, 0), 1);
+}
+
+TEST(JSON, erase_many_array_full_const) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  sourcemeta::jsontoolkit::erase_many(
+      document, sourcemeta::jsontoolkit::cbegin_array(document),
+      sourcemeta::jsontoolkit::cend_array(document));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_array(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
 }
