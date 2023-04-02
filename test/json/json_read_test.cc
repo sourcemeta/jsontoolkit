@@ -1657,3 +1657,189 @@ TEST(JSON, parse_from_size_t) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_integer(document));
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(document), 5);
 }
+
+TEST(JSON, compare_int_less_than_int) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(3)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(4)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_int_greater_than_int) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(4)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(3)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_int_equal_int) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(4)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(4)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_int_less_than_real) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(3)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(4.3)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_int_greater_than_real) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(4)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(3.8)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_int_equal_real) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(4)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(4.0)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_real_less_than_int) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(3.8)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(4)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_real_greater_than_int) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(4.2)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(3)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_real_equal_int) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(4.0)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(4)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_real_less_than_real) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(3.8)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(4.1)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_real_greater_than_real) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(4.2)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(3.9)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_real_equal_real) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(4.2)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(4.2)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_false_true) {
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::from(false)};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::from(true)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_false_false) {
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::from(false)};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::from(false)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_true_true) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(true)};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::from(true)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_bool_int) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(true)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(0)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_bool_real) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(true)};
+  const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(4.5)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_int_array) {
+  const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(4)};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_array_array_same) {
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_array_array_different) {
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("[1,2]")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_array_array_different_same_size) {
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("[1,3,4]")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_object_object_same) {
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_object_object_different_same_size) {
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("{\"foo\":2}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_object_object_different) {
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::parse("{\"foo\":1, \"bar\":2}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
