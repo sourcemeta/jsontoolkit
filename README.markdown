@@ -787,6 +787,22 @@ assert(sourcemeta::jsontoolkit::is_real(document));
 assert(sourcemeta::jsontoolkit::to_real(document) == 8.2);
 ```
 
+#### Contains element
+
+`bool contains(JSON &value | Value &value, const JSON & | const Value &)`
+
+This function checks if an JSON array contains a given JSON instance. This
+function is undefined if the input JSON instance is not an array. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+assert(sourcemeta::jsontoolkit::contains(document, sourcemeta::jsontoolkit::from(2)));
+assert(!sourcemeta::jsontoolkit::contains(document, sourcemeta::jsontoolkit::from(4)));
+```
+
 ### Iterators
 
 A set of functions that provide a standard iterators interface over JSON for
