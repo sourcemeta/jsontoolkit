@@ -666,16 +666,13 @@ This function does nothing if the given key does not exist.
 
 #### Erase multiple members
 
-`void erase_many(JSON & | Value &, Iterator begin, Iterator end)`
-
 `void erase_many(JSON & | Value &, const Collection<std::string> &)`
 
 `void erase_many(JSON & | Value &, std::initializer_list<std::string>)`
 
 This function deletes a set of object keys. This function is undefined is the
-input JSON instance is not an object. There are variants for passing the set of
-object keys to erase using iterators, initializer lists, or arbitrary
-collections of strings. For example:
+input JSON instance is not an object. There are variants for initializer lists
+and arbitrary collections of strings. For example:
 
 ```c++
 #include <jsontoolkit/json.h>
@@ -699,6 +696,37 @@ sourcemeta::jsontoolkit::erase_many(document, keys.cbegin(), keys.cend());
 assert(!sourcemeta::jsontoolkit::defines(document, "foo"));
 assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 assert(sourcemeta::jsontoolkit::defines(document, "baz"));
+```
+
+#### Erase elements or members
+
+`void erase_many(JSON & | Value &, Iterator begin, Iterator end)`
+
+This function deletes a set of object keys or array elements using iterators.
+This function is undefined is the input JSON instance is not an object or an
+array. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+#include <iterator>
+
+// Delete all but first elements of array
+sourcemeta::jsontoolkit::JSON array{
+  sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+sourcemeta::jsontoolkit::erase_many(array,
+  std::next(sourcemeta::jsontoolkit::begin_array(array)),
+  sourcemeta::jsontoolkit::end_array(array));
+assert(sourcemeta::jsontoolkit::size(array), 1);
+assert(sourcemeta::jsontoolkit::at(array, 0), 1);
+
+// Delete all but first member of object
+sourcemeta::jsontoolkit::JSON object{
+  sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+sourcemeta::jsontoolkit::erase_many(object,
+  std::next(sourcemeta::jsontoolkit::begin_object(object)),
+  sourcemeta::jsontoolkit::end_object(object));
+assert(sourcemeta::jsontoolkit::size(object), 1);
 ```
 
 #### Clear
