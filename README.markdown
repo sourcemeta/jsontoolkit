@@ -527,7 +527,7 @@ assert(sourcemeta::jsontoolkit::to_integer(value) == 3);
 `bool defines(const JSON & | const Value &, const std::string &key)`
 
 This function checks whether an input JSON object defines a specific key. This
-function is undefined is the input JSON instance is not an object. For example:
+function is undefined if the input JSON instance is not an object. For example:
 
 ```c++
 #include <jsontoolkit/json.h>
@@ -547,7 +547,7 @@ assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 `void defines_any(const JSON & | Value &, std::initializer_list<std::string>)`
 
 This function checks whether an input JSON object defines at least one given
-key. This function is undefined is the input JSON instance is not an object.
+key. This function is undefined if the input JSON instance is not an object.
 There are variants for passing the set of object keys to check using iterators,
 initializer lists, or arbitrary collections of strings. For example:
 
@@ -632,7 +632,7 @@ assert(sourcemeta::jsontoolkit::is_integer(document, "foo"));
 
 `void assign([JSON &root,] JSON &value | Value &value, const std::string &key, JSON & | Value &)`
 
-This function sets or updates an object key. This function is undefined is the
+This function sets or updates an object key. This function is undefined if the
 input JSON instance is not an object. For example, an object can be updated to
 contain a new `bar` boolean member as follows:
 
@@ -650,7 +650,7 @@ assert(sourcemeta::jsontoolkit::defines(document, "bar"));
 
 `void erase(JSON & | Value &, const std::string &key)`
 
-This function deletes an object key. This function is undefined is the
+This function deletes an object key. This function is undefined if the
 input JSON instance is not an object. For example:
 
 ```c++
@@ -670,7 +670,7 @@ This function does nothing if the given key does not exist.
 
 `void erase_many(JSON & | Value &, std::initializer_list<std::string>)`
 
-This function deletes a set of object keys. This function is undefined is the
+This function deletes a set of object keys. This function is undefined if the
 input JSON instance is not an object. There are variants for initializer lists
 and arbitrary collections of strings. For example:
 
@@ -703,7 +703,7 @@ assert(sourcemeta::jsontoolkit::defines(document, "baz"));
 `void erase_many(JSON & | Value &, Iterator begin, Iterator end)`
 
 This function deletes a set of object keys or array elements using iterators.
-This function is undefined is the input JSON instance is not an object or an
+This function is undefined if the input JSON instance is not an object or an
 array. For example:
 
 ```c++
@@ -734,7 +734,7 @@ assert(sourcemeta::jsontoolkit::size(object), 1);
 `void clear(JSON & | Value &)`
 
 This function deletes all members of an object or all elements of an array,
-leaving them empty. This function is undefined is the input JSON instance is
+leaving them empty. This function is undefined if the input JSON instance is
 not an object or an array. For example:
 
 ```c++
@@ -749,12 +749,41 @@ assert(sourcemeta::jsontoolkit::empty(my_object));
 assert(sourcemeta::jsontoolkit::empty(my_array));
 ```
 
+#### Clear except
+
+`void clear_except(const JSON & | Value &, const Collection<std::string> &)`
+
+`void clear_except(const JSON & | Value &, std::initializer_list<std::string>)`
+
+This function deletes all members of an object except for the JSON instances
+declares as the second argument.  This function is undefined if the input JSON
+instance is not an object.  There are variants for passing the set of object
+keys to keep using initializer lists and arbitrary collections of strings. For
+example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+#include <string>
+#include <vector>
+
+const sourcemeta::jsontoolkit::JSON document{
+  sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": false, \"baz\": true }")};
+
+// With initializer lists
+sourcemeta::jsontoolkit::clear_except(document, { "foo" });
+
+// With collection
+const std::vector<std::string> keys{"foo"};
+sourcemeta::jsontoolkit::clear_except(document, keys);
+```
+
 #### Insert element to the front
 
 `void push_front([JSON &root,] JSON &value | Value &value, JSON & | Value &)`
 
 This function inserts a new element to the beginning of the given array. This
-function is undefined is the input JSON instance is not an array. For example:
+function is undefined if the input JSON instance is not an array. For example:
 
 ```c++
 #include <jsontoolkit/json.h>
@@ -772,7 +801,7 @@ assert(sourcemeta::jsontoolkit::to_integer(value) == 0);
 `void push_back([JSON &root,] JSON &value | Value &value, JSON & | Value &)`
 
 This function inserts a new element to the end of the given array. This
-function is undefined is the input JSON instance is not an array. For example:
+function is undefined if the input JSON instance is not an array. For example:
 
 ```c++
 #include <jsontoolkit/json.h>
@@ -827,7 +856,7 @@ assert(sourcemeta::jsontoolkit::empty(document));
 
 This function adds a numeric JSON instance to another numeric JSON instance.
 
-This function is undefined is the input JSON instance or the additive JSON
+This function is undefined if the input JSON instance or the additive JSON
 instance are not numbers. For example, a numeric JSON instance 3.2 can be added
 to a numeric JSON instance 5 as follows::
 

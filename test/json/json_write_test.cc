@@ -640,3 +640,88 @@ TEST(JSON, add_real_real_within_object) {
                 sourcemeta::jsontoolkit::at(document, "foo")),
             5.2);
 }
+
+TEST(JSON, clear_except_one_key_set) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\":true,\"bar\":false}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  const std::set<std::string> keys{"bar"};
+  sourcemeta::jsontoolkit::clear_except(document, keys);
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+}
+
+TEST(JSON, clear_except_extra_key_set) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\":true,\"bar\":false}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  const std::set<std::string> keys{"qux"};
+  sourcemeta::jsontoolkit::clear_except(document, keys);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::empty(document));
+}
+
+TEST(JSON, clear_except_multiple_intersection_set) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":1,\"bar\":2,\"baz\":3,\"qux\":4}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 4);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "qux"));
+  const std::set<std::string> keys{"foo", "baz", "xxx", "yyy"};
+  sourcemeta::jsontoolkit::clear_except(document, keys);
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "qux"));
+}
+
+TEST(JSON, clear_except_one_key_initializer_list) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\":true,\"bar\":false}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  sourcemeta::jsontoolkit::clear_except(document, {"bar"});
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 1);
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+}
+
+TEST(JSON, clear_except_extra_key_initializer_list) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{\"foo\":true,\"bar\":false}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  sourcemeta::jsontoolkit::clear_except(document, {"qux"});
+  EXPECT_TRUE(sourcemeta::jsontoolkit::empty(document));
+}
+
+TEST(JSON, clear_except_multiple_intersection_initializer_list) {
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(
+      "{\"foo\":1,\"bar\":2,\"baz\":3,\"qux\":4}")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 4);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "qux"));
+  sourcemeta::jsontoolkit::clear_except(document, {"foo", "baz", "xxx", "yyy"});
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "foo"));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "bar"));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "qux"));
+}
