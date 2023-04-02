@@ -1,4 +1,4 @@
-#include <algorithm> // std::all_of, std::for_each
+#include <algorithm> // std::all_of, std::for_each, std::sort
 #include <gtest/gtest.h>
 #include <jsontoolkit/json/iterators.h>
 #include <jsontoolkit/json/read.h>
@@ -181,4 +181,19 @@ TEST(JSON, object_iterator) {
   EXPECT_EQ(result.size(), 2);
   EXPECT_EQ(result.at("foo"), 1);
   EXPECT_EQ(result.at("bar"), 2);
+}
+
+TEST(JSON, array_int_standard_sort) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[3,2,1]")};
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::at(document, 0), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::at(document, 1), 2);
+  EXPECT_EQ(sourcemeta::jsontoolkit::at(document, 2), 1);
+  std::sort(sourcemeta::jsontoolkit::begin_array(document),
+            sourcemeta::jsontoolkit::end_array(document),
+            sourcemeta::jsontoolkit::compare);
+  EXPECT_EQ(sourcemeta::jsontoolkit::at(document, 0), 1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::at(document, 1), 2);
+  EXPECT_EQ(sourcemeta::jsontoolkit::at(document, 2), 3);
 }

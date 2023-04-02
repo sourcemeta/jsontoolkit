@@ -538,7 +538,7 @@ assert(sourcemeta::jsontoolkit::defines(document, "foo"));
 assert(!sourcemeta::jsontoolkit::defines(document, "bar"));
 ```
 
-#### Define any member
+#### Defines any member
 
 `void defines_any(const JSON & | Value &, Iterator begin, Iterator end)`
 
@@ -569,6 +569,33 @@ assert(sourcemeta::jsontoolkit::defines_any(document, keys));
 
 // With iterators
 assert(sourcemeta::jsontoolkit::defines_any(document, keys.cbegin(), keys.cend()));
+```
+
+#### Compare
+
+`bool compare(const JSON & | Value &, const JSON & | Value &)`
+
+This function implements strict weak ordering for JSON instances. This function
+can be passed as a comparator to standard algorithms. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(1)};
+const sourcemeta::jsontoolkit::JSON right{sourcemeta::jsontoolkit::from(1)};
+
+assert(sourcemeta::jsontoolkit::compare(left, right));
+assert(!sourcemeta::jsontoolkit::compare(left, right));
+
+// With std::sort
+const sourcemeta::jsontoolkit::JSON collection{sourcemeta::jsontoolkit::parse("[3,2,1]")};
+std::sort(sourcemeta::jsontoolkit::begin_array(collection),
+          sourcemeta::jsontoolkit::end_array(collection),
+          sourcemeta::jsontoolkit::compare);
+assert(sourcemeta::jsontoolkit::at(collection, 0), 1);
+assert(sourcemeta::jsontoolkit::at(collection, 1), 2);
+assert(sourcemeta::jsontoolkit::at(collection, 2), 3);
 ```
 
 ### Writing
