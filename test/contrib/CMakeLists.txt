@@ -3,7 +3,13 @@ set(MINIFY_BIN $<TARGET_FILE:jsontoolkit_minify>)
 set(JSONSCHEMA_WALKER_BIN $<TARGET_FILE:jsontoolkit_jsonschema_walker>)
 set(JSONSCHEMA_KEYWORDS_BIN $<TARGET_FILE:jsontoolkit_jsonschema_keywords>)
 
-set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.sh")
+if(WIN32)
+  set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.bat")
+  set(IS_SAME_STDIN_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.bat")
+else()
+  set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.sh")
+  set(IS_SAME_STDIN_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.sh")
+endif()
 
 add_test(NAME prettify_invalid COMMAND
   "${PRETTIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/invalid.json")
@@ -18,13 +24,10 @@ add_test(NAME prettify COMMAND
   "${CMAKE_CURRENT_SOURCE_DIR}/prettify-output.json"
   "${CMAKE_CURRENT_SOURCE_DIR}/prettify-input.json")
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  add_test(NAME prettify_stdin COMMAND
-    "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.sh"
-    "${PRETTIFY_BIN}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/prettify-output.json"
-    "${CMAKE_CURRENT_SOURCE_DIR}/prettify-input.json")
-endif()
+add_test(NAME prettify_stdin COMMAND
+  "${IS_SAME_STDIN_BIN}" "${PRETTIFY_BIN}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/prettify-output.json"
+  "${CMAKE_CURRENT_SOURCE_DIR}/prettify-input.json")
 
 add_test(NAME minify_invalid COMMAND
   "${MINIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/invalid.json")
@@ -39,13 +42,10 @@ add_test(NAME minify COMMAND
   "${CMAKE_CURRENT_SOURCE_DIR}/minify-output.json"
   "${CMAKE_CURRENT_SOURCE_DIR}/minify-input.json")
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  add_test(NAME minify_stdin COMMAND
-    "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.sh"
-    "${MINIFY_BIN}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/minify-output.json"
-    "${CMAKE_CURRENT_SOURCE_DIR}/minify-input.json")
-endif()
+add_test(NAME minify_stdin COMMAND
+  "${IS_SAME_STDIN_BIN}" "${MINIFY_BIN}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/minify-output.json"
+  "${CMAKE_CURRENT_SOURCE_DIR}/minify-input.json")
 
 add_test(NAME jsonschema_walker_deep_2020_12 COMMAND
   "${IS_SAME_BIN}" "${JSONSCHEMA_WALKER_BIN}"
@@ -57,19 +57,15 @@ add_test(NAME jsonschema_walker_flat_2020_12 COMMAND
   "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-flat.txt"
   flat "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json")
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  add_test(NAME jsonschema_walker_deep_2020_12_stdin COMMAND
-    "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.sh"
-    "${JSONSCHEMA_WALKER_BIN}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-deep.txt"
-    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" deep)
+add_test(NAME jsonschema_walker_deep_2020_12_stdin COMMAND
+  "${IS_SAME_STDIN_BIN}" "${JSONSCHEMA_WALKER_BIN}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-deep.txt"
+  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" deep)
 
-  add_test(NAME jsonschema_walker_flat_2020_12_stdin COMMAND
-    "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.sh"
-    "${JSONSCHEMA_WALKER_BIN}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-flat.txt"
-    "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" flat)
-endif()
+add_test(NAME jsonschema_walker_flat_2020_12_stdin COMMAND
+  "${IS_SAME_STDIN_BIN}" "${JSONSCHEMA_WALKER_BIN}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-flat.txt"
+  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" flat)
 
 add_test(NAME jsonschema_walker_invalid_mode COMMAND
   "${JSONSCHEMA_WALKER_BIN}"
