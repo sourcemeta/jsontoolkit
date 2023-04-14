@@ -43,7 +43,7 @@ add_test(NAME minify COMMAND
   "${CMAKE_CURRENT_SOURCE_DIR}/minify-output.json"
   "${CMAKE_CURRENT_SOURCE_DIR}/minify-input.json")
 
-if(WIN32)
+if(NOT WIN32)
   add_test(NAME minify_stdin COMMAND
     "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.sh"
     "${MINIFY_BIN}"
@@ -61,7 +61,7 @@ add_test(NAME jsonschema_walker_flat_2020_12 COMMAND
   "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-flat.txt"
   flat "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json")
 
-if(WIN32)
+if(NOT WIN32)
   add_test(NAME jsonschema_walker_deep_2020_12_stdin COMMAND
     "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.sh"
     "${JSONSCHEMA_WALKER_BIN}"
