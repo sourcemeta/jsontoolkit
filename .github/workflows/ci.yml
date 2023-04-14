@@ -24,6 +24,8 @@ jobs:
             cc: gcc
             cxx: g++
             backend: rapidjson
+          - os: windows-2022
+            backend: rapidjson
 
     runs-on: ${{ matrix.platform.os }}
     env:
@@ -39,6 +41,9 @@ jobs:
       - name: Install dependencies (GNU/Linux)
         if: runner.os == 'linux'
         run: sudo apt-get install --yes googletest rapidjson-dev clang-format
+      - name: Install dependencies (Windows)
+        if: runner.os == 'windows'
+        run: vcpkg install gtest:x64-windows rapidjson:x64-windows
 
       - uses: actions/checkout@v3
       - run: cmake --version

@@ -11,7 +11,8 @@ low-overhead frontend to multiple JSON implementations. With JSON Toolkit,
 libraries can support multiple JSON backends and transparently let the
 end-consumer swap them as required.
 
-**JSON Toolkit targets C++17 and supports the Clang and GCC compilers.**
+**JSON Toolkit targets C++17 and supports the Clang, GCC, and MSVC compilers on
+macOS, GNU/Linux, and Windows.**
 
 Usage
 -----

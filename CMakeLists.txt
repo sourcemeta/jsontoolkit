@@ -1,4 +1,10 @@
 cmake_minimum_required(VERSION 3.18)
+
+# Needs to happen before the first call to "project()".
+if(WIN32)
+  include(cmake/vcpkg.cmake)
+endif()
+
 project("JSON Toolkit" VERSION 0.0.1 LANGUAGES CXX
   DESCRIPTION "A multi-backend JSON library for modern C++")
 
@@ -122,7 +128,8 @@ if(JSONTOOLKIT_TESTS)
   include(cmake/googletest.cmake)
   add_subdirectory(./test/json)
   add_subdirectory(./test/jsonschema)
-  if(JSONTOOLKIT_CONTRIB)
+  # TODO: Make contrib tests work on Windows
+  if(JSONTOOLKIT_CONTRIB AND NOT WIN32)
     add_subdirectory(./test/contrib)
   endif()
 endif()
