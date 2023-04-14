@@ -12,7 +12,6 @@ BACKEND ?= rapidjson
 .PHONY: all
 all: configure compile
 	cd ./build && $(CTEST) --build-config $(PRESET) --output-on-failure --progress
-	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose
 
 .PHONY: configure
 configure:
