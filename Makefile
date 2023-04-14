@@ -7,7 +7,6 @@ PRESET = Debug
 BACKEND = rapidjson
 
 all: configure compile test
-	cd ./build && $(CTEST) --build-config $(PRESET) --output-on-failure --progress
 
 configure: .always
 	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE=$(PRESET) \
