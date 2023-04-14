@@ -6,8 +6,8 @@ set "EXPECTED=%2"
 set "ARGUMENT=%3"
 
 set "TEMP_OUTPUT=test-output-%RANDOM%-%RANDOM%.txt"
-echo Running %PROGRAM% %ARGUMENT% 1>&2
-"%PROGRAM%" "%ARGUMENT%" >"%TEMP_OUTPUT%" || exit /b 1
+echo Running %PROGRAM% ^< %ARGUMENT%  1>&2
+"%PROGRAM%" < "%ARGUMENT%" >"%TEMP_OUTPUT%" || exit /b 1
 fc "%TEMP_OUTPUT%" "%EXPECTED%" > nul
 if errorlevel 1 (
   echo Got 1>&2
