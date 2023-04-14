@@ -3,16 +3,15 @@ set(MINIFY_BIN $<TARGET_FILE:jsontoolkit_minify>)
 set(JSONSCHEMA_WALKER_BIN $<TARGET_FILE:jsontoolkit_jsonschema_walker>)
 set(JSONSCHEMA_KEYWORDS_BIN $<TARGET_FILE:jsontoolkit_jsonschema_keywords>)
 
-set(FAIL_BIN "${CMAKE_CURRENT_SOURCE_DIR}/fail.sh")
 set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.sh")
 
 add_test(NAME prettify_invalid COMMAND
-  "${FAIL_BIN}" "${PRETTIFY_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/invalid.json")
+  "${PRETTIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/invalid.json")
+set_tests_properties(prettify_invalid PROPERTIES WILL_FAIL TRUE)
 
 add_test(NAME prettify_not_found COMMAND
-  "${FAIL_BIN}" "${PRETTIFY_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/non-existent.json")
+  "${PRETTIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/non-existent.json")
+set_tests_properties(prettify_not_found PROPERTIES WILL_FAIL TRUE)
 
 add_test(NAME prettify COMMAND
   "${IS_SAME_BIN}" "${PRETTIFY_BIN}"
@@ -28,12 +27,12 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 add_test(NAME minify_invalid COMMAND
-  "${FAIL_BIN}" "${MINIFY_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/invalid.json")
+  "${MINIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/invalid.json")
+set_tests_properties(minify_invalid PROPERTIES WILL_FAIL TRUE)
 
 add_test(NAME minify_not_found COMMAND
-  "${FAIL_BIN}" "${MINIFY_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/non-existent.json")
+  "${MINIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/non-existent.json")
+set_tests_properties(minify_not_found PROPERTIES WILL_FAIL TRUE)
 
 add_test(NAME minify COMMAND
   "${IS_SAME_BIN}" "${MINIFY_BIN}"
@@ -73,8 +72,9 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 add_test(NAME jsonschema_walker_invalid_mode COMMAND
-  "${FAIL_BIN}" "${JSONSCHEMA_WALKER_BIN}"
+  "${JSONSCHEMA_WALKER_BIN}"
   "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" xxxxx)
+set_tests_properties(jsonschema_walker_invalid_mode PROPERTIES WILL_FAIL TRUE)
 
 add_test(NAME jsonschema_keywords COMMAND
   "${IS_SAME_BIN}" "${JSONSCHEMA_KEYWORDS_BIN}"
