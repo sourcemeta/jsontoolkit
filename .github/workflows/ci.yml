@@ -60,3 +60,11 @@ jobs:
       # Better to be sure and `cd` all the time here.
       - run: cd ./build && ctest --build-config Release --output-on-failure
       - run: cmake --install ./build --prefix ./build/dist --config Release --verbose
+
+      # Make sure the Makefile always works
+      - name: Exercise Makefile (GNU Make)
+        if: runner.os != 'windows'
+        run: make PRESET=Release
+      - name: Exercise Makefile (NMake)
+        if: runner.os == 'windows'
+        run: nmake PRESET=Release
