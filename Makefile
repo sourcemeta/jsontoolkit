@@ -6,8 +6,7 @@ CTEST = ctest
 PRESET = Debug
 BACKEND = rapidjson
 
-# Not every CTest version supports the --test-dir option
-all: configure compile
+all: configure compile test
 	cd ./build && $(CTEST) --build-config $(PRESET) --output-on-failure --progress
 
 configure: .always
@@ -17,6 +16,10 @@ configure: .always
 compile: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target clang_format
 	$(CMAKE) --build ./build --config $(PRESET)
+
+# Not every CTest version supports the --test-dir option
+test: .always
+	cd ./build && $(CTEST) --build-config $(PRESET) --output-on-failure --progress
 
 clean: .always
 	$(CMAKE) -E rm -R -f build
