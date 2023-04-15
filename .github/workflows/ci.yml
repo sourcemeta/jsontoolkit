@@ -53,7 +53,7 @@ jobs:
           -DJSONTOOLKIT_BACKEND=${{ matrix.platform.backend }}
           -DJSONTOOLKIT_CONTRIB=ON
           -DJSONTOOLKIT_TESTS=ON
-      - run: cmake --build ./build --config Release --target clang_format
+      - run: cmake --build ./build --config Release --target clang_format_test
       - run: cmake --build ./build --config Release
       # Not every CTest version supports the --test-dir option. If such option
       # is not recognized, `ctest` will successfully exit finding no tests.
