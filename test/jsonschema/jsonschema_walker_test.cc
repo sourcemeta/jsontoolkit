@@ -476,7 +476,7 @@ TEST(jsonschema, walker_flat_const) {
 }
 
 TEST(jsonschema, walker_flat_non_const) {
-  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({
+  const std::string json{R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
       "schema": { "foo": 1 }
@@ -486,8 +486,9 @@ TEST(jsonschema, walker_flat_non_const) {
         "schema": { "foo": 2 }
       }
     }
-  })JSON")};
+  })JSON"};
 
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(json)};
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (sourcemeta::jsontoolkit::Value &subschema :
        sourcemeta::jsontoolkit::flat_subschema_iterator(document, test_walker,
@@ -505,7 +506,7 @@ TEST(jsonschema, walker_flat_non_const) {
 }
 
 TEST(jsonschema, walker_flat_non_const_modify) {
-  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({
+  const std::string json{R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
       "schema": { "foo": 1 }
@@ -515,8 +516,9 @@ TEST(jsonschema, walker_flat_non_const_modify) {
         "schema": { "foo": 2 }
       }
     }
-  })JSON")};
+  })JSON"};
 
+  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(json)};
   for (sourcemeta::jsontoolkit::Value &subschema :
        sourcemeta::jsontoolkit::flat_subschema_iterator(document, test_walker,
                                                         test_resolver)) {
