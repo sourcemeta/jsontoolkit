@@ -16,7 +16,7 @@ endif()
 
 # Global options
 if(MSVC)
-  add_compile_options(/options:strict /W4 /WX /WL /sdl)
+  add_compile_options(/options:strict /W4 /WX /WL /sdl /DNOMINMAX)
 else()
   add_compile_options(-Wall -Wextra -Werror -Wpedantic
     -Wshadow -Wdouble-promotion -Wconversion -Wunused-parameter)
