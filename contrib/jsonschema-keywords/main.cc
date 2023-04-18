@@ -1,4 +1,3 @@
-#include <jsontoolkit/contrib/resolver.h>
 #include <jsontoolkit/json.h>
 #include <jsontoolkit/jsonschema.h>
 
@@ -16,7 +15,7 @@
 static auto analyze(const sourcemeta::jsontoolkit::JSON &schema,
                     std::unordered_map<std::string, unsigned long> &accumulator)
     -> void {
-  const sourcemeta::jsontoolkit::contrib::Resolver resolver;
+  const sourcemeta::jsontoolkit::DefaultResolver resolver;
   for (const sourcemeta::jsontoolkit::Value &subschema :
        sourcemeta::jsontoolkit::subschema_iterator(
            schema, sourcemeta::jsontoolkit::default_schema_walker, resolver)) {

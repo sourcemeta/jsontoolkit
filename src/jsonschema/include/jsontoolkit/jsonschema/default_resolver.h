@@ -1,5 +1,5 @@
-#ifndef JSONTOOLKIT_CONTRIB_RESOLVER_H_
-#define JSONTOOLKIT_CONTRIB_RESOLVER_H_
+#ifndef JSONTOOLKIT_JSONSCHEMA_DEFAULT_RESOLVER_H_
+#define JSONTOOLKIT_JSONSCHEMA_DEFAULT_RESOLVER_H_
 
 #include <future>   // std::future
 #include <optional> // std::optional
@@ -7,14 +7,14 @@
 
 #include <jsontoolkit/json.h>
 
-namespace sourcemeta::jsontoolkit::contrib {
+namespace sourcemeta::jsontoolkit {
 
-class Resolver {
+class DefaultResolver {
 public:
   auto operator()(const std::string &identifier)
       -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>>;
 };
 
-} // namespace sourcemeta::jsontoolkit::contrib
+} // namespace sourcemeta::jsontoolkit
 
 #endif
