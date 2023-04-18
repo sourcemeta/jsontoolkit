@@ -48,8 +48,8 @@ sourcemeta::jsontoolkit::contrib::Resolver::Resolver() {
   set_option(this->handle, CURLOPT_IPRESOLVE, (long)CURL_IPRESOLVE_WHATEVER);
   // TCP keepalive probes will be sent
   set_option(this->handle, CURLOPT_TCP_KEEPALIVE, 1L);
-  // THe version of HTTP to use
-  set_option(this->handle, CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_2TLS);
+  // The version of HTTP to use
+  set_option(this->handle, CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_1_1);
 
   // An identifiable user agent
   std::ostringstream user_agent;
