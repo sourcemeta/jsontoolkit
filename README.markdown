@@ -1275,9 +1275,7 @@ You can implement resolvers to read from a local storage, to send HTTP
 requests, or anything your application might require.
 
 Unless your resolver is trivial, it is recommend to create a callable object
-that implements the function interface. See
-[`contrib/resolver`](https://github.com/sourcemeta/jsontoolkit/tree/main/contrib/resolver)
-for an example.
+that implements the function interface.
 
 #### Get dialect
 

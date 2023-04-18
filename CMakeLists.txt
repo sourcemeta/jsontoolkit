@@ -16,7 +16,7 @@ endif()
 
 # Global options
 if(MSVC)
-  add_compile_options(/options:strict /W4 /WX /WL /sdl /DNOMINMAX)
+  add_compile_options(/options:strict /W4 /WX /WL /sdl)
 else()
   add_compile_options(-Wall -Wextra -Werror -Wpedantic
     -Wshadow -Wdouble-promotion -Wconversion -Wunused-parameter)
@@ -108,10 +108,8 @@ install(FILES include/jsontoolkit/jsonschema/resolver.h
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/jsonschema")
 
 if(JSONTOOLKIT_CONTRIB)
-  include(cmake/curl.cmake)
   add_subdirectory(./contrib/prettify)
   add_subdirectory(./contrib/minify)
-  add_subdirectory(./contrib/resolver)
   add_subdirectory(./contrib/jsonschema-walker)
   add_subdirectory(./contrib/jsonschema-keywords)
 endif()
@@ -132,6 +130,5 @@ if(JSONTOOLKIT_TESTS)
   add_subdirectory(./test/jsonschema)
   if(JSONTOOLKIT_CONTRIB)
     add_subdirectory(./test/contrib)
-    add_subdirectory(./test/contrib/resolver)
   endif()
 endif()

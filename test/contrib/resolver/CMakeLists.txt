@@ -1,8 +1,0 @@
-add_executable(sourcemeta_jsontoolkit_contrib_resolver_unit resolver_test.cc)
-target_link_libraries(sourcemeta_jsontoolkit_contrib_resolver_unit
-  PRIVATE GTest::gtest)
-target_link_libraries(sourcemeta_jsontoolkit_contrib_resolver_unit
-  PRIVATE GTest::gtest_main)
-target_link_libraries(sourcemeta_jsontoolkit_contrib_resolver_unit
-  PRIVATE sourcemeta_jsontoolkit_contrib_resolver)
-gtest_discover_tests(sourcemeta_jsontoolkit_contrib_resolver_unit)
