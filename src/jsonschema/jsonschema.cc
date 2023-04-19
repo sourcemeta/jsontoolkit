@@ -127,10 +127,7 @@ auto sourcemeta::jsontoolkit::vocabularies(
   // implementation proceeds with processing the schema, it MUST assume the
   // use of the vocabulary from the core specification.
   // See https://json-schema.org/draft/2020-12/json-schema-core.html#section-8
-  // TODO: Do not assume 2020-12 core if the schema already has a
-  // non-2020-12 metaschema
-  std::unordered_map<std::string, bool> result{
-      {"https://json-schema.org/draft/2020-12/vocab/core", true}};
+  std::unordered_map<std::string, bool> result;
 
   /*
    * (1) Identify the schema's metaschema
@@ -138,6 +135,8 @@ auto sourcemeta::jsontoolkit::vocabularies(
   const std::optional<std::string> metaschema_id{
       sourcemeta::jsontoolkit::metaschema(schema)};
   if (!metaschema_id.has_value() && !default_metaschema.has_value()) {
+    // The core vocabulary is always required
+    result.insert({"https://json-schema.org/draft/2020-12/vocab/core", true});
     promise.set_value(result);
     return promise.get_future();
   }
@@ -174,9 +173,12 @@ auto sourcemeta::jsontoolkit::vocabularies(
     // Vocabularies from the core specification are assumed to be set
     // if the $vocabulary keyword is not defined.
     // See
+    // https://json-schema.org/draft/2020-12/json-schema-core.html#name-the-json-schema-core-vocabu
+    // See
     // https://json-schema.org/draft/2020-12/json-schema-core.html#section-10
     // See
     // https://json-schema.org/draft/2020-12/json-schema-core.html#section-11
+    result.insert({"https://json-schema.org/draft/2020-12/vocab/core", true});
     result.insert(
         {"https://json-schema.org/draft/2020-12/vocab/applicator", true});
     result.insert(
@@ -184,8 +186,22 @@ auto sourcemeta::jsontoolkit::vocabularies(
     promise.set_value(result);
     return promise.get_future();
   }
+
   const sourcemeta::jsontoolkit::Value &vocabulary_value{
       sourcemeta::jsontoolkit::at(metaschema.value(), "$vocabulary")};
+
+  // Handle core vocabulary edge cases
+  if (!sourcemeta::jsontoolkit::defines(
+          vocabulary_value,
+          "https://json-schema.org/draft/2020-12/vocab/core")) {
+    throw std::runtime_error(
+        "Every metaschema must declare the core vocabulary");
+  } else if (!sourcemeta::jsontoolkit::to_boolean(sourcemeta::jsontoolkit::at(
+                 vocabulary_value,
+                 "https://json-schema.org/draft/2020-12/vocab/core"))) {
+    throw std::runtime_error("The core vocabulary must be marked as required");
+  }
+
   for (auto iterator = sourcemeta::jsontoolkit::cbegin_object(vocabulary_value);
        iterator != sourcemeta::jsontoolkit::cend_object(vocabulary_value);
        iterator++) {
