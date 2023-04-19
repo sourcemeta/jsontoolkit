@@ -135,10 +135,11 @@ auto sourcemeta::jsontoolkit::vocabularies(
   const std::optional<std::string> metaschema_id{
       sourcemeta::jsontoolkit::metaschema(schema)};
   if (!metaschema_id.has_value() && !default_metaschema.has_value()) {
-    // The core vocabulary is always required
-    result.insert({"https://json-schema.org/draft/2020-12/vocab/core", true});
-    promise.set_value(result);
-    return promise.get_future();
+    // If the schema has no declared metaschema and the user didn't
+    // provide a explicit default, then we cannot do anything.
+    // Better to abort instead of trying to guess.
+    throw std::runtime_error(
+        "Cannot determine the metaschema of the given schema");
   }
   const std::string &effective_metaschema_id{metaschema_id.has_value()
                                                  ? metaschema_id.value()
