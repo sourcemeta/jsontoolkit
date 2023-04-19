@@ -33,6 +33,15 @@ static auto test_resolver(const std::string &identifier)
         "https://json-schema.org/draft/2020-12/vocab/core": false
       }
     })JSON"));
+  } else if (identifier == "https://sourcemeta.com/metaschema_4") {
+    // Missing core
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$id": "https://sourcemeta.com/metaschema_4",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$vocabulary": {
+        "https://json-schema.org/draft/2020-12/vocab/validation": true
+      }
+    })JSON"));
   } else if (identifier == "https://sourcemeta.com/invalid_1") {
     // No $id
     promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
@@ -188,15 +197,22 @@ TEST(jsonschema_vocabulary, real_metaschema_takes_precedence_over_default) {
       vocabularies, "https://json-schema.org/draft/2020-12/vocab/unevaluated");
 }
 
-TEST(jsonschema_vocabulary, custom_metaschema_3) {
+TEST(jsonschema_vocabulary, custom_metaschema_3_invalid) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_3"
   })JSON")};
-  const std::unordered_map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
-  EXPECT_EQ(vocabularies.size(), 1);
-  // Core must always be required, even if a metaschema claims its optional
-  EXPECT_VOCABULARY_REQUIRED(
-      vocabularies, "https://json-schema.org/draft/2020-12/vocab/core");
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
+               std::runtime_error);
+}
+
+TEST(jsonschema_vocabulary, custom_metaschema_4_invalid) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://sourcemeta.com/metaschema_4"
+  })JSON")};
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
+               std::runtime_error);
 }
