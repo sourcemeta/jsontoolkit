@@ -168,22 +168,42 @@ auto sourcemeta::jsontoolkit::vocabularies(
   }
 
   /*
-   * (3) Parse the "$vocabulary" keyword, if any
+   * (3) Resolve the metaschema's dialect
+   */
+  const std::optional<std::string> dialect{
+      sourcemeta::jsontoolkit::dialect(metaschema.value(), resolver,
+                                       default_metaschema)
+          .get()};
+  if (!dialect.has_value()) {
+    std::ostringstream error;
+    error << "Could not determine dialect for schema: " << resolved_id.value();
+    throw std::runtime_error(error.str());
+  }
+
+  /*
+   * (4) Parse the "$vocabulary" keyword, if any
    */
   if (!sourcemeta::jsontoolkit::defines(metaschema.value(), "$vocabulary")) {
-    // Vocabularies from the core specification are assumed to be set
-    // if the $vocabulary keyword is not defined.
-    // See
-    // https://json-schema.org/draft/2020-12/json-schema-core.html#name-the-json-schema-core-vocabu
-    // See
-    // https://json-schema.org/draft/2020-12/json-schema-core.html#section-10
-    // See
-    // https://json-schema.org/draft/2020-12/json-schema-core.html#section-11
-    result.insert({"https://json-schema.org/draft/2020-12/vocab/core", true});
-    result.insert(
-        {"https://json-schema.org/draft/2020-12/vocab/applicator", true});
-    result.insert(
-        {"https://json-schema.org/draft/2020-12/vocab/unevaluated", true});
+    if (dialect.value() == "https://json-schema.org/draft/2020-12/schema") {
+      // Vocabularies from the core specification are assumed to be set
+      // if the $vocabulary keyword is not defined.
+      // See
+      // https://json-schema.org/draft/2020-12/json-schema-core.html#name-the-json-schema-core-vocabu
+      // See
+      // https://json-schema.org/draft/2020-12/json-schema-core.html#section-10
+      // See
+      // https://json-schema.org/draft/2020-12/json-schema-core.html#section-11
+      result.insert({"https://json-schema.org/draft/2020-12/vocab/core", true});
+      result.insert(
+          {"https://json-schema.org/draft/2020-12/vocab/applicator", true});
+      result.insert(
+          {"https://json-schema.org/draft/2020-12/vocab/unevaluated", true});
+    } else {
+      std::ostringstream error;
+      error << "Unrecognized dialect: " << dialect.value();
+      throw std::runtime_error(error.str());
+    }
+
     promise.set_value(result);
     return promise.get_future();
   }
@@ -192,15 +212,18 @@ auto sourcemeta::jsontoolkit::vocabularies(
       sourcemeta::jsontoolkit::at(metaschema.value(), "$vocabulary")};
 
   // Handle core vocabulary edge cases
-  if (!sourcemeta::jsontoolkit::defines(
-          vocabulary_value,
-          "https://json-schema.org/draft/2020-12/vocab/core")) {
-    throw std::runtime_error(
-        "Every metaschema must declare the core vocabulary");
-  } else if (!sourcemeta::jsontoolkit::to_boolean(sourcemeta::jsontoolkit::at(
-                 vocabulary_value,
-                 "https://json-schema.org/draft/2020-12/vocab/core"))) {
-    throw std::runtime_error("The core vocabulary must be marked as required");
+  if (dialect.value() == "https://json-schema.org/draft/2020-12/schema") {
+    if (!sourcemeta::jsontoolkit::defines(
+            vocabulary_value,
+            "https://json-schema.org/draft/2020-12/vocab/core")) {
+      throw std::runtime_error(
+          "Every metaschema must declare the core vocabulary");
+    } else if (!sourcemeta::jsontoolkit::to_boolean(sourcemeta::jsontoolkit::at(
+                   vocabulary_value,
+                   "https://json-schema.org/draft/2020-12/vocab/core"))) {
+      throw std::runtime_error(
+          "The core vocabulary must be marked as required");
+    }
   }
 
   for (auto iterator = sourcemeta::jsontoolkit::cbegin_object(vocabulary_value);

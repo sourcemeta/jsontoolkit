@@ -25,7 +25,14 @@ static auto test_resolver(const std::string &identifier)
       }
     })JSON"));
   } else {
-    promise.set_value(std::nullopt);
+    sourcemeta::jsontoolkit::DefaultResolver resolver;
+    const std::optional<sourcemeta::jsontoolkit::JSON> result{
+        resolver(identifier).get()};
+    if (result.has_value()) {
+      promise.set_value(sourcemeta::jsontoolkit::from(result.value()));
+    } else {
+      promise.set_value(std::nullopt);
+    }
   }
 
   return promise.get_future();
