@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <jsontoolkit/contrib/resolver.h>
 #include <jsontoolkit/json.h>
 #include <jsontoolkit/jsonschema.h>
 
@@ -17,8 +16,8 @@ EXPECT_SCHEMA(const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
             identifier);
 }
 
-TEST(Resolver, jsonschema_2020_12) {
-  sourcemeta::jsontoolkit::contrib::Resolver resolver;
+TEST(jsonschema, default_resolver_jsonschema_2020_12) {
+  sourcemeta::jsontoolkit::DefaultResolver resolver;
   EXPECT_SCHEMA(resolver, "https://json-schema.org/draft/2020-12/schema");
   EXPECT_SCHEMA(resolver,
                 "https://json-schema.org/draft/2020-12/meta/applicator");
@@ -38,15 +37,15 @@ TEST(Resolver, jsonschema_2020_12) {
                 "https://json-schema.org/draft/2020-12/meta/validation");
 }
 
-TEST(Resolver, idempotency) {
-  sourcemeta::jsontoolkit::contrib::Resolver resolver;
+TEST(jsonschema, default_resolver_idempotency) {
+  sourcemeta::jsontoolkit::DefaultResolver resolver;
   EXPECT_SCHEMA(resolver, "https://json-schema.org/draft/2020-12/schema");
   EXPECT_SCHEMA(resolver, "https://json-schema.org/draft/2020-12/schema");
   EXPECT_SCHEMA(resolver, "https://json-schema.org/draft/2020-12/schema");
 }
 
-TEST(Resolver, invalid) {
-  sourcemeta::jsontoolkit::contrib::Resolver resolver;
+TEST(jsonschema, default_resolver_invalid) {
+  sourcemeta::jsontoolkit::DefaultResolver resolver;
   const std::optional<sourcemeta::jsontoolkit::JSON> result{
       resolver("https://example.com/foobar").get()};
   EXPECT_FALSE(result.has_value());

@@ -1,4 +1,3 @@
-#include <jsontoolkit/contrib/resolver.h>
 #include <jsontoolkit/json.h>
 #include <jsontoolkit/jsonschema.h>
 
@@ -23,7 +22,7 @@ static auto walk(const std::string &mode,
                  "only assume the presence of the 'core' vocabulary\n";
   }
 
-  const sourcemeta::jsontoolkit::contrib::Resolver resolver;
+  const sourcemeta::jsontoolkit::DefaultResolver resolver;
   if (mode == "deep") {
     for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
              document, sourcemeta::jsontoolkit::default_schema_walker,

@@ -1271,13 +1271,14 @@ arguments, of the type `schema_resolver_t`. This function takes a URI as an
 [`std::optional`](https://en.cppreference.com/w/cpp/utility/optional) JSON
 document that represented the requested schema.
 
+This project includes a default resolver with common official metaschemas at
+`sourcemeta::jsontoolkit::DefaultResolver`.
+
 You can implement resolvers to read from a local storage, to send HTTP
 requests, or anything your application might require.
 
 Unless your resolver is trivial, it is recommend to create a callable object
-that implements the function interface. See
-[`contrib/resolver`](https://github.com/sourcemeta/jsontoolkit/tree/main/contrib/resolver)
-for an example.
+that implements the function interface.
 
 #### Get dialect
 
@@ -1300,20 +1301,9 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JS
   "type": "object"
 })JSON")};
 
-static auto my_resolver(const std::string &identifier)
-    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
-  std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
-
-  if (identifier == "https://json-schema.org/draft/2020-12/schema") {
-    // Resolve the schema somehow
-    promise.set_value(...);
-  }
-
-  return promise.get_future();
-}
-
+sourcemeta::jsontoolkit::DefaultResolver resolver;
 const std::optional<std::string> dialect{
-    sourcemeta::jsontoolkit::dialect(document, my_resolver).get()};
+    sourcemeta::jsontoolkit::dialect(document, resolver).get()};
 
 assert(dialect.has_value());
 assert(dialect.value() == "https://json-schema.org/draft/2020-12/schema");
@@ -1341,20 +1331,9 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JS
   "type": "object"
 })JSON")};
 
-static auto my_resolver(const std::string &identifier)
-    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
-  std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
-
-  if (identifier == "https://json-schema.org/draft/2020-12/schema") {
-    // Resolve the schema somehow
-    promise.set_value(...);
-  }
-
-  return promise.get_future();
-}
-
+sourcemeta::jsontoolkit::DefaultResolver resolver;
 const std::unordered_map<std::string, bool> vocabularies{
-    sourcemeta::jsontoolkit::vocabularies(document, my_resolver).get()};
+    sourcemeta::jsontoolkit::vocabularies(document, resolver).get()};
 
 assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/core"));
 assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/applicator"));
@@ -1440,20 +1419,18 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JS
   }
 })JSON")};
 
-// Define your own resolver
-static auto my_resolver(const std::string &)
-    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> { ... }
+sourcemeta::jsontoolkit::DefaultResolver resolver;
 
 // Print every subschema
 for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
-         document, sourcemeta::jsontoolkit::default_schema_walker, my_resolver)) {
+         document, sourcemeta::jsontoolkit::default_schema_walker, resolver)) {
   sourcemeta::jsontoolkit::prettify(subschema, std::cout);
   std::cout << "\n";
 }
 
 // Print the first-level subchemas
 for (const auto &subschema : sourcemeta::jsontoolkit::flat_subschema_iterator(
-         document, sourcemeta::jsontoolkit::default_schema_walker, my_resolver)) {
+         document, sourcemeta::jsontoolkit::default_schema_walker, resolver)) {
   sourcemeta::jsontoolkit::prettify(subschema, std::cout);
   std::cout << "\n";
 }
