@@ -1271,8 +1271,8 @@ arguments, of the type `schema_resolver_t`. This function takes a URI as an
 [`std::optional`](https://en.cppreference.com/w/cpp/utility/optional) JSON
 document that represented the requested schema.
 
-This project includes a default resolver with common official metaschemas at
-`sourcemeta::jsontoolkit::DefaultResolver`.
+This project includes a default resolver with official 2019-09 and 2020-12
+metaschemas at `sourcemeta::jsontoolkit::DefaultResolver`.
 
 You can implement resolvers to read from a local storage, to send HTTP
 requests, or anything your application might require.

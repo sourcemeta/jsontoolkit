@@ -37,6 +37,22 @@ TEST(jsonschema, default_resolver_jsonschema_2020_12) {
                 "https://json-schema.org/draft/2020-12/meta/validation");
 }
 
+TEST(jsonschema, default_resolver_jsonschema_2019_09) {
+  sourcemeta::jsontoolkit::DefaultResolver resolver;
+  EXPECT_SCHEMA(resolver, "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_SCHEMA(resolver,
+                "https://json-schema.org/draft/2019-09/meta/applicator");
+  EXPECT_SCHEMA(resolver, "https://json-schema.org/draft/2019-09/meta/content");
+  EXPECT_SCHEMA(resolver, "https://json-schema.org/draft/2019-09/meta/core");
+  EXPECT_SCHEMA(resolver, "https://json-schema.org/draft/2019-09/meta/format");
+  EXPECT_SCHEMA(resolver,
+                "https://json-schema.org/draft/2019-09/meta/hyper-schema");
+  EXPECT_SCHEMA(resolver,
+                "https://json-schema.org/draft/2019-09/meta/meta-data");
+  EXPECT_SCHEMA(resolver,
+                "https://json-schema.org/draft/2019-09/meta/validation");
+}
+
 TEST(jsonschema, default_resolver_idempotency) {
   sourcemeta::jsontoolkit::DefaultResolver resolver;
   EXPECT_SCHEMA(resolver, "https://json-schema.org/draft/2020-12/schema");
