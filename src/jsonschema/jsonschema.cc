@@ -115,6 +115,8 @@ auto sourcemeta::jsontoolkit::dialect(
   return promise.get_future();
 }
 
+// TODO: Support every JSON Schema dialect from Draft 7 and older
+// for completeness, returning the dialect itself as the only vocabulary.
 static auto core_vocabulary(const std::string &dialect) -> std::string {
   if (dialect == "https://json-schema.org/draft/2020-12/schema" ||
       dialect == "https://json-schema.org/draft/2020-12/hyper-schema") {
