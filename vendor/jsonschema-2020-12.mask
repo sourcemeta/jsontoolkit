@@ -3,7 +3,6 @@ archive
 output
 .travis.yml
 CONTRIBUTING.md
-hyper-schema.json
 jsonschema-core.xml
 jsonschema-validation.xml
 links.json

@@ -116,9 +116,11 @@ auto sourcemeta::jsontoolkit::dialect(
 }
 
 static auto core_vocabulary(const std::string &dialect) -> std::string {
-  if (dialect == "https://json-schema.org/draft/2020-12/schema") {
+  if (dialect == "https://json-schema.org/draft/2020-12/schema" ||
+      dialect == "https://json-schema.org/draft/2020-12/hyper-schema") {
     return "https://json-schema.org/draft/2020-12/vocab/core";
-  } else if (dialect == "https://json-schema.org/draft/2019-09/schema") {
+  } else if (dialect == "https://json-schema.org/draft/2019-09/schema" ||
+             dialect == "https://json-schema.org/draft/2019-09/hyper-schema") {
     return "https://json-schema.org/draft/2019-09/vocab/core";
   } else {
     std::ostringstream error;
@@ -203,7 +205,9 @@ auto sourcemeta::jsontoolkit::vocabularies(
     // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-02#section-8
     result.insert({core, true});
 
-    if (dialect.value() == "https://json-schema.org/draft/2020-12/schema") {
+    if (dialect.value() == "https://json-schema.org/draft/2020-12/schema" ||
+        dialect.value() ==
+            "https://json-schema.org/draft/2020-12/hyper-schema") {
       // See
       // https://json-schema.org/draft/2020-12/json-schema-core.html#section-10
       result.insert(
@@ -225,7 +229,9 @@ auto sourcemeta::jsontoolkit::vocabularies(
       result.insert(
           {"https://json-schema.org/draft/2020-12/vocab/meta-data", true});
     } else if (dialect.value() ==
-               "https://json-schema.org/draft/2019-09/schema") {
+                   "https://json-schema.org/draft/2019-09/schema" ||
+               dialect.value() ==
+                   "https://json-schema.org/draft/2019-09/hyper-schema") {
       // See
       // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-02#section-9
       result.insert(

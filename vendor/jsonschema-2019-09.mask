@@ -1,7 +1,6 @@
 output
 .travis.yml
 CONTRIBUTING.md
-hyper-schema.json
 jsonschema-core.xml
 jsonschema-hyperschema.xml
 jsonschema-validation.xml
