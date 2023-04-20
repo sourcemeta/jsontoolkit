@@ -9,9 +9,9 @@ static auto test_resolver(const std::string &identifier)
     -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
   std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
 
-  if (identifier == "https://sourcemeta.com/metaschema_1") {
+  if (identifier == "https://sourcemeta.com/2020-12-custom-vocabularies") {
     promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
-      "$id": "https://sourcemeta.com/metaschema_1",
+      "$id": "https://sourcemeta.com/2020-12-custom-vocabularies",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$vocabulary": {
         "https://json-schema.org/draft/2020-12/vocab/core": true,
@@ -19,10 +19,16 @@ static auto test_resolver(const std::string &identifier)
         "https://json-schema.org/draft/2020-12/vocab/validation": false
       }
     })JSON"));
-  } else if (identifier == "https://sourcemeta.com/metaschema_2") {
+  } else if (identifier ==
+             "https://sourcemeta.com/2019-09-custom-vocabularies") {
     promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
-      "$id": "https://sourcemeta.com/metaschema_2",
-      "$schema": "https://json-schema.org/draft/2020-12/schema"
+      "$id": "https://sourcemeta.com/2019-09-custom-vocabularies",
+      "$schema": "https://json-schema.org/draft/2019-09/schema",
+      "$vocabulary": {
+        "https://json-schema.org/draft/2019-09/vocab/core": true,
+        "https://json-schema.org/draft/2019-09/vocab/applicator": true,
+        "https://json-schema.org/draft/2019-09/vocab/validation": false
+      }
     })JSON"));
   } else if (identifier == "https://sourcemeta.com/metaschema_3") {
     // Optional core
@@ -41,6 +47,17 @@ static auto test_resolver(const std::string &identifier)
       "$vocabulary": {
         "https://json-schema.org/draft/2020-12/vocab/validation": true
       }
+    })JSON"));
+  } else if (identifier == "https://sourcemeta.com/2020-12-no-vocabularies") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$id": "https://sourcemeta.com/2020-12-no-vocabularies",
+      "$schema": "https://json-schema.org/draft/2020-12/schema"
+    })JSON"));
+  } else if (identifier == "https://sourcemeta.com/2019-09-no-vocabularies") {
+    // 2019-09 without $vocabulary
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$id": "https://sourcemeta.com/2019-09-no-vocabularies",
+      "$schema": "https://json-schema.org/draft/2019-09/schema"
     })JSON"));
   } else if (identifier == "https://sourcemeta.com/invalid_1") {
     // No $id
@@ -104,7 +121,8 @@ TEST(jsonschema_vocabulary, core_vocabularies_boolean_with_default) {
       sourcemeta::jsontoolkit::from(true)};
   const std::unordered_map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(
-          document, test_resolver, "https://sourcemeta.com/metaschema_1")
+          document, test_resolver,
+          "https://sourcemeta.com/2020-12-custom-vocabularies")
           .get()};
   EXPECT_EQ(vocabularies.size(), 3);
   EXPECT_VOCABULARY_REQUIRED(
@@ -120,7 +138,8 @@ TEST(jsonschema_vocabulary, default_metaschema_with_boolean) {
       sourcemeta::jsontoolkit::from(true)};
   const std::unordered_map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(
-          document, test_resolver, "https://sourcemeta.com/metaschema_1")
+          document, test_resolver,
+          "https://sourcemeta.com/2020-12-custom-vocabularies")
           .get()};
   EXPECT_EQ(vocabularies.size(), 3);
   EXPECT_VOCABULARY_REQUIRED(
@@ -136,7 +155,8 @@ TEST(jsonschema_vocabulary, not_random_vocabulary_boolean) {
       sourcemeta::jsontoolkit::from(true)};
   const std::unordered_map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(
-          document, test_resolver, "https://sourcemeta.com/metaschema_1")
+          document, test_resolver,
+          "https://sourcemeta.com/2020-12-custom-vocabularies")
           .get()};
   EXPECT_EQ(vocabularies.size(), 3);
   EXPECT_VOCABULARY_MISSING(vocabularies, "https://example.com/my-vocabulary");
@@ -169,54 +189,29 @@ TEST(jsonschema_vocabulary, custom_metaschema_invalid_2) {
                std::runtime_error);
 }
 
-TEST(jsonschema_vocabulary, custom_metaschema_1) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "https://sourcemeta.com/metaschema_1"
-  })JSON")};
-  const std::unordered_map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
-  EXPECT_EQ(vocabularies.size(), 3);
-  EXPECT_VOCABULARY_REQUIRED(
-      vocabularies, "https://json-schema.org/draft/2020-12/vocab/core");
-  EXPECT_VOCABULARY_REQUIRED(
-      vocabularies, "https://json-schema.org/draft/2020-12/vocab/applicator");
-  EXPECT_VOCABULARY_OPTIONAL(
-      vocabularies, "https://json-schema.org/draft/2020-12/vocab/validation");
-}
-
-TEST(jsonschema_vocabulary, custom_metaschema_2) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "https://sourcemeta.com/metaschema_2"
-  })JSON")};
-  const std::unordered_map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
-  EXPECT_EQ(vocabularies.size(), 3);
-  EXPECT_VOCABULARY_REQUIRED(
-      vocabularies, "https://json-schema.org/draft/2020-12/vocab/core");
-  EXPECT_VOCABULARY_REQUIRED(
-      vocabularies, "https://json-schema.org/draft/2020-12/vocab/applicator");
-  EXPECT_VOCABULARY_REQUIRED(
-      vocabularies, "https://json-schema.org/draft/2020-12/vocab/unevaluated");
-}
-
 TEST(jsonschema_vocabulary, real_metaschema_takes_precedence_over_default) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "https://sourcemeta.com/metaschema_2"
+    "$schema": "https://sourcemeta.com/2020-12-no-vocabularies"
   })JSON")};
   const std::unordered_map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(
-          document, test_resolver, "https://sourcemeta.com/metaschema_1")
+          document, test_resolver,
+          "https://sourcemeta.com/2020-12-custom-vocabularies")
           .get()};
-  EXPECT_EQ(vocabularies.size(), 3);
+  EXPECT_EQ(vocabularies.size(), 6);
   EXPECT_VOCABULARY_REQUIRED(
       vocabularies, "https://json-schema.org/draft/2020-12/vocab/core");
   EXPECT_VOCABULARY_REQUIRED(
       vocabularies, "https://json-schema.org/draft/2020-12/vocab/applicator");
   EXPECT_VOCABULARY_REQUIRED(
       vocabularies, "https://json-schema.org/draft/2020-12/vocab/unevaluated");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/validation");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/content");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/meta-data");
 }
 
 TEST(jsonschema_vocabulary, custom_metaschema_3_invalid) {
@@ -237,4 +232,80 @@ TEST(jsonschema_vocabulary, custom_metaschema_4_invalid) {
 
   EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
                std::runtime_error);
+}
+
+TEST(jsonschema_vocabulary, no_vocabularies_2020_12) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://sourcemeta.com/2020-12-no-vocabularies"
+  })JSON")};
+  const std::unordered_map<std::string, bool> vocabularies{
+      sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
+  EXPECT_EQ(vocabularies.size(), 6);
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/core");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/applicator");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/unevaluated");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/validation");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/content");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/meta-data");
+}
+
+TEST(jsonschema_vocabulary, no_vocabularies_2019_09) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://sourcemeta.com/2019-09-no-vocabularies"
+  })JSON")};
+  const std::unordered_map<std::string, bool> vocabularies{
+      sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
+  EXPECT_EQ(vocabularies.size(), 6);
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2019-09/vocab/core");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2019-09/vocab/applicator");
+  EXPECT_VOCABULARY_OPTIONAL(
+      vocabularies, "https://json-schema.org/draft/2019-09/vocab/format");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2019-09/vocab/validation");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2019-09/vocab/content");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2019-09/vocab/meta-data");
+}
+
+TEST(jsonschema_vocabulary, custom_vocabularies_2020_12) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://sourcemeta.com/2020-12-custom-vocabularies"
+  })JSON")};
+  const std::unordered_map<std::string, bool> vocabularies{
+      sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
+  EXPECT_EQ(vocabularies.size(), 3);
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/core");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/applicator");
+  EXPECT_VOCABULARY_OPTIONAL(
+      vocabularies, "https://json-schema.org/draft/2020-12/vocab/validation");
+}
+
+TEST(jsonschema_vocabulary, custom_vocabularies_2019_09) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://sourcemeta.com/2019-09-custom-vocabularies"
+  })JSON")};
+  const std::unordered_map<std::string, bool> vocabularies{
+      sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
+  EXPECT_EQ(vocabularies.size(), 3);
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2019-09/vocab/core");
+  EXPECT_VOCABULARY_REQUIRED(
+      vocabularies, "https://json-schema.org/draft/2019-09/vocab/applicator");
+  EXPECT_VOCABULARY_OPTIONAL(
+      vocabularies, "https://json-schema.org/draft/2019-09/vocab/validation");
 }
