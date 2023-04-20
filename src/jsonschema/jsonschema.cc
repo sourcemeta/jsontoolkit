@@ -116,10 +116,34 @@ auto sourcemeta::jsontoolkit::dialect(
 }
 
 static auto core_vocabulary(const std::string &dialect) -> std::string {
-  if (dialect == "https://json-schema.org/draft/2020-12/schema") {
+  if (dialect == "https://json-schema.org/draft/2020-12/schema" ||
+      dialect == "https://json-schema.org/draft/2020-12/hyper-schema") {
     return "https://json-schema.org/draft/2020-12/vocab/core";
-  } else if (dialect == "https://json-schema.org/draft/2019-09/schema") {
+  } else if (dialect == "https://json-schema.org/draft/2019-09/schema" ||
+             dialect == "https://json-schema.org/draft/2019-09/hyper-schema") {
     return "https://json-schema.org/draft/2019-09/vocab/core";
+  } else if (dialect == "http://json-schema.org/draft-07/schema#") {
+    return "http://json-schema.org/draft-07/schema#";
+  } else if (dialect == "http://json-schema.org/draft-07/hyper-schema#") {
+    return "http://json-schema.org/draft-07/hyper-schema#";
+  } else if (dialect == "http://json-schema.org/draft-06/schema#") {
+    return "http://json-schema.org/draft-06/schema#";
+  } else if (dialect == "http://json-schema.org/draft-06/hyper-schema#") {
+    return "http://json-schema.org/draft-06/hyper-schema#";
+  } else if (dialect == "http://json-schema.org/draft-04/schema#") {
+    return "http://json-schema.org/draft-04/schema#";
+  } else if (dialect == "http://json-schema.org/draft-04/hyper-schema#") {
+    return "http://json-schema.org/draft-04/hyper-schema#";
+  } else if (dialect == "http://json-schema.org/draft-03/schema#") {
+    return "http://json-schema.org/draft-03/schema#";
+  } else if (dialect == "http://json-schema.org/draft-03/hyper-schema#") {
+    return "http://json-schema.org/draft-03/hyper-schema#";
+  } else if (dialect == "http://json-schema.org/draft-02/hyper-schema#") {
+    return "http://json-schema.org/draft-02/hyper-schema#";
+  } else if (dialect == "http://json-schema.org/draft-01/hyper-schema#") {
+    return "http://json-schema.org/draft-01/hyper-schema#";
+  } else if (dialect == "http://json-schema.org/draft-00/hyper-schema#") {
+    return "http://json-schema.org/draft-00/hyper-schema#";
   } else {
     std::ostringstream error;
     error << "Unrecognized dialect: " << dialect;
