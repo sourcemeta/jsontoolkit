@@ -118,6 +118,8 @@ auto sourcemeta::jsontoolkit::dialect(
 static auto core_vocabulary(const std::string &dialect) -> std::string {
   if (dialect == "https://json-schema.org/draft/2020-12/schema") {
     return "https://json-schema.org/draft/2020-12/vocab/core";
+  } else if (dialect == "https://json-schema.org/draft/2019-09/schema") {
+    return "https://json-schema.org/draft/2019-09/vocab/core";
   } else {
     std::ostringstream error;
     error << "Unrecognized dialect: " << dialect;
@@ -197,19 +199,54 @@ auto sourcemeta::jsontoolkit::vocabularies(
   if (!sourcemeta::jsontoolkit::defines(metaschema.value(), "$vocabulary")) {
     // The core vocabulary is always used
     // See https://json-schema.org/draft/2020-12/json-schema-core.html#section-8
+    // See
+    // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-02#section-8
     result.insert({core, true});
 
     if (dialect.value() == "https://json-schema.org/draft/2020-12/schema") {
-      // Vocabularies from the core specification are assumed to be set
-      // if the $vocabulary keyword is not defined.
       // See
       // https://json-schema.org/draft/2020-12/json-schema-core.html#section-10
+      result.insert(
+          {"https://json-schema.org/draft/2020-12/vocab/applicator", true});
       // See
       // https://json-schema.org/draft/2020-12/json-schema-core.html#section-11
       result.insert(
-          {"https://json-schema.org/draft/2020-12/vocab/applicator", true});
-      result.insert(
           {"https://json-schema.org/draft/2020-12/vocab/unevaluated", true});
+      // See
+      // https://json-schema.org/draft/2020-12/json-schema-validation.html#section-6
+      result.insert(
+          {"https://json-schema.org/draft/2020-12/vocab/validation", true});
+      // See
+      // https://json-schema.org/draft/2020-12/json-schema-validation.html#section-8
+      result.insert(
+          {"https://json-schema.org/draft/2020-12/vocab/content", true});
+      // See
+      // https://json-schema.org/draft/2020-12/json-schema-validation.html#section-9
+      result.insert(
+          {"https://json-schema.org/draft/2020-12/vocab/meta-data", true});
+    } else if (dialect.value() ==
+               "https://json-schema.org/draft/2019-09/schema") {
+      // See
+      // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-02#section-9
+      result.insert(
+          {"https://json-schema.org/draft/2019-09/vocab/applicator", true});
+      // See
+      // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-validation-02#section-6
+      result.insert(
+          {"https://json-schema.org/draft/2019-09/vocab/validation", true});
+      // The Format vocabulary is optional by default
+      // See
+      // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-validation-02#section-7
+      result.insert(
+          {"https://json-schema.org/draft/2019-09/vocab/format", false});
+      // See
+      // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-validation-02#section-8
+      result.insert(
+          {"https://json-schema.org/draft/2019-09/vocab/content", true});
+      // See
+      // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-validation-02#section-9
+      result.insert(
+          {"https://json-schema.org/draft/2019-09/vocab/meta-data", true});
     }
 
     promise.set_value(result);
