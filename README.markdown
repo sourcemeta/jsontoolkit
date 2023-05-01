@@ -600,6 +600,31 @@ assert(sourcemeta::jsontoolkit::at(collection, 1), 2);
 assert(sourcemeta::jsontoolkit::at(collection, 2), 3);
 ```
 
+#### Copy
+
+`void copy(Iterator begin, Iterator end, Iterator output)`
+
+This function copies JSON documents inside a container into another container,
+using iterators. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+#include <vector>
+#include <iterator>
+
+std::vector<sourcemeta::jsontoolkit::JSON> documents;
+documents.push_back(sourcemeta::jsontoolkit::from("foo"));
+documents.push_back(sourcemeta::jsontoolkit::from("bar"));
+documents.push_back(sourcemeta::jsontoolkit::from("baz"));
+
+std::vector<sourcemeta::jsontoolkit::JSON> result;
+sourcemeta::jsontoolkit::copy(documents.cbegin(), documents.cend(),
+                              std::back_inserter(result));
+
+assert(documents.size() == result.size());
+```
+
 ### Writing
 
 A set of functions to write to JSON instance. To accomodate for the memory
