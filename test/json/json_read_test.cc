@@ -1,5 +1,6 @@
 #include <cstdint> // std::uint64_t, std::int64_t
 #include <gtest/gtest.h>
+#include <iterator> // std::back_inserter
 #include <jsontoolkit/json/read.h>
 #include <limits>  // std::numeric_limits
 #include <set>     // std::set
@@ -1842,4 +1843,25 @@ TEST(JSON, compare_object_object_different) {
       sourcemeta::jsontoolkit::parse("{\"foo\":1, \"bar\":2}")};
   EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
   EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, copy_json_vector) {
+  std::vector<sourcemeta::jsontoolkit::JSON> documents;
+  documents.push_back(sourcemeta::jsontoolkit::from("foo"));
+  documents.push_back(sourcemeta::jsontoolkit::from("bar"));
+  documents.push_back(sourcemeta::jsontoolkit::from("baz"));
+
+  std::vector<sourcemeta::jsontoolkit::JSON> result;
+  sourcemeta::jsontoolkit::copy(documents.cbegin(), documents.cend(),
+                                std::back_inserter(result));
+
+  EXPECT_EQ(documents.size(), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(documents.at(0)), "foo");
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(documents.at(1)), "bar");
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(documents.at(2)), "baz");
+
+  EXPECT_EQ(result.size(), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(result.at(0)), "foo");
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(result.at(1)), "bar");
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(result.at(2)), "baz");
 }
