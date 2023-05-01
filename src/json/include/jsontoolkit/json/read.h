@@ -8,6 +8,7 @@
 #endif
 
 #include <algorithm> // std::any_of, std::transform
+#include <iterator>  // std::cbegin, std::cend, std::back_inserter
 
 namespace sourcemeta::jsontoolkit {
 
@@ -36,6 +37,14 @@ template <typename InputIt, typename OutputIt>
 auto copy(InputIt begin, InputIt end, OutputIt output) -> void {
   std::transform(begin, end, output,
                  [](const auto &json) { return from(json); });
+}
+
+template <typename Container>
+auto copy(const Container &container) -> Container {
+  Container output;
+  sourcemeta::jsontoolkit::copy(std::cbegin(container), std::cend(container),
+                                std::back_inserter(output));
+  return output;
 }
 
 } // namespace sourcemeta::jsontoolkit

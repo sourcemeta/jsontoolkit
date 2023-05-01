@@ -604,8 +604,13 @@ assert(sourcemeta::jsontoolkit::at(collection, 2), 3);
 
 `void copy(Iterator begin, Iterator end, Iterator output)`
 
-This function copies JSON documents inside a container into another container,
-using iterators. For example:
+`Container copy(const Container &container)`
+
+The first function copies JSON documents inside a container into another
+container, using iterators. The second function is a utility to duplicate an
+entire JSON container.
+
+For example:
 
 ```c++
 #include <jsontoolkit/json.h>
@@ -618,9 +623,14 @@ documents.push_back(sourcemeta::jsontoolkit::from("foo"));
 documents.push_back(sourcemeta::jsontoolkit::from("bar"));
 documents.push_back(sourcemeta::jsontoolkit::from("baz"));
 
+// With iterators
 std::vector<sourcemeta::jsontoolkit::JSON> result;
 sourcemeta::jsontoolkit::copy(documents.cbegin(), documents.cend(),
                               std::back_inserter(result));
+
+// With container utility
+std::vector<sourcemeta::jsontoolkit::JSON> result{
+  sourcemeta::jsontoolkit::copy(result)};
 
 assert(documents.size() == result.size());
 ```

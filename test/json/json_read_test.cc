@@ -1845,7 +1845,7 @@ TEST(JSON, compare_object_object_different) {
   EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
 }
 
-TEST(JSON, copy_json_vector) {
+TEST(JSON, copy_json_vector_iterators) {
   std::vector<sourcemeta::jsontoolkit::JSON> documents;
   documents.push_back(sourcemeta::jsontoolkit::from("foo"));
   documents.push_back(sourcemeta::jsontoolkit::from("bar"));
@@ -1854,6 +1854,26 @@ TEST(JSON, copy_json_vector) {
   std::vector<sourcemeta::jsontoolkit::JSON> result;
   sourcemeta::jsontoolkit::copy(documents.cbegin(), documents.cend(),
                                 std::back_inserter(result));
+
+  EXPECT_EQ(documents.size(), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(documents.at(0)), "foo");
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(documents.at(1)), "bar");
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(documents.at(2)), "baz");
+
+  EXPECT_EQ(result.size(), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(result.at(0)), "foo");
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(result.at(1)), "bar");
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(result.at(2)), "baz");
+}
+
+TEST(JSON, copy_json_vector) {
+  std::vector<sourcemeta::jsontoolkit::JSON> documents;
+  documents.push_back(sourcemeta::jsontoolkit::from("foo"));
+  documents.push_back(sourcemeta::jsontoolkit::from("bar"));
+  documents.push_back(sourcemeta::jsontoolkit::from("baz"));
+
+  std::vector<sourcemeta::jsontoolkit::JSON> result{
+      sourcemeta::jsontoolkit::copy(documents)};
 
   EXPECT_EQ(documents.size(), 3);
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(documents.at(0)), "foo");
