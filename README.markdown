@@ -417,6 +417,31 @@ assert(sourcemeta::jsontoolkit::is_string(document));
 assert(sourcemeta::jsontoolkit::to_string(document) == "foo");
 ```
 
+#### To vector
+
+`std::vector<JSON> to_vector(const JSON & | const Value &)`
+
+Convert a JSON array instance into a standard vector of JSON instances. The
+result of this function is undefined unless the JSON instance holds an array
+value. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+#include <vector>
+
+const sourcemeta::jsontoolkit::JSON document{
+    sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+assert(sourcemeta::jsontoolkit::is_array(document));
+
+const std::vector<sourcemeta::jsontoolkit::JSON> result{
+    sourcemeta::jsontoolkit::to_vector(document)};
+assert(result.size(), 3);
+assert(sourcemeta::jsontoolkit::to_integer(result.at(0)), 1);
+assert(sourcemeta::jsontoolkit::to_integer(result.at(1)), 2);
+assert(sourcemeta::jsontoolkit::to_integer(result.at(2)), 3);
+```
+
 #### Size
 
 `std::size_t size(const JSON & | const Value &)`
