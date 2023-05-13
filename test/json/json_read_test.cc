@@ -1885,3 +1885,14 @@ TEST(JSON, copy_json_vector) {
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(result.at(1)), "bar");
   EXPECT_EQ(sourcemeta::jsontoolkit::to_string(result.at(2)), "baz");
 }
+
+TEST(JSON, array_to_vector) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  const std::vector<sourcemeta::jsontoolkit::JSON> result{
+      sourcemeta::jsontoolkit::to_vector(document)};
+  EXPECT_EQ(result.size(), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(result.at(0)), 1);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(result.at(1)), 2);
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(result.at(2)), 3);
+}
