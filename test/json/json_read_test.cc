@@ -1896,3 +1896,39 @@ TEST(JSON, array_to_vector) {
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(result.at(1)), 2);
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(result.at(2)), 3);
 }
+
+TEST(JSON, is_positive_negative_integer) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(-3)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_positive(document));
+}
+
+TEST(JSON, is_positive_zero_integer) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(0)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_positive(document));
+}
+
+TEST(JSON, is_positive_positive_integer) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(5)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_positive(document));
+}
+
+TEST(JSON, is_positive_negative_real) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(-3.2)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::is_positive(document));
+}
+
+TEST(JSON, is_positive_zero_real) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(0.0)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_positive(document));
+}
+
+TEST(JSON, is_positive_positive_real) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(5.1)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_positive(document));
+}

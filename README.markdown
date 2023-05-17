@@ -400,6 +400,23 @@ assert(sourcemeta::jsontoolkit::is_real(document));
 assert(sourcemeta::jsontoolkit::to_real(document) == 3.14);
 ```
 
+#### Is positive
+
+`bool is_positive(const JSON & | const Value &)`
+
+Check if the input JSON document is either a positive integer or a positive
+real number. Zero is considered to be positive. For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON real{sourcemeta::jsontoolkit::parse("3.14")};
+const sourcemeta::jsontoolkit::JSON integer{sourcemeta::jsontoolkit::parse("-5")};
+assert(sourcemeta::jsontoolkit::is_positive(real));
+assert(!sourcemeta::jsontoolkit::is_positive(integer));
+```
+
 #### To string
 
 `std::string to_string(const JSON & | const Value &)`
