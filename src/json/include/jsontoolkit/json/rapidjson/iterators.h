@@ -5,7 +5,10 @@
 #include "read.h"
 
 #include <cassert>  // assert
-#include <iterator> // std::reverse_iterator
+#include <cstddef>  // std::ptrdiff_t
+#include <iterator> // std::reverse_iterator,
+                    // std::random_access_iterator,
+                    // std::bidirectional_iterator_tag
 
 namespace sourcemeta::jsontoolkit {
 
@@ -97,6 +100,12 @@ inline auto end_object(Value &value) -> rapidjson::Value::MemberIterator {
 
 class ArrayIteratorWrapper {
 public:
+  using iterator_category = std::random_access_iterator_tag;
+  using difference_type = std::ptrdiff_t;
+  using value_type = rapidjson::Value;
+  using pointer = value_type *;
+  using reference = value_type &;
+
   ArrayIteratorWrapper(Value &input) : data{input} { assert(is_array(input)); }
   auto begin() -> rapidjson::Value::ValueIterator {
     return begin_array(this->data);
@@ -111,6 +120,12 @@ private:
 
 class ConstArrayIteratorWrapper {
 public:
+  using iterator_category = std::random_access_iterator_tag;
+  using difference_type = std::ptrdiff_t;
+  using value_type = const rapidjson::Value;
+  using pointer = value_type *;
+  using reference = value_type &;
+
   ConstArrayIteratorWrapper(const Value &input) : data{input} {
     assert(is_array(input));
   }
@@ -127,6 +142,12 @@ private:
 
 class ObjectIteratorWrapper {
 public:
+  using iterator_category = std::bidirectional_iterator_tag;
+  using difference_type = std::ptrdiff_t;
+  using value_type = rapidjson::Value::Member;
+  using pointer = value_type *;
+  using reference = value_type &;
+
   ObjectIteratorWrapper(Value &input) : data{input} {
     assert(is_object(input));
   }
@@ -143,6 +164,12 @@ private:
 
 class ConstObjectIteratorWrapper {
 public:
+  using iterator_category = std::bidirectional_iterator_tag;
+  using difference_type = std::ptrdiff_t;
+  using value_type = const rapidjson::Value::Member;
+  using pointer = value_type *;
+  using reference = value_type &;
+
   ConstObjectIteratorWrapper(const Value &input) : data{input} {
     assert(is_object(input));
   }
