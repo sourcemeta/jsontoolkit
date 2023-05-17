@@ -95,6 +95,68 @@ inline auto end_object(Value &value) -> rapidjson::Value::MemberIterator {
   return value.MemberEnd();
 }
 
+class ArrayIteratorWrapper {
+public:
+  ArrayIteratorWrapper(Value &input) : data{input} { assert(is_array(input)); }
+  auto begin() -> rapidjson::Value::ValueIterator {
+    return begin_array(this->data);
+  }
+  auto end() -> rapidjson::Value::ValueIterator {
+    return end_array(this->data);
+  }
+
+private:
+  Value &data;
+};
+
+class ConstArrayIteratorWrapper {
+public:
+  ConstArrayIteratorWrapper(const Value &input) : data{input} {
+    assert(is_array(input));
+  }
+  auto begin() const -> rapidjson::Value::ConstValueIterator {
+    return cbegin_array(this->data);
+  }
+  auto end() const -> rapidjson::Value::ConstValueIterator {
+    return cend_array(this->data);
+  }
+
+private:
+  const Value &data;
+};
+
+class ObjectIteratorWrapper {
+public:
+  ObjectIteratorWrapper(Value &input) : data{input} {
+    assert(is_object(input));
+  }
+  auto begin() -> rapidjson::Value::MemberIterator {
+    return begin_object(this->data);
+  }
+  auto end() -> rapidjson::Value::MemberIterator {
+    return end_object(this->data);
+  }
+
+private:
+  Value &data;
+};
+
+class ConstObjectIteratorWrapper {
+public:
+  ConstObjectIteratorWrapper(const Value &input) : data{input} {
+    assert(is_object(input));
+  }
+  auto begin() const -> rapidjson::Value::ConstMemberIterator {
+    return cbegin_object(this->data);
+  }
+  auto end() const -> rapidjson::Value::ConstMemberIterator {
+    return cend_object(this->data);
+  }
+
+private:
+  const Value &data;
+};
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif
