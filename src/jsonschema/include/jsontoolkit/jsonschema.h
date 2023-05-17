@@ -30,7 +30,13 @@ auto vocabularies(
 // We inline the definition of this class in this file to avoid a circular
 // dependency
 template <typename ValueT> class SchemaWalker {
+private:
+  using internal = typename std::vector<std::reference_wrapper<ValueT>>;
+
 public:
+  using iterator = typename internal::iterator;
+  using const_iterator = typename internal::const_iterator;
+
   SchemaWalker(ValueT &input, const schema_walker_t &walker,
                const schema_resolver_t &resolver,
                const std::optional<std::string> &default_metaschema,
@@ -159,7 +165,7 @@ private:
     }
   }
 
-  std::vector<std::reference_wrapper<ValueT>> subschemas;
+  internal subschemas;
   const schema_walker_type_t walker_type;
 };
 
