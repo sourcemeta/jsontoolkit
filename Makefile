@@ -14,7 +14,7 @@ configure: .always
 
 compile: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target clang_format
-	$(CMAKE) --build ./build --config $(PRESET)
+	$(CMAKE) --build ./build --config $(PRESET) --parallel
 
 # Not every CTest version supports the --test-dir option
 test: .always
