@@ -128,6 +128,8 @@ private:
                             level);
         }
         break;
+      case schema_walker_strategy_t::None:
+        break;
       default:
         break;
       }

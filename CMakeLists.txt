@@ -18,7 +18,7 @@ endif()
 if(MSVC)
   add_compile_options(/options:strict /W4 /WX /WL /sdl /DNOMINMAX)
 else()
-  add_compile_options(-Wall -Wextra -Werror -Wpedantic
+  add_compile_options(-Wall -Wextra -Werror -Wpedantic -Wswitch -Wswitch-enum
     -Wshadow -Wdouble-promotion -Wconversion -Wunused-parameter)
 endif()
 
