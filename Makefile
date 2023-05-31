@@ -18,7 +18,7 @@ compile: .always
 
 # Not every CTest version supports the --test-dir option
 test: .always
-	cd ./build && $(CTEST) --build-config $(PRESET) --output-on-failure --progress
+	cd ./build && $(CTEST) --build-config $(PRESET) --output-on-failure --progress --parallel
 
 clean: .always
 	$(CMAKE) -E rm -R -f build
