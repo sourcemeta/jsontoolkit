@@ -725,3 +725,18 @@ TEST(JSON, clear_except_multiple_intersection_initializer_list) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, "baz"));
   EXPECT_FALSE(sourcemeta::jsontoolkit::defines(document, "qux"));
 }
+
+TEST(JSON, long_object_key_assign) {
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::make_object()};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_object(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::size(document), 0);
+  const std::string key(30, 'x');
+  EXPECT_EQ(key.size(), 30);
+  sourcemeta::jsontoolkit::assign(document, key,
+                                  sourcemeta::jsontoolkit::from(true));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::defines(document, key));
+  const auto &value{sourcemeta::jsontoolkit::at(document, key)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_boolean(value));
+  EXPECT_TRUE(sourcemeta::jsontoolkit::to_boolean(value));
+}
