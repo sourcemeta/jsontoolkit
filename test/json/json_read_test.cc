@@ -1,4 +1,5 @@
-#include <cstdint> // std::uint64_t, std::int64_t
+#include <cstdint>    // std::uint64_t, std::int64_t
+#include <functional> // std::hash
 #include <gtest/gtest.h>
 #include <iterator> // std::back_inserter
 #include <jsontoolkit/json/read.h>
@@ -1931,4 +1932,66 @@ TEST(JSON, is_positive_positive_real) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::from(5.1)};
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_positive(document));
+}
+
+TEST(JSON, hash_scalar) {
+  const sourcemeta::jsontoolkit::JSON document1{
+      sourcemeta::jsontoolkit::parse("2")};
+  const sourcemeta::jsontoolkit::JSON document2{
+      sourcemeta::jsontoolkit::parse("2")};
+  const sourcemeta::jsontoolkit::JSON document3{
+      sourcemeta::jsontoolkit::parse("3")};
+
+  EXPECT_EQ(sourcemeta::jsontoolkit::hash(document1),
+            sourcemeta::jsontoolkit::hash(document2));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::hash(document1) ==
+               sourcemeta::jsontoolkit::hash(document3));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::hash(document2) ==
+               sourcemeta::jsontoolkit::hash(document3));
+}
+
+TEST(JSON, hash_array) {
+  const sourcemeta::jsontoolkit::JSON document1{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  const sourcemeta::jsontoolkit::JSON document2{
+      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  const sourcemeta::jsontoolkit::JSON document3{
+      sourcemeta::jsontoolkit::parse("[ 1, 3, 2 ]")};
+
+  EXPECT_EQ(sourcemeta::jsontoolkit::hash(document1),
+            sourcemeta::jsontoolkit::hash(document2));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::hash(document1) ==
+               sourcemeta::jsontoolkit::hash(document3));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::hash(document2) ==
+               sourcemeta::jsontoolkit::hash(document3));
+}
+
+TEST(JSON, hash_object) {
+  const sourcemeta::jsontoolkit::JSON document1{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  const sourcemeta::jsontoolkit::JSON document2{
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
+  const sourcemeta::jsontoolkit::JSON document3{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 2, \"bar\": 1 }")};
+
+  EXPECT_EQ(sourcemeta::jsontoolkit::hash(document1),
+            sourcemeta::jsontoolkit::hash(document2));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::hash(document1) ==
+               sourcemeta::jsontoolkit::hash(document3));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::hash(document2) ==
+               sourcemeta::jsontoolkit::hash(document3));
+}
+
+TEST(JSON, idempotent) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+
+  const auto hash1{sourcemeta::jsontoolkit::hash(document)};
+  const auto hash2{sourcemeta::jsontoolkit::hash(document)};
+  const auto hash3{sourcemeta::jsontoolkit::hash(document)};
+  const auto hash4{sourcemeta::jsontoolkit::hash(document)};
+
+  EXPECT_EQ(hash1, hash2);
+  EXPECT_EQ(hash2, hash3);
+  EXPECT_EQ(hash3, hash4);
 }
