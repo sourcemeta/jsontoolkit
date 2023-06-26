@@ -677,6 +677,27 @@ std::vector<sourcemeta::jsontoolkit::JSON> result{
 assert(documents.size() == result.size());
 ```
 
+#### Hash
+
+`std::size_t hash(const JSON &value | const Value &value)`
+
+This function hashes the input JSON document in a way that is compatible to the
+standard [`std::hash`](https://en.cppreference.com/w/cpp/utility/hash) callable
+objects. The hash takes into account the JSON data model and will report the
+same value independent of insignificant spacing, object property ordering, etc.
+
+For example:
+
+```c++
+#include <jsontoolkit/json.h>
+#include <cassert>
+
+const sourcemeta::jsontoolkit::JSON document1{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+const sourcemeta::jsontoolkit::JSON document2{sourcemeta::jsontoolkit::parse("[1,2,3]")};
+
+assert(sourcemeta::jsontoolkit::hash(document1) == sourcemeta::jsontoolkit::hash(document2));
+```
+
 ### Writing
 
 A set of functions to write to JSON instance. To accomodate for the memory
