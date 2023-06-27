@@ -1378,16 +1378,16 @@ requests, or anything your application might require.
 Unless your resolver is trivial, it is recommend to create a callable object
 that implements the function interface.
 
-#### Get dialect
+#### Get draft
 
-`std::future<std::optional<std::string>> dialect(const JSON & | const Value &, const schema_resolver_t &)`
+`std::future<std::optional<std::string>> draft(const JSON & | const Value &, const schema_resolver_t &)`
 
-`std::future<std::optional<std::string>> dialect(const JSON & | const Value &, const schema_resolver_t &, const std::string &default_metaschema)`
+`std::future<std::optional<std::string>> draft(const JSON & | const Value &, const schema_resolver_t &, const std::string &default_metaschema)`
 
-Get the dialect URI that applies to the given schema. If you set a default
+Get the draft URI that applies to the given schema. If you set a default
 metaschema URI, this will be used if the given schema does not declare the
-`$schema` keyword. The result of this function is unset if its dialect could
-not be determined. For example:
+`$schema` keyword. The result of this function is unset if its draft could not
+be determined. For example:
 
 ```c++
 #include <jsontoolkit/json.h>
@@ -1400,11 +1400,11 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JS
 })JSON")};
 
 sourcemeta::jsontoolkit::DefaultResolver resolver;
-const std::optional<std::string> dialect{
-    sourcemeta::jsontoolkit::dialect(document, resolver).get()};
+const std::optional<std::string> draft{
+    sourcemeta::jsontoolkit::draft(document, resolver).get()};
 
-assert(dialect.has_value());
-assert(dialect.value() == "https://json-schema.org/draft/2020-12/schema");
+assert(draft.has_value());
+assert(draft.value() == "https://json-schema.org/draft/2020-12/schema");
 ```
 
 #### List vocabularies
