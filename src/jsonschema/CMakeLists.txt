@@ -9,6 +9,7 @@ add_library(sourcemeta_jsontoolkit_jsonschema
   include/jsontoolkit/jsonschema/default_resolver.h
   jsonschema.cc default_metaschemas.h.in
   default_walker.cc default_resolver.cc)
+jsontoolkit_target_compile_options(sourcemeta_jsontoolkit_jsonschema PRIVATE)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema
   PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/jsonschema.h")
 target_include_directories(sourcemeta_jsontoolkit_jsonschema

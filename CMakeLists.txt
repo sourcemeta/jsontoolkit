@@ -14,18 +14,7 @@ if(NOT DEFINED PROJECT_IS_TOP_LEVEL AND "${CMAKE_PROJECT_NAME}" STREQUAL "${PROJ
   set(PROJECT_IS_TOP_LEVEL YES)
 endif()
 
-# Global options
-if(MSVC)
-  add_compile_options(/options:strict /W4 /WX /WL /sdl /DNOMINMAX)
-else()
-  add_compile_options(-Wall -Wextra -Werror -Wpedantic
-    -Wshadow -Wdouble-promotion -Wconversion -Wunused-parameter)
-endif()
-
-# Specify the C++ standard
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+include(cmake/compiler.cmake)
 
 # Options
 set(JSONTOOLKIT_BACKEND "rapidjson" CACHE STRING "Set the JSON Toolkit backend")
