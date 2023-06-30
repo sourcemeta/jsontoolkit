@@ -12,7 +12,7 @@ libraries can support multiple JSON backends and transparently let the
 end-consumer swap them as required.
 
 **JSON Toolkit targets C++17 and supports the Clang, GCC, and MSVC compilers on
-macOS, GNU/Linux, and Windows.**
+macOS, GNU/Linux, FreeBSD, and Windows.**
 
 Usage
 -----
