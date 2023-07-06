@@ -10,7 +10,6 @@ set(JSONTOOLKIT_JSON_BACKEND_HEADERS
 add_library(sourcemeta_jsontoolkit_json
   INTERFACE ${JSONTOOLKIT_JSON_META_HEADERS} ${JSONTOOLKIT_JSON_BACKEND_HEADERS})
 add_library(sourcemeta::jsontoolkit::json ALIAS sourcemeta_jsontoolkit_json)
-jsontoolkit_target_compile_options(sourcemeta_jsontoolkit_json INTERFACE)
 set_target_properties(sourcemeta_jsontoolkit_json
   PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/json.h"
   OUTPUT_NAME jsontoolkit-json
