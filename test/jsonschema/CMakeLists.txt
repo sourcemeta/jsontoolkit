@@ -13,5 +13,5 @@ target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE GTest::gtest_main)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
-  PRIVATE sourcemeta_jsontoolkit_jsonschema)
+  PRIVATE sourcemeta::jsontoolkit::jsonschema)
 gtest_discover_tests(sourcemeta_jsontoolkit_jsonschema_unit)

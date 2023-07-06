@@ -18,7 +18,7 @@ target_include_directories(sourcemeta_jsontoolkit_jsonschema
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
-  sourcemeta_jsontoolkit_json)
+  sourcemeta::jsontoolkit::json)
 
 # To find the generated metaschemas file
 target_include_directories(sourcemeta_jsontoolkit_jsonschema
