@@ -6,6 +6,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #pragma clang diagnostic ignored "-Wambiguous-reversed-operator"
 #pragma clang diagnostic ignored "-Wshadow"
+#pragma clang diagnostic ignored "-Wdocumentation"
 #endif
 #include <rapidjson/document.h>       // rapidjson::Value, rapidjson::Document
 #include <rapidjson/error/en.h>       // rapidjson::GetParseError_En
