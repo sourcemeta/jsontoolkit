@@ -1,5 +1,4 @@
 add_executable(jsontoolkit_jsonschema_keywords main.cc)
-jsontoolkit_target_compile_options(jsontoolkit_jsonschema_keywords PRIVATE)
 target_link_libraries(jsontoolkit_jsonschema_keywords PRIVATE sourcemeta::jsontoolkit::json)
 target_link_libraries(jsontoolkit_jsonschema_keywords PRIVATE sourcemeta::jsontoolkit::jsonschema)
 set_target_properties(jsontoolkit_jsonschema_keywords PROPERTIES

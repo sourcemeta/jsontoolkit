@@ -4,7 +4,6 @@ add_executable(sourcemeta_jsontoolkit_json_unit
   json_write_test.cc
   json_iterators_test.cc
   json_stringify_test.cc)
-jsontoolkit_target_compile_options(sourcemeta_jsontoolkit_json_unit PRIVATE)
 target_link_libraries(sourcemeta_jsontoolkit_json_unit
   PRIVATE GTest::gtest)
 target_link_libraries(sourcemeta_jsontoolkit_json_unit
