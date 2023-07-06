@@ -5,7 +5,7 @@ if(WIN32)
   include(cmake/vcpkg.cmake)
 endif()
 
-project("JSON Toolkit" VERSION 0.0.1 LANGUAGES CXX
+project(jsontoolkit VERSION 0.0.1 LANGUAGES CXX
   DESCRIPTION "A multi-backend JSON library for modern C++")
 
 # The PROJECT_IS_TOP_LEVEL handy variable is only
@@ -26,6 +26,10 @@ option(JSONTOOLKIT_WEBSITE "Build the JSON Toolkit website" OFF)
 if(PROJECT_IS_TOP_LEVEL)
   include(GNUInstallDirs)
 endif()
+
+install(FILES README.markdown
+  DESTINATION "${CMAKE_INSTALL_DOCDIR}"
+  COMPONENT jsontoolkit)
 
 add_subdirectory(src/json)
 add_subdirectory(src/jsonschema)
