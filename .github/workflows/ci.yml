@@ -59,4 +59,4 @@ jobs:
       # is not recognized, `ctest` will successfully exit finding no tests.
       # Better to be sure and `cd` all the time here.
       - run: cd ./build && ctest --build-config Release --output-on-failure --parallel
-      - run: cmake --install ./build --prefix ./build/dist --config Release --verbose
+      - run: cmake --install ./build --prefix ./build/dist --config Release --verbose --component jsontoolkit
