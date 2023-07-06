@@ -12,7 +12,10 @@ add_library(sourcemeta_jsontoolkit_jsonschema
 add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jsonschema)
 jsontoolkit_target_compile_options(sourcemeta_jsontoolkit_jsonschema PRIVATE)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema
-  PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/jsonschema.h")
+  PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/jsonschema.h"
+  OUTPUT_NAME jsontoolkit-jsonschema
+  EXPORT_NAME jsontoolkit::jsonschema)
+
 target_include_directories(sourcemeta_jsontoolkit_jsonschema
   PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
@@ -35,6 +38,7 @@ endif()
 
 # Installation
 install(TARGETS sourcemeta_jsontoolkit_jsonschema
+  EXPORT sourcemeta_jsontoolkit_jsonschema
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT jsontoolkit
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit" COMPONENT jsontoolkit)
 install(FILES include/jsontoolkit/jsonschema/resolver.h

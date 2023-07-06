@@ -12,7 +12,9 @@ add_library(sourcemeta_jsontoolkit_json
 add_library(sourcemeta::jsontoolkit::json ALIAS sourcemeta_jsontoolkit_json)
 jsontoolkit_target_compile_options(sourcemeta_jsontoolkit_json INTERFACE)
 set_target_properties(sourcemeta_jsontoolkit_json
-  PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/json.h")
+  PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/json.h"
+  OUTPUT_NAME jsontoolkit-json
+  EXPORT_NAME jsontoolkit::json)
 target_include_directories(sourcemeta_jsontoolkit_json
   INTERFACE
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
