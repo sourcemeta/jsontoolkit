@@ -25,11 +25,10 @@ option(JSONTOOLKIT_WEBSITE "Build the JSON Toolkit website" OFF)
 
 if(PROJECT_IS_TOP_LEVEL)
   include(GNUInstallDirs)
+  install(FILES README.markdown
+    DESTINATION "${CMAKE_INSTALL_DOCDIR}"
+    COMPONENT jsontoolkit)
 endif()
-
-install(FILES README.markdown
-  DESTINATION "${CMAKE_INSTALL_DOCDIR}"
-  COMPONENT jsontoolkit)
 
 add_subdirectory(src/json)
 add_subdirectory(src/jsonschema)
