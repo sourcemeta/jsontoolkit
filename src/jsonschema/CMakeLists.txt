@@ -33,10 +33,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC Threads::Threads)
 endif()
 
+# Installation
 install(TARGETS sourcemeta_jsontoolkit_jsonschema
-  EXPORT sourcemeta_jsontoolkit_jsonschema
-  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  COMPONENT jsonschema
-  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit")
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT jsontoolkit
+  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit" COMPONENT jsontoolkit)
 install(FILES include/jsontoolkit/jsonschema/resolver.h
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/jsonschema")
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/jsonschema"
+  COMPONENT jsontoolkit)

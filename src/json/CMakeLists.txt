@@ -24,12 +24,15 @@ target_compile_definitions(sourcemeta_jsontoolkit_json INTERFACE
   JSONTOOLKIT_BACKEND_${UPPER_JSONTOOLKIT_BACKEND})
 target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE
   ${JSONTOOLKIT_BACKEND})
+
+# Installation
 install(TARGETS sourcemeta_jsontoolkit_json
   EXPORT sourcemeta_jsontoolkit_json
-  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  COMPONENT json
-  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit")
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT jsontoolkit
+  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit" COMPONENT jsontoolkit)
 install(FILES ${JSONTOOLKIT_JSON_META_HEADERS}
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json")
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json"
+  COMPONENT jsontoolkit)
 install(FILES ${JSONTOOLKIT_JSON_BACKEND_HEADERS}
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json/${JSONTOOLKIT_BACKEND}")
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json/${JSONTOOLKIT_BACKEND}"
+  COMPONENT jsontoolkit)
