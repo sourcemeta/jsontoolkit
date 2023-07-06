@@ -10,7 +10,7 @@ target_link_libraries(sourcemeta_jsontoolkit_json_unit
 target_link_libraries(sourcemeta_jsontoolkit_json_unit
   PRIVATE GTest::gtest_main)
 target_link_libraries(sourcemeta_jsontoolkit_json_unit
-  PRIVATE sourcemeta_jsontoolkit_json)
+  PRIVATE sourcemeta::jsontoolkit::json)
 gtest_discover_tests(sourcemeta_jsontoolkit_json_unit)
 
 # JSON Test Suite
@@ -19,5 +19,5 @@ add_executable(sourcemeta_jsontoolkit_jsontestsuite jsontestsuite.cc)
 target_compile_definitions(sourcemeta_jsontoolkit_jsontestsuite
   PRIVATE JSONTESTSUITE_PATH="${PROJECT_SOURCE_DIR}/vendor/jsontestsuite")
 target_link_libraries(sourcemeta_jsontoolkit_jsontestsuite PRIVATE GTest::gtest)
-target_link_libraries(sourcemeta_jsontoolkit_jsontestsuite PRIVATE sourcemeta_jsontoolkit_json)
+target_link_libraries(sourcemeta_jsontoolkit_jsontestsuite PRIVATE sourcemeta::jsontoolkit::json)
 gtest_discover_tests(sourcemeta_jsontoolkit_jsontestsuite)
