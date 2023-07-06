@@ -28,6 +28,24 @@ if(PROJECT_IS_TOP_LEVEL)
   install(FILES README.markdown
     DESTINATION "${CMAKE_INSTALL_DOCDIR}"
     COMPONENT jsontoolkit)
+
+  include(CMakePackageConfigHelpers)
+  configure_package_config_file(
+    cmake/JSONToolkitConfig.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/JSONToolkitConfig.cmake"
+    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/jsontoolkit")
+  write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/JSONToolkitConfigVersion.cmake"
+    COMPATIBILITY SameMajorVersion)
+  install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/JSONToolkitConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/JSONToolkitConfig.cmake"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/jsontoolkit"
+    COMPONENT jsontoolkit)
+  install(FILES
+    "cmake/${JSONTOOLKIT_BACKEND}.cmake"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/jsontoolkit"
+    COMPONENT jsontoolkit)
 endif()
 
 add_subdirectory(src/json)
@@ -56,5 +74,9 @@ if(JSONTOOLKIT_TESTS)
   add_subdirectory(./test/jsonschema)
   if(JSONTOOLKIT_CONTRIB)
     add_subdirectory(./test/contrib)
+  endif()
+
+  if(PROJECT_IS_TOP_LEVEL)
+    add_subdirectory(./test/packaging)
   endif()
 endif()

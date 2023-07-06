@@ -6,5 +6,5 @@ task:
   prepare_script: pkg install -y cmake rapidjson googletest
   configure_script: cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DJSONTOOLKIT_BACKEND=rapidjson -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON
   build_script: cmake --build ./build --config Release
-  test_script: cd ./build && ctest --build-config Release --output-on-failure --parallel
   install_script: cmake --install ./build --prefix ./build/dist --config Release --verbose
+  test_script: cd ./build && ctest --build-config Release --output-on-failure
