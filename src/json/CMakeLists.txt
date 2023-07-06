@@ -7,11 +7,10 @@ set(JSONTOOLKIT_JSON_BACKEND_HEADERS
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/read.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/write.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/iterators.h)
-add_library(sourcemeta_jsontoolkit_json INTERFACE)
+add_library(sourcemeta_jsontoolkit_json
+  INTERFACE ${JSONTOOLKIT_JSON_META_HEADERS} ${JSONTOOLKIT_JSON_BACKEND_HEADERS})
 add_library(sourcemeta::jsontoolkit::json ALIAS sourcemeta_jsontoolkit_json)
 jsontoolkit_target_compile_options(sourcemeta_jsontoolkit_json INTERFACE)
-target_sources(sourcemeta_jsontoolkit_json INTERFACE include/jsontoolkit/json.h
-  ${JSONTOOLKIT_JSON_META_HEADERS} ${JSONTOOLKIT_JSON_BACKEND_HEADERS})
 set_target_properties(sourcemeta_jsontoolkit_json
   PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/json.h")
 target_include_directories(sourcemeta_jsontoolkit_json
