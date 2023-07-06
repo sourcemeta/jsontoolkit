@@ -3,3 +3,6 @@ jsontoolkit_target_compile_options(jsontoolkit_prettify PRIVATE)
 target_link_libraries(jsontoolkit_prettify PRIVATE sourcemeta_jsontoolkit_json)
 set_target_properties(jsontoolkit_prettify PROPERTIES
   OUTPUT_NAME jsontoolkit-prettify)
+install(TARGETS jsontoolkit_prettify
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  COMPONENT jsontoolkit)
