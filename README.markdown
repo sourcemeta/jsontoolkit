@@ -27,7 +27,8 @@ $ git submodule add https://github.com/sourcemeta/jsontoolkit.git deps/jsontoolk
 add_subdirectory("${PROJECT_SOURCE_DIR}/deps/jsontoolkit")
 
 # Link your targets accordingly
-target_link_libraries(my-executable-or-library PUBLIC sourcemeta_jsontoolkit_json)
+target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::json)
+target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::jsonschema)
 ```
 
 ### Using `FetchContent`
@@ -45,7 +46,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(jsontoolkit)
 
 add_executable(my_example ...)
-target_link_libraries(my_example PRIVATE sourcemeta_jsontoolkit_json)
+target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::json)
+target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::jsonschema)
 ```
 
 ### CMake options
