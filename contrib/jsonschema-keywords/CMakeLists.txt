@@ -4,3 +4,6 @@ target_link_libraries(jsontoolkit_jsonschema_keywords PRIVATE sourcemeta_jsontoo
 target_link_libraries(jsontoolkit_jsonschema_keywords PRIVATE sourcemeta_jsontoolkit_jsonschema)
 set_target_properties(jsontoolkit_jsonschema_keywords PROPERTIES
   OUTPUT_NAME jsonschema-keywords)
+install(TARGETS jsontoolkit_jsonschema_keywords
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  COMPONENT jsontoolkit)
