@@ -8,6 +8,7 @@ set(JSONTOOLKIT_JSON_BACKEND_HEADERS
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/write.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/iterators.h)
 add_library(sourcemeta_jsontoolkit_json INTERFACE)
+add_library(sourcemeta::jsontoolkit::json ALIAS sourcemeta_jsontoolkit_json)
 jsontoolkit_target_compile_options(sourcemeta_jsontoolkit_json INTERFACE)
 target_sources(sourcemeta_jsontoolkit_json INTERFACE include/jsontoolkit/json.h
   ${JSONTOOLKIT_JSON_META_HEADERS} ${JSONTOOLKIT_JSON_BACKEND_HEADERS})
