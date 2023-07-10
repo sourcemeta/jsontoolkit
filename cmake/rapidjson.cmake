@@ -1,4 +1,4 @@
-if(JSONTOOLKIT_BACKEND_PATH STREQUAL "")
+if(NOT JSONTOOLKIT_BACKEND_PATH OR JSONTOOLKIT_BACKEND_PATH STREQUAL "")
   # RapidJSON's find package implementation populates RAPIDJSON_INCLUDE_DIRS
   # See https://github.com/rjeczalik/rapidjson/blob/master/cmake/Findrapidjson.cmake
   find_package(RapidJSON CONFIG REQUIRED)
