@@ -1,4 +1,5 @@
 set(JSONTOOLKIT_JSON_META_HEADERS
+  include/jsontoolkit/json.h
   include/jsontoolkit/json/read.h
   include/jsontoolkit/json/write.h
   include/jsontoolkit/json/iterators.h)
