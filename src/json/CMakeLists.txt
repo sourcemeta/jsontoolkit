@@ -37,3 +37,7 @@ install(FILES ${JSONTOOLKIT_JSON_META_HEADERS}
 install(FILES ${JSONTOOLKIT_JSON_BACKEND_HEADERS}
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json/${JSONTOOLKIT_BACKEND}"
   COMPONENT jsontoolkit)
+install(EXPORT sourcemeta_jsontoolkit_json
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/jsontoolkit"
+  NAMESPACE sourcemeta::
+  COMPONENT jsontoolkit)
