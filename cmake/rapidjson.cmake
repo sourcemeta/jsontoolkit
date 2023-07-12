@@ -15,4 +15,3 @@ endif()
 
 # Build RapidJSON using std::string
 target_compile_definitions(rapidjson INTERFACE RAPIDJSON_HAS_STDSTRING)
-

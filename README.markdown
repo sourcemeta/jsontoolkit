@@ -50,6 +50,19 @@ target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::json)
 target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::jsonschema)
 ```
 
+### Using `find_package`
+
+Assuming you have installed JSON Toolkit in a place where CMake can find the
+package config file:
+
+```sh
+find_package(JSONToolkit REQUIRED)
+
+# Link your targets accordingly
+target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::json)
+target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::jsonschema)
+```
+
 ### CMake options
 
 | Option                     | Type    | Default     | Description                                      |
