@@ -23,8 +23,9 @@ $ git submodule add https://github.com/sourcemeta/jsontoolkit.git deps/jsontoolk
 add_subdirectory("${PROJECT_SOURCE_DIR}/deps/jsontoolkit")
 
 # Link your targets accordingly
-target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::json)
-target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::jsonschema)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::json)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonschema)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonpointer)
 ```
 
 ### Using FetchContent
@@ -44,6 +45,7 @@ FetchContent_MakeAvailable(jsontoolkit)
 add_executable(my_example ...)
 target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::json)
 target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::jsonschema)
+target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::jsonpointer)
 ```
 
 ### Using find_package
@@ -55,8 +57,9 @@ package config file:
 find_package(JSONToolkit REQUIRED)
 
 # Link your targets accordingly
-target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::json)
-target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::jsonschema)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::json)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonschema)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonpointer)
 ```
 
 CMake
@@ -64,16 +67,17 @@ CMake
 
 ### Options
 
-| Option                            | Type    | Default | Description                                |
-|-----------------------------------|---------|---------|--------------------------------------------|
-| `JSONTOOLKIT_JSON`                | Boolean | `ON`    | Build the JSON Toolkit JSON library        |
-| `JSONTOOLKIT_JSONSCHEMA`          | Boolean | `ON`    | Build the JSON Toolkit JSON Schema library |
-| `JSONTOOLKIT_TESTS`               | Boolean | `OFF`   | Build the JSON Toolkit tests               |
-| `JSONTOOLKIT_CONTRIB`             | Boolean | `OFF`   | Build the JSON Toolkit `contrib` programs  |
-| `JSONTOOLKIT_DOCS`                | Boolean | `OFF`   | Build the JSON Toolkit docs                |
-| `JSONTOOLKIT_ADDRESS_SANITIZER`   | Boolean | `OFF`   | Enable the address sanitizer               |
-| `JSONTOOLKIT_UNDEFINED_SANITIZER` | Boolean | `OFF`   | Enable the undefined behavior sanitizer    |
-| `JSONTOOLKIT_EMSCRIPTEN_TESTS`    | Boolean | `OFF`   | Build JSON Toolkit Emscripten tests        |
+| Option                            | Type    | Default | Description                                 |
+|-----------------------------------|---------|---------|---------------------------------------------|
+| `JSONTOOLKIT_JSON`                | Boolean | `ON`    | Build the JSON Toolkit JSON library         |
+| `JSONTOOLKIT_JSONSCHEMA`          | Boolean | `ON`    | Build the JSON Toolkit JSON Schema library  |
+| `JSONTOOLKIT_JSONPOINTER`         | Boolean | `ON`    | Build the JSON Toolkit JSON Pointer library |
+| `JSONTOOLKIT_TESTS`               | Boolean | `OFF`   | Build the JSON Toolkit tests                |
+| `JSONTOOLKIT_CONTRIB`             | Boolean | `OFF`   | Build the JSON Toolkit `contrib` programs   |
+| `JSONTOOLKIT_DOCS`                | Boolean | `OFF`   | Build the JSON Toolkit docs                 |
+| `JSONTOOLKIT_ADDRESS_SANITIZER`   | Boolean | `OFF`   | Enable the address sanitizer                |
+| `JSONTOOLKIT_UNDEFINED_SANITIZER` | Boolean | `OFF`   | Enable the undefined behavior sanitizer     |
+| `JSONTOOLKIT_EMSCRIPTEN_TESTS`    | Boolean | `OFF`   | Build JSON Toolkit Emscripten tests         |
 
 ### Components
 
@@ -107,7 +111,7 @@ cmake --build ./build --config <Debug|Release>
 ctest --test-dir ./build --build-config <Debug|Release> --output-on-failure --progress
 ```
 
-Or simple run:
+Or simply run:
 
 ```sh
 # On UNIX-based systems
