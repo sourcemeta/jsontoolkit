@@ -40,9 +40,6 @@ install(TARGETS sourcemeta_jsontoolkit_jsonschema
   EXPORT sourcemeta_jsontoolkit_jsonschema
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT jsontoolkit
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit" COMPONENT jsontoolkit)
-install(FILES include/jsontoolkit/jsonschema/resolver.h
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/jsonschema"
-  COMPONENT jsontoolkit)
 install(EXPORT sourcemeta_jsontoolkit_jsonschema
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/jsontoolkit"
   NAMESPACE sourcemeta::
