@@ -3,8 +3,7 @@
 #include <filesystem> // std::filesystem::path, std::filesystem::directory_entry
 #include <fstream>    // std::ifstream
 #include <gtest/gtest.h>
-#include <stdexcept> // std::domain_error
-#include <string>    // std::string
+#include <string> // std::string
 
 enum class JSONTestType { Accept, Reject };
 
@@ -21,7 +20,8 @@ public:
       sourcemeta::jsontoolkit::parse(stream);
       SUCCEED();
     } else if (this->type == JSONTestType::Reject) {
-      EXPECT_THROW(sourcemeta::jsontoolkit::parse(stream), std::domain_error);
+      EXPECT_THROW(sourcemeta::jsontoolkit::parse(stream),
+                   sourcemeta::jsontoolkit::ParseError);
     } else {
       FAIL() << "Invalid test type";
     }

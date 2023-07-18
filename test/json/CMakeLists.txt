@@ -1,5 +1,6 @@
 add_executable(sourcemeta_jsontoolkit_json_unit
   json_parse_error_test.cc
+  json_error_test.cc
   json_read_test.cc
   json_write_test.cc
   json_iterators_test.cc

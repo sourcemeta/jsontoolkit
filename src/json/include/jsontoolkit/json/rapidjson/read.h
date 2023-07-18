@@ -1,6 +1,7 @@
 #ifndef JSONTOOLKIT_JSON_RAPIDJSON_READ_H_
 #define JSONTOOLKIT_JSON_RAPIDJSON_READ_H_
 
+#include "../error.h"
 #include "common.h"
 
 #include <cassert>     // assert
@@ -10,7 +11,7 @@
 #include <istream>     // std::basic_istream
 #include <limits>      // std::numeric_limits
 #include <ostream>     // std::basic_ostream
-#include <stdexcept>   // std::domain_error, std::overflow_error
+#include <stdexcept>   // std::overflow_error
 #include <string>      // std::string
 #include <type_traits> // std::enable_if_t, std::is_same_v
 
@@ -20,8 +21,8 @@ inline auto parse(const std::string &json) -> JSON {
   rapidjson::Document document;
   document.Parse(json);
   if (document.HasParseError()) {
-    throw std::domain_error(
-        rapidjson::GetParseError_En(document.GetParseError()));
+    // TODO: Provide more information about the error
+    throw ParseError();
   }
 
   return document;
@@ -33,8 +34,8 @@ inline auto parse(std::basic_istream<CharT, Traits> &stream) -> JSON {
   rapidjson::Document document;
   document.ParseStream(istream_wrapper);
   if (document.HasParseError()) {
-    throw std::domain_error(
-        rapidjson::GetParseError_En(document.GetParseError()));
+    // TODO: Provide more information about the error
+    throw ParseError();
   }
 
   return document;
