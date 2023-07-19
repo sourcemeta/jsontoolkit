@@ -2,7 +2,8 @@ set(JSONTOOLKIT_JSON_META_HEADERS
   include/jsontoolkit/json.h
   include/jsontoolkit/json/read.h
   include/jsontoolkit/json/write.h
-  include/jsontoolkit/json/iterators.h)
+  include/jsontoolkit/json/iterators.h
+  include/jsontoolkit/json/error.h)
 set(JSONTOOLKIT_JSON_BACKEND_HEADERS
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/common.h
   include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/read.h

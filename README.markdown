@@ -110,9 +110,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(stre
 assert(sourcemeta::jsontoolkit::is_array(document));
 ```
 
-If parsing fails,
-[`std::domain_error`](https://en.cppreference.com/w/cpp/error/domain_error)
-with a human-friendly error string will be thrown.
+If parsing fails, `sourcemeta::jsontoolkit::ParseError` will be thrown.
 
 #### Parse from string
 
@@ -129,9 +127,7 @@ const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1
 assert(sourcemeta::jsontoolkit::is_array(document));
 ```
 
-If parsing fails,
-[`std::domain_error`](https://en.cppreference.com/w/cpp/error/domain_error)
-with a human-friendly error string will be thrown.
+If parsing fails, `sourcemeta::jsontoolkit::ParseError` will be thrown.
 
 #### Create from JSON
 
