@@ -179,7 +179,7 @@ TEST(jsonschema_vocabulary, unresolvable_metaschema) {
     "$schema": "https://non-existent.com/metaschema"
   })JSON")};
   EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
-               std::runtime_error);
+               sourcemeta::jsontoolkit::ResolutionError);
 }
 
 TEST(jsonschema_vocabulary, custom_metaschema_invalid_1) {
@@ -188,7 +188,7 @@ TEST(jsonschema_vocabulary, custom_metaschema_invalid_1) {
     "$schema": "https://sourcemeta.com/invalid_1"
   })JSON")};
   EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
-               std::runtime_error);
+               sourcemeta::jsontoolkit::ResolutionError);
 }
 
 TEST(jsonschema_vocabulary, custom_metaschema_invalid_2) {
@@ -197,7 +197,7 @@ TEST(jsonschema_vocabulary, custom_metaschema_invalid_2) {
     "$schema": "https://sourcemeta.com/invalid_2"
   })JSON")};
   EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
-               std::runtime_error);
+               sourcemeta::jsontoolkit::ResolutionError);
 }
 
 TEST(jsonschema_vocabulary, real_metaschema_takes_precedence_over_default) {
