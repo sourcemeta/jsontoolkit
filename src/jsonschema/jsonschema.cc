@@ -4,7 +4,6 @@
 #include <cassert>     // assert
 #include <future>      // std::future
 #include <sstream>     // std::ostringstream
-#include <stdexcept>   // std::invalid_argument, std::runtime_error
 #include <type_traits> // std::remove_reference_t
 
 auto sourcemeta::jsontoolkit::is_schema(
@@ -103,9 +102,8 @@ auto sourcemeta::jsontoolkit::draft(
     const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
         resolver(effective_metaschema_id.value()).get()};
     if (!metaschema.has_value()) {
-      std::ostringstream error;
-      error << "Could not resolve schema: " << effective_metaschema_id.value();
-      throw std::runtime_error(error.str());
+      throw sourcemeta::jsontoolkit::ResolutionError(
+          effective_metaschema_id.value(), "Could not resolve schema");
     }
 
     return draft(metaschema.value(), resolver, effective_metaschema_id.value());
@@ -170,18 +168,16 @@ auto sourcemeta::jsontoolkit::vocabularies(
   const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
       metaschema_future.get()};
   if (!metaschema.has_value()) {
-    std::ostringstream error;
-    error << "Could not resolve schema: " << effective_metaschema_id;
-    throw std::runtime_error(error.str());
+    throw sourcemeta::jsontoolkit::ResolutionError(effective_metaschema_id,
+                                                   "Could not resolve schema");
   }
   const std::optional<std::string> resolved_id{
       sourcemeta::jsontoolkit::id(metaschema.value())};
   if (!resolved_id.has_value() ||
       resolved_id.value() != effective_metaschema_id) {
-    std::ostringstream error;
-    error << "Resolved metaschema id does not match request: "
-          << effective_metaschema_id;
-    throw std::runtime_error(error.str());
+    throw sourcemeta::jsontoolkit::ResolutionError(
+        effective_metaschema_id,
+        "Resolved metaschema id does not match request");
   }
 
   /*

@@ -8,7 +8,7 @@ namespace sourcemeta::jsontoolkit {
 class ParseError : public std::exception {
 public:
   ParseError() {}
-  const char *what() const noexcept override {
+  auto what() const noexcept -> const char * override {
     return "The input is not a valid JSON document";
   }
 };
