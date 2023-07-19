@@ -41,19 +41,19 @@ TEST(jsonschema_metaschema, metaschema_integer) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::from(5)};
   EXPECT_THROW(sourcemeta::jsontoolkit::metaschema(document),
-               std::invalid_argument);
+               sourcemeta::jsontoolkit::SchemaError);
 }
 
 TEST(jsonschema_metaschema, metaschema_object_with_integer_metaschema) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse("{ \"$schema\": 1 }")};
   EXPECT_THROW(sourcemeta::jsontoolkit::metaschema(document),
-               std::invalid_argument);
+               sourcemeta::jsontoolkit::SchemaError);
 }
 
 TEST(jsonschema_metaschema, metaschema_object_empty_metaschema) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse("{ \"$schema\": \"\" }")};
   EXPECT_THROW(sourcemeta::jsontoolkit::metaschema(document),
-               std::invalid_argument);
+               sourcemeta::jsontoolkit::SchemaError);
 }

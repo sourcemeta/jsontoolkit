@@ -124,7 +124,7 @@ TEST(jsonschema_vocabulary, core_vocabularies_boolean_without_default) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::from(true)};
   EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
-               std::runtime_error);
+               sourcemeta::jsontoolkit::SchemaError);
 }
 
 TEST(jsonschema_vocabulary, core_vocabularies_boolean_with_default) {
@@ -232,7 +232,7 @@ TEST(jsonschema_vocabulary, custom_metaschema_3_invalid) {
   })JSON")};
 
   EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
-               std::runtime_error);
+               sourcemeta::jsontoolkit::SchemaError);
 }
 
 TEST(jsonschema_vocabulary, custom_metaschema_4_invalid) {
@@ -242,7 +242,7 @@ TEST(jsonschema_vocabulary, custom_metaschema_4_invalid) {
   })JSON")};
 
   EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
-               std::runtime_error);
+               sourcemeta::jsontoolkit::SchemaError);
 }
 
 TEST(jsonschema_vocabulary, no_vocabularies_2020_12) {
