@@ -22,7 +22,8 @@ auto sourcemeta::jsontoolkit::id(const sourcemeta::jsontoolkit::Value &schema)
         sourcemeta::jsontoolkit::at(schema, "$id")};
     if (!sourcemeta::jsontoolkit::is_string(id) ||
         sourcemeta::jsontoolkit::empty(id)) {
-      throw std::invalid_argument("The value of the $id property is not valid");
+      throw sourcemeta::jsontoolkit::SchemaError(
+          "The value of the $id property is not valid");
     }
 
     return sourcemeta::jsontoolkit::to_string(id);
@@ -35,7 +36,8 @@ auto sourcemeta::jsontoolkit::metaschema(
     const sourcemeta::jsontoolkit::Value &schema)
     -> std::optional<std::string> {
   if (!sourcemeta::jsontoolkit::is_schema(schema)) {
-    throw std::invalid_argument("The input document is not a valid schema");
+    throw sourcemeta::jsontoolkit::SchemaError(
+        "The input document is not a valid schema");
   }
 
   if (sourcemeta::jsontoolkit::is_boolean(schema)) {
@@ -47,7 +49,7 @@ auto sourcemeta::jsontoolkit::metaschema(
         sourcemeta::jsontoolkit::at(schema, "$schema")};
     if (!sourcemeta::jsontoolkit::is_string(metaschema) ||
         sourcemeta::jsontoolkit::empty(metaschema)) {
-      throw std::invalid_argument(
+      throw sourcemeta::jsontoolkit::SchemaError(
           "The value of the $schema property is not valid");
     }
 
@@ -126,7 +128,7 @@ static auto core_vocabulary(const std::string &draft) -> std::string {
   } else {
     std::ostringstream error;
     error << "Unrecognized draft: " << draft;
-    throw std::runtime_error(error.str());
+    throw sourcemeta::jsontoolkit::SchemaError(error.str());
   }
 }
 
@@ -153,7 +155,7 @@ auto sourcemeta::jsontoolkit::vocabularies(
     // If the schema has no declared metaschema and the user didn't
     // provide a explicit default, then we cannot do anything.
     // Better to abort instead of trying to guess.
-    throw std::runtime_error(
+    throw sourcemeta::jsontoolkit::SchemaError(
         "Cannot determine the metaschema of the given schema");
   }
   const std::string &effective_metaschema_id{metaschema_id.has_value()
@@ -192,7 +194,7 @@ auto sourcemeta::jsontoolkit::vocabularies(
   if (!draft.has_value()) {
     std::ostringstream error;
     error << "Could not determine draft for schema: " << resolved_id.value();
-    throw std::runtime_error(error.str());
+    throw sourcemeta::jsontoolkit::SchemaError(error.str());
   }
   const std::string core{core_vocabulary(draft.value())};
 
@@ -264,11 +266,12 @@ auto sourcemeta::jsontoolkit::vocabularies(
 
   // Handle core vocabulary edge cases
   if (!sourcemeta::jsontoolkit::defines(vocabulary_value, core)) {
-    throw std::runtime_error(
+    throw sourcemeta::jsontoolkit::SchemaError(
         "Every metaschema must declare the core vocabulary");
   } else if (!sourcemeta::jsontoolkit::to_boolean(
                  sourcemeta::jsontoolkit::at(vocabulary_value, core))) {
-    throw std::runtime_error("The core vocabulary must be marked as required");
+    throw sourcemeta::jsontoolkit::SchemaError(
+        "The core vocabulary must be marked as required");
   }
 
   for (auto iterator = sourcemeta::jsontoolkit::cbegin_object(vocabulary_value);

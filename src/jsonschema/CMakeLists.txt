@@ -7,6 +7,7 @@ add_library(sourcemeta_jsontoolkit_jsonschema
   include/jsontoolkit/jsonschema/walker.h
   include/jsontoolkit/jsonschema/default_walker.h
   include/jsontoolkit/jsonschema/default_resolver.h
+  include/jsontoolkit/jsonschema/error.h
   jsonschema.cc default_metaschemas.h.in
   default_walker.cc default_resolver.cc)
 add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jsonschema)

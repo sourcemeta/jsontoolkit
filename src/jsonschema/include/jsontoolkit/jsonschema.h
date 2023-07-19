@@ -4,6 +4,7 @@
 #include <jsontoolkit/json.h>
 #include <jsontoolkit/jsonschema/default_resolver.h>
 #include <jsontoolkit/jsonschema/default_walker.h>
+#include <jsontoolkit/jsonschema/error.h>
 #include <jsontoolkit/jsonschema/resolver.h>
 #include <jsontoolkit/jsonschema/walker.h>
 
