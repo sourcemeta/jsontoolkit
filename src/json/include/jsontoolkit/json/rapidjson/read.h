@@ -13,6 +13,7 @@
 #include <ostream>     // std::basic_ostream
 #include <stdexcept>   // std::overflow_error
 #include <string>      // std::string
+#include <string_view> // std::string_view
 #include <type_traits> // std::enable_if_t, std::is_same_v
 
 namespace sourcemeta::jsontoolkit {
@@ -59,9 +60,9 @@ inline auto from(const Value &value) -> JSON {
   return document;
 }
 
-inline auto from(const std::string &value) -> JSON {
+inline auto from(std::string_view value) -> JSON {
   rapidjson::Document document;
-  document.SetString(value.c_str(), document.GetAllocator());
+  document.SetString(std::string{value}.c_str(), document.GetAllocator());
   return document;
 }
 

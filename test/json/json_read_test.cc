@@ -1,13 +1,15 @@
-#include <cstdint>    // std::uint64_t, std::int64_t
-#include <functional> // std::hash
 #include <gtest/gtest.h>
-#include <iterator> // std::back_inserter
 #include <jsontoolkit/json/read.h>
-#include <limits>  // std::numeric_limits
-#include <set>     // std::set
-#include <sstream> // std::istringstream
-#include <utility> // std::move
-#include <vector>  // std::vector
+
+#include <cstdint>     // std::uint64_t, std::int64_t
+#include <functional>  // std::hash
+#include <iterator>    // std::back_inserter
+#include <limits>      // std::numeric_limits
+#include <set>         // std::set
+#include <sstream>     // std::istringstream
+#include <string_view> // std::string_view
+#include <utility>     // std::move
+#include <vector>      // std::vector
 
 TEST(JSON, parse_from_stream) {
   std::istringstream stream{"true"};
@@ -58,6 +60,14 @@ TEST(JSON, from_json_value) {
   EXPECT_EQ(sourcemeta::jsontoolkit::to_integer(
                 sourcemeta::jsontoolkit::at(document, 2)),
             3);
+}
+
+TEST(JSON, from_string_view) {
+  const std::string_view input{"foo"};
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from(input)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::is_string(document));
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(document), "foo");
 }
 
 TEST(JSON, is_boolean_true) {
