@@ -1,5 +1,5 @@
-#ifndef JSONTOOLKIT_JSONSCHEMA_H_
-#define JSONTOOLKIT_JSONSCHEMA_H_
+#ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_H_
+#define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_H_
 
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema/default_resolver.h>

@@ -1,5 +1,5 @@
-#ifndef JSONTOOLKIT_JSONSCHEMA_WALKER_H_
-#define JSONTOOLKIT_JSONSCHEMA_WALKER_H_
+#ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_WALKER_H_
+#define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_WALKER_H_
 
 #include <functional>    // std::function
 #include <string>        // std::string

@@ -1,5 +1,5 @@
-#ifndef JSONTOOLKIT_JSONSCHEMA_ERROR_H
-#define JSONTOOLKIT_JSONSCHEMA_ERROR_H
+#ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_ERROR_H
+#define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_ERROR_H
 
 #include <exception> // std::exception
 #include <string>    // std::string
