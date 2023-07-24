@@ -56,7 +56,7 @@ Assuming you have installed JSON Toolkit in a place where CMake can find the
 package config file:
 
 ```sh
-find_package(JSONToolkit REQUIRED)
+find_package(sourcemeta_jsontoolkit REQUIRED)
 
 # Link your targets accordingly
 target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::json)

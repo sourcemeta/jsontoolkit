@@ -5,7 +5,7 @@ if(WIN32)
   include(cmake/vcpkg.cmake)
 endif()
 
-project(jsontoolkit VERSION 0.0.1 LANGUAGES CXX
+project(sourcemeta_jsontoolkit VERSION 0.0.1 LANGUAGES CXX
   DESCRIPTION "A multi-backend JSON library for modern C++")
 
 # The PROJECT_IS_TOP_LEVEL handy variable is only
@@ -31,20 +31,20 @@ if(PROJECT_IS_TOP_LEVEL)
 
   include(CMakePackageConfigHelpers)
   configure_package_config_file(
-    cmake/JSONToolkitConfig.cmake.in
-    "${CMAKE_CURRENT_BINARY_DIR}/JSONToolkitConfig.cmake"
-    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/jsontoolkit")
+    cmake/config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
+    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
   write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/JSONToolkitConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
     COMPATIBILITY SameMajorVersion)
   install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/JSONToolkitConfigVersion.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/JSONToolkitConfig.cmake"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/jsontoolkit"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
     COMPONENT jsontoolkit)
   install(FILES
     "cmake/${JSONTOOLKIT_BACKEND}.cmake"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/jsontoolkit"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
     COMPONENT jsontoolkit)
 endif()
 
