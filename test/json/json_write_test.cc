@@ -1,7 +1,7 @@
 #include <algorithm> // std::all_of
 #include <gtest/gtest.h>
-#include <jsontoolkit/json/write.h>
-#include <set>     // std::set
+#include <set> // std::set
+#include <sourcemeta/jsontoolkit/json/write.h>
 #include <utility> // std::move
 #include <vector>  // std::vector
 

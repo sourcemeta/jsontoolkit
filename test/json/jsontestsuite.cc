@@ -1,4 +1,4 @@
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 
 #include <filesystem> // std::filesystem::path, std::filesystem::directory_entry
 #include <fstream>    // std::ifstream

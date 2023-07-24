@@ -1,5 +1,5 @@
 #include "default_metaschemas.h"
-#include <jsontoolkit/jsonschema/default_resolver.h>
+#include <sourcemeta/jsontoolkit/jsonschema/default_resolver.h>
 
 auto sourcemeta::jsontoolkit::DefaultResolver::operator()(
     const std::string &identifier)

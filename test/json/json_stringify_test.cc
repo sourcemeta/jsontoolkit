@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <jsontoolkit/json/read.h>
+#include <sourcemeta/jsontoolkit/json/read.h>
 #include <sstream> // std::ostringstream
 
 TEST(JSON, array_stringify_scalars_no_space) {

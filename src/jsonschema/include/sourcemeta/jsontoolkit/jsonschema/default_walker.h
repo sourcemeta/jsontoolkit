@@ -1,7 +1,7 @@
 #ifndef JSONTOOLKIT_JSONSCHEMA_DEFAULT_WALKER_H_
 #define JSONTOOLKIT_JSONSCHEMA_DEFAULT_WALKER_H_
 
-#include <jsontoolkit/jsonschema/walker.h>
+#include <sourcemeta/jsontoolkit/jsonschema/walker.h>
 
 namespace sourcemeta::jsontoolkit {
 

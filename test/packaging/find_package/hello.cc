@@ -1,4 +1,4 @@
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 
 #include <cstdlib>  // EXIT_SUCCESS
 #include <iostream> // std::cout

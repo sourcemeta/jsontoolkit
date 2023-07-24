@@ -1,5 +1,5 @@
-#include <jsontoolkit/json.h>
-#include <jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 
 #include <cassert>     // assert
 #include <future>      // std::future

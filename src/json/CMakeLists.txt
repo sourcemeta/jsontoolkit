@@ -1,20 +1,20 @@
 set(JSONTOOLKIT_JSON_META_HEADERS
-  include/jsontoolkit/json.h
-  include/jsontoolkit/json/read.h
-  include/jsontoolkit/json/write.h
-  include/jsontoolkit/json/iterators.h
-  include/jsontoolkit/json/error.h)
+  include/sourcemeta/jsontoolkit/json.h
+  include/sourcemeta/jsontoolkit/json/read.h
+  include/sourcemeta/jsontoolkit/json/write.h
+  include/sourcemeta/jsontoolkit/json/iterators.h
+  include/sourcemeta/jsontoolkit/json/error.h)
 set(JSONTOOLKIT_JSON_BACKEND_HEADERS
-  include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/common.h
-  include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/read.h
-  include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/write.h
-  include/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/iterators.h)
+  include/sourcemeta/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/common.h
+  include/sourcemeta/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/read.h
+  include/sourcemeta/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/write.h
+  include/sourcemeta/jsontoolkit/json/${JSONTOOLKIT_BACKEND}/iterators.h)
 add_library(sourcemeta_jsontoolkit_json
   INTERFACE ${JSONTOOLKIT_JSON_META_HEADERS} ${JSONTOOLKIT_JSON_BACKEND_HEADERS})
 add_library(sourcemeta::jsontoolkit::json ALIAS sourcemeta_jsontoolkit_json)
 set_target_properties(sourcemeta_jsontoolkit_json
-  PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/json.h"
-  OUTPUT_NAME jsontoolkit-json
+  PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/sourcemeta/jsontoolkit/json.h"
+  OUTPUT_NAME sourcemeta-jsontoolkit-json
   EXPORT_NAME jsontoolkit::json)
 target_include_directories(sourcemeta_jsontoolkit_json
   INTERFACE
@@ -31,14 +31,14 @@ target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE
 install(TARGETS sourcemeta_jsontoolkit_json
   EXPORT sourcemeta_jsontoolkit_json
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT jsontoolkit
-  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit" COMPONENT jsontoolkit)
+  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit" COMPONENT jsontoolkit)
 install(FILES ${JSONTOOLKIT_JSON_META_HEADERS}
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json"
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit/json"
   COMPONENT jsontoolkit)
 install(FILES ${JSONTOOLKIT_JSON_BACKEND_HEADERS}
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit/json/${JSONTOOLKIT_BACKEND}"
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit/json/${JSONTOOLKIT_BACKEND}"
   COMPONENT jsontoolkit)
 install(EXPORT sourcemeta_jsontoolkit_json
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/jsontoolkit"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/sourcemeta"
   NAMESPACE sourcemeta::
   COMPONENT jsontoolkit)

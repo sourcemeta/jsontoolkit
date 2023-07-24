@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <jsontoolkit/json.h>
-#include <jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 
 #include <future> // std::promise, std::future
 #include <string> // std::string

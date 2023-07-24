@@ -5,7 +5,7 @@
 #include <optional> // std::optional
 #include <string>   // std::string
 
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 
 namespace sourcemeta::jsontoolkit {
 
