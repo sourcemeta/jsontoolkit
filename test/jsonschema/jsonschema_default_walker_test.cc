@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 
 static const std::unordered_map<std::string, bool> VOCABULARIES_2020_12{
     {"https://json-schema.org/draft/2020-12/vocab/core", true},

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <jsontoolkit/json.h>
-#include <jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 
 static auto
 EXPECT_SCHEMA(const sourcemeta::jsontoolkit::schema_resolver_t &resolver,

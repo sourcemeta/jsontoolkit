@@ -1,7 +1,7 @@
 #ifndef JSONTOOLKIT_JSONSCHEMA_RESOLVER_H_
 #define JSONTOOLKIT_JSONSCHEMA_RESOLVER_H_
 
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 
 #include <functional> // std::function
 #include <future>     // std::future

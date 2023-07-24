@@ -86,7 +86,7 @@ JSON Toolkit provides a set of (mostly `inline`) functions and aliases under
 the `sourcemeta::jsontoolkit` namespace that are included as follows:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 ```
 
 ### Conversion
@@ -101,7 +101,7 @@ Create a JSON document from a C++ standard input stream. For example, a JSON
 document that represents an array can be parsed as follows:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 #include <sstream>
 
@@ -120,7 +120,7 @@ Create a JSON document from a JSON string. For example, a JSON document that
 represents an array can be parsed as follows:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
@@ -137,7 +137,7 @@ This function creates a JSON document from another JSON document or value,
 effectively deep-copying it. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from("Foo Bar")};
@@ -155,7 +155,7 @@ This function creates a JSON document from a set of supported basic C++ types.
 For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 
 const sourcemeta::jsontoolkit::JSON my_null{sourcemeta::jsontoolkit::from(nullptr)};
 const sourcemeta::jsontoolkit::JSON my_string{sourcemeta::jsontoolkit::from("Foo Bar")};
@@ -174,7 +174,7 @@ functions that modify the JSON document and take other JSON values as input.
 This function creates an empty JSON object. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::make_object()};
@@ -191,7 +191,7 @@ This function is particularly handy for programatically constructing objects.
 This function creates an empty JSON array. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::make_array()};
@@ -209,7 +209,7 @@ Stringify the input JSON document into a given C++ standard output stream in
 compact mode. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <iostream>
 #include <sstream>
 
@@ -227,7 +227,7 @@ Stringify the input JSON document into a given C++ standard output stream in
 pretty mode, indenting the output using 4 spaces. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <iostream>
 #include <sstream>
 
@@ -248,7 +248,7 @@ A set of functions to check the type of a given JSON instance.
 Check if the input JSON document is a boolean. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("true")};
@@ -262,7 +262,7 @@ assert(sourcemeta::jsontoolkit::is_boolean(document));
 Check if the input JSON document is null. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("null")};
@@ -276,7 +276,7 @@ assert(sourcemeta::jsontoolkit::is_null(document));
 Check if the input JSON document is an array. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
@@ -290,7 +290,7 @@ assert(sourcemeta::jsontoolkit::is_array(document));
 Check if the input JSON document is an object. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
@@ -304,7 +304,7 @@ assert(sourcemeta::jsontoolkit::is_object(document));
 Check if the input JSON document is a string. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("\"foo\"")};
@@ -318,7 +318,7 @@ assert(sourcemeta::jsontoolkit::is_string(document));
 Check if the input JSON document is an integer. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("5")};
@@ -332,7 +332,7 @@ assert(sourcemeta::jsontoolkit::is_integer(document));
 Check if the input JSON document is a real type. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("3.14")};
@@ -347,7 +347,7 @@ Check if the input JSON document is either an integer or a real type. For
 example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON real{sourcemeta::jsontoolkit::parse("3.14")};
@@ -369,7 +369,7 @@ Convert a JSON instance into a boolean value. The result of this function is
 undefined unless the JSON instance holds a boolean value. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
@@ -386,7 +386,7 @@ function is undefined unless the JSON instance holds an integer value. For
 example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(5)};
@@ -403,7 +403,7 @@ this function is undefined unless the JSON instance holds a real value. For
 example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(3.14)};
@@ -419,7 +419,7 @@ Check if the input JSON document is either a positive integer or a positive
 real number. Zero is considered to be positive. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON real{sourcemeta::jsontoolkit::parse("3.14")};
@@ -437,7 +437,7 @@ function is undefined unless the JSON instance holds a string value. For
 example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from("foo")};
@@ -454,7 +454,7 @@ result of this function is undefined unless the JSON instance holds an array
 value. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 #include <vector>
 
@@ -482,7 +482,7 @@ undefined for other types of JSON instances.
 For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON my_object{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
@@ -505,7 +505,7 @@ for other types of JSON instances.
 For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON my_object{sourcemeta::jsontoolkit::parse("{}")};
@@ -529,7 +529,7 @@ an array.
 For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON my_object{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
@@ -551,7 +551,7 @@ undefined if the input JSON instance is not an array or if it is an empty
 array. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
@@ -569,7 +569,7 @@ undefined if the input JSON instance is not an array or if it is an empty
 array. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
@@ -585,7 +585,7 @@ This function checks whether an input JSON object defines a specific key. This
 function is undefined if the input JSON instance is not an object. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
@@ -607,7 +607,7 @@ There are variants for passing the set of object keys to check using iterators,
 initializer lists, or arbitrary collections of strings. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 #include <string>
 #include <vector>
@@ -634,7 +634,7 @@ This function implements strict weak ordering for JSON instances. This function
 can be passed as a comparator to standard algorithms. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON left{sourcemeta::jsontoolkit::from(1)};
@@ -666,7 +666,7 @@ entire JSON container.
 For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 #include <vector>
 #include <iterator>
@@ -700,7 +700,7 @@ same value independent of insignificant spacing, object property ordering, etc.
 For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document1{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
@@ -730,7 +730,7 @@ This function sets a value to another JSON value. For example, the member of a
 JSON document can be transformed from a boolean to an integer as follows:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
@@ -748,7 +748,7 @@ input JSON instance is not an object. For example, an object can be updated to
 contain a new `bar` boolean member as follows:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
@@ -765,7 +765,7 @@ This function deletes an object key. This function is undefined if the
 input JSON instance is not an object. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
@@ -786,7 +786,7 @@ input JSON instance is not an object. There are variants for initializer lists
 and arbitrary collections of strings. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 #include <string>
 #include <vector>
@@ -818,7 +818,7 @@ This function is undefined if the input JSON instance is not an object or an
 array. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 #include <iterator>
 
@@ -849,7 +849,7 @@ leaving them empty. This function is undefined if the input JSON instance is
 not an object or an array. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 sourcemeta::jsontoolkit::JSON my_object{sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
@@ -873,7 +873,7 @@ keys to keep using initializer lists and arbitrary collections of strings. For
 example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 #include <string>
 #include <vector>
@@ -897,7 +897,7 @@ This function inserts a new element to the beginning of the given array. This
 function is undefined if the input JSON instance is not an array. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
@@ -915,7 +915,7 @@ This function inserts a new element to the end of the given array. This
 function is undefined if the input JSON instance is not an array. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
@@ -933,7 +933,7 @@ This function converts an existing JSON instance into an empty object. For
 example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
@@ -951,7 +951,7 @@ This function converts an existing JSON instance into an empty array. For
 example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
@@ -972,7 +972,7 @@ instance are not numbers. For example, a numeric JSON instance 3.2 can be added
 to a numeric JSON instance 5 as follows::
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(5)};
@@ -990,7 +990,7 @@ This function checks if an JSON array contains a given JSON instance. This
 function is undefined if the input JSON instance is not an array. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <cassert>
 
 sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
@@ -1021,7 +1021,7 @@ undefined if the given JSON instance is not an object. For example, every value
 of an object can be set to `true` as follows:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <algorithm>
 
 sourcemeta::jsontoolkit::JSON document{
@@ -1040,7 +1040,7 @@ The third function provides a convenience interface to range-based `for` loops.
 For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <iostream>
 
 sourcemeta::jsontoolkit::JSON document{
@@ -1067,7 +1067,7 @@ undefined if the given JSON instance is not an object. For example, the keys
 of an object can be printed as follows:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <algorithm>
 #include <iostream>
 
@@ -1086,7 +1086,7 @@ The third function provides a convenience interface to range-based `for` loops.
 For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <iostream>
 
 const sourcemeta::jsontoolkit::JSON document{
@@ -1113,7 +1113,7 @@ undefined if the given JSON instance is not an array. For example, every
 integer value of an array can be incremented as follows:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <algorithm>
 
 sourcemeta::jsontoolkit::JSON document{
@@ -1131,7 +1131,7 @@ The third function provides a convenience interface to range-based `for` loops.
 For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <iostream>
 
 sourcemeta::jsontoolkit::JSON document{
@@ -1155,7 +1155,7 @@ undefined if the given JSON instance is not an array. For example, every
 integer value of an array can be decremented as follows:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <algorithm>
 
 sourcemeta::jsontoolkit::JSON document{
@@ -1184,7 +1184,7 @@ undefined if the given JSON instance is not an array. For example, the pairs of
 an array can be printed as follows:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <algorithm>
 #include <iostream>
 
@@ -1203,7 +1203,7 @@ The third function provides a convenience interface to range-based `for` loops.
 For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <iostream>
 
 const sourcemeta::jsontoolkit::JSON document{
@@ -1227,7 +1227,7 @@ undefined if the given JSON instance is not an array. For example, the pairs of
 an array can be printed in reverse as follows:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <algorithm>
 #include <iostream>
 
@@ -1250,7 +1250,7 @@ This function is a utility to retrieve the value of a member pair returned by
 an object iterator. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <algorithm>
 #include <cassert>
 
@@ -1272,7 +1272,7 @@ This function is a utility to retrieve the key of a member pair returned by an
 object iterator. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/json.h>
 #include <algorithm>
 #include <cassert>
 
@@ -1293,7 +1293,7 @@ Schema](https://json-schema.org) at any given point in time. This functionality
 is included as follows:
 
 ```c++
-#include <jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 ```
 
 Older JSON Schema versions will not be supported. Older JSON Schema documents
@@ -1313,8 +1313,8 @@ This function returns true if the given JSON instance is of a schema-compatible
 type: an object or a boolean. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
-#include <jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::from(true)};
@@ -1329,8 +1329,8 @@ This function returns the URI identifier of the given schema, if any. For
 example:
 
 ```c++
-#include <jsontoolkit/json.h>
-#include <jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{
@@ -1352,8 +1352,8 @@ Get the metaschema corresponding to a JSON Schema instance. The result is empty
 if the metaschema cannot be determined. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
-#include <jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({
@@ -1401,8 +1401,8 @@ metaschema URI, this will be used if the given schema does not declare the
 be determined. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
-#include <jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({
@@ -1431,8 +1431,8 @@ depending on whether the corresponding vocabulary is required or optional,
 respectively. For example:
 
 ```c++
-#include <jsontoolkit/json.h>
-#include <jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <cassert>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({
@@ -1511,8 +1511,8 @@ either read-only or read-write modes.
 For example:
 
 ```c++
-#include <jsontoolkit/json.h>
-#include <jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <iostream>
 
 const sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(R"JSON({

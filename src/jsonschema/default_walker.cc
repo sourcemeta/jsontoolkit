@@ -1,4 +1,4 @@
-#include <jsontoolkit/jsonschema/default_walker.h>
+#include <sourcemeta/jsontoolkit/jsonschema/default_walker.h>
 
 // Because standard "contains()" is introduced in C++20
 namespace {

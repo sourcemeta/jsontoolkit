@@ -1,9 +1,9 @@
 #include <algorithm> // std::all_of, std::for_each, std::sort
 #include <gtest/gtest.h>
-#include <jsontoolkit/json/iterators.h>
-#include <jsontoolkit/json/read.h>
-#include <jsontoolkit/json/write.h>
-#include <map>    // std::map
+#include <map> // std::map
+#include <sourcemeta/jsontoolkit/json/iterators.h>
+#include <sourcemeta/jsontoolkit/json/read.h>
+#include <sourcemeta/jsontoolkit/json/write.h>
 #include <string> // std::string
 #include <vector> // std::vector
 

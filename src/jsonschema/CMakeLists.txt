@@ -2,18 +2,18 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/metaschemas.cmake")
 configure_file(default_metaschemas.h.in default_metaschemas.h @ONLY)
 
 add_library(sourcemeta_jsontoolkit_jsonschema
-  include/jsontoolkit/jsonschema.h
-  include/jsontoolkit/jsonschema/resolver.h
-  include/jsontoolkit/jsonschema/walker.h
-  include/jsontoolkit/jsonschema/default_walker.h
-  include/jsontoolkit/jsonschema/default_resolver.h
-  include/jsontoolkit/jsonschema/error.h
+  include/sourcemeta/jsontoolkit/jsonschema.h
+  include/sourcemeta/jsontoolkit/jsonschema/resolver.h
+  include/sourcemeta/jsontoolkit/jsonschema/walker.h
+  include/sourcemeta/jsontoolkit/jsonschema/default_walker.h
+  include/sourcemeta/jsontoolkit/jsonschema/default_resolver.h
+  include/sourcemeta/jsontoolkit/jsonschema/error.h
   jsonschema.cc default_metaschemas.h.in
   default_walker.cc default_resolver.cc)
 add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jsonschema)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema
-  PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/jsontoolkit/jsonschema.h"
-  OUTPUT_NAME jsontoolkit-jsonschema
+  PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/sourcemeta/jsontoolkit/jsonschema.h"
+  OUTPUT_NAME sourcemeta-jsontoolkit-jsonschema
   EXPORT_NAME jsontoolkit::jsonschema)
 
 target_include_directories(sourcemeta_jsontoolkit_jsonschema
@@ -40,8 +40,8 @@ endif()
 install(TARGETS sourcemeta_jsontoolkit_jsonschema
   EXPORT sourcemeta_jsontoolkit_jsonschema
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT jsontoolkit
-  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsontoolkit" COMPONENT jsontoolkit)
+  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit" COMPONENT jsontoolkit)
 install(EXPORT sourcemeta_jsontoolkit_jsonschema
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/jsontoolkit"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/sourcemeta"
   NAMESPACE sourcemeta::
   COMPONENT jsontoolkit)

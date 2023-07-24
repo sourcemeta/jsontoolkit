@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <jsontoolkit/jsonschema/error.h>
+#include <sourcemeta/jsontoolkit/jsonschema/error.h>
 
 #include <exception>   // std::exception
 #include <string>      // std::string

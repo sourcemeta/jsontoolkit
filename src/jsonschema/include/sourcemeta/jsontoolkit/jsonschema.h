@@ -1,12 +1,12 @@
 #ifndef JSONTOOLKIT_JSONSCHEMA_H_
 #define JSONTOOLKIT_JSONSCHEMA_H_
 
-#include <jsontoolkit/json.h>
-#include <jsontoolkit/jsonschema/default_resolver.h>
-#include <jsontoolkit/jsonschema/default_walker.h>
-#include <jsontoolkit/jsonschema/error.h>
-#include <jsontoolkit/jsonschema/resolver.h>
-#include <jsontoolkit/jsonschema/walker.h>
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonschema/default_resolver.h>
+#include <sourcemeta/jsontoolkit/jsonschema/default_walker.h>
+#include <sourcemeta/jsontoolkit/jsonschema/error.h>
+#include <sourcemeta/jsontoolkit/jsonschema/resolver.h>
+#include <sourcemeta/jsontoolkit/jsonschema/walker.h>
 
 #include <future>        // std::promise, std::future
 #include <optional>      // std::optional

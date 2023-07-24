@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <jsontoolkit/json/read.h>
+#include <sourcemeta/jsontoolkit/json/read.h>
 
 #include <cstdint>     // std::uint64_t, std::int64_t
 #include <functional>  // std::hash
