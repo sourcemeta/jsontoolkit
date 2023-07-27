@@ -102,37 +102,40 @@ private:
 
     for (auto &pair : object_iterator(subschema)) {
       switch (walker(key(pair), vocabularies)) {
-      case schema_walker_strategy_t::Value:
-        this->walk_schema(value(pair), walker, resolver, new_metaschema, level);
-        break;
-      case schema_walker_strategy_t::Elements:
-        this->walk_array(value(pair), walker, resolver, new_metaschema, level);
-        break;
-      case schema_walker_strategy_t::Members:
-        this->walk_object(value(pair), walker, resolver, new_metaschema, level);
-        break;
-      case schema_walker_strategy_t::ValueOrElements:
-        if (is_array(value(pair))) {
-          this->walk_array(value(pair), walker, resolver, new_metaschema,
-                           level);
-        } else {
+        case schema_walker_strategy_t::Value:
           this->walk_schema(value(pair), walker, resolver, new_metaschema,
                             level);
-        }
-        break;
-      case schema_walker_strategy_t::ElementsOrMembers:
-        if (is_array(value(pair))) {
+          break;
+        case schema_walker_strategy_t::Elements:
           this->walk_array(value(pair), walker, resolver, new_metaschema,
                            level);
-        } else {
+          break;
+        case schema_walker_strategy_t::Members:
           this->walk_object(value(pair), walker, resolver, new_metaschema,
                             level);
-        }
-        break;
-      case schema_walker_strategy_t::None:
-        break;
-      default:
-        break;
+          break;
+        case schema_walker_strategy_t::ValueOrElements:
+          if (is_array(value(pair))) {
+            this->walk_array(value(pair), walker, resolver, new_metaschema,
+                             level);
+          } else {
+            this->walk_schema(value(pair), walker, resolver, new_metaschema,
+                              level);
+          }
+          break;
+        case schema_walker_strategy_t::ElementsOrMembers:
+          if (is_array(value(pair))) {
+            this->walk_array(value(pair), walker, resolver, new_metaschema,
+                             level);
+          } else {
+            this->walk_object(value(pair), walker, resolver, new_metaschema,
+                              level);
+          }
+          break;
+        case schema_walker_strategy_t::None:
+          break;
+        default:
+          break;
       }
     }
   }

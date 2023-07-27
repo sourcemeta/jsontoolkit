@@ -7,12 +7,7 @@ endif()
 
 project(sourcemeta_jsontoolkit VERSION 0.0.1 LANGUAGES CXX
   DESCRIPTION "A multi-backend JSON library for modern C++")
-
-# The PROJECT_IS_TOP_LEVEL handy variable is only
-# available on CMake >=3.21.
-if(NOT DEFINED PROJECT_IS_TOP_LEVEL AND "${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
-  set(PROJECT_IS_TOP_LEVEL YES)
-endif()
+include(vendor/noa/cmake/noa.cmake)
 
 include(cmake/compiler.cmake)
 
@@ -59,7 +54,10 @@ if(JSONTOOLKIT_CONTRIB)
 endif()
 
 if(PROJECT_IS_TOP_LEVEL)
-  include(cmake/clang-format.cmake)
+  noa_target_clang_format(SOURCES
+    src/*.h src/*.cc include/*.h
+    test/*.cc test/*.h
+    contrib/*.cc contrib/*.h)
   if(JSONTOOLKIT_WEBSITE)
     add_subdirectory(./www)
   endif()

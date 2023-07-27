@@ -5,14 +5,6 @@ find_program(CONVERT_BIN NAMES convert REQUIRED)
 set(WWW_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/dist")
 file(MAKE_DIRECTORY "${WWW_OUTPUT_DIRECTORY}")
 
-macro(jsontoolkit_copy_file source destination)
-  add_custom_command(
-    OUTPUT "${destination}"
-    COMMAND "${CMAKE_COMMAND}" -E copy "${source}" "${destination}"
-    MAIN_DEPENDENCY "${source}"
-    DEPENDS "${source}")
-endmacro()
-
 macro(imagemagick_convert size source destination)
   add_custom_command(
     OUTPUT "${destination}"
@@ -60,15 +52,15 @@ imagemagick_convert(32x32
   "${CMAKE_CURRENT_SOURCE_DIR}/icon.svg"
   "${WWW_OUTPUT_DIRECTORY}/favicon.ico")
 
-jsontoolkit_copy_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/CNAME"
-  "${WWW_OUTPUT_DIRECTORY}/CNAME")
-jsontoolkit_copy_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/manifest.webmanifest"
-  "${WWW_OUTPUT_DIRECTORY}/manifest.webmanifest")
-jsontoolkit_copy_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/icon.svg"
-  "${WWW_OUTPUT_DIRECTORY}/icon.svg")
+noa_command_copy_file(
+  FROM "${CMAKE_CURRENT_SOURCE_DIR}/CNAME"
+  TO "${WWW_OUTPUT_DIRECTORY}/CNAME")
+noa_command_copy_file(
+  FROM "${CMAKE_CURRENT_SOURCE_DIR}/manifest.webmanifest"
+  TO "${WWW_OUTPUT_DIRECTORY}/manifest.webmanifest")
+noa_command_copy_file(
+  FROM "${CMAKE_CURRENT_SOURCE_DIR}/icon.svg"
+  TO "${WWW_OUTPUT_DIRECTORY}/icon.svg")
 
 add_custom_target(www DEPENDS
   "${WWW_OUTPUT_DIRECTORY}/index.html"
