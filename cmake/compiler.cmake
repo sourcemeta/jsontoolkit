@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(MSVC)
+if(NOA_COMPILER_MSVC)
   # See https://learn.microsoft.com/en-us/cpp/build/reference/compiler-options-listed-by-category
   add_compile_options(
     /options:strict
@@ -47,7 +47,7 @@ else()
     -Winvalid-offsetof)
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+if(NOA_COMPILER_LLVM)
   add_compile_options(
     -Wbool-conversion
     -Wint-conversion
