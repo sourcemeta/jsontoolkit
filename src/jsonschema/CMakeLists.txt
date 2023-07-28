@@ -13,7 +13,7 @@ add_library(sourcemeta_jsontoolkit_jsonschema
 add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jsonschema)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema
   PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/sourcemeta/jsontoolkit/jsonschema.h"
-  OUTPUT_NAME sourcemeta-jsontoolkit-jsonschema
+  OUTPUT_NAME sourcemeta_jsontoolkit_jsonschema
   EXPORT_NAME jsontoolkit::jsonschema)
 
 target_include_directories(sourcemeta_jsontoolkit_jsonschema
