@@ -21,7 +21,7 @@ if(PROJECT_IS_TOP_LEVEL)
   include(GNUInstallDirs)
   install(FILES README.markdown
     DESTINATION "${CMAKE_INSTALL_DOCDIR}"
-    COMPONENT jsontoolkit)
+    COMPONENT sourcemeta_jsontoolkit)
 
   include(CMakePackageConfigHelpers)
   configure_package_config_file(
@@ -35,11 +35,11 @@ if(PROJECT_IS_TOP_LEVEL)
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-    COMPONENT jsontoolkit)
+    COMPONENT sourcemeta_jsontoolkit)
   install(FILES
     "cmake/${JSONTOOLKIT_BACKEND}.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-    COMPONENT jsontoolkit)
+    COMPONENT sourcemeta_jsontoolkit)
 endif()
 
 add_subdirectory(src/json)

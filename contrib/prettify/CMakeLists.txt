@@ -4,4 +4,4 @@ set_target_properties(jsontoolkit_prettify PROPERTIES
   OUTPUT_NAME jsontoolkit_prettify)
 install(TARGETS jsontoolkit_prettify
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-  COMPONENT jsontoolkit)
+  COMPONENT sourcemeta_jsontoolkit)

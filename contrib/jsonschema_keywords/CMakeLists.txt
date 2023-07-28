@@ -5,4 +5,4 @@ set_target_properties(jsontoolkit_jsonschema_keywords PROPERTIES
   OUTPUT_NAME jsonschema_keywords)
 install(TARGETS jsontoolkit_jsonschema_keywords
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-  COMPONENT jsontoolkit)
+  COMPONENT sourcemeta_jsontoolkit)

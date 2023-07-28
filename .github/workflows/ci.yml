@@ -89,5 +89,7 @@ jobs:
       # Not every CTest version supports the --test-dir option. If such option
       # is not recognized, `ctest` will successfully exit finding no tests.
       # Better to be sure and `cd` all the time here.
-      - run: cmake --install ./build --prefix ./build/dist --config Release --verbose --component jsontoolkit
+      - run: >
+          cmake --install ./build --prefix ./build/dist --config Release --verbose
+          --component sourcemeta_jsontoolkit
       - run: cd ./build && ctest --build-config Release --output-on-failure --parallel
