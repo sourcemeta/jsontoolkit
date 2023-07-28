@@ -45,14 +45,14 @@ endif()
 # Installation
 install(TARGETS sourcemeta_jsontoolkit_jsonschema
   EXPORT sourcemeta_jsontoolkit_jsonschema
-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT jsontoolkit
-  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT jsontoolkit
-  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT jsontoolkit)
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT sourcemeta_jsontoolkit
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT sourcemeta_jsontoolkit
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT sourcemeta_jsontoolkit)
 install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/sourcemeta_jsontoolkit_jsonschema_export.h"
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit"
-  COMPONENT jsontoolkit)
+  COMPONENT sourcemeta_jsontoolkit)
 install(EXPORT sourcemeta_jsontoolkit_jsonschema
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
   NAMESPACE sourcemeta::
-  COMPONENT jsontoolkit)
+  COMPONENT sourcemeta_jsontoolkit)
