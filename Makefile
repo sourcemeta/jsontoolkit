@@ -20,6 +20,8 @@ compile: .always
 	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
 		--component sourcemeta_jsontoolkit
 	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
+		--component sourcemeta_jsontoolkit_dev
+	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
 		--component sourcemeta_jsontoolkit_contrib
 
 # Not every CTest version supports the --test-dir option

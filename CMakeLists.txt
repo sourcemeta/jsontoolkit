@@ -35,11 +35,11 @@ if(PROJECT_IS_TOP_LEVEL)
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-    COMPONENT sourcemeta_jsontoolkit)
+    COMPONENT sourcemeta_jsontoolkit_dev)
   install(FILES
     "cmake/${JSONTOOLKIT_BACKEND}.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-    COMPONENT sourcemeta_jsontoolkit)
+    COMPONENT sourcemeta_jsontoolkit_dev)
 endif()
 
 add_subdirectory(src/json)

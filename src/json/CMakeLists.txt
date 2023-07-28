@@ -31,16 +31,16 @@ target_link_libraries(sourcemeta_jsontoolkit_json INTERFACE
 install(TARGETS sourcemeta_jsontoolkit_json
   EXPORT sourcemeta_jsontoolkit_json
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  COMPONENT sourcemeta_jsontoolkit
+  COMPONENT sourcemeta_jsontoolkit_dev
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit"
-  COMPONENT sourcemeta_jsontoolkit)
+  COMPONENT sourcemeta_jsontoolkit_dev)
 install(FILES ${JSONTOOLKIT_JSON_META_HEADERS}
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit/json"
-  COMPONENT sourcemeta_jsontoolkit)
+  COMPONENT sourcemeta_jsontoolkit_dev)
 install(FILES ${JSONTOOLKIT_JSON_BACKEND_HEADERS}
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit/json/${JSONTOOLKIT_BACKEND}"
-  COMPONENT sourcemeta_jsontoolkit)
+  COMPONENT sourcemeta_jsontoolkit_dev)
 install(EXPORT sourcemeta_jsontoolkit_json
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
   NAMESPACE sourcemeta::
-  COMPONENT sourcemeta_jsontoolkit)
+  COMPONENT sourcemeta_jsontoolkit_dev)
