@@ -7,14 +7,16 @@
 #include <iostream>   // std::cerr, std::cout, std::cin
 #include <istream>    // std::basic_istream
 
+namespace {
 template <typename CharT, typename Traits>
-static auto minify(std::basic_istream<CharT, Traits> &stream) -> int {
+auto minify(std::basic_istream<CharT, Traits> &stream) -> int {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse(stream)};
   sourcemeta::jsontoolkit::stringify(document, std::cout);
   std::cout << std::endl;
   return EXIT_SUCCESS;
 }
+} // namespace
 
 auto main(int argc, char *argv[]) -> int {
   try {

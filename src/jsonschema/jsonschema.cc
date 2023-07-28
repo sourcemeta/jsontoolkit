@@ -116,7 +116,8 @@ auto sourcemeta::jsontoolkit::draft(
 
 // TODO: Support every JSON Schema draft from Draft 7 and older
 // for completeness, returning the draft itself as the only vocabulary.
-static auto core_vocabulary(const std::string &draft) -> std::string {
+namespace {
+auto core_vocabulary(const std::string &draft) -> std::string {
   if (draft == "https://json-schema.org/draft/2020-12/schema" ||
       draft == "https://json-schema.org/draft/2020-12/hyper-schema") {
     return "https://json-schema.org/draft/2020-12/vocab/core";
@@ -129,6 +130,7 @@ static auto core_vocabulary(const std::string &draft) -> std::string {
     throw sourcemeta::jsontoolkit::SchemaError(error.str());
   }
 }
+} // namespace
 
 auto sourcemeta::jsontoolkit::vocabularies(
     const sourcemeta::jsontoolkit::Value &schema,

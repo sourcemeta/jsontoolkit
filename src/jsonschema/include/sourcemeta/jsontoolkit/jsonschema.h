@@ -134,8 +134,6 @@ private:
           break;
         case schema_walker_strategy_t::None:
           break;
-        default:
-          break;
       }
     }
   }
@@ -172,7 +170,7 @@ private:
   }
 
   internal subschemas;
-  const schema_walker_type_t walker_type;
+  schema_walker_type_t walker_type;
 };
 
 auto subschema_iterator(

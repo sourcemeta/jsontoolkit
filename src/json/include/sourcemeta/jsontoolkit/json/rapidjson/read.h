@@ -67,15 +67,16 @@ inline auto from(std::string_view value) -> JSON {
 }
 
 template <typename T>
-typename std::enable_if_t<std::is_same_v<T, std::int64_t>, JSON> from(T value) {
+auto from(T value) ->
+    typename std::enable_if_t<std::is_same_v<T, std::int64_t>, JSON> {
   rapidjson::Document document;
   document.SetInt64(value);
   return document;
 }
 
 template <typename T>
-typename std::enable_if_t<std::is_same_v<T, std::uint64_t>, JSON>
-from(T value) {
+auto from(T value) ->
+    typename std::enable_if_t<std::is_same_v<T, std::uint64_t>, JSON> {
   rapidjson::Document document;
 
   // Safe to cast
@@ -94,19 +95,20 @@ template <typename T,
           typename std::enable_if<std::is_same_v<T, std::size_t> &&
                                       !std::is_same_v<T, std::uint64_t>,
                                   int>::type = 0>
-JSON from(T value) {
+auto from(T value) -> JSON {
   return from(static_cast<std::int64_t>(value));
 }
 
 template <typename T>
-typename std::enable_if_t<std::is_same_v<T, int>, JSON> from(T value) {
+auto from(T value) -> typename std::enable_if_t<std::is_same_v<T, int>, JSON> {
   return from(static_cast<std::int64_t>(value));
 }
 
 inline auto from(std::nullptr_t) -> JSON { return parse("null"); }
 
 template <typename T>
-typename std::enable_if_t<std::is_same_v<T, double>, JSON> from(T value) {
+auto from(T value) ->
+    typename std::enable_if_t<std::is_same_v<T, double>, JSON> {
   assert(std::isfinite(value));
   rapidjson::Document document;
   document.SetDouble(value);
@@ -114,7 +116,7 @@ typename std::enable_if_t<std::is_same_v<T, double>, JSON> from(T value) {
 }
 
 template <typename T>
-typename std::enable_if_t<std::is_same_v<T, bool>, JSON> from(T value) {
+auto from(T value) -> typename std::enable_if_t<std::is_same_v<T, bool>, JSON> {
   return value ? parse("true") : parse("false");
 }
 

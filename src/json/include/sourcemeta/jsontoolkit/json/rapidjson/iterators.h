@@ -129,14 +129,16 @@ public:
   ConstArrayIteratorWrapper(const Value &input) : data{input} {
     assert(is_array(input));
   }
-  auto begin() const -> rapidjson::Value::ConstValueIterator {
+  [[nodiscard]] auto begin() const -> rapidjson::Value::ConstValueIterator {
     return cbegin_array(this->data);
   }
-  auto end() const -> rapidjson::Value::ConstValueIterator {
+  [[nodiscard]] auto end() const -> rapidjson::Value::ConstValueIterator {
     return cend_array(this->data);
   }
 
 private:
+  // We are purposely storing a const ref here
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-const-or-ref-data-members)
   const Value &data;
 };
 
@@ -173,14 +175,16 @@ public:
   ConstObjectIteratorWrapper(const Value &input) : data{input} {
     assert(is_object(input));
   }
-  auto begin() const -> rapidjson::Value::ConstMemberIterator {
+  [[nodiscard]] auto begin() const -> rapidjson::Value::ConstMemberIterator {
     return cbegin_object(this->data);
   }
-  auto end() const -> rapidjson::Value::ConstMemberIterator {
+  [[nodiscard]] auto end() const -> rapidjson::Value::ConstMemberIterator {
     return cend_object(this->data);
   }
 
 private:
+  // We are purposely storing a const ref here
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-const-or-ref-data-members)
   const Value &data;
 };
 

@@ -45,8 +45,9 @@ inline auto erase_many(Value &value, rapidjson::Value::ConstValueIterator begin,
   value.Erase(begin, end);
 }
 
-inline auto erase_many(Value &value, rapidjson::Value::MemberIterator begin,
-                       rapidjson::Value::MemberIterator end) -> void {
+inline auto erase_many(Value &value,
+                       const rapidjson::Value::MemberIterator &begin,
+                       const rapidjson::Value::MemberIterator &end) -> void {
   value.EraseMember(begin, end);
 }
 

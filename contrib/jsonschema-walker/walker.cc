@@ -9,9 +9,10 @@
 #include <istream>       // std::basic_istream
 #include <unordered_map> // std::unordered_map
 
+namespace {
 template <typename CharT, typename Traits>
-static auto walk(const std::string &mode,
-                 std::basic_istream<CharT, Traits> &stream) -> int {
+auto walk(const std::string &mode, std::basic_istream<CharT, Traits> &stream)
+    -> int {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::parse(stream)};
 
@@ -46,9 +47,10 @@ static auto walk(const std::string &mode,
   return EXIT_SUCCESS;
 }
 
-static auto help(const std::string &program) -> void {
+auto help(const std::string &program) -> void {
   std::cerr << "Usage: " << program << " <flat|deep> [input.json]\n";
 }
+} // namespace
 
 auto main(int argc, char *argv[]) -> int {
   if (argc == 1) {
