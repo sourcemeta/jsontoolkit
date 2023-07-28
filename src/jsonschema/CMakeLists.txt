@@ -23,9 +23,14 @@ target_include_directories(sourcemeta_jsontoolkit_jsonschema
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
   sourcemeta::jsontoolkit::json)
 
-# To find the generated metaschemas file
+generate_export_header(sourcemeta_jsontoolkit_jsonschema)
+set_target_properties(sourcemeta_jsontoolkit_jsonschema PROPERTIES
+  SOVERSION "${PROJECT_VERSION_MAJOR}"
+  VERSION "${PROJECT_VERSION}")
+
+# To find the generated files
 target_include_directories(sourcemeta_jsontoolkit_jsonschema
-  PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>")
 
 # GCC does not allow the use of std::promise, std::future
 # without compiling with pthreads support.
@@ -39,8 +44,14 @@ endif()
 # Installation
 install(TARGETS sourcemeta_jsontoolkit_jsonschema
   EXPORT sourcemeta_jsontoolkit_jsonschema
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT jsontoolkit
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT jsontoolkit
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT jsontoolkit
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit" COMPONENT jsontoolkit)
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/sourcemeta_jsontoolkit_jsonschema_export.h"
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit"
+  COMPONENT jsontoolkit)
 install(EXPORT sourcemeta_jsontoolkit_jsonschema
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
   NAMESPACE sourcemeta::

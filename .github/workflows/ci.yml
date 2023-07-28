@@ -16,16 +16,39 @@ jobs:
             cc: clang
             cxx: clang++
             backend: rapidjson
+            type: static
+          - os: macos-11
+            cc: clang
+            cxx: clang++
+            backend: rapidjson
+            type: shared
           - os: ubuntu-22.04
             cc: clang
             cxx: clang++
             backend: rapidjson
+            type: static
           - os: ubuntu-22.04
             cc: gcc
             cxx: g++
             backend: rapidjson
+            type: static
+          - os: ubuntu-22.04
+            cc: clang
+            cxx: clang++
+            backend: rapidjson
+            type: shared
+          - os: ubuntu-22.04
+            cc: gcc
+            cxx: g++
+            backend: rapidjson
+            type: shared
           - os: windows-2022
             backend: rapidjson
+            type: static
+          # TODO: Make shared libraries work on Windows
+          # - os: windows-2022
+            # backend: rapidjson
+            # type: shared
 
     runs-on: ${{ matrix.platform.os }}
     env:
@@ -43,12 +66,24 @@ jobs:
           HOMEBREW_NO_ANALYTICS: 1
           HOMEBREW_NO_AUTO_UPDATE: 1
       - run: cmake --version
-      - run: >
+      - name: Configure JSON Toolkit (static)
+        if: matrix.platform.type == 'static'
+        run: >
           cmake -S . -B ./build
           -DCMAKE_BUILD_TYPE=Release
           -DJSONTOOLKIT_BACKEND=${{ matrix.platform.backend }}
           -DJSONTOOLKIT_CONTRIB=ON
           -DJSONTOOLKIT_TESTS=ON
+          -DBUILD_SHARED_LIBS=OFF
+      - name: Configure JSON Toolkit (shared)
+        if: matrix.platform.type == 'shared'
+        run: >
+          cmake -S . -B ./build
+          -DCMAKE_BUILD_TYPE=Release
+          -DJSONTOOLKIT_BACKEND=${{ matrix.platform.backend }}
+          -DJSONTOOLKIT_CONTRIB=ON
+          -DJSONTOOLKIT_TESTS=ON
+          -DBUILD_SHARED_LIBS=ON
       - run: cmake --build ./build --config Release --target clang_format_test
       - run: cmake --build ./build --config Release --parallel
       # Not every CTest version supports the --test-dir option. If such option

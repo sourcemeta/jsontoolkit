@@ -1,6 +1,8 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_DEFAULT_RESOLVER_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_DEFAULT_RESOLVER_H_
 
+#include "sourcemeta_jsontoolkit_jsonschema_export.h"
+
 #include <future>   // std::future
 #include <optional> // std::optional
 #include <string>   // std::string
@@ -9,7 +11,7 @@
 
 namespace sourcemeta::jsontoolkit {
 
-class DefaultResolver {
+class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT DefaultResolver {
 public:
   auto operator()(const std::string &identifier)
       -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>>;

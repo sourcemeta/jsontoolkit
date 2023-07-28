@@ -1,6 +1,8 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_H_
 
+#include "sourcemeta_jsontoolkit_jsonschema_export.h"
+
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema/default_resolver.h>
 #include <sourcemeta/jsontoolkit/jsonschema/default_walker.h>
@@ -17,12 +19,21 @@
 
 namespace sourcemeta::jsontoolkit {
 
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto is_schema(const Value &schema) -> bool;
+
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto id(const Value &schema) -> std::optional<std::string>;
+
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto metaschema(const Value &schema) -> std::optional<std::string>;
+
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto draft(const Value &schema, const schema_resolver_t &resolver,
            const std::optional<std::string> &default_metaschema = std::nullopt)
     -> std::future<std::optional<std::string>>;
+
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto vocabularies(
     const Value &schema, const schema_resolver_t &resolver,
     const std::optional<std::string> &default_metaschema = std::nullopt)
@@ -30,7 +41,8 @@ auto vocabularies(
 
 // We inline the definition of this class in this file to avoid a circular
 // dependency
-template <typename ValueT> class SchemaWalker {
+template <typename ValueT>
+class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaWalker {
 private:
   using internal = typename std::vector<std::reference_wrapper<ValueT>>;
 
@@ -173,18 +185,21 @@ private:
   schema_walker_type_t walker_type;
 };
 
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto subschema_iterator(
     const Value &schema, const schema_walker_t &walker,
     const schema_resolver_t &resolver,
     const std::optional<std::string> &default_metaschema = std::nullopt)
     -> SchemaWalker<std::remove_reference_t<decltype(schema)>>;
 
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto flat_subschema_iterator(
     const Value &schema, const schema_walker_t &walker,
     const schema_resolver_t &resolver,
     const std::optional<std::string> &default_metaschema = std::nullopt)
     -> SchemaWalker<std::remove_reference_t<decltype(schema)>>;
 
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto flat_subschema_iterator(
     Value &schema, const schema_walker_t &walker,
     const schema_resolver_t &resolver,
