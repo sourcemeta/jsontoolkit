@@ -22,6 +22,9 @@ compile: .always
 test: .always
 	cd ./build && $(CTEST) --build-config $(PRESET) --output-on-failure --progress --parallel
 
+lint: .always
+	$(CMAKE) --build ./build --config $(PRESET) --target clang_tidy
+
 clean: .always
 	$(CMAKE) -E rm -R -f build
 

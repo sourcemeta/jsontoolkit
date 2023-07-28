@@ -57,6 +57,8 @@ if(PROJECT_IS_TOP_LEVEL)
     src/*.h src/*.cc include/*.h
     test/*.cc test/*.h
     contrib/*.cc contrib/*.h)
+  noa_target_clang_tidy(SOURCES
+    src/*.h src/*.cc include/*.h contrib/*.cc)
   if(JSONTOOLKIT_WEBSITE)
     add_subdirectory(./www)
   endif()
