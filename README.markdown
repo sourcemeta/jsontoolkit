@@ -81,6 +81,7 @@ into a set of CMake components:
 | Component                        | Description                                    |
 |----------------------------------|------------------------------------------------|
 | `sourcemeta_jsontoolkit`         | The core JSON Toolkit libraries                |
+| `sourcemeta_jsontoolkit_dev`     | The JSON Toolkit headers and development files |
 | `sourcemeta_jsontoolkit_contrib` | The optional executables located in `contrib/` |
 
 ### Supported backends
