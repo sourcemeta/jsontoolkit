@@ -12,8 +12,9 @@
 #include <utility>       // std::pair
 #include <vector>        // std::vector
 
-static auto analyze(const sourcemeta::jsontoolkit::JSON &schema,
-                    std::unordered_map<std::string, unsigned long> &accumulator)
+namespace {
+auto analyze(const sourcemeta::jsontoolkit::JSON &schema,
+             std::unordered_map<std::string, unsigned long> &accumulator)
     -> void {
   const sourcemeta::jsontoolkit::DefaultResolver resolver;
   for (const sourcemeta::jsontoolkit::Value &subschema :
@@ -35,7 +36,7 @@ static auto analyze(const sourcemeta::jsontoolkit::JSON &schema,
   }
 }
 
-static auto scan(const std::filesystem::path &directory) -> int {
+auto scan(const std::filesystem::path &directory) -> int {
   std::unordered_map<std::string, unsigned long> accumulator;
   for (const std::filesystem::directory_entry &directory_entry :
        std::filesystem::recursive_directory_iterator(directory)) {
@@ -51,8 +52,9 @@ static auto scan(const std::filesystem::path &directory) -> int {
   }
 
   std::vector<std::pair<std::string, unsigned long>> result;
+  result.reserve(accumulator.size());
   for (const auto &iterator : accumulator) {
-    result.push_back(iterator);
+    result.emplace_back(iterator);
   }
 
   std::sort(result.begin(), result.end(),
@@ -67,10 +69,11 @@ static auto scan(const std::filesystem::path &directory) -> int {
 
   return EXIT_SUCCESS;
 }
+} // namespace
 
 auto main(int argc, char *argv[]) -> int {
   if (argc <= 1) {
-    std::cerr << "Usage: " << argv[0] << " <directory>\n";
+    std::cerr << "Usage: " << std::string{argv[0]} << " <directory>\n";
     return EXIT_FAILURE;
   }
 

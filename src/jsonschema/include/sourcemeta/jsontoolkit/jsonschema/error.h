@@ -3,33 +3,36 @@
 
 #include <exception> // std::exception
 #include <string>    // std::string
+#include <utility>   // std::move
 
 namespace sourcemeta::jsontoolkit {
 
 class SchemaError : public std::exception {
 public:
-  SchemaError(const std::string &message) : message_{message} {}
-  auto what() const noexcept -> const char * override {
+  SchemaError(std::string message) : message_{std::move(message)} {}
+  [[nodiscard]] auto what() const noexcept -> const char * override {
     return this->message_.c_str();
   }
 
 private:
-  const std::string message_;
+  std::string message_;
 };
 
 class ResolutionError : public std::exception {
 public:
-  ResolutionError(const std::string &identifier, const std::string &message)
-      : identifier_{identifier}, message_{message} {}
-  auto what() const noexcept -> const char * override {
+  ResolutionError(std::string identifier, std::string message)
+      : identifier_{std::move(identifier)}, message_{std::move(message)} {}
+  [[nodiscard]] auto what() const noexcept -> const char * override {
     return this->message_.c_str();
   }
 
-  auto id() const noexcept -> const std::string & { return this->identifier_; }
+  [[nodiscard]] auto id() const noexcept -> const std::string & {
+    return this->identifier_;
+  }
 
 private:
-  const std::string identifier_;
-  const std::string message_;
+  std::string identifier_;
+  std::string message_;
 };
 
 } // namespace sourcemeta::jsontoolkit
