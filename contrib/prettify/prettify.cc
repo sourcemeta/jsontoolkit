@@ -23,6 +23,8 @@ auto main(int argc, char *argv[]) -> int {
     if (argc == 1) {
       return prettify(std::cin);
     } else {
+      // TODO: Use std::span on C++20
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       const std::filesystem::path input{argv[1]};
       std::ifstream stream{std::filesystem::canonical(input)};
       stream.exceptions(std::ios_base::badbit);

@@ -54,17 +54,25 @@ auto help(const std::string &program) -> void {
 
 auto main(int argc, char *argv[]) -> int {
   if (argc == 1) {
+    // TODO: Use std::span on C++20
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     help(argv[0]);
     return EXIT_FAILURE;
   }
 
   try {
     if (argc == 2) {
+      // TODO: Use std::span on C++20
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       return walk(argv[1], std::cin);
     } else {
+      // TODO: Use std::span on C++20
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       const std::filesystem::path input{argv[2]};
       std::ifstream stream{std::filesystem::canonical(input)};
       stream.exceptions(std::ios_base::badbit);
+      // TODO: Use std::span on C++20
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       return walk(argv[1], stream);
     }
   } catch (const std::exception &error) {
