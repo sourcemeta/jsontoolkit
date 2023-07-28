@@ -92,9 +92,8 @@ private:
     }
 
     // We can't recurse any further
-    if (!is_object(subschema)) {
-      return;
-    } else if (this->walker_type == schema_walker_type_t::Flat && level > 0) {
+    if (!is_object(subschema) ||
+        (this->walker_type == schema_walker_type_t::Flat && level > 0)) {
       return;
     }
 
