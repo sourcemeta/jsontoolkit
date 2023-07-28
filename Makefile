@@ -17,8 +17,10 @@ configure: .always
 compile: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target clang_format
 	$(CMAKE) --build ./build --config $(PRESET) --parallel
-	$(CMAKE) --install ./build --prefix ./build/dist \
-		--config $(PRESET) --verbose --component sourcemeta_jsontoolkit
+	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
+		--component sourcemeta_jsontoolkit
+	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
+		--component sourcemeta_jsontoolkit_contrib
 
 # Not every CTest version supports the --test-dir option
 test: .always
