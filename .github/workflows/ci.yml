@@ -39,9 +39,8 @@ jobs:
             type: shared
           - os: windows-2022
             type: static
-          # TODO: Make shared libraries work on Windows
-          # - os: windows-2022
-            # type: shared
+          - os: windows-2022
+            type: shared
 
           # Sanitizers
           - os: ubuntu-22.04
