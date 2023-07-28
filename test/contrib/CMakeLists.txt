@@ -16,63 +16,63 @@ add_test(NAME prettify_invalid COMMAND
 set_tests_properties(prettify_invalid PROPERTIES WILL_FAIL TRUE)
 
 add_test(NAME prettify_not_found COMMAND
-  "${PRETTIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/non-existent.json")
+  "${PRETTIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/non_existent.json")
 set_tests_properties(prettify_not_found PROPERTIES WILL_FAIL TRUE)
 
 add_test(NAME prettify COMMAND
   "${IS_SAME_BIN}" "${PRETTIFY_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/prettify-output.json"
-  "${CMAKE_CURRENT_SOURCE_DIR}/prettify-input.json")
+  "${CMAKE_CURRENT_SOURCE_DIR}/prettify_output.json"
+  "${CMAKE_CURRENT_SOURCE_DIR}/prettify_input.json")
 
 add_test(NAME prettify_stdin COMMAND
   "${IS_SAME_STDIN_BIN}" "${PRETTIFY_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/prettify-output.json"
-  "${CMAKE_CURRENT_SOURCE_DIR}/prettify-input.json")
+  "${CMAKE_CURRENT_SOURCE_DIR}/prettify_output.json"
+  "${CMAKE_CURRENT_SOURCE_DIR}/prettify_input.json")
 
 add_test(NAME minify_invalid COMMAND
   "${MINIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/invalid.json")
 set_tests_properties(minify_invalid PROPERTIES WILL_FAIL TRUE)
 
 add_test(NAME minify_not_found COMMAND
-  "${MINIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/non-existent.json")
+  "${MINIFY_BIN}" "${CMAKE_CURRENT_SOURCE_DIR}/non_existent.json")
 set_tests_properties(minify_not_found PROPERTIES WILL_FAIL TRUE)
 
 add_test(NAME minify COMMAND
   "${IS_SAME_BIN}" "${MINIFY_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/minify-output.json"
-  "${CMAKE_CURRENT_SOURCE_DIR}/minify-input.json")
+  "${CMAKE_CURRENT_SOURCE_DIR}/minify_output.json"
+  "${CMAKE_CURRENT_SOURCE_DIR}/minify_input.json")
 
 add_test(NAME minify_stdin COMMAND
   "${IS_SAME_STDIN_BIN}" "${MINIFY_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/minify-output.json"
-  "${CMAKE_CURRENT_SOURCE_DIR}/minify-input.json")
+  "${CMAKE_CURRENT_SOURCE_DIR}/minify_output.json"
+  "${CMAKE_CURRENT_SOURCE_DIR}/minify_input.json")
 
 add_test(NAME jsonschema_walker_deep_2020_12 COMMAND
   "${IS_SAME_BIN}" "${JSONSCHEMA_WALKER_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-deep.txt"
-  deep "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json")
+  "${CMAKE_CURRENT_SOURCE_DIR}/example_2020_12_subschemas_deep.txt"
+  deep "${CMAKE_CURRENT_SOURCE_DIR}/example_2020_12.json")
 
 add_test(NAME jsonschema_walker_flat_2020_12 COMMAND
   "${IS_SAME_BIN}" "${JSONSCHEMA_WALKER_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-flat.txt"
-  flat "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json")
+  "${CMAKE_CURRENT_SOURCE_DIR}/example_2020_12_subschemas_flat.txt"
+  flat "${CMAKE_CURRENT_SOURCE_DIR}/example_2020_12.json")
 
 add_test(NAME jsonschema_walker_deep_2020_12_stdin COMMAND
   "${IS_SAME_STDIN_BIN}" "${JSONSCHEMA_WALKER_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-deep.txt"
-  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" deep)
+  "${CMAKE_CURRENT_SOURCE_DIR}/example_2020_12_subschemas_deep.txt"
+  "${CMAKE_CURRENT_SOURCE_DIR}/example_2020_12.json" deep)
 
 add_test(NAME jsonschema_walker_flat_2020_12_stdin COMMAND
   "${IS_SAME_STDIN_BIN}" "${JSONSCHEMA_WALKER_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12-subschemas-flat.txt"
-  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" flat)
+  "${CMAKE_CURRENT_SOURCE_DIR}/example_2020_12_subschemas_flat.txt"
+  "${CMAKE_CURRENT_SOURCE_DIR}/example_2020_12.json" flat)
 
 add_test(NAME jsonschema_walker_invalid_mode COMMAND
   "${JSONSCHEMA_WALKER_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/example-2020-12.json" xxxxx)
+  "${CMAKE_CURRENT_SOURCE_DIR}/example_2020_12.json" xxxxx)
 set_tests_properties(jsonschema_walker_invalid_mode PROPERTIES WILL_FAIL TRUE)
 
 add_test(NAME jsonschema_keywords COMMAND
   "${IS_SAME_BIN}" "${JSONSCHEMA_KEYWORDS_BIN}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/schemas/keyword-count.txt"
+  "${CMAKE_CURRENT_SOURCE_DIR}/schemas/keyword_count.txt"
   "${CMAKE_CURRENT_SOURCE_DIR}/schemas")
