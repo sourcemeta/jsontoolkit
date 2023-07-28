@@ -73,12 +73,16 @@ auto scan(const std::filesystem::path &directory) -> int {
 
 auto main(int argc, char *argv[]) -> int {
   if (argc <= 1) {
+    // TODO: Use std::span on C++20
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     std::cerr << "Usage: " << std::string{argv[0]} << " <directory>\n";
     return EXIT_FAILURE;
   }
 
   try {
     // Make sure the directory indeed exists
+    // TODO: Use std::span on C++20
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     return scan(std::filesystem::canonical(std::filesystem::path{argv[1]}));
   } catch (const std::exception &error) {
     std::cerr << "Error: " << error.what() << "\n";
