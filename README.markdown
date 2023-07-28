@@ -73,6 +73,16 @@ target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::j
 | `JSONTOOLKIT_CONTRIB`      | Boolean | `OFF`       | Build the JSON Toolkit `contrib` programs        |
 | `JSONTOOLKIT_WEBSITE`      | Boolean | `OFF`       | Build the JSON Toolkit website                   |
 
+### CMake components
+
+If you install JSON Toolkit from source, keep in mind that the project is split
+into a set of CMake components:
+
+| Component                        | Description                                    |
+|----------------------------------|------------------------------------------------|
+| `sourcemeta_jsontoolkit`         | The core JSON Toolkit libraries                |
+| `sourcemeta_jsontoolkit_contrib` | The optional executables located in `contrib/` |
+
 ### Supported backends
 
 | Name                               | CMake ID    | Reading | Writing | Iterators |

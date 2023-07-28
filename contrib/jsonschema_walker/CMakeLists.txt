@@ -5,4 +5,4 @@ set_target_properties(jsontoolkit_jsonschema_walker PROPERTIES
   OUTPUT_NAME jsontoolkit_jsonschema-walker)
 install(TARGETS jsontoolkit_jsonschema_walker
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-  COMPONENT sourcemeta_jsontoolkit)
+  COMPONENT sourcemeta_jsontoolkit_contrib)
