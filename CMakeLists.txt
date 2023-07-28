@@ -6,7 +6,8 @@ if(WIN32)
 endif()
 
 project(sourcemeta_jsontoolkit VERSION 0.0.1 LANGUAGES CXX
-  DESCRIPTION "A multi-backend JSON library for modern C++")
+  DESCRIPTION "A multi-backend JSON library for modern C++"
+  HOMEPAGE_URL "https://jsontoolkit.sourcemeta.com")
 include(vendor/noa/cmake/noa.cmake)
 include(cmake/compiler.cmake)
 
