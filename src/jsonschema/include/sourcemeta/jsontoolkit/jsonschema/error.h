@@ -1,13 +1,16 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_ERROR_H
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_ERROR_H
 
+#include "sourcemeta_jsontoolkit_jsonschema_export.h"
+
 #include <exception> // std::exception
 #include <string>    // std::string
 #include <utility>   // std::move
 
 namespace sourcemeta::jsontoolkit {
 
-class SchemaError : public std::exception {
+class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaError
+    : public std::exception {
 public:
   SchemaError(std::string message) : message_{std::move(message)} {}
   [[nodiscard]] auto what() const noexcept -> const char * override {
@@ -18,7 +21,8 @@ private:
   std::string message_;
 };
 
-class ResolutionError : public std::exception {
+class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT ResolutionError
+    : public std::exception {
 public:
   ResolutionError(std::string identifier, std::string message)
       : identifier_{std::move(identifier)}, message_{std::move(message)} {}

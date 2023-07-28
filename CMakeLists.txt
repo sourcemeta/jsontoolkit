@@ -42,6 +42,7 @@ if(PROJECT_IS_TOP_LEVEL)
     COMPONENT jsontoolkit)
 endif()
 
+include(GenerateExportHeader)
 add_subdirectory(src/json)
 add_subdirectory(src/jsonschema)
 
