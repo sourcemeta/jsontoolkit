@@ -115,6 +115,8 @@ public:
   }
 
 private:
+  // We are purposely storing a ref here
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-const-or-ref-data-members)
   Value &data;
 };
 
@@ -161,6 +163,8 @@ public:
   }
 
 private:
+  // We are purposely storing a ref here
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-const-or-ref-data-members)
   Value &data;
 };
 
