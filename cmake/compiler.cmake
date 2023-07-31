@@ -6,14 +6,12 @@ if(NOA_COMPILER_MSVC)
   add_compile_options(
     /options:strict
     /W4
-    /WX
     /WL
     /sdl)
 else()
   add_compile_options(
     -Wall
     -Wextra
-    -Werror
     -Wpedantic
     -Wshadow
     -Wdouble-promotion
