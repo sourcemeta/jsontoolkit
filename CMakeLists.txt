@@ -12,7 +12,13 @@ include(vendor/noa/cmake/noa.cmake)
 include(cmake/compiler.cmake)
 
 # Options
-set(JSONTOOLKIT_BACKEND "rapidjson" CACHE STRING "Set the JSON Toolkit backend")
+noa_option_enum(
+  NAME JSONTOOLKIT_BACKEND
+  DEFAULT rapidjson
+  DESCRIPTION "Set the JSON Toolkit backend"
+  CHOICES rapidjson)
+
+# TODO: Remove this anti-pattern option
 set(JSONTOOLKIT_BACKEND_PATH "" CACHE PATH "Set a custom path to the JSON Toolkit backend")
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" OFF)
 option(JSONTOOLKIT_CONTRIB "Build the JSON Toolkit extra programs" OFF)
