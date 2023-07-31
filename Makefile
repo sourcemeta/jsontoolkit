@@ -10,9 +10,12 @@ SHARED = OFF
 all: configure compile test
 
 configure: .always
-	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE=$(PRESET) \
-		-DJSONTOOLKIT_BACKEND=$(BACKEND) -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON \
-		-DBUILD_SHARED_LIBS=$(SHARED)
+	$(CMAKE) -S . -B ./build \
+		-DCMAKE_BUILD_TYPE:STRING=$(PRESET) \
+		-DJSONTOOLKIT_BACKEND:STRING=$(BACKEND) \
+		-DJSONTOOLKIT_CONTRIB:BOOL=ON \
+		-DJSONTOOLKIT_TESTS:BOOL=ON \
+		-DBUILD_SHARED_LIBS:BOOL=$(SHARED)
 
 compile: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target clang_format
@@ -35,7 +38,7 @@ clean: .always
 	$(CMAKE) -E rm -R -f build
 
 www: .always
-	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE=$(PRESET) -DJSONTOOLKIT_WEBSITE=ON
+	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE:STRING=$(PRESET) -DJSONTOOLKIT_WEBSITE:BOOL=ON
 	$(CMAKE) --build ./build --config $(PRESET) --target www
 
 # For NMake, which doesn't support .PHONY

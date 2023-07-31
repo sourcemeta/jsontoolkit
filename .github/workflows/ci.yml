@@ -70,20 +70,20 @@ jobs:
         if: matrix.platform.type == 'static'
         run: >
           cmake -S . -B ./build
-          -DCMAKE_BUILD_TYPE=Release
-          -DJSONTOOLKIT_BACKEND=${{ matrix.platform.backend }}
-          -DJSONTOOLKIT_CONTRIB=ON
-          -DJSONTOOLKIT_TESTS=ON
-          -DBUILD_SHARED_LIBS=OFF
+          -DCMAKE_BUILD_TYPE:STRING=Release
+          -DJSONTOOLKIT_BACKEND:STRING=${{ matrix.platform.backend }}
+          -DJSONTOOLKIT_CONTRIB:BOOL=ON
+          -DJSONTOOLKIT_TESTS:BOOL=ON
+          -DBUILD_SHARED_LIBS:BOOL=OFF
       - name: Configure JSON Toolkit (shared)
         if: matrix.platform.type == 'shared'
         run: >
           cmake -S . -B ./build
-          -DCMAKE_BUILD_TYPE=Release
-          -DJSONTOOLKIT_BACKEND=${{ matrix.platform.backend }}
-          -DJSONTOOLKIT_CONTRIB=ON
-          -DJSONTOOLKIT_TESTS=ON
-          -DBUILD_SHARED_LIBS=ON
+          -DCMAKE_BUILD_TYPE:STRING=Release
+          -DJSONTOOLKIT_BACKEND:STRING=${{ matrix.platform.backend }}
+          -DJSONTOOLKIT_CONTRIB:BOOL=ON
+          -DJSONTOOLKIT_TESTS:BOOL=ON
+          -DBUILD_SHARED_LIBS:BOOL=ON
       - run: cmake --build ./build --config Release --target clang_format_test
       - run: cmake --build ./build --config Release --parallel
       # Not every CTest version supports the --test-dir option. If such option
