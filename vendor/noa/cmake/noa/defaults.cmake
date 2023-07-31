@@ -1,3 +1,14 @@
+# Standards (sane modern defaults)
+if("CXX" IN_LIST NOA_LANGUAGES)
+  set(CMAKE_CXX_STANDARD 20)
+endif()
+if("C" IN_LIST NOA_LANGUAGES)
+  set(CMAKE_C_STANDARD 11)
+endif()
+if("OBJCXX" IN_LIST NOA_LANGUAGES)
+  set(CMAKE_OBJCXX_STANDARD "${CMAKE_CXX_STANDARD}")
+endif()
+
 # Hide symbols from shared libraries by default
 # In certain compilers, like GCC and Clang,
 # symbols are visible by default.
@@ -5,11 +16,25 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
 if("CXX" IN_LIST NOA_LANGUAGES)
   set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 endif()
+if("C" IN_LIST NOA_LANGUAGES)
+  set(CMAKE_C_VISIBILITY_PRESET hidden)
+endif()
+if("OBJCXX" IN_LIST NOA_LANGUAGES)
+  set(CMAKE_OBJCXX_VISIBILITY_PRESET hidden)
+endif()
 
 # By default, stay within ISO C++
 if("CXX" IN_LIST NOA_LANGUAGES)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
+if("C" IN_LIST NOA_LANGUAGES)
+  set(CMAKE_C_STANDARD_REQUIRED ON)
+  set(CMAKE_C_EXTENSIONS OFF)
+endif()
+if("OBJCXX" IN_LIST NOA_LANGUAGES)
+  set(CMAKE_OBJCXX_STANDARD_REQUIRED ON)
+  set(CMAKE_OBJCXX_EXTENSIONS OFF)
 endif()
 
 # Export compile commands by default.
