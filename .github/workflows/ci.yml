@@ -75,6 +75,7 @@ jobs:
           -DJSONTOOLKIT_CONTRIB:BOOL=ON
           -DJSONTOOLKIT_TESTS:BOOL=ON
           -DBUILD_SHARED_LIBS:BOOL=OFF
+          -DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON
       - name: Configure JSON Toolkit (shared)
         if: matrix.platform.type == 'shared'
         run: >
@@ -84,6 +85,7 @@ jobs:
           -DJSONTOOLKIT_CONTRIB:BOOL=ON
           -DJSONTOOLKIT_TESTS:BOOL=ON
           -DBUILD_SHARED_LIBS:BOOL=ON
+          -DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON
       - run: cmake --build ./build --config Release --target clang_format_test
       - run: cmake --build ./build --config Release --parallel
       # Not every CTest version supports the --test-dir option. If such option
