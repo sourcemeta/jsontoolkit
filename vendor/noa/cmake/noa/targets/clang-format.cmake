@@ -43,4 +43,6 @@ function(noa_target_clang_format)
       COMMAND "${CMAKE_COMMAND}" -E echo "Could not locate ClangFormat"
       COMMAND "${CMAKE_COMMAND}" -E false)
   endif()
+
+  set_target_properties(clang_format clang_format_test PROPERTIES FOLDER "Formatting")
 endfunction()

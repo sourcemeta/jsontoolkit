@@ -14,7 +14,8 @@ add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jso
 set_target_properties(sourcemeta_jsontoolkit_jsonschema
   PROPERTIES
   OUTPUT_NAME sourcemeta_jsontoolkit_jsonschema
-  EXPORT_NAME jsontoolkit::jsonschema)
+  EXPORT_NAME jsontoolkit::jsonschema
+  FOLDER "JSON Toolkit/JSON Schema")
 
 target_include_directories(sourcemeta_jsontoolkit_jsonschema
   PUBLIC

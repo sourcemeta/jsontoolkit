@@ -72,3 +72,5 @@ add_custom_target(www DEPENDS
   "${WWW_OUTPUT_DIRECTORY}/icon-192x192.png"
   "${WWW_OUTPUT_DIRECTORY}/icon-512x512.png"
   "${WWW_OUTPUT_DIRECTORY}/style.min.css")
+set_target_properties(www
+  PROPERTIES FOLDER "JSON Toolkit/Website")
