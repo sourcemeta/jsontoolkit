@@ -1,10 +1,6 @@
-if(NOT JSONTOOLKIT_BACKEND_PATH OR JSONTOOLKIT_BACKEND_PATH STREQUAL "")
-  # RapidJSON's find package implementation populates RAPIDJSON_INCLUDE_DIRS
-  # See https://github.com/rjeczalik/rapidjson/blob/master/cmake/Findrapidjson.cmake
-  find_package(RapidJSON CONFIG REQUIRED)
-else()
-  set(RAPIDJSON_INCLUDE_DIRS "${JSONTOOLKIT_BACKEND_PATH}/include")
-endif()
+# RapidJSON's find package implementation populates RAPIDJSON_INCLUDE_DIRS
+# See https://github.com/rjeczalik/rapidjson/blob/master/cmake/Findrapidjson.cmake
+find_package(RapidJSON CONFIG REQUIRED)
 
 # RapidJSON through VCPKG already declares the `rapidjson` library
 if(NOT TARGET rapidjson)
