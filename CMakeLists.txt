@@ -21,6 +21,11 @@ noa_option_enum(
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" OFF)
 option(JSONTOOLKIT_CONTRIB "Build the JSON Toolkit extra programs" OFF)
 option(JSONTOOLKIT_WEBSITE "Build the JSON Toolkit website" OFF)
+option(JSONTOOLKIT_ADDRESS_SANITIZER "Build JSON Toolkit with an address sanitizer" OFF)
+
+if(JSONTOOLKIT_ADDRESS_SANITIZER)
+  noa_sanitizer(TYPE address)
+endif()
 
 if(PROJECT_IS_TOP_LEVEL)
   include(GNUInstallDirs)
