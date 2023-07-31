@@ -65,13 +65,12 @@ target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::j
 
 ### CMake options
 
-| Option                     | Type    | Default     | Description                                      |
-|----------------------------|---------|-------------|--------------------------------------------------|
-| `JSONTOOLKIT_BACKEND`      | String  | `rapidjson` | The JSON implementation backend                  |
-| `JSONTOOLKIT_BACKEND_PATH` | String  |             | A custom path to the JSON implementation backend |
-| `JSONTOOLKIT_TESTS`        | Boolean | `OFF`       | Build the JSON Toolkit tests                     |
-| `JSONTOOLKIT_CONTRIB`      | Boolean | `OFF`       | Build the JSON Toolkit `contrib` programs        |
-| `JSONTOOLKIT_WEBSITE`      | Boolean | `OFF`       | Build the JSON Toolkit website                   |
+| Option                | Type    | Default     | Description                               |
+|-----------------------|---------|-------------|-------------------------------------------|
+| `JSONTOOLKIT_BACKEND` | String  | `rapidjson` | The JSON implementation backend           |
+| `JSONTOOLKIT_TESTS`   | Boolean | `OFF`       | Build the JSON Toolkit tests              |
+| `JSONTOOLKIT_CONTRIB` | Boolean | `OFF`       | Build the JSON Toolkit `contrib` programs |
+| `JSONTOOLKIT_WEBSITE` | Boolean | `OFF`       | Build the JSON Toolkit website            |
 
 ### CMake components
 

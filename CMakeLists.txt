@@ -18,8 +18,6 @@ noa_option_enum(
   DESCRIPTION "Set the JSON Toolkit backend"
   CHOICES rapidjson)
 
-# TODO: Remove this anti-pattern option
-set(JSONTOOLKIT_BACKEND_PATH "" CACHE PATH "Set a custom path to the JSON Toolkit backend")
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" OFF)
 option(JSONTOOLKIT_CONTRIB "Build the JSON Toolkit extra programs" OFF)
 option(JSONTOOLKIT_WEBSITE "Build the JSON Toolkit website" OFF)
