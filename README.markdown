@@ -65,13 +65,14 @@ target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::j
 
 ### CMake options
 
-| Option                          | Type    | Default     | Description                               |
-|---------------------------------|---------|-------------|-------------------------------------------|
-| `JSONTOOLKIT_BACKEND`           | String  | `rapidjson` | The JSON implementation backend           |
-| `JSONTOOLKIT_TESTS`             | Boolean | `OFF`       | Build the JSON Toolkit tests              |
-| `JSONTOOLKIT_CONTRIB`           | Boolean | `OFF`       | Build the JSON Toolkit `contrib` programs |
-| `JSONTOOLKIT_WEBSITE`           | Boolean | `OFF`       | Build the JSON Toolkit website            |
-| `JSONTOOLKIT_ADDRESS_SANITIZER` | Boolean | `OFF`       | Enable the address sanitizer              |
+| Option                            | Type    | Default     | Description                               |
+|-----------------------------------|---------|-------------|-------------------------------------------|
+| `JSONTOOLKIT_BACKEND`             | String  | `rapidjson` | The JSON implementation backend           |
+| `JSONTOOLKIT_TESTS`               | Boolean | `OFF`       | Build the JSON Toolkit tests              |
+| `JSONTOOLKIT_CONTRIB`             | Boolean | `OFF`       | Build the JSON Toolkit `contrib` programs |
+| `JSONTOOLKIT_WEBSITE`             | Boolean | `OFF`       | Build the JSON Toolkit website            |
+| `JSONTOOLKIT_ADDRESS_SANITIZER`   | Boolean | `OFF`       | Enable the address sanitizer              |
+| `JSONTOOLKIT_UNDEFINED_SANITIZER` | Boolean | `OFF`       | Enable the undefined behavior sanitizer   |
 
 ### CMake components
 

@@ -57,6 +57,12 @@ jobs:
             backend: rapidjson
             type: static
             options: -DJSONTOOLKIT_ADDRESS_SANITIZER:BOOL=ON
+          - os: ubuntu-22.04
+            cc: clang
+            cxx: clang++
+            backend: rapidjson
+            type: static
+            options: -DJSONTOOLKIT_UNDEFINED_SANITIZER:BOOL=ON
 
     runs-on: ${{ matrix.platform.os }}
     env:
