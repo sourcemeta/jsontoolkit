@@ -47,3 +47,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(NOT APPLE)
   set(CMAKE_INSTALL_RPATH $ORIGIN)
 endif()
+
+# Delay GoogleTest discovery until before running the tests
+# See https://discourse.cmake.org/t/default-value-for-new-discovery-mode-option-for-gtest-discover-tests/1422
+set(CMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
