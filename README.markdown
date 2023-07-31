@@ -1564,8 +1564,11 @@ configure, build and test the project as follows:
 
 ```sh
 # Find the backend id in the "Supported backends" section
-cmake -S . -B ./build -DCMAKE_BUILD_TYPE=<Debug|Release> \
-  -DJSONTOOLKIT_BACKEND=<backend-id> -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON
+cmake -S . -B ./build \
+  -DCMAKE_BUILD_TYPE:STRING=<Debug|Release> \
+  -DJSONTOOLKIT_BACKEND:STRING=<backend-id> \
+  -DJSONTOOLKIT_CONTRIB:BOOL=ON \
+  -DJSONTOOLKIT_TESTS:BOOL=ON
 # Format the code
 cmake --build ./build --config <Debug|Release> --target clang_format
 # Build the project
