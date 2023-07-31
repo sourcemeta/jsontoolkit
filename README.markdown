@@ -72,6 +72,7 @@ target_link_libraries(my-executable-or-library PUBLIC sourcemeta::jsontoolkit::j
 | `JSONTOOLKIT_CONTRIB`           | Boolean | `OFF`       | Build the JSON Toolkit `contrib` programs |
 | `JSONTOOLKIT_WEBSITE`           | Boolean | `OFF`       | Build the JSON Toolkit website            |
 | `JSONTOOLKIT_ADDRESS_SANITIZER` | Boolean | `OFF`       | Enable the address sanitizer              |
+| `JSONTOOLKIT_MEMORY_SANITIZER`  | Boolean | `OFF`       | Enable the memory sanitizer               |
 
 ### CMake components
 

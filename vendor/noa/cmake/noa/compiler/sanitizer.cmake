@@ -13,6 +13,18 @@ function(noa_sanitizer)
     # Get nicer stack traces with the Address sanitizer
     add_compile_options(-fno-omit-frame-pointer -fno-optimize-sibling-calls)
     add_compile_options(-O1)
+  elseif(NOA_COMPILER_LLVM AND "${NOA_SANITIZER_TYPE}" STREQUAL "memory")
+    if(APPLE)
+      message(FATAL_ERROR "Clang MemorySanitizer is not available on Apple platforms")
+    endif()
+
+    # See https://clang.llvm.org/docs/MemorySanitizer.html
+    message(STATUS "Enabling sanitizer: Clang MemorySanitizer")
+    add_compile_options(-fsanitize=memory -fno-sanitize-memory-use-after-dtor)
+    add_link_options(-fsanitize=memory)
+    # Get nicer stack traces with the Memory sanitizer
+    add_compile_options(-fno-omit-frame-pointer -fno-optimize-sibling-calls)
+    add_compile_options(-O1)
   else()
     message(FATAL_ERROR "Unrecognized compiler and/or sanitizer combination")
   endif()
