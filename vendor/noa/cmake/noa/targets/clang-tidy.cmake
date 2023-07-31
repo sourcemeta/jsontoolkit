@@ -32,4 +32,6 @@ function(noa_target_clang_tidy)
       COMMAND "${CMAKE_COMMAND}" -E echo "Could not locate ClangTidy"
       COMMAND "${CMAKE_COMMAND}" -E false)
   endif()
+
+  set_target_properties(clang_tidy PROPERTIES FOLDER "Linting")
 endfunction()
