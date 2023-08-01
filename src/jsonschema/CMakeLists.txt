@@ -10,7 +10,7 @@ set(JSONSCHEMA_PRIVATE_HEADERS
   include/sourcemeta/jsontoolkit/jsonschema/default_walker.h
   include/sourcemeta/jsontoolkit/jsonschema/default_resolver.h
   include/sourcemeta/jsontoolkit/jsonschema/error.h
-  "${CMAKE_CURRENT_BINARY_DIR}/sourcemeta_jsontoolkit_jsonschema_export.h")
+  "${CMAKE_CURRENT_BINARY_DIR}/export.h")
 
 add_library(sourcemeta_jsontoolkit_jsonschema
   ${JSONSCHEMA_PUBLIC_HEADERS}
@@ -34,7 +34,8 @@ target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
   sourcemeta::jsontoolkit::json)
 
 include(GenerateExportHeader)
-generate_export_header(sourcemeta_jsontoolkit_jsonschema)
+generate_export_header(sourcemeta_jsontoolkit_jsonschema
+  EXPORT_FILE_NAME export.h)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema PROPERTIES
   SOVERSION "${PROJECT_VERSION_MAJOR}"
   VERSION "${PROJECT_VERSION}")
