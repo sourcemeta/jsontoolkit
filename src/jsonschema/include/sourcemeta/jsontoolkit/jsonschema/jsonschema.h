@@ -1,7 +1,7 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_JSONSCHEMA_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_JSONSCHEMA_H_
 
-#include "sourcemeta_jsontoolkit_jsonschema_export.h"
+#include "export.h"
 
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema/default_resolver.h>

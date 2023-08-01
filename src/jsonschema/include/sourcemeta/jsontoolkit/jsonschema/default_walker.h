@@ -1,7 +1,7 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_DEFAULT_WALKER_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_DEFAULT_WALKER_H_
 
-#include "sourcemeta_jsontoolkit_jsonschema_export.h"
+#include "export.h"
 
 #include <sourcemeta/jsontoolkit/jsonschema/walker.h>
 

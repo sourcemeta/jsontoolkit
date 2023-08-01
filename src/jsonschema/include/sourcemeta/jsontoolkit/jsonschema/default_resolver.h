@@ -1,7 +1,7 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_DEFAULT_RESOLVER_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_DEFAULT_RESOLVER_H_
 
-#include "sourcemeta_jsontoolkit_jsonschema_export.h"
+#include "export.h"
 
 #include <future>   // std::future
 #include <optional> // std::optional
