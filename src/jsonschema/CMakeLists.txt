@@ -1,19 +1,28 @@
 include("${CMAKE_CURRENT_SOURCE_DIR}/metaschemas.cmake")
 configure_file(default_metaschemas.h.in default_metaschemas.h @ONLY)
 
-add_library(sourcemeta_jsontoolkit_jsonschema
-  include/sourcemeta/jsontoolkit/jsonschema.h
+set(JSONSCHEMA_PUBLIC_HEADERS
+  include/sourcemeta/jsontoolkit/jsonschema.h)
+set(JSONSCHEMA_PRIVATE_HEADERS
+  include/sourcemeta/jsontoolkit/jsonschema/jsonschema.h
   include/sourcemeta/jsontoolkit/jsonschema/resolver.h
   include/sourcemeta/jsontoolkit/jsonschema/walker.h
   include/sourcemeta/jsontoolkit/jsonschema/default_walker.h
   include/sourcemeta/jsontoolkit/jsonschema/default_resolver.h
   include/sourcemeta/jsontoolkit/jsonschema/error.h
+  "${CMAKE_CURRENT_BINARY_DIR}/sourcemeta_jsontoolkit_jsonschema_export.h")
+
+add_library(sourcemeta_jsontoolkit_jsonschema
+  ${JSONSCHEMA_PUBLIC_HEADERS}
+  ${JSONSCHEMA_PRIVATE_HEADERS}
   jsonschema.cc default_metaschemas.h.in
   default_walker.cc default_resolver.cc)
 add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jsonschema)
-set_target_properties(sourcemeta_jsontoolkit_jsonschema
-  PROPERTIES
+
+set_target_properties(sourcemeta_jsontoolkit_jsonschema PROPERTIES
   OUTPUT_NAME sourcemeta_jsontoolkit_jsonschema
+  PUBLIC_HEADER "${JSONSCHEMA_PUBLIC_HEADERS}"
+  PRIVATE_HEADER "${JSONSCHEMA_PRIVATE_HEADERS}"
   EXPORT_NAME jsontoolkit::jsonschema
   FOLDER "JSON Toolkit/JSON Schema")
 
@@ -46,16 +55,17 @@ endif()
 # Installation
 install(TARGETS sourcemeta_jsontoolkit_jsonschema
   EXPORT sourcemeta_jsontoolkit_jsonschema
+  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit"
+    COMPONENT sourcemeta_jsontoolkit_dev
+  PRIVATE_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit/jsonschema"
+    COMPONENT sourcemeta_jsontoolkit_dev
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-  COMPONENT sourcemeta_jsontoolkit
+    COMPONENT sourcemeta_jsontoolkit
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  COMPONENT sourcemeta_jsontoolkit NAMELINK_COMPONENT sourcemeta_jsontoolkit_dev
+    COMPONENT sourcemeta_jsontoolkit
+    NAMELINK_COMPONENT sourcemeta_jsontoolkit_dev
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  COMPONENT sourcemeta_jsontoolkit_dev)
-install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/sourcemeta_jsontoolkit_jsonschema_export.h"
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit"
-  COMPONENT sourcemeta_jsontoolkit_dev)
+    COMPONENT sourcemeta_jsontoolkit_dev)
 install(EXPORT sourcemeta_jsontoolkit_jsonschema
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
   NAMESPACE sourcemeta::
