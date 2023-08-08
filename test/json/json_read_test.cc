@@ -1829,6 +1829,24 @@ TEST(JSON, compare_array_array_different_same_size) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::compare(right, left));
 }
 
+TEST(JSON, compare_string_string_different) {
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::from("aaa")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::from("bbb")};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
+TEST(JSON, compare_string_string_same) {
+  const sourcemeta::jsontoolkit::JSON left{
+      sourcemeta::jsontoolkit::from("foo")};
+  const sourcemeta::jsontoolkit::JSON right{
+      sourcemeta::jsontoolkit::from("foo")};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(left, right));
+  EXPECT_FALSE(sourcemeta::jsontoolkit::compare(right, left));
+}
+
 TEST(JSON, compare_object_object_same) {
   const sourcemeta::jsontoolkit::JSON left{
       sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
