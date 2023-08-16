@@ -32,8 +32,9 @@ lint: .always
 
 # Not every CTest version supports the --test-dir option
 test: .always
-	$(CTEST) --test-dir ./build --build-config $(PRESET) \
-		--output-on-failure --progress --parallel
+	$(CMAKE) -E env UBSAN_OPTIONS=print_stacktrace=1 \
+		$(CTEST) --test-dir ./build --build-config $(PRESET) \
+			--output-on-failure --progress --parallel
 
 doxygen: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target doxygen
