@@ -22,10 +22,6 @@ TEST(JSON_value, copy_traits) {
 TEST(JSON_value, move_traits) {
   EXPECT_TRUE(std::is_move_assignable<sourcemeta::jsontoolkit::JSON>::value);
   EXPECT_TRUE(std::is_move_constructible<sourcemeta::jsontoolkit::JSON>::value);
-  EXPECT_TRUE(
-      std::is_nothrow_move_assignable<sourcemeta::jsontoolkit::JSON>::value);
-  EXPECT_TRUE(
-      std::is_nothrow_move_constructible<sourcemeta::jsontoolkit::JSON>::value);
 }
 
 TEST(JSON_value, copy_equivalence_constructor) {

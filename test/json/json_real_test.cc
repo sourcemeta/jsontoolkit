@@ -26,7 +26,7 @@ TEST(JSON_real, type) {
 }
 
 TEST(JSON_real, long_double_nan) {
-  const long double value{static_cast<long double>(NAN)};
+  const double value{static_cast<double>(NAN)};
   EXPECT_THROW(sourcemeta::jsontoolkit::JSON{value}, std::invalid_argument);
 }
 
@@ -41,7 +41,7 @@ TEST(JSON_real, float_nan) {
 }
 
 TEST(JSON_real, long_double_infinity) {
-  const long double value{std::numeric_limits<long double>::infinity()};
+  const double value{std::numeric_limits<double>::infinity()};
   EXPECT_THROW(sourcemeta::jsontoolkit::JSON{value}, std::invalid_argument);
 }
 

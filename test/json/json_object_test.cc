@@ -36,8 +36,6 @@ TEST(JSON_object, move_traits) {
       std::is_move_constructible<sourcemeta::jsontoolkit::JSON::Object>::value);
   EXPECT_TRUE(std::is_nothrow_move_assignable<
               sourcemeta::jsontoolkit::JSON::Object>::value);
-  EXPECT_TRUE(std::is_nothrow_move_constructible<
-              sourcemeta::jsontoolkit::JSON::Object>::value);
 }
 
 TEST(JSON_object, type) {

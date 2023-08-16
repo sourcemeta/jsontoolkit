@@ -86,8 +86,8 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::JSON my_real{3.14};
   /// ```
-  explicit GenericValue(const long double value)
-      : data{std::in_place_type<long double>, value} {
+  explicit GenericValue(const double value)
+      : data{std::in_place_type<double>, value} {
     if (std::isinf(value) || std::isnan(value)) {
       throw std::invalid_argument("JSON does not support Infinity or NaN");
     }
@@ -101,19 +101,8 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::JSON my_real{3.14};
   /// ```
-  explicit GenericValue(const double value)
-      : GenericValue(static_cast<long double>(value)) {}
-
-  /// This constructor creates a JSON document from an real number type. For
-  /// example:
-  ///
-  /// ```cpp
-  /// #include <sourcemeta/jsontoolkit/json.h>
-  ///
-  /// const sourcemeta::jsontoolkit::JSON my_real{3.14};
-  /// ```
   explicit GenericValue(const float value)
-      : GenericValue(static_cast<long double>(value)) {}
+      : GenericValue(static_cast<double>(value)) {}
 
   /// This constructor creates a JSON document from a boolean type. For example:
   ///
@@ -240,9 +229,9 @@ public:
   operator<(const GenericValue<CharT, Traits, Allocator> &other) const noexcept
       -> bool {
     if (this->type() == Type::Integer && other.type() == Type::Real) {
-      return static_cast<long double>(this->to_integer()) < other.to_real();
+      return static_cast<double>(this->to_integer()) < other.to_real();
     } else if (this->type() == Type::Real && other.type() == Type::Integer) {
-      return this->to_real() < static_cast<long double>(other.to_integer());
+      return this->to_real() < static_cast<double>(other.to_integer());
     }
 
     if (this->type() != other.type()) {
@@ -298,14 +287,13 @@ public:
       this->data.template emplace<std::int64_t>(this->to_integer() +
                                                 additive.to_integer());
     } else if (this->is_integer() && additive.is_real()) {
-      this->data.template emplace<long double>(
-          static_cast<long double>(this->to_integer()) + additive.to_real());
+      this->data.template emplace<double>(
+          static_cast<double>(this->to_integer()) + additive.to_real());
     } else if (this->is_real() && additive.is_integer()) {
-      this->data.template emplace<long double>(
-          this->to_real() + static_cast<long double>(additive.to_integer()));
+      this->data.template emplace<double>(
+          this->to_real() + static_cast<double>(additive.to_integer()));
     } else {
-      this->data.template emplace<long double>(this->to_real() +
-                                               additive.to_real());
+      this->data.template emplace<double>(this->to_real() + additive.to_real());
     }
 
     return *this;
@@ -364,7 +352,7 @@ public:
   /// assert(document.is_real());
   /// ```
   [[nodiscard]] auto is_real() const noexcept -> bool {
-    return std::holds_alternative<long double>(this->data);
+    return std::holds_alternative<double>(this->data);
   }
 
   /// Check if the input JSON document is either an integer or a real type. For
@@ -400,7 +388,7 @@ public:
       case Type::Integer:
         return this->to_integer() >= 0;
       case Type::Real:
-        return this->to_real() >= static_cast<long double>(0.0);
+        return this->to_real() >= static_cast<double>(0.0);
       default:
         return false;
     }
@@ -521,9 +509,9 @@ public:
   /// assert(document.is_real());
   /// assert(document.to_real() == 3.14);
   /// ```
-  [[nodiscard]] auto to_real() const noexcept -> long double {
+  [[nodiscard]] auto to_real() const noexcept -> double {
     assert(this->is_real());
-    return std::get<long double>(this->data);
+    return std::get<double>(this->data);
   }
 
   /// Convert a JSON instance into a standard string value. The result of this
@@ -1280,7 +1268,7 @@ public:
   }
 
 private:
-  std::variant<std::nullptr_t, bool, std::int64_t, long double, String, Array,
+  std::variant<std::nullptr_t, bool, std::int64_t, double, String, Array,
                Object>
       data;
 };

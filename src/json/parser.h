@@ -15,7 +15,7 @@
 #include <sstream>    // std::basic_ostringstream, std::basic_istringstream
 #include <stack>      // std::stack
 #include <stdexcept>  // std::out_of_range
-#include <string>     // std::basic_string, std::stol, std::stold, std::stoul
+#include <string>     // std::basic_string, std::stol, std::stod, std::stoul
 
 namespace sourcemeta::jsontoolkit::internal {
 
@@ -218,9 +218,9 @@ auto parse_number_integer(const std::uint64_t line, const std::uint64_t column,
 template <typename CharT, typename Traits>
 auto parse_number_real(const std::uint64_t line, const std::uint64_t column,
                        const std::basic_string<CharT, Traits> &string)
-    -> long double {
+    -> double {
   try {
-    return std::stold(string);
+    return std::stod(string);
   } catch (const std::out_of_range &) {
     throw ParseError(line, column);
   }
@@ -233,7 +233,7 @@ auto parse_number_exponent_rest(
     const std::uint64_t original_column,
     std::basic_istream<CharT, Traits> &stream,
     std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> long double {
+    -> double {
   while (!stream.eof()) {
     const CharT character{static_cast<CharT>(stream.peek())};
     switch (character) {
@@ -266,7 +266,7 @@ auto parse_number_exponent(
     const std::uint64_t original_column,
     std::basic_istream<CharT, Traits> &stream,
     std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> long double {
+    -> double {
   const CharT character{static_cast<CharT>(stream.get())};
   column += 1;
   switch (character) {
@@ -295,7 +295,7 @@ auto parse_number_exponent_first(
     const std::uint64_t original_column,
     std::basic_istream<CharT, Traits> &stream,
     std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> long double {
+    -> double {
   const CharT character{static_cast<CharT>(stream.get())};
   column += 1;
   switch (character) {
@@ -334,7 +334,7 @@ auto parse_number_fractional(
     const std::uint64_t original_column,
     std::basic_istream<CharT, Traits> &stream,
     std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> long double {
+    -> double {
   while (!stream.eof()) {
     const CharT character{static_cast<CharT>(stream.peek())};
     switch (character) {
@@ -374,7 +374,7 @@ auto parse_number_fractional_first(
     const std::uint64_t original_column,
     std::basic_istream<CharT, Traits> &stream,
     std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> long double {
+    -> double {
   const CharT character{static_cast<CharT>(stream.peek())};
   switch (character) {
     case internal::token_number_decimal_point<CharT>:

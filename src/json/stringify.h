@@ -57,9 +57,9 @@ auto stringify(const std::int64_t value,
 
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
-auto stringify(const long double value,
-               std::basic_ostream<CharT, Traits> &stream) -> void {
-  if (value == static_cast<long double>(0.0)) {
+auto stringify(const double value, std::basic_ostream<CharT, Traits> &stream)
+    -> void {
+  if (value == static_cast<double>(0.0)) {
     stream.write("0.0", 3);
   } else {
     // TODO: use .put() etc instead of formatted output

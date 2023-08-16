@@ -40,7 +40,7 @@ public:
         while (!stream.eof()) {
           sourcemeta::jsontoolkit::parse(stream);
         }
-      } catch (const sourcemeta::jsontoolkit::ParseError &error) {
+      } catch (const sourcemeta::jsontoolkit::ParseError &) {
         SUCCEED();
       } catch (const std::exception &) {
         FAIL() << "The parse function threw an unexpected error";
