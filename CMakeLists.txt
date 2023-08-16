@@ -73,6 +73,10 @@ if(JSONTOOLKIT_TESTS)
   endif()
 
   if(PROJECT_IS_TOP_LEVEL)
-    add_subdirectory(./test/packaging)
+    # Otherwise we need the child project to link
+    # against the sanitizers too.
+    if(NOT JSONTOOLKIT_ADDRESS_SANITIZER)
+      add_subdirectory(./test/packaging)
+    endif()
   endif()
 endif()
