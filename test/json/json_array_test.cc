@@ -171,7 +171,7 @@ TEST(JSON_array, modify_array_after_copy) {
   EXPECT_EQ(document.at(2).to_integer(), 3);
 
   // Make copy
-  sourcemeta::jsontoolkit::JSON copy{document};
+  sourcemeta::jsontoolkit::JSON copy = document;
   EXPECT_EQ(copy.size(), 3);
   EXPECT_EQ(copy.at(0).to_integer(), 1);
   EXPECT_EQ(copy.at(1).to_integer(), 2);

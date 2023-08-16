@@ -131,7 +131,7 @@ TEST(JSON_object, modify_after_copy) {
   EXPECT_EQ(document.at("y").to_integer(), 2);
 
   // Make copy
-  sourcemeta::jsontoolkit::JSON copy{document};
+  sourcemeta::jsontoolkit::JSON copy = document;
   EXPECT_EQ(copy.size(), 2);
   EXPECT_TRUE(copy.defines("x"));
   EXPECT_TRUE(copy.defines("y"));

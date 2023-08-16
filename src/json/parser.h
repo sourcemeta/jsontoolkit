@@ -698,8 +698,8 @@ do_parse_array_item:
     case internal::token_number_eight<CharT>:
     case internal::token_number_nine<CharT>:
       frames.top().get().push_back(
-          Result{internal::parse_number<CharT, Traits, Allocator>(
-              line, column, stream, character)});
+          internal::parse_number<CharT, Traits, Allocator>(line, column, stream,
+                                                           character));
       goto do_parse_array_item_separator;
 
     // Whitespace
@@ -856,8 +856,8 @@ do_parse_object_property_value:
     case internal::token_number_eight<CharT>:
     case internal::token_number_nine<CharT>:
       frames.top().get().assign(
-          key, Result{internal::parse_number<CharT, Traits, Allocator>(
-                   line, column, stream, character)});
+          key, internal::parse_number<CharT, Traits, Allocator>(
+                   line, column, stream, character));
       goto do_parse_object_property_end;
 
     // Whitespace
