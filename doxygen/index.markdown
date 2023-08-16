@@ -70,6 +70,7 @@ CMake
 | `JSONTOOLKIT_CONTRIB`           | Boolean | `OFF`   | Build the JSON Toolkit `contrib` programs |
 | `JSONTOOLKIT_DOCS`              | Boolean | `OFF`   | Build the JSON Toolkit docs               |
 | `JSONTOOLKIT_ADDRESS_SANITIZER` | Boolean | `OFF`   | Enable the address sanitizer              |
+| `JSONTOOLKIT_MEMORY_SANITIZER`  | Boolean | `OFF`   | Enable the memory sanitizer               |
 
 ### Components
 
