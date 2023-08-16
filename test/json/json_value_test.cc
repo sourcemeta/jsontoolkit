@@ -252,7 +252,7 @@ TEST(JSON_value, set_const_null) {
   EXPECT_FALSE(document.is_null());
   EXPECT_TRUE(document.is_boolean());
   const sourcemeta::jsontoolkit::JSON new_value{nullptr};
-  document.into(sourcemeta::jsontoolkit::JSON{new_value});
+  document.into(new_value);
   EXPECT_TRUE(document.is_null());
   EXPECT_FALSE(document.is_boolean());
 }
