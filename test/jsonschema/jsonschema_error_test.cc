@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
-#include <sourcemeta/jsontoolkit/jsonschema/error.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 
 #include <exception>   // std::exception
 #include <string>      // std::string
 #include <type_traits> // std::is_base_of_v
 
-TEST(jsonschema, schema_error_throw) {
+TEST(JSONSchema, schema_error_throw) {
   static_assert(
       std::is_base_of_v<std::exception, sourcemeta::jsontoolkit::SchemaError>,
       "Must subclass std::exception");
@@ -14,7 +14,7 @@ TEST(jsonschema, schema_error_throw) {
   EXPECT_EQ(std::string{exception.what()}, "My error");
 }
 
-TEST(jsonschema, resolution_error_throw) {
+TEST(JSONSchema, resolution_error_throw) {
   static_assert(std::is_base_of_v<std::exception,
                                   sourcemeta::jsontoolkit::ResolutionError>,
                 "Must subclass std::exception");

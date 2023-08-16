@@ -5,8 +5,7 @@
 #include <iostream> // std::cout
 
 auto main() -> int {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::from("Hello World")};
+  const sourcemeta::jsontoolkit::JSON document{"Hello World"};
   sourcemeta::jsontoolkit::stringify(document, std::cout);
   std::cout << std::endl;
   return EXIT_SUCCESS;

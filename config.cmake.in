@@ -1,6 +1,5 @@
 @PACKAGE_INIT@
 
-include("${CMAKE_CURRENT_LIST_DIR}/@JSONTOOLKIT_BACKEND@.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/sourcemeta_jsontoolkit_json.cmake")
 
 # GCC does not allow the use of std::promise, std::future

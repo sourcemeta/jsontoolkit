@@ -7,59 +7,52 @@
 #include <type_traits> // std::remove_reference_t
 
 auto sourcemeta::jsontoolkit::is_schema(
-    const sourcemeta::jsontoolkit::Value &schema) -> bool {
-  return sourcemeta::jsontoolkit::is_object(schema) ||
-         sourcemeta::jsontoolkit::is_boolean(schema);
+    const sourcemeta::jsontoolkit::JSON &schema) -> bool {
+  return schema.is_object() || schema.is_boolean();
 }
 
-auto sourcemeta::jsontoolkit::id(const sourcemeta::jsontoolkit::Value &schema)
+auto sourcemeta::jsontoolkit::id(const sourcemeta::jsontoolkit::JSON &schema)
     -> std::optional<std::string> {
   assert(is_schema(schema));
-  if (sourcemeta::jsontoolkit::is_object(schema) &&
-      sourcemeta::jsontoolkit::defines(schema, "$id")) {
-    const sourcemeta::jsontoolkit::Value &id{
-        sourcemeta::jsontoolkit::at(schema, "$id")};
-    if (!sourcemeta::jsontoolkit::is_string(id) ||
-        sourcemeta::jsontoolkit::empty(id)) {
+  if (schema.is_object() && schema.defines("$id")) {
+    const sourcemeta::jsontoolkit::JSON &id{schema.at("$id")};
+    if (!id.is_string() || id.empty()) {
       throw sourcemeta::jsontoolkit::SchemaError(
           "The value of the $id property is not valid");
     }
 
-    return sourcemeta::jsontoolkit::to_string(id);
+    return id.to_string();
   }
 
   return std::nullopt;
 }
 
 auto sourcemeta::jsontoolkit::metaschema(
-    const sourcemeta::jsontoolkit::Value &schema)
-    -> std::optional<std::string> {
+    const sourcemeta::jsontoolkit::JSON &schema) -> std::optional<std::string> {
   if (!sourcemeta::jsontoolkit::is_schema(schema)) {
     throw sourcemeta::jsontoolkit::SchemaError(
         "The input document is not a valid schema");
   }
 
-  if (sourcemeta::jsontoolkit::is_boolean(schema)) {
+  if (schema.is_boolean()) {
     return std::nullopt;
   }
 
-  if (sourcemeta::jsontoolkit::defines(schema, "$schema")) {
-    const sourcemeta::jsontoolkit::Value &metaschema{
-        sourcemeta::jsontoolkit::at(schema, "$schema")};
-    if (!sourcemeta::jsontoolkit::is_string(metaschema) ||
-        sourcemeta::jsontoolkit::empty(metaschema)) {
+  if (schema.defines("$schema")) {
+    const sourcemeta::jsontoolkit::JSON &metaschema{schema.at("$schema")};
+    if (!metaschema.is_string() || metaschema.empty()) {
       throw sourcemeta::jsontoolkit::SchemaError(
           "The value of the $schema property is not valid");
     }
 
-    return sourcemeta::jsontoolkit::to_string(metaschema);
+    return metaschema.to_string();
   }
 
   return std::nullopt;
 }
 
 auto sourcemeta::jsontoolkit::draft(
-    const sourcemeta::jsontoolkit::Value &schema,
+    const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
     const std::optional<std::string> &default_metaschema)
     -> std::future<std::optional<std::string>> {
@@ -133,7 +126,7 @@ auto core_vocabulary(const std::string &draft) -> std::string {
 } // namespace
 
 auto sourcemeta::jsontoolkit::vocabularies(
-    const sourcemeta::jsontoolkit::Value &schema,
+    const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
     const std::optional<std::string> &default_metaschema)
     -> std::future<std::unordered_map<std::string, bool>> {
@@ -199,7 +192,7 @@ auto sourcemeta::jsontoolkit::vocabularies(
   /*
    * (4) Parse the "$vocabulary" keyword, if any
    */
-  if (!sourcemeta::jsontoolkit::defines(metaschema.value(), "$vocabulary")) {
+  if (!metaschema.value().defines("$vocabulary")) {
     // The core vocabulary is always used
     // See https://json-schema.org/draft/2020-12/json-schema-core.html#section-8
     // See
@@ -259,25 +252,20 @@ auto sourcemeta::jsontoolkit::vocabularies(
     return promise.get_future();
   }
 
-  const sourcemeta::jsontoolkit::Value &vocabulary_value{
-      sourcemeta::jsontoolkit::at(metaschema.value(), "$vocabulary")};
+  const sourcemeta::jsontoolkit::JSON &vocabulary_value{
+      metaschema.value().at("$vocabulary")};
 
   // Handle core vocabulary edge cases
-  if (!sourcemeta::jsontoolkit::defines(vocabulary_value, core)) {
+  if (!vocabulary_value.defines(core)) {
     throw sourcemeta::jsontoolkit::SchemaError(
         "Every metaschema must declare the core vocabulary");
-  } else if (!sourcemeta::jsontoolkit::to_boolean(
-                 sourcemeta::jsontoolkit::at(vocabulary_value, core))) {
+  } else if (!vocabulary_value.at(core).to_boolean()) {
     throw sourcemeta::jsontoolkit::SchemaError(
         "The core vocabulary must be marked as required");
   }
 
-  for (auto iterator = sourcemeta::jsontoolkit::cbegin_object(vocabulary_value);
-       iterator != sourcemeta::jsontoolkit::cend_object(vocabulary_value);
-       iterator++) {
-    result.insert({sourcemeta::jsontoolkit::key(*iterator),
-                   sourcemeta::jsontoolkit::to_boolean(
-                       sourcemeta::jsontoolkit::value(*iterator))});
+  for (const auto &[key, value] : vocabulary_value.as_object()) {
+    result.insert({key, value.to_boolean()});
   }
 
   promise.set_value(result);
@@ -285,7 +273,7 @@ auto sourcemeta::jsontoolkit::vocabularies(
 }
 
 auto sourcemeta::jsontoolkit::subschema_iterator(
-    const sourcemeta::jsontoolkit::Value &schema,
+    const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::schema_walker_t &walker,
     const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
     const std::optional<std::string> &default_metaschema)
@@ -295,7 +283,7 @@ auto sourcemeta::jsontoolkit::subschema_iterator(
 }
 
 auto sourcemeta::jsontoolkit::flat_subschema_iterator(
-    const sourcemeta::jsontoolkit::Value &schema,
+    const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::schema_walker_t &walker,
     const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
     const std::optional<std::string> &default_metaschema)
@@ -305,7 +293,7 @@ auto sourcemeta::jsontoolkit::flat_subschema_iterator(
 }
 
 auto sourcemeta::jsontoolkit::flat_subschema_iterator(
-    sourcemeta::jsontoolkit::Value &schema,
+    sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::schema_walker_t &walker,
     const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
     const std::optional<std::string> &default_metaschema)

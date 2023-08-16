@@ -1,219 +1,217 @@
 #include <gtest/gtest.h>
-#include <sourcemeta/jsontoolkit/json/read.h>
-#include <sstream> // std::ostringstream
+#include <sstream>
 
-TEST(JSON, array_stringify_scalars_no_space) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::stringify(document, stream);
-  EXPECT_EQ(stream.str(), "[1,2,3]");
-}
+#include <sourcemeta/jsontoolkit/json.h>
 
-TEST(JSON, array_stringify_scalars_space_pretty) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(), "[\n    1,\n    2,\n    3\n]");
-}
-
-TEST(JSON, stringify_array_pretty) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("[ 1, [2,3], 4 ]")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(),
-            "[\n    1,\n    [\n        2,\n        3\n    ],\n    4\n]");
-}
-
-TEST(JSON, array_stringify_object_pretty) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("[ { \"foo\": 1 } ]")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(), "[\n    {\n        \"foo\": 1\n    }\n]");
-}
-
-TEST(JSON, stringify_false) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::from(false)};
+TEST(JSON_stringify, boolean_false) {
+  const sourcemeta::jsontoolkit::JSON document{false};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
   EXPECT_EQ(stream.str(), "false");
 }
 
-TEST(JSON, stringify_true) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::from(true)};
+TEST(JSON_stringify, boolean_true) {
+  const sourcemeta::jsontoolkit::JSON document{true};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
   EXPECT_EQ(stream.str(), "true");
 }
 
-TEST(JSON, prettify_false) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::from(false)};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(), "false");
-}
-
-TEST(JSON, prettify_true) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::from(true)};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(), "true");
-}
-
-TEST(JSON, null_stringify) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::from(nullptr)};
+TEST(JSON_stringify, null) {
+  const sourcemeta::jsontoolkit::JSON document{nullptr};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
   EXPECT_EQ(stream.str(), "null");
 }
 
-TEST(JSON, null_prettify) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::from(nullptr)};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(), "null");
-}
-
-TEST(JSON, stringify_positive_integer) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("54")};
+TEST(JSON_stringify, integer_positive) {
+  const sourcemeta::jsontoolkit::JSON document{1234};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
-  EXPECT_EQ(stream.str(), "54");
+  EXPECT_EQ(stream.str(), "1234");
 }
 
-TEST(JSON, stringify_negative_integer) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("-54")};
+TEST(JSON_stringify, integer_negative) {
+  const sourcemeta::jsontoolkit::JSON document{-1234};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
-  EXPECT_EQ(stream.str(), "-54");
+  EXPECT_EQ(stream.str(), "-1234");
 }
 
-TEST(JSON, stringify_zero) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("0")};
+TEST(JSON_stringify, integer_zero) {
+  const sourcemeta::jsontoolkit::JSON document{0};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
   EXPECT_EQ(stream.str(), "0");
 }
 
-TEST(JSON, stringify_positive_real) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("5.4")};
+TEST(JSON_stringify, integer_minus_zero) {
+  const sourcemeta::jsontoolkit::JSON document{-0};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
-  EXPECT_EQ(stream.str(), "5.4");
+  EXPECT_EQ(stream.str(), "0");
 }
 
-TEST(JSON, stringify_negative_real) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("-5.4")};
+TEST(JSON_stringify, real_positive) {
+  const sourcemeta::jsontoolkit::JSON document{12.34};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
-  EXPECT_EQ(stream.str(), "-5.4");
+  EXPECT_EQ(stream.str(), "12.34");
 }
 
-TEST(JSON, stringify_single_scalar_no_space) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+TEST(JSON_stringify, real_negative) {
+  const sourcemeta::jsontoolkit::JSON document{-12.34};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
-  EXPECT_EQ(stream.str(), "{\"foo\":1}");
+  EXPECT_EQ(stream.str(), "-12.34");
 }
 
-TEST(JSON, stringify_scalars_no_space) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": true }")};
+TEST(JSON_stringify, real_zero) {
+  const sourcemeta::jsontoolkit::JSON document{0.0};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
-  // Because order is irrelevant
-  const bool matches = stream.str() == "{\"foo\":1,\"bar\":true}" ||
-                       stream.str() == "{\"bar\":true,\"foo\":1}";
-  EXPECT_TRUE(matches);
+  EXPECT_EQ(stream.str(), "0.0");
 }
 
-TEST(JSON, stringify_single_scalar_pretty) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(), "{\n    \"foo\": 1\n}");
-}
-
-TEST(JSON, stringify_scalars_pretty) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": true }")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  // Because order is irrelevant
-  const bool matches =
-      stream.str() == "{\n    \"foo\": 1,\n    \"bar\": true\n}" ||
-      stream.str() == "{\n    \"bar\": true,\n    \"foo\": 1\n}";
-  EXPECT_TRUE(matches);
-}
-
-TEST(JSON, stringify_single_array_no_space) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": [1,2] }")};
+TEST(JSON_stringify, real_minus_zero) {
+  const sourcemeta::jsontoolkit::JSON document{-0.0};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
-  EXPECT_EQ(stream.str(), "{\"foo\":[1,2]}");
+  EXPECT_EQ(stream.str(), "0.0");
 }
 
-TEST(JSON, stringify_single_array_pretty) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": [1,2] }")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(), "{\n    \"foo\": [\n        1,\n        2\n    ]\n}");
-}
-
-TEST(JSON, stringify_single_object_pretty) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": {\"bar\":1} }")};
-  std::ostringstream stream;
-  sourcemeta::jsontoolkit::prettify(document, stream);
-  EXPECT_EQ(stream.str(), "{\n    \"foo\": {\n        \"bar\": 1\n    }\n}");
-}
-
-TEST(JSON, stringify_empty_string) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("\"\"")};
+TEST(JSON_stringify, empty_string) {
+  const sourcemeta::jsontoolkit::JSON document{""};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
   EXPECT_EQ(stream.str(), "\"\"");
 }
 
-TEST(JSON, stringify_short_string) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("\"foo\"")};
+TEST(JSON_stringify, small_string) {
+  const sourcemeta::jsontoolkit::JSON document{"foo"};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
   EXPECT_EQ(stream.str(), "\"foo\"");
 }
 
-TEST(JSON, stringify_quote) {
+TEST(JSON_stringify, array_integers) {
   const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("\"\\\"\"")};
+      sourcemeta::jsontoolkit::JSON{1}, sourcemeta::jsontoolkit::JSON{2},
+      sourcemeta::jsontoolkit::JSON{3}, sourcemeta::jsontoolkit::JSON{4}};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "[1,2,3,4]");
+}
+
+TEST(JSON_stringify, array_nested) {
+  sourcemeta::jsontoolkit::JSON array{
+      sourcemeta::jsontoolkit::JSON{1}, sourcemeta::jsontoolkit::JSON{2},
+      sourcemeta::jsontoolkit::JSON{3}, sourcemeta::jsontoolkit::JSON{4}};
+  sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::JSON::Array{}};
+  document.push_back(std::move(array));
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "[[1,2,3,4]]");
+}
+
+TEST(JSON_stringify, array_empty) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::JSON::Array{}};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "[]");
+}
+
+TEST(JSON_stringify, object_integers) {
+  const sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{1}},
+      {"bar", sourcemeta::jsontoolkit::JSON{2}}};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  // Because order is irrelevant
+  const bool matches = stream.str() == "{\"foo\":1,\"bar\":2}" ||
+                       stream.str() == "{\"bar\":2,\"foo\":1}";
+  EXPECT_TRUE(matches);
+}
+
+TEST(JSON_stringify, object_empty) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::JSON::make_object()};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "{}");
+}
+
+TEST(JSON_stringify, object_with_array) {
+  sourcemeta::jsontoolkit::JSON array{sourcemeta::jsontoolkit::JSON::Array{}};
+  array.push_back(sourcemeta::jsontoolkit::JSON{1});
+  array.push_back(sourcemeta::jsontoolkit::JSON{2});
+  const sourcemeta::jsontoolkit::JSON document{{"foo", std::move(array)}};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "{\"foo\":[1,2]}");
+}
+
+TEST(JSON_stringify, stringify_quote) {
+  const sourcemeta::jsontoolkit::JSON document{"\""};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
   EXPECT_EQ(stream.str(), "\"\\\"\"");
 }
 
-TEST(JSON, stringify_unicode_solidus) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("\"\\u002F\"")};
+TEST(JSON_stringify, stringify_escape) {
+  const sourcemeta::jsontoolkit::JSON document{"\\"};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "\"\\\\\"");
+}
+
+TEST(JSON_stringify, stringify_solidus) {
+  const sourcemeta::jsontoolkit::JSON document{"/"};
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
   EXPECT_EQ(stream.str(), "\"/\"");
+}
+
+TEST(JSON_stringify, stringify_backspace) {
+  const sourcemeta::jsontoolkit::JSON document{"foo\bbar"};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "\"foo\\bbar\"");
+}
+
+TEST(JSON_stringify, stringify_formfeed) {
+  const sourcemeta::jsontoolkit::JSON document{"foo\fbar"};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "\"foo\\fbar\"");
+}
+
+TEST(JSON_stringify, stringify_newline) {
+  const sourcemeta::jsontoolkit::JSON document{"foo\nbar"};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "\"foo\\nbar\"");
+}
+
+TEST(JSON_stringify, stringify_carriage_return) {
+  const sourcemeta::jsontoolkit::JSON document{"foo\rbar"};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "\"foo\\rbar\"");
+}
+
+TEST(JSON_stringify, stringify_tabulation) {
+  const sourcemeta::jsontoolkit::JSON document{"foo\tbar"};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "\"foo\\tbar\"");
+}
+
+TEST(JSON_stringify, stringify_scientific_real) {
+  const sourcemeta::jsontoolkit::JSON document{4.321768E3};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "4321.77");
 }

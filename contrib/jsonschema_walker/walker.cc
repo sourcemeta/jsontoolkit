@@ -7,6 +7,7 @@
 #include <fstream>       // std::ifstream
 #include <iostream>      // std::cerr, std::cout, std::cin
 #include <istream>       // std::basic_istream
+#include <span>          // std::span
 #include <unordered_map> // std::unordered_map
 
 namespace {
@@ -53,27 +54,21 @@ auto help(const std::string &program) -> void {
 } // namespace
 
 auto main(int argc, char *argv[]) -> int {
-  if (argc == 1) {
-    // TODO: Use std::span on C++20
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    help(argv[0]);
+  const auto arguments{std::span(argv, static_cast<std::size_t>(argc))};
+
+  if (arguments.size() == 1) {
+    help(arguments.front());
     return EXIT_FAILURE;
   }
 
   try {
-    if (argc == 2) {
-      // TODO: Use std::span on C++20
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-      return walk(argv[1], std::cin);
+    if (arguments.size() == 2) {
+      return walk(arguments[1], std::cin);
     } else {
-      // TODO: Use std::span on C++20
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-      const std::filesystem::path input{argv[2]};
+      const std::filesystem::path input{arguments[2]};
       std::ifstream stream{std::filesystem::canonical(input)};
       stream.exceptions(std::ios_base::badbit);
-      // TODO: Use std::span on C++20
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-      return walk(argv[1], stream);
+      return walk(arguments[1], stream);
     }
   } catch (const std::exception &error) {
     std::cerr << "Error: " << error.what() << "\n";

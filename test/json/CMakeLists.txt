@@ -1,14 +1,20 @@
 add_executable(sourcemeta_jsontoolkit_json_unit
-  json_parse_error_test.cc
+  json_array_test.cc
+  json_boolean_test.cc
   json_error_test.cc
-  json_read_test.cc
-  json_write_test.cc
-  json_iterators_test.cc
-  json_stringify_test.cc)
+  json_integer_test.cc
+  json_null_test.cc
+  json_number_test.cc
+  json_object_test.cc
+  json_parse_error_test.cc
+  json_parser_test.cc
+  json_prettify_test.cc
+  json_real_test.cc
+  json_string_test.cc
+  json_stringify_test.cc
+  json_value_test.cc)
 target_link_libraries(sourcemeta_jsontoolkit_json_unit
-  PRIVATE GTest::gtest)
-target_link_libraries(sourcemeta_jsontoolkit_json_unit
-  PRIVATE GTest::gtest_main)
+  PRIVATE GTest::gtest GTest::gtest_main)
 target_link_libraries(sourcemeta_jsontoolkit_json_unit
   PRIVATE sourcemeta::jsontoolkit::json)
 gtest_discover_tests(sourcemeta_jsontoolkit_json_unit)

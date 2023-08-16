@@ -6,6 +6,7 @@
 #include <fstream>    // std::ifstream
 #include <iostream>   // std::cerr, std::cout, std::cin
 #include <istream>    // std::basic_istream
+#include <span>       // std::span
 
 namespace {
 template <typename CharT, typename Traits>
@@ -19,17 +20,19 @@ auto minify(std::basic_istream<CharT, Traits> &stream) -> int {
 } // namespace
 
 auto main(int argc, char *argv[]) -> int {
+  const auto arguments{std::span(argv, static_cast<std::size_t>(argc))};
+
   try {
-    if (argc == 1) {
+    if (arguments.size() == 1) {
       return minify(std::cin);
     } else {
-      // TODO: Use std::span on C++20
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-      const std::filesystem::path input{argv[1]};
+      const std::filesystem::path input{arguments[1]};
       std::ifstream stream{std::filesystem::canonical(input)};
       stream.exceptions(std::ios_base::badbit);
       return minify(stream);
     }
+
+    // TODO: Catch and pretty print line/column numbers
   } catch (const std::exception &error) {
     std::cerr << "Error: " << error.what() << "\n";
     return EXIT_FAILURE;

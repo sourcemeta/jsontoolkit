@@ -15,10 +15,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - run: sudo apt update
-      - run: sudo apt install -y sassc rapidjson-dev
-
-      # The pandoc version shipped with Ubuntu leads to broken codeblocks
-      - run: wget https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-1-amd64.deb
-      - run: sudo dpkg -i pandoc-2.19.2-1-amd64.deb
-
-      - run: make www
+      - run: sudo apt install -y doxygen
+      - run: >
+          cmake -S . -B ./build
+          -DCMAKE_BUILD_TYPE:STRING=Release
+          -DJSONTOOLKIT_CONTRIB:BOOL=OFF
+          -DJSONTOOLKIT_TESTS:BOOL=OFF
+          -DJSONTOOLKIT_DOCS:BOOL=ON
+      - run: cmake --build ./build --config Release --target doxygen

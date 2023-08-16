@@ -4,7 +4,6 @@ CTEST = ctest
 
 # Options
 PRESET = Debug
-BACKEND = rapidjson
 SHARED = OFF
 
 all: configure compile test
@@ -12,11 +11,11 @@ all: configure compile test
 configure: .always
 	$(CMAKE) -S . -B ./build \
 		-DCMAKE_BUILD_TYPE:STRING=$(PRESET) \
-		-DJSONTOOLKIT_BACKEND:STRING=$(BACKEND) \
+		-DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON \
 		-DJSONTOOLKIT_CONTRIB:BOOL=ON \
 		-DJSONTOOLKIT_TESTS:BOOL=ON \
-		-DBUILD_SHARED_LIBS:BOOL=$(SHARED) \
-		-DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON
+		-DJSONTOOLKIT_DOCS:BOOL=ON \
+		-DBUILD_SHARED_LIBS:BOOL=$(SHARED)
 
 compile: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target clang_format
@@ -28,19 +27,19 @@ compile: .always
 	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
 		--component sourcemeta_jsontoolkit_contrib
 
-# Not every CTest version supports the --test-dir option
-test: .always
-	cd ./build && $(CTEST) --build-config $(PRESET) --output-on-failure --progress --parallel
-
 lint: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target clang_tidy
 
+# Not every CTest version supports the --test-dir option
+test: .always
+	$(CTEST) --test-dir ./build --build-config $(PRESET) \
+		--output-on-failure --progress --parallel
+
+doxygen: .always
+	$(CMAKE) --build ./build --config $(PRESET) --target doxygen
+
 clean: .always
 	$(CMAKE) -E rm -R -f build
-
-www: .always
-	$(CMAKE) -S . -B ./build -DCMAKE_BUILD_TYPE:STRING=$(PRESET) -DJSONTOOLKIT_WEBSITE:BOOL=ON
-	$(CMAKE) --build ./build --config $(PRESET) --target www
 
 # For NMake, which doesn't support .PHONY
 .always:
