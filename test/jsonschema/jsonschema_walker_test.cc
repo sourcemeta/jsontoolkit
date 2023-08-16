@@ -102,7 +102,7 @@ TEST(JSONSchema, walker_false) {
 }
 
 TEST(JSONSchema, walker_value) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
@@ -110,7 +110,7 @@ TEST(JSONSchema, walker_value) {
         "foo": 1
       }
     }
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -138,11 +138,11 @@ TEST(JSONSchema, walker_value) {
 }
 
 TEST(JSONSchema, walker_value_invalid) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": [ { "foo": 1 } ]
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -158,11 +158,11 @@ TEST(JSONSchema, walker_value_invalid) {
 }
 
 TEST(JSONSchema, walker_elements) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemas": [ { "foo": 1 }, { "schema": { "bar": 2 } } ]
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -187,11 +187,11 @@ TEST(JSONSchema, walker_elements) {
 }
 
 TEST(JSONSchema, walker_elements_invalid) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemas": { "foo": 1 }
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -207,7 +207,7 @@ TEST(JSONSchema, walker_elements_invalid) {
 }
 
 TEST(JSONSchema, walker_members) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemaMap": {
@@ -217,7 +217,7 @@ TEST(JSONSchema, walker_members) {
         }
       }
     }
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -245,11 +245,11 @@ TEST(JSONSchema, walker_members) {
 }
 
 TEST(JSONSchema, walker_members_invalid) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemaMap": [ { "foo": 1 } ]
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -265,7 +265,7 @@ TEST(JSONSchema, walker_members_invalid) {
 }
 
 TEST(JSONSchema, walker_value_or_elements) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemaOrSchemas": {
@@ -273,7 +273,7 @@ TEST(JSONSchema, walker_value_or_elements) {
         { "foo": 1 }
       ]
     }
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -300,7 +300,7 @@ TEST(JSONSchema, walker_value_or_elements) {
 }
 
 TEST(JSONSchema, walker_elements_or_members) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemasOrMap": [
@@ -310,7 +310,7 @@ TEST(JSONSchema, walker_elements_or_members) {
         }
       }
     ]
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -340,10 +340,10 @@ TEST(JSONSchema, walker_elements_or_members) {
 }
 
 TEST(JSONSchema, walker_no_metaschema_and_not_default) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "schema": { "foo": 1 }
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -358,14 +358,14 @@ TEST(JSONSchema, walker_no_metaschema_and_not_default) {
 }
 
 TEST(JSONSchema, walker_no_metaschema_with_default) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "schema": {
       "schema": {
         "foo": 1
       }
     }
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -393,13 +393,13 @@ TEST(JSONSchema, walker_no_metaschema_with_default) {
 }
 
 TEST(JSONSchema, walker_unknown_keyword_from_other_vocab) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
       "custom": { "foo": 1 }
     }
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -420,14 +420,14 @@ TEST(JSONSchema, walker_unknown_keyword_from_other_vocab) {
 }
 
 TEST(JSONSchema, walker_multi_metaschemas) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
       "$schema": "https://sourcemeta.com/custom-vocab",
       "custom": { "foo": 1 }
     }
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
@@ -453,7 +453,7 @@ TEST(JSONSchema, walker_multi_metaschemas) {
 }
 
 TEST(JSONSchema, walker_flat_const) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
@@ -464,7 +464,7 @@ TEST(JSONSchema, walker_flat_const) {
         "schema": { "foo": 2 }
       }
     }
-  })JSON")};
+  })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::flat_subschema_iterator(
@@ -494,7 +494,7 @@ TEST(JSONSchema, walker_flat_non_const) {
     }
   })JSON"};
 
-  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(json)};
+  sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(json);
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (sourcemeta::jsontoolkit::JSON &subschema :
        sourcemeta::jsontoolkit::flat_subschema_iterator(document, test_walker,
@@ -524,7 +524,7 @@ TEST(JSONSchema, walker_flat_non_const_modify) {
     }
   })JSON"};
 
-  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::parse(json)};
+  sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(json);
   for (sourcemeta::jsontoolkit::JSON &subschema :
        sourcemeta::jsontoolkit::flat_subschema_iterator(document, test_walker,
                                                         test_resolver)) {
@@ -541,8 +541,8 @@ TEST(JSONSchema, walker_flat_non_const_modify) {
 }
 
 TEST(JSONSchema, walker_flat_const_no_metaschema) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(R"JSON({ "foo": 1 })JSON")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({ "foo": 1 })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::flat_subschema_iterator(
@@ -554,8 +554,8 @@ TEST(JSONSchema, walker_flat_const_no_metaschema) {
 }
 
 TEST(JSONSchema, walker_flat_non_const_no_metaschema) {
-  sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(R"JSON({ "foo": 1 })JSON")};
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({ "foo": 1 })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (auto &subschema : sourcemeta::jsontoolkit::flat_subschema_iterator(

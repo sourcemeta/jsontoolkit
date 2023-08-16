@@ -17,18 +17,18 @@ TEST(JSONSchema_metaschema, metaschema_false) {
 }
 
 TEST(JSONSchema_metaschema, metaschema_empty_object) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{}")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{}");
   const std::optional<std::string> metaschema{
       sourcemeta::jsontoolkit::metaschema(document)};
   EXPECT_FALSE(metaschema.has_value());
 }
 
 TEST(JSONSchema_metaschema, metaschema_valid) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> metaschema{
       sourcemeta::jsontoolkit::metaschema(document)};
   EXPECT_TRUE(metaschema.has_value());
@@ -42,15 +42,15 @@ TEST(JSONSchema_metaschema, metaschema_integer) {
 }
 
 TEST(JSONSchema_metaschema, metaschema_object_with_integer_metaschema) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{ \"$schema\": 1 }")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{ \"$schema\": 1 }");
   EXPECT_THROW(sourcemeta::jsontoolkit::metaschema(document),
                sourcemeta::jsontoolkit::SchemaError);
 }
 
 TEST(JSONSchema_metaschema, metaschema_object_empty_metaschema) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{ \"$schema\": \"\" }")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{ \"$schema\": \"\" }");
   EXPECT_THROW(sourcemeta::jsontoolkit::metaschema(document),
                sourcemeta::jsontoolkit::SchemaError);
 }

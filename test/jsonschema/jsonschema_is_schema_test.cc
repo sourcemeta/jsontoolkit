@@ -33,13 +33,13 @@ TEST(JSONSchema, is_schema_string) {
 }
 
 TEST(JSONSchema, is_schema_array) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   EXPECT_FALSE(sourcemeta::jsontoolkit::is_schema(document));
 }
 
 TEST(JSONSchema, is_schema_empty_object) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{}")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{}");
   EXPECT_TRUE(sourcemeta::jsontoolkit::is_schema(document));
 }
