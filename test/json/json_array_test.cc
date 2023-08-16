@@ -70,8 +70,8 @@ TEST(JSON_array, empty_with_copy_constructor) {
 }
 
 TEST(JSON_array, empty_with_make_array) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON::Array{}};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::JSON::make_array();
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
 }

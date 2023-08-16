@@ -28,8 +28,8 @@ TEST(JSON_value, copy_equivalence_constructor) {
   sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::JSON::Array{}};
   document.push_back(sourcemeta::jsontoolkit::JSON{1});
-  sourcemeta::jsontoolkit::JSON object{
-      sourcemeta::jsontoolkit::JSON::make_object()};
+  sourcemeta::jsontoolkit::JSON object =
+      sourcemeta::jsontoolkit::JSON::make_object();
   object.assign("foo", sourcemeta::jsontoolkit::JSON{1.2});
   document.push_back(object);
   document.push_back(sourcemeta::jsontoolkit::JSON{3});
@@ -41,8 +41,8 @@ TEST(JSON_value, copy_equivalence_assignment) {
   sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::JSON::Array{}};
   document.push_back(sourcemeta::jsontoolkit::JSON{1});
-  sourcemeta::jsontoolkit::JSON object{
-      sourcemeta::jsontoolkit::JSON::make_object()};
+  sourcemeta::jsontoolkit::JSON object =
+      sourcemeta::jsontoolkit::JSON::make_object();
   object.assign("foo", sourcemeta::jsontoolkit::JSON{1.2});
   document.push_back(object);
   document.push_back(sourcemeta::jsontoolkit::JSON{3});

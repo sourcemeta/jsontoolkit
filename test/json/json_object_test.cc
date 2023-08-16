@@ -65,16 +65,16 @@ TEST(JSON_object, empty_with_copy_constructor) {
   EXPECT_EQ(document.size(), 0);
 }
 
-TEST(JSON_object, empty_with_make_array) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON::make_object()};
+TEST(JSON_object, empty_with_make_object) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::JSON::make_object();
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 0);
 }
 
 TEST(JSON_object, assign_booleans) {
-  sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON::make_object()};
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::JSON::make_object();
   EXPECT_TRUE(document.is_object());
   document.assign("foo", sourcemeta::jsontoolkit::JSON{false});
   document.assign("bar", sourcemeta::jsontoolkit::JSON{true});
@@ -394,8 +394,8 @@ TEST(JSON_object, assign_move_empty_object) {
 }
 
 TEST(JSON_object, long_key_assign) {
-  sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON::make_object()};
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::JSON::make_object();
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 0);
   const std::string key(30, 'x');

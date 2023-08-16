@@ -136,8 +136,8 @@ TEST(JSON_stringify, object_integers) {
 }
 
 TEST(JSON_stringify, object_empty) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON::make_object()};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::JSON::make_object();
   std::ostringstream stream;
   sourcemeta::jsontoolkit::stringify(document, stream);
   EXPECT_EQ(stream.str(), "{}");

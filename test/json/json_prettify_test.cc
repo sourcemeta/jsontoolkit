@@ -149,8 +149,8 @@ TEST(JSON_prettify, object_integers) {
 }
 
 TEST(JSON_prettify, object_empty) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON::make_object()};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::JSON::make_object();
   std::ostringstream stream;
   sourcemeta::jsontoolkit::prettify(document, stream);
   EXPECT_EQ(stream.str(), "{}");
@@ -167,8 +167,8 @@ TEST(JSON_prettify, object_with_array) {
 }
 
 TEST(JSON_prettify, object_nested) {
-  sourcemeta::jsontoolkit::JSON object{
-      sourcemeta::jsontoolkit::JSON::make_object()};
+  sourcemeta::jsontoolkit::JSON object =
+      sourcemeta::jsontoolkit::JSON::make_object();
   object.assign("bar", sourcemeta::jsontoolkit::JSON{1});
   const sourcemeta::jsontoolkit::JSON document{{"foo", std::move(object)}};
   std::ostringstream stream;
@@ -177,8 +177,8 @@ TEST(JSON_prettify, object_nested) {
 }
 
 TEST(JSON_prettify, array_with_object) {
-  sourcemeta::jsontoolkit::JSON object{
-      sourcemeta::jsontoolkit::JSON::make_object()};
+  sourcemeta::jsontoolkit::JSON object =
+      sourcemeta::jsontoolkit::JSON::make_object();
   object.assign("foo", sourcemeta::jsontoolkit::JSON{1});
   sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::JSON::Array{}};
