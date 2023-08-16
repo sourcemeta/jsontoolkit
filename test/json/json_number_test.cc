@@ -2,50 +2,42 @@
 #include <sourcemeta/jsontoolkit/json.h>
 
 TEST(JSON_number, is_number_zero) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{0}};
+  const sourcemeta::jsontoolkit::JSON document{0};
   EXPECT_TRUE(document.is_number());
 }
 
 TEST(JSON_number, is_number_zero_real) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{0.0}};
+  const sourcemeta::jsontoolkit::JSON document{0.0};
   EXPECT_TRUE(document.is_number());
 }
 
 TEST(JSON_number, is_number_positive_integer) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{5}};
+  const sourcemeta::jsontoolkit::JSON document{5};
   EXPECT_TRUE(document.is_number());
 }
 
 TEST(JSON_number, is_number_positive_real) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{5.3}};
+  const sourcemeta::jsontoolkit::JSON document{5.3};
   EXPECT_TRUE(document.is_number());
 }
 
 TEST(JSON_number, is_number_negative_integer) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{-5}};
+  const sourcemeta::jsontoolkit::JSON document{-5};
   EXPECT_TRUE(document.is_number());
 }
 
 TEST(JSON_number, is_number_negative_real) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{-5.3}};
+  const sourcemeta::jsontoolkit::JSON document{-5.3};
   EXPECT_TRUE(document.is_number());
 }
 
 TEST(JSON_number, is_number_string) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{"0"}};
+  const sourcemeta::jsontoolkit::JSON document{"0"};
   EXPECT_FALSE(document.is_number());
 }
 
 TEST(JSON_number, is_number_null) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{nullptr}};
+  const sourcemeta::jsontoolkit::JSON document{nullptr};
   EXPECT_FALSE(document.is_number());
 }
 
