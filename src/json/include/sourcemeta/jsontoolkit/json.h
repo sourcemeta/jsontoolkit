@@ -37,8 +37,8 @@ using JSON = GenericValue<char, std::char_traits<char>, std::allocator>;
 /// #include <sstream>
 ///
 /// std::istringstream stream{"[ 1, 2, 3 ]"};
-/// const sourcemeta::jsontoolkit::JSON
-/// document{sourcemeta::jsontoolkit::parse(stream)};
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(stream);
 /// assert(document.is_array());
 /// ```
 ///
@@ -55,8 +55,8 @@ auto parse(std::basic_istream<char, std::char_traits<char>> &stream) -> JSON;
 /// #include <sourcemeta/jsontoolkit/json.h>
 /// #include <cassert>
 ///
-/// const sourcemeta::jsontoolkit::JSON
-/// document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
 /// assert(document.is_array());
 /// ```
 ///
@@ -75,10 +75,11 @@ auto parse(const std::basic_string<char, std::char_traits<char>> &input)
 /// #include <iostream>
 /// #include <sstream>
 ///
-/// const sourcemeta::jsontoolkit::JSON
-/// document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")}; std::ostringstream
-/// stream; sourcemeta::jsontoolkit::stringify(document, stream); std::cout <<
-/// stream.str() << std::endl;
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+/// std::ostringstream stream;
+/// sourcemeta::jsontoolkit::stringify(document, stream);
+/// std::cout << stream.str() << std::endl;
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
 auto stringify(const JSON &document,
@@ -95,10 +96,10 @@ auto stringify(const JSON &document,
 /// #include <iostream>
 /// #include <sstream>
 ///
-/// const sourcemeta::jsontoolkit::JSON
-/// document{sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")}; std::ostringstream
-/// stream; sourcemeta::jsontoolkit::prettify(document, stream); std::cout <<
-/// stream.str() << std::endl;
+/// const sourcemeta::jsontoolkit::JSON document =
+/// sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]"); std::ostringstream stream;
+/// sourcemeta::jsontoolkit::prettify(document, stream);
+/// std::cout << stream.str() << std::endl;
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
 auto prettify(const JSON &document,

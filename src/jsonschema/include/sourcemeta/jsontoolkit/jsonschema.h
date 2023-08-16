@@ -58,11 +58,11 @@ auto is_schema(const JSON &schema) -> bool;
 /// #include <sourcemeta/jsontoolkit/jsonschema.h>
 /// #include <cassert>
 ///
-/// const sourcemeta::jsontoolkit::JSON document{
+/// const sourcemeta::jsontoolkit::JSON document =
 ///     sourcemeta::jsontoolkit::parse(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "$id": "https://sourcemeta.com/example-schema"
-/// })JSON")};
+/// })JSON");
 ///
 /// std::optional<std::string> id{sourcemeta::jsontoolkit::id(document)};
 /// assert(id.has_value());
@@ -81,11 +81,11 @@ auto id(const JSON &schema) -> std::optional<std::string>;
 /// #include <sourcemeta/jsontoolkit/jsonschema.h>
 /// #include <cassert>
 ///
-/// const sourcemeta::jsontoolkit::JSON document{
+/// const sourcemeta::jsontoolkit::JSON document =
 ///   sourcemeta::jsontoolkit::parse(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object"
-/// })JSON")};
+/// })JSON");
 ///
 /// const std::optional<std::string>
 ///   metaschema{sourcemeta::jsontoolkit::metaschema(document)};
@@ -108,11 +108,11 @@ auto metaschema(const JSON &schema) -> std::optional<std::string>;
 /// #include <sourcemeta/jsontoolkit/jsonschema.h>
 /// #include <cassert>
 ///
-/// const sourcemeta::jsontoolkit::JSON document{
+/// const sourcemeta::jsontoolkit::JSON document =
 ///   sourcemeta::jsontoolkit::parse(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object"
-/// })JSON")};
+/// })JSON");
 ///
 /// sourcemeta::jsontoolkit::DefaultResolver resolver;
 /// const std::optional<std::string> draft{
@@ -140,11 +140,11 @@ auto draft(const JSON &schema, const schema_resolver_t &resolver,
 /// #include <sourcemeta/jsontoolkit/jsonschema.h>
 /// #include <cassert>
 ///
-/// const sourcemeta::jsontoolkit::JSON document{
+/// const sourcemeta::jsontoolkit::JSON document =
 ///   sourcemeta::jsontoolkit::parse(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object"
-/// })JSON")};
+/// })JSON");
 ///
 /// sourcemeta::jsontoolkit::DefaultResolver resolver;
 /// const std::unordered_map<std::string, bool> vocabularies{
@@ -334,7 +334,7 @@ private:
 /// #include <sourcemeta/jsontoolkit/jsonschema.h>
 /// #include <iostream>
 ///
-/// const sourcemeta::jsontoolkit::JSON document{
+/// const sourcemeta::jsontoolkit::JSON document =
 ///   sourcemeta::jsontoolkit::parse(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object",
@@ -346,7 +346,7 @@ private:
 ///       }
 ///     }
 ///   }
-/// })JSON")};
+/// })JSON");
 ///
 /// sourcemeta::jsontoolkit::DefaultResolver resolver;
 ///
@@ -378,7 +378,7 @@ auto subschema_iterator(
 /// #include <sourcemeta/jsontoolkit/jsonschema.h>
 /// #include <iostream>
 ///
-/// const sourcemeta::jsontoolkit::JSON document{
+/// const sourcemeta::jsontoolkit::JSON document =
 ///   sourcemeta::jsontoolkit::parse(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object",
@@ -390,7 +390,7 @@ auto subschema_iterator(
 ///       }
 ///     }
 ///   }
-/// })JSON")};
+/// })JSON");
 ///
 /// sourcemeta::jsontoolkit::DefaultResolver resolver;
 ///

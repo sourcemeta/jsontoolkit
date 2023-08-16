@@ -193,8 +193,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::JSON::make_array()};
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::JSON::make_array();
   /// assert(document.is_array());
   /// assert(document.empty());
   /// ```
@@ -209,8 +209,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::JSON::make_object()};
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::JSON::make_object();
   /// assert(document.is_object());
   /// assert(document.empty());
   /// ```
@@ -413,8 +413,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// const sourcemeta::jsontoolkit::JSON
+  /// document=sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// assert(document.is_array());
   /// ```
   [[nodiscard]] auto is_array() const noexcept -> bool {
@@ -427,8 +427,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///  sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+  /// const sourcemeta::jsontoolkit::JSON
+  /// document=sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
   /// assert(document.is_object());
   /// ```
   [[nodiscard]] auto is_object() const noexcept -> bool {
@@ -556,8 +556,8 @@ public:
   /// #include <algorithm>
   /// #include <iostream>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// std::for_each(document.as_array().cbegin(),
   ///               document.as_array().cend(),
   ///               [](const auto &element) {
@@ -579,8 +579,8 @@ public:
   /// #include <algorithm>
   /// #include <iostream>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// std::sort(document.as_array().begin(), document.as_array().end());
   /// ```
   [[nodiscard]] auto as_array() noexcept -> Array & {
@@ -596,8 +596,8 @@ public:
   /// #include <algorithm>
   /// #include <iostream>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::JSON::make_object()};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::JSON::make_object();
   /// document.assign("foo", sourcemeta::jsontoolkit::JSON{1});
   /// document.assign("bar", sourcemeta::jsontoolkit::JSON{2});
   /// document.assign("baz", sourcemeta::jsontoolkit::JSON{3});
@@ -623,8 +623,8 @@ public:
   /// #include <algorithm>
   /// #include <iostream>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::JSON::make_object()};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::JSON::make_object();
   /// document.assign("foo", sourcemeta::jsontoolkit::JSON{1});
   /// document.assign("bar", sourcemeta::jsontoolkit::JSON{2});
   /// document.assign("baz", sourcemeta::jsontoolkit::JSON{3});
@@ -650,8 +650,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON my_array{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+  /// const sourcemeta::jsontoolkit::JSON my_array =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2 ]");
   /// assert(my_array.at(1).to_integer() == 2);
   /// ```
   [[nodiscard]] auto at(const typename Array::size_type index) const
@@ -669,8 +669,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON my_array{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+  /// sourcemeta::jsontoolkit::JSON my_array =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2 ]");
   /// assert(my_array.at(1).to_integer() == 2);
   /// ```
   [[nodiscard]] auto at(const typename Array::size_type index)
@@ -688,8 +688,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON my_object{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  /// const sourcemeta::jsontoolkit::JSON my_object =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }");
   /// assert(my_object.at("bar").to_integer() == 2);
   /// ```
   [[nodiscard]] auto at(const String &key) const -> const GenericValue & {
@@ -706,8 +706,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON my_object{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  /// sourcemeta::jsontoolkit::JSON my_object =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }");
   /// assert(my_object.at("bar").to_integer() == 2);
   /// ```
   [[nodiscard]] auto at(const String &key) -> GenericValue & {
@@ -724,8 +724,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// assert(document.front().to_integer() == 1);
   /// ```
   [[nodiscard]] auto front() -> GenericValue & {
@@ -742,8 +742,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// assert(document.front().to_integer() == 1);
   /// ```
   [[nodiscard]] auto front() const -> const GenericValue & {
@@ -760,8 +760,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// assert(document.back().to_integer() == 3);
   /// ```
   [[nodiscard]] auto back() -> GenericValue & {
@@ -778,8 +778,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// assert(document.back().to_integer() == 3);
   /// ```
   [[nodiscard]] auto back() const -> const GenericValue & {
@@ -802,10 +802,10 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON my_object{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
-  /// const sourcemeta::jsontoolkit::JSON my_array{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+  /// const sourcemeta::jsontoolkit::JSON my_object =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
+  /// const sourcemeta::jsontoolkit::JSON my_array =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2 ]");
   /// const sourcemeta::jsontoolkit::JSON my_string{"foo"};
   ///
   /// assert(my_object.size() == 1);
@@ -831,10 +831,10 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON my_object{
-  ///   sourcemeta::jsontoolkit::parse("{}")};
-  /// const sourcemeta::jsontoolkit::JSON my_array{
-  ///   sourcemeta::jsontoolkit::parse("[]")};
+  /// const sourcemeta::jsontoolkit::JSON my_object =
+  ///   sourcemeta::jsontoolkit::parse("{}");
+  /// const sourcemeta::jsontoolkit::JSON my_array =
+  ///   sourcemeta::jsontoolkit::parse("[]");
   /// const sourcemeta::jsontoolkit::JSON my_string{""};
   ///
   /// assert(my_object.empty());
@@ -858,8 +858,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
   /// assert(document.defines("foo"));
   /// assert(!document.defines("bar"));
   /// ```
@@ -877,8 +877,8 @@ public:
   /// #include <string>
   /// #include <vector>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": false }")};
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": false }");
   ///
   /// const std::vector<std::string> keys{"foo", "qux"};
   /// assert(document.defines_any(keys.cbegin(), keys.cend()));
@@ -897,8 +897,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": false }")};
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": false }");
   ///
   /// assert(document.defines_any({ "foo", "qux" }));
   /// ```
@@ -914,8 +914,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// assert(document.contains(sourcemeta::jsontoolkit::JSON{2}));
   /// assert(!document.contains(sourcemeta::jsontoolkit::JSON{4}));
   /// ```
@@ -936,8 +936,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// const sourcemeta::jsontoolkit::JSON value{4};
   /// document.push_back(value);
   /// assert(document.size() == 4);
@@ -955,8 +955,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// document.push_back(sourcemeta::jsontoolkit::JSON{4});
   /// assert(document.size() == 4);
   /// assert(document.back().to_integer() == 4);
@@ -973,8 +973,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }");
   /// const sourcemeta::jsontoolkit::JSON value{false};
   /// document.assign("bar", value);
   /// assert(document.defines("foo"));
@@ -992,8 +992,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }");
   /// document.assign("bar", sourcemeta::jsontoolkit::JSON{false});
   /// assert(document.defines("foo"));
   /// assert(document.defines("bar"));
@@ -1009,8 +1009,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }");
   /// document.erase("foo");
   /// assert(!document.defines("foo"));
   /// ```
@@ -1027,8 +1027,8 @@ public:
   /// #include <string>
   /// #include <vector>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::JSON::make_object()};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::JSON::make_object();
   /// document.assign("foo", sourcemeta::jsontoolkit::JSON{true});
   /// document.assign("bar", sourcemeta::jsontoolkit::JSON{false});
   /// document.assign("baz", sourcemeta::jsontoolkit::JSON{true});
@@ -1054,8 +1054,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::JSON::make_object()};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::JSON::make_object();
   /// document.assign("foo", sourcemeta::jsontoolkit::JSON{true});
   /// document.assign("bar", sourcemeta::jsontoolkit::JSON{false});
   /// document.assign("baz", sourcemeta::jsontoolkit::JSON{true});
@@ -1077,8 +1077,8 @@ public:
   /// #include <cassert>
   /// #include <iterator>
   ///
-  /// sourcemeta::jsontoolkit::JSON array{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// sourcemeta::jsontoolkit::JSON array =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// array.erase_keys(std::next(array.begin()));
   /// assert(array.size(), 2);
   /// assert(array.at(0), 1);
@@ -1097,8 +1097,8 @@ public:
   /// #include <cassert>
   /// #include <iterator>
   ///
-  /// sourcemeta::jsontoolkit::JSON array{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// sourcemeta::jsontoolkit::JSON array =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// array.erase_keys(std::next(array.begin()), array.end());
   /// assert(array.size(), 1);
   /// assert(array.at(0), 1);
@@ -1116,10 +1116,10 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON my_object{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
-  /// sourcemeta::jsontoolkit::JSON my_array{
-  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  /// sourcemeta::jsontoolkit::JSON my_object =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }");
+  /// sourcemeta::jsontoolkit::JSON my_array =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   /// my_object.clear();
   /// my_array.clear();
   /// assert(my_object.empty());
@@ -1142,8 +1142,8 @@ public:
   /// #include <string>
   /// #include <vector>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::JSON::make_object()};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::JSON::make_object();
   /// document.assign("foo", sourcemeta::jsontoolkit::JSON{true});
   /// document.assign("bar", sourcemeta::jsontoolkit::JSON{false});
   /// document.assign("baz", sourcemeta::jsontoolkit::JSON{true});
@@ -1180,8 +1180,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::JSON::make_object()};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::JSON::make_object();
   /// document.assign("foo", sourcemeta::jsontoolkit::JSON{true});
   /// document.assign("bar", sourcemeta::jsontoolkit::JSON{false});
   /// document.assign("baz", sourcemeta::jsontoolkit::JSON{true});
@@ -1208,8 +1208,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }");
   /// const sourcemeta::jsontoolkit::JSON value{2};
   /// document.at("foo").into(value);
   /// assert(document.at("foo").is_integer());
@@ -1224,8 +1224,8 @@ public:
   /// #include <sourcemeta/jsontoolkit/json.h>
   /// #include <cassert>
   ///
-  /// sourcemeta::jsontoolkit::JSON document{
-  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }");
   /// document.at("foo").into(sourcemeta::jsontoolkit::JSON{2});
   /// assert(document.at("foo").is_integer());
   /// ```
