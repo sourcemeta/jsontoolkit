@@ -178,62 +178,62 @@ TEST(JSON_value, compare_bool_real) {
 
 TEST(JSON_value, compare_int_array) {
   const sourcemeta::jsontoolkit::JSON left{4};
-  const sourcemeta::jsontoolkit::JSON right{
-      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  const sourcemeta::jsontoolkit::JSON right =
+      sourcemeta::jsontoolkit::parse("[1,2,3]");
   EXPECT_TRUE(left < right);
   EXPECT_FALSE(right < left);
 }
 
 TEST(JSON_value, compare_array_array_same) {
-  const sourcemeta::jsontoolkit::JSON left{
-      sourcemeta::jsontoolkit::parse("[1,2,3]")};
-  const sourcemeta::jsontoolkit::JSON right{
-      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  const sourcemeta::jsontoolkit::JSON left =
+      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  const sourcemeta::jsontoolkit::JSON right =
+      sourcemeta::jsontoolkit::parse("[1,2,3]");
   EXPECT_FALSE(left < right);
   EXPECT_FALSE(right < left);
 }
 
 TEST(JSON_value, compare_array_array_different) {
-  const sourcemeta::jsontoolkit::JSON left{
-      sourcemeta::jsontoolkit::parse("[1,2]")};
-  const sourcemeta::jsontoolkit::JSON right{
-      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  const sourcemeta::jsontoolkit::JSON left =
+      sourcemeta::jsontoolkit::parse("[1,2]");
+  const sourcemeta::jsontoolkit::JSON right =
+      sourcemeta::jsontoolkit::parse("[1,2,3]");
   EXPECT_TRUE(left < right);
   EXPECT_FALSE(right < left);
 }
 
 TEST(JSON_value, compare_array_array_different_same_size) {
-  const sourcemeta::jsontoolkit::JSON left{
-      sourcemeta::jsontoolkit::parse("[1,3,4]")};
-  const sourcemeta::jsontoolkit::JSON right{
-      sourcemeta::jsontoolkit::parse("[1,2,3]")};
+  const sourcemeta::jsontoolkit::JSON left =
+      sourcemeta::jsontoolkit::parse("[1,3,4]");
+  const sourcemeta::jsontoolkit::JSON right =
+      sourcemeta::jsontoolkit::parse("[1,2,3]");
   EXPECT_FALSE(left < right);
   EXPECT_TRUE(right < left);
 }
 
 TEST(JSON_value, compare_object_object_same) {
-  const sourcemeta::jsontoolkit::JSON left{
-      sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
-  const sourcemeta::jsontoolkit::JSON right{
-      sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
+  const sourcemeta::jsontoolkit::JSON left =
+      sourcemeta::jsontoolkit::parse("{\"foo\":1}");
+  const sourcemeta::jsontoolkit::JSON right =
+      sourcemeta::jsontoolkit::parse("{\"foo\":1}");
   EXPECT_FALSE(left < right);
   EXPECT_FALSE(right < left);
 }
 
 TEST(JSON_value, compare_object_object_different_same_size) {
-  const sourcemeta::jsontoolkit::JSON left{
-      sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
-  const sourcemeta::jsontoolkit::JSON right{
-      sourcemeta::jsontoolkit::parse("{\"foo\":2}")};
+  const sourcemeta::jsontoolkit::JSON left =
+      sourcemeta::jsontoolkit::parse("{\"foo\":1}");
+  const sourcemeta::jsontoolkit::JSON right =
+      sourcemeta::jsontoolkit::parse("{\"foo\":2}");
   EXPECT_TRUE(left < right);
   EXPECT_FALSE(right < left);
 }
 
 TEST(JSON_value, compare_object_object_different) {
-  const sourcemeta::jsontoolkit::JSON left{
-      sourcemeta::jsontoolkit::parse("{\"foo\":1}")};
-  const sourcemeta::jsontoolkit::JSON right{
-      sourcemeta::jsontoolkit::parse("{\"foo\":1, \"bar\":2}")};
+  const sourcemeta::jsontoolkit::JSON left =
+      sourcemeta::jsontoolkit::parse("{\"foo\":1}");
+  const sourcemeta::jsontoolkit::JSON right =
+      sourcemeta::jsontoolkit::parse("{\"foo\":1, \"bar\":2}");
   EXPECT_FALSE(left < right);
   EXPECT_TRUE(right < left);
 }

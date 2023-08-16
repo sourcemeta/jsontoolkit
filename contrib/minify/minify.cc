@@ -11,8 +11,8 @@
 namespace {
 template <typename CharT, typename Traits>
 auto minify(std::basic_istream<CharT, Traits> &stream) -> int {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(stream)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(stream);
   sourcemeta::jsontoolkit::stringify(document, std::cout);
   std::cout << std::endl;
   return EXIT_SUCCESS;

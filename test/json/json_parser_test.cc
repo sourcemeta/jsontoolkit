@@ -4,16 +4,16 @@
 
 TEST(JSON_parse, true) {
   std::istringstream input{"true"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_boolean());
   EXPECT_TRUE(document.to_boolean());
 }
 
 TEST(JSON_parse, false) {
   std::istringstream input{"false"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_boolean());
   EXPECT_FALSE(document.to_boolean());
 }
@@ -22,12 +22,12 @@ TEST(JSON_parse, true_equality) {
   std::istringstream input_1{"true"};
   std::istringstream input_2{"   true    "};
   std::istringstream input_3{"false"};
-  const sourcemeta::jsontoolkit::JSON document_1{
-      sourcemeta::jsontoolkit::parse(input_1)};
-  const sourcemeta::jsontoolkit::JSON document_2{
-      sourcemeta::jsontoolkit::parse(input_2)};
-  const sourcemeta::jsontoolkit::JSON document_3{
-      sourcemeta::jsontoolkit::parse(input_3)};
+  const sourcemeta::jsontoolkit::JSON document_1 =
+      sourcemeta::jsontoolkit::parse(input_1);
+  const sourcemeta::jsontoolkit::JSON document_2 =
+      sourcemeta::jsontoolkit::parse(input_2);
+  const sourcemeta::jsontoolkit::JSON document_3 =
+      sourcemeta::jsontoolkit::parse(input_3);
   EXPECT_EQ(document_1, document_2);
   EXPECT_FALSE(document_1 == document_3);
   EXPECT_FALSE(document_2 == document_3);
@@ -37,12 +37,12 @@ TEST(JSON_parse, false_equality) {
   std::istringstream input_1{"false"};
   std::istringstream input_2{"   false    "};
   std::istringstream input_3{"true"};
-  const sourcemeta::jsontoolkit::JSON document_1{
-      sourcemeta::jsontoolkit::parse(input_1)};
-  const sourcemeta::jsontoolkit::JSON document_2{
-      sourcemeta::jsontoolkit::parse(input_2)};
-  const sourcemeta::jsontoolkit::JSON document_3{
-      sourcemeta::jsontoolkit::parse(input_3)};
+  const sourcemeta::jsontoolkit::JSON document_1 =
+      sourcemeta::jsontoolkit::parse(input_1);
+  const sourcemeta::jsontoolkit::JSON document_2 =
+      sourcemeta::jsontoolkit::parse(input_2);
+  const sourcemeta::jsontoolkit::JSON document_3 =
+      sourcemeta::jsontoolkit::parse(input_3);
   EXPECT_EQ(document_1, document_2);
   EXPECT_FALSE(document_1 == document_3);
   EXPECT_FALSE(document_2 == document_3);
@@ -50,31 +50,31 @@ TEST(JSON_parse, false_equality) {
 
 TEST(JSON_parse, true_with_spacing) {
   std::istringstream input{"   true   "};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_boolean());
   EXPECT_TRUE(document.to_boolean());
 }
 
 TEST(JSON_parse, false_with_spacing) {
   std::istringstream input{"   false   "};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_boolean());
   EXPECT_FALSE(document.to_boolean());
 }
 
 TEST(JSON_parse, null) {
   std::istringstream input{"null"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_null());
 }
 
 TEST(JSON_parse, null_with_spacing) {
   std::istringstream input{"   null   "};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_null());
 }
 
@@ -82,12 +82,12 @@ TEST(JSON_parse, null_equality) {
   std::istringstream input_1{"null"};
   std::istringstream input_2{"   null    "};
   std::istringstream input_3{"true"};
-  const sourcemeta::jsontoolkit::JSON document_1{
-      sourcemeta::jsontoolkit::parse(input_1)};
-  const sourcemeta::jsontoolkit::JSON document_2{
-      sourcemeta::jsontoolkit::parse(input_2)};
-  const sourcemeta::jsontoolkit::JSON document_3{
-      sourcemeta::jsontoolkit::parse(input_3)};
+  const sourcemeta::jsontoolkit::JSON document_1 =
+      sourcemeta::jsontoolkit::parse(input_1);
+  const sourcemeta::jsontoolkit::JSON document_2 =
+      sourcemeta::jsontoolkit::parse(input_2);
+  const sourcemeta::jsontoolkit::JSON document_3 =
+      sourcemeta::jsontoolkit::parse(input_3);
   EXPECT_EQ(document_1, document_2);
   EXPECT_FALSE(document_1 == document_3);
   EXPECT_FALSE(document_2 == document_3);
@@ -95,8 +95,8 @@ TEST(JSON_parse, null_equality) {
 
 TEST(JSON_parse, string_empty) {
   std::istringstream input{"\"\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 0);
   EXPECT_EQ(document.to_string(), "");
@@ -104,8 +104,8 @@ TEST(JSON_parse, string_empty) {
 
 TEST(JSON_parse, string_foo) {
   std::istringstream input{"\"foo\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 3);
   EXPECT_EQ(document.to_string(), "foo");
@@ -113,8 +113,8 @@ TEST(JSON_parse, string_foo) {
 
 TEST(JSON_parse, string_foo_with_spacing) {
   std::istringstream input{"      \"foo\"     "};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 3);
   EXPECT_EQ(document.to_string(), "foo");
@@ -122,8 +122,8 @@ TEST(JSON_parse, string_foo_with_spacing) {
 
 TEST(JSON_parse, string_foo_padded) {
   std::istringstream input{"\"   foo   \""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 9);
   EXPECT_EQ(document.to_string(), "   foo   ");
@@ -131,8 +131,8 @@ TEST(JSON_parse, string_foo_padded) {
 
 TEST(JSON_parse, string_escape_quote) {
   std::istringstream input{"\"foo\\\"bar\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 7);
   EXPECT_EQ(document.to_string(), "foo\"bar");
@@ -140,24 +140,24 @@ TEST(JSON_parse, string_escape_quote) {
 
 TEST(JSON_parse, empty_array) {
   std::istringstream input{"[]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
 }
 
 TEST(JSON_parse, empty_array_with_inner_space) {
   std::istringstream input{"[            ]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
 }
 
 TEST(JSON_parse, array_one_null_item) {
   std::istringstream input{"[null]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_null());
@@ -165,8 +165,8 @@ TEST(JSON_parse, array_one_null_item) {
 
 TEST(JSON_parse, array_one_boolean_item) {
   std::istringstream input{"[true]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_boolean());
@@ -175,8 +175,8 @@ TEST(JSON_parse, array_one_boolean_item) {
 
 TEST(JSON_parse, array_one_boolean_item_with_inner_space) {
   std::istringstream input{"[   true     ]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_boolean());
@@ -185,8 +185,8 @@ TEST(JSON_parse, array_one_boolean_item_with_inner_space) {
 
 TEST(JSON_parse, array_one_boolean_item_with_padding) {
   std::istringstream input{"   [ true  ]   "};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_boolean());
@@ -195,8 +195,8 @@ TEST(JSON_parse, array_one_boolean_item_with_padding) {
 
 TEST(JSON_parse, array_one_nested_null_item) {
   std::istringstream input{"[[null]]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_array());
@@ -206,8 +206,8 @@ TEST(JSON_parse, array_one_nested_null_item) {
 
 TEST(JSON_parse, array_one_nested_nested_null_item) {
   std::istringstream input{"[[[null]]]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_array());
@@ -219,8 +219,8 @@ TEST(JSON_parse, array_one_nested_nested_null_item) {
 
 TEST(JSON_parse, array_nested_nested_string) {
   std::istringstream input{"[[[\"nested\"]]]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_array());
@@ -233,8 +233,8 @@ TEST(JSON_parse, array_nested_nested_string) {
 
 TEST(JSON_parse, array_false_true_false) {
   std::istringstream input{"[false,true,false]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
   EXPECT_TRUE(document.at(0).is_boolean());
@@ -247,8 +247,8 @@ TEST(JSON_parse, array_false_true_false) {
 
 TEST(JSON_parse, array_foo_bar_baz) {
   std::istringstream input{"[\"foo\",\"bar\",\"baz\"]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
   EXPECT_TRUE(document.at(0).is_string());
@@ -261,8 +261,8 @@ TEST(JSON_parse, array_foo_bar_baz) {
 
 TEST(JSON_parse, array_mixed_boolean_nested) {
   std::istringstream input{"[false,[true],false]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
   EXPECT_TRUE(document.at(0).is_boolean());
@@ -277,8 +277,8 @@ TEST(JSON_parse, array_mixed_boolean_nested) {
 
 TEST(JSON_parse, array_nested_double) {
   std::istringstream input{"[true,[false,[true]]]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 2);
   EXPECT_TRUE(document.at(0).is_boolean());
@@ -295,8 +295,8 @@ TEST(JSON_parse, array_nested_double) {
 
 TEST(JSON_parse, array_nested_double_with_spacing) {
   std::istringstream input{"   [   true  ,  [ false  ,  [ true] ] ]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 2);
   EXPECT_TRUE(document.at(0).is_boolean());
@@ -313,8 +313,8 @@ TEST(JSON_parse, array_nested_double_with_spacing) {
 
 TEST(JSON_parse, array_mixed_boolean_nested_with_spaces) {
   std::istringstream input{"  [   false  ,  [ true]    ,   false ]   "};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
   EXPECT_TRUE(document.at(0).is_boolean());
@@ -329,8 +329,8 @@ TEST(JSON_parse, array_mixed_boolean_nested_with_spaces) {
 
 TEST(JSON_parse, array_one_string_item) {
   std::istringstream input{"[\"foo\"]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_string());
@@ -339,8 +339,8 @@ TEST(JSON_parse, array_one_string_item) {
 
 TEST(JSON_parse, array_one_positive_integer_item) {
   std::istringstream input{"[5]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_integer());
@@ -349,8 +349,8 @@ TEST(JSON_parse, array_one_positive_integer_item) {
 
 TEST(JSON_parse, array_one_negative_integer_item) {
   std::istringstream input{"[-5]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_integer());
@@ -359,8 +359,8 @@ TEST(JSON_parse, array_one_negative_integer_item) {
 
 TEST(JSON_parse, array_one_positive_real_item) {
   std::istringstream input{"[5.2]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_real());
@@ -369,8 +369,8 @@ TEST(JSON_parse, array_one_positive_real_item) {
 
 TEST(JSON_parse, array_one_negative_real_item) {
   std::istringstream input{"[-5.2]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_real());
@@ -379,8 +379,8 @@ TEST(JSON_parse, array_one_negative_real_item) {
 
 TEST(JSON_parse, array_comma_within_string) {
   std::istringstream input{"[\"foo,bar\"]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_string());
@@ -389,8 +389,8 @@ TEST(JSON_parse, array_comma_within_string) {
 
 TEST(JSON_parse, array_with_stringified_array) {
   std::istringstream input{"[\"[false,true]\"]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_string());
@@ -401,12 +401,12 @@ TEST(JSON_parse, array_equality) {
   std::istringstream input_1{"[ 1, 2, 3 ]"};
   std::istringstream input_2{"    [   1, 2    ,3]    "};
   std::istringstream input_3{"   [1,2,2]"};
-  const sourcemeta::jsontoolkit::JSON document_1{
-      sourcemeta::jsontoolkit::parse(input_1)};
-  const sourcemeta::jsontoolkit::JSON document_2{
-      sourcemeta::jsontoolkit::parse(input_2)};
-  const sourcemeta::jsontoolkit::JSON document_3{
-      sourcemeta::jsontoolkit::parse(input_3)};
+  const sourcemeta::jsontoolkit::JSON document_1 =
+      sourcemeta::jsontoolkit::parse(input_1);
+  const sourcemeta::jsontoolkit::JSON document_2 =
+      sourcemeta::jsontoolkit::parse(input_2);
+  const sourcemeta::jsontoolkit::JSON document_3 =
+      sourcemeta::jsontoolkit::parse(input_3);
   EXPECT_EQ(document_1, document_2);
   EXPECT_FALSE(document_1 == document_3);
   EXPECT_FALSE(document_2 == document_3);
@@ -414,8 +414,8 @@ TEST(JSON_parse, array_equality) {
 
 TEST(JSON_parse, single_exponential_number_element) {
   std::istringstream input{"[3e2]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_real());
@@ -426,12 +426,12 @@ TEST(JSON_parse, object_equality) {
   std::istringstream input_1{"{\"foo\":1}"};
   std::istringstream input_2{"   {   \"foo\"   :  1  }    "};
   std::istringstream input_3{"{\"foo\":2}"};
-  const sourcemeta::jsontoolkit::JSON document_1{
-      sourcemeta::jsontoolkit::parse(input_1)};
-  const sourcemeta::jsontoolkit::JSON document_2{
-      sourcemeta::jsontoolkit::parse(input_2)};
-  const sourcemeta::jsontoolkit::JSON document_3{
-      sourcemeta::jsontoolkit::parse(input_3)};
+  const sourcemeta::jsontoolkit::JSON document_1 =
+      sourcemeta::jsontoolkit::parse(input_1);
+  const sourcemeta::jsontoolkit::JSON document_2 =
+      sourcemeta::jsontoolkit::parse(input_2);
+  const sourcemeta::jsontoolkit::JSON document_3 =
+      sourcemeta::jsontoolkit::parse(input_3);
   EXPECT_EQ(document_1, document_2);
   EXPECT_FALSE(document_1 == document_3);
   EXPECT_FALSE(document_2 == document_3);
@@ -439,8 +439,8 @@ TEST(JSON_parse, object_equality) {
 
 TEST(JSON_parse, object_single_null) {
   std::istringstream input{"{\"foo\":null}"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -449,8 +449,8 @@ TEST(JSON_parse, object_single_null) {
 
 TEST(JSON_parse, object_single_null_with_spaces) {
   std::istringstream input{"   {   \"foo\"   :   null  }  "};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -459,8 +459,8 @@ TEST(JSON_parse, object_single_null_with_spaces) {
 
 TEST(JSON_parse, object_multiple_null) {
   std::istringstream input{"{\"foo\":null,\"bar\":null,\"baz\":null}"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 3);
   EXPECT_TRUE(document.defines("foo"));
@@ -473,8 +473,8 @@ TEST(JSON_parse, object_multiple_null) {
 
 TEST(JSON_parse, array_with_object_size_1) {
   std::istringstream input{"[ { \"foo\": null } ]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_object());
@@ -484,8 +484,8 @@ TEST(JSON_parse, array_with_object_size_1) {
 
 TEST(JSON_parse, array_with_object_size_2) {
   std::istringstream input{"[ { \"foo\": false, \"bar\": true } ]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_object());
@@ -500,8 +500,8 @@ TEST(JSON_parse, array_with_object_size_2) {
 
 TEST(JSON_parse, array_with_empty_object) {
   std::istringstream input{"[{}]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_object());
@@ -510,8 +510,8 @@ TEST(JSON_parse, array_with_empty_object) {
 
 TEST(JSON_parse, array_escaped_quote_within_string_element) {
   std::istringstream input{"[\"foo\\\"bar\"]"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.at(0).is_string());
@@ -520,8 +520,8 @@ TEST(JSON_parse, array_escaped_quote_within_string_element) {
 
 TEST(JSON_parse, object_with_array) {
   std::istringstream input{"{ \"foo\": [null] }"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -532,8 +532,8 @@ TEST(JSON_parse, object_with_array) {
 
 TEST(JSON_parse, object_with_array_two_elements) {
   std::istringstream input{"{ \"foo\": [false, true] }"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -547,8 +547,8 @@ TEST(JSON_parse, object_with_array_two_elements) {
 
 TEST(JSON_parse, object_with_object) {
   std::istringstream input{"{ \"foo\": { \"bar\": null } }"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -560,8 +560,8 @@ TEST(JSON_parse, object_with_object) {
 
 TEST(JSON_parse, object_with_positive_integer) {
   std::istringstream input{"{ \"foo\": 5 }"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -571,24 +571,24 @@ TEST(JSON_parse, object_with_positive_integer) {
 
 TEST(JSON_parse, empty_object) {
   std::istringstream input{"{}"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 0);
 }
 
 TEST(JSON_parse, empty_object_with_spacing) {
   std::istringstream input{"{      }"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 0);
 }
 
 TEST(JSON_parse, object_string_value_with_comma) {
   std::istringstream input{"{\"foo\":\"bar,baz\"}"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -598,8 +598,8 @@ TEST(JSON_parse, object_string_value_with_comma) {
 
 TEST(JSON_parse, object_string_value_with_escaped_quote) {
   std::istringstream input{"{\"foo\":\"bar\\\"baz\"}"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -609,8 +609,8 @@ TEST(JSON_parse, object_string_value_with_escaped_quote) {
 
 TEST(JSON_parse, object_empty_string_key) {
   std::istringstream input{"{\"\":\"foo\"}"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines(""));
@@ -620,8 +620,8 @@ TEST(JSON_parse, object_empty_string_key) {
 
 TEST(JSON_parse, object_string_key_with_comma) {
   std::istringstream input{"{\"foo,bar\":\"baz\"}"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo,bar"));
@@ -631,8 +631,8 @@ TEST(JSON_parse, object_string_key_with_comma) {
 
 TEST(JSON_parse, object_string_key_with_space) {
   std::istringstream input{"{\"foo bar\":\"baz\"}"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo bar"));
@@ -642,8 +642,8 @@ TEST(JSON_parse, object_string_key_with_space) {
 
 TEST(JSON_parse, object_string_value_with_stringified) {
   std::istringstream input{"{\"foo\":\"{\\\"x\\\":1}\"}"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -653,8 +653,8 @@ TEST(JSON_parse, object_string_value_with_stringified) {
 
 TEST(JSON_parse, object_one_true_boolean_element_with_space) {
   std::istringstream input{"    {   \"foo\"   :   true  }    "};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -665,8 +665,8 @@ TEST(JSON_parse, object_one_true_boolean_element_with_space) {
 TEST(JSON_parse, object_two_boolean_values_with_space) {
   std::istringstream input{
       "{   \"foo\"  :   true    ,     \"bar\"   :   false}"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 2);
   EXPECT_TRUE(document.defines("foo"));
@@ -679,8 +679,8 @@ TEST(JSON_parse, object_two_boolean_values_with_space) {
 
 TEST(JSON_parse, object_one_array_element_with_space) {
   std::istringstream input{"{   \"foo\"   :  [  true  ,  false   ]   }"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -694,8 +694,8 @@ TEST(JSON_parse, object_one_array_element_with_space) {
 
 TEST(JSON_parse, object_minified_nested) {
   std::istringstream input{"{\"foo\":{\"bar\":true}}"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -706,8 +706,8 @@ TEST(JSON_parse, object_minified_nested) {
 
 TEST(JSON_parse, object_empty_nested_with_new_line_before_end) {
   std::istringstream input("{\"x\":{}\n}");
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("x"));
@@ -717,360 +717,360 @@ TEST(JSON_parse, object_empty_nested_with_new_line_before_end) {
 
 TEST(JSON_parse, zero_integer) {
   std::istringstream input{"0"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_integer());
   EXPECT_EQ(document.to_integer(), 0);
 }
 
 TEST(JSON_parse, minus_zero_integer) {
   std::istringstream input{"-0"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_integer());
   EXPECT_EQ(document.to_integer(), 0);
 }
 
 TEST(JSON_parse, positive_single_digit_positive_integer) {
   std::istringstream input{"1"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_integer());
   EXPECT_EQ(document.to_integer(), 1);
 }
 
 TEST(JSON_parse, positive_multi_digit_positive_integer) {
   std::istringstream input{"1234"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_integer());
   EXPECT_EQ(document.to_integer(), 1234);
 }
 
 TEST(JSON_parse, positive_single_digit_negative_integer) {
   std::istringstream input{"-1"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_integer());
   EXPECT_EQ(document.to_integer(), -1);
 }
 
 TEST(JSON_parse, positive_multi_digit_negative_integer) {
   std::istringstream input{"-1234"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_integer());
   EXPECT_EQ(document.to_integer(), -1234);
 }
 
 TEST(JSON_parse, positive_real_trailing_zeroes) {
   std::istringstream input{"1.50000"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 1.5);
 }
 
 TEST(JSON_parse, negative_real_trailing_zeroes) {
   std::istringstream input{"-1.50000"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), -1.5);
 }
 
 TEST(JSON_parse, positive_real) {
   std::istringstream input{"1.5"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 1.5);
 }
 
 TEST(JSON_parse, negative_real) {
   std::istringstream input{"-1.5"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), -1.5);
 }
 
 TEST(JSON_parse, real_leading_decimal_zero) {
   std::istringstream input{"1.0005"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 1.0005);
 }
 
 TEST(JSON_parse, real_multi_left_digit_positive_real) {
   std::istringstream input{"1234.5"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 1234.5);
 }
 
 TEST(JSON_parse, real_multi_left_digit_negative_real) {
   std::istringstream input{"-1234.5"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), -1234.5);
 }
 
 TEST(JSON_parse, real_long_positive_real) {
   std::istringstream input{"1234.56789"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 1234.56789);
 }
 
 TEST(JSON_parse, real_long_negative_real) {
   std::istringstream input{"-1234.56789"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), -1234.56789);
 }
 
 TEST(JSON_parse, single_digit_positive_real_integer) {
   std::istringstream input{"1.0"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 1.0);
 }
 
 TEST(JSON_parse, single_digit_positive_real_integer_trailing_zero) {
   std::istringstream input{"1.0000000"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 1.0);
 }
 
 TEST(JSON_parse, single_digit_negative_real_integer) {
   std::istringstream input{"-1.0"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), -1.0);
 }
 
 TEST(JSON_parse, single_digit_negative_real_integer_trailing_zero) {
   std::istringstream input{"-1.0000000"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), -1.0);
 }
 
 TEST(JSON_parse, leading_zero_real_number) {
   std::istringstream input{"-0.2"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), -0.2);
 }
 
 TEST(JSON_parse, zero_integer_with_exponent) {
   std::istringstream input{"0e2"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 0.0);
 }
 
 TEST(JSON_parse, zero_real_with_exponent) {
   std::istringstream input{"0.0e2"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 0.0);
 }
 
 TEST(JSON_parse, large_negative_exponential_number) {
   std::istringstream input{"-1.0e28"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), -1e28);
 }
 
 TEST(JSON_parse, large_positive_exponential_number_with_plus_exponent) {
   std::istringstream input{"1.0e+28"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 1e28);
 }
 
 TEST(JSON_parse, large_negative_exponential_number_with_plus_exponent) {
   std::istringstream input{"-1.0e+28"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), -1e28);
 }
 
 TEST(JSON_parse, number_exponential_notation_plus_after_e) {
   std::istringstream input{"3E+2"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 300.0);
 }
 
 TEST(JSON_parse, exponential_notation_integer_1_upper) {
   std::istringstream input{"2E0"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 2.0);
 }
 
 TEST(JSON_parse, exponential_notation_integer_2_upper) {
   std::istringstream input{"3E2"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 300.0);
 }
 
 TEST(JSON_parse, exponential_notation_integer_3_upper) {
   std::istringstream input{"4.321768E3"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 4321.768);
 }
 
 TEST(JSON_parse, exponential_notation_integer_4_upper) {
   std::istringstream input{"-5.3E4"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), -53000);
 }
 
 TEST(JSON_parse, exponential_notation_integer_5_upper) {
   std::istringstream input{"6.72E9"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 6720000000);
 }
 
 TEST(JSON_parse, exponential_notation_integer_6_upper) {
   std::istringstream input{"2E-1"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 0.2);
 }
 
 TEST(JSON_parse, exponential_notation_integer_7_upper) {
   std::istringstream input{"9.87E2"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 987);
 }
 
 TEST(JSON_parse, exponential_notation_integer_8_upper) {
   std::istringstream input{"7.51E-9"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 0.00000000751);
 }
 
 TEST(JSON_parse, exponential_notation_integer_1_lower) {
   std::istringstream input{"2e0"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 2.0);
 }
 
 TEST(JSON_parse, exponential_notation_integer_2_lower) {
   std::istringstream input{"3e2"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 300.0);
 }
 
 TEST(JSON_parse, exponential_notation_integer_3_lower) {
   std::istringstream input{"4.321768e3"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 4321.768);
 }
 
 TEST(JSON_parse, exponential_notation_integer_4_lower) {
   std::istringstream input{"-5.3e4"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), -53000);
 }
 
 TEST(JSON_parse, exponential_notation_integer_5_lower) {
   std::istringstream input{"6.72e9"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 6720000000);
 }
 
 TEST(JSON_parse, exponential_notation_integer_6_lower) {
   std::istringstream input{"2e-1"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 0.2);
 }
 
 TEST(JSON_parse, exponential_notation_integer_7_lower) {
   std::istringstream input{"9.87e2"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 987);
 }
 
 TEST(JSON_parse, exponential_notation_integer_8_lower) {
   std::istringstream input{"7.51e-9"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 0.00000000751);
 }
 
 TEST(JSON_parse, exponential_notation_integer_1_real) {
   std::istringstream input{"2.0e0"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 2.0);
 }
 
 TEST(JSON_parse, exponential_notation_integer_2_real) {
   std::istringstream input{"3.0e2"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 300.0);
 }
 
 TEST(JSON_parse, exponential_notation_integer_3_real) {
   std::istringstream input{"2.0e-1"};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 0.2);
 }
@@ -1079,12 +1079,12 @@ TEST(JSON_parse, integer_equality) {
   std::istringstream input_1{"5"};
   std::istringstream input_2{"   5    "};
   std::istringstream input_3{" 5.1 "};
-  const sourcemeta::jsontoolkit::JSON document_1{
-      sourcemeta::jsontoolkit::parse(input_1)};
-  const sourcemeta::jsontoolkit::JSON document_2{
-      sourcemeta::jsontoolkit::parse(input_2)};
-  const sourcemeta::jsontoolkit::JSON document_3{
-      sourcemeta::jsontoolkit::parse(input_3)};
+  const sourcemeta::jsontoolkit::JSON document_1 =
+      sourcemeta::jsontoolkit::parse(input_1);
+  const sourcemeta::jsontoolkit::JSON document_2 =
+      sourcemeta::jsontoolkit::parse(input_2);
+  const sourcemeta::jsontoolkit::JSON document_3 =
+      sourcemeta::jsontoolkit::parse(input_3);
   EXPECT_EQ(document_1, document_2);
   EXPECT_FALSE(document_1 == document_3);
   EXPECT_FALSE(document_2 == document_3);
@@ -1094,12 +1094,12 @@ TEST(JSON_parse, real_equality) {
   std::istringstream input_1{"5.1"};
   std::istringstream input_2{"   5.1    "};
   std::istringstream input_3{" 5 "};
-  const sourcemeta::jsontoolkit::JSON document_1{
-      sourcemeta::jsontoolkit::parse(input_1)};
-  const sourcemeta::jsontoolkit::JSON document_2{
-      sourcemeta::jsontoolkit::parse(input_2)};
-  const sourcemeta::jsontoolkit::JSON document_3{
-      sourcemeta::jsontoolkit::parse(input_3)};
+  const sourcemeta::jsontoolkit::JSON document_1 =
+      sourcemeta::jsontoolkit::parse(input_1);
+  const sourcemeta::jsontoolkit::JSON document_2 =
+      sourcemeta::jsontoolkit::parse(input_2);
+  const sourcemeta::jsontoolkit::JSON document_3 =
+      sourcemeta::jsontoolkit::parse(input_3);
   EXPECT_EQ(document_1, document_2);
   EXPECT_FALSE(document_1 == document_3);
   EXPECT_FALSE(document_2 == document_3);
@@ -1108,18 +1108,18 @@ TEST(JSON_parse, real_equality) {
 TEST(JSON_parse, integer_real_not_equal) {
   std::istringstream left{"1"};
   std::istringstream right{"1.0"};
-  const sourcemeta::jsontoolkit::JSON document_1{
-      sourcemeta::jsontoolkit::parse(left)};
-  const sourcemeta::jsontoolkit::JSON document_2{
-      sourcemeta::jsontoolkit::parse(right)};
+  const sourcemeta::jsontoolkit::JSON document_1 =
+      sourcemeta::jsontoolkit::parse(left);
+  const sourcemeta::jsontoolkit::JSON document_2 =
+      sourcemeta::jsontoolkit::parse(right);
   EXPECT_FALSE(document_1 == document_2);
   EXPECT_FALSE(document_2 == document_1);
 }
 
 TEST(JSON_parse, string_escaped_quotes) {
   std::istringstream input{"\"\\\"foo\\\"\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 5);
   EXPECT_EQ(document.to_string(), "\"foo\"");
@@ -1127,8 +1127,8 @@ TEST(JSON_parse, string_escaped_quotes) {
 
 TEST(JSON_parse, string_escaped_reverse_solidus) {
   std::istringstream input{"\"foo\\\\bar\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 7);
   EXPECT_EQ(document.to_string(), "foo\\bar");
@@ -1136,8 +1136,8 @@ TEST(JSON_parse, string_escaped_reverse_solidus) {
 
 TEST(JSON_parse, string_escaped_solidus) {
   std::istringstream input{"\"foo\\/bar\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 7);
   EXPECT_EQ(document.to_string(), "foo/bar");
@@ -1145,8 +1145,8 @@ TEST(JSON_parse, string_escaped_solidus) {
 
 TEST(JSON_parse, string_escaped_backspace) {
   std::istringstream input{"\"foo\\bbar\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 7);
   EXPECT_EQ(document.to_string(), "foo\bbar");
@@ -1154,8 +1154,8 @@ TEST(JSON_parse, string_escaped_backspace) {
 
 TEST(JSON_parse, string_escaped_form_feed) {
   std::istringstream input{"\"foo\\fbar\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 7);
   EXPECT_EQ(document.to_string(), "foo\fbar");
@@ -1163,8 +1163,8 @@ TEST(JSON_parse, string_escaped_form_feed) {
 
 TEST(JSON_parse, string_escaped_line_feed) {
   std::istringstream input{"\"foo\\nbar\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 7);
   EXPECT_EQ(document.to_string(), "foo\nbar");
@@ -1172,8 +1172,8 @@ TEST(JSON_parse, string_escaped_line_feed) {
 
 TEST(JSON_parse, string_escaped_carriage_return) {
   std::istringstream input{"\"foo\\rbar\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 7);
   EXPECT_EQ(document.to_string(), "foo\rbar");
@@ -1181,8 +1181,8 @@ TEST(JSON_parse, string_escaped_carriage_return) {
 
 TEST(JSON_parse, string_escaped_tab) {
   std::istringstream input{"\"foo\\tbar\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 7);
   EXPECT_EQ(document.to_string(), "foo\tbar");
@@ -1190,8 +1190,8 @@ TEST(JSON_parse, string_escaped_tab) {
 
 TEST(JSON_parse, string_unicode_code_points) {
   std::istringstream input{"\"\\u002F\""};
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 1);
   EXPECT_EQ(document.to_string(), "\u002F");
@@ -1203,14 +1203,14 @@ TEST(JSON_parse, string_unicode_code_point_equality) {
   std::istringstream input_3{"\"\\/\""};
   std::istringstream input_4{"\"/\""};
 
-  const sourcemeta::jsontoolkit::JSON document_1{
-      sourcemeta::jsontoolkit::parse(input_1)};
-  const sourcemeta::jsontoolkit::JSON document_2{
-      sourcemeta::jsontoolkit::parse(input_2)};
-  const sourcemeta::jsontoolkit::JSON document_3{
-      sourcemeta::jsontoolkit::parse(input_3)};
-  const sourcemeta::jsontoolkit::JSON document_4{
-      sourcemeta::jsontoolkit::parse(input_4)};
+  const sourcemeta::jsontoolkit::JSON document_1 =
+      sourcemeta::jsontoolkit::parse(input_1);
+  const sourcemeta::jsontoolkit::JSON document_2 =
+      sourcemeta::jsontoolkit::parse(input_2);
+  const sourcemeta::jsontoolkit::JSON document_3 =
+      sourcemeta::jsontoolkit::parse(input_3);
+  const sourcemeta::jsontoolkit::JSON document_4 =
+      sourcemeta::jsontoolkit::parse(input_4);
 
   EXPECT_EQ(document_1.to_string(), document_2.to_string());
   EXPECT_EQ(document_2.to_string(), document_3.to_string());
@@ -1221,12 +1221,12 @@ TEST(JSON_parse, string_equality) {
   std::istringstream input_1{"\"foo\""};
   std::istringstream input_2{"   \"foo\"    "};
   std::istringstream input_3{"\"fo\""};
-  const sourcemeta::jsontoolkit::JSON document_1{
-      sourcemeta::jsontoolkit::parse(input_1)};
-  const sourcemeta::jsontoolkit::JSON document_2{
-      sourcemeta::jsontoolkit::parse(input_2)};
-  const sourcemeta::jsontoolkit::JSON document_3{
-      sourcemeta::jsontoolkit::parse(input_3)};
+  const sourcemeta::jsontoolkit::JSON document_1 =
+      sourcemeta::jsontoolkit::parse(input_1);
+  const sourcemeta::jsontoolkit::JSON document_2 =
+      sourcemeta::jsontoolkit::parse(input_2);
+  const sourcemeta::jsontoolkit::JSON document_3 =
+      sourcemeta::jsontoolkit::parse(input_3);
   EXPECT_EQ(document_1, document_2);
   EXPECT_FALSE(document_1 == document_3);
   EXPECT_FALSE(document_2 == document_3);

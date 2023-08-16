@@ -112,8 +112,8 @@ TEST(JSON_number, add_real_real) {
 }
 
 TEST(JSON_number, add_integer_integer_within_object) {
-  sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{\"foo\": 5}")};
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{\"foo\": 5}");
   const sourcemeta::jsontoolkit::JSON value{3};
   document.at("foo") += value;
   EXPECT_TRUE(document.at("foo").is_integer());
@@ -121,8 +121,8 @@ TEST(JSON_number, add_integer_integer_within_object) {
 }
 
 TEST(JSON_number, add_integer_real_within_object) {
-  sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{\"foo\": 5}")};
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{\"foo\": 5}");
   const sourcemeta::jsontoolkit::JSON value{3.2};
   document.at("foo") += value;
   EXPECT_TRUE(document.at("foo").is_real());
@@ -130,8 +130,8 @@ TEST(JSON_number, add_integer_real_within_object) {
 }
 
 TEST(JSON_number, add_real_integer_within_object) {
-  sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{\"foo\": 3.2}")};
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{\"foo\": 3.2}");
   const sourcemeta::jsontoolkit::JSON value{2};
   document.at("foo") += value;
   EXPECT_TRUE(document.at("foo").is_real());
@@ -139,8 +139,8 @@ TEST(JSON_number, add_real_integer_within_object) {
 }
 
 TEST(JSON_number, add_real_real_within_object) {
-  sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{\"foo\": 3.2}")};
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{\"foo\": 3.2}");
   const sourcemeta::jsontoolkit::JSON value{2.0};
   document.at("foo") += value;
   EXPECT_TRUE(document.at("foo").is_real());
