@@ -1250,8 +1250,8 @@ TEST(JSON_parse, rfc8259_example_1) {
       "}\n"
       "}"};
 
-  const sourcemeta::jsontoolkit::JSON value{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON value =
+      sourcemeta::jsontoolkit::parse(input);
 
   // Top level object
   EXPECT_TRUE(value.is_object());
@@ -1328,8 +1328,8 @@ TEST(JSON_parse, rfc8259_example_2) {
                            "}\n"
                            "]"};
 
-  const sourcemeta::jsontoolkit::JSON value{
-      sourcemeta::jsontoolkit::parse(input)};
+  const sourcemeta::jsontoolkit::JSON value =
+      sourcemeta::jsontoolkit::parse(input);
 
   // Type and size
   EXPECT_TRUE(value.is_array());
