@@ -29,7 +29,7 @@ static auto test_resolver(const std::string &identifier)
     const std::optional<sourcemeta::jsontoolkit::JSON> result{
         resolver(identifier).get()};
     if (result.has_value()) {
-      promise.set_value(sourcemeta::jsontoolkit::JSON{result.value()});
+      promise.set_value(result.value());
     } else {
       promise.set_value(std::nullopt);
     }
