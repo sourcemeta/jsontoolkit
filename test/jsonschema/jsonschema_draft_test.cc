@@ -51,24 +51,24 @@ static auto test_resolver(const std::string &identifier)
 }
 
 TEST(JSONSchema_draft, boolean_schema_true) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("true")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("true");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_FALSE(draft.has_value());
 }
 
 TEST(JSONSchema_draft, boolean_schema_false) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("false")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("false");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_FALSE(draft.has_value());
 }
 
 TEST(JSONSchema_draft, boolean_schema_default_metaschema_one_hop) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("true")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("true");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver,
                                      "https://sourcemeta.com/metaschema_1")
@@ -78,8 +78,8 @@ TEST(JSONSchema_draft, boolean_schema_default_metaschema_one_hop) {
 }
 
 TEST(JSONSchema_draft, boolean_schema_default_metaschema_two_hops) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("true")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("true");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver,
                                      "https://sourcemeta.com/metaschema_2")
@@ -89,11 +89,11 @@ TEST(JSONSchema_draft, boolean_schema_default_metaschema_two_hops) {
 }
 
 TEST(JSONSchema_draft, self_descriptive_schema) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://example.com/my-schema"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -101,27 +101,27 @@ TEST(JSONSchema_draft, self_descriptive_schema) {
 }
 
 TEST(JSONSchema_draft, non_resolvable_schema_with_id) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://example.com/does-not-exist"
-  })JSON")};
+  })JSON");
   EXPECT_THROW(sourcemeta::jsontoolkit::draft(document, test_resolver),
                sourcemeta::jsontoolkit::ResolutionError);
 }
 
 TEST(JSONSchema_draft, non_resolvable_schema) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://example.com/does-not-exist"
-  })JSON")};
+  })JSON");
   EXPECT_THROW(sourcemeta::jsontoolkit::draft(document, test_resolver),
                sourcemeta::jsontoolkit::ResolutionError);
 }
 
 TEST(JSONSchema_draft, non_resolvable_default_schema) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{}")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{}");
   EXPECT_THROW(
       sourcemeta::jsontoolkit::draft(document, test_resolver,
                                      "https://example.com/does-not-exist"),
@@ -129,11 +129,11 @@ TEST(JSONSchema_draft, non_resolvable_default_schema) {
 }
 
 TEST(JSONSchema_draft, id_with_one_hop) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://sourcemeta.com/metaschema_1"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -141,11 +141,11 @@ TEST(JSONSchema_draft, id_with_one_hop) {
 }
 
 TEST(JSONSchema_draft, id_with_two_hops) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://sourcemeta.com/metaschema_2"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -153,10 +153,10 @@ TEST(JSONSchema_draft, id_with_two_hops) {
 }
 
 TEST(JSONSchema_draft, no_id_with_one_hop) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_1"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -164,10 +164,10 @@ TEST(JSONSchema_draft, no_id_with_one_hop) {
 }
 
 TEST(JSONSchema_draft, no_id_with_two_hops) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_2"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -175,11 +175,11 @@ TEST(JSONSchema_draft, no_id_with_two_hops) {
 }
 
 TEST(JSONSchema_draft, self_descriptive_metaschema_without_schema) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://sourcemeta.com/no-schema",
     "$schema": "https://sourcemeta.com/no-schema"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -187,10 +187,10 @@ TEST(JSONSchema_draft, self_descriptive_metaschema_without_schema) {
 }
 
 TEST(JSONSchema_draft, metaschema_without_schema_one_hop) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_3"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -198,10 +198,10 @@ TEST(JSONSchema_draft, metaschema_without_schema_one_hop) {
 }
 
 TEST(JSONSchema_draft, id_self_descriptive_default_metaschema) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://sourcemeta.com/foo-bar"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver,
                                      "https://sourcemeta.com/foo-bar")
@@ -211,10 +211,10 @@ TEST(JSONSchema_draft, id_self_descriptive_default_metaschema) {
 }
 
 TEST(JSONSchema_draft, id_default_metaschema_one_hop) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://sourcemeta.com/foo-bar"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver,
                                      "https://sourcemeta.com/metaschema_1")
@@ -224,10 +224,10 @@ TEST(JSONSchema_draft, id_default_metaschema_one_hop) {
 }
 
 TEST(JSONSchema_draft, id_default_metaschema_two_hops) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://sourcemeta.com/foo-bar"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver,
                                      "https://sourcemeta.com/metaschema_2")
@@ -237,8 +237,8 @@ TEST(JSONSchema_draft, id_default_metaschema_two_hops) {
 }
 
 TEST(JSONSchema_draft, default_metaschema_one_hop) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{}")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{}");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver,
                                      "https://sourcemeta.com/metaschema_1")
@@ -248,8 +248,8 @@ TEST(JSONSchema_draft, default_metaschema_one_hop) {
 }
 
 TEST(JSONSchema_draft, default_metaschema_two_hops) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::parse("{}")};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{}");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver,
                                      "https://sourcemeta.com/metaschema_2")
@@ -262,11 +262,11 @@ TEST(JSONSchema_draft, default_metaschema_two_hops) {
 // official hyper-schema metaschema.
 // See http://json-schema.org/draft-00/schema#
 TEST(JSONSchema_draft, jsonschema_draft_hyperschema_0) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-00/hyper-schema#",
     "type": "object"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -277,11 +277,11 @@ TEST(JSONSchema_draft, jsonschema_draft_hyperschema_0) {
 // official hyper-schema metaschema.
 // See http://json-schema.org/draft-01/schema#
 TEST(JSONSchema_draft, jsonschema_draft_hyperschema_1) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-01/hyper-schema#",
     "type": "object"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -292,11 +292,11 @@ TEST(JSONSchema_draft, jsonschema_draft_hyperschema_1) {
 // official hyper-schema metaschema.
 // See http://json-schema.org/draft-02/schema#
 TEST(JSONSchema_draft, jsonschema_draft_hyperschema_2) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-02/hyper-schema#",
     "type": "object"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -304,11 +304,11 @@ TEST(JSONSchema_draft, jsonschema_draft_hyperschema_2) {
 }
 
 TEST(JSONSchema_draft, jsonschema_draft_3) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-03/schema#",
     "type": "object"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -316,11 +316,11 @@ TEST(JSONSchema_draft, jsonschema_draft_3) {
 }
 
 TEST(JSONSchema_draft, jsonschema_draft_4) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -328,10 +328,10 @@ TEST(JSONSchema_draft, jsonschema_draft_4) {
 }
 
 TEST(JSONSchema_draft, jsonschema_draft_4_one_hop) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_4"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -339,10 +339,10 @@ TEST(JSONSchema_draft, jsonschema_draft_4_one_hop) {
 }
 
 TEST(JSONSchema_draft, jsonschema_draft_4_two_hops) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_5"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver).get()};
   EXPECT_TRUE(draft.has_value());
@@ -350,10 +350,10 @@ TEST(JSONSchema_draft, jsonschema_draft_4_two_hops) {
 }
 
 TEST(JSONSchema_draft, default_metaschema_precedence) {
-  const sourcemeta::jsontoolkit::JSON document{
+  const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_6"
-  })JSON")};
+  })JSON");
   const std::optional<std::string> draft{
       sourcemeta::jsontoolkit::draft(document, test_resolver,
                                      "https://sourcemeta.com/metaschema_1")
