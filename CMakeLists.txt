@@ -18,10 +18,6 @@ option(JSONTOOLKIT_CONTRIB "Build the JSON Toolkit extra programs" OFF)
 option(JSONTOOLKIT_DOCS "Build the JSON Toolkit docs" OFF)
 option(JSONTOOLKIT_ADDRESS_SANITIZER "Build JSON Toolkit with an address sanitizer" OFF)
 
-if(JSONTOOLKIT_ADDRESS_SANITIZER)
-  noa_sanitizer(TYPE address)
-endif()
-
 if(PROJECT_IS_TOP_LEVEL)
   include(GNUInstallDirs)
   include(CMakePackageConfigHelpers)
@@ -41,6 +37,11 @@ endif()
 
 add_subdirectory(src/json)
 add_subdirectory(src/jsonschema)
+
+if(JSONTOOLKIT_ADDRESS_SANITIZER)
+  noa_sanitizer(TYPE address TARGET sourcemeta_jsontoolkit_json)
+  noa_sanitizer(TYPE address TARGET sourcemeta_jsontoolkit_jsonschema)
+endif()
 
 if(JSONTOOLKIT_CONTRIB)
   add_subdirectory(./contrib/prettify)
