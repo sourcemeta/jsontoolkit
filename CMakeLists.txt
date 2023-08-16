@@ -5,22 +5,17 @@ if(WIN32)
   include(cmake/vcpkg.cmake)
 endif()
 
-project(sourcemeta_jsontoolkit VERSION 0.0.1 LANGUAGES CXX
-  DESCRIPTION "A multi-backend JSON library for modern C++"
+project(jsontoolkit VERSION 0.0.1 LANGUAGES CXX
+  DESCRIPTION "The swiss-army knife for JSON programming in C++"
   HOMEPAGE_URL "https://jsontoolkit.sourcemeta.com")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 include(vendor/noa/cmake/noa.cmake)
-include(cmake/compiler.cmake)
+include(CompilerOptions)
 
 # Options
-noa_option_enum(
-  NAME JSONTOOLKIT_BACKEND
-  DEFAULT rapidjson
-  DESCRIPTION "Set the JSON Toolkit backend"
-  CHOICES rapidjson)
-
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" OFF)
 option(JSONTOOLKIT_CONTRIB "Build the JSON Toolkit extra programs" OFF)
-option(JSONTOOLKIT_WEBSITE "Build the JSON Toolkit website" OFF)
+option(JSONTOOLKIT_DOCS "Build the JSON Toolkit docs" OFF)
 option(JSONTOOLKIT_ADDRESS_SANITIZER "Build JSON Toolkit with an address sanitizer" OFF)
 
 if(JSONTOOLKIT_ADDRESS_SANITIZER)
@@ -29,10 +24,6 @@ endif()
 
 if(PROJECT_IS_TOP_LEVEL)
   include(GNUInstallDirs)
-  install(FILES README.markdown
-    DESTINATION "${CMAKE_INSTALL_DOCDIR}"
-    COMPONENT sourcemeta_jsontoolkit)
-
   include(CMakePackageConfigHelpers)
   configure_package_config_file(
     config.cmake.in
@@ -44,10 +35,6 @@ if(PROJECT_IS_TOP_LEVEL)
   install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-    COMPONENT sourcemeta_jsontoolkit_dev)
-  install(FILES
-    "cmake/${JSONTOOLKIT_BACKEND}.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
     COMPONENT sourcemeta_jsontoolkit_dev)
 endif()
@@ -62,30 +49,34 @@ if(JSONTOOLKIT_CONTRIB)
   add_subdirectory(./contrib/jsonschema_keywords)
 endif()
 
-if(PROJECT_IS_TOP_LEVEL)
-  noa_target_clang_format(SOURCES
-    src/*.h src/*.cc include/*.h
-    test/*.cc test/*.h
-    contrib/*.cc contrib/*.h)
-  noa_target_clang_tidy(SOURCES
-    src/*.h src/*.cc include/*.h contrib/*.cc)
-  if(JSONTOOLKIT_WEBSITE)
-    add_subdirectory(./www)
-  endif()
-  if(JSONTOOLKIT_TESTS)
-    enable_testing()
-  endif()
+if(JSONTOOLKIT_DOCS)
+  include(Doxygen)
 endif()
 
+if(PROJECT_IS_TOP_LEVEL)
+  noa_target_clang_format(SOURCES
+    src/*.h src/*.cc
+    test/*.h test/*.cc
+    contrib/*.h contrib/*.cc)
+  noa_target_clang_tidy(SOURCES
+    src/*.h src/*.cc)
+endif()
+
+# Testing
 if(JSONTOOLKIT_TESTS)
-  include(cmake/googletest.cmake)
-  add_subdirectory(./test/json)
-  add_subdirectory(./test/jsonschema)
+  find_package(GoogleTest REQUIRED)
+  enable_testing()
+  add_subdirectory(test/json)
+  add_subdirectory(test/jsonschema)
   if(JSONTOOLKIT_CONTRIB)
     add_subdirectory(./test/contrib)
   endif()
 
   if(PROJECT_IS_TOP_LEVEL)
-    add_subdirectory(./test/packaging)
+    # Otherwise we need the child project to link
+    # against the sanitizers too.
+    if(NOT JSONTOOLKIT_ADDRESS_SANITIZER)
+      add_subdirectory(./test/packaging)
+    endif()
   endif()
 endif()

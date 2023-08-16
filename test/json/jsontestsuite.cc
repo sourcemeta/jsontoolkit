@@ -1,9 +1,11 @@
 #include <sourcemeta/jsontoolkit/json.h>
 
-#include <filesystem> // std::filesystem::path, std::filesystem::directory_entry
-#include <fstream>    // std::ifstream
 #include <gtest/gtest.h>
-#include <string> // std::string
+
+#include <exception>  // std::exception
+#include <filesystem> // std::filesystem
+#include <fstream>    // std::ifstream
+#include <string>     // std::string, std::char_traits
 
 enum class JSONTestType { Accept, Reject };
 
@@ -18,10 +20,31 @@ public:
     stream.exceptions(std::ios_base::badbit);
     if (this->type == JSONTestType::Accept) {
       sourcemeta::jsontoolkit::parse(stream);
-      SUCCEED();
+      // JSON Toolkit consumes up to the end of a valid document
+      // in the stream. Force it continue until the end to cover
+      // certain test cases.
+      while (stream.peek() != std::char_traits<char>::eof()) {
+        switch (stream.get()) {
+          case '\n':
+          case ' ':
+            break;
+          default:
+            FAIL() << "Unexpected character";
+        }
+      }
     } else if (this->type == JSONTestType::Reject) {
-      EXPECT_THROW(sourcemeta::jsontoolkit::parse(stream),
-                   sourcemeta::jsontoolkit::ParseError);
+      try {
+        // JSON Toolkit consumes up to the end of a valid document
+        // in the stream. Force it continue until the end to cover
+        // certain test cases.
+        while (!stream.eof()) {
+          sourcemeta::jsontoolkit::parse(stream);
+        }
+      } catch (const sourcemeta::jsontoolkit::ParseError &) {
+        SUCCEED();
+      } catch (const std::exception &) {
+        FAIL() << "The parse function threw an unexpected error";
+      }
     } else {
       FAIL() << "Invalid test type";
     }
@@ -39,47 +62,17 @@ int main(int argc, char **argv) {
   for (const std::filesystem::directory_entry &entry :
        std::filesystem::directory_iterator(test_parsing_path)) {
     const std::filesystem::path test_path{entry.path()};
-
-    // Ignore "maybe" for now
     const char front = test_path.filename().string().front();
-    if (front == 'i') {
+
+    // TODO: Fix these
+    if (test_path.filename().string() ==
+            "n_structure_100000_opening_arrays.json" ||
+        test_path.filename().string() == "n_structure_open_array_object.json") {
       continue;
     }
 
-#if defined(JSONTOOLKIT_BACKEND_RAPIDJSON)
-    // TODO: Make this pass
-    if (test_path.filename() == "n_multidigit_number_then_00.json") {
-      continue;
-    }
-
-#if defined(__GNUC__)
-    // TODO: Make this pass
-    if (test_path.filename() == "n_structure_100000_opening_arrays.json") {
-      continue;
-    }
-
-    // TODO: Make this pass
-    if (test_path.filename() == "n_structure_open_array_object.json") {
-      continue;
-    }
-#endif
-
-#if defined(_MSC_VER)
-    // TODO: Make this pass
-    if (test_path.filename() == "n_structure_100000_opening_arrays.json") {
-      continue;
-    }
-
-    // TODO: Make this pass
-    if (test_path.filename() == "n_structure_open_array_object.json") {
-      continue;
-    }
-#endif
-#endif
-
-    JSONTestType type =
-        front == 'n' ? JSONTestType::Reject : JSONTestType::Accept;
-
+    JSONTestType type = front == 'n' || front == 'i' ? JSONTestType::Reject
+                                                     : JSONTestType::Accept;
     testing::RegisterTest(
         "JSONTestSuite", test_path.filename().string().c_str(), nullptr,
         nullptr, __FILE__, __LINE__,

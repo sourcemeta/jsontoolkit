@@ -1,53 +1,53 @@
 {
-    "$id": "https://example.com/person.schema.json",
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$comment": "From https://json-schema.org/learn/miscellaneous-examples.html",
-    "title": "Person",
-    "type": "object",
-    "properties": {
-        "name": {
-            "type": "object",
-            "properties": {
-                "first": {
-                    "type": "string",
-                    "description": "The person's first name."
-                },
-                "last": {
-                    "type": "string",
-                    "description": "The person's last name."
-                }
-            }
-        },
-        "age": {
-            "description": "Age in years which must be equal to or greater than zero.",
-            "type": "integer",
-            "minimum": 0
-        }
-    }
-}
-{
-    "type": "object",
-    "properties": {
+  "$comment": "From https://json-schema.org/learn/miscellaneous-examples.html",
+  "$id": "https://example.com/person.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "age": {
+      "description": "Age in years which must be equal to or greater than zero.",
+      "minimum": 0,
+      "type": "integer"
+    },
+    "name": {
+      "properties": {
         "first": {
-            "type": "string",
-            "description": "The person's first name."
+          "description": "The person's first name.",
+          "type": "string"
         },
         "last": {
-            "type": "string",
-            "description": "The person's last name."
+          "description": "The person's last name.",
+          "type": "string"
         }
+      },
+      "type": "object"
     }
+  },
+  "title": "Person",
+  "type": "object"
 }
 {
-    "type": "string",
-    "description": "The person's first name."
+  "description": "Age in years which must be equal to or greater than zero.",
+  "minimum": 0,
+  "type": "integer"
 }
 {
-    "type": "string",
-    "description": "The person's last name."
+  "properties": {
+    "first": {
+      "description": "The person's first name.",
+      "type": "string"
+    },
+    "last": {
+      "description": "The person's last name.",
+      "type": "string"
+    }
+  },
+  "type": "object"
 }
 {
-    "description": "Age in years which must be equal to or greater than zero.",
-    "type": "integer",
-    "minimum": 0
+  "description": "The person's first name.",
+  "type": "string"
+}
+{
+  "description": "The person's last name.",
+  "type": "string"
 }

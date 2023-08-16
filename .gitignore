@@ -9,3 +9,5 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 /build
+Brewfile.lock.json
+.DS_Store

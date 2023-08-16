@@ -1,10 +1,10 @@
 {
-    "foo": "bar",
-    "baz": [
-        1,
-        2,
-        {
-            "qux": true
-        }
-    ]
+  "baz": [
+    1,
+    2,
+    {
+      "qux": true
+    }
+  ],
+  "foo": "bar"
 }

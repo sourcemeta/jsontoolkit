@@ -8,6 +8,7 @@
 #include <fstream>       // std::ifstream
 #include <ios>           // std::ios_base
 #include <iostream>      // std::cout, std::cerr
+#include <span>          // std::span
 #include <unordered_map> // std::unordered_map
 #include <utility>       // std::pair
 #include <vector>        // std::vector
@@ -17,16 +18,15 @@ auto analyze(const sourcemeta::jsontoolkit::JSON &schema,
              std::unordered_map<std::string, unsigned long> &accumulator)
     -> void {
   const sourcemeta::jsontoolkit::DefaultResolver resolver;
-  for (const sourcemeta::jsontoolkit::Value &subschema :
+  for (const sourcemeta::jsontoolkit::JSON &subschema :
        sourcemeta::jsontoolkit::subschema_iterator(
            schema, sourcemeta::jsontoolkit::default_schema_walker, resolver)) {
-    if (!sourcemeta::jsontoolkit::is_object(subschema)) {
+    if (!subschema.is_object()) {
       continue;
     }
 
-    for (const auto &pair :
-         sourcemeta::jsontoolkit::object_iterator(subschema)) {
-      const std::string keyword{sourcemeta::jsontoolkit::key(pair)};
+    for (const auto &pair : subschema.as_object()) {
+      const std::string keyword{pair.first};
       if (accumulator.find(keyword) == accumulator.end()) {
         accumulator.insert({keyword, 1});
       } else {
@@ -72,18 +72,17 @@ auto scan(const std::filesystem::path &directory) -> int {
 } // namespace
 
 auto main(int argc, char *argv[]) -> int {
-  if (argc <= 1) {
-    // TODO: Use std::span on C++20
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    std::cerr << "Usage: " << std::string{argv[0]} << " <directory>\n";
+  const auto arguments{std::span(argv, static_cast<std::size_t>(argc))};
+  if (arguments.size() <= 1) {
+    std::cerr << "Usage: " << std::string{arguments.front()}
+              << " <directory>\n";
     return EXIT_FAILURE;
   }
 
   try {
     // Make sure the directory indeed exists
-    // TODO: Use std::span on C++20
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    return scan(std::filesystem::canonical(std::filesystem::path{argv[1]}));
+    return scan(
+        std::filesystem::canonical(std::filesystem::path{arguments[1]}));
   } catch (const std::exception &error) {
     std::cerr << "Error: " << error.what() << "\n";
     return EXIT_FAILURE;

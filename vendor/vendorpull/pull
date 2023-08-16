@@ -30,7 +30,7 @@ vendor() {
   # Patching
   if [ -d "$PATCHES/$1" ]
   then
-    for patch in "$2"/*.patch
+    for patch in "$PATCHES/$1"/*.patch
     do
       log "Patching $1: $patch"
       git -C "$4/$1" apply --3way "$patch"

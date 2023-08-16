@@ -4,13 +4,12 @@ configure_file(default_metaschemas.h.in default_metaschemas.h @ONLY)
 set(JSONSCHEMA_PUBLIC_HEADERS
   include/sourcemeta/jsontoolkit/jsonschema.h)
 set(JSONSCHEMA_PRIVATE_HEADERS
-  include/sourcemeta/jsontoolkit/jsonschema/jsonschema.h
-  include/sourcemeta/jsontoolkit/jsonschema/resolver.h
-  include/sourcemeta/jsontoolkit/jsonschema/walker.h
-  include/sourcemeta/jsontoolkit/jsonschema/default_walker.h
-  include/sourcemeta/jsontoolkit/jsonschema/default_resolver.h
-  include/sourcemeta/jsontoolkit/jsonschema/error.h
-  "${CMAKE_CURRENT_BINARY_DIR}/export.h")
+  include/sourcemeta/jsontoolkit/jsonschema_resolver.h
+  include/sourcemeta/jsontoolkit/jsonschema_walker.h
+  include/sourcemeta/jsontoolkit/jsonschema_default_walker.h
+  include/sourcemeta/jsontoolkit/jsonschema_default_resolver.h
+  include/sourcemeta/jsontoolkit/jsonschema_error.h
+  "${CMAKE_CURRENT_BINARY_DIR}/jsonschema_export.h")
 
 add_library(sourcemeta_jsontoolkit_jsonschema
   ${JSONSCHEMA_PUBLIC_HEADERS}
@@ -35,7 +34,7 @@ target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
 
 include(GenerateExportHeader)
 generate_export_header(sourcemeta_jsontoolkit_jsonschema
-  EXPORT_FILE_NAME export.h)
+  EXPORT_FILE_NAME jsonschema_export.h)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema PROPERTIES
   SOVERSION "${PROJECT_VERSION_MAJOR}"
   VERSION "${PROJECT_VERSION}")
@@ -58,7 +57,7 @@ install(TARGETS sourcemeta_jsontoolkit_jsonschema
   EXPORT sourcemeta_jsontoolkit_jsonschema
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit"
     COMPONENT sourcemeta_jsontoolkit_dev
-  PRIVATE_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit/jsonschema"
+  PRIVATE_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sourcemeta/jsontoolkit"
     COMPONENT sourcemeta_jsontoolkit_dev
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
     COMPONENT sourcemeta_jsontoolkit
