@@ -36,7 +36,6 @@ else()
     -Wunknown-pragmas
     -Wnon-virtual-dtor
     -Woverloaded-virtual
-    -Wno-exit-time-destructors
     -Winvalid-offsetof)
 endif()
 
@@ -58,5 +57,6 @@ if(NOA_COMPILER_LLVM)
     -Wdocumentation
     -Wmove
     -Wc++11-extensions
+    -Wno-exit-time-destructors
     -Wrange-loop-analysis)
 endif()

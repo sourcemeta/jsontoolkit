@@ -15,6 +15,7 @@
 #include <set>              // std::set
 #include <stdexcept>        // std::invalid_argument
 #include <string>           // std::basic_string
+#include <type_traits>      // std::enable_if_t, std::is_same_v
 #include <utility>          // std::in_place_type, std::pair, std::move
 #include <variant>          // std::variant, std::holds_alternative, std::get
 
@@ -71,14 +72,9 @@ public:
   explicit GenericValue(const int value)
       : data{std::in_place_type<std::int64_t>, value} {}
 
-  /// This constructor creates a JSON document from an real number type. For
-  /// example:
-  ///
-  /// ```cpp
-  /// #include <sourcemeta/jsontoolkit/json.h>
-  ///
-  /// const sourcemeta::jsontoolkit::JSON my_real{3.14};
-  /// ```
+  // On some systems, `std::int64_t` might be equal to `long`
+  template <typename T = std::int64_t,
+            typename = std::enable_if_t<!std::is_same_v<T, std::int64_t>>>
   explicit GenericValue(const long value)
       : data{std::in_place_type<std::int64_t>, value} {}
 
@@ -268,6 +264,8 @@ public:
         return this->as_array() < other.as_array();
       case Type::Object:
         return this->as_object() < other.as_object();
+      default:
+        return false;
     }
   }
 
