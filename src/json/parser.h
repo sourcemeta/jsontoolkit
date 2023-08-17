@@ -77,6 +77,18 @@ auto parse_string_unicode(
   std::basic_string<CharT, Traits, Allocator<CharT>> code_point;
   code_point.reserve(4);
   std::size_t code_point_size{0};
+
+  // Any code point may be represented as a hexadecimal escape sequence.
+  // The meaning of such a hexadecimal number is determined by ISO/IEC
+  // 10646. If the code point is in the Basic Multilingual Plane (U+0000
+  // through U+FFFF), then it may be represented as a six-character
+  // sequence: a reverse solidus, followed by the lowercase letter u,
+  // followed by four hexadecimal digits that encode the code point.
+  // Hexadecimal digits can be digits (U+0030 through U+0039) or the
+  // hexadecimal letters A through F in uppercase (U+0041 through U+0046)
+  // or lowercase (U+0061 through U+0066).
+  // See
+  // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
   while (code_point_size < 4) {
     column += 1;
     code_point[code_point_size] = static_cast<CharT>(stream.get());
@@ -136,6 +148,8 @@ auto parse_string_escape(
     // Hexadecimal digits can be digits (U+0030 through U+0039) or the
     // hexadecimal letters A through F in uppercase (U+0041 through U+0046)
     // or lowercase (U+0061 through U+0066).
+    // See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_string_escape_unicode<CharT>:
       parse_string_unicode(line, column, stream, result);
       return;
@@ -155,6 +169,9 @@ auto parse_string(const std::uint64_t line, std::uint64_t &column,
     column += 1;
     const CharT character{static_cast<CharT>(stream.get())};
     switch (character) {
+      // A string is a sequence of Unicode code points wrapped with quotation
+      // marks (U+0022). See
+      // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
       case internal::token_string_quote<CharT>:
         return result.str();
       case internal::token_string_escape<CharT>:
@@ -338,6 +355,9 @@ auto parse_number_fractional(
   while (!stream.eof()) {
     const CharT character{static_cast<CharT>(stream.peek())};
     switch (character) {
+      // [A number] may have an exponent, prefixed by e (U+0065) or E (U+0045)
+      // See
+      // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
       case internal::token_number_exponent_uppercase<CharT>:
       case internal::token_number_exponent_lowercase<CharT>:
         result.put(character);
@@ -345,6 +365,7 @@ auto parse_number_fractional(
         column += 1;
         return parse_number_exponent_first(line, column, original_column,
                                            stream, result);
+
       case internal::token_number_zero<CharT>:
       case internal::token_number_one<CharT>:
       case internal::token_number_two<CharT>:
@@ -377,6 +398,9 @@ auto parse_number_fractional_first(
     -> double {
   const CharT character{static_cast<CharT>(stream.peek())};
   switch (character) {
+    // [A number] may have a fractional part prefixed by a decimal point
+    // (U+002E). See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_number_decimal_point<CharT>:
     case Traits::eof():
       column += 1;
@@ -411,6 +435,9 @@ auto parse_number_maybe_fractional(
     -> GenericValue<CharT, Traits, Allocator> {
   const CharT character{static_cast<CharT>(stream.peek())};
   switch (character) {
+    // [A number] may have a fractional part prefixed by a decimal point
+    // (U+002E). See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_number_decimal_point<CharT>:
       result.put(character);
       stream.ignore(1);
@@ -453,6 +480,9 @@ auto parse_number_any_rest(
   while (!stream.eof()) {
     const CharT character{static_cast<CharT>(stream.peek())};
     switch (character) {
+      // [A number] may have a fractional part prefixed by a decimal point
+      // (U+002E). See
+      // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
       case internal::token_number_decimal_point<CharT>:
         result.put(character);
         stream.ignore(1);
@@ -502,6 +532,9 @@ auto parse_number_any_negative_first(
   const CharT character{static_cast<CharT>(stream.get())};
   column += 1;
   switch (character) {
+    // A number is a sequence of decimal digits with no superfluous leading
+    // zero. See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_number_zero<CharT>:
       result.put(character);
       return parse_number_maybe_fractional(line, column, original_column,
@@ -523,13 +556,6 @@ auto parse_number_any_negative_first(
   }
 }
 
-// A number is a sequence of decimal digits with no superfluous leading
-// zero. It may have a preceding minus sign (U+002D). It may have a
-// fractional part prefixed by a decimal point (U+002E). It may have an
-// exponent, prefixed by e (U+0065) or E (U+0045) and optionally + (U+002B)
-// or – (U+002D).
-// See
-// https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
 auto parse_number(const std::uint64_t line, std::uint64_t &column,
@@ -537,6 +563,10 @@ auto parse_number(const std::uint64_t line, std::uint64_t &column,
     -> GenericValue<CharT, Traits, Allocator> {
   std::basic_ostringstream<CharT, Traits, Allocator<CharT>> result;
   result.put(first);
+
+  // A number is a sequence of decimal digits with no superfluous leading zero.
+  // It may have a preceding minus sign (U+002D). See
+  // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
   switch (first) {
     case internal::token_number_minus<CharT>:
       return parse_number_any_negative_first(line, column, column, stream,
@@ -578,6 +608,10 @@ auto parse(std::basic_istream<CharT, Traits> &stream)
 do_parse:
   column += 1;
   character = static_cast<CharT>(stream.get());
+
+  // A JSON value can be an object, array, number, string, true, false, or null.
+  // See
+  // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
   switch (character) {
     case internal::constant_true<CharT, Traits>.front():
       return internal::parse_boolean_true<CharT, Traits, Allocator>(
@@ -588,6 +622,10 @@ do_parse:
     case internal::constant_null<CharT, Traits>.front():
       return internal::parse_null<CharT, Traits, Allocator>(line, column,
                                                             stream);
+
+    // A string is a sequence of Unicode code points wrapped with quotation
+    // marks (U+0022). See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_string_quote<CharT>:
       return Result{internal::parse_string<CharT, Traits, Allocator>(
           line, column, stream)};
@@ -610,6 +648,9 @@ do_parse:
       return internal::parse_number<CharT, Traits, Allocator>(
           line, column, stream, character);
 
+    // Insignificant whitespace is allowed before or after any token.
+    // See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_whitespace_line_feed<CharT>:
       column = 0;
       line += 1;
@@ -648,6 +689,11 @@ do_parse_array:
     frames.emplace(frames.top().get().at(key));
   }
 
+  // An array structure is a pair of square bracket tokens surrounding zero or
+  // more values. The values are separated by commas.
+  // See
+  // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
+
 do_parse_array_item:
   assert(levels.top() == Container::Array);
   column += 1;
@@ -680,6 +726,10 @@ do_parse_array_item:
       frames.top().get().push_back(
           internal::parse_null<CharT, Traits, Allocator>(line, column, stream));
       goto do_parse_array_item_separator;
+
+    // A string is a sequence of Unicode code points wrapped with quotation
+    // marks (U+0022). See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_string_quote<CharT>:
       frames.top().get().push_back(
           Result{internal::parse_string<CharT, Traits, Allocator>(line, column,
@@ -702,7 +752,9 @@ do_parse_array_item:
                                                            character));
       goto do_parse_array_item_separator;
 
-    // Whitespace
+    // Insignificant whitespace is allowed before or after any token.
+    // See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_whitespace_line_feed<CharT>:
       column = 0;
       line += 1;
@@ -726,7 +778,9 @@ do_parse_array_item_separator:
     case internal::token_array_end<CharT>:
       goto do_parse_container_end;
 
-    // Whitespace
+    // Insignificant whitespace is allowed before or after any token.
+    // See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_whitespace_line_feed<CharT>:
       column = 0;
       line += 1;
@@ -766,6 +820,13 @@ do_parse_object:
     frames.emplace(frames.top().get().at(key));
   }
 
+  // An object structure is represented as a pair of curly bracket tokens
+  // surrounding zero or more name/value pairs. A name is a string. A single
+  // colon token follows each name, separating the name from the value. A single
+  // comma token separates a value from a following name.
+  // See
+  // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
+
 do_parse_object_property_key:
   assert(levels.top() == Container::Object);
   column += 1;
@@ -778,10 +839,17 @@ do_parse_object_property_key:
         goto error;
       }
 
+    // A string is a sequence of Unicode code points wrapped with quotation
+    // marks (U+0022). See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_string_quote<CharT>:
       key = internal::parse_string<CharT, Traits, Allocator>(line, column,
                                                              stream);
       goto do_parse_object_property_separator;
+
+    // Insignificant whitespace is allowed before or after any token.
+    // See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_whitespace_line_feed<CharT>:
       column = 0;
       line += 1;
@@ -801,6 +869,10 @@ do_parse_object_property_separator:
   switch (character) {
     case internal::token_object_key_delimiter<CharT>:
       goto do_parse_object_property_value;
+
+    // Insignificant whitespace is allowed before or after any token.
+    // See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_whitespace_line_feed<CharT>:
       column = 0;
       line += 1;
@@ -838,6 +910,10 @@ do_parse_object_property_value:
           key,
           internal::parse_null<CharT, Traits, Allocator>(line, column, stream));
       goto do_parse_object_property_end;
+
+    // A string is a sequence of Unicode code points wrapped with quotation
+    // marks (U+0022). See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_string_quote<CharT>:
       frames.top().get().assign(
           key, Result{internal::parse_string<CharT, Traits, Allocator>(
@@ -860,7 +936,9 @@ do_parse_object_property_value:
                    line, column, stream, character));
       goto do_parse_object_property_end;
 
-    // Whitespace
+    // Insignificant whitespace is allowed before or after any token.
+    // See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_whitespace_line_feed<CharT>:
       column = 0;
       line += 1;
@@ -882,6 +960,10 @@ do_parse_object_property_end:
       goto do_parse_object_property_key;
     case internal::token_object_end<CharT>:
       goto do_parse_container_end;
+
+    // Insignificant whitespace is allowed before or after any token.
+    // See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_whitespace_line_feed<CharT>:
       column = 0;
       line += 1;
