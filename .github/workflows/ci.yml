@@ -45,6 +45,11 @@ jobs:
             cxx: clang++
             type: static
             options: -DJSONTOOLKIT_ADDRESS_SANITIZER:BOOL=ON
+          - os: ubuntu-22.04
+            cc: clang
+            cxx: clang++
+            type: static
+            options: -DJSONTOOLKIT_UNDEFINED_SANITIZER:BOOL=ON
 
     runs-on: ${{ matrix.platform.os }}
     env:
@@ -96,3 +101,6 @@ jobs:
           cmake --install ./build --prefix ./build/dist --config Release --verbose
           --component sourcemeta_jsontoolkit_dev
       - run: cd ./build && ctest --build-config Release --output-on-failure --parallel
+        env:
+          # See https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
+          UBSAN_OPTIONS: print_stacktrace=1
