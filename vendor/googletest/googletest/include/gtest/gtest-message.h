@@ -106,6 +106,9 @@ class GTEST_API_ Message {
 
  public:
   // Constructs an empty Message.
+#if defined(__clang__)
+  __attribute__((no_sanitize("memory")))
+#endif
   Message();
 
   // Copy constructor.

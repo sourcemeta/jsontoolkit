@@ -1264,6 +1264,9 @@ void Abort() {
 // Returns the name of the environment variable corresponding to the
 // given flag.  For example, FlagToEnvVar("foo") will return
 // "GTEST_FOO" in the open-source version.
+#if defined(__clang__)
+__attribute__((no_sanitize("memory")))
+#endif
 static std::string FlagToEnvVar(const char* flag) {
   const std::string full_flag =
       (Message() << GTEST_FLAG_PREFIX_ << flag).GetString();

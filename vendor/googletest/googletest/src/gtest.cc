@@ -2213,6 +2213,9 @@ std::string String::FormatByte(unsigned char value) {
 
 // Converts the buffer in a stringstream to an std::string, converting NUL
 // bytes to "\\0" along the way.
+#if defined(__clang__)
+  __attribute__((no_sanitize("memory")))
+#endif
 std::string StringStreamToString(::std::stringstream* ss) {
   const ::std::string& str = ss->str();
   const char* const start = str.c_str();
