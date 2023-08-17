@@ -38,9 +38,8 @@ static auto test_resolver(const std::string &identifier)
   return promise.get_future();
 }
 
-static auto
-test_walker(const std::string &keyword,
-            const std::unordered_map<std::string, bool> &vocabularies)
+static auto test_walker(const std::string &keyword,
+                        const std::map<std::string, bool> &vocabularies)
     -> sourcemeta::jsontoolkit::schema_walker_strategy_t {
   if (vocabularies.find("https://sourcemeta.com/vocab/test-1") !=
       vocabularies.end()) {
@@ -567,7 +566,7 @@ TEST(JSONSchema, walker_flat_non_const_no_metaschema) {
 }
 
 TEST(JSONSchema, schema_walker_none_never_walks) {
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       {"https://json-schema.org/draft/2020-12/vocab/core", true},
       {"https://json-schema.org/draft/2020-12/vocab/applicator", true},
       {"https://json-schema.org/draft/2020-12/vocab/unevaluated", true},
