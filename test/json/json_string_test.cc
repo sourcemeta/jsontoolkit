@@ -1,10 +1,18 @@
 #include <gtest/gtest.h>
 #include <string>
+#include <string_view>
 
 #include <sourcemeta/jsontoolkit/json.h>
 
 TEST(JSON_string, foo_value_string) {
   const std::string value{"foo"};
+  const sourcemeta::jsontoolkit::JSON document{value};
+  EXPECT_TRUE(document.is_string());
+  EXPECT_EQ(document.to_string(), "foo");
+}
+
+TEST(JSON_string, foo_value_string_view) {
+  const std::string_view value{"foo"};
   const sourcemeta::jsontoolkit::JSON document{value};
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.to_string(), "foo");

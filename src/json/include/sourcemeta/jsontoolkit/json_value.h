@@ -15,6 +15,7 @@
 #include <set>              // std::set
 #include <stdexcept>        // std::invalid_argument
 #include <string>           // std::basic_string
+#include <string_view>      // std::basic_string_view
 #include <type_traits>      // std::enable_if_t, std::is_same_v
 #include <utility>          // std::in_place_type, std::pair, std::move
 #include <variant>          // std::variant, std::holds_alternative, std::get
@@ -135,6 +136,16 @@ public:
   /// const sourcemeta::jsontoolkit::JSON my_string{"foo"};
   /// ```
   explicit GenericValue(const String &value)
+      : data{std::in_place_type<String>, value} {}
+
+  /// This constructor creates a JSON document from a string type. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON my_string{"foo"};
+  /// ```
+  explicit GenericValue(const std::basic_string_view<CharT, Traits> &value)
       : data{std::in_place_type<String>, value} {}
 
   /// This constructor creates a JSON document from a string type. For example:
