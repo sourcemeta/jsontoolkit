@@ -100,23 +100,23 @@ static auto test_resolver(const std::string &identifier)
   return promise.get_future();
 }
 
-static auto EXPECT_VOCABULARY_REQUIRED(
-    const std::unordered_map<std::string, bool> &vocabularies,
-    const std::string &vocabulary) -> void {
+static auto
+EXPECT_VOCABULARY_REQUIRED(const std::map<std::string, bool> &vocabularies,
+                           const std::string &vocabulary) -> void {
   EXPECT_TRUE(vocabularies.find(vocabulary) != vocabularies.end());
   EXPECT_TRUE(vocabularies.at(vocabulary));
 }
 
-static auto EXPECT_VOCABULARY_OPTIONAL(
-    const std::unordered_map<std::string, bool> &vocabularies,
-    const std::string &vocabulary) -> void {
+static auto
+EXPECT_VOCABULARY_OPTIONAL(const std::map<std::string, bool> &vocabularies,
+                           const std::string &vocabulary) -> void {
   EXPECT_TRUE(vocabularies.find(vocabulary) != vocabularies.end());
   EXPECT_FALSE(vocabularies.at(vocabulary));
 }
 
-static auto EXPECT_VOCABULARY_MISSING(
-    const std::unordered_map<std::string, bool> &vocabularies,
-    const std::string &vocabulary) -> void {
+static auto
+EXPECT_VOCABULARY_MISSING(const std::map<std::string, bool> &vocabularies,
+                          const std::string &vocabulary) -> void {
   EXPECT_TRUE(vocabularies.find(vocabulary) == vocabularies.end());
 }
 
@@ -128,7 +128,7 @@ TEST(JSONSchema_vocabulary, core_vocabularies_boolean_without_default) {
 
 TEST(JSONSchema_vocabulary, core_vocabularies_boolean_with_default) {
   const sourcemeta::jsontoolkit::JSON document{true};
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(
           document, test_resolver,
           "https://sourcemeta.com/2020-12-custom-vocabularies")
@@ -144,7 +144,7 @@ TEST(JSONSchema_vocabulary, core_vocabularies_boolean_with_default) {
 
 TEST(JSONSchema_vocabulary, default_metaschema_with_boolean) {
   const sourcemeta::jsontoolkit::JSON document{true};
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(
           document, test_resolver,
           "https://sourcemeta.com/2020-12-custom-vocabularies")
@@ -160,7 +160,7 @@ TEST(JSONSchema_vocabulary, default_metaschema_with_boolean) {
 
 TEST(JSONSchema_vocabulary, not_random_vocabulary_boolean) {
   const sourcemeta::jsontoolkit::JSON document{true};
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(
           document, test_resolver,
           "https://sourcemeta.com/2020-12-custom-vocabularies")
@@ -201,7 +201,7 @@ TEST(JSONSchema_vocabulary, real_metaschema_takes_precedence_over_default) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2020-12-no-vocabularies"
   })JSON");
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(
           document, test_resolver,
           "https://sourcemeta.com/2020-12-custom-vocabularies")
@@ -246,7 +246,7 @@ TEST(JSONSchema_vocabulary, no_vocabularies_2020_12) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2020-12-no-vocabularies"
   })JSON");
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
   EXPECT_EQ(vocabularies.size(), 6);
   EXPECT_VOCABULARY_REQUIRED(
@@ -268,7 +268,7 @@ TEST(JSONSchema_vocabulary, no_vocabularies_2020_12_hyper) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2020-12-hyper-no-vocabularies"
   })JSON");
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
   EXPECT_EQ(vocabularies.size(), 6);
   EXPECT_VOCABULARY_REQUIRED(
@@ -290,7 +290,7 @@ TEST(JSONSchema_vocabulary, hyper_2020_12) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/hyper-schema"
   })JSON");
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
   EXPECT_EQ(vocabularies.size(), 8);
   EXPECT_VOCABULARY_REQUIRED(
@@ -318,7 +318,7 @@ TEST(JSONSchema_vocabulary, no_vocabularies_2019_09) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2019-09-no-vocabularies"
   })JSON");
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
   EXPECT_EQ(vocabularies.size(), 6);
   EXPECT_VOCABULARY_REQUIRED(
@@ -340,7 +340,7 @@ TEST(JSONSchema_vocabulary, no_vocabularies_2019_09_hyper) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2019-09-hyper-no-vocabularies"
   })JSON");
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
   EXPECT_EQ(vocabularies.size(), 6);
   EXPECT_VOCABULARY_REQUIRED(
@@ -362,7 +362,7 @@ TEST(JSONSchema_vocabulary, hyper_2019_09) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/hyper-schema"
   })JSON");
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
   EXPECT_EQ(vocabularies.size(), 7);
   EXPECT_VOCABULARY_REQUIRED(
@@ -386,7 +386,7 @@ TEST(JSONSchema_vocabulary, custom_vocabularies_2020_12) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2020-12-custom-vocabularies"
   })JSON");
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
   EXPECT_EQ(vocabularies.size(), 3);
   EXPECT_VOCABULARY_REQUIRED(
@@ -402,7 +402,7 @@ TEST(JSONSchema_vocabulary, custom_vocabularies_2019_09) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2019-09-custom-vocabularies"
   })JSON");
-  const std::unordered_map<std::string, bool> vocabularies{
+  const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(document, test_resolver).get()};
   EXPECT_EQ(vocabularies.size(), 3);
   EXPECT_VOCABULARY_REQUIRED(

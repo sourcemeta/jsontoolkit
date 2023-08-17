@@ -1,9 +1,9 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_WALKER_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_WALKER_H_
 
-#include <functional>    // std::function
-#include <string>        // std::string
-#include <unordered_map> // std::unordered_map
+#include <functional> // std::function
+#include <map>        // std::map
+#include <string>     // std::string
 
 namespace sourcemeta::jsontoolkit {
 
@@ -55,7 +55,7 @@ enum class schema_walker_strategy_t {
 /// - sourcemeta::jsontoolkit::default_schema_walker
 /// - sourcemeta::jsontoolkit::schema_walker_none
 using schema_walker_t = std::function<schema_walker_strategy_t(
-    const std::string &, const std::unordered_map<std::string, bool> &)>;
+    const std::string &, const std::map<std::string, bool> &)>;
 
 /// @ingroup jsonschema
 enum class schema_walker_type_t { Deep, Flat };

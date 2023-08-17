@@ -1,14 +1,14 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-#include <cstdlib>       // EXIT_FAILURE, EXIT_SUCCESS
-#include <exception>     // std::exception
-#include <filesystem>    // std::filesystem::path, std::filesystem::canonical
-#include <fstream>       // std::ifstream
-#include <iostream>      // std::cerr, std::cout, std::cin
-#include <istream>       // std::basic_istream
-#include <span>          // std::span
-#include <unordered_map> // std::unordered_map
+#include <cstdlib>    // EXIT_FAILURE, EXIT_SUCCESS
+#include <exception>  // std::exception
+#include <filesystem> // std::filesystem::path, std::filesystem::canonical
+#include <fstream>    // std::ifstream
+#include <iostream>   // std::cerr, std::cout, std::cin
+#include <istream>    // std::basic_istream
+#include <map>        // std::map
+#include <span>       // std::span
 
 namespace {
 template <typename CharT, typename Traits>

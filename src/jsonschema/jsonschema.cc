@@ -129,15 +129,15 @@ auto sourcemeta::jsontoolkit::vocabularies(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
     const std::optional<std::string> &default_metaschema)
-    -> std::future<std::unordered_map<std::string, bool>> {
-  std::promise<std::unordered_map<std::string, bool>> promise;
+    -> std::future<std::map<std::string, bool>> {
+  std::promise<std::map<std::string, bool>> promise;
 
   // If the meta-schema, as referenced by the schema, is not recognized, or is
   // missing, then the behavior is implementation-defined. If the
   // implementation proceeds with processing the schema, it MUST assume the
   // use of the vocabulary from the core specification.
   // See https://json-schema.org/draft/2020-12/json-schema-core.html#section-8
-  std::unordered_map<std::string, bool> result;
+  std::map<std::string, bool> result;
 
   /*
    * (1) Identify the schema's metaschema

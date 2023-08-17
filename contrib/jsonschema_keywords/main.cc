@@ -1,22 +1,21 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-#include <algorithm>     // std::sort
-#include <cstdlib>       // EXIT_SUCCESS, EXIT_FAILURE
-#include <exception>     // std::exception
-#include <filesystem>    // std::filesystem
-#include <fstream>       // std::ifstream
-#include <ios>           // std::ios_base
-#include <iostream>      // std::cout, std::cerr
-#include <span>          // std::span
-#include <unordered_map> // std::unordered_map
-#include <utility>       // std::pair
-#include <vector>        // std::vector
+#include <algorithm>  // std::sort
+#include <cstdlib>    // EXIT_SUCCESS, EXIT_FAILURE
+#include <exception>  // std::exception
+#include <filesystem> // std::filesystem
+#include <fstream>    // std::ifstream
+#include <ios>        // std::ios_base
+#include <iostream>   // std::cout, std::cerr
+#include <map>        // std::map
+#include <span>       // std::span
+#include <utility>    // std::pair
+#include <vector>     // std::vector
 
 namespace {
 auto analyze(const sourcemeta::jsontoolkit::JSON &schema,
-             std::unordered_map<std::string, unsigned long> &accumulator)
-    -> void {
+             std::map<std::string, unsigned long> &accumulator) -> void {
   const sourcemeta::jsontoolkit::DefaultResolver resolver;
   for (const sourcemeta::jsontoolkit::JSON &subschema :
        sourcemeta::jsontoolkit::subschema_iterator(
@@ -37,7 +36,7 @@ auto analyze(const sourcemeta::jsontoolkit::JSON &schema,
 }
 
 auto scan(const std::filesystem::path &directory) -> int {
-  std::unordered_map<std::string, unsigned long> accumulator;
+  std::map<std::string, unsigned long> accumulator;
   for (const std::filesystem::directory_entry &directory_entry :
        std::filesystem::recursive_directory_iterator(directory)) {
     if (std::filesystem::is_directory(directory_entry.path()) ||

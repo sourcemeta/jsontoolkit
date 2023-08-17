@@ -10,12 +10,12 @@
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
-#include <future>        // std::promise, std::future
-#include <optional>      // std::optional
-#include <stdexcept>     // std::invalid_argument
-#include <string>        // std::string
-#include <unordered_map> // std::unordered_map
-#include <vector>        // std::vector
+#include <future>    // std::promise, std::future
+#include <map>       // std::map
+#include <optional>  // std::optional
+#include <stdexcept> // std::invalid_argument
+#include <string>    // std::string
+#include <vector>    // std::vector
 
 /// @defgroup jsonschema JSON Schema
 /// @brief A set of JSON Schema utilities across draft versions.
@@ -147,7 +147,7 @@ auto draft(const JSON &schema, const schema_resolver_t &resolver,
 /// })JSON");
 ///
 /// sourcemeta::jsontoolkit::DefaultResolver resolver;
-/// const std::unordered_map<std::string, bool> vocabularies{
+/// const std::map<std::string, bool> vocabularies{
 ///     sourcemeta::jsontoolkit::vocabularies(document, resolver).get()};
 ///
 /// assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/core"));
@@ -159,10 +159,9 @@ auto draft(const JSON &schema, const schema_resolver_t &resolver,
 /// assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/content"));
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto vocabularies(
-    const JSON &schema, const schema_resolver_t &resolver,
-    const std::optional<std::string> &default_metaschema = std::nullopt)
-    -> std::future<std::unordered_map<std::string, bool>>;
+auto vocabularies(const JSON &schema, const schema_resolver_t &resolver,
+                  const std::optional<std::string> &default_metaschema =
+                      std::nullopt) -> std::future<std::map<std::string, bool>>;
 
 // We inline the definition of this class in this file to avoid a circular
 // dependency
@@ -232,7 +231,7 @@ private:
     const std::string &new_metaschema{current_metaschema.has_value()
                                           ? current_metaschema.value()
                                           : metaschema};
-    const std::unordered_map<std::string, bool> vocabularies{
+    const std::map<std::string, bool> vocabularies{
         sourcemeta::jsontoolkit::vocabularies(subschema, resolver,
                                               new_metaschema)
             .get()};

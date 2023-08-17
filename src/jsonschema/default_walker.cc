@@ -2,15 +2,15 @@
 
 // Because standard "contains()" is introduced in C++20
 namespace {
-auto contains(const std::unordered_map<std::string, bool> &map,
-              const std::string &key) -> bool {
+auto contains(const std::map<std::string, bool> &map, const std::string &key)
+    -> bool {
   return map.find(key) != map.end();
 }
 } // namespace
 
 // A stub walker that doesn't walk
 auto sourcemeta::jsontoolkit::schema_walker_none(
-    const std::string &, const std::unordered_map<std::string, bool> &)
+    const std::string &, const std::map<std::string, bool> &)
     -> sourcemeta::jsontoolkit::schema_walker_strategy_t {
   return sourcemeta::jsontoolkit::schema_walker_strategy_t::None;
 }
@@ -18,8 +18,7 @@ auto sourcemeta::jsontoolkit::schema_walker_none(
 // TODO: Extend this default walker to recognize as many official
 // JSON Schema vocabularies as possible.
 auto sourcemeta::jsontoolkit::default_schema_walker(
-    const std::string &keyword,
-    const std::unordered_map<std::string, bool> &vocabularies)
+    const std::string &keyword, const std::map<std::string, bool> &vocabularies)
     -> sourcemeta::jsontoolkit::schema_walker_strategy_t {
   if (::contains(vocabularies,
                  "https://json-schema.org/draft/2020-12/vocab/core") &&
