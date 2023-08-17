@@ -18,7 +18,7 @@ function(noa_sanitizer)
       -fsanitize=address -fsanitize-address-use-after-scope
       # Get nicer stack traces with the Address sanitizer
       -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1)
-    target_link_options("${NOA_SANITIZER_TARGET}" PUBLIC -fsanitize=address)
+    target_link_options("${NOA_SANITIZER_TARGET}" PRIVATE -fsanitize=address)
   elseif(NOA_COMPILER_LLVM AND "${NOA_SANITIZER_TYPE}" STREQUAL "memory")
     if(APPLE)
       message(FATAL_ERROR "Clang MemorySanitizer is not available on Apple platforms")
