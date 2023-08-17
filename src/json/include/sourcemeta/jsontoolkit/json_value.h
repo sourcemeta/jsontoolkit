@@ -280,7 +280,7 @@ public:
   /// assert(document.is_real());
   /// assert(document.to_real() == 8.2);
   /// ```
-  GenericValue &operator+=(const GenericValue &additive) {
+  auto operator+=(const GenericValue &additive) -> GenericValue & {
     assert(this->is_number());
     assert(additive.is_number());
     if (this->is_integer() && additive.is_integer()) {
