@@ -1,7 +1,7 @@
-set(PRETTIFY_BIN $<TARGET_FILE:jsontoolkit_prettify>)
-set(MINIFY_BIN $<TARGET_FILE:jsontoolkit_minify>)
-set(JSONSCHEMA_WALKER_BIN $<TARGET_FILE:jsontoolkit_jsonschema_walker>)
-set(JSONSCHEMA_KEYWORDS_BIN $<TARGET_FILE:jsontoolkit_jsonschema_keywords>)
+set(PRETTIFY_BIN $<TARGET_FILE:sourcemeta_jsontoolkit_prettify>)
+set(MINIFY_BIN $<TARGET_FILE:sourcemeta_jsontoolkit_minify>)
+set(JSONSCHEMA_WALKER_BIN $<TARGET_FILE:sourcemeta_jsontoolkit_jsonschema_walker>)
+set(JSONSCHEMA_KEYWORDS_BIN $<TARGET_FILE:sourcemeta_jsontoolkit_jsonschema_keywords>)
 
 if(WIN32)
   set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.bat")

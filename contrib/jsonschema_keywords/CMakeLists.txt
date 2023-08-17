@@ -1,10 +1,12 @@
-add_executable(jsontoolkit_jsonschema_keywords main.cc)
-sourcemeta_jsontoolkit_add_compile_options(jsontoolkit_jsonschema_keywords)
-target_link_libraries(jsontoolkit_jsonschema_keywords PRIVATE sourcemeta::jsontoolkit::json)
-target_link_libraries(jsontoolkit_jsonschema_keywords PRIVATE sourcemeta::jsontoolkit::jsonschema)
-set_target_properties(jsontoolkit_jsonschema_keywords PROPERTIES
+add_executable(sourcemeta_jsontoolkit_jsonschema_keywords main.cc)
+sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema_keywords)
+target_link_libraries(sourcemeta_jsontoolkit_jsonschema_keywords
+  PRIVATE sourcemeta::jsontoolkit::json)
+target_link_libraries(sourcemeta_jsontoolkit_jsonschema_keywords
+  PRIVATE sourcemeta::jsontoolkit::jsonschema)
+set_target_properties(sourcemeta_jsontoolkit_jsonschema_keywords PROPERTIES
   OUTPUT_NAME jsonschema_keywords
   FOLDER "JSON Toolkit/Contrib")
-install(TARGETS jsontoolkit_jsonschema_keywords
+install(TARGETS sourcemeta_jsontoolkit_jsonschema_keywords
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
   COMPONENT sourcemeta_jsontoolkit_contrib)
