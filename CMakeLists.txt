@@ -1,10 +1,4 @@
 cmake_minimum_required(VERSION 3.24)
-
-# Needs to happen before the first call to "project()".
-if(WIN32)
-  include(cmake/vcpkg.cmake)
-endif()
-
 project(jsontoolkit VERSION 0.0.1 LANGUAGES CXX
   DESCRIPTION "The swiss-army knife for JSON programming in C++"
   HOMEPAGE_URL "https://jsontoolkit.sourcemeta.com")
