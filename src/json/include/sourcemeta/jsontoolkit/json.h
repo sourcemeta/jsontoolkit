@@ -97,13 +97,36 @@ auto stringify(const JSON &document,
 /// #include <sstream>
 ///
 /// const sourcemeta::jsontoolkit::JSON document =
-/// sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]"); std::ostringstream stream;
+///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+/// std::ostringstream stream;
 /// sourcemeta::jsontoolkit::prettify(document, stream);
 /// std::cout << stream.str() << std::endl;
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
 auto prettify(const JSON &document,
               std::basic_ostream<char, std::char_traits<char>> &stream) -> void;
+
+/// @ingroup json
+///
+/// Encode the input JSON document into a given standard output stream.
+/// The JSON document is stringified or prettified depending on the
+/// presence of the `NDEBUG` define (for debugging purposes). For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <iostream>
+/// #include <sstream>
+///
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+/// std::ostringstream stream;
+/// stream << document;
+/// std::cout << stream.str() << std::endl;
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
+auto operator<<(std::basic_ostream<char, std::char_traits<char>> &stream,
+                const JSON &document)
+    -> std::basic_ostream<char, std::char_traits<char>> &;
 
 } // namespace sourcemeta::jsontoolkit
 

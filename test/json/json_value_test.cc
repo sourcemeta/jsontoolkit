@@ -310,3 +310,16 @@ TEST(JSON_value, into_string_from_string) {
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.to_string(), "bar");
 }
+
+TEST(JSON_value, to_ostream) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::JSON{1}, sourcemeta::jsontoolkit::JSON{2},
+      sourcemeta::jsontoolkit::JSON{3}, sourcemeta::jsontoolkit::JSON{4}};
+  std::ostringstream stream;
+  stream << document;
+#ifdef NDEBUG
+  EXPECT_EQ(stream.str(), "[1,2,3,4]");
+#else
+  EXPECT_EQ(stream.str(), "[\n  1,\n  2,\n  3,\n  4\n]");
+#endif
+}
