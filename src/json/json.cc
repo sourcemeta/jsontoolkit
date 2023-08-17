@@ -26,4 +26,15 @@ auto prettify(const JSON &document,
   prettify<char, std::char_traits<char>, std::allocator>(document, stream);
 }
 
+auto operator<<(std::basic_ostream<char, std::char_traits<char>> &stream,
+                const JSON &document)
+    -> std::basic_ostream<char, std::char_traits<char>> & {
+#ifdef NDEBUG
+  stringify(document, stream);
+#else
+  prettify(document, stream);
+#endif
+  return stream;
+}
+
 } // namespace sourcemeta::jsontoolkit
