@@ -64,13 +64,6 @@ int main(int argc, char **argv) {
     const std::filesystem::path test_path{entry.path()};
     const char front = test_path.filename().string().front();
 
-    // TODO: Fix these
-    if (test_path.filename().string() ==
-            "n_structure_100000_opening_arrays.json" ||
-        test_path.filename().string() == "n_structure_open_array_object.json") {
-      continue;
-    }
-
     JSONTestType type = front == 'n' || front == 'i' ? JSONTestType::Reject
                                                      : JSONTestType::Accept;
     testing::RegisterTest(

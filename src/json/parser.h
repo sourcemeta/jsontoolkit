@@ -712,7 +712,7 @@ do_parse_array_item:
     case internal::token_whitespace_space<CharT>:
       goto do_parse_array_item;
     default:
-      throw ParseError(line, column);
+      goto error;
   }
 
 do_parse_array_item_separator:
@@ -736,7 +736,7 @@ do_parse_array_item_separator:
     case internal::token_whitespace_space<CharT>:
       goto do_parse_array_item_separator;
     default:
-      throw ParseError(line, column);
+      goto error;
   }
 
   /*
@@ -775,7 +775,7 @@ do_parse_object_property_key:
       if (frames.top().get().empty()) {
         goto do_parse_container_end;
       } else {
-        throw ParseError(line, column);
+        goto error;
       }
 
     case internal::token_string_quote<CharT>:
@@ -791,7 +791,7 @@ do_parse_object_property_key:
     case internal::token_whitespace_space<CharT>:
       goto do_parse_object_property_key;
     default:
-      throw ParseError(line, column);
+      goto error;
   }
 
 do_parse_object_property_separator:
@@ -810,7 +810,7 @@ do_parse_object_property_separator:
     case internal::token_whitespace_space<CharT>:
       goto do_parse_object_property_separator;
     default:
-      throw ParseError(line, column);
+      goto error;
   }
 
 do_parse_object_property_value:
@@ -870,7 +870,7 @@ do_parse_object_property_value:
     case internal::token_whitespace_space<CharT>:
       goto do_parse_object_property_value;
     default:
-      throw ParseError(line, column);
+      goto error;
   }
 
 do_parse_object_property_end:
@@ -891,12 +891,25 @@ do_parse_object_property_end:
     case internal::token_whitespace_space<CharT>:
       goto do_parse_object_property_end;
     default:
-      throw ParseError(line, column);
+      goto error;
   }
 
   /*
    * Finish parsing a container
    */
+
+error:
+  // For some strange reason, with certain AppleClang versions,
+  // the program crashes when de-allocating huge array/objects
+  // before throwing an error. The error goes away if we manually
+  // reset every frame of the resulting object. Compiler error?
+  // Seen on Apple clang version 14.0.3 (clang-1403.0.22.14.1)
+  while (!frames.empty()) {
+    frames.top().get().into(Result{nullptr});
+    frames.pop();
+  }
+
+  throw ParseError(line, column);
 
 do_parse_container_end:
   assert(!levels.empty());
