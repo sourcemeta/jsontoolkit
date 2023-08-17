@@ -111,6 +111,3 @@ make
 # On Windows
 nmake
 ```
-
-Building and running the test suite requires the presence of
-[GoogleTest](https://google.github.io/googletest/) in the system.

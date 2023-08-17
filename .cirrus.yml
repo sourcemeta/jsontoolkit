@@ -3,7 +3,7 @@ freebsd_instance:
 
 task:
   name: JSON Toolkit / test (freebsd)
-  prepare_script: pkg install -y cmake googletest
+  prepare_script: pkg install -y cmake
   configure_script: cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DJSONTOOLKIT_CONTRIB=ON -DJSONTOOLKIT_TESTS=ON
   build_script: cmake --build ./build --config Release
   install_script: cmake --install ./build --prefix ./build/dist --config Release --verbose

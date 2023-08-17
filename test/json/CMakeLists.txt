@@ -13,6 +13,7 @@ add_executable(sourcemeta_jsontoolkit_json_unit
   json_string_test.cc
   json_stringify_test.cc
   json_value_test.cc)
+sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_json_unit)
 target_link_libraries(sourcemeta_jsontoolkit_json_unit
   PRIVATE GTest::gtest GTest::gtest_main)
 target_link_libraries(sourcemeta_jsontoolkit_json_unit
@@ -24,6 +25,7 @@ set_target_properties(sourcemeta_jsontoolkit_json_unit
 # JSON Test Suite
 # See https://github.com/nst/JSONTestSuite
 add_executable(sourcemeta_jsontoolkit_jsontestsuite jsontestsuite.cc)
+sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsontestsuite)
 target_compile_definitions(sourcemeta_jsontoolkit_jsontestsuite
   PRIVATE JSONTESTSUITE_PATH="${PROJECT_SOURCE_DIR}/vendor/jsontestsuite")
 target_link_libraries(sourcemeta_jsontoolkit_jsontestsuite PRIVATE GTest::gtest)

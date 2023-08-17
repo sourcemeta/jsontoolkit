@@ -16,6 +16,7 @@ add_library(sourcemeta_jsontoolkit_jsonschema
   ${JSONSCHEMA_PRIVATE_HEADERS}
   jsonschema.cc default_metaschemas.h.in
   default_walker.cc default_resolver.cc)
+sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema)
 add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jsonschema)
 
 set_target_properties(sourcemeta_jsontoolkit_jsonschema PROPERTIES

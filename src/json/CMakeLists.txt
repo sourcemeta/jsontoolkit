@@ -9,6 +9,7 @@ set(JSON_PRIVATE_HEADERS
 add_library(sourcemeta_jsontoolkit_json
   ${JSON_PUBLIC_HEADERS} ${JSON_PRIVATE_HEADERS}
   grammar.h parser.h stringify.h json.cc)
+sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_json)
 add_library(sourcemeta::jsontoolkit::json
   ALIAS sourcemeta_jsontoolkit_json)
 target_include_directories(sourcemeta_jsontoolkit_json
