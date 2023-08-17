@@ -88,6 +88,9 @@ public:
   /// ```
   explicit GenericValue(const double value)
       : data{std::in_place_type<double>, value} {
+    // Numeric values that cannot be represented as sequences of digits (such as
+    // Infinity and NaN) are not permitted. See
+    // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     if (std::isinf(value) || std::isnan(value)) {
       throw std::invalid_argument("JSON does not support Infinity or NaN");
     }
