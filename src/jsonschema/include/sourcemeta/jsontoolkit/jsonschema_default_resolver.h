@@ -1,7 +1,11 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_DEFAULT_RESOLVER_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_DEFAULT_RESOLVER_H_
 
+#ifdef __EMSCRIPTEN__
+#define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+#else
 #include "jsonschema_export.h"
+#endif
 
 #include <future>   // std::future
 #include <optional> // std::optional

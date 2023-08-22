@@ -1,7 +1,11 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSON_ERROR_H_
 #define SOURCEMETA_JSONTOOLKIT_JSON_ERROR_H_
 
+#ifdef __EMSCRIPTEN__
+#define SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
+#else
 #include "json_export.h"
+#endif
 
 #include <cstdint>   // std::uint64_t
 #include <exception> // std::exception

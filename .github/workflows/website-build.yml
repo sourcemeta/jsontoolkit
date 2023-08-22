@@ -19,6 +19,8 @@ jobs:
       - run: >
           cmake -S . -B ./build
           -DCMAKE_BUILD_TYPE:STRING=Release
+          -DJSONTOOLKIT_JSON:BOOL=OFF
+          -DJSONTOOLKIT_JSONSCHEMA:BOOL=OFF
           -DJSONTOOLKIT_CONTRIB:BOOL=OFF
           -DJSONTOOLKIT_TESTS:BOOL=OFF
           -DJSONTOOLKIT_DOCS:BOOL=ON
