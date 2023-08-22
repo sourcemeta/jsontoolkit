@@ -4,11 +4,11 @@ set(JSONSCHEMA_WALKER_BIN $<TARGET_FILE:sourcemeta_jsontoolkit_jsonschema_walker
 set(JSONSCHEMA_KEYWORDS_BIN $<TARGET_FILE:sourcemeta_jsontoolkit_jsonschema_keywords>)
 
 if(WIN32)
-  set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.bat")
-  set(IS_SAME_STDIN_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.bat")
+  set(IS_SAME_BIN "${PROJECT_SOURCE_DIR}/test/scripts/is_same.bat")
+  set(IS_SAME_STDIN_BIN "${PROJECT_SOURCE_DIR}/test/scripts/is_same_stdin.bat")
 else()
-  set(IS_SAME_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same.sh")
-  set(IS_SAME_STDIN_BIN "${CMAKE_CURRENT_SOURCE_DIR}/is_same_stdin.sh")
+  set(IS_SAME_BIN "${PROJECT_SOURCE_DIR}/test/scripts/is_same.sh")
+  set(IS_SAME_STDIN_BIN "${PROJECT_SOURCE_DIR}/test/scripts/is_same_stdin.sh")
 endif()
 
 add_test(NAME prettify_invalid COMMAND
