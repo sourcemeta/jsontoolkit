@@ -1,7 +1,11 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSON_H_
 #define SOURCEMETA_JSONTOOLKIT_JSON_H_
 
+#ifdef __EMSCRIPTEN__
+#define SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
+#else
 #include "json_export.h"
+#endif
 
 #include <sourcemeta/jsontoolkit/json_error.h>
 #include <sourcemeta/jsontoolkit/json_value.h>

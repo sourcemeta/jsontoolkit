@@ -1,7 +1,11 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_ERROR_H
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_ERROR_H
 
+#ifdef __EMSCRIPTEN__
+#define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+#else
 #include "jsonschema_export.h"
+#endif
 
 #include <exception> // std::exception
 #include <string>    // std::string
