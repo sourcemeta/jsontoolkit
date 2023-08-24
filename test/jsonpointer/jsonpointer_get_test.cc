@@ -461,3 +461,22 @@ TEST(JSONPointer_get, rfc6901_12) {
   EXPECT_TRUE(result.is_integer());
   EXPECT_EQ(result.to_integer(), 8);
 }
+
+// Note that JSON pointers can contain the NUL (Unicode U+0000)
+// character.  Care is needed not to misinterpret this character in
+// programming languages that use NUL to mark the end of a string.
+// See https://www.rfc-editor.org/rfc/rfc6901#section-8
+TEST(JSONPointer_get, null) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo\u0000bar": 1
+  })JSON");
+
+  // See https://stackoverflow.com/a/164274
+  using namespace std::string_literals;
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo\0bar"s};
+  const sourcemeta::jsontoolkit::JSON &result{
+      sourcemeta::jsontoolkit::get(document, pointer)};
+  EXPECT_TRUE(result.is_integer());
+  EXPECT_EQ(result.to_integer(), 1);
+}
