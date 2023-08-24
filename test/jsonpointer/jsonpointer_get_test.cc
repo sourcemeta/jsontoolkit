@@ -2,6 +2,19 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 
+TEST(JSONPointer_get, integer_property) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "0": 1
+  })JSON");
+
+  const sourcemeta::jsontoolkit::Pointer pointer{"0"};
+  const sourcemeta::jsontoolkit::JSON &result{
+      sourcemeta::jsontoolkit::get(document, pointer)};
+  EXPECT_TRUE(result.is_integer());
+  EXPECT_EQ(result.to_integer(), 1);
+}
+
 TEST(JSONPointer_get, const_empty) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
