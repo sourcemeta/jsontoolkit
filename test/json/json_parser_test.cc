@@ -102,6 +102,18 @@ TEST(JSON_parse, string_empty) {
   EXPECT_EQ(document.to_string(), "");
 }
 
+TEST(JSON_parse, string_with_null) {
+  std::istringstream input{"\"foo \\u0000 bar\""};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
+  EXPECT_TRUE(document.is_string());
+  EXPECT_EQ(document.size(), 9);
+
+  // See https://stackoverflow.com/a/164274
+  using namespace std::string_literals;
+  EXPECT_EQ(document.to_string(), "foo \0 bar"s);
+}
+
 TEST(JSON_parse, string_foo) {
   std::istringstream input{"\"foo\""};
   const sourcemeta::jsontoolkit::JSON document =
