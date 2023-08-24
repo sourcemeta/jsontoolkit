@@ -21,7 +21,7 @@ auto internal_get(V &document, const sourcemeta::jsontoolkit::GenericPointer<
       assert(current.get().is_object());
       assert(current.get().defines(token.to_property()));
       current = current.get().at(token.to_property());
-    } else if (token.is_index()) {
+    } else {
       assert(current.get().is_array());
       assert(current.get().size() > token.to_index());
       current = current.get().at(token.to_index());
