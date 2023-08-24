@@ -1,6 +1,5 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 
-#include <cassert>     // assert
 #include <functional>  // std::reference_wrapper
 #include <type_traits> // std::is_same_v
 
@@ -16,14 +15,30 @@ auto internal_get(V &document, const sourcemeta::jsontoolkit::GenericPointer<
       std::is_same_v<typename Pointer::Value, std::remove_const_t<V>>);
 
   std::reference_wrapper<V> current{document};
+
+  // Evaluation of a JSON Pointer begins with a reference to the root
+  // value of a JSON document and completes with a reference to some value
+  // within the document.  Each reference token in the JSON Pointer is
+  // evaluated sequentially.
+  // See https://www.rfc-editor.org/rfc/rfc6901#section-4
   for (const typename Pointer::Token &token : pointer) {
     if (token.is_property()) {
-      assert(current.get().is_object());
-      assert(current.get().defines(token.to_property()));
+      // If the currently referenced value is a JSON object, the new
+      // referenced value is the object member with the name identified by
+      // the reference token.  The member name is equal to the token if it
+      // has the same number of Unicode characters as the token and their
+      // code points are byte-by-byte equal.  No Unicode character
+      // normalization is performed.
+      // See https://www.rfc-editor.org/rfc/rfc6901#section-4
       current = current.get().at(token.to_property());
     } else {
-      assert(current.get().is_array());
-      assert(current.get().size() > token.to_index());
+      // If the currently referenced value is a JSON array, the reference
+      // token MUST contain [...] characters comprised of digits (see ABNF
+      // below; note that leading zeros are not allowed) that represent an
+      // unsigned base-10 integer value, making the new referenced value the
+      // array element with the zero-based index identified by the
+      // token.
+      // See https://www.rfc-editor.org/rfc/rfc6901#section-4
       current = current.get().at(token.to_index());
     }
   }
