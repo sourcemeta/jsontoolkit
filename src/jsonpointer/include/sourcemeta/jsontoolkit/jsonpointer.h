@@ -62,6 +62,7 @@ auto get(const JSON &document, const Pointer &pointer) -> const JSON &;
 /// std::istringstream stream{"[ { \"foo\": 1 }, { \"bar\": 2 } ]"};
 /// sourcemeta::jsontoolkit::JSON document =
 ///   sourcemeta::jsontoolkit::parse(stream);
+/// assert(document.at("foo").to_integer() == 1);
 ///
 /// const sourcemeta::jsontoolkit::Pointer pointer{1, "bar"};
 /// sourcemeta::jsontoolkit::JSON &value{
@@ -71,6 +72,51 @@ auto get(const JSON &document, const Pointer &pointer) -> const JSON &;
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(JSON &document, const Pointer &pointer) -> JSON &;
+
+// TODO: Make set recognize "-" as a push?
+
+/// @ingroup jsonpointer
+/// Set a value in a JSON document using a JSON Pointer (`const` overload).
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <cassert>
+/// #include <sstream>
+///
+/// std::istringstream stream{"{ \"foo\": 1 }"};
+/// sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(stream);
+/// assert(document.at("foo").to_integer() == 1);
+///
+/// const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+/// const sourcemeta::jsontoolkit::JSON value{2};
+/// sourcemeta::jsontoolkit::set(document, pointer, value);
+/// assert(document.at("foo").to_integer() == 2);
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto set(JSON &document, const Pointer &pointer, const JSON &value) -> void;
+
+/// @ingroup jsonpointer
+/// Set a value in a JSON document using a JSON Pointer (non-`const` overload).
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <cassert>
+/// #include <sstream>
+///
+/// std::istringstream stream{"{ \"foo\": 1 }"};
+/// sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(stream);
+///
+/// const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+/// sourcemeta::jsontoolkit::set(document, pointer,
+///   sourcemeta::jsontoolkit::JSON{2});
+/// assert(document.at("foo").to_integer() == 2);
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void;
 
 } // namespace sourcemeta::jsontoolkit
 
