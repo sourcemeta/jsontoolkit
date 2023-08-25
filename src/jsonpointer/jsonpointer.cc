@@ -2,12 +2,15 @@
 
 #include <functional>  // std::reference_wrapper
 #include <type_traits> // std::is_same_v
+#include <utility>     // std::move
 
 namespace {
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator, typename V>
-auto internal_get(V &document, const sourcemeta::jsontoolkit::GenericPointer<
-                                   CharT, Traits, Allocator> &pointer) -> V & {
+auto traverse(V &document,
+              const sourcemeta::jsontoolkit::GenericPointer<CharT, Traits,
+                                                            Allocator> &pointer)
+    -> V & {
   using Pointer =
       sourcemeta::jsontoolkit::GenericPointer<CharT, Traits, Allocator>;
   // Make sure types match
@@ -50,11 +53,19 @@ auto internal_get(V &document, const sourcemeta::jsontoolkit::GenericPointer<
 namespace sourcemeta::jsontoolkit {
 
 auto get(const JSON &document, const Pointer &pointer) -> const JSON & {
-  return internal_get(document, pointer);
+  return traverse(document, pointer);
 }
 
 auto get(JSON &document, const Pointer &pointer) -> JSON & {
-  return internal_get(document, pointer);
+  return traverse(document, pointer);
+}
+
+auto set(JSON &document, const Pointer &pointer, const JSON &value) -> void {
+  return traverse(document, pointer).into(value);
+}
+
+auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void {
+  return traverse(document, pointer).into(std::move(value));
 }
 
 } // namespace sourcemeta::jsontoolkit
