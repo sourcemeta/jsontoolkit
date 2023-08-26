@@ -1,7 +1,7 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 
 #include <functional>  // std::reference_wrapper
-#include <iterator>    // std::cbegin, std::cend
+#include <iterator>    // std::cbegin, std::cend, std::prev
 #include <memory>      // std::allocator
 #include <type_traits> // std::is_same_v
 #include <utility>     // std::move
@@ -52,6 +52,7 @@ auto traverse(V &document,
 
   return current.get();
 }
+
 } // namespace
 
 namespace sourcemeta::jsontoolkit {
@@ -67,15 +68,49 @@ auto get(JSON &document, const Pointer &pointer) -> JSON & {
 }
 
 auto set(JSON &document, const Pointer &pointer, const JSON &value) -> void {
-  return traverse<std::allocator, JSON>(document, std::cbegin(pointer),
-                                        std::cend(pointer))
-      .into(value);
+  if (pointer.empty()) {
+    document.into(value);
+    return;
+  }
+
+  JSON &current{traverse<std::allocator, JSON>(document, std::cbegin(pointer),
+                                               std::prev(std::cend(pointer)))};
+  const auto last{pointer.back()};
+  // Handle the hyphen as a last constant
+  // If the currently referenced value is a JSON array, the reference
+  // token [can be ] the single character "-", making the new referenced value
+  // the (nonexistent) member after the last array element.
+  // See https://www.rfc-editor.org/rfc/rfc6901#section-4
+  if (current.is_array() && last.is_hyphen()) {
+    current.push_back(value);
+  } else if (last.is_property()) {
+    current.at(last.to_property()).into(value);
+  } else {
+    current.at(last.to_index()).into(value);
+  }
 }
 
 auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void {
-  return traverse<std::allocator, JSON>(document, std::cbegin(pointer),
-                                        std::cend(pointer))
-      .into(std::move(value));
+  if (pointer.empty()) {
+    document.into(value);
+    return;
+  }
+
+  JSON &current{traverse<std::allocator, JSON>(document, std::cbegin(pointer),
+                                               std::prev(std::cend(pointer)))};
+  const auto last{pointer.back()};
+  // Handle the hyphen as a last constant
+  // If the currently referenced value is a JSON array, the reference
+  // token [can be ] the single character "-", making the new referenced value
+  // the (nonexistent) member after the last array element.
+  // See https://www.rfc-editor.org/rfc/rfc6901#section-4
+  if (current.is_array() && last.is_hyphen()) {
+    current.push_back(value);
+  } else if (last.is_property()) {
+    current.at(last.to_property()).into(std::move(value));
+  } else {
+    current.at(last.to_index()).into(std::move(value));
+  }
 }
 
 } // namespace sourcemeta::jsontoolkit

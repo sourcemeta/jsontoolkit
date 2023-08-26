@@ -73,10 +73,12 @@ auto get(const JSON &document, const Pointer &pointer) -> const JSON &;
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(JSON &document, const Pointer &pointer) -> JSON &;
 
-// TODO: Make set recognize "-" as a push?
-
 /// @ingroup jsonpointer
 /// Set a value in a JSON document using a JSON Pointer (`const` overload).
+///
+/// If the last token of the JSON Pointer is the constant `-` and the tail
+/// instance is an array, then the operation is equivalent to
+/// `sourcemeta::jsontoolkit::JSON::push_back`.
 ///
 /// ```cpp
 /// #include <sourcemeta/jsontoolkit/json.h>
@@ -99,6 +101,10 @@ auto set(JSON &document, const Pointer &pointer, const JSON &value) -> void;
 
 /// @ingroup jsonpointer
 /// Set a value in a JSON document using a JSON Pointer (non-`const` overload).
+///
+/// If the last token of the JSON Pointer is the constant `-` and the tail
+/// instance is an array, then the operation is equivalent to
+/// `sourcemeta::jsontoolkit::JSON::push_back`.
 ///
 /// ```cpp
 /// #include <sourcemeta/jsontoolkit/json.h>

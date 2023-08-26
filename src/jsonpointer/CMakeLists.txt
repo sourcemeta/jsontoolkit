@@ -2,6 +2,7 @@ set(JSONPOINTER_PUBLIC_HEADERS include/sourcemeta/jsontoolkit/jsonpointer.h)
 
 set(JSONPOINTER_PRIVATE_HEADERS
   include/sourcemeta/jsontoolkit/jsonpointer_pointer.h
+  include/sourcemeta/jsontoolkit/jsonpointer_grammar.h
   include/sourcemeta/jsontoolkit/jsonpointer_token.h
   "${CMAKE_CURRENT_BINARY_DIR}/jsonpointer_export.h")
 
