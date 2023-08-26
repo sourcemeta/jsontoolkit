@@ -8,6 +8,7 @@
 #endif
 
 #include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonpointer_grammar.h>
 
 #include <cassert> // assert
 #include <utility> // std::in_place_type
@@ -109,7 +110,8 @@ public:
   /// assert(token_2.is_hyphen());
   /// ```
   [[nodiscard]] auto is_hyphen() const noexcept -> bool {
-    return this->is_property() && this->to_property() == "-";
+    return this->is_property() && this->to_property().size() == 1 &&
+           this->to_property().front() == internal::token_pointer_hyphen<CharT>;
   }
 
   /// Check if a JSON Pointer token represents an array index.
