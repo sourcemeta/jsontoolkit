@@ -5,30 +5,30 @@
 
 namespace sourcemeta::jsontoolkit {
 
-auto parse(std::basic_istream<char, std::char_traits<char>> &stream) -> JSON {
-  return parse<char, std::char_traits<char>, std::allocator>(stream);
+auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream) -> JSON {
+  return parse<JSON::Char, JSON::CharTraits, std::allocator>(stream);
 }
 
-auto parse(const std::basic_string<char, std::char_traits<char>> &input)
+auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input)
     -> JSON {
-  return parse<char, std::char_traits<char>, std::allocator>(input);
+  return parse<JSON::Char, JSON::CharTraits, std::allocator>(input);
 }
 
 auto stringify(const JSON &document,
-               std::basic_ostream<char, std::char_traits<char>> &stream)
+               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
-  stringify<char, std::char_traits<char>, std::allocator>(document, stream);
+  stringify<JSON::Char, JSON::CharTraits, std::allocator>(document, stream);
 }
 
 auto prettify(const JSON &document,
-              std::basic_ostream<char, std::char_traits<char>> &stream)
+              std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
-  prettify<char, std::char_traits<char>, std::allocator>(document, stream);
+  prettify<JSON::Char, JSON::CharTraits, std::allocator>(document, stream);
 }
 
-auto operator<<(std::basic_ostream<char, std::char_traits<char>> &stream,
+auto operator<<(std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
                 const JSON &document)
-    -> std::basic_ostream<char, std::char_traits<char>> & {
+    -> std::basic_ostream<JSON::Char, JSON::CharTraits> & {
 #ifdef NDEBUG
   stringify(document, stream);
 #else

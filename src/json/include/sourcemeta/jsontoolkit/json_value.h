@@ -31,6 +31,10 @@ template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
 class SOURCEMETA_JSONTOOLKIT_JSON_EXPORT GenericValue {
 public:
+  /// The character traits used by the JSON document.
+  using CharTraits = Traits;
+  /// The character type used by the JSON document.
+  using Char = typename CharTraits::char_type;
   /// The string type used by the JSON document.
   using String = std::basic_string<CharT, Traits, Allocator<CharT>>;
   /// The array type used by the JSON document.
