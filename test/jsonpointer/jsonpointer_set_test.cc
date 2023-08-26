@@ -85,3 +85,18 @@ TEST(JSONPointer_set, array_element_to_integer_copy) {
   EXPECT_EQ(document.at("foo").at(1).to_integer(), 9);
   EXPECT_EQ(document.at("foo").at(2).to_integer(), 3);
 }
+
+TEST(JSONPointer_set, hyphen_property_in_object) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{ \"foo\": { \"-\": 1 } }");
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "-"};
+  sourcemeta::jsontoolkit::set(document, pointer,
+                               sourcemeta::jsontoolkit::JSON{2});
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 1);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_EQ(document.at("foo").size(), 1);
+  EXPECT_TRUE(document.at("foo").defines("-"));
+  EXPECT_TRUE(document.at("foo").at("-").is_integer());
+  EXPECT_EQ(document.at("foo").at("-").to_integer(), 2);
+}
