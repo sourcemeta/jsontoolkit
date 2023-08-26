@@ -15,6 +15,32 @@ TEST(JSONPointer_get, integer_property) {
   EXPECT_EQ(result.to_integer(), 1);
 }
 
+TEST(JSONPointer_get, integer_property_as_character) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "0": 1
+  })JSON");
+
+  const sourcemeta::jsontoolkit::Pointer pointer{'0'};
+  const sourcemeta::jsontoolkit::JSON &result{
+      sourcemeta::jsontoolkit::get(document, pointer)};
+  EXPECT_TRUE(result.is_integer());
+  EXPECT_EQ(result.to_integer(), 1);
+}
+
+TEST(JSONPointer_get, character_after_property) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": { "x": 1 }
+  })JSON");
+
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", 'x'};
+  const sourcemeta::jsontoolkit::JSON &result{
+      sourcemeta::jsontoolkit::get(document, pointer)};
+  EXPECT_TRUE(result.is_integer());
+  EXPECT_EQ(result.to_integer(), 1);
+}
+
 TEST(JSONPointer_get, const_empty) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
