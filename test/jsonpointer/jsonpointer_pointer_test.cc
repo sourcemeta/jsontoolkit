@@ -46,6 +46,13 @@ TEST(JSONPointer_pointer, one_fragment_property) {
   EXPECT_EQ(pointer.at(0).to_property(), "foo");
 }
 
+TEST(JSONPointer_pointer, one_fragment_back) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+  EXPECT_EQ(pointer.size(), 1);
+  EXPECT_TRUE(pointer.back().is_property());
+  EXPECT_EQ(pointer.back().to_property(), "foo");
+}
+
 TEST(JSONPointer_pointer, one_fragment_index) {
   const sourcemeta::jsontoolkit::Pointer pointer{0};
   EXPECT_EQ(pointer.size(), 1);
@@ -64,4 +71,11 @@ TEST(JSONPointer_pointer, multiple_fragments_mixed) {
   EXPECT_EQ(pointer.at(0).to_property(), "foo");
   EXPECT_EQ(pointer.at(1).to_index(), 1);
   EXPECT_EQ(pointer.at(2).to_property(), "bar");
+}
+
+TEST(JSONPointer_pointer, multiple_fragments_back) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", 1, "bar"};
+  EXPECT_EQ(pointer.size(), 3);
+  EXPECT_TRUE(pointer.back().is_property());
+  EXPECT_EQ(pointer.back().to_property(), "bar");
 }

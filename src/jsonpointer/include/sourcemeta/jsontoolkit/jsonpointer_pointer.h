@@ -113,6 +113,22 @@ public:
     return this->data[index];
   }
 
+  /// Access the last token in a JSON Pointer
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", 1};
+  /// assert(pointer.back().is_property());
+  /// assert(pointer.back().to_property() == "bar");
+  /// ```
+  [[nodiscard]] auto back() const -> const_reference {
+    assert(!this->empty());
+    return this->data.back();
+  }
+
   /// Get the number of tokens in a JSON Pointer.
   /// For example:
   ///
