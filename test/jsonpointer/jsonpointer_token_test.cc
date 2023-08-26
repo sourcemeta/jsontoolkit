@@ -35,10 +35,19 @@ TEST(JSONPointer_token, move_traits) {
               sourcemeta::jsontoolkit::Pointer::Token>::value);
 }
 
+TEST(JSONPointer_token, character_token) {
+  const sourcemeta::jsontoolkit::Pointer::Token token{'f'};
+  EXPECT_TRUE(token.is_property());
+  EXPECT_FALSE(token.is_index());
+  EXPECT_FALSE(token.is_hyphen());
+  EXPECT_EQ(token.to_property(), "f");
+}
+
 TEST(JSONPointer_token, string_token) {
   const sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
   EXPECT_TRUE(token.is_property());
   EXPECT_FALSE(token.is_index());
+  EXPECT_FALSE(token.is_hyphen());
   EXPECT_EQ(token.to_property(), "foo");
 }
 
@@ -46,5 +55,18 @@ TEST(JSONPointer_token, integer_token) {
   const sourcemeta::jsontoolkit::Pointer::Token token{5};
   EXPECT_TRUE(token.is_index());
   EXPECT_FALSE(token.is_property());
+  EXPECT_FALSE(token.is_hyphen());
   EXPECT_EQ(token.to_index(), 5);
+}
+
+TEST(JSONPointer_token, hyphen_string_token) {
+  const sourcemeta::jsontoolkit::Pointer::Token token{"-"};
+  EXPECT_FALSE(token.is_index());
+  EXPECT_TRUE(token.is_hyphen());
+}
+
+TEST(JSONPointer_token, hyphen_char_token) {
+  const sourcemeta::jsontoolkit::Pointer::Token token{'-'};
+  EXPECT_FALSE(token.is_index());
+  EXPECT_TRUE(token.is_hyphen());
 }

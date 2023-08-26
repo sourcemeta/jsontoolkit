@@ -24,7 +24,7 @@ public:
   using Property = typename Value::String;
   using Index = typename Value::Array::size_type;
 
-  /// This constructor creates an JSON Pointer token from a property string. For
+  /// This constructor creates an JSON Pointer token from a string. For
   /// example:
   ///
   /// ```cpp
@@ -36,7 +36,7 @@ public:
   GenericToken(const Property &property)
       : data{std::in_place_type<Property>, property} {}
 
-  /// This constructor creates an JSON Pointer token from a property string. For
+  /// This constructor creates an JSON Pointer token from a string. For
   /// example:
   ///
   /// ```cpp
@@ -47,6 +47,18 @@ public:
   /// ```
   GenericToken(const CharT *const property)
       : data{std::in_place_type<Property>, property} {}
+
+  /// This constructor creates an JSON Pointer token from a character. For
+  /// example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::Pointer::Token token{'a'};
+  /// ```
+  GenericToken(const CharT character)
+      : data{std::in_place_type<Property>, Property{character}} {}
 
   /// This constructor creates an JSON Pointer token from an item index. For
   /// example:
@@ -82,6 +94,22 @@ public:
   /// ```
   [[nodiscard]] auto is_property() const noexcept -> bool {
     return std::holds_alternative<Property>(this->data);
+  }
+
+  /// Check if a JSON Pointer token represents the hyphen constant
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::Pointer::Token token_1{"-"};
+  /// const sourcemeta::jsontoolkit::Pointer::Token token_2{'-'};
+  /// assert(token_1.is_hyphen());
+  /// assert(token_2.is_hyphen());
+  /// ```
+  [[nodiscard]] auto is_hyphen() const noexcept -> bool {
+    return this->is_property() && this->to_property() == "-";
   }
 
   /// Check if a JSON Pointer token represents an array index.
