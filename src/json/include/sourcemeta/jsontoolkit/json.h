@@ -48,7 +48,7 @@ using JSON = GenericValue<char, std::char_traits<char>, std::allocator>;
 ///
 /// If parsing fails, sourcemeta::jsontoolkit::ParseError will be thrown.
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
-auto parse(std::basic_istream<char, std::char_traits<char>> &stream) -> JSON;
+auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream) -> JSON;
 
 /// @ingroup json
 ///
@@ -66,7 +66,7 @@ auto parse(std::basic_istream<char, std::char_traits<char>> &stream) -> JSON;
 ///
 /// If parsing fails, sourcemeta::jsontoolkit::ParseError will be thrown.
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
-auto parse(const std::basic_string<char, std::char_traits<char>> &input)
+auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input)
     -> JSON;
 
 /// @ingroup json
@@ -87,7 +87,7 @@ auto parse(const std::basic_string<char, std::char_traits<char>> &input)
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
 auto stringify(const JSON &document,
-               std::basic_ostream<char, std::char_traits<char>> &stream)
+               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void;
 
 /// @ingroup json
@@ -108,7 +108,7 @@ auto stringify(const JSON &document,
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
 auto prettify(const JSON &document,
-              std::basic_ostream<char, std::char_traits<char>> &stream) -> void;
+              std::basic_ostream<JSON::Char, JSON::CharTraits> &stream) -> void;
 
 /// @ingroup json
 ///
@@ -128,9 +128,9 @@ auto prettify(const JSON &document,
 /// std::cout << stream.str() << std::endl;
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
-auto operator<<(std::basic_ostream<char, std::char_traits<char>> &stream,
+auto operator<<(std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
                 const JSON &document)
-    -> std::basic_ostream<char, std::char_traits<char>> &;
+    -> std::basic_ostream<JSON::Char, JSON::CharTraits> &;
 
 } // namespace sourcemeta::jsontoolkit
 

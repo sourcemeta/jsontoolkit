@@ -3,20 +3,20 @@
 #include <functional>  // std::reference_wrapper
 #include <iterator>    // std::cbegin, std::cend
 #include <memory>      // std::allocator
-#include <string>      // std::char_traits
 #include <type_traits> // std::is_same_v
 #include <utility>     // std::move
 
 namespace {
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator, typename V>
+template <template <typename T> typename Allocator, typename V>
 auto traverse(V &document,
               typename sourcemeta::jsontoolkit::GenericPointer<
-                  CharT, Traits, Allocator>::const_iterator begin,
+                  typename V::Char, typename V::CharTraits,
+                  Allocator>::const_iterator begin,
               typename sourcemeta::jsontoolkit::GenericPointer<
-                  CharT, Traits, Allocator>::const_iterator end) -> V & {
-  using Pointer =
-      sourcemeta::jsontoolkit::GenericPointer<CharT, Traits, Allocator>;
+                  typename V::Char, typename V::CharTraits,
+                  Allocator>::const_iterator end) -> V & {
+  using Pointer = sourcemeta::jsontoolkit::GenericPointer<
+      typename V::Char, typename V::CharTraits, Allocator>;
   // Make sure types match
   static_assert(
       std::is_same_v<typename Pointer::Value, std::remove_const_t<V>>);
@@ -57,24 +57,24 @@ auto traverse(V &document,
 namespace sourcemeta::jsontoolkit {
 
 auto get(const JSON &document, const Pointer &pointer) -> const JSON & {
-  return traverse<char, std::char_traits<char>, std::allocator, const JSON>(
-      document, std::cbegin(pointer), std::cend(pointer));
+  return traverse<std::allocator, const JSON>(document, std::cbegin(pointer),
+                                              std::cend(pointer));
 }
 
 auto get(JSON &document, const Pointer &pointer) -> JSON & {
-  return traverse<char, std::char_traits<char>, std::allocator, JSON>(
-      document, std::cbegin(pointer), std::cend(pointer));
+  return traverse<std::allocator, JSON>(document, std::cbegin(pointer),
+                                        std::cend(pointer));
 }
 
 auto set(JSON &document, const Pointer &pointer, const JSON &value) -> void {
-  return traverse<char, std::char_traits<char>, std::allocator, JSON>(
-             document, std::cbegin(pointer), std::cend(pointer))
+  return traverse<std::allocator, JSON>(document, std::cbegin(pointer),
+                                        std::cend(pointer))
       .into(value);
 }
 
 auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void {
-  return traverse<char, std::char_traits<char>, std::allocator, JSON>(
-             document, std::cbegin(pointer), std::cend(pointer))
+  return traverse<std::allocator, JSON>(document, std::cbegin(pointer),
+                                        std::cend(pointer))
       .into(std::move(value));
 }
 

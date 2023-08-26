@@ -7,11 +7,11 @@
 #include "jsonpointer_export.h"
 #endif
 
+#include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_pointer.h>
 
 #include <memory> // std::allocator
-#include <string> // std::char_traits
 
 /// @defgroup jsonpointer JSON Pointer
 /// @brief An growing implementation of RFC 6901 JSON Pointer.
@@ -25,7 +25,7 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonpointer
-using Pointer = GenericPointer<char, std::char_traits<char>, std::allocator>;
+using Pointer = GenericPointer<JSON::Char, JSON::CharTraits, std::allocator>;
 
 /// @ingroup jsonpointer
 /// Get a value from a JSON document using a JSON Pointer (`const` overload).
