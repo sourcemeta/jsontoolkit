@@ -8,7 +8,7 @@ set(JSONPOINTER_PRIVATE_HEADERS
 
 add_library(sourcemeta_jsontoolkit_jsonpointer
   ${JSONPOINTER_PUBLIC_HEADERS} ${JSONPOINTER_PRIVATE_HEADERS}
-  jsonpointer.cc)
+  jsonpointer.cc stringify.h)
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonpointer)
 add_library(sourcemeta::jsontoolkit::jsonpointer
   ALIAS sourcemeta_jsontoolkit_jsonpointer)
