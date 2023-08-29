@@ -1,10 +1,13 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 
+#include "parser.h"
 #include "stringify.h"
 
+#include <cassert>     // assert
 #include <functional>  // std::reference_wrapper
 #include <iterator>    // std::cbegin, std::cend, std::prev
 #include <memory>      // std::allocator
+#include <sstream>     // std::basic_istringstream
 #include <type_traits> // std::is_same_v
 #include <utility>     // std::move
 
@@ -113,6 +116,12 @@ auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void {
   } else {
     current.at(last.to_index()).into(std::move(value));
   }
+}
+
+auto to_pointer(const JSON &document) -> Pointer {
+  assert(document.is_string());
+  auto stream{document.to_stringstream()};
+  return parse_pointer<JSON::Char, JSON::CharTraits, std::allocator>(stream);
 }
 
 auto stringify(const Pointer &pointer,
