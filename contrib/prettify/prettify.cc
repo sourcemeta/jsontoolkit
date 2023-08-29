@@ -12,7 +12,7 @@ namespace {
 template <typename CharT, typename Traits>
 auto prettify(std::basic_istream<CharT, Traits> &stream) -> int {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(stream);
+      sourcemeta::jsontoolkit::parse_json(stream);
   sourcemeta::jsontoolkit::prettify(document, std::cout);
   std::cout << std::endl;
   return EXIT_SUCCESS;

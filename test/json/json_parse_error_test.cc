@@ -5,7 +5,7 @@
 
 #define EXPECT_PARSE_ERROR(input, expected_line, expected_column)              \
   try {                                                                        \
-    sourcemeta::jsontoolkit::parse((input));                                   \
+    sourcemeta::jsontoolkit::parse_json((input));                              \
     FAIL() << "The parse function was expected to throw";                      \
   } catch (const sourcemeta::jsontoolkit::ParseError &error) {                 \
     EXPECT_EQ(error.line(), expected_line);                                    \

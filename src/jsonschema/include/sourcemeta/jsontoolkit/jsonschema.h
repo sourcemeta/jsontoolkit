@@ -63,7 +63,7 @@ auto is_schema(const JSON &schema) -> bool;
 /// #include <cassert>
 ///
 /// const sourcemeta::jsontoolkit::JSON document =
-///     sourcemeta::jsontoolkit::parse(R"JSON({
+///     sourcemeta::jsontoolkit::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "$id": "https://sourcemeta.com/example-schema"
 /// })JSON");
@@ -86,7 +86,7 @@ auto id(const JSON &schema) -> std::optional<std::string>;
 /// #include <cassert>
 ///
 /// const sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse(R"JSON({
+///   sourcemeta::jsontoolkit::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object"
 /// })JSON");
@@ -113,7 +113,7 @@ auto metaschema(const JSON &schema) -> std::optional<std::string>;
 /// #include <cassert>
 ///
 /// const sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse(R"JSON({
+///   sourcemeta::jsontoolkit::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object"
 /// })JSON");
@@ -145,7 +145,7 @@ auto draft(const JSON &schema, const schema_resolver_t &resolver,
 /// #include <cassert>
 ///
 /// const sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse(R"JSON({
+///   sourcemeta::jsontoolkit::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object"
 /// })JSON");
@@ -338,7 +338,7 @@ private:
 /// #include <iostream>
 ///
 /// const sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse(R"JSON({
+///   sourcemeta::jsontoolkit::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object",
 ///   "properties": {
@@ -382,7 +382,7 @@ auto subschema_iterator(
 /// #include <iostream>
 ///
 /// const sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse(R"JSON({
+///   sourcemeta::jsontoolkit::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object",
 ///   "properties": {

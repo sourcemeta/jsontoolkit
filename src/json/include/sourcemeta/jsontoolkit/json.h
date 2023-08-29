@@ -42,13 +42,14 @@ using JSON = GenericValue<char, std::char_traits<char>, std::allocator>;
 ///
 /// std::istringstream stream{"[ 1, 2, 3 ]"};
 /// const sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse(stream);
+///   sourcemeta::jsontoolkit::parse_json(stream);
 /// assert(document.is_array());
 /// ```
 ///
 /// If parsing fails, sourcemeta::jsontoolkit::ParseError will be thrown.
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
-auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream) -> JSON;
+auto parse_json(std::basic_istream<JSON::Char, JSON::CharTraits> &stream)
+    -> JSON;
 
 /// @ingroup json
 ///
@@ -60,13 +61,13 @@ auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream) -> JSON;
 /// #include <cassert>
 ///
 /// const sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+///   sourcemeta::jsontoolkit::parse_json("[ 1, 2, 3 ]");
 /// assert(document.is_array());
 /// ```
 ///
 /// If parsing fails, sourcemeta::jsontoolkit::ParseError will be thrown.
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
-auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input)
+auto parse_json(const std::basic_string<JSON::Char, JSON::CharTraits> &input)
     -> JSON;
 
 /// @ingroup json
@@ -80,7 +81,7 @@ auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input)
 /// #include <sstream>
 ///
 /// const sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+///   sourcemeta::jsontoolkit::parse_json("[ 1, 2, 3 ]");
 /// std::ostringstream stream;
 /// sourcemeta::jsontoolkit::stringify(document, stream);
 /// std::cout << stream.str() << std::endl;
@@ -101,7 +102,7 @@ auto stringify(const JSON &document,
 /// #include <sstream>
 ///
 /// const sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+///   sourcemeta::jsontoolkit::parse_json("[ 1, 2, 3 ]");
 /// std::ostringstream stream;
 /// sourcemeta::jsontoolkit::prettify(document, stream);
 /// std::cout << stream.str() << std::endl;
@@ -122,7 +123,7 @@ auto prettify(const JSON &document,
 /// #include <sstream>
 ///
 /// const sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+///   sourcemeta::jsontoolkit::parse_json("[ 1, 2, 3 ]");
 /// std::ostringstream stream;
 /// stream << document;
 /// std::cout << stream.str() << std::endl;
