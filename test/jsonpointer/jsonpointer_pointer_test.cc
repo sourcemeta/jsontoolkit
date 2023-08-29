@@ -79,3 +79,22 @@ TEST(JSONPointer_pointer, multiple_fragments_back) {
   EXPECT_TRUE(pointer.back().is_property());
   EXPECT_EQ(pointer.back().to_property(), "bar");
 }
+
+TEST(JSONPointer_pointer, build_with_emplace_back) {
+  sourcemeta::jsontoolkit::Pointer pointer;
+  EXPECT_EQ(pointer.size(), 0);
+
+  auto &result_1{pointer.emplace_back("foo")};
+  EXPECT_TRUE(result_1.is_property());
+  EXPECT_EQ(result_1.to_property(), "foo");
+
+  auto &result_2{pointer.emplace_back(1)};
+  EXPECT_TRUE(result_2.is_index());
+  EXPECT_EQ(result_2.to_index(), 1);
+
+  EXPECT_EQ(pointer.size(), 2);
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_TRUE(pointer.at(1).is_index());
+  EXPECT_EQ(pointer.at(0).to_property(), "foo");
+  EXPECT_EQ(pointer.at(1).to_index(), 1);
+}
