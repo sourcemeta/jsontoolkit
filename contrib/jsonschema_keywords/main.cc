@@ -47,7 +47,7 @@ auto scan(const std::filesystem::path &directory) -> int {
     std::cerr << "Scanning: " << directory_entry.path().string() << "\n";
     std::ifstream stream{directory_entry.path()};
     stream.exceptions(std::ios_base::badbit);
-    analyze(sourcemeta::jsontoolkit::parse(stream), accumulator);
+    analyze(sourcemeta::jsontoolkit::parse_json(stream), accumulator);
   }
 
   std::vector<std::pair<std::string, unsigned long>> result;

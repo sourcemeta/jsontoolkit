@@ -4,7 +4,7 @@
 
 TEST(JSONPointer_set, property_to_integer) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
+      sourcemeta::jsontoolkit::parse_json("{ \"foo\": 1 }");
   const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
   sourcemeta::jsontoolkit::set(document, pointer,
                                sourcemeta::jsontoolkit::JSON{2});
@@ -17,7 +17,7 @@ TEST(JSONPointer_set, property_to_integer) {
 
 TEST(JSONPointer_set, property_to_integer_copy) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
+      sourcemeta::jsontoolkit::parse_json("{ \"foo\": 1 }");
   const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
   const sourcemeta::jsontoolkit::JSON value{2};
   sourcemeta::jsontoolkit::set(document, pointer, value);
@@ -30,7 +30,7 @@ TEST(JSONPointer_set, property_to_integer_copy) {
 
 TEST(JSONPointer_set, top_level_to_integer) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
+      sourcemeta::jsontoolkit::parse_json("{ \"foo\": 1 }");
   const sourcemeta::jsontoolkit::Pointer pointer;
   sourcemeta::jsontoolkit::set(document, pointer,
                                sourcemeta::jsontoolkit::JSON{2});
@@ -40,7 +40,7 @@ TEST(JSONPointer_set, top_level_to_integer) {
 
 TEST(JSONPointer_set, top_level_to_integer_copy) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
+      sourcemeta::jsontoolkit::parse_json("{ \"foo\": 1 }");
   const sourcemeta::jsontoolkit::Pointer pointer;
   const sourcemeta::jsontoolkit::JSON value{2};
   sourcemeta::jsontoolkit::set(document, pointer, value);
@@ -50,7 +50,7 @@ TEST(JSONPointer_set, top_level_to_integer_copy) {
 
 TEST(JSONPointer_set, array_element_to_integer) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": [ 1, 2, 3 ] }");
+      sourcemeta::jsontoolkit::parse_json("{ \"foo\": [ 1, 2, 3 ] }");
   const sourcemeta::jsontoolkit::Pointer pointer{"foo", 1};
   sourcemeta::jsontoolkit::set(document, pointer,
                                sourcemeta::jsontoolkit::JSON{9});
@@ -69,7 +69,7 @@ TEST(JSONPointer_set, array_element_to_integer) {
 
 TEST(JSONPointer_set, array_element_to_integer_copy) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": [ 1, 2, 3 ] }");
+      sourcemeta::jsontoolkit::parse_json("{ \"foo\": [ 1, 2, 3 ] }");
   const sourcemeta::jsontoolkit::Pointer pointer{"foo", 1};
   const sourcemeta::jsontoolkit::JSON value{9};
   sourcemeta::jsontoolkit::set(document, pointer, value);
@@ -88,7 +88,7 @@ TEST(JSONPointer_set, array_element_to_integer_copy) {
 
 TEST(JSONPointer_set, hyphen_property_in_object) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": { \"-\": 1 } }");
+      sourcemeta::jsontoolkit::parse_json("{ \"foo\": { \"-\": 1 } }");
   const sourcemeta::jsontoolkit::Pointer pointer{"foo", "-"};
   sourcemeta::jsontoolkit::set(document, pointer,
                                sourcemeta::jsontoolkit::JSON{2});
@@ -103,7 +103,7 @@ TEST(JSONPointer_set, hyphen_property_in_object) {
 
 TEST(JSONPointer_set, hyphen_in_array_single_token) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+      sourcemeta::jsontoolkit::parse_json("[ 1, 2, 3 ]");
   const sourcemeta::jsontoolkit::Pointer pointer{"-"};
   sourcemeta::jsontoolkit::set(document, pointer,
                                sourcemeta::jsontoolkit::JSON{4});
@@ -121,7 +121,7 @@ TEST(JSONPointer_set, hyphen_in_array_single_token) {
 
 TEST(JSONPointer_set, hyphen_in_array_single_token_copy) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+      sourcemeta::jsontoolkit::parse_json("[ 1, 2, 3 ]");
   const sourcemeta::jsontoolkit::Pointer pointer{"-"};
   const sourcemeta::jsontoolkit::JSON value{4};
   sourcemeta::jsontoolkit::set(document, pointer, value);
@@ -139,7 +139,7 @@ TEST(JSONPointer_set, hyphen_in_array_single_token_copy) {
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": [ 1, 2, 3 ] }");
+      sourcemeta::jsontoolkit::parse_json("{ \"foo\": [ 1, 2, 3 ] }");
   const sourcemeta::jsontoolkit::Pointer pointer{"foo", "-"};
   sourcemeta::jsontoolkit::set(document, pointer,
                                sourcemeta::jsontoolkit::JSON{4});
@@ -159,7 +159,7 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens) {
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_copy) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": [ 1, 2, 3 ] }");
+      sourcemeta::jsontoolkit::parse_json("{ \"foo\": [ 1, 2, 3 ] }");
   const sourcemeta::jsontoolkit::Pointer pointer{"foo", "-"};
   const sourcemeta::jsontoolkit::JSON value{4};
   sourcemeta::jsontoolkit::set(document, pointer, value);
@@ -179,7 +179,7 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_copy) {
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"-\": [ 1, 2, 3 ] }");
+      sourcemeta::jsontoolkit::parse_json("{ \"-\": [ 1, 2, 3 ] }");
   const sourcemeta::jsontoolkit::Pointer pointer{"-", "-"};
   sourcemeta::jsontoolkit::set(document, pointer,
                                sourcemeta::jsontoolkit::JSON{4});
@@ -199,7 +199,7 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen) {
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen_copy) {
   sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"-\": [ 1, 2, 3 ] }");
+      sourcemeta::jsontoolkit::parse_json("{ \"-\": [ 1, 2, 3 ] }");
   const sourcemeta::jsontoolkit::Pointer pointer{"-", "-"};
   const sourcemeta::jsontoolkit::JSON value{4};
   sourcemeta::jsontoolkit::set(document, pointer, value);

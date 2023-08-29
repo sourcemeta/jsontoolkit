@@ -19,7 +19,7 @@ public:
     std::ifstream stream{this->test_path};
     stream.exceptions(std::ios_base::badbit);
     if (this->type == JSONTestType::Accept) {
-      sourcemeta::jsontoolkit::parse(stream);
+      sourcemeta::jsontoolkit::parse_json(stream);
       // JSON Toolkit consumes up to the end of a valid document
       // in the stream. Force it continue until the end to cover
       // certain test cases.
@@ -38,7 +38,7 @@ public:
         // in the stream. Force it continue until the end to cover
         // certain test cases.
         while (!stream.eof()) {
-          sourcemeta::jsontoolkit::parse(stream);
+          sourcemeta::jsontoolkit::parse_json(stream);
         }
       } catch (const sourcemeta::jsontoolkit::ParseError &) {
         SUCCEED();

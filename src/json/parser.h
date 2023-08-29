@@ -588,7 +588,7 @@ auto parse_number(const std::uint64_t line, std::uint64_t &column,
 namespace sourcemeta::jsontoolkit {
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
-auto parse(std::basic_istream<CharT, Traits> &stream)
+auto parse_json(std::basic_istream<CharT, Traits> &stream)
     -> GenericValue<CharT, Traits, Allocator> {
   // Globals
   using Result = GenericValue<CharT, Traits, Allocator>;
@@ -1012,10 +1012,10 @@ do_parse_container_end:
 
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
-auto parse(const std::basic_string<CharT, Traits> &input)
+auto parse_json(const std::basic_string<CharT, Traits> &input)
     -> GenericValue<CharT, Traits, Allocator> {
   std::basic_istringstream<CharT, Traits, Allocator<CharT>> stream{input};
-  return parse<CharT, Traits, Allocator>(stream);
+  return parse_json<CharT, Traits, Allocator>(stream);
 }
 
 } // namespace sourcemeta::jsontoolkit
