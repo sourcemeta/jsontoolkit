@@ -48,7 +48,6 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             stream.put(internal::token_pointer_reverse_solidus<CharT>);
             break;
 
-          // TODO: Handle this for JSON stringifying too
           // See https://www.asciitable.com
           // See https://www.rfc-editor.org/rfc/rfc4627#section-2.5
 
