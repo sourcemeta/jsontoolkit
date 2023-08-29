@@ -127,7 +127,7 @@ auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void;
 
 // TODO: Add an operator<< overload
 
-/// @ingroup json
+/// @ingroup jsonpointer
 ///
 /// Stringify the input JSON Pointer into a given C++ standard output stream.
 /// For example:
