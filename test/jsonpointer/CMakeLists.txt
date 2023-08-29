@@ -2,6 +2,7 @@ add_executable(sourcemeta_jsontoolkit_jsonpointer_unit
   jsonpointer_get_test.cc
   jsonpointer_pointer_test.cc
   jsonpointer_set_test.cc
+  jsonpointer_stringify_test.cc
   jsonpointer_token_test.cc)
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonpointer_unit)
 target_link_libraries(sourcemeta_jsontoolkit_jsonpointer_unit

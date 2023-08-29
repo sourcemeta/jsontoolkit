@@ -11,7 +11,8 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_pointer.h>
 
-#include <memory> // std::allocator
+#include <memory>  // std::allocator
+#include <ostream> // std::basic_ostream
 
 /// @defgroup jsonpointer JSON Pointer
 /// @brief An growing implementation of RFC 6901 JSON Pointer.
@@ -123,6 +124,28 @@ auto set(JSON &document, const Pointer &pointer, const JSON &value) -> void;
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void;
+
+// TODO: Add an operator<< overload
+
+/// @ingroup json
+///
+/// Stringify the input JSON Pointer into a given C++ standard output stream.
+/// For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <iostream>
+/// #include <sstream>
+///
+/// const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+/// std::ostringstream stream;
+/// sourcemeta::jsontoolkit::stringify(pointer, stream);
+/// std::cout << stream.str() << std::endl;
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto stringify(const Pointer &pointer,
+               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
+    -> void;
 
 } // namespace sourcemeta::jsontoolkit
 

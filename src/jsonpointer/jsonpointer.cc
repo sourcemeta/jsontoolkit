@@ -1,5 +1,7 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 
+#include "stringify.h"
+
 #include <functional>  // std::reference_wrapper
 #include <iterator>    // std::cbegin, std::cend, std::prev
 #include <memory>      // std::allocator
@@ -111,6 +113,12 @@ auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void {
   } else {
     current.at(last.to_index()).into(std::move(value));
   }
+}
+
+auto stringify(const Pointer &pointer,
+               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
+    -> void {
+  stringify<JSON::Char, JSON::CharTraits, std::allocator>(pointer, stream);
 }
 
 } // namespace sourcemeta::jsontoolkit
