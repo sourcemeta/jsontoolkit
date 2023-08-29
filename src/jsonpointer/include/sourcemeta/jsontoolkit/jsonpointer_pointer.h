@@ -159,6 +159,23 @@ public:
     return this->data.empty();
   }
 
+  /// Emplace a token into the back of a JSON Pointer.
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::Pointer pointer;
+  /// assert(pointer.empty());
+  /// auto &token{pointer.emplace_back("foo")};
+  /// assert(!pointer.empty());
+  /// assert(token.is_property());
+  /// ```
+  template <class... Args> auto emplace_back(Args &&...args) -> reference {
+    return this->data.emplace_back(args...);
+  }
+
 private:
   Container data;
 };
