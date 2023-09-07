@@ -1,7 +1,7 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_ERROR_H
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_ERROR_H
 
-#ifdef __EMSCRIPTEN__
+#if defined(__EMSCRIPTEN__) || defined(__Unikraft__)
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 #else
 #include "jsonschema_export.h"

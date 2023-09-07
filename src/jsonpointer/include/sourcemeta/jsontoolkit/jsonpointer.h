@@ -1,7 +1,7 @@
 #ifndef JSONTOOLKIT_JSONPOINTER_H_
 #define JSONTOOLKIT_JSONPOINTER_H_
 
-#ifdef __EMSCRIPTEN__
+#if defined(__EMSCRIPTEN__) || defined(__Unikraft__)
 #define SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 #else
 #include "jsonpointer_export.h"
