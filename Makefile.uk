@@ -1,0 +1,6 @@
+$(eval $(call addlib_s,libjsontoolkit,$(CONFIG_LIBJSONTOOLKIT)))
+
+# TODO: Support JSON Schema and JSON Pointer
+LIBJSONTOOLKIT_SRC = $(LIBJSONTOOLKIT_BASE)/src
+CXXINCLUDES-$(CONFIG_LIBJSONTOOLKIT) += -I$(LIBJSONTOOLKIT_SRC)/json/include
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/json/json.cc
