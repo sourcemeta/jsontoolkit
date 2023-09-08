@@ -1,0 +1,4 @@
+menuconfig LIBJSONTOOLKIT
+	bool "libjsontoolkit - a swiss-army knife library for expressive JSON programming in modern C++"
+	select LIBCXX
+	default n

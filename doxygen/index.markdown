@@ -8,7 +8,7 @@ in modern C++. It comes with a built-in parser and growing support for
 standards such as [JSON Schema](http://json-schema.org), [JSON
 Pointer](https://www.rfc-editor.org/rfc/rfc6901), and more.  It targets C++20
 and supports the Clang, GCC, and MSVC compilers on macOS, GNU/Linux, FreeBSD,
-and Windows.
+Windows, and Unikraft.
 
 Installation
 ------------
