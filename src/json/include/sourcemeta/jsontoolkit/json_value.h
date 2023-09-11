@@ -887,8 +887,7 @@ public:
   /// ```
   [[nodiscard]] auto defines(const String &key) const -> bool {
     assert(this->is_object());
-    return std::get<Object>(this->data).data.find(key) !=
-           std::get<Object>(this->data).data.end();
+    return std::get<Object>(this->data).data.contains(key);
   }
 
   /// This method checks whether an input JSON object defines at least one given
@@ -1190,7 +1189,7 @@ public:
 
     std::set<String, std::less<String>, Allocator<String>> blacklist;
     for (const auto &pair : this->as_object()) {
-      if (whitelist.find(pair.first) == whitelist.end()) {
+      if (!whitelist.contains(pair.first)) {
         blacklist.insert(pair.first);
       }
     }
