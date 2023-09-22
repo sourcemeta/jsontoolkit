@@ -216,3 +216,16 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen_copy) {
   EXPECT_EQ(document.at("-").at(2).to_integer(), 3);
   EXPECT_EQ(document.at("-").at(3).to_integer(), 4);
 }
+
+TEST(JSONPointer_set, positive_integer_property) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse_json(R"JSON({
+    "0": 1
+  })JSON");
+
+  const sourcemeta::jsontoolkit::Pointer pointer{0};
+  const sourcemeta::jsontoolkit::JSON value{4};
+  sourcemeta::jsontoolkit::set(document, pointer, value);
+  EXPECT_TRUE(document.at("0").is_integer());
+  EXPECT_EQ(document.at("0").to_integer(), 4);
+}

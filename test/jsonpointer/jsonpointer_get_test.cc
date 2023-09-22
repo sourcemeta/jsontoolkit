@@ -506,3 +506,16 @@ TEST(JSONPointer_get, null) {
   EXPECT_TRUE(result.is_integer());
   EXPECT_EQ(result.to_integer(), 1);
 }
+
+TEST(JSONPointer_get, positive_integer_property) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse_json(R"JSON({
+    "0": 1
+  })JSON");
+
+  const sourcemeta::jsontoolkit::Pointer pointer{0};
+  const sourcemeta::jsontoolkit::JSON &result{
+      sourcemeta::jsontoolkit::get(document, pointer)};
+  EXPECT_TRUE(result.is_integer());
+  EXPECT_EQ(result.to_integer(), 1);
+}
