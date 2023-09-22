@@ -448,3 +448,45 @@ TEST(JSON_object, clear_except_multiple_intersection_initializer_list) {
   EXPECT_TRUE(document.defines("baz"));
   EXPECT_FALSE(document.defines("qux"));
 }
+
+TEST(JSON_object, at_index_using_integer) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse_json("{\"0\":1,\"1\":2,\"2\":3}");
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 3);
+  EXPECT_TRUE(document.defines("0"));
+  EXPECT_TRUE(document.defines("1"));
+  EXPECT_TRUE(document.defines("2"));
+  EXPECT_TRUE(document.at(0).is_integer());
+  EXPECT_TRUE(document.at(1).is_integer());
+  EXPECT_TRUE(document.at(2).is_integer());
+  EXPECT_EQ(document.at(0).to_integer(), 1);
+  EXPECT_EQ(document.at(1).to_integer(), 2);
+  EXPECT_EQ(document.at(2).to_integer(), 3);
+}
+
+TEST(JSON_object, at_index_using_integer_non_const) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse_json("{\"0\":1,\"1\":2,\"2\":3}");
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 3);
+  EXPECT_TRUE(document.defines("0"));
+  EXPECT_TRUE(document.defines("1"));
+  EXPECT_TRUE(document.defines("2"));
+  EXPECT_TRUE(document.at(0).is_integer());
+  EXPECT_TRUE(document.at(1).is_integer());
+  EXPECT_TRUE(document.at(2).is_integer());
+  EXPECT_EQ(document.at(0).to_integer(), 1);
+  EXPECT_EQ(document.at(1).to_integer(), 2);
+  EXPECT_EQ(document.at(2).to_integer(), 3);
+}
+
+TEST(JSON_object, defines_property_using_integer) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse_json("{\"0\":1,\"1\":2,\"2\":3}");
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 3);
+  EXPECT_TRUE(document.defines(0));
+  EXPECT_TRUE(document.defines(1));
+  EXPECT_TRUE(document.defines(2));
+}

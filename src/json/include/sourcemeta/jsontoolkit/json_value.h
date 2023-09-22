@@ -18,7 +18,7 @@
 #include <initializer_list> // std::initializer_list
 #include <set>              // std::set
 #include <stdexcept>        // std::invalid_argument
-#include <string>           // std::basic_string
+#include <string>           // std::basic_string, std::to_string
 #include <string_view>      // std::basic_string_view
 #include <type_traits>      // std::enable_if_t, std::is_same_v
 #include <utility>          // std::in_place_type, std::pair, std::move
@@ -664,7 +664,9 @@ public:
    * Getters
    */
 
-  /// This method retrieves an array element.
+  /// This method retrieves a element by its index. If the input JSON instance
+  /// is an object, a property that corresponds to the stringified integer will
+  /// be accessed.
   ///
   /// For example:
   ///
@@ -675,15 +677,27 @@ public:
   /// const sourcemeta::jsontoolkit::JSON my_array =
   ///   sourcemeta::jsontoolkit::parse_json("[ 1, 2 ]");
   /// assert(my_array.at(1).to_integer() == 2);
+  ///
+  /// const sourcemeta::jsontoolkit::JSON my_object =
+  ///   sourcemeta::jsontoolkit::parse_json("{ \"1\": "foo" }");
+  /// assert(my_array.at(1).to_string() == "foo");
   /// ```
   [[nodiscard]] auto at(const typename Array::size_type index) const
       -> const GenericValue & {
+    // In practice, this case only applies in some edge cases when
+    // using JSON Pointers
+    if (this->is_object()) [[unlikely]] {
+      return this->at(std::to_string(index));
+    }
+
     assert(this->is_array());
     assert(index < this->size());
     return std::get<Array>(this->data).data.at(index);
   }
 
-  /// This method retrieves an array element.
+  /// This method retrieves a element by its index. If the input JSON instance
+  /// is an object, a property that corresponds to the stringified integer will
+  /// be accessed.
   ///
   /// For example:
   ///
@@ -694,9 +708,19 @@ public:
   /// sourcemeta::jsontoolkit::JSON my_array =
   ///   sourcemeta::jsontoolkit::parse_json("[ 1, 2 ]");
   /// assert(my_array.at(1).to_integer() == 2);
+  ///
+  /// sourcemeta::jsontoolkit::JSON my_object =
+  ///   sourcemeta::jsontoolkit::parse_json("{ \"1\": "foo" }");
+  /// assert(my_array.at(1).to_string() == "foo");
   /// ```
   [[nodiscard]] auto at(const typename Array::size_type index)
       -> GenericValue & {
+    // In practice, this case only applies in some edge cases when
+    // using JSON Pointers
+    if (this->is_object()) [[unlikely]] {
+      return this->at(std::to_string(index));
+    }
+
     assert(this->is_array());
     assert(index < this->size());
     return std::get<Array>(this->data).data.at(index);
@@ -888,6 +912,23 @@ public:
   [[nodiscard]] auto defines(const String &key) const -> bool {
     assert(this->is_object());
     return std::get<Object>(this->data).data.contains(key);
+  }
+
+  /// This method checks whether an input JSON object defines a specific integer
+  /// key. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse_json("{ \"0\": 1 }");
+  /// assert(document.defines(0));
+  /// assert(!document.defines(1));
+  /// ```
+  [[nodiscard]] auto defines(const typename Array::size_type index) const
+      -> bool {
+    return this->defines(std::to_string(index));
   }
 
   /// This method checks whether an input JSON object defines at least one given
