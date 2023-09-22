@@ -31,7 +31,7 @@ auto traverse(V &document,
   // evaluated sequentially.
   // See https://www.rfc-editor.org/rfc/rfc6901#section-4
   for (auto iterator = begin; iterator != end; ++iterator) {
-    if ((*iterator).is_property()) {
+    if (iterator->is_property()) {
       // If the currently referenced value is a JSON object, the new
       // referenced value is the object member with the name identified by
       // the reference token.  The member name is equal to the token if it
@@ -39,7 +39,7 @@ auto traverse(V &document,
       // code points are byte-by-byte equal.  No Unicode character
       // normalization is performed.
       // See https://www.rfc-editor.org/rfc/rfc6901#section-4
-      current = current.get().at((*iterator).to_property());
+      current = current.get().at(iterator->to_property());
     } else {
       // If the currently referenced value is a JSON array, the reference
       // token MUST contain [...] characters comprised of digits (see ABNF
@@ -48,7 +48,7 @@ auto traverse(V &document,
       // array element with the zero-based index identified by the
       // token.
       // See https://www.rfc-editor.org/rfc/rfc6901#section-4
-      current = current.get().at((*iterator).to_index());
+      current = current.get().at(iterator->to_index());
     }
   }
 
