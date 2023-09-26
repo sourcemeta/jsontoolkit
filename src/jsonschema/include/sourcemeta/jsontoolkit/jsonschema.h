@@ -170,8 +170,7 @@ auto vocabularies(const JSON &schema, const schema_resolver_t &resolver,
 // We inline the definition of this class in this file to avoid a circular
 // dependency
 /// @ingroup jsonschema
-template <typename ValueT>
-class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaWalker {
+template <typename ValueT> class SchemaWalker {
 private:
   using internal = typename std::vector<std::reference_wrapper<ValueT>>;
 

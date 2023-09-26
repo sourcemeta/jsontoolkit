@@ -1,20 +1,13 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSON_ARRAY_H_
 #define SOURCEMETA_JSONTOOLKIT_JSON_ARRAY_H_
 
-#if defined(__EMSCRIPTEN__) || defined(__Unikraft__)
-#define SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
-#else
-#include "json_export.h"
-#endif
-
 #include <initializer_list> // std::initializer_list
 #include <vector>           // std::vector
 
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup json
-template <typename Value, typename Allocator>
-class SOURCEMETA_JSONTOOLKIT_JSON_EXPORT GenericArray {
+template <typename Value, typename Allocator> class GenericArray {
 public:
   using Container = std::vector<Value, Allocator>;
   GenericArray() : data{} {}

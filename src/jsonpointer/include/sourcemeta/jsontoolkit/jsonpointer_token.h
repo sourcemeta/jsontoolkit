@@ -1,12 +1,6 @@
 #ifndef JSONTOOLKIT_JSONPOINTER_TOKEN_H_
 #define JSONTOOLKIT_JSONPOINTER_TOKEN_H_
 
-#if defined(__EMSCRIPTEN__) || defined(__Unikraft__)
-#define SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
-#else
-#include "jsonpointer_export.h"
-#endif
-
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_grammar.h>
 
@@ -19,7 +13,7 @@ namespace sourcemeta::jsontoolkit {
 /// @ingroup jsonpointer
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
-class SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT GenericToken {
+class GenericToken {
 public:
   using Value = GenericValue<CharT, Traits, Allocator>;
   using Property = typename Value::String;
