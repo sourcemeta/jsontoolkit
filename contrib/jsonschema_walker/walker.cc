@@ -15,7 +15,7 @@ template <typename CharT, typename Traits>
 auto walk(const std::string &mode, std::basic_istream<CharT, Traits> &stream)
     -> int {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(stream);
+      sourcemeta::jsontoolkit::parse(stream);
 
   const std::optional<std::string> metaschema{
       sourcemeta::jsontoolkit::metaschema(document)};

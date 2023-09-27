@@ -39,7 +39,7 @@ using Pointer = GenericPointer<JSON::Char, JSON::CharTraits, std::allocator>;
 ///
 /// std::istringstream stream{"[ { \"foo\": 1 }, { \"bar\": 2 } ]"};
 /// const sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse_json(stream);
+///   sourcemeta::jsontoolkit::parse(stream);
 ///
 /// const sourcemeta::jsontoolkit::Pointer pointer{1, "bar"};
 /// const sourcemeta::jsontoolkit::JSON &value{
@@ -62,7 +62,7 @@ auto get(const JSON &document, const Pointer &pointer) -> const JSON &;
 ///
 /// std::istringstream stream{"[ { \"foo\": 1 }, { \"bar\": 2 } ]"};
 /// sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse_json(stream);
+///   sourcemeta::jsontoolkit::parse(stream);
 /// assert(document.at("foo").to_integer() == 1);
 ///
 /// const sourcemeta::jsontoolkit::Pointer pointer{1, "bar"};
@@ -89,7 +89,7 @@ auto get(JSON &document, const Pointer &pointer) -> JSON &;
 ///
 /// std::istringstream stream{"{ \"foo\": 1 }"};
 /// sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse_json(stream);
+///   sourcemeta::jsontoolkit::parse(stream);
 /// assert(document.at("foo").to_integer() == 1);
 ///
 /// const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
@@ -115,7 +115,7 @@ auto set(JSON &document, const Pointer &pointer, const JSON &value) -> void;
 ///
 /// std::istringstream stream{"{ \"foo\": 1 }"};
 /// sourcemeta::jsontoolkit::JSON document =
-///   sourcemeta::jsontoolkit::parse_json(stream);
+///   sourcemeta::jsontoolkit::parse(stream);
 ///
 /// const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
 /// sourcemeta::jsontoolkit::set(document, pointer,
