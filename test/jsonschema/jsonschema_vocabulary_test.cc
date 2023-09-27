@@ -10,7 +10,7 @@ static auto test_resolver(const std::string &identifier)
   std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
 
   if (identifier == "https://sourcemeta.com/2020-12-custom-vocabularies") {
-    promise.set_value(sourcemeta::jsontoolkit::parse_json(R"JSON({
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "$id": "https://sourcemeta.com/2020-12-custom-vocabularies",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$vocabulary": {
@@ -21,7 +21,7 @@ static auto test_resolver(const std::string &identifier)
     })JSON"));
   } else if (identifier ==
              "https://sourcemeta.com/2019-09-custom-vocabularies") {
-    promise.set_value(sourcemeta::jsontoolkit::parse_json(R"JSON({
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "$id": "https://sourcemeta.com/2019-09-custom-vocabularies",
       "$schema": "https://json-schema.org/draft/2019-09/schema",
       "$vocabulary": {
@@ -32,7 +32,7 @@ static auto test_resolver(const std::string &identifier)
     })JSON"));
   } else if (identifier == "https://sourcemeta.com/metaschema_3") {
     // Optional core
-    promise.set_value(sourcemeta::jsontoolkit::parse_json(R"JSON({
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "$id": "https://sourcemeta.com/metaschema_3",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$vocabulary": {
@@ -41,7 +41,7 @@ static auto test_resolver(const std::string &identifier)
     })JSON"));
   } else if (identifier == "https://sourcemeta.com/metaschema_4") {
     // Missing core
-    promise.set_value(sourcemeta::jsontoolkit::parse_json(R"JSON({
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "$id": "https://sourcemeta.com/metaschema_4",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$vocabulary": {
@@ -49,37 +49,37 @@ static auto test_resolver(const std::string &identifier)
       }
     })JSON"));
   } else if (identifier == "https://sourcemeta.com/2020-12-no-vocabularies") {
-    promise.set_value(sourcemeta::jsontoolkit::parse_json(R"JSON({
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "$id": "https://sourcemeta.com/2020-12-no-vocabularies",
       "$schema": "https://json-schema.org/draft/2020-12/schema"
     })JSON"));
   } else if (identifier ==
              "https://sourcemeta.com/2020-12-hyper-no-vocabularies") {
-    promise.set_value(sourcemeta::jsontoolkit::parse_json(R"JSON({
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "$id": "https://sourcemeta.com/2020-12-hyper-no-vocabularies",
       "$schema": "https://json-schema.org/draft/2020-12/hyper-schema"
     })JSON"));
   } else if (identifier == "https://sourcemeta.com/2019-09-no-vocabularies") {
-    promise.set_value(sourcemeta::jsontoolkit::parse_json(R"JSON({
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "$id": "https://sourcemeta.com/2019-09-no-vocabularies",
       "$schema": "https://json-schema.org/draft/2019-09/schema"
     })JSON"));
   } else if (identifier ==
              "https://sourcemeta.com/2019-09-hyper-no-vocabularies") {
-    promise.set_value(sourcemeta::jsontoolkit::parse_json(R"JSON({
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "$id": "https://sourcemeta.com/2019-09-hyper-no-vocabularies",
       "$schema": "https://json-schema.org/draft/2019-09/hyper-schema"
     })JSON"));
   } else if (identifier == "https://sourcemeta.com/invalid_1") {
     // No $id
-    promise.set_value(sourcemeta::jsontoolkit::parse_json(R"JSON({
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$vocabulary": {
         "https://json-schema.org/draft/2020-12/vocab/core": true
       }
     })JSON"));
   } else if (identifier == "https://sourcemeta.com/invalid_2") {
-    promise.set_value(sourcemeta::jsontoolkit::parse_json(R"JSON({
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "$id": "non-matching-id",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$vocabulary": {
@@ -171,7 +171,7 @@ TEST(JSONSchema_vocabulary, not_random_vocabulary_boolean) {
 
 TEST(JSONSchema_vocabulary, unresolvable_metaschema) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://non-existent.com/metaschema"
   })JSON");
   EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
@@ -180,7 +180,7 @@ TEST(JSONSchema_vocabulary, unresolvable_metaschema) {
 
 TEST(JSONSchema_vocabulary, custom_metaschema_invalid_1) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/invalid_1"
   })JSON");
   EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
@@ -189,7 +189,7 @@ TEST(JSONSchema_vocabulary, custom_metaschema_invalid_1) {
 
 TEST(JSONSchema_vocabulary, custom_metaschema_invalid_2) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/invalid_2"
   })JSON");
   EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(document, test_resolver),
@@ -198,7 +198,7 @@ TEST(JSONSchema_vocabulary, custom_metaschema_invalid_2) {
 
 TEST(JSONSchema_vocabulary, real_metaschema_takes_precedence_over_default) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2020-12-no-vocabularies"
   })JSON");
   const std::map<std::string, bool> vocabularies{
@@ -223,7 +223,7 @@ TEST(JSONSchema_vocabulary, real_metaschema_takes_precedence_over_default) {
 
 TEST(JSONSchema_vocabulary, custom_metaschema_3_invalid) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_3"
   })JSON");
 
@@ -233,7 +233,7 @@ TEST(JSONSchema_vocabulary, custom_metaschema_3_invalid) {
 
 TEST(JSONSchema_vocabulary, custom_metaschema_4_invalid) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_4"
   })JSON");
 
@@ -243,7 +243,7 @@ TEST(JSONSchema_vocabulary, custom_metaschema_4_invalid) {
 
 TEST(JSONSchema_vocabulary, no_vocabularies_2020_12) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2020-12-no-vocabularies"
   })JSON");
   const std::map<std::string, bool> vocabularies{
@@ -265,7 +265,7 @@ TEST(JSONSchema_vocabulary, no_vocabularies_2020_12) {
 
 TEST(JSONSchema_vocabulary, no_vocabularies_2020_12_hyper) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2020-12-hyper-no-vocabularies"
   })JSON");
   const std::map<std::string, bool> vocabularies{
@@ -287,7 +287,7 @@ TEST(JSONSchema_vocabulary, no_vocabularies_2020_12_hyper) {
 
 TEST(JSONSchema_vocabulary, hyper_2020_12) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/hyper-schema"
   })JSON");
   const std::map<std::string, bool> vocabularies{
@@ -315,7 +315,7 @@ TEST(JSONSchema_vocabulary, hyper_2020_12) {
 
 TEST(JSONSchema_vocabulary, no_vocabularies_2019_09) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2019-09-no-vocabularies"
   })JSON");
   const std::map<std::string, bool> vocabularies{
@@ -337,7 +337,7 @@ TEST(JSONSchema_vocabulary, no_vocabularies_2019_09) {
 
 TEST(JSONSchema_vocabulary, no_vocabularies_2019_09_hyper) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2019-09-hyper-no-vocabularies"
   })JSON");
   const std::map<std::string, bool> vocabularies{
@@ -359,7 +359,7 @@ TEST(JSONSchema_vocabulary, no_vocabularies_2019_09_hyper) {
 
 TEST(JSONSchema_vocabulary, hyper_2019_09) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/hyper-schema"
   })JSON");
   const std::map<std::string, bool> vocabularies{
@@ -383,7 +383,7 @@ TEST(JSONSchema_vocabulary, hyper_2019_09) {
 
 TEST(JSONSchema_vocabulary, custom_vocabularies_2020_12) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2020-12-custom-vocabularies"
   })JSON");
   const std::map<std::string, bool> vocabularies{
@@ -399,7 +399,7 @@ TEST(JSONSchema_vocabulary, custom_vocabularies_2020_12) {
 
 TEST(JSONSchema_vocabulary, custom_vocabularies_2019_09) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2019-09-custom-vocabularies"
   })JSON");
   const std::map<std::string, bool> vocabularies{

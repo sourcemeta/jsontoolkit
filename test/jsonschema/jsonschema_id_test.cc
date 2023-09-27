@@ -10,14 +10,14 @@ TEST(JSONSchema, id_boolean) {
 
 TEST(JSONSchema, id_empty_object) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json("{}");
+      sourcemeta::jsontoolkit::parse("{}");
   std::optional<std::string> id{sourcemeta::jsontoolkit::id(document)};
   EXPECT_FALSE(id.has_value());
 }
 
 TEST(JSONSchema, id_object_with_id) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://example.com/my-schema"
   })JSON");
   std::optional<std::string> id{sourcemeta::jsontoolkit::id(document)};
@@ -27,7 +27,7 @@ TEST(JSONSchema, id_object_with_id) {
 
 TEST(JSONSchema, id_object_with_old_id) {
   const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse_json(R"JSON({
+      sourcemeta::jsontoolkit::parse(R"JSON({
     "id": "https://example.com/my-schema"
   })JSON");
   std::optional<std::string> id{sourcemeta::jsontoolkit::id(document)};
