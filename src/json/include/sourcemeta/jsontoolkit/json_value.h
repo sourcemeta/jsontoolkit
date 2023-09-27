@@ -1,12 +1,6 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSON_VALUE_H_
 #define SOURCEMETA_JSONTOOLKIT_JSON_VALUE_H_
 
-#if defined(__EMSCRIPTEN__) || defined(__Unikraft__)
-#define SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
-#else
-#include "json_export.h"
-#endif
-
 #include <sourcemeta/jsontoolkit/json_array.h>
 #include <sourcemeta/jsontoolkit/json_object.h>
 
@@ -29,7 +23,7 @@ namespace sourcemeta::jsontoolkit {
 /// @ingroup json
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
-class SOURCEMETA_JSONTOOLKIT_JSON_EXPORT GenericValue {
+class GenericValue {
 public:
   /// The character traits used by the JSON document.
   using CharTraits = Traits;

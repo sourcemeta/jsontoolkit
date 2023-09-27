@@ -1,12 +1,6 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSON_OBJECT_H_
 #define SOURCEMETA_JSONTOOLKIT_JSON_OBJECT_H_
 
-#if defined(__EMSCRIPTEN__) || defined(__Unikraft__)
-#define SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
-#else
-#include "json_export.h"
-#endif
-
 #include <functional>       // std::less
 #include <initializer_list> // std::initializer_list
 #include <map>              // std::map
@@ -15,7 +9,7 @@ namespace sourcemeta::jsontoolkit {
 
 /// @ingroup json
 template <typename Key, typename Value, typename Allocator>
-class SOURCEMETA_JSONTOOLKIT_JSON_EXPORT GenericObject {
+class GenericObject {
 public:
   // Constructors & operators
   using Container = std::map<Key, Value, std::less<Key>, Allocator>;
