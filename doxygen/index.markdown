@@ -77,7 +77,6 @@ CMake
 | `JSONTOOLKIT_DOCS`                | Boolean | `OFF`   | Build the JSON Toolkit docs                 |
 | `JSONTOOLKIT_ADDRESS_SANITIZER`   | Boolean | `OFF`   | Enable the address sanitizer                |
 | `JSONTOOLKIT_UNDEFINED_SANITIZER` | Boolean | `OFF`   | Enable the undefined behavior sanitizer     |
-| `JSONTOOLKIT_EMSCRIPTEN_TESTS`    | Boolean | `OFF`   | Build JSON Toolkit Emscripten tests         |
 
 ### Components
 
