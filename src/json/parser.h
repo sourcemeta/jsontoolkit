@@ -75,7 +75,7 @@ auto parse_string_unicode(
     std::basic_istream<CharT, Traits> &stream,
     std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result) -> void {
   std::basic_string<CharT, Traits, Allocator<CharT>> code_point;
-  code_point.reserve(4);
+  code_point.resize(4);
   std::size_t code_point_size{0};
 
   // Any code point may be represented as a hexadecimal escape sequence.
