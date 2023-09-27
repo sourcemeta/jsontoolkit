@@ -210,7 +210,7 @@ auto parse_string(const std::uint64_t line, std::uint64_t &column,
       case '\u001D':
       case '\u001E':
       case '\u001F':
-      case Traits::eof():
+      case static_cast<CharT>(Traits::eof()):
         throw ParseError(line, column);
       default:
         result.put(character);
@@ -402,7 +402,7 @@ auto parse_number_fractional_first(
     // (U+002E). See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     case internal::token_number_decimal_point<CharT>:
-    case Traits::eof():
+    case static_cast<CharT>(Traits::eof()):
       column += 1;
       throw ParseError(line, column);
     case internal::token_number_zero<CharT>:
