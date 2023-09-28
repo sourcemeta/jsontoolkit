@@ -19,7 +19,7 @@ class SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT PointerParseError
     : public ParseError {
 public:
   /// Create a parsing error
-  PointerParseError(const std::uint64_t column) : ParseError{0, column} {}
+  PointerParseError(const std::uint64_t column) : ParseError{1, column} {}
 
   [[nodiscard]] auto what() const noexcept -> const char * override {
     return "The input is not a valid JSON Pointer";

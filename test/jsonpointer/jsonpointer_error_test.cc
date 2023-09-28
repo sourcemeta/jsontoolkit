@@ -16,3 +16,12 @@ TEST(JSONPointer_error, parse_error) {
             "The input is not a valid JSON Pointer");
   EXPECT_EQ(exception.column(), 5);
 }
+
+TEST(JSONPointer_error, line_is_always_one) {
+  auto exception_1{sourcemeta::jsontoolkit::PointerParseError(5)};
+  auto exception_2{sourcemeta::jsontoolkit::PointerParseError(1)};
+  auto exception_3{sourcemeta::jsontoolkit::PointerParseError(8)};
+  EXPECT_EQ(exception_1.line(), 1);
+  EXPECT_EQ(exception_2.line(), 1);
+  EXPECT_EQ(exception_3.line(), 1);
+}
