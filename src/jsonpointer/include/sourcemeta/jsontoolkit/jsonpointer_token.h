@@ -76,6 +76,7 @@ public:
   /// ```
   GenericToken(const int index) : data{std::in_place_type<Index>, index} {}
 
+#if defined(_MSC_VER)
   /// This constructor creates an JSON Pointer token from an item index. For
   /// example:
   ///
@@ -87,6 +88,7 @@ public:
   /// ```
   GenericToken(const unsigned long index)
       : data{std::in_place_type<Index>, index} {}
+#endif
 
   /// Check if a JSON Pointer token represents an object property.
   /// For example:
