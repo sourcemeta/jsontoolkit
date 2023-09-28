@@ -7,7 +7,7 @@ add_executable(sourcemeta_jsontoolkit_json_unit
   json_number_test.cc
   json_object_test.cc
   json_parse_error_test.cc
-  json_parser_test.cc
+  json_parse_test.cc
   json_prettify_test.cc
   json_real_test.cc
   json_string_test.cc
