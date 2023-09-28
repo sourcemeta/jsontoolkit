@@ -11,6 +11,7 @@
 #include <functional>       // std::less
 #include <initializer_list> // std::initializer_list
 #include <set>              // std::set
+#include <sstream>          // std::basic_istringstream
 #include <stdexcept>        // std::invalid_argument
 #include <string>           // std::basic_string, std::to_string
 #include <string_view>      // std::basic_string_view
@@ -562,6 +563,25 @@ public:
   [[nodiscard]] auto to_string() noexcept -> String & {
     assert(this->is_string());
     return std::get<String>(this->data);
+  }
+
+  /// Get a standard input string stream from a JSON string. The result of this
+  /// method is undefined unless the JSON instance holds a string value. For
+  /// example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON document{"foo"};
+  /// assert(document.is_string());
+  /// auto stream{document.to_stringstream()};
+  /// assert(stream.get() == 'f');
+  /// ```
+  [[nodiscard]] auto to_stringstream() const
+      -> std::basic_istringstream<CharT, Traits, Allocator<CharT>> {
+    return std::basic_istringstream<CharT, Traits, Allocator<CharT>>{
+        std::get<String>(this->data)};
   }
 
   /// Get the JSON document as an array instance. This is convenient
