@@ -22,3 +22,19 @@ TEST(JSON_string, type) {
   const sourcemeta::jsontoolkit::JSON document{"foo"};
   EXPECT_EQ(document.type(), sourcemeta::jsontoolkit::JSON::Type::String);
 }
+
+TEST(JSON_string, to_stringstream) {
+  const std::string value{"foo bar"};
+  const sourcemeta::jsontoolkit::JSON document{value};
+  EXPECT_TRUE(document.is_string());
+  auto stream{document.to_stringstream()};
+  EXPECT_EQ(stream.get(), 'f');
+  EXPECT_EQ(stream.get(), 'o');
+  EXPECT_EQ(stream.get(), 'o');
+  EXPECT_EQ(stream.get(), ' ');
+  EXPECT_EQ(stream.get(), 'b');
+  EXPECT_EQ(stream.get(), 'a');
+  EXPECT_EQ(stream.get(), 'r');
+  EXPECT_EQ(stream.get(), -1);
+  EXPECT_TRUE(stream.eof());
+}
