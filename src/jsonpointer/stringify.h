@@ -1,7 +1,8 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONPOINTER_STRINGIFY_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONPOINTER_STRINGIFY_H_
 
-#include <sourcemeta/jsontoolkit/jsonpointer_grammar.h>
+#include "grammar.h"
+
 #include <sourcemeta/jsontoolkit/jsonpointer_pointer.h>
 
 #include <ostream> // std::basic_ostream

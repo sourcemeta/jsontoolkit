@@ -3,13 +3,12 @@ set(JSONPOINTER_PUBLIC_HEADERS include/sourcemeta/jsontoolkit/jsonpointer.h)
 set(JSONPOINTER_PRIVATE_HEADERS
   include/sourcemeta/jsontoolkit/jsonpointer_pointer.h
   include/sourcemeta/jsontoolkit/jsonpointer_error.h
-  include/sourcemeta/jsontoolkit/jsonpointer_grammar.h
   include/sourcemeta/jsontoolkit/jsonpointer_token.h
   "${CMAKE_CURRENT_BINARY_DIR}/jsonpointer_export.h")
 
 add_library(sourcemeta_jsontoolkit_jsonpointer
   ${JSONPOINTER_PUBLIC_HEADERS} ${JSONPOINTER_PRIVATE_HEADERS}
-  jsonpointer.cc stringify.h)
+  jsonpointer.cc stringify.h grammar.h)
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonpointer)
 add_library(sourcemeta::jsontoolkit::jsonpointer
   ALIAS sourcemeta_jsontoolkit_jsonpointer)
