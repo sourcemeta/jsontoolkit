@@ -1,7 +1,8 @@
 #include <exception>
 #include <gtest/gtest.h>
-#include <sourcemeta/jsontoolkit/json.h>
 #include <sstream>
+
+#include <sourcemeta/jsontoolkit/json.h>
 
 #define EXPECT_PARSE_ERROR(input, expected_line, expected_column)              \
   try {                                                                        \
