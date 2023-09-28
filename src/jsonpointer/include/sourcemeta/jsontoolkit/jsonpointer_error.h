@@ -16,7 +16,7 @@ namespace sourcemeta::jsontoolkit {
 /// @ingroup jsonpointer
 /// This class represents a parsing error.
 class SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT PointerParseError
-    : private ParseError {
+    : public ParseError {
 public:
   /// Create a parsing error
   PointerParseError(const std::uint64_t column) : ParseError{0, column} {}
