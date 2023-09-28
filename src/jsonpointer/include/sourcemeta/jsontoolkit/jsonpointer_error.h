@@ -24,11 +24,6 @@ public:
   [[nodiscard]] auto what() const noexcept -> const char * override {
     return "The input is not a valid JSON Pointer";
   }
-
-  /// Get the column number of the error
-  [[nodiscard]] auto column() const noexcept -> std::uint64_t {
-    return ParseError::column();
-  }
 };
 
 } // namespace sourcemeta::jsontoolkit
