@@ -76,6 +76,20 @@ public:
   /// ```
   GenericToken(const int index) : data{std::in_place_type<Index>, index} {}
 
+#if defined(_MSC_VER)
+  /// This constructor creates an JSON Pointer token from an item index. For
+  /// example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::Pointer::Token token{1};
+  /// ```
+  GenericToken(const unsigned long index)
+      : data{std::in_place_type<Index>, index} {}
+#endif
+
   /// Check if a JSON Pointer token represents an object property.
   /// For example:
   ///
