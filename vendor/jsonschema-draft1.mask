@@ -1,3 +1,1 @@
-json-ref.json
 jsonschema.xml
-links.json
