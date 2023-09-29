@@ -93,6 +93,54 @@ auto sourcemeta::jsontoolkit::DefaultSchemaResolver::operator()(
     promise.set_value(sourcemeta::jsontoolkit::parse(
         R"EOF(@METASCHEMA_HYPERSCHEMA_DRAFT7@)EOF"));
 
+    // JSON Schema Draft6
+  } else if (identifier == "http://json-schema.org/draft-06/schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_JSONSCHEMA_DRAFT6@)EOF"));
+  } else if (identifier == "http://json-schema.org/draft-06/hyper-schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_HYPERSCHEMA_DRAFT6@)EOF"));
+
+    // JSON Schema Draft4
+  } else if (identifier == "http://json-schema.org/draft-04/schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_JSONSCHEMA_DRAFT4@)EOF"));
+  } else if (identifier == "http://json-schema.org/draft-04/hyper-schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_HYPERSCHEMA_DRAFT4@)EOF"));
+
+    // JSON Schema Draft3
+  } else if (identifier == "http://json-schema.org/draft-03/schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_JSONSCHEMA_DRAFT3@)EOF"));
+  } else if (identifier == "http://json-schema.org/draft-03/hyper-schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_HYPERSCHEMA_DRAFT3@)EOF"));
+
+    // JSON Schema Draft2
+  } else if (identifier == "http://json-schema.org/draft-02/schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_JSONSCHEMA_DRAFT2@)EOF"));
+  } else if (identifier == "http://json-schema.org/draft-02/hyper-schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_HYPERSCHEMA_DRAFT2@)EOF"));
+
+    // JSON Schema Draft1
+  } else if (identifier == "http://json-schema.org/draft-01/schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_JSONSCHEMA_DRAFT1@)EOF"));
+  } else if (identifier == "http://json-schema.org/draft-01/hyper-schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_HYPERSCHEMA_DRAFT1@)EOF"));
+
+    // JSON Schema Draft0
+  } else if (identifier == "http://json-schema.org/draft-00/schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_JSONSCHEMA_DRAFT0@)EOF"));
+  } else if (identifier == "http://json-schema.org/draft-00/hyper-schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_HYPERSCHEMA_DRAFT0@)EOF"));
+
     // Otherwise
   } else {
     promise.set_value(std::nullopt);
