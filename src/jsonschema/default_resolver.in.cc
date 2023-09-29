@@ -1,7 +1,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 
 auto sourcemeta::jsontoolkit::DefaultSchemaResolver::operator()(
-    const std::string &identifier)
+    std::string_view identifier)
     -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
   std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
 

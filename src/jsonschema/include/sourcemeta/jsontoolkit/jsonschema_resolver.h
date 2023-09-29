@@ -9,10 +9,10 @@
 
 #include <sourcemeta/jsontoolkit/json.h>
 
-#include <functional> // std::function
-#include <future>     // std::future
-#include <optional>   // std::optional
-#include <string>     // std::string
+#include <functional>  // std::function
+#include <future>      // std::future
+#include <optional>    // std::optional
+#include <string_view> // std::string_view
 
 namespace sourcemeta::jsontoolkit {
 
@@ -32,13 +32,13 @@ namespace sourcemeta::jsontoolkit {
 /// is trivial, it is recommended to create a callable object that implements
 /// the function interface.
 using SchemaResolver =
-    std::function<std::future<std::optional<JSON>>(const std::string &)>;
+    std::function<std::future<std::optional<JSON>>(std::string_view)>;
 
 /// @ingroup jsonschema
 /// A default resolver that relies on built-in official schemas.
 class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT DefaultSchemaResolver {
 public:
-  auto operator()(const std::string &identifier)
+  auto operator()(std::string_view identifier)
       -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>>;
 };
 

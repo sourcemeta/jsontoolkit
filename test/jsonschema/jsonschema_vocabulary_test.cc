@@ -5,7 +5,7 @@
 #include <future> // std::promise, std::future
 #include <string> // std::string
 
-static auto test_resolver(const std::string &identifier)
+static auto test_resolver(std::string_view identifier)
     -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
   std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
 

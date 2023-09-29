@@ -4,7 +4,7 @@
 
 static auto
 EXPECT_SCHEMA(const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-              const std::string &identifier) -> void {
+              std::string_view identifier) -> void {
   const std::optional<sourcemeta::jsontoolkit::JSON> result{
       resolver(identifier).get()};
   EXPECT_TRUE(result.has_value());
