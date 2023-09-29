@@ -1,5 +1,30 @@
-include("${CMAKE_CURRENT_SOURCE_DIR}/metaschemas.cmake")
-configure_file(default_metaschemas.h.in default_metaschemas.h @ONLY)
+# JSON Schema 2020-12
+set(JSON_SCHEMA_2020_12_DIR "${PROJECT_SOURCE_DIR}/vendor/jsonschema-2020-12")
+file(READ "${JSON_SCHEMA_2020_12_DIR}/schema.json" METASCHEMA_JSONSCHEMA_2020_12)
+file(READ "${JSON_SCHEMA_2020_12_DIR}/hyper-schema.json" METASCHEMA_HYPERSCHEMA_2020_12)
+file(READ "${JSON_SCHEMA_2020_12_DIR}/meta/applicator.json" METASCHEMA_JSONSCHEMA_2020_12_APPLICATOR)
+file(READ "${JSON_SCHEMA_2020_12_DIR}/meta/content.json" METASCHEMA_JSONSCHEMA_2020_12_CONTENT)
+file(READ "${JSON_SCHEMA_2020_12_DIR}/meta/core.json" METASCHEMA_JSONSCHEMA_2020_12_CORE)
+file(READ "${JSON_SCHEMA_2020_12_DIR}/meta/format-annotation.json" METASCHEMA_JSONSCHEMA_2020_12_FORMAT_ANNOTATION)
+file(READ "${JSON_SCHEMA_2020_12_DIR}/meta/format-assertion.json" METASCHEMA_JSONSCHEMA_2020_12_FORMAT_ASSERTION)
+file(READ "${JSON_SCHEMA_2020_12_DIR}/meta/hyper-schema.json" METASCHEMA_JSONSCHEMA_2020_12_HYPER_SCHEMA)
+file(READ "${JSON_SCHEMA_2020_12_DIR}/meta/meta-data.json" METASCHEMA_JSONSCHEMA_2020_12_META_DATA)
+file(READ "${JSON_SCHEMA_2020_12_DIR}/meta/unevaluated.json" METASCHEMA_JSONSCHEMA_2020_12_UNEVALUATED)
+file(READ "${JSON_SCHEMA_2020_12_DIR}/meta/validation.json" METASCHEMA_JSONSCHEMA_2020_12_VALIDATION)
+
+# JSON Schema 2019-09
+set(JSON_SCHEMA_2019_09_DIR "${PROJECT_SOURCE_DIR}/vendor/jsonschema-2019-09")
+file(READ "${JSON_SCHEMA_2019_09_DIR}/schema.json" METASCHEMA_JSONSCHEMA_2019_09)
+file(READ "${JSON_SCHEMA_2019_09_DIR}/hyper-schema.json" METASCHEMA_HYPERSCHEMA_2019_09)
+file(READ "${JSON_SCHEMA_2019_09_DIR}/meta/applicator.json" METASCHEMA_JSONSCHEMA_2019_09_APPLICATOR)
+file(READ "${JSON_SCHEMA_2019_09_DIR}/meta/content.json" METASCHEMA_JSONSCHEMA_2019_09_CONTENT)
+file(READ "${JSON_SCHEMA_2019_09_DIR}/meta/core.json" METASCHEMA_JSONSCHEMA_2019_09_CORE)
+file(READ "${JSON_SCHEMA_2019_09_DIR}/meta/format.json" METASCHEMA_JSONSCHEMA_2019_09_FORMAT)
+file(READ "${JSON_SCHEMA_2019_09_DIR}/meta/hyper-schema.json" METASCHEMA_JSONSCHEMA_2019_09_HYPER_SCHEMA)
+file(READ "${JSON_SCHEMA_2019_09_DIR}/meta/meta-data.json" METASCHEMA_JSONSCHEMA_2019_09_META_DATA)
+file(READ "${JSON_SCHEMA_2019_09_DIR}/meta/validation.json" METASCHEMA_JSONSCHEMA_2019_09_VALIDATION)
+
+configure_file(default_resolver.in.cc default_resolver.cc @ONLY)
 
 set(JSONSCHEMA_PUBLIC_HEADERS
   include/sourcemeta/jsontoolkit/jsonschema.h)
@@ -7,15 +32,14 @@ set(JSONSCHEMA_PRIVATE_HEADERS
   include/sourcemeta/jsontoolkit/jsonschema_resolver.h
   include/sourcemeta/jsontoolkit/jsonschema_walker.h
   include/sourcemeta/jsontoolkit/jsonschema_default_walker.h
-  include/sourcemeta/jsontoolkit/jsonschema_default_resolver.h
   include/sourcemeta/jsontoolkit/jsonschema_error.h
   "${CMAKE_CURRENT_BINARY_DIR}/jsonschema_export.h")
 
 add_library(sourcemeta_jsontoolkit_jsonschema
   ${JSONSCHEMA_PUBLIC_HEADERS}
   ${JSONSCHEMA_PRIVATE_HEADERS}
-  jsonschema.cc default_metaschemas.h.in
-  default_walker.cc default_resolver.cc)
+  jsonschema.cc default_walker.cc
+  "${CMAKE_CURRENT_BINARY_DIR}/default_resolver.cc")
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema)
 add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jsonschema)
 

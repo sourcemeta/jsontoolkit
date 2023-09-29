@@ -87,7 +87,7 @@ static auto test_resolver(const std::string &identifier)
       }
     })JSON"));
   } else {
-    sourcemeta::jsontoolkit::DefaultResolver resolver;
+    sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
     const std::optional<sourcemeta::jsontoolkit::JSON> result{
         resolver(identifier).get()};
     if (result.has_value()) {
