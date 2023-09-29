@@ -8,17 +8,16 @@
 #endif
 
 #include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema_default_walker.h>
 #include <sourcemeta/jsontoolkit/jsonschema_error.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
-#include <future>    // std::promise, std::future
-#include <map>       // std::map
-#include <optional>  // std::optional
-#include <stdexcept> // std::invalid_argument
-#include <string>    // std::string
-#include <vector>    // std::vector
+#include <functional> // std::reference_wrapper
+#include <future>     // std::promise, std::future
+#include <map>        // std::map
+#include <optional>   // std::optional
+#include <string>     // std::string
+#include <vector>     // std::vector
 
 /// @defgroup jsonschema JSON Schema
 /// @brief A set of JSON Schema utilities across draft versions.
