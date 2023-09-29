@@ -83,7 +83,6 @@ set(JSONSCHEMA_PUBLIC_HEADERS
 set(JSONSCHEMA_PRIVATE_HEADERS
   include/sourcemeta/jsontoolkit/jsonschema_resolver.h
   include/sourcemeta/jsontoolkit/jsonschema_walker.h
-  include/sourcemeta/jsontoolkit/jsonschema_default_walker.h
   include/sourcemeta/jsontoolkit/jsonschema_error.h
   "${CMAKE_CURRENT_BINARY_DIR}/jsonschema_export.h")
 
