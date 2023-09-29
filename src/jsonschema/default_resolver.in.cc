@@ -85,6 +85,14 @@ auto sourcemeta::jsontoolkit::DefaultSchemaResolver::operator()(
     promise.set_value(sourcemeta::jsontoolkit::parse(
         R"EOF(@METASCHEMA_JSONSCHEMA_2019_09_VALIDATION@)EOF"));
 
+    // JSON Schema Draft7
+  } else if (identifier == "http://json-schema.org/draft-07/schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_JSONSCHEMA_DRAFT7@)EOF"));
+  } else if (identifier == "http://json-schema.org/draft-07/hyper-schema#") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(
+        R"EOF(@METASCHEMA_HYPERSCHEMA_DRAFT7@)EOF"));
+
     // Otherwise
   } else {
     promise.set_value(std::nullopt);

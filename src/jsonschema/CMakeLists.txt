@@ -24,6 +24,11 @@ file(READ "${JSON_SCHEMA_2019_09_DIR}/meta/hyper-schema.json" METASCHEMA_JSONSCH
 file(READ "${JSON_SCHEMA_2019_09_DIR}/meta/meta-data.json" METASCHEMA_JSONSCHEMA_2019_09_META_DATA)
 file(READ "${JSON_SCHEMA_2019_09_DIR}/meta/validation.json" METASCHEMA_JSONSCHEMA_2019_09_VALIDATION)
 
+# JSON Schema Draft7
+set(JSON_SCHEMA_DRAFT7_DIR "${PROJECT_SOURCE_DIR}/vendor/jsonschema-draft7")
+file(READ "${JSON_SCHEMA_DRAFT7_DIR}/schema.json" METASCHEMA_JSONSCHEMA_DRAFT7)
+file(READ "${JSON_SCHEMA_DRAFT7_DIR}/hyper-schema.json" METASCHEMA_HYPERSCHEMA_DRAFT7)
+
 configure_file(default_resolver.in.cc default_resolver.cc @ONLY)
 
 set(JSONSCHEMA_PUBLIC_HEADERS
