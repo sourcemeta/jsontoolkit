@@ -89,7 +89,7 @@ set(JSONSCHEMA_PRIVATE_HEADERS
 add_library(sourcemeta_jsontoolkit_jsonschema
   ${JSONSCHEMA_PUBLIC_HEADERS}
   ${JSONSCHEMA_PRIVATE_HEADERS}
-  jsonschema.cc default_walker.cc
+  jsonschema.cc default_walker.cc walker.cc
   "${CMAKE_CURRENT_BINARY_DIR}/default_resolver.cc")
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema)
 add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jsonschema)

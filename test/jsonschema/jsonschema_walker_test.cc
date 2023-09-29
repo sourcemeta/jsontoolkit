@@ -40,45 +40,44 @@ static auto test_resolver(std::string_view identifier)
 
 static auto test_walker(const std::string &keyword,
                         const std::map<std::string, bool> &vocabularies)
-    -> sourcemeta::jsontoolkit::schema_walker_strategy_t {
+    -> sourcemeta::jsontoolkit::SchemaWalkerStrategy {
   if (vocabularies.find("https://sourcemeta.com/vocab/test-1") !=
       vocabularies.end()) {
     if (keyword == "schema") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Value;
+      return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value;
     }
 
     if (keyword == "schemas") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Elements;
+      return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Elements;
     }
 
     if (keyword == "schemaMap") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Members;
+      return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Members;
     }
 
     if (keyword == "schemaOrSchemas") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::ValueOrElements;
+      return sourcemeta::jsontoolkit::SchemaWalkerStrategy::ValueOrElements;
     }
 
     if (keyword == "schemasOrMap") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::
-          ElementsOrMembers;
+      return sourcemeta::jsontoolkit::SchemaWalkerStrategy::ElementsOrMembers;
     }
   }
 
   if (vocabularies.find("https://sourcemeta.com/vocab/test-2") !=
       vocabularies.end()) {
     if (keyword == "custom") {
-      return sourcemeta::jsontoolkit::schema_walker_strategy_t::Value;
+      return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value;
     }
   }
 
-  return sourcemeta::jsontoolkit::schema_walker_strategy_t::None;
+  return sourcemeta::jsontoolkit::SchemaWalkerStrategy::None;
 }
 
 TEST(JSONSchema, walker_true) {
   const sourcemeta::jsontoolkit::JSON document{true};
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -91,7 +90,7 @@ TEST(JSONSchema, walker_true) {
 TEST(JSONSchema, walker_false) {
   const sourcemeta::jsontoolkit::JSON document{false};
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -112,7 +111,7 @@ TEST(JSONSchema, walker_value) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -144,7 +143,7 @@ TEST(JSONSchema, walker_value_invalid) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -164,7 +163,7 @@ TEST(JSONSchema, walker_elements) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -193,7 +192,7 @@ TEST(JSONSchema, walker_elements_invalid) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -219,7 +218,7 @@ TEST(JSONSchema, walker_members) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -251,7 +250,7 @@ TEST(JSONSchema, walker_members_invalid) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -275,7 +274,7 @@ TEST(JSONSchema, walker_value_or_elements) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -312,7 +311,7 @@ TEST(JSONSchema, walker_elements_or_members) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -345,7 +344,7 @@ TEST(JSONSchema, walker_no_metaschema_and_not_default) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -367,7 +366,7 @@ TEST(JSONSchema, walker_no_metaschema_with_default) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver,
            "https://sourcemeta.com/test-metaschema")) {
     subschemas.push_back(subschema);
@@ -401,7 +400,7 @@ TEST(JSONSchema, walker_unknown_keyword_from_other_vocab) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -429,7 +428,7 @@ TEST(JSONSchema, walker_multi_metaschemas) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -466,7 +465,7 @@ TEST(JSONSchema, walker_flat_const) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::flat_subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIteratorFlat(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -496,8 +495,8 @@ TEST(JSONSchema, walker_flat_non_const) {
   sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(json);
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::flat_subschema_iterator(document, test_walker,
-                                                        test_resolver)) {
+       sourcemeta::jsontoolkit::SchemaIteratorFlat(document, test_walker,
+                                                   test_resolver)) {
     subschemas.push_back(subschema);
   }
 
@@ -525,8 +524,8 @@ TEST(JSONSchema, walker_flat_non_const_modify) {
 
   sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(json);
   for (sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::flat_subschema_iterator(document, test_walker,
-                                                        test_resolver)) {
+       sourcemeta::jsontoolkit::SchemaIteratorFlat(document, test_walker,
+                                                   test_resolver)) {
     subschema.into(sourcemeta::jsontoolkit::JSON{true});
   }
 
@@ -544,7 +543,7 @@ TEST(JSONSchema, walker_flat_const_no_metaschema) {
       sourcemeta::jsontoolkit::parse(R"JSON({ "foo": 1 })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const auto &subschema : sourcemeta::jsontoolkit::flat_subschema_iterator(
+  for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIteratorFlat(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -557,7 +556,7 @@ TEST(JSONSchema, walker_flat_non_const_no_metaschema) {
       sourcemeta::jsontoolkit::parse(R"JSON({ "foo": 1 })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (auto &subschema : sourcemeta::jsontoolkit::flat_subschema_iterator(
+  for (auto &subschema : sourcemeta::jsontoolkit::SchemaIteratorFlat(
            document, test_walker, test_resolver)) {
     subschemas.push_back(subschema);
   }
@@ -577,11 +576,11 @@ TEST(JSONSchema, schema_walker_none_never_walks) {
 
   EXPECT_EQ(
       sourcemeta::jsontoolkit::schema_walker_none("properties", vocabularies),
-      sourcemeta::jsontoolkit::schema_walker_strategy_t::None);
+      sourcemeta::jsontoolkit::SchemaWalkerStrategy::None);
   EXPECT_EQ(sourcemeta::jsontoolkit::schema_walker_none("contentSchema",
                                                         vocabularies),
-            sourcemeta::jsontoolkit::schema_walker_strategy_t::None);
+            sourcemeta::jsontoolkit::SchemaWalkerStrategy::None);
   EXPECT_EQ(sourcemeta::jsontoolkit::schema_walker_none("unevaluatedItems",
                                                         vocabularies),
-            sourcemeta::jsontoolkit::schema_walker_strategy_t::None);
+            sourcemeta::jsontoolkit::SchemaWalkerStrategy::None);
 }
