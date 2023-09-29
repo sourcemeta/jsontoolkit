@@ -8,7 +8,6 @@
 #endif
 
 #include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema_default_resolver.h>
 #include <sourcemeta/jsontoolkit/jsonschema_default_walker.h>
 #include <sourcemeta/jsontoolkit/jsonschema_error.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
@@ -118,7 +117,7 @@ auto metaschema(const JSON &schema) -> std::optional<std::string>;
 ///   "type": "object"
 /// })JSON");
 ///
-/// sourcemeta::jsontoolkit::DefaultResolver resolver;
+/// sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
 /// const std::optional<std::string> draft{
 ///     sourcemeta::jsontoolkit::draft(document, resolver).get()};
 ///
@@ -126,7 +125,7 @@ auto metaschema(const JSON &schema) -> std::optional<std::string>;
 /// assert(draft.value() == "https://json-schema.org/draft/2020-12/schema");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto draft(const JSON &schema, const schema_resolver_t &resolver,
+auto draft(const JSON &schema, const SchemaResolver &resolver,
            const std::optional<std::string> &default_metaschema = std::nullopt)
     -> std::future<std::optional<std::string>>;
 
@@ -150,7 +149,7 @@ auto draft(const JSON &schema, const schema_resolver_t &resolver,
 ///   "type": "object"
 /// })JSON");
 ///
-/// sourcemeta::jsontoolkit::DefaultResolver resolver;
+/// sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
 /// const std::map<std::string, bool> vocabularies{
 ///     sourcemeta::jsontoolkit::vocabularies(document, resolver).get()};
 ///
@@ -163,7 +162,7 @@ auto draft(const JSON &schema, const schema_resolver_t &resolver,
 /// assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/content"));
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto vocabularies(const JSON &schema, const schema_resolver_t &resolver,
+auto vocabularies(const JSON &schema, const SchemaResolver &resolver,
                   const std::optional<std::string> &default_metaschema =
                       std::nullopt) -> std::future<std::map<std::string, bool>>;
 
@@ -179,7 +178,7 @@ public:
   using const_iterator = typename internal::const_iterator;
 
   SchemaWalker(ValueT &input, const schema_walker_t &walker,
-               const schema_resolver_t &resolver,
+               const SchemaResolver &resolver,
                const std::optional<std::string> &default_metaschema,
                const schema_walker_type_t type)
       : walker_type{type} {
@@ -213,7 +212,7 @@ public:
 
 private:
   auto walk(ValueT &subschema, const schema_walker_t &walker,
-            const schema_resolver_t &resolver, const std::string &metaschema,
+            const SchemaResolver &resolver, const std::string &metaschema,
             const std::size_t level) -> void {
     if (this->walker_type == schema_walker_type_t::Deep || level > 0) {
       this->subschemas.push_back(subschema);
@@ -278,9 +277,8 @@ private:
   }
 
   auto walk_array(ValueT &array, const schema_walker_t &walker,
-                  const schema_resolver_t &resolver,
-                  const std::string &metaschema, const std::size_t level)
-      -> void {
+                  const SchemaResolver &resolver, const std::string &metaschema,
+                  const std::size_t level) -> void {
     if (array.is_array()) {
       for (auto &element : array.as_array()) {
         this->walk(element, walker, resolver, metaschema, level + 1);
@@ -289,7 +287,7 @@ private:
   }
 
   auto walk_object(ValueT &object, const schema_walker_t &walker,
-                   const schema_resolver_t &resolver,
+                   const SchemaResolver &resolver,
                    const std::string &metaschema, const std::size_t level)
       -> void {
     if (object.is_object()) {
@@ -300,7 +298,7 @@ private:
   }
 
   auto walk_schema(ValueT &schema, const schema_walker_t &walker,
-                   const schema_resolver_t &resolver,
+                   const SchemaResolver &resolver,
                    const std::string &metaschema, const std::size_t level)
       -> void {
     if (schema.is_object() || schema.is_boolean()) {
@@ -350,7 +348,7 @@ private:
 ///   }
 /// })JSON");
 ///
-/// sourcemeta::jsontoolkit::DefaultResolver resolver;
+/// sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
 ///
 /// for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
 ///          document, sourcemeta::jsontoolkit::default_schema_walker,
@@ -362,7 +360,7 @@ private:
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto subschema_iterator(
     const JSON &schema, const schema_walker_t &walker,
-    const schema_resolver_t &resolver,
+    const SchemaResolver &resolver,
     const std::optional<std::string> &default_metaschema = std::nullopt)
     -> SchemaWalker<std::remove_reference_t<decltype(schema)>>;
 
@@ -394,7 +392,7 @@ auto subschema_iterator(
 ///   }
 /// })JSON");
 ///
-/// sourcemeta::jsontoolkit::DefaultResolver resolver;
+/// sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
 ///
 /// for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
 ///          document, sourcemeta::jsontoolkit::default_schema_walker,
@@ -406,7 +404,7 @@ auto subschema_iterator(
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto flat_subschema_iterator(
     const JSON &schema, const schema_walker_t &walker,
-    const schema_resolver_t &resolver,
+    const SchemaResolver &resolver,
     const std::optional<std::string> &default_metaschema = std::nullopt)
     -> SchemaWalker<std::remove_reference_t<decltype(schema)>>;
 
@@ -414,8 +412,7 @@ auto flat_subschema_iterator(
 /// A mutable variant of sourcemeta::jsontoolkit::flat_subschema_iterator.
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto flat_subschema_iterator(
-    JSON &schema, const schema_walker_t &walker,
-    const schema_resolver_t &resolver,
+    JSON &schema, const schema_walker_t &walker, const SchemaResolver &resolver,
     const std::optional<std::string> &default_metaschema = std::nullopt)
     -> SchemaWalker<std::remove_reference_t<decltype(schema)>>;
 

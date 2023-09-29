@@ -53,7 +53,7 @@ auto sourcemeta::jsontoolkit::metaschema(
 
 auto sourcemeta::jsontoolkit::draft(
     const sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
+    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_metaschema)
     -> std::future<std::optional<std::string>> {
   assert(sourcemeta::jsontoolkit::is_schema(schema));
@@ -127,7 +127,7 @@ auto core_vocabulary(const std::string &draft) -> std::string {
 
 auto sourcemeta::jsontoolkit::vocabularies(
     const sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
+    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_metaschema)
     -> std::future<std::map<std::string, bool>> {
   std::promise<std::map<std::string, bool>> promise;
@@ -275,7 +275,7 @@ auto sourcemeta::jsontoolkit::vocabularies(
 auto sourcemeta::jsontoolkit::subschema_iterator(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::schema_walker_t &walker,
-    const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
+    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_metaschema)
     -> SchemaWalker<std::remove_reference_t<decltype(schema)>> {
   return {schema, walker, resolver, default_metaschema,
@@ -285,7 +285,7 @@ auto sourcemeta::jsontoolkit::subschema_iterator(
 auto sourcemeta::jsontoolkit::flat_subschema_iterator(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::schema_walker_t &walker,
-    const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
+    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_metaschema)
     -> SchemaWalker<std::remove_reference_t<decltype(schema)>> {
   return {schema, walker, resolver, default_metaschema,
@@ -295,7 +295,7 @@ auto sourcemeta::jsontoolkit::flat_subschema_iterator(
 auto sourcemeta::jsontoolkit::flat_subschema_iterator(
     sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::schema_walker_t &walker,
-    const sourcemeta::jsontoolkit::schema_resolver_t &resolver,
+    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_metaschema)
     -> SchemaWalker<std::remove_reference_t<decltype(schema)>> {
   return {schema, walker, resolver, default_metaschema,

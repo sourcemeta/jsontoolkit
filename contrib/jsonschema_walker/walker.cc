@@ -24,7 +24,7 @@ auto walk(const std::string &mode, std::basic_istream<CharT, Traits> &stream)
                  "only assume the presence of the 'core' vocabulary\n";
   }
 
-  const sourcemeta::jsontoolkit::DefaultResolver resolver;
+  const sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
   if (mode == "deep") {
     for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
              document, sourcemeta::jsontoolkit::default_schema_walker,

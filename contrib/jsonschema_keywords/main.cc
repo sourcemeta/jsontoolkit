@@ -16,7 +16,7 @@
 namespace {
 auto analyze(const sourcemeta::jsontoolkit::JSON &schema,
              std::map<std::string, unsigned long> &accumulator) -> void {
-  const sourcemeta::jsontoolkit::DefaultResolver resolver;
+  const sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
   for (const sourcemeta::jsontoolkit::JSON &subschema :
        sourcemeta::jsontoolkit::subschema_iterator(
            schema, sourcemeta::jsontoolkit::default_schema_walker, resolver)) {
