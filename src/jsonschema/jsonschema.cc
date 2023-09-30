@@ -11,14 +11,30 @@ auto sourcemeta::jsontoolkit::is_schema(
   return schema.is_object() || schema.is_boolean();
 }
 
+// TODO: Make this function take a dialect as an argument
 auto sourcemeta::jsontoolkit::id(const sourcemeta::jsontoolkit::JSON &schema)
     -> std::optional<std::string> {
   assert(is_schema(schema));
+
+  // TODO: Test that we always use "$id" or "id" correctly depending on the
+  // dialect, and we don't just fallback
   if (schema.is_object() && schema.defines("$id")) {
     const sourcemeta::jsontoolkit::JSON &id{schema.at("$id")};
     if (!id.is_string() || id.empty()) {
       throw sourcemeta::jsontoolkit::SchemaError(
           "The value of the $id property is not valid");
+    }
+
+    return id.to_string();
+  }
+
+  // TODO: Test that we always use "$id" or "id" correctly depending on the
+  // dialect and we don't just fallback
+  if (schema.is_object() && schema.defines("id")) {
+    const sourcemeta::jsontoolkit::JSON &id{schema.at("id")};
+    if (!id.is_string() || id.empty()) {
+      throw sourcemeta::jsontoolkit::SchemaError(
+          "The value of the id property is not valid");
     }
 
     return id.to_string();
