@@ -97,7 +97,7 @@ auto sourcemeta::jsontoolkit::DefaultSchemaResolver::operator()(
   } else if (identifier ==
              "https://json-schema.org/draft/2019-09/output/schema") {
     promise.set_value(sourcemeta::jsontoolkit::parse(
-        R"EOF(@METASCHEMA_JSONSCHEMA_2020_12_OUTPUT@)EOF"));
+        R"EOF(@METASCHEMA_JSONSCHEMA_2019_09_OUTPUT@)EOF"));
   } else if (identifier ==
              "https://json-schema.org/draft/2019-09/output/hyper-schema") {
     promise.set_value(sourcemeta::jsontoolkit::parse(
