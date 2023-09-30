@@ -115,16 +115,16 @@ auto metaschema(const JSON &schema) -> std::optional<std::string>;
 /// })JSON");
 ///
 /// sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
-/// const std::optional<std::string> draft{
-///     sourcemeta::jsontoolkit::draft(document, resolver).get()};
+/// const std::optional<std::string> dialect{
+///     sourcemeta::jsontoolkit::dialect(document, resolver).get()};
 ///
-/// assert(draft.has_value());
-/// assert(draft.value() == "https://json-schema.org/draft/2020-12/schema");
+/// assert(dialect.has_value());
+/// assert(dialect.value() == "https://json-schema.org/draft/2020-12/schema");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto draft(const JSON &schema, const SchemaResolver &resolver,
-           const std::optional<std::string> &default_metaschema = std::nullopt)
-    -> std::future<std::optional<std::string>>;
+auto dialect(const JSON &schema, const SchemaResolver &resolver,
+             const std::optional<std::string> &default_metaschema =
+                 std::nullopt) -> std::future<std::optional<std::string>>;
 
 /// @ingroup jsonschema
 ///

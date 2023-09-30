@@ -67,7 +67,7 @@ auto sourcemeta::jsontoolkit::metaschema(
   return std::nullopt;
 }
 
-auto sourcemeta::jsontoolkit::draft(
+auto sourcemeta::jsontoolkit::dialect(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_metaschema)
@@ -115,7 +115,8 @@ auto sourcemeta::jsontoolkit::draft(
           effective_metaschema_id.value(), "Could not resolve schema");
     }
 
-    return draft(metaschema.value(), resolver, effective_metaschema_id.value());
+    return dialect(metaschema.value(), resolver,
+                   effective_metaschema_id.value());
   }
 
   std::promise<std::optional<std::string>> promise;
@@ -194,16 +195,16 @@ auto sourcemeta::jsontoolkit::vocabularies(
   /*
    * (3) Resolve the metaschema's draft
    */
-  const std::optional<std::string> draft{
-      sourcemeta::jsontoolkit::draft(metaschema.value(), resolver,
-                                     default_metaschema)
+  const std::optional<std::string> dialect{
+      sourcemeta::jsontoolkit::dialect(metaschema.value(), resolver,
+                                       default_metaschema)
           .get()};
-  if (!draft.has_value()) {
+  if (!dialect.has_value()) {
     std::ostringstream error;
-    error << "Could not determine draft for schema: " << resolved_id.value();
+    error << "Could not determine dialect for schema: " << resolved_id.value();
     throw sourcemeta::jsontoolkit::SchemaError(error.str());
   }
-  const std::string core{core_vocabulary(draft.value())};
+  const std::string core{core_vocabulary(dialect.value())};
 
   /*
    * (4) Parse the "$vocabulary" keyword, if any
@@ -215,8 +216,9 @@ auto sourcemeta::jsontoolkit::vocabularies(
     // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-02#section-8
     result.insert({core, true});
 
-    if (draft.value() == "https://json-schema.org/draft/2020-12/schema" ||
-        draft.value() == "https://json-schema.org/draft/2020-12/hyper-schema") {
+    if (dialect.value() == "https://json-schema.org/draft/2020-12/schema" ||
+        dialect.value() ==
+            "https://json-schema.org/draft/2020-12/hyper-schema") {
       // See
       // https://json-schema.org/draft/2020-12/json-schema-core.html#section-10
       result.insert(
@@ -237,9 +239,9 @@ auto sourcemeta::jsontoolkit::vocabularies(
       // https://json-schema.org/draft/2020-12/json-schema-validation.html#section-9
       result.insert(
           {"https://json-schema.org/draft/2020-12/vocab/meta-data", true});
-    } else if (draft.value() ==
+    } else if (dialect.value() ==
                    "https://json-schema.org/draft/2019-09/schema" ||
-               draft.value() ==
+               dialect.value() ==
                    "https://json-schema.org/draft/2019-09/hyper-schema") {
       // See
       // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-02#section-9
