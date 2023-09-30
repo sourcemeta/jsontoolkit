@@ -240,68 +240,56 @@ private:
     for (auto &pair : subschema.as_object()) {
       switch (walker(pair.first, vocabularies)) {
         case schema_walker_strategy_t::Value:
-          this->walk_schema(pair.second, walker, resolver, new_metaschema,
-                            level);
+          if (is_schema(pair.second)) {
+            this->walk(pair.second, walker, resolver, new_metaschema,
+                       level + 1);
+          }
+
           break;
         case schema_walker_strategy_t::Elements:
-          this->walk_array(pair.second, walker, resolver, new_metaschema,
-                           level);
+          if (pair.second.is_array()) {
+            for (auto &element : pair.second.as_array()) {
+              this->walk(element, walker, resolver, new_metaschema, level + 1);
+            }
+          }
+
           break;
         case schema_walker_strategy_t::Members:
-          this->walk_object(pair.second, walker, resolver, new_metaschema,
-                            level);
+          if (pair.second.is_object()) {
+            for (auto &subpair : pair.second.as_object()) {
+              this->walk(subpair.second, walker, resolver, new_metaschema,
+                         level + 1);
+            }
+          }
+
           break;
         case schema_walker_strategy_t::ValueOrElements:
           if (pair.second.is_array()) {
-            this->walk_array(pair.second, walker, resolver, new_metaschema,
-                             level);
-          } else {
-            this->walk_schema(pair.second, walker, resolver, new_metaschema,
-                              level);
+            for (auto &element : pair.second.as_array()) {
+              this->walk(element, walker, resolver, new_metaschema, level + 1);
+            }
+          } else if (is_schema(pair.second)) {
+            this->walk(pair.second, walker, resolver, new_metaschema,
+                       level + 1);
           }
+
           break;
         case schema_walker_strategy_t::ElementsOrMembers:
           if (pair.second.is_array()) {
-            this->walk_array(pair.second, walker, resolver, new_metaschema,
-                             level);
-          } else {
-            this->walk_object(pair.second, walker, resolver, new_metaschema,
-                              level);
+            for (auto &element : pair.second.as_array()) {
+              this->walk(element, walker, resolver, new_metaschema, level + 1);
+            }
+          } else if (pair.second.is_object()) {
+            for (auto &subpair : pair.second.as_object()) {
+              this->walk(subpair.second, walker, resolver, new_metaschema,
+                         level + 1);
+            }
           }
+
           break;
         case schema_walker_strategy_t::None:
           break;
       }
-    }
-  }
-
-  auto walk_array(ValueT &array, const schema_walker_t &walker,
-                  const SchemaResolver &resolver, const std::string &metaschema,
-                  const std::size_t level) -> void {
-    if (array.is_array()) {
-      for (auto &element : array.as_array()) {
-        this->walk(element, walker, resolver, metaschema, level + 1);
-      }
-    }
-  }
-
-  auto walk_object(ValueT &object, const schema_walker_t &walker,
-                   const SchemaResolver &resolver,
-                   const std::string &metaschema, const std::size_t level)
-      -> void {
-    if (object.is_object()) {
-      for (auto &pair : object.as_object()) {
-        this->walk(pair.second, walker, resolver, metaschema, level + 1);
-      }
-    }
-  }
-
-  auto walk_schema(ValueT &schema, const schema_walker_t &walker,
-                   const SchemaResolver &resolver,
-                   const std::string &metaschema, const std::size_t level)
-      -> void {
-    if (schema.is_object() || schema.is_boolean()) {
-      this->walk(schema, walker, resolver, metaschema, level + 1);
     }
   }
 
