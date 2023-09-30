@@ -271,33 +271,3 @@ auto sourcemeta::jsontoolkit::vocabularies(
   promise.set_value(result);
   return promise.get_future();
 }
-
-auto sourcemeta::jsontoolkit::subschema_iterator(
-    const sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::schema_walker_t &walker,
-    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-    const std::optional<std::string> &default_metaschema)
-    -> SchemaWalker<std::remove_reference_t<decltype(schema)>> {
-  return {schema, walker, resolver, default_metaschema,
-          sourcemeta::jsontoolkit::schema_walker_type_t::Deep};
-}
-
-auto sourcemeta::jsontoolkit::flat_subschema_iterator(
-    const sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::schema_walker_t &walker,
-    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-    const std::optional<std::string> &default_metaschema)
-    -> SchemaWalker<std::remove_reference_t<decltype(schema)>> {
-  return {schema, walker, resolver, default_metaschema,
-          sourcemeta::jsontoolkit::schema_walker_type_t::Flat};
-}
-
-auto sourcemeta::jsontoolkit::flat_subschema_iterator(
-    sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::schema_walker_t &walker,
-    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-    const std::optional<std::string> &default_metaschema)
-    -> SchemaWalker<std::remove_reference_t<decltype(schema)>> {
-  return {schema, walker, resolver, default_metaschema,
-          sourcemeta::jsontoolkit::schema_walker_type_t::Flat};
-}

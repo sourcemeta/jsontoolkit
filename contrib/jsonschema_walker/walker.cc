@@ -26,7 +26,7 @@ auto walk(const std::string &mode, std::basic_istream<CharT, Traits> &stream)
 
   const sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
   if (mode == "deep") {
-    for (const auto &subschema : sourcemeta::jsontoolkit::subschema_iterator(
+    for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
              document, sourcemeta::jsontoolkit::default_schema_walker,
              resolver)) {
       sourcemeta::jsontoolkit::prettify(subschema, std::cout);
@@ -34,9 +34,9 @@ auto walk(const std::string &mode, std::basic_istream<CharT, Traits> &stream)
     }
   } else if (mode == "flat") {
     for (const auto &subschema :
-         sourcemeta::jsontoolkit::flat_subschema_iterator(
+         sourcemeta::jsontoolkit::ConstSchemaIteratorFlat{
              document, sourcemeta::jsontoolkit::default_schema_walker,
-             resolver)) {
+             resolver}) {
       sourcemeta::jsontoolkit::prettify(subschema, std::cout);
       std::cout << "\n";
     }
