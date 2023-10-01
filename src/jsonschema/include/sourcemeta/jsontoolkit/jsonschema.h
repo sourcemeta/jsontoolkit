@@ -114,9 +114,9 @@ auto metaschema(const JSON &schema) -> std::optional<std::string>;
 ///   "type": "object"
 /// })JSON");
 ///
-/// sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
 /// const std::optional<std::string> dialect{
-///     sourcemeta::jsontoolkit::dialect(document, resolver).get()};
+///   sourcemeta::jsontoolkit::dialect(
+///     document, sourcemeta::jsontoolkit::official_resolver).get()};
 ///
 /// assert(dialect.has_value());
 /// assert(dialect.value() == "https://json-schema.org/draft/2020-12/schema");
@@ -146,9 +146,9 @@ auto dialect(const JSON &schema, const SchemaResolver &resolver,
 ///   "type": "object"
 /// })JSON");
 ///
-/// sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
 /// const std::map<std::string, bool> vocabularies{
-///     sourcemeta::jsontoolkit::vocabularies(document, resolver).get()};
+///   sourcemeta::jsontoolkit::vocabularies(
+///     document, sourcemeta::jsontoolkit::official_resolver).get()};
 ///
 /// assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/core"));
 /// assert(vocabularies.at("https://json-schema.org/draft/2020-12/vocab/applicator"));

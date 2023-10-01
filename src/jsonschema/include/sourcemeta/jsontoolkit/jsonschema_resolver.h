@@ -25,7 +25,7 @@ namespace sourcemeta::jsontoolkit {
 ///
 /// For convenience, we provide the following default resolvers:
 ///
-/// - sourcemeta::jsontoolkit::DefaultSchemaResolver
+/// - sourcemeta::jsontoolkit::official_resolver
 ///
 /// You can implement resolvers to read from a local storage, to send HTTP
 /// requests, or anything your application might require. Unless your resolver
@@ -36,11 +36,9 @@ using SchemaResolver =
 
 /// @ingroup jsonschema
 /// A default resolver that relies on built-in official schemas.
-class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT DefaultSchemaResolver {
-public:
-  auto operator()(std::string_view identifier)
-      -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>>;
-};
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+auto official_resolver(std::string_view identifier)
+    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>>;
 
 } // namespace sourcemeta::jsontoolkit
 
