@@ -37,7 +37,7 @@ static auto test_resolver(std::string_view identifier)
   return promise.get_future();
 }
 
-static auto test_walker(const std::string &keyword,
+static auto test_walker(std::string_view keyword,
                         const std::map<std::string, bool> &vocabularies)
     -> sourcemeta::jsontoolkit::SchemaWalkerStrategy {
   if (vocabularies.find("https://sourcemeta.com/vocab/test-1") !=
