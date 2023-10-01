@@ -111,12 +111,10 @@ auto default_schema_walker(const std::string &keyword,
 ///   }
 /// })JSON");
 ///
-/// sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
-///
 /// for (const auto &subschema :
 /// sourcemeta::jsontoolkit::ConstSchemaIterator{
 ///          document, sourcemeta::jsontoolkit::default_schema_walker,
-///          resolver}) {
+///          sourcemeta::jsontoolkit::official_resolver}) {
 ///   sourcemeta::jsontoolkit::prettify(subschema, std::cout);
 ///   std::cout << "\n";
 /// }
@@ -177,12 +175,10 @@ private:
 ///   }
 /// })JSON");
 ///
-/// sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
-///
 /// for (const auto &subschema :
 /// sourcemeta::jsontoolkit::ConstSchemaIteratorFlat{
 ///          document, sourcemeta::jsontoolkit::default_schema_walker,
-///          resolver}) {
+///          sourcemeta::jsontoolkit::official_resolver}) {
 ///   sourcemeta::jsontoolkit::prettify(subschema, std::cout);
 ///   std::cout << "\n";
 /// }

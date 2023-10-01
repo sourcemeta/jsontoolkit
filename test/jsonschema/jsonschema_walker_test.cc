@@ -25,9 +25,8 @@ static auto test_resolver(std::string_view identifier)
       }
     })JSON"));
   } else {
-    sourcemeta::jsontoolkit::DefaultSchemaResolver resolver;
     const std::optional<sourcemeta::jsontoolkit::JSON> result{
-        resolver(identifier).get()};
+        sourcemeta::jsontoolkit::official_resolver(identifier).get()};
     if (result.has_value()) {
       promise.set_value(result.value());
     } else {
