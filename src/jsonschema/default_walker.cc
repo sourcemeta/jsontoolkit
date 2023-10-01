@@ -10,7 +10,7 @@ auto contains(const std::map<std::string, bool> &map, const std::string &key)
 
 // A stub walker that doesn't walk
 auto sourcemeta::jsontoolkit::schema_walker_none(
-    const std::string &, const std::map<std::string, bool> &)
+    std::string_view, const std::map<std::string, bool> &)
     -> sourcemeta::jsontoolkit::SchemaWalkerStrategy {
   return sourcemeta::jsontoolkit::SchemaWalkerStrategy::None;
 }
@@ -18,7 +18,7 @@ auto sourcemeta::jsontoolkit::schema_walker_none(
 // TODO: Extend this default walker to recognize as many official
 // JSON Schema vocabularies as possible.
 auto sourcemeta::jsontoolkit::default_schema_walker(
-    const std::string &keyword, const std::map<std::string, bool> &vocabularies)
+    std::string_view keyword, const std::map<std::string, bool> &vocabularies)
     -> sourcemeta::jsontoolkit::SchemaWalkerStrategy {
   if (::contains(vocabularies,
                  "https://json-schema.org/draft/2020-12/vocab/core") &&

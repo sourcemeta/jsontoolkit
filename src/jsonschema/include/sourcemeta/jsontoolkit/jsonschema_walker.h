@@ -10,11 +10,12 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 
-#include <functional> // std::function, std::reference_wrapper
-#include <map>        // std::map
-#include <optional>   // std::optional
-#include <string>     // std::string
-#include <vector>     // std::vector
+#include <functional>  // std::function, std::reference_wrapper
+#include <map>         // std::map
+#include <optional>    // std::optional
+#include <string>      // std::string
+#include <string_view> // std::string_view
+#include <vector>      // std::vector
 
 namespace sourcemeta::jsontoolkit {
 
@@ -66,19 +67,18 @@ enum class SchemaWalkerStrategy {
 /// - sourcemeta::jsontoolkit::default_schema_walker
 /// - sourcemeta::jsontoolkit::schema_walker_none
 using SchemaWalker = std::function<SchemaWalkerStrategy(
-    const std::string &, const std::map<std::string, bool> &)>;
+    std::string_view, const std::map<std::string, bool> &)>;
 
 /// @ingroup jsonschema
 /// A stub walker that doesn't walk
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto schema_walker_none(const std::string &,
-                        const std::map<std::string, bool> &)
+auto schema_walker_none(std::string_view, const std::map<std::string, bool> &)
     -> sourcemeta::jsontoolkit::SchemaWalkerStrategy;
 
 /// @ingroup jsonschema
 /// A default schema walker with support for a wide range of drafs
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto default_schema_walker(const std::string &keyword,
+auto default_schema_walker(std::string_view keyword,
                            const std::map<std::string, bool> &vocabularies)
     -> sourcemeta::jsontoolkit::SchemaWalkerStrategy;
 
