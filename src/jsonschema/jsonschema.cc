@@ -62,13 +62,13 @@ auto sourcemeta::jsontoolkit::dialect(
 auto sourcemeta::jsontoolkit::base_dialect(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-    const std::optional<std::string> &default_metaschema)
+    const std::optional<std::string> &default_dialect)
     -> std::future<std::optional<std::string>> {
   assert(sourcemeta::jsontoolkit::is_schema(schema));
   const std::optional<std::string> metaschema_id{
       sourcemeta::jsontoolkit::dialect(schema)};
   const std::optional<std::string> &effective_metaschema_id{
-      metaschema_id.has_value() ? metaschema_id : default_metaschema};
+      metaschema_id.has_value() ? metaschema_id : default_dialect};
 
   // There is no metaschema information whatsoever
   // Nothing we can do at this point
@@ -148,7 +148,7 @@ auto core_vocabulary(const std::string &draft) -> std::string {
 auto sourcemeta::jsontoolkit::vocabularies(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-    const std::optional<std::string> &default_metaschema)
+    const std::optional<std::string> &default_dialect)
     -> std::future<std::map<std::string, bool>> {
   std::promise<std::map<std::string, bool>> promise;
 
@@ -164,7 +164,7 @@ auto sourcemeta::jsontoolkit::vocabularies(
    */
   const std::optional<std::string> metaschema_id{
       sourcemeta::jsontoolkit::dialect(schema)};
-  if (!metaschema_id.has_value() && !default_metaschema.has_value()) {
+  if (!metaschema_id.has_value() && !default_dialect.has_value()) {
     // If the schema has no declared metaschema and the user didn't
     // provide a explicit default, then we cannot do anything.
     // Better to abort instead of trying to guess.
@@ -173,7 +173,7 @@ auto sourcemeta::jsontoolkit::vocabularies(
   }
   const std::string &effective_metaschema_id{metaschema_id.has_value()
                                                  ? metaschema_id.value()
-                                                 : default_metaschema.value()};
+                                                 : default_dialect.value()};
 
   /*
    * (2) Resolve the metaschema
@@ -200,7 +200,7 @@ auto sourcemeta::jsontoolkit::vocabularies(
    */
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(metaschema.value(), resolver,
-                                            default_metaschema)
+                                            default_dialect)
           .get()};
   if (!base_dialect.has_value()) {
     std::ostringstream error;

@@ -141,7 +141,7 @@ TEST(JSONSchema_vocabulary, core_vocabularies_boolean_with_default) {
       vocabularies, "https://json-schema.org/draft/2020-12/vocab/validation");
 }
 
-TEST(JSONSchema_vocabulary, default_metaschema_with_boolean) {
+TEST(JSONSchema_vocabulary, default_dialect_with_boolean) {
   const sourcemeta::jsontoolkit::JSON document{true};
   const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(

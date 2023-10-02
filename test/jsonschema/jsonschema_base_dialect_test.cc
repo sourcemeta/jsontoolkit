@@ -66,7 +66,7 @@ TEST(JSONSchema_base_dialect, boolean_schema_false) {
   EXPECT_FALSE(base_dialect.has_value());
 }
 
-TEST(JSONSchema_base_dialect, boolean_schema_default_metaschema_one_hop) {
+TEST(JSONSchema_base_dialect, boolean_schema_default_dialect_one_hop) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("true");
   const std::optional<std::string> base_dialect{
@@ -77,7 +77,7 @@ TEST(JSONSchema_base_dialect, boolean_schema_default_metaschema_one_hop) {
   EXPECT_EQ(base_dialect.value(), "https://sourcemeta.com/metaschema_1");
 }
 
-TEST(JSONSchema_base_dialect, boolean_schema_default_metaschema_two_hops) {
+TEST(JSONSchema_base_dialect, boolean_schema_default_dialect_two_hops) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("true");
   const std::optional<std::string> base_dialect{
@@ -197,7 +197,7 @@ TEST(JSONSchema_base_dialect, metaschema_without_schema_one_hop) {
   EXPECT_EQ(base_dialect.value(), "https://sourcemeta.com/no-schema");
 }
 
-TEST(JSONSchema_base_dialect, id_self_descriptive_default_metaschema) {
+TEST(JSONSchema_base_dialect, id_self_descriptive_default_dialect) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://sourcemeta.com/foo-bar"
@@ -210,7 +210,7 @@ TEST(JSONSchema_base_dialect, id_self_descriptive_default_metaschema) {
   EXPECT_EQ(base_dialect.value(), "https://sourcemeta.com/foo-bar");
 }
 
-TEST(JSONSchema_base_dialect, id_default_metaschema_one_hop) {
+TEST(JSONSchema_base_dialect, id_default_dialect_one_hop) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://sourcemeta.com/foo-bar"
@@ -223,7 +223,7 @@ TEST(JSONSchema_base_dialect, id_default_metaschema_one_hop) {
   EXPECT_EQ(base_dialect.value(), "https://sourcemeta.com/metaschema_1");
 }
 
-TEST(JSONSchema_base_dialect, id_default_metaschema_two_hops) {
+TEST(JSONSchema_base_dialect, id_default_dialect_two_hops) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://sourcemeta.com/foo-bar"
@@ -236,7 +236,7 @@ TEST(JSONSchema_base_dialect, id_default_metaschema_two_hops) {
   EXPECT_EQ(base_dialect.value(), "https://sourcemeta.com/metaschema_1");
 }
 
-TEST(JSONSchema_base_dialect, default_metaschema_one_hop) {
+TEST(JSONSchema_base_dialect, default_dialect_one_hop) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{}");
   const std::optional<std::string> base_dialect{
@@ -247,7 +247,7 @@ TEST(JSONSchema_base_dialect, default_metaschema_one_hop) {
   EXPECT_EQ(base_dialect.value(), "https://sourcemeta.com/metaschema_1");
 }
 
-TEST(JSONSchema_base_dialect, default_metaschema_two_hops) {
+TEST(JSONSchema_base_dialect, default_dialect_two_hops) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{}");
   const std::optional<std::string> base_dialect{
@@ -258,7 +258,7 @@ TEST(JSONSchema_base_dialect, default_metaschema_two_hops) {
   EXPECT_EQ(base_dialect.value(), "https://sourcemeta.com/metaschema_1");
 }
 
-TEST(JSONSchema_base_dialect, default_metaschema_precedence) {
+TEST(JSONSchema_base_dialect, default_dialect_precedence) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_6"

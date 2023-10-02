@@ -128,7 +128,7 @@ public:
   ConstSchemaIterator(
       const JSON &input, const SchemaWalker &walker,
       const SchemaResolver &resolver,
-      const std::optional<std::string> &default_metaschema = std::nullopt);
+      const std::optional<std::string> &default_dialect = std::nullopt);
   auto begin() const -> const_iterator;
   auto end() const -> const_iterator;
   auto cbegin() const -> const_iterator;
@@ -192,7 +192,7 @@ public:
   ConstSchemaIteratorFlat(
       const JSON &input, const SchemaWalker &walker,
       const SchemaResolver &resolver,
-      const std::optional<std::string> &default_metaschema = std::nullopt);
+      const std::optional<std::string> &default_dialect = std::nullopt);
   auto begin() const -> const_iterator;
   auto end() const -> const_iterator;
   auto cbegin() const -> const_iterator;
@@ -222,7 +222,7 @@ public:
   using const_iterator = typename internal::const_iterator;
   SchemaIteratorFlat(
       JSON &input, const SchemaWalker &walker, const SchemaResolver &resolver,
-      const std::optional<std::string> &default_metaschema = std::nullopt);
+      const std::optional<std::string> &default_dialect = std::nullopt);
   auto begin() -> iterator;
   auto end() -> iterator;
   auto cbegin() const -> const_iterator;
