@@ -36,10 +36,10 @@ private:
 
 /// @ingroup jsonschema
 /// An error that represents a schema resolution failure event
-class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT ResolutionError
+class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaResolutionError
     : public std::exception {
 public:
-  ResolutionError(std::string identifier, std::string message)
+  SchemaResolutionError(std::string identifier, std::string message)
       : identifier_{std::move(identifier)}, message_{std::move(message)} {}
   [[nodiscard]] auto what() const noexcept -> const char * override {
     return this->message_.c_str();

@@ -115,7 +115,7 @@ auto sourcemeta::jsontoolkit::base_dialect(
   const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
       resolver(effective_metaschema_id.value()).get()};
   if (!metaschema.has_value()) {
-    throw sourcemeta::jsontoolkit::ResolutionError(
+    throw sourcemeta::jsontoolkit::SchemaResolutionError(
         effective_metaschema_id.value(), "Could not resolve schema");
   }
 
@@ -179,14 +179,14 @@ auto sourcemeta::jsontoolkit::vocabularies(
   const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
       metaschema_future.get()};
   if (!metaschema.has_value()) {
-    throw sourcemeta::jsontoolkit::ResolutionError(effective_metaschema_id,
-                                                   "Could not resolve schema");
+    throw sourcemeta::jsontoolkit::SchemaResolutionError(
+        effective_metaschema_id, "Could not resolve schema");
   }
   const std::optional<std::string> resolved_id{
       sourcemeta::jsontoolkit::id(metaschema.value())};
   if (!resolved_id.has_value() ||
       resolved_id.value() != effective_metaschema_id) {
-    throw sourcemeta::jsontoolkit::ResolutionError(
+    throw sourcemeta::jsontoolkit::SchemaResolutionError(
         effective_metaschema_id,
         "Resolved metaschema id does not match request");
   }
