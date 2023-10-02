@@ -73,8 +73,8 @@ auto id(const JSON &schema) -> std::optional<std::string>;
 
 /// @ingroup jsonschema
 ///
-/// Get the metaschema corresponding to a JSON Schema instance. The result is
-/// empty if the metaschema cannot be determined. For example:
+/// Get the dialect URI that corresponds to a JSON Schema instance.
+/// The result is empty if the dialect cannot be determined. For example:
 ///
 /// ```cpp
 /// #include <sourcemeta/jsontoolkit/json.h>
@@ -88,13 +88,13 @@ auto id(const JSON &schema) -> std::optional<std::string>;
 /// })JSON");
 ///
 /// const std::optional<std::string>
-///   metaschema{sourcemeta::jsontoolkit::metaschema(document)};
-/// assert(metaschema.has_value());
-/// assert(metaschema.value() ==
+///   dialect{sourcemeta::jsontoolkit::dialect(document)};
+/// assert(dialect.has_value());
+/// assert(dialect.value() ==
 ///   "https://json-schema.org/draft/2020-12/schema");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto metaschema(const JSON &schema) -> std::optional<std::string>;
+auto dialect(const JSON &schema) -> std::optional<std::string>;
 
 /// @ingroup jsonschema
 ///

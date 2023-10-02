@@ -43,28 +43,20 @@ auto sourcemeta::jsontoolkit::id(const sourcemeta::jsontoolkit::JSON &schema)
   return std::nullopt;
 }
 
-auto sourcemeta::jsontoolkit::metaschema(
+auto sourcemeta::jsontoolkit::dialect(
     const sourcemeta::jsontoolkit::JSON &schema) -> std::optional<std::string> {
-  if (!sourcemeta::jsontoolkit::is_schema(schema)) {
-    throw sourcemeta::jsontoolkit::SchemaError(
-        "The input document is not a valid schema");
-  }
-
-  if (schema.is_boolean()) {
+  assert(sourcemeta::jsontoolkit::is_schema(schema));
+  if (schema.is_boolean() || !schema.defines("$schema")) {
     return std::nullopt;
   }
 
-  if (schema.defines("$schema")) {
-    const sourcemeta::jsontoolkit::JSON &metaschema{schema.at("$schema")};
-    if (!metaschema.is_string() || metaschema.empty()) {
-      throw sourcemeta::jsontoolkit::SchemaError(
-          "The value of the $schema property is not valid");
-    }
-
-    return metaschema.to_string();
+  const sourcemeta::jsontoolkit::JSON &dialect{schema.at("$schema")};
+  if (!dialect.is_string() || dialect.empty()) {
+    throw sourcemeta::jsontoolkit::SchemaError(
+        "The value of the $schema property is not valid");
   }
 
-  return std::nullopt;
+  return dialect.to_string();
 }
 
 auto sourcemeta::jsontoolkit::base_dialect(
@@ -74,7 +66,7 @@ auto sourcemeta::jsontoolkit::base_dialect(
     -> std::future<std::optional<std::string>> {
   assert(sourcemeta::jsontoolkit::is_schema(schema));
   const std::optional<std::string> metaschema_id{
-      sourcemeta::jsontoolkit::metaschema(schema)};
+      sourcemeta::jsontoolkit::dialect(schema)};
   const std::optional<std::string> &effective_metaschema_id{
       metaschema_id.has_value() ? metaschema_id : default_metaschema};
 
@@ -171,7 +163,7 @@ auto sourcemeta::jsontoolkit::vocabularies(
    * (1) Identify the schema's metaschema
    */
   const std::optional<std::string> metaschema_id{
-      sourcemeta::jsontoolkit::metaschema(schema)};
+      sourcemeta::jsontoolkit::dialect(schema)};
   if (!metaschema_id.has_value() && !default_metaschema.has_value()) {
     // If the schema has no declared metaschema and the user didn't
     // provide a explicit default, then we cannot do anything.
