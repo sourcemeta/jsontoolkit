@@ -38,6 +38,7 @@ TEST(JSONSchema, default_resolver_jsonschema_2019_09) {
   EXPECT_SCHEMA("https://json-schema.org/draft/2019-09/meta/meta-data");
   EXPECT_SCHEMA("https://json-schema.org/draft/2019-09/meta/validation");
   EXPECT_SCHEMA("https://json-schema.org/draft/2019-09/output/schema");
+  EXPECT_SCHEMA("https://json-schema.org/draft/2019-09/links");
   EXPECT_SCHEMA("https://json-schema.org/draft/2019-09/output/hyper-schema");
 }
 
