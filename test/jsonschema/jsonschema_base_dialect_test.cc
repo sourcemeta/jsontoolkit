@@ -107,7 +107,7 @@ TEST(JSONSchema_base_dialect, non_resolvable_schema_with_id) {
     "$schema": "https://example.com/does-not-exist"
   })JSON");
   EXPECT_THROW(sourcemeta::jsontoolkit::base_dialect(document, test_resolver),
-               sourcemeta::jsontoolkit::ResolutionError);
+               sourcemeta::jsontoolkit::SchemaResolutionError);
 }
 
 TEST(JSONSchema_base_dialect, non_resolvable_schema) {
@@ -116,7 +116,7 @@ TEST(JSONSchema_base_dialect, non_resolvable_schema) {
     "$schema": "https://example.com/does-not-exist"
   })JSON");
   EXPECT_THROW(sourcemeta::jsontoolkit::base_dialect(document, test_resolver),
-               sourcemeta::jsontoolkit::ResolutionError);
+               sourcemeta::jsontoolkit::SchemaResolutionError);
 }
 
 TEST(JSONSchema_base_dialect, non_resolvable_default_schema) {
@@ -125,7 +125,7 @@ TEST(JSONSchema_base_dialect, non_resolvable_default_schema) {
   EXPECT_THROW(
       sourcemeta::jsontoolkit::base_dialect(
           document, test_resolver, "https://example.com/does-not-exist"),
-      sourcemeta::jsontoolkit::ResolutionError);
+      sourcemeta::jsontoolkit::SchemaResolutionError);
 }
 
 TEST(JSONSchema_base_dialect, id_with_one_hop) {
