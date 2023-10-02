@@ -98,10 +98,10 @@ auto metaschema(const JSON &schema) -> std::optional<std::string>;
 
 /// @ingroup jsonschema
 ///
-/// Get the draft URI that applies to the given schema. If you set a default
-/// metaschema URI, this will be used if the given schema does not declare the
-/// `$schema` keyword. The result of this function is unset if its draft could
-/// not be determined. For example:
+/// Get the URI of the base dialect that applies to the given schema. If you set
+/// a default metaschema URI, this will be used if the given schema does not
+/// declare the `$schema` keyword. The result of this function is unset
+/// if its base dialect could not be determined. For example:
 ///
 /// ```cpp
 /// #include <sourcemeta/jsontoolkit/json.h>
@@ -114,17 +114,18 @@ auto metaschema(const JSON &schema) -> std::optional<std::string>;
 ///   "type": "object"
 /// })JSON");
 ///
-/// const std::optional<std::string> dialect{
-///   sourcemeta::jsontoolkit::dialect(
+/// const std::optional<std::string> base_dialect{
+///   sourcemeta::jsontoolkit::base_dialect(
 ///     document, sourcemeta::jsontoolkit::official_resolver).get()};
 ///
-/// assert(dialect.has_value());
-/// assert(dialect.value() == "https://json-schema.org/draft/2020-12/schema");
+/// assert(base_dialect.has_value());
+/// assert(base_dialect.value() ==
+/// "https://json-schema.org/draft/2020-12/schema");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto dialect(const JSON &schema, const SchemaResolver &resolver,
-             const std::optional<std::string> &default_metaschema =
-                 std::nullopt) -> std::future<std::optional<std::string>>;
+auto base_dialect(const JSON &schema, const SchemaResolver &resolver,
+                  const std::optional<std::string> &default_metaschema =
+                      std::nullopt) -> std::future<std::optional<std::string>>;
 
 /// @ingroup jsonschema
 ///

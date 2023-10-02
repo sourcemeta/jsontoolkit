@@ -67,61 +67,72 @@ auto sourcemeta::jsontoolkit::metaschema(
   return std::nullopt;
 }
 
-auto sourcemeta::jsontoolkit::dialect(
+auto sourcemeta::jsontoolkit::base_dialect(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_metaschema)
     -> std::future<std::optional<std::string>> {
   assert(sourcemeta::jsontoolkit::is_schema(schema));
-
-  const std::optional<std::string> schema_id{
-      sourcemeta::jsontoolkit::id(schema)};
   const std::optional<std::string> metaschema_id{
       sourcemeta::jsontoolkit::metaschema(schema)};
   const std::optional<std::string> &effective_metaschema_id{
       metaschema_id.has_value() ? metaschema_id : default_metaschema};
 
-  if (effective_metaschema_id.has_value()) {
-    // For compatibility with older JSON Schema drafts that didn't support $id
-    if (effective_metaschema_id.value() ==
-            "http://json-schema.org/draft-00/hyper-schema#" ||
-        effective_metaschema_id.value() ==
-            "http://json-schema.org/draft-01/hyper-schema#" ||
-        effective_metaschema_id.value() ==
-            "http://json-schema.org/draft-02/hyper-schema#" ||
-        effective_metaschema_id.value() ==
-            "http://json-schema.org/draft-03/schema#" ||
-        effective_metaschema_id.value() ==
-            "http://json-schema.org/draft-04/schema#") {
-      std::promise<std::optional<std::string>> promise;
-      promise.set_value(effective_metaschema_id);
-      return promise.get_future();
-    }
-
-    // If the schema defines itself, then the schema is the draft definition
-    if (schema_id.has_value() &&
-        schema_id.value() == effective_metaschema_id.value()) {
-      std::promise<std::optional<std::string>> promise;
-      promise.set_value(schema_id);
-      return promise.get_future();
-    }
+  // There is no metaschema information whatsoever
+  // Nothing we can do at this point
+  if (!effective_metaschema_id.has_value()) {
+    std::promise<std::optional<std::string>> promise;
+    promise.set_value(std::nullopt);
+    return promise.get_future();
   }
 
-  if (effective_metaschema_id.has_value()) {
-    const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
-        resolver(effective_metaschema_id.value()).get()};
-    if (!metaschema.has_value()) {
-      throw sourcemeta::jsontoolkit::ResolutionError(
-          effective_metaschema_id.value(), "Could not resolve schema");
-    }
+  // For compatibility with older JSON Schema drafts that didn't support $id nor
+  // $vocabulary
+  if (
+      // In Draft 0, 1, and 2, the official metaschema is defined on top of
+      // the official hyper-schema metaschema. See
+      // http://json-schema.org/draft-00/schema#
+      effective_metaschema_id.value() ==
+          "http://json-schema.org/draft-00/hyper-schema#" ||
+      effective_metaschema_id.value() ==
+          "http://json-schema.org/draft-01/hyper-schema#" ||
+      effective_metaschema_id.value() ==
+          "http://json-schema.org/draft-02/hyper-schema#" ||
 
-    return dialect(metaschema.value(), resolver,
-                   effective_metaschema_id.value());
+      // Draft 3 and 4 have both schema and hyper-schema dialects
+      effective_metaschema_id.value() ==
+          "http://json-schema.org/draft-03/hyper-schema#" ||
+      effective_metaschema_id.value() ==
+          "http://json-schema.org/draft-03/schema#" ||
+      effective_metaschema_id.value() ==
+          "http://json-schema.org/draft-04/hyper-schema#" ||
+      effective_metaschema_id.value() ==
+          "http://json-schema.org/draft-04/schema#") {
+    std::promise<std::optional<std::string>> promise;
+    promise.set_value(effective_metaschema_id);
+    return promise.get_future();
   }
 
-  std::promise<std::optional<std::string>> promise;
-  promise.set_value(std::nullopt);
-  return promise.get_future();
+  // If we reach the bottom of the metaschema hierarchy, where the schema
+  // defines itself, then we got to the base dialect
+  const std::optional<std::string> schema_id{id(schema)};
+  if (schema_id.has_value() &&
+      schema_id.value() == effective_metaschema_id.value()) {
+    std::promise<std::optional<std::string>> promise;
+    promise.set_value(schema_id.value());
+    return promise.get_future();
+  }
+
+  // Otherwise, traverse the metaschema hierarchy up
+  const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
+      resolver(effective_metaschema_id.value()).get()};
+  if (!metaschema.has_value()) {
+    throw sourcemeta::jsontoolkit::ResolutionError(
+        effective_metaschema_id.value(), "Could not resolve schema");
+  }
+
+  return base_dialect(metaschema.value(), resolver,
+                      effective_metaschema_id.value());
 }
 
 // TODO: Support every JSON Schema draft from Draft 7 and older
@@ -195,16 +206,16 @@ auto sourcemeta::jsontoolkit::vocabularies(
   /*
    * (3) Resolve the metaschema's draft
    */
-  const std::optional<std::string> dialect{
-      sourcemeta::jsontoolkit::dialect(metaschema.value(), resolver,
-                                       default_metaschema)
+  const std::optional<std::string> base_dialect{
+      sourcemeta::jsontoolkit::base_dialect(metaschema.value(), resolver,
+                                            default_metaschema)
           .get()};
-  if (!dialect.has_value()) {
+  if (!base_dialect.has_value()) {
     std::ostringstream error;
     error << "Could not determine dialect for schema: " << resolved_id.value();
     throw sourcemeta::jsontoolkit::SchemaError(error.str());
   }
-  const std::string core{core_vocabulary(dialect.value())};
+  const std::string core{core_vocabulary(base_dialect.value())};
 
   /*
    * (4) Parse the "$vocabulary" keyword, if any
@@ -216,8 +227,9 @@ auto sourcemeta::jsontoolkit::vocabularies(
     // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-02#section-8
     result.insert({core, true});
 
-    if (dialect.value() == "https://json-schema.org/draft/2020-12/schema" ||
-        dialect.value() ==
+    if (base_dialect.value() ==
+            "https://json-schema.org/draft/2020-12/schema" ||
+        base_dialect.value() ==
             "https://json-schema.org/draft/2020-12/hyper-schema") {
       // See
       // https://json-schema.org/draft/2020-12/json-schema-core.html#section-10
@@ -239,9 +251,9 @@ auto sourcemeta::jsontoolkit::vocabularies(
       // https://json-schema.org/draft/2020-12/json-schema-validation.html#section-9
       result.insert(
           {"https://json-schema.org/draft/2020-12/vocab/meta-data", true});
-    } else if (dialect.value() ==
+    } else if (base_dialect.value() ==
                    "https://json-schema.org/draft/2019-09/schema" ||
-               dialect.value() ==
+               base_dialect.value() ==
                    "https://json-schema.org/draft/2019-09/hyper-schema") {
       // See
       // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-02#section-9
