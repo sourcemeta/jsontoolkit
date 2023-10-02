@@ -51,11 +51,7 @@ auto sourcemeta::jsontoolkit::dialect(
   }
 
   const sourcemeta::jsontoolkit::JSON &dialect{schema.at("$schema")};
-  if (!dialect.is_string() || dialect.empty()) {
-    throw sourcemeta::jsontoolkit::SchemaError(
-        "The value of the $schema property is not valid");
-  }
-
+  assert(dialect.is_string() && !dialect.empty());
   return dialect.to_string();
 }
 
