@@ -92,7 +92,7 @@ auto sourcemeta::jsontoolkit::official_resolver(std::string_view identifier)
         R"EOF(@METASCHEMA_JSONSCHEMA_2019_09_VALIDATION@)EOF"));
   } else if (identifier == "https://json-schema.org/draft/2019-09/links") {
     promise.set_value(
-        sourcemeta::jsontoolkit::parse(R"EOF(@METASCHEMA_LINKS_2020_12@)EOF"));
+        sourcemeta::jsontoolkit::parse(R"EOF(@METASCHEMA_LINKS_2019_09@)EOF"));
   } else if (identifier ==
              "https://json-schema.org/draft/2019-09/output/schema") {
     promise.set_value(sourcemeta::jsontoolkit::parse(
