@@ -99,7 +99,7 @@ auto dialect(const JSON &schema) -> std::optional<std::string>;
 /// @ingroup jsonschema
 ///
 /// Get the URI of the base dialect that applies to the given schema. If you set
-/// a default metaschema URI, this will be used if the given schema does not
+/// a default dialect URI, this will be used if the given schema does not
 /// declare the `$schema` keyword. The result of this function is unset
 /// if its base dialect could not be determined. For example:
 ///
@@ -124,13 +124,13 @@ auto dialect(const JSON &schema) -> std::optional<std::string>;
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto base_dialect(const JSON &schema, const SchemaResolver &resolver,
-                  const std::optional<std::string> &default_metaschema =
+                  const std::optional<std::string> &default_dialect =
                       std::nullopt) -> std::future<std::optional<std::string>>;
 
 /// @ingroup jsonschema
 ///
 /// List the vocabularies that a specific schema makes use of. If you set a
-/// default metaschema URI, this will be used if the given schema does not
+/// default dialect URI, this will be used if the given schema does not
 /// declare the
 /// `$schema` keyword. The resulting map values are set to `true` or `false`
 /// depending on whether the corresponding vocabulary is required or optional,
@@ -161,7 +161,7 @@ auto base_dialect(const JSON &schema, const SchemaResolver &resolver,
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto vocabularies(const JSON &schema, const SchemaResolver &resolver,
-                  const std::optional<std::string> &default_metaschema =
+                  const std::optional<std::string> &default_dialect =
                       std::nullopt) -> std::future<std::map<std::string, bool>>;
 
 } // namespace sourcemeta::jsontoolkit

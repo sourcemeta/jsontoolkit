@@ -100,18 +100,18 @@ sourcemeta::jsontoolkit::ConstSchemaIterator::ConstSchemaIterator(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::SchemaWalker &walker,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-    const std::optional<std::string> &default_metaschema) {
+    const std::optional<std::string> &default_dialect) {
   const std::optional<std::string> dialect{
       sourcemeta::jsontoolkit::dialect(schema)};
 
   // If the given schema declares no dialect and the user didn't
   // not pass a default, then there is nothing we can do. We know
   // the current schema is a subschema, but cannot walk any further.
-  if (!dialect.has_value() && !default_metaschema.has_value()) {
+  if (!dialect.has_value() && !default_dialect.has_value()) {
     this->subschemas.push_back(schema);
   } else {
     const std::string &effective_dialect{
-        dialect.has_value() ? dialect.value() : default_metaschema.value()};
+        dialect.has_value() ? dialect.value() : default_dialect.value()};
     walk(this->subschemas, schema, walker, resolver, effective_dialect,
          SchemaWalkerype_t::Deep, 0);
   }
@@ -121,12 +121,12 @@ sourcemeta::jsontoolkit::ConstSchemaIteratorFlat::ConstSchemaIteratorFlat(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::SchemaWalker &walker,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-    const std::optional<std::string> &default_metaschema) {
+    const std::optional<std::string> &default_dialect) {
   const std::optional<std::string> dialect{
       sourcemeta::jsontoolkit::dialect(schema)};
-  if (dialect.has_value() || default_metaschema.has_value()) {
+  if (dialect.has_value() || default_dialect.has_value()) {
     const std::string &effective_dialect{
-        dialect.has_value() ? dialect.value() : default_metaschema.value()};
+        dialect.has_value() ? dialect.value() : default_dialect.value()};
     walk(this->subschemas, schema, walker, resolver, effective_dialect,
          SchemaWalkerype_t::Flat, 0);
   }
@@ -136,12 +136,12 @@ sourcemeta::jsontoolkit::SchemaIteratorFlat::SchemaIteratorFlat(
     sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::SchemaWalker &walker,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-    const std::optional<std::string> &default_metaschema) {
+    const std::optional<std::string> &default_dialect) {
   const std::optional<std::string> dialect{
       sourcemeta::jsontoolkit::dialect(schema)};
-  if (dialect.has_value() || default_metaschema.has_value()) {
+  if (dialect.has_value() || default_dialect.has_value()) {
     const std::string &effective_dialect{
-        dialect.has_value() ? dialect.value() : default_metaschema.value()};
+        dialect.has_value() ? dialect.value() : default_dialect.value()};
     walk(this->subschemas, schema, walker, resolver, effective_dialect,
          SchemaWalkerype_t::Flat, 0);
   }
