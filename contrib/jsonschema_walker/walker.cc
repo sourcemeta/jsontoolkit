@@ -17,10 +17,10 @@ auto walk(const std::string &mode, std::basic_istream<CharT, Traits> &stream)
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(stream);
 
-  const std::optional<std::string> metaschema{
-      sourcemeta::jsontoolkit::metaschema(document)};
-  if (!metaschema.has_value()) {
-    std::cerr << "The given schema does not declare its meta-schema. We will "
+  const std::optional<std::string> dialect{
+      sourcemeta::jsontoolkit::dialect(document)};
+  if (!dialect.has_value()) {
+    std::cerr << "The given schema does not declare its dialect. We will "
                  "only assume the presence of the 'core' vocabulary\n";
   }
 
