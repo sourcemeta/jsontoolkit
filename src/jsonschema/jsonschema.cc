@@ -5,6 +5,7 @@
 #include <future>      // std::future
 #include <sstream>     // std::ostringstream
 #include <type_traits> // std::remove_reference_t
+#include <utility>     // std::move
 
 auto sourcemeta::jsontoolkit::is_schema(
     const sourcemeta::jsontoolkit::JSON &schema) -> bool {
@@ -123,19 +124,18 @@ auto sourcemeta::jsontoolkit::base_dialect(
                       effective_metaschema_id.value());
 }
 
-// TODO: Support every JSON Schema draft from Draft 7 and older
-// for completeness, returning the draft itself as the only vocabulary.
 namespace {
-auto core_vocabulary(const std::string &draft) -> std::string {
-  if (draft == "https://json-schema.org/draft/2020-12/schema" ||
-      draft == "https://json-schema.org/draft/2020-12/hyper-schema") {
+auto core_vocabulary(std::string_view base_dialect) -> std::string {
+  if (base_dialect == "https://json-schema.org/draft/2020-12/schema" ||
+      base_dialect == "https://json-schema.org/draft/2020-12/hyper-schema") {
     return "https://json-schema.org/draft/2020-12/vocab/core";
-  } else if (draft == "https://json-schema.org/draft/2019-09/schema" ||
-             draft == "https://json-schema.org/draft/2019-09/hyper-schema") {
+  } else if (base_dialect == "https://json-schema.org/draft/2019-09/schema" ||
+             base_dialect ==
+                 "https://json-schema.org/draft/2019-09/hyper-schema") {
     return "https://json-schema.org/draft/2019-09/vocab/core";
   } else {
     std::ostringstream error;
-    error << "Unrecognized draft: " << draft;
+    error << "Unrecognized base dialect: " << base_dialect;
     throw sourcemeta::jsontoolkit::SchemaError(error.str());
   }
 }
@@ -146,146 +146,100 @@ auto sourcemeta::jsontoolkit::vocabularies(
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect)
     -> std::future<std::map<std::string, bool>> {
-  std::promise<std::map<std::string, bool>> promise;
-
-  // If the meta-schema, as referenced by the schema, is not recognized, or is
-  // missing, then the behavior is implementation-defined. If the
-  // implementation proceeds with processing the schema, it MUST assume the
-  // use of the vocabulary from the core specification.
-  // See https://json-schema.org/draft/2020-12/json-schema-core.html#section-8
-  std::map<std::string, bool> result;
+  /*
+   * (1) Determine the base dialect. We need this to unambiguously
+   * determine if the `$vocabulary` is supported
+   */
+  const std::optional<std::string> maybe_base_dialect{
+      sourcemeta::jsontoolkit::base_dialect(schema, resolver, default_dialect)
+          .get()};
+  if (!maybe_base_dialect.has_value()) {
+    throw sourcemeta::jsontoolkit::SchemaError(
+        "Could not determine base dialect for schema");
+  }
+  const std::string &base_dialect{maybe_base_dialect.value()};
 
   /*
-   * (1) Identify the schema's metaschema
+   * (2) If the base dialect is pre-vocabularies, then the
+   * base dialect itself is conceptually the only vocabulary
    */
-  const std::optional<std::string> metaschema_id{
+
+  // This is an exhaustive list of all base dialects in the pre-vocabulary world
+  if (base_dialect == "http://json-schema.org/draft-07/schema#" ||
+      base_dialect == "http://json-schema.org/draft-07/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-06/schema#" ||
+      base_dialect == "http://json-schema.org/draft-06/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-04/schema#" ||
+      base_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-03/schema#" ||
+      base_dialect == "http://json-schema.org/draft-03/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-02/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-01/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-00/hyper-schema#") {
+    std::promise<std::map<std::string, bool>> promise;
+    promise.set_value({{base_dialect, true}});
+    return promise.get_future();
+  }
+
+  /*
+   * (3) If the dialect is vocabulary aware, then fetch such dialect
+   */
+
+  const std::optional<std::string> maybe_dialect{
       sourcemeta::jsontoolkit::dialect(schema)};
-  if (!metaschema_id.has_value() && !default_dialect.has_value()) {
+  if (!maybe_dialect.has_value() && !default_dialect.has_value()) {
     // If the schema has no declared metaschema and the user didn't
     // provide a explicit default, then we cannot do anything.
     // Better to abort instead of trying to guess.
     throw sourcemeta::jsontoolkit::SchemaError(
-        "Cannot determine the metaschema of the given schema");
+        "Cannot determine the dialect of the schema");
   }
-  const std::string &effective_metaschema_id{metaschema_id.has_value()
-                                                 ? metaschema_id.value()
-                                                 : default_dialect.value()};
-
-  /*
-   * (2) Resolve the metaschema
-   */
-  std::future<std::optional<sourcemeta::jsontoolkit::JSON>> metaschema_future{
-      resolver(effective_metaschema_id)};
-  const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
-      metaschema_future.get()};
-  if (!metaschema.has_value()) {
+  const std::string &dialect_id{maybe_dialect.has_value()
+                                    ? maybe_dialect.value()
+                                    : default_dialect.value()};
+  const std::optional<sourcemeta::jsontoolkit::JSON> maybe_schema_dialect{
+      resolver(dialect_id).get()};
+  if (!maybe_schema_dialect.has_value()) {
     throw sourcemeta::jsontoolkit::SchemaResolutionError(
-        effective_metaschema_id, "Could not resolve schema");
+        dialect_id, "Could not resolve schema");
   }
-  const std::optional<std::string> resolved_id{
-      sourcemeta::jsontoolkit::id(metaschema.value())};
-  if (!resolved_id.has_value() ||
-      resolved_id.value() != effective_metaschema_id) {
-    throw sourcemeta::jsontoolkit::SchemaResolutionError(
-        effective_metaschema_id,
-        "Resolved metaschema id does not match request");
-  }
+  const sourcemeta::jsontoolkit::JSON &schema_dialect{
+      maybe_schema_dialect.value()};
+  // At this point we are sure that the dialect is vocabulary aware and the
+  // identifier keyword is indeed `$id`, so we can avoid the added
+  // complexity of the generic `id` function.
+  assert(schema_dialect.defines("$id") &&
+         schema_dialect.at("$id").is_string() &&
+         schema_dialect.at("$id").to_string() == dialect_id);
 
   /*
-   * (3) Resolve the metaschema's draft
+   * (4) Retrieve the vocabularies explicitly or implicitly declared by the
+   * dialect
    */
-  const std::optional<std::string> base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(metaschema.value(), resolver,
-                                            default_dialect)
-          .get()};
-  if (!base_dialect.has_value()) {
-    std::ostringstream error;
-    error << "Could not determine dialect for schema: " << resolved_id.value();
-    throw sourcemeta::jsontoolkit::SchemaError(error.str());
-  }
-  const std::string core{core_vocabulary(base_dialect.value())};
 
-  /*
-   * (4) Parse the "$vocabulary" keyword, if any
-   */
-  if (!metaschema.value().defines("$vocabulary")) {
-    // The core vocabulary is always used
-    // See https://json-schema.org/draft/2020-12/json-schema-core.html#section-8
-    // See
-    // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-02#section-8
-    result.insert({core, true});
-
-    if (base_dialect.value() ==
-            "https://json-schema.org/draft/2020-12/schema" ||
-        base_dialect.value() ==
-            "https://json-schema.org/draft/2020-12/hyper-schema") {
-      // See
-      // https://json-schema.org/draft/2020-12/json-schema-core.html#section-10
-      result.insert(
-          {"https://json-schema.org/draft/2020-12/vocab/applicator", true});
-      // See
-      // https://json-schema.org/draft/2020-12/json-schema-core.html#section-11
-      result.insert(
-          {"https://json-schema.org/draft/2020-12/vocab/unevaluated", true});
-      // See
-      // https://json-schema.org/draft/2020-12/json-schema-validation.html#section-6
-      result.insert(
-          {"https://json-schema.org/draft/2020-12/vocab/validation", true});
-      // See
-      // https://json-schema.org/draft/2020-12/json-schema-validation.html#section-8
-      result.insert(
-          {"https://json-schema.org/draft/2020-12/vocab/content", true});
-      // See
-      // https://json-schema.org/draft/2020-12/json-schema-validation.html#section-9
-      result.insert(
-          {"https://json-schema.org/draft/2020-12/vocab/meta-data", true});
-    } else if (base_dialect.value() ==
-                   "https://json-schema.org/draft/2019-09/schema" ||
-               base_dialect.value() ==
-                   "https://json-schema.org/draft/2019-09/hyper-schema") {
-      // See
-      // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-02#section-9
-      result.insert(
-          {"https://json-schema.org/draft/2019-09/vocab/applicator", true});
-      // See
-      // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-validation-02#section-6
-      result.insert(
-          {"https://json-schema.org/draft/2019-09/vocab/validation", true});
-      // The Format vocabulary is optional by default
-      // See
-      // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-validation-02#section-7
-      result.insert(
-          {"https://json-schema.org/draft/2019-09/vocab/format", false});
-      // See
-      // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-validation-02#section-8
-      result.insert(
-          {"https://json-schema.org/draft/2019-09/vocab/content", true});
-      // See
-      // https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-validation-02#section-9
-      result.insert(
-          {"https://json-schema.org/draft/2019-09/vocab/meta-data", true});
+  std::map<std::string, bool> result;
+  const std::string core{core_vocabulary(base_dialect)};
+  if (schema_dialect.defines("$vocabulary")) {
+    const sourcemeta::jsontoolkit::JSON &vocabularies{
+        schema_dialect.at("$vocabulary")};
+    assert(vocabularies.is_object());
+    for (const auto &[key, value] : vocabularies.as_object()) {
+      result.insert({key, value.to_boolean()});
     }
-
-    promise.set_value(result);
-    return promise.get_future();
+  } else {
+    result.insert({core, true});
   }
 
-  const sourcemeta::jsontoolkit::JSON &vocabulary_value{
-      metaschema.value().at("$vocabulary")};
-
-  // Handle core vocabulary edge cases
-  if (!vocabulary_value.defines(core)) {
+  // The specification recommends these checks
+  if (!result.contains(core)) {
     throw sourcemeta::jsontoolkit::SchemaError(
-        "Every metaschema must declare the core vocabulary");
-  } else if (!vocabulary_value.at(core).to_boolean()) {
+        "The core vocabulary must always be present");
+  } else if (!result.at(core)) {
     throw sourcemeta::jsontoolkit::SchemaError(
-        "The core vocabulary must be marked as required");
+        "The core vocabulary must always be required");
   }
 
-  for (const auto &[key, value] : vocabulary_value.as_object()) {
-    result.insert({key, value.to_boolean()});
-  }
-
-  promise.set_value(result);
+  std::promise<std::map<std::string, bool>> promise;
+  promise.set_value(std::move(result));
   return promise.get_future();
 }
