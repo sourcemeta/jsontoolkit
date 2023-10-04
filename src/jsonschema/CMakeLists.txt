@@ -1,5 +1,5 @@
 include(./metaschemas.cmake)
-configure_file(default_resolver.in.cc default_resolver.cc @ONLY)
+configure_file(official_resolver.in.cc official_resolver.cc @ONLY)
 
 set(JSONSCHEMA_PUBLIC_HEADERS
   include/sourcemeta/jsontoolkit/jsonschema.h)
@@ -13,7 +13,7 @@ add_library(sourcemeta_jsontoolkit_jsonschema
   ${JSONSCHEMA_PUBLIC_HEADERS}
   ${JSONSCHEMA_PRIVATE_HEADERS}
   jsonschema.cc default_walker.cc walker.cc
-  "${CMAKE_CURRENT_BINARY_DIR}/default_resolver.cc")
+  "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema)
 add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jsonschema)
 
