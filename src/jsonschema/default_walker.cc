@@ -1,39 +1,31 @@
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
-// Because standard "contains()" is introduced in C++20
-namespace {
-auto contains(const std::map<std::string, bool> &map, const std::string &key)
-    -> bool {
-  return map.find(key) != map.end();
-}
-} // namespace
-
 // TODO: Extend this default walker to recognize as many official
 // JSON Schema vocabularies as possible.
 auto sourcemeta::jsontoolkit::default_schema_walker(
     std::string_view keyword, const std::map<std::string, bool> &vocabularies)
     -> sourcemeta::jsontoolkit::SchemaWalkerStrategy {
-  if (::contains(vocabularies,
-                 "https://json-schema.org/draft/2020-12/vocab/core") &&
+  if (vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/core") &&
       keyword == "$defs") {
     return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Members;
   }
 
-  if (::contains(vocabularies,
-                 "https://json-schema.org/draft/2020-12/vocab/content") &&
+  if (vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/content") &&
       keyword == "contentSchema") {
     return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value;
   }
 
-  if (::contains(vocabularies,
-                 "https://json-schema.org/draft/2020-12/vocab/unevaluated")) {
+  if (vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/unevaluated")) {
     if (keyword == "unevaluatedProperties" || keyword == "unevaluatedItems") {
       return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value;
     }
   }
 
-  if (::contains(vocabularies,
-                 "https://json-schema.org/draft/2020-12/vocab/applicator")) {
+  if (vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/applicator")) {
     if (keyword == "dependentSchemas" || keyword == "properties" ||
         keyword == "patternProperties") {
       return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Members;
