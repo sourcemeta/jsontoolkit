@@ -72,8 +72,11 @@ using SchemaWalker = std::function<SchemaWalkerStrategy(
 /// @ingroup jsonschema
 /// A stub walker that doesn't walk
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto schema_walker_none(std::string_view, const std::map<std::string, bool> &)
-    -> sourcemeta::jsontoolkit::SchemaWalkerStrategy;
+inline auto schema_walker_none(std::string_view,
+                               const std::map<std::string, bool> &)
+    -> sourcemeta::jsontoolkit::SchemaWalkerStrategy {
+  return SchemaWalkerStrategy::None;
+}
 
 /// @ingroup jsonschema
 /// A default schema walker with support for a wide range of drafs
