@@ -31,6 +31,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_vocabulary_draft1_test.cc
   jsonschema_vocabulary_draft0_test.cc
   jsonschema_vocabulary_test.cc
+  jsonschema_walker_none_test.cc
   jsonschema_walker_test.cc
   jsonschema_error_test.cc
   jsonschema_default_walker_test.cc
