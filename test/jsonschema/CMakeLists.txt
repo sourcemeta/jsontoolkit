@@ -31,10 +31,10 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_vocabulary_draft1_test.cc
   jsonschema_vocabulary_draft0_test.cc
   jsonschema_vocabulary_test.cc
+  jsonschema_default_walker_2020_12_test.cc
   jsonschema_walker_none_test.cc
   jsonschema_walker_test.cc
   jsonschema_error_test.cc
-  jsonschema_default_walker_test.cc
   jsonschema_official_resolver_test.cc)
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema_unit)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
