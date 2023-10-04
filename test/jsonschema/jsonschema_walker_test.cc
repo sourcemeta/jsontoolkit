@@ -73,7 +73,7 @@ static auto test_walker(std::string_view keyword,
   return sourcemeta::jsontoolkit::SchemaWalkerStrategy::None;
 }
 
-TEST(JSONSchema, walker_true) {
+TEST(JSONSchema_walker, true) {
   const sourcemeta::jsontoolkit::JSON document{true};
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
@@ -86,7 +86,7 @@ TEST(JSONSchema, walker_true) {
   EXPECT_EQ(subschemas.at(0).to_boolean(), true);
 }
 
-TEST(JSONSchema, walker_false) {
+TEST(JSONSchema_walker, false) {
   const sourcemeta::jsontoolkit::JSON document{false};
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
   for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
@@ -95,10 +95,11 @@ TEST(JSONSchema, walker_false) {
   }
 
   EXPECT_EQ(subschemas.size(), 1);
+  EXPECT_EQ(subschemas.at(0).is_boolean(), true);
   EXPECT_EQ(subschemas.at(0).to_boolean(), false);
 }
 
-TEST(JSONSchema, walker_value) {
+TEST(JSONSchema_walker, value) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
@@ -134,7 +135,7 @@ TEST(JSONSchema, walker_value) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_value_invalid) {
+TEST(JSONSchema_walker, value_invalid) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
@@ -154,7 +155,7 @@ TEST(JSONSchema, walker_value_invalid) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_elements) {
+TEST(JSONSchema_walker, elements) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
@@ -183,7 +184,7 @@ TEST(JSONSchema, walker_elements) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_elements_invalid) {
+TEST(JSONSchema_walker, elements_invalid) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
@@ -203,7 +204,7 @@ TEST(JSONSchema, walker_elements_invalid) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_members) {
+TEST(JSONSchema_walker, members) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
@@ -241,7 +242,7 @@ TEST(JSONSchema, walker_members) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_members_invalid) {
+TEST(JSONSchema_walker, members_invalid) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
@@ -261,7 +262,7 @@ TEST(JSONSchema, walker_members_invalid) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_value_or_elements) {
+TEST(JSONSchema_walker, value_or_elements) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
@@ -296,7 +297,7 @@ TEST(JSONSchema, walker_value_or_elements) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_elements_or_members) {
+TEST(JSONSchema_walker, elements_or_members) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
@@ -336,7 +337,7 @@ TEST(JSONSchema, walker_elements_or_members) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_no_metaschema_and_not_default) {
+TEST(JSONSchema_walker, no_metaschema_and_no_default) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "schema": { "foo": 1 }
@@ -354,7 +355,7 @@ TEST(JSONSchema, walker_no_metaschema_and_not_default) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_no_metaschema_with_default) {
+TEST(JSONSchema_walker, no_metaschema_with_default) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "schema": {
@@ -389,7 +390,7 @@ TEST(JSONSchema, walker_no_metaschema_with_default) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_unknown_keyword_from_other_vocab) {
+TEST(JSONSchema_walker, unknown_keyword_from_other_vocab) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
@@ -416,7 +417,7 @@ TEST(JSONSchema, walker_unknown_keyword_from_other_vocab) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_multi_metaschemas) {
+TEST(JSONSchema_walker, multi_metaschemas) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
@@ -449,7 +450,7 @@ TEST(JSONSchema, walker_multi_metaschemas) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_flat_const) {
+TEST(JSONSchema_walker, flat_const) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
@@ -478,7 +479,7 @@ TEST(JSONSchema, walker_flat_const) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_flat_non_const) {
+TEST(JSONSchema_walker, flat_non_const) {
   const std::string json{R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
@@ -508,7 +509,7 @@ TEST(JSONSchema, walker_flat_non_const) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_flat_non_const_modify) {
+TEST(JSONSchema_walker, flat_non_const_modify) {
   const std::string json{R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
@@ -537,7 +538,7 @@ TEST(JSONSchema, walker_flat_non_const_modify) {
   })JSON"));
 }
 
-TEST(JSONSchema, walker_flat_const_no_metaschema) {
+TEST(JSONSchema_walker, flat_const_no_metaschema) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({ "foo": 1 })JSON");
 
@@ -550,7 +551,7 @@ TEST(JSONSchema, walker_flat_const_no_metaschema) {
   EXPECT_EQ(subschemas.size(), 0);
 }
 
-TEST(JSONSchema, walker_flat_non_const_no_metaschema) {
+TEST(JSONSchema_walker, flat_non_const_no_metaschema) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({ "foo": 1 })JSON");
 
