@@ -8,13 +8,6 @@ auto contains(const std::map<std::string, bool> &map, const std::string &key)
 }
 } // namespace
 
-// A stub walker that doesn't walk
-auto sourcemeta::jsontoolkit::schema_walker_none(
-    std::string_view, const std::map<std::string, bool> &)
-    -> sourcemeta::jsontoolkit::SchemaWalkerStrategy {
-  return sourcemeta::jsontoolkit::SchemaWalkerStrategy::None;
-}
-
 // TODO: Extend this default walker to recognize as many official
 // JSON Schema vocabularies as possible.
 auto sourcemeta::jsontoolkit::default_schema_walker(
