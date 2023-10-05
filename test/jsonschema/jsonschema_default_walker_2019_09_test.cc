@@ -1,0 +1,780 @@
+#include <gtest/gtest.h>
+#include <sourcemeta/jsontoolkit/jsonschema.h>
+
+static const std::map<std::string, bool> VOCABULARIES_2019_09_CORE{
+    {"https://json-schema.org/draft/2019-09/vocab/core", true}};
+
+static const std::map<std::string, bool> VOCABULARIES_2019_09_APPLICATOR{
+    {"https://json-schema.org/draft/2019-09/vocab/core", true},
+    {"https://json-schema.org/draft/2019-09/vocab/applicator", true}};
+
+static const std::map<std::string, bool> VOCABULARIES_2019_09_VALIDATION{
+    {"https://json-schema.org/draft/2019-09/vocab/core", true},
+    {"https://json-schema.org/draft/2019-09/vocab/validation", true}};
+
+static const std::map<std::string, bool> VOCABULARIES_2019_09_FORMAT{
+    {"https://json-schema.org/draft/2019-09/vocab/core", true},
+    {"https://json-schema.org/draft/2019-09/vocab/format", true}};
+
+static const std::map<std::string, bool> VOCABULARIES_2019_09_CONTENT{
+    {"https://json-schema.org/draft/2019-09/vocab/core", true},
+    {"https://json-schema.org/draft/2019-09/vocab/content", true}};
+
+static const std::map<std::string, bool> VOCABULARIES_2019_09_METADATA{
+    {"https://json-schema.org/draft/2019-09/vocab/core", true},
+    {"https://json-schema.org/draft/2019-09/vocab/meta-data", true}};
+
+TEST(JSONSchema_default_walker_2019_09, core_schema) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("$schema", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, core_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("$vocabulary", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, core_id) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("$id", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, core_anchor) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("$anchor", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, core_recursiveAnchor) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("$recursiveAnchor", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, core_ref) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("$ref", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, core_recursiveRef) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("$recursiveRef", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, core_defs) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("$defs", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Members);
+}
+
+TEST(JSONSchema_default_walker_2019_09, core_comment) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("$comment", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_allOf) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("allOf", VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Elements);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_anyOf) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("anyOf", VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Elements);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_oneOf) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("oneOf", VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Elements);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_not) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("not", VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_if) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("if", VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_then) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("then", VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_else) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("else", VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_dependentSchemas) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("dependentSchemas",
+                                            VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Members);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_items) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("items", VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::ValueOrElements);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_additionalItems) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("additionalItems",
+                                            VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_contains) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("contains", VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_properties) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("properties", VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Members);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_patternProperties) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("patternProperties",
+                                            VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Members);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_additionalProperties) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("additionalProperties",
+                                            VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_propertyNames) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("propertyNames", VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_unevaluatedItems) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("unevaluatedItems",
+                                            VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_unevaluatedProperties) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("unevaluatedProperties",
+                                            VOCABULARIES_2019_09_APPLICATOR)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_type) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("type", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_enum) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("enum", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_const) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("const", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_multipleOf) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("multipleOf", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_maximum) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maximum", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_minimum) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minimum", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_exclusiveMaximum) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("exclusiveMaximum",
+                                            VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_exclusiveMinimum) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("exclusiveMinimum",
+                                            VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_maxLength) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maxLength", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_minLength) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minLength", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_pattern) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("pattern", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_maxItems) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maxItems", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_minItems) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minItems", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_uniqueItems) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("uniqueItems", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_maxContains) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maxContains", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_minContains) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minContains", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_maxProperties) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maxProperties", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_minProperties) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minProperties", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_required) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("required", VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_dependentRequired) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("dependentRequired",
+                                            VOCABULARIES_2019_09_VALIDATION)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, format_format) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("format", VOCABULARIES_2019_09_FORMAT)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, content_contentEncoding) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("contentEncoding", VOCABULARIES_2019_09_CONTENT)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, content_contentMediaType) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("contentMediaType", VOCABULARIES_2019_09_CONTENT)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, content_contentSchema) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("contentSchema", VOCABULARIES_2019_09_CONTENT)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_title) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("title", VOCABULARIES_2019_09_METADATA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_description) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("description", VOCABULARIES_2019_09_METADATA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_default) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("default", VOCABULARIES_2019_09_METADATA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_deprecated) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("deprecated", VOCABULARIES_2019_09_METADATA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_readOnly) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("readOnly", VOCABULARIES_2019_09_METADATA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_writeOnly) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("writeOnly", VOCABULARIES_2019_09_METADATA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_examples) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("examples", VOCABULARIES_2019_09_METADATA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_allOf_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("allOf", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_anyOf_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("anyOf", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_oneOf_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("oneOf", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_not_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("not", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_if_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("if", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_then_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("then", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_else_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("else", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     applicator_dependentSchemas_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("dependentSchemas", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     applicator_additionalItems_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("additionalItems", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, applicator_items_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("items", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     applicator_contains_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("contains", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     applicator_properties_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("properties", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     applicator_patternProperties_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("patternProperties", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     applicator_additionalProperties_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("additionalProperties", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     applicator_propertyNames_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("propertyNames", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     applicator_unevaluatedItems_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("unevaluatedItems", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     applicator_unevaluatedProperties_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("unevaluatedProperties",
+                                            VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_type_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("type", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_enum_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("enum", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_const_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("const", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_multipleOf_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("multipleOf", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_maximum_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maximum", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_minimum_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minimum", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_exclusiveMaximum_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("exclusiveMaximum", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_exclusiveMinimum_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("exclusiveMinimum", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_maxLength_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maxLength", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_minLength_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minLength", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, validation_pattern_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("pattern", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_maxItems_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maxItems", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_minItems_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minItems", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_uniqueItems_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("uniqueItems", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_maxContains_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maxContains", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_minContains_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minContains", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_maxProperties_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maxProperties", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_minProperties_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minProperties", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_required_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("required", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     validation_dependentRequired_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("dependentRequired", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, format_format_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("format", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     content_contentEncoding_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("contentEncoding", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     content_contentMediaType_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("contentMediaType", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     content_contentSchema_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("contentSchema", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_title_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("title", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     metadata_description_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("description", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_default_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("default", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09,
+     metadata_deprecated_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("deprecated", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_readOnly_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("readOnly", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_writeOnly_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("writeOnly", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_2019_09, metadata_examples_without_vocabulary) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("examples", VOCABULARIES_2019_09_CORE)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
