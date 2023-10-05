@@ -33,6 +33,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_vocabulary_test.cc
   jsonschema_default_walker_2020_12_test.cc
   jsonschema_default_walker_2019_09_test.cc
+  jsonschema_default_walker_draft7_test.cc
   jsonschema_walker_none_test.cc
   jsonschema_walker_test.cc
   jsonschema_error_test.cc

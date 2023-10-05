@@ -31,21 +31,24 @@ namespace sourcemeta::jsontoolkit {
 enum class SchemaWalkerStrategy {
   /// The JSON Schema keyword is not an applicator
   None,
-  /// The JSON Schema keyword is an applicator that takes a JSON Schema
-  /// definition as an argument
+  /// The JSON Schema keyword is an applicator that potentially
+  /// takes a JSON Schema definition as an argument
   Value,
-  /// The JSON Schema keyword is an applicator that takes an arrat of JSON
-  /// Schema definitions as an argument
+  /// The JSON Schema keyword is an applicator that potentially
+  /// takes an array of potentially JSON Schema definitions
+  /// as an argument
   Elements,
-  /// The JSON Schema keyword is an applicator that takes an object as argument,
-  /// whose values are JSON Schema definitions
+  /// The JSON Schema keyword is an applicator that potentially
+  /// takes an object as argument, whose values are potentially
+  /// JSON Schema definitions
   Members,
-  /// The JSON Schema keyword is an applicator that either takes a JSON Schema
-  /// definition or an array of JSON Schema definitions as an argument
+  /// The JSON Schema keyword is an applicator that may take a JSON Schema
+  /// definition or an array of potentially JSON Schema definitions
+  /// as an argument
   ValueOrElements,
-  /// The JSON Schema keyword is an applicator that either takes an array of
-  /// JSON Schema definitions or an object whose values are JSON Schema
-  /// definitions as an argument
+  /// The JSON Schema keyword is an applicator that may take an array of
+  /// potentially JSON Schema definitions or an object whose values are
+  /// potentially JSON Schema definitions as an argument
   ElementsOrMembers
 };
 #if defined(__GNUC__)
