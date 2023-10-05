@@ -11,6 +11,10 @@ auto walk(std::vector<std::reference_wrapper<ValueT>> &subschemas,
           const sourcemeta::jsontoolkit::SchemaResolver &resolver,
           const std::string &dialect, const SchemaWalkerype_t type,
           const std::size_t level) -> void {
+  if (!is_schema(subschema)) {
+    return;
+  }
+
   if (type == SchemaWalkerype_t::Deep || level > 0) {
     subschemas.push_back(subschema);
   }
@@ -36,11 +40,8 @@ auto walk(std::vector<std::reference_wrapper<ValueT>> &subschemas,
   for (auto &pair : subschema.as_object()) {
     switch (walker(pair.first, vocabularies)) {
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value:
-        if (is_schema(pair.second)) {
-          walk(subschemas, pair.second, walker, resolver, new_dialect, type,
-               level + 1);
-        }
-
+        walk(subschemas, pair.second, walker, resolver, new_dialect, type,
+             level + 1);
         break;
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Elements:
         if (pair.second.is_array()) {
@@ -66,7 +67,7 @@ auto walk(std::vector<std::reference_wrapper<ValueT>> &subschemas,
             walk(subschemas, element, walker, resolver, new_dialect, type,
                  level + 1);
           }
-        } else if (is_schema(pair.second)) {
+        } else {
           walk(subschemas, pair.second, walker, resolver, new_dialect, type,
                level + 1);
         }
