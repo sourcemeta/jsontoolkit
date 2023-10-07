@@ -45,6 +45,6 @@ target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE GTest::gtest_main)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE sourcemeta::jsontoolkit::jsonschema)
-gtest_discover_tests(sourcemeta_jsontoolkit_jsonschema_unit)
+add_test(NAME JSONSchema COMMAND sourcemeta_jsontoolkit_jsonschema_unit --gtest_brief=1)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema_unit
   PROPERTIES FOLDER "JSON Toolkit/JSON Schema")

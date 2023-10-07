@@ -14,6 +14,6 @@ target_link_libraries(sourcemeta_jsontoolkit_jsonpointer_unit
   PRIVATE sourcemeta::jsontoolkit::jsonpointer)
 target_link_libraries(sourcemeta_jsontoolkit_jsonpointer_unit
   PRIVATE sourcemeta::jsontoolkit::json)
-gtest_discover_tests(sourcemeta_jsontoolkit_jsonpointer_unit)
+add_test(NAME JSONPointer COMMAND sourcemeta_jsontoolkit_jsonpointer_unit --gtest_brief=1)
 set_target_properties(sourcemeta_jsontoolkit_jsonpointer_unit
   PROPERTIES FOLDER "JSON Toolkit/JSON Pointer")
