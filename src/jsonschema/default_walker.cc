@@ -84,6 +84,19 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-06/schema#", "contains", Value)
   WALK(HTTP_BASE "draft-06/schema#", "additionalProperties", Value)
   WALK(HTTP_BASE "draft-06/schema#", "propertyNames", Value)
+
+  // Draft4
+  WALK(HTTP_BASE "draft-04/schema#", "definitions", Members)
+  WALK(HTTP_BASE "draft-04/schema#", "dependencies", Members)
+  WALK(HTTP_BASE "draft-04/schema#", "items", ValueOrElements)
+  WALK(HTTP_BASE "draft-04/schema#", "additionalItems", Value)
+  WALK(HTTP_BASE "draft-04/schema#", "properties", Members)
+  WALK(HTTP_BASE "draft-04/schema#", "patternProperties", Members)
+  WALK(HTTP_BASE "draft-04/schema#", "allOf", Elements)
+  WALK(HTTP_BASE "draft-04/schema#", "anyOf", Elements)
+  WALK(HTTP_BASE "draft-04/schema#", "oneOf", Elements)
+  WALK(HTTP_BASE "draft-04/schema#", "not", Value)
+  WALK(HTTP_BASE "draft-04/schema#", "additionalProperties", Value)
 #undef HTTP_BASE
 #undef WALK
   return sourcemeta::jsontoolkit::SchemaWalkerStrategy::None;
