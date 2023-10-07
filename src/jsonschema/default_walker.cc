@@ -1,100 +1,76 @@
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
-// TODO: Extend this default walker to recognize as many official
-// JSON Schema vocabularies as possible.
-//
-// TODO: Better split by vocabulary to make it more readable
 auto sourcemeta::jsontoolkit::default_schema_walker(
     std::string_view keyword, const std::map<std::string, bool> &vocabularies)
     -> sourcemeta::jsontoolkit::SchemaWalkerStrategy {
-  if ((vocabularies.contains(
-           "https://json-schema.org/draft/2020-12/vocab/core") ||
-       vocabularies.contains(
-           "https://json-schema.org/draft/2019-09/vocab/core")) &&
-      keyword == "$defs") {
-    return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Members;
-  }
+#define HTTPS_BASE "https://json-schema.org/draft/"
+#define HTTP_BASE "http://json-schema.org/"
+#define WALK(vocabulary, _keyword, strategy)                                   \
+  if (vocabularies.contains(vocabulary) && keyword == _keyword)                \
+    return sourcemeta::jsontoolkit::SchemaWalkerStrategy::strategy;
 
-  if (vocabularies.contains("http://json-schema.org/draft-07/schema#") &&
-      keyword == "definitions") {
-    return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Members;
-  }
+  // 2020-12
+  WALK(HTTPS_BASE "2020-12/vocab/core", "$defs", Members)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "items", Value)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "prefixItems", Elements)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "dependentSchemas", Members)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "properties", Members)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "patternProperties", Members)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "allOf", Elements)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "anyOf", Elements)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "oneOf", Elements)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "not", Value)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "if", Value)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "then", Value)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "else", Value)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "contains", Value)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "additionalProperties", Value)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "propertyNames", Value)
+  WALK(HTTPS_BASE "2020-12/vocab/content", "contentSchema", Value)
+  WALK(HTTPS_BASE "2020-12/vocab/unevaluated", "unevaluatedProperties", Value)
+  WALK(HTTPS_BASE "2020-12/vocab/unevaluated", "unevaluatedItems", Value)
 
-  if ((vocabularies.contains(
-           "https://json-schema.org/draft/2020-12/vocab/content") ||
-       vocabularies.contains(
-           "https://json-schema.org/draft/2019-09/vocab/content")) &&
-      keyword == "contentSchema") {
-    return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value;
-  }
+  // 2019-09
+  WALK(HTTPS_BASE "2019-09/vocab/core", "$defs", Members)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "items", ValueOrElements)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "additionalItems", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "dependentSchemas", Members)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "unevaluatedProperties", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "unevaluatedItems", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "properties", Members)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "patternProperties", Members)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "allOf", Elements)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "anyOf", Elements)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "oneOf", Elements)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "not", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "if", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "then", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "else", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "contains", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "additionalProperties", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "propertyNames", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/content", "contentSchema", Value)
 
-  if (vocabularies.contains(
-          "https://json-schema.org/draft/2020-12/vocab/unevaluated") ||
-      vocabularies.contains(
-          "https://json-schema.org/draft/2019-09/vocab/applicator")) {
-    if (keyword == "unevaluatedProperties" || keyword == "unevaluatedItems") {
-      return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value;
-    }
-  }
+  // Draft7
+  WALK(HTTP_BASE "draft-07/schema#", "definitions", Members)
+  WALK(HTTP_BASE "draft-07/schema#", "dependencies", Members)
+  WALK(HTTP_BASE "draft-07/schema#", "items", ValueOrElements)
+  WALK(HTTP_BASE "draft-07/schema#", "additionalItems", Value)
+  WALK(HTTP_BASE "draft-07/schema#", "properties", Members)
+  WALK(HTTP_BASE "draft-07/schema#", "patternProperties", Members)
+  WALK(HTTP_BASE "draft-07/schema#", "allOf", Elements)
+  WALK(HTTP_BASE "draft-07/schema#", "anyOf", Elements)
+  WALK(HTTP_BASE "draft-07/schema#", "oneOf", Elements)
+  WALK(HTTP_BASE "draft-07/schema#", "not", Value)
+  WALK(HTTP_BASE "draft-07/schema#", "if", Value)
+  WALK(HTTP_BASE "draft-07/schema#", "then", Value)
+  WALK(HTTP_BASE "draft-07/schema#", "else", Value)
+  WALK(HTTP_BASE "draft-07/schema#", "contains", Value)
+  WALK(HTTP_BASE "draft-07/schema#", "additionalProperties", Value)
+  WALK(HTTP_BASE "draft-07/schema#", "propertyNames", Value)
 
-  if (vocabularies.contains("http://json-schema.org/draft-07/schema#") &&
-      keyword == "dependencies") {
-    return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Members;
-  }
-
-  if ((vocabularies.contains(
-           "https://json-schema.org/draft/2019-09/vocab/applicator") ||
-       vocabularies.contains("http://json-schema.org/draft-07/schema#")) &&
-      keyword == "items") {
-    return sourcemeta::jsontoolkit::SchemaWalkerStrategy::ValueOrElements;
-  }
-
-  if (vocabularies.contains(
-          "https://json-schema.org/draft/2020-12/vocab/applicator") &&
-      keyword == "items") {
-    return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value;
-  }
-
-  if (vocabularies.contains(
-          "https://json-schema.org/draft/2020-12/vocab/applicator") &&
-      keyword == "prefixItems") {
-    return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Elements;
-  }
-
-  if ((vocabularies.contains(
-           "https://json-schema.org/draft/2019-09/vocab/applicator") ||
-       vocabularies.contains("http://json-schema.org/draft-07/schema#")) &&
-      keyword == "additionalItems") {
-    return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value;
-  }
-
-  if ((vocabularies.contains(
-           "https://json-schema.org/draft/2020-12/vocab/applicator") ||
-       vocabularies.contains(
-           "https://json-schema.org/draft/2019-09/vocab/applicator")) &&
-      keyword == "dependentSchemas") {
-    return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Members;
-  }
-
-  if (vocabularies.contains(
-          "https://json-schema.org/draft/2020-12/vocab/applicator") ||
-      vocabularies.contains(
-          "https://json-schema.org/draft/2019-09/vocab/applicator") ||
-      vocabularies.contains("http://json-schema.org/draft-07/schema#")) {
-    if (keyword == "properties" || keyword == "patternProperties") {
-      return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Members;
-    }
-
-    if (keyword == "allOf" || keyword == "anyOf" || keyword == "oneOf") {
-      return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Elements;
-    }
-
-    if (keyword == "not" || keyword == "if" || keyword == "then" ||
-        keyword == "else" || keyword == "contains" ||
-        keyword == "additionalProperties" || keyword == "propertyNames") {
-      return sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value;
-    }
-  }
-
+#undef HTTPS_BASE
+#undef HTTP_BASE
+#undef WALK
   return sourcemeta::jsontoolkit::SchemaWalkerStrategy::None;
 }
