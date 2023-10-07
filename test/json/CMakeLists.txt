@@ -18,9 +18,9 @@ target_link_libraries(sourcemeta_jsontoolkit_json_unit
   PRIVATE GTest::gtest GTest::gtest_main)
 target_link_libraries(sourcemeta_jsontoolkit_json_unit
   PRIVATE sourcemeta::jsontoolkit::json)
-gtest_discover_tests(sourcemeta_jsontoolkit_json_unit)
 set_target_properties(sourcemeta_jsontoolkit_json_unit
   PROPERTIES FOLDER "JSON Toolkit/JSON")
+add_test(NAME JSON COMMAND sourcemeta_jsontoolkit_json_unit --gtest_brief=1)
 
 # JSON Test Suite
 # See https://github.com/nst/JSONTestSuite
@@ -30,6 +30,6 @@ target_compile_definitions(sourcemeta_jsontoolkit_jsontestsuite
   PRIVATE JSONTESTSUITE_PATH="${PROJECT_SOURCE_DIR}/vendor/jsontestsuite")
 target_link_libraries(sourcemeta_jsontoolkit_jsontestsuite PRIVATE GTest::gtest)
 target_link_libraries(sourcemeta_jsontoolkit_jsontestsuite PRIVATE sourcemeta::jsontoolkit::json)
-gtest_discover_tests(sourcemeta_jsontoolkit_jsontestsuite)
 set_target_properties(sourcemeta_jsontoolkit_jsontestsuite
   PROPERTIES FOLDER "JSON Toolkit/JSON")
+add_test(NAME JSONTestSuite COMMAND sourcemeta_jsontoolkit_jsontestsuite --gtest_brief=1)
