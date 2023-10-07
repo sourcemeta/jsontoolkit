@@ -124,6 +124,14 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-01/schema#", "additionalProperties", Value)
   WALK(HTTP_BASE "draft-01/schema#", "extends", ValueOrElements)
   WALK(HTTP_BASE "draft-01/schema#", "requires", Value)
+
+  // Draft0
+  WALK(HTTP_BASE "draft-00/schema#", "type", Elements)
+  WALK(HTTP_BASE "draft-00/schema#", "items", ValueOrElements)
+  WALK(HTTP_BASE "draft-00/schema#", "properties", Members)
+  WALK(HTTP_BASE "draft-00/schema#", "additionalProperties", Value)
+  WALK(HTTP_BASE "draft-00/schema#", "extends", ValueOrElements)
+  WALK(HTTP_BASE "draft-00/schema#", "requires", Value)
 #undef HTTP_BASE
 #undef WALK
   return sourcemeta::jsontoolkit::SchemaWalkerStrategy::None;
