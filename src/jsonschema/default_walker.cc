@@ -108,6 +108,14 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-03/schema#", "additionalProperties", Value)
   WALK(HTTP_BASE "draft-03/schema#", "disallow", Elements)
   WALK(HTTP_BASE "draft-03/schema#", "extends", ValueOrElements)
+
+  // Draft2
+  WALK(HTTP_BASE "draft-02/schema#", "type", Elements)
+  WALK(HTTP_BASE "draft-02/schema#", "items", ValueOrElements)
+  WALK(HTTP_BASE "draft-02/schema#", "properties", Members)
+  WALK(HTTP_BASE "draft-02/schema#", "additionalProperties", Value)
+  WALK(HTTP_BASE "draft-02/schema#", "extends", ValueOrElements)
+  WALK(HTTP_BASE "draft-02/schema#", "requires", Value)
 #undef HTTP_BASE
 #undef WALK
   return sourcemeta::jsontoolkit::SchemaWalkerStrategy::None;
