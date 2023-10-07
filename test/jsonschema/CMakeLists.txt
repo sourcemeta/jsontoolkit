@@ -36,6 +36,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_default_walker_draft7_test.cc
   jsonschema_default_walker_draft6_test.cc
   jsonschema_default_walker_draft4_test.cc
+  jsonschema_default_walker_draft3_test.cc
   jsonschema_walker_none_test.cc
   jsonschema_walker_test.cc
   jsonschema_error_test.cc
