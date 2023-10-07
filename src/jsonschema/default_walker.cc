@@ -3,12 +3,11 @@
 auto sourcemeta::jsontoolkit::default_schema_walker(
     std::string_view keyword, const std::map<std::string, bool> &vocabularies)
     -> sourcemeta::jsontoolkit::SchemaWalkerStrategy {
-#define HTTPS_BASE "https://json-schema.org/draft/"
-#define HTTP_BASE "http://json-schema.org/"
 #define WALK(vocabulary, _keyword, strategy)                                   \
   if (vocabularies.contains(vocabulary) && keyword == _keyword)                \
     return sourcemeta::jsontoolkit::SchemaWalkerStrategy::strategy;
 
+#define HTTPS_BASE "https://json-schema.org/draft/"
   // 2020-12
   WALK(HTTPS_BASE "2020-12/vocab/core", "$defs", Members)
   WALK(HTTPS_BASE "2020-12/vocab/applicator", "items", Value)
@@ -50,7 +49,9 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "additionalProperties", Value)
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "propertyNames", Value)
   WALK(HTTPS_BASE "2019-09/vocab/content", "contentSchema", Value)
+#undef HTTPS_BASE
 
+#define HTTP_BASE "http://json-schema.org/"
   // Draft7
   WALK(HTTP_BASE "draft-07/schema#", "definitions", Members)
   WALK(HTTP_BASE "draft-07/schema#", "dependencies", Members)
@@ -69,7 +70,20 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-07/schema#", "additionalProperties", Value)
   WALK(HTTP_BASE "draft-07/schema#", "propertyNames", Value)
 
-#undef HTTPS_BASE
+  // Draft6
+  WALK(HTTP_BASE "draft-06/schema#", "definitions", Members)
+  WALK(HTTP_BASE "draft-06/schema#", "dependencies", Members)
+  WALK(HTTP_BASE "draft-06/schema#", "items", ValueOrElements)
+  WALK(HTTP_BASE "draft-06/schema#", "additionalItems", Value)
+  WALK(HTTP_BASE "draft-06/schema#", "properties", Members)
+  WALK(HTTP_BASE "draft-06/schema#", "patternProperties", Members)
+  WALK(HTTP_BASE "draft-06/schema#", "allOf", Elements)
+  WALK(HTTP_BASE "draft-06/schema#", "anyOf", Elements)
+  WALK(HTTP_BASE "draft-06/schema#", "oneOf", Elements)
+  WALK(HTTP_BASE "draft-06/schema#", "not", Value)
+  WALK(HTTP_BASE "draft-06/schema#", "contains", Value)
+  WALK(HTTP_BASE "draft-06/schema#", "additionalProperties", Value)
+  WALK(HTTP_BASE "draft-06/schema#", "propertyNames", Value)
 #undef HTTP_BASE
 #undef WALK
   return sourcemeta::jsontoolkit::SchemaWalkerStrategy::None;

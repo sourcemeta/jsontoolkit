@@ -237,20 +237,20 @@ TEST(JSONSchema_default_walker_draft7, required) {
   EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
 }
 
-TEST(JSONSchema_default_walker_draft7, format_format) {
+TEST(JSONSchema_default_walker_draft7, format) {
   using namespace sourcemeta::jsontoolkit;
   const auto strategy{default_schema_walker("format", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
 }
 
-TEST(JSONSchema_default_walker_draft7, content_contentEncoding) {
+TEST(JSONSchema_default_walker_draft7, contentEncoding) {
   using namespace sourcemeta::jsontoolkit;
   const auto strategy{
       default_schema_walker("contentEncoding", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
 }
 
-TEST(JSONSchema_default_walker_draft7, content_contentMediaType) {
+TEST(JSONSchema_default_walker_draft7, contentMediaType) {
   using namespace sourcemeta::jsontoolkit;
   const auto strategy{
       default_schema_walker("contentMediaType", VOCABULARIES_DRAFT7)};
