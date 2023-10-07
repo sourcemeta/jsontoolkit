@@ -49,6 +49,11 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "additionalProperties", Value)
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "propertyNames", Value)
   WALK(HTTPS_BASE "2019-09/vocab/content", "contentSchema", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/hyper-schema", "hrefSchema", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/hyper-schema", "targetSchema", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/hyper-schema", "headerSchema", Value)
+  WALK(HTTPS_BASE "2019-09/vocab/hyper-schema", "submissionSchema", Value)
+
 #undef HTTPS_BASE
 
 #define HTTP_BASE "http://json-schema.org/"
