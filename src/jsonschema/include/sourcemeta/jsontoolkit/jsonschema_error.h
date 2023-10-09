@@ -45,7 +45,7 @@ public:
     return this->message_.c_str();
   }
 
-  [[nodiscard]] auto id() const noexcept -> const std::string & {
+  [[nodiscard]] auto id() const noexcept -> std::string_view {
     return this->identifier_;
   }
 
