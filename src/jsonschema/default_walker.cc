@@ -74,6 +74,10 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-07/schema#", "contains", Value)
   WALK(HTTP_BASE "draft-07/schema#", "additionalProperties", Value)
   WALK(HTTP_BASE "draft-07/schema#", "propertyNames", Value)
+  WALK(HTTP_BASE "draft-07/hyper-schema#", "hrefSchema", Value)
+  WALK(HTTP_BASE "draft-07/hyper-schema#", "targetSchema", Value)
+  WALK(HTTP_BASE "draft-07/hyper-schema#", "headerSchema", Value)
+  WALK(HTTP_BASE "draft-07/hyper-schema#", "submissionSchema", Value)
 
   // Draft6
   WALK(HTTP_BASE "draft-06/schema#", "definitions", Members)
@@ -89,6 +93,9 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-06/schema#", "contains", Value)
   WALK(HTTP_BASE "draft-06/schema#", "additionalProperties", Value)
   WALK(HTTP_BASE "draft-06/schema#", "propertyNames", Value)
+  WALK(HTTP_BASE "draft-06/hyper-schema#", "hrefSchema", Value)
+  WALK(HTTP_BASE "draft-06/hyper-schema#", "targetSchema", Value)
+  WALK(HTTP_BASE "draft-06/hyper-schema#", "submissionSchema", Value)
 
   // Draft4
   WALK(HTTP_BASE "draft-04/schema#", "definitions", Members)
