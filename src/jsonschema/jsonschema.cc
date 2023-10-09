@@ -33,6 +33,7 @@ auto sourcemeta::jsontoolkit::id(
       base_dialect == "http://json-schema.org/draft-03/schema#" ||
       base_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
       base_dialect == "http://json-schema.org/draft-04/schema#") {
+    std::promise<std::optional<std::string>> promise;
     if (schema.is_object() && schema.defines("id")) {
       const sourcemeta::jsontoolkit::JSON &id{schema.at("id")};
       if (!id.is_string() || id.empty()) {
@@ -40,10 +41,12 @@ auto sourcemeta::jsontoolkit::id(
             "The value of the id property is not valid");
       }
 
-      std::promise<std::optional<std::string>> promise;
       promise.set_value(id.to_string());
-      return promise.get_future();
+    } else {
+      promise.set_value(std::nullopt);
     }
+
+    return promise.get_future();
   }
 
   if (schema.is_object() && schema.defines("$id")) {
