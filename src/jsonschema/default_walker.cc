@@ -121,6 +121,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-02/schema#", "additionalProperties", Value)
   WALK(HTTP_BASE "draft-02/schema#", "extends", ValueOrElements)
   WALK(HTTP_BASE "draft-02/schema#", "requires", Value)
+  WALK(HTTP_BASE "draft-02/hyper-schema#", "targetSchema", Value)
 
   // Draft1
   WALK(HTTP_BASE "draft-01/schema#", "type", Elements)
