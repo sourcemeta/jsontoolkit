@@ -9,7 +9,10 @@
     EXPECT_TRUE(result.has_value());                                           \
     const sourcemeta::jsontoolkit::JSON &document{result.value()};             \
     EXPECT_TRUE(sourcemeta::jsontoolkit::is_schema(document));                 \
-    std::optional<std::string> id{sourcemeta::jsontoolkit::id(document)};      \
+    std::optional<std::string> id{                                             \
+        sourcemeta::jsontoolkit::id(                                           \
+            document, sourcemeta::jsontoolkit::official_resolver)              \
+            .get()};                                                           \
     EXPECT_TRUE(id.has_value());                                               \
     EXPECT_EQ(id.value(), identifier);                                         \
   }
