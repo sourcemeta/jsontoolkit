@@ -64,12 +64,15 @@ auto is_schema(const JSON &schema) -> bool;
 ///   "$id": "https://sourcemeta.com/example-schema"
 /// })JSON");
 ///
-/// std::optional<std::string> id{sourcemeta::jsontoolkit::id(document)};
+/// std::optional<std::string> id{sourcemeta::jsontoolkit::id(
+///   document, sourcemeta::jsontoolkit::official_resolver).get()};
 /// assert(id.has_value());
 /// assert(id.value() == "https://sourcemeta.com/example-schema");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto id(const JSON &schema) -> std::optional<std::string>;
+auto id(const JSON &schema, const SchemaResolver &resolver,
+        const std::optional<std::string> &default_dialect = std::nullopt)
+    -> std::future<std::optional<std::string>>;
 
 /// @ingroup jsonschema
 ///

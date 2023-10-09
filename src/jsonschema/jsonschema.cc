@@ -12,9 +12,11 @@ auto sourcemeta::jsontoolkit::is_schema(
   return schema.is_object() || schema.is_boolean();
 }
 
-// TODO: Make this function take a dialect as an argument
-auto sourcemeta::jsontoolkit::id(const sourcemeta::jsontoolkit::JSON &schema)
-    -> std::optional<std::string> {
+// TODO: Consume the resolver and default dialect
+auto sourcemeta::jsontoolkit::id(const sourcemeta::jsontoolkit::JSON &schema,
+                                 const SchemaResolver &,
+                                 const std::optional<std::string> &)
+    -> std::future<std::optional<std::string>> {
   assert(is_schema(schema));
 
   // TODO: Test that we always use "$id" or "id" correctly depending on the
@@ -26,7 +28,9 @@ auto sourcemeta::jsontoolkit::id(const sourcemeta::jsontoolkit::JSON &schema)
           "The value of the $id property is not valid");
     }
 
-    return id.to_string();
+    std::promise<std::optional<std::string>> promise;
+    promise.set_value(id.to_string());
+    return promise.get_future();
   }
 
   // TODO: Test that we always use "$id" or "id" correctly depending on the
@@ -38,10 +42,14 @@ auto sourcemeta::jsontoolkit::id(const sourcemeta::jsontoolkit::JSON &schema)
           "The value of the id property is not valid");
     }
 
-    return id.to_string();
+    std::promise<std::optional<std::string>> promise;
+    promise.set_value(id.to_string());
+    return promise.get_future();
   }
 
-  return std::nullopt;
+  std::promise<std::optional<std::string>> promise;
+  promise.set_value(std::nullopt);
+  return promise.get_future();
 }
 
 auto sourcemeta::jsontoolkit::dialect(
@@ -104,7 +112,8 @@ auto sourcemeta::jsontoolkit::base_dialect(
 
   // If we reach the bottom of the metaschema hierarchy, where the schema
   // defines itself, then we got to the base dialect
-  const std::optional<std::string> schema_id{id(schema)};
+  const std::optional<std::string> schema_id{
+      id(schema, resolver, default_dialect).get()};
   if (schema_id.has_value() &&
       schema_id.value() == effective_metaschema_id.value()) {
     std::promise<std::optional<std::string>> promise;
