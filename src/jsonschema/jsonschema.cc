@@ -12,34 +12,45 @@ auto sourcemeta::jsontoolkit::is_schema(
   return schema.is_object() || schema.is_boolean();
 }
 
-// TODO: Consume the resolver and default dialect
-auto sourcemeta::jsontoolkit::id(const sourcemeta::jsontoolkit::JSON &schema,
-                                 const SchemaResolver &,
-                                 const std::optional<std::string> &)
+auto sourcemeta::jsontoolkit::id(
+    const sourcemeta::jsontoolkit::JSON &schema, const SchemaResolver &resolver,
+    const std::optional<std::string> &default_dialect)
     -> std::future<std::optional<std::string>> {
-  assert(is_schema(schema));
+  const std::optional<std::string> maybe_base_dialect{
+      sourcemeta::jsontoolkit::base_dialect(schema, resolver, default_dialect)
+          .get()};
+  if (!maybe_base_dialect.has_value()) {
+    std::promise<std::optional<std::string>> promise;
+    promise.set_value(std::nullopt);
+    return promise.get_future();
+  }
 
-  // TODO: Test that we always use "$id" or "id" correctly depending on the
-  // dialect, and we don't just fallback
+  const std::string &base_dialect{maybe_base_dialect.value()};
+  if (base_dialect == "http://json-schema.org/draft-00/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-01/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-02/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-03/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-03/schema#" ||
+      base_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-04/schema#") {
+    if (schema.is_object() && schema.defines("id")) {
+      const sourcemeta::jsontoolkit::JSON &id{schema.at("id")};
+      if (!id.is_string() || id.empty()) {
+        throw sourcemeta::jsontoolkit::SchemaError(
+            "The value of the id property is not valid");
+      }
+
+      std::promise<std::optional<std::string>> promise;
+      promise.set_value(id.to_string());
+      return promise.get_future();
+    }
+  }
+
   if (schema.is_object() && schema.defines("$id")) {
     const sourcemeta::jsontoolkit::JSON &id{schema.at("$id")};
     if (!id.is_string() || id.empty()) {
       throw sourcemeta::jsontoolkit::SchemaError(
           "The value of the $id property is not valid");
-    }
-
-    std::promise<std::optional<std::string>> promise;
-    promise.set_value(id.to_string());
-    return promise.get_future();
-  }
-
-  // TODO: Test that we always use "$id" or "id" correctly depending on the
-  // dialect and we don't just fallback
-  if (schema.is_object() && schema.defines("id")) {
-    const sourcemeta::jsontoolkit::JSON &id{schema.at("id")};
-    if (!id.is_string() || id.empty()) {
-      throw sourcemeta::jsontoolkit::SchemaError(
-          "The value of the id property is not valid");
     }
 
     std::promise<std::optional<std::string>> promise;
@@ -112,13 +123,13 @@ auto sourcemeta::jsontoolkit::base_dialect(
 
   // If we reach the bottom of the metaschema hierarchy, where the schema
   // defines itself, then we got to the base dialect
-  const std::optional<std::string> schema_id{
-      id(schema, resolver, default_dialect).get()};
-  if (schema_id.has_value() &&
-      schema_id.value() == effective_metaschema_id.value()) {
-    std::promise<std::optional<std::string>> promise;
-    promise.set_value(schema_id.value());
-    return promise.get_future();
+  if (schema.is_object() && schema.defines("$id")) {
+    assert(schema.at("$id").is_string());
+    if (schema.at("$id").to_string() == effective_metaschema_id.value()) {
+      std::promise<std::optional<std::string>> promise;
+      promise.set_value(schema.at("$id").to_string());
+      return promise.get_future();
+    }
   }
 
   // Otherwise, traverse the metaschema hierarchy up
