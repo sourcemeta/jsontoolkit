@@ -69,6 +69,7 @@ CMake
 
 | Option                            | Type    | Default | Description                                 |
 |-----------------------------------|---------|---------|---------------------------------------------|
+| `JSONTOOLKIT_URI`                 | Boolean | `ON`    | Build the JSON Toolkit URI library          |
 | `JSONTOOLKIT_JSON`                | Boolean | `ON`    | Build the JSON Toolkit JSON library         |
 | `JSONTOOLKIT_JSONSCHEMA`          | Boolean | `ON`    | Build the JSON Toolkit JSON Schema library  |
 | `JSONTOOLKIT_JSONPOINTER`         | Boolean | `ON`    | Build the JSON Toolkit JSON Pointer library |
