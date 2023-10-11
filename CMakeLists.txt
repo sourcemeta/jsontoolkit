@@ -7,6 +7,7 @@ include(vendor/noa/cmake/noa.cmake)
 include(CompilerOptions)
 
 # Options
+option(JSONTOOLKIT_URI "Build the JSON Toolkit URI library" ON)
 option(JSONTOOLKIT_JSON "Build the JSON Toolkit JSON library" ON)
 option(JSONTOOLKIT_JSONSCHEMA "Build the JSON Toolkit JSON Schema library" ON)
 option(JSONTOOLKIT_JSONPOINTER "Build the JSON Toolkit JSON Pointer library" ON)
@@ -31,6 +32,11 @@ if(PROJECT_IS_TOP_LEVEL)
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
     COMPONENT sourcemeta_jsontoolkit_dev)
+endif()
+
+if(JSONTOOLKIT_URI)
+  find_package(UriParser REQUIRED)
+  add_subdirectory(src/uri)
 endif()
 
 if(JSONTOOLKIT_JSON)
@@ -81,6 +87,10 @@ endif()
 if(JSONTOOLKIT_TESTS)
   find_package(GoogleTest REQUIRED)
   enable_testing()
+
+  if(JSONTOOLKIT_URI)
+    add_subdirectory(test/uri)
+  endif()
 
   if(JSONTOOLKIT_JSON)
     add_subdirectory(test/json)
