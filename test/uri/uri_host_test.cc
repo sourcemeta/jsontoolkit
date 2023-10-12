@@ -7,7 +7,7 @@ TEST(URI_host, https_example_url) {
   EXPECT_EQ(uri.host().value(), "example.com");
 }
 
-TEST(URI_host, relaive_url) {
+TEST(URI_host, relative_url) {
   const sourcemeta::jsontoolkit::URI uri{"../foo"};
   EXPECT_FALSE(uri.host().has_value());
 }

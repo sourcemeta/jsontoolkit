@@ -59,7 +59,19 @@ public:
   /// assert(uri.host().has_value());
   /// assert(uri.host().value() == "sourcemeta.com");
   /// ```
-  auto host() const -> std::optional<std::string_view>;
+  [[nodiscard]] auto host() const -> std::optional<std::string_view>;
+
+  /// Get the fragment part of the URI, if any. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"https://www.sourcemeta.com/#foo"};
+  /// assert(uri.fragment().has_value());
+  /// assert(uri.fragment().value() == "foo");
+  /// ```
+  [[nodiscard]] auto fragment() const -> std::optional<std::string_view>;
 
   /// Normalize and recompose a URI as established by RFC 3986. For example:
   ///
@@ -71,7 +83,7 @@ public:
   ///   uri{"https://www.sourcemeta.com/foo/../bar"};
   /// assert(uri.recompose() == "https://sourcemeta.com/bar");
   /// ```
-  auto recompose() const -> std::string;
+  [[nodiscard]] auto recompose() const -> std::string;
 
   /// Resolve a relative URI against a base URI as established by RFC 3986. For
   /// example:
