@@ -21,6 +21,8 @@ namespace sourcemeta::jsontoolkit {
 #pragma warning(disable : 4251 4275)
 #endif
 
+/// @ingroup uri
+/// An error that represents a URI parsing failure
 class SOURCEMETA_JSONTOOLKIT_URI_EXPORT URIParseError : public std::exception {
 public:
   URIParseError(const std::uint64_t column) : column_{column} {}
@@ -29,6 +31,7 @@ public:
     return "The input is not a valid URI";
   }
 
+  /// Get the column number of the error
   [[nodiscard]] auto column() const noexcept -> std::uint64_t {
     return column_;
   }
@@ -37,6 +40,8 @@ private:
   std::uint64_t column_;
 };
 
+/// @ingroup uri
+/// An error that represents a general URI error event
 class SOURCEMETA_JSONTOOLKIT_URI_EXPORT URIError : public std::exception {
 public:
   URIError(std::string message) : message_{std::move(message)} {}

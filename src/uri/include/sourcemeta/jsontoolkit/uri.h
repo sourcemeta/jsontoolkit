@@ -14,19 +14,80 @@
 #include <string>      // std::string
 #include <string_view> // std::string_view
 
+/// @defgroup uri URI
+/// @brief A RFC 3986 URI implementation based on `uriparser`.
+///
+/// This functionality is included as follows:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/uri.h>
+/// ```
+
 namespace sourcemeta::jsontoolkit {
 
+/// @ingroup uri
 class SOURCEMETA_JSONTOOLKIT_URI_EXPORT URI {
 public:
+  /// This constructor creates a URI from a string type. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"https://www.sourcemeta.com"};
+  /// ```
   URI(std::string input);
   ~URI();
 
-  auto is_absolute() const noexcept -> bool;
+  /// Check if the URI is absolute. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"https://www.sourcemeta.com"};
+  /// assert(uri.is_absolute());
+  /// ```
+  [[nodiscard]] auto is_absolute() const noexcept -> bool;
+
+  /// Get the host part of the URI, if any. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"https://www.sourcemeta.com"};
+  /// assert(uri.host().has_value());
+  /// assert(uri.host().value() == "sourcemeta.com");
+  /// ```
   auto host() const -> std::optional<std::string_view>;
+
+  /// Normalize and recompose a URI as established by RFC 3986. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI
+  ///   uri{"https://www.sourcemeta.com/foo/../bar"};
+  /// assert(uri.recompose() == "https://sourcemeta.com/bar");
+  /// ```
   auto recompose() const -> std::string;
 
-  // We return a string for performance reasons, which the
-  // user can always parse back into a URI object if they wish.
+  /// Resolve a relative URI against a base URI as established by RFC 3986. For
+  /// example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI base{"https://www.sourcemeta.com"};
+  /// const sourcemeta::jsontoolkit::URI relative{"foo"};
+  /// assert(relative.resolve_from(base) == "https://sourcemeta.com/foo");
+  /// ```
+  ///
+  /// Note that we return a string, and not a sourcemeta::jsontoolkit::URI for
+  /// performance reasons. The user can always parse the string back into a URI
+  /// object if they wish.
   auto resolve_from(const URI &base) const -> std::string;
 
 private:
