@@ -29,6 +29,17 @@ static auto uri_to_string(const UriUriA *const uri) -> std::string {
   return result;
 }
 
+static auto uri_text_range(const UriTextRangeA *const range)
+    -> std::optional<std::string_view> {
+  if (range->afterLast == nullptr) {
+    return std::nullopt;
+  }
+
+  return std::string_view{range->first,
+                          static_cast<std::string_view::size_type>(
+                              range->afterLast - range->first)};
+}
+
 namespace sourcemeta::jsontoolkit {
 
 struct URI::Internal {
@@ -65,14 +76,11 @@ auto URI::is_absolute() const noexcept -> bool {
 }
 
 auto URI::host() const -> std::optional<std::string_view> {
-  if (this->internal->uri.hostText.afterLast == nullptr) {
-    return std::nullopt;
-  }
+  return uri_text_range(&this->internal->uri.hostText);
+}
 
-  return std::string_view{this->internal->uri.hostText.first,
-                          static_cast<std::string_view::size_type>(
-                              this->internal->uri.hostText.afterLast -
-                              this->internal->uri.hostText.first)};
+auto URI::fragment() const -> std::optional<std::string_view> {
+  return uri_text_range(&this->internal->uri.fragment);
 }
 
 auto URI::recompose() const -> std::string {
