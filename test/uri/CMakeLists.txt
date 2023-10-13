@@ -3,7 +3,9 @@ add_executable(sourcemeta_jsontoolkit_uri_unit
   uri_host_test.cc
   uri_is_absolute_test.cc
   uri_recompose_test.cc
-  uri_resolve_from_test.cc)
+  uri_resolve_from_test.cc
+  uri_escape_test.cc
+  uri_unescape_test.cc)
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_uri_unit)
 target_link_libraries(sourcemeta_jsontoolkit_uri_unit
   PRIVATE GTest::gtest GTest::gtest_main)

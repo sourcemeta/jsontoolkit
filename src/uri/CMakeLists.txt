@@ -4,7 +4,7 @@ set(URI_PRIVATE_HEADERS
   "${CMAKE_CURRENT_BINARY_DIR}/uri_export.h")
 
 add_library(sourcemeta_jsontoolkit_uri
-  ${URI_PUBLIC_HEADERS} ${URI_PRIVATE_HEADERS} uri.cc)
+  ${URI_PUBLIC_HEADERS} ${URI_PRIVATE_HEADERS} uri.cc escaping.cc)
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_uri)
 add_library(sourcemeta::jsontoolkit::uri
   ALIAS sourcemeta_jsontoolkit_uri)
