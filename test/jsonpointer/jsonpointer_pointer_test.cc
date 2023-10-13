@@ -98,3 +98,21 @@ TEST(JSONPointer_pointer, build_with_emplace_back) {
   EXPECT_EQ(pointer.at(0).to_property(), "foo");
   EXPECT_EQ(pointer.at(1).to_index(), 1);
 }
+
+TEST(JSONPointer_pointer, equality_empty) {
+  const sourcemeta::jsontoolkit::Pointer pointer_1;
+  const sourcemeta::jsontoolkit::Pointer pointer_2;
+  EXPECT_EQ(pointer_1, pointer_2);
+}
+
+TEST(JSONPointer_pointer, equality_true) {
+  const sourcemeta::jsontoolkit::Pointer pointer_1{"foo", 1, "bar"};
+  const sourcemeta::jsontoolkit::Pointer pointer_2{"foo", 1, "bar"};
+  EXPECT_EQ(pointer_1, pointer_2);
+}
+
+TEST(JSONPointer_pointer, equality_false) {
+  const sourcemeta::jsontoolkit::Pointer pointer_1{"foo", 1, "bar"};
+  const sourcemeta::jsontoolkit::Pointer pointer_2{"foo", 2, "bar"};
+  EXPECT_FALSE(pointer_1 == pointer_2);
+}
