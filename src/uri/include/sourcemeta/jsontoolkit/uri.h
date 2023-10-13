@@ -30,6 +30,8 @@ namespace sourcemeta::jsontoolkit {
 /// @ingroup uri
 class SOURCEMETA_JSONTOOLKIT_URI_EXPORT URI {
 public:
+  // TODO: Add a constructor that takes a C++ input stream
+
   /// This constructor creates a URI from a string type. For example:
   ///
   /// ```cpp
