@@ -183,6 +183,13 @@ public:
     return std::get<Index>(this->data);
   }
 
+  /// Compare JSON Pointer tokens
+  auto
+  operator==(const GenericToken<CharT, Traits, Allocator> &other) const noexcept
+      -> bool {
+    return this->data == other.data;
+  }
+
 private:
   std::variant<Property, Index> data;
 };

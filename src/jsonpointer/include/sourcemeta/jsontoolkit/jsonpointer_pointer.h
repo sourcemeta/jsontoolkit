@@ -170,6 +170,12 @@ public:
     return this->data.emplace_back(args...);
   }
 
+  /// Compare JSON Pointer instances
+  auto operator==(const GenericPointer<CharT, Traits, Allocator> &other)
+      const noexcept -> bool {
+    return this->data == other.data;
+  }
+
 private:
   Container data;
 };
