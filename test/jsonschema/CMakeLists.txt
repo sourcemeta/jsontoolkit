@@ -12,6 +12,15 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_id_draft0_test.cc
   jsonschema_id_test.cc
   jsonschema_is_schema_test.cc
+  jsonschema_frame_2020_12_test.cc
+  jsonschema_frame_2019_09_test.cc
+  jsonschema_frame_draft7_test.cc
+  jsonschema_frame_draft6_test.cc
+  jsonschema_frame_draft4_test.cc
+  jsonschema_frame_draft3_test.cc
+  jsonschema_frame_draft2_test.cc
+  jsonschema_frame_draft1_test.cc
+  jsonschema_frame_draft0_test.cc
   jsonschema_dialect_test.cc
   jsonschema_dialect_2020_12_test.cc
   jsonschema_dialect_2019_09_test.cc
