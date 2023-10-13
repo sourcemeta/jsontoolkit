@@ -16,6 +16,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   find_package(Threads REQUIRED)
 endif()
 
-include("${CMAKE_CURRENT_LIST_DIR}/sourcemeta_jsontoolkit_jsonschema.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/sourcemeta_jsontoolkit_jsonpointer.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/sourcemeta_jsontoolkit_jsonschema.cmake")
 check_required_components("@PROJECT_NAME@")
