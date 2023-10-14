@@ -3,6 +3,8 @@ sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema_key
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_keywords
   PRIVATE sourcemeta::jsontoolkit::json)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_keywords
+  PRIVATE sourcemeta::jsontoolkit::jsonpointer)
+target_link_libraries(sourcemeta_jsontoolkit_jsonschema_keywords
   PRIVATE sourcemeta::jsontoolkit::jsonschema)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema_keywords PROPERTIES
   OUTPUT_NAME jsonschema_keywords

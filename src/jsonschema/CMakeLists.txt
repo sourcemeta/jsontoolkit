@@ -30,6 +30,8 @@ target_include_directories(sourcemeta_jsontoolkit_jsonschema
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
   sourcemeta::jsontoolkit::json)
+target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
+  sourcemeta::jsontoolkit::jsonpointer)
 
 include(GenerateExportHeader)
 generate_export_header(sourcemeta_jsontoolkit_jsonschema

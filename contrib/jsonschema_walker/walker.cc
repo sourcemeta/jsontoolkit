@@ -1,4 +1,5 @@
 #include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
 #include <cstdlib>    // EXIT_FAILURE, EXIT_SUCCESS
@@ -25,18 +26,19 @@ auto walk(const std::string &mode, std::basic_istream<CharT, Traits> &stream)
   }
 
   if (mode == "deep") {
-    for (const auto &subschema : sourcemeta::jsontoolkit::ConstSchemaIterator(
+    for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
              document, sourcemeta::jsontoolkit::default_schema_walker,
              sourcemeta::jsontoolkit::official_resolver)) {
-      sourcemeta::jsontoolkit::prettify(subschema, std::cout);
+      sourcemeta::jsontoolkit::prettify(
+          sourcemeta::jsontoolkit::get(document, pointer), std::cout);
       std::cout << "\n";
     }
   } else if (mode == "flat") {
-    for (const auto &subschema :
-         sourcemeta::jsontoolkit::ConstSchemaIteratorFlat{
+    for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIteratorFlat{
              document, sourcemeta::jsontoolkit::default_schema_walker,
              sourcemeta::jsontoolkit::official_resolver}) {
-      sourcemeta::jsontoolkit::prettify(subschema, std::cout);
+      sourcemeta::jsontoolkit::prettify(
+          sourcemeta::jsontoolkit::get(document, pointer), std::cout);
       std::cout << "\n";
     }
   } else {

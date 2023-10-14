@@ -1,12 +1,13 @@
+#include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
 namespace {
 enum class SchemaWalkerype_t { Deep, Flat };
 
-template <typename ValueT>
-auto walk(std::vector<std::reference_wrapper<ValueT>> &subschemas,
-          ValueT &subschema,
+auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
+          std::vector<sourcemeta::jsontoolkit::Pointer> &pointers,
+          const sourcemeta::jsontoolkit::JSON &subschema,
           const sourcemeta::jsontoolkit::SchemaWalker &walker,
           const sourcemeta::jsontoolkit::SchemaResolver &resolver,
           const std::string &dialect, const SchemaWalkerype_t type,
@@ -16,7 +17,7 @@ auto walk(std::vector<std::reference_wrapper<ValueT>> &subschemas,
   }
 
   if (type == SchemaWalkerype_t::Deep || level > 0) {
-    subschemas.push_back(subschema);
+    pointers.push_back(pointer);
   }
 
   // We can't recurse any further
@@ -27,7 +28,7 @@ auto walk(std::vector<std::reference_wrapper<ValueT>> &subschemas,
 
   // Recalculate the dialect and its vocabularies at every step.
   // This is needed for correctly traversing through schemas that
-  // contains subschemas that use different dialect/vocabularies.
+  // contains pointers that use different dialect/vocabularies.
   // This is often the case for bundled schemas.
   const std::optional<std::string> current_dialect{
       sourcemeta::jsontoolkit::dialect(subschema)};
@@ -39,15 +40,20 @@ auto walk(std::vector<std::reference_wrapper<ValueT>> &subschemas,
 
   for (auto &pair : subschema.as_object()) {
     switch (walker(pair.first, vocabularies)) {
-      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value:
-        walk(subschemas, pair.second, walker, resolver, new_dialect, type,
-             level + 1);
-        break;
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value: {
+        sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+        new_pointer.emplace_back(pair.first);
+        walk(new_pointer, pointers, pair.second, walker, resolver, new_dialect,
+             type, level + 1);
+      } break;
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Elements:
         if (pair.second.is_array()) {
-          for (auto &element : pair.second.as_array()) {
-            walk(subschemas, element, walker, resolver, new_dialect, type,
-                 level + 1);
+          for (std::size_t index = 0; index < pair.second.size(); index++) {
+            sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+            new_pointer.emplace_back(pair.first);
+            new_pointer.emplace_back(index);
+            walk(new_pointer, pointers, pair.second.at(index), walker, resolver,
+                 new_dialect, type, level + 1);
           }
         }
 
@@ -55,34 +61,48 @@ auto walk(std::vector<std::reference_wrapper<ValueT>> &subschemas,
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Members:
         if (pair.second.is_object()) {
           for (auto &subpair : pair.second.as_object()) {
-            walk(subschemas, subpair.second, walker, resolver, new_dialect,
-                 type, level + 1);
+            sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+            new_pointer.emplace_back(pair.first);
+            new_pointer.emplace_back(subpair.first);
+            walk(new_pointer, pointers, subpair.second, walker, resolver,
+                 new_dialect, type, level + 1);
           }
         }
 
         break;
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ValueOrElements:
         if (pair.second.is_array()) {
-          for (auto &element : pair.second.as_array()) {
-            walk(subschemas, element, walker, resolver, new_dialect, type,
-                 level + 1);
+          for (std::size_t index = 0; index < pair.second.size(); index++) {
+            sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+            new_pointer.emplace_back(pair.first);
+            new_pointer.emplace_back(index);
+            walk(new_pointer, pointers, pair.second.at(index), walker, resolver,
+                 new_dialect, type, level + 1);
           }
         } else {
-          walk(subschemas, pair.second, walker, resolver, new_dialect, type,
-               level + 1);
+          sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+          new_pointer.emplace_back(pair.first);
+          walk(new_pointer, pointers, pair.second, walker, resolver,
+               new_dialect, type, level + 1);
         }
 
         break;
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ElementsOrMembers:
         if (pair.second.is_array()) {
-          for (auto &element : pair.second.as_array()) {
-            walk(subschemas, element, walker, resolver, new_dialect, type,
-                 level + 1);
+          for (std::size_t index = 0; index < pair.second.size(); index++) {
+            sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+            new_pointer.emplace_back(pair.first);
+            new_pointer.emplace_back(index);
+            walk(new_pointer, pointers, pair.second.at(index), walker, resolver,
+                 new_dialect, type, level + 1);
           }
         } else if (pair.second.is_object()) {
           for (auto &subpair : pair.second.as_object()) {
-            walk(subschemas, subpair.second, walker, resolver, new_dialect,
-                 type, level + 1);
+            sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+            new_pointer.emplace_back(pair.first);
+            new_pointer.emplace_back(subpair.first);
+            walk(new_pointer, pointers, subpair.second, walker, resolver,
+                 new_dialect, type, level + 1);
           }
         }
 
@@ -97,7 +117,7 @@ auto walk(std::vector<std::reference_wrapper<ValueT>> &subschemas,
 // TODO: These iterators are not very efficient. They traverse once on
 // construction and then the client traverses again.
 
-sourcemeta::jsontoolkit::ConstSchemaIterator::ConstSchemaIterator(
+sourcemeta::jsontoolkit::SchemaIterator::SchemaIterator(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::SchemaWalker &walker,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
@@ -109,16 +129,17 @@ sourcemeta::jsontoolkit::ConstSchemaIterator::ConstSchemaIterator(
   // not pass a default, then there is nothing we can do. We know
   // the current schema is a subschema, but cannot walk any further.
   if (!dialect.has_value() && !default_dialect.has_value()) {
-    this->subschemas.push_back(schema);
+    this->pointers.push_back(sourcemeta::jsontoolkit::Pointer{});
   } else {
     const std::string &effective_dialect{
         dialect.has_value() ? dialect.value() : default_dialect.value()};
-    walk(this->subschemas, schema, walker, resolver, effective_dialect,
+    sourcemeta::jsontoolkit::Pointer pointer;
+    walk(pointer, this->pointers, schema, walker, resolver, effective_dialect,
          SchemaWalkerype_t::Deep, 0);
   }
 }
 
-sourcemeta::jsontoolkit::ConstSchemaIteratorFlat::ConstSchemaIteratorFlat(
+sourcemeta::jsontoolkit::SchemaIteratorFlat::SchemaIteratorFlat(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::SchemaWalker &walker,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
@@ -128,71 +149,38 @@ sourcemeta::jsontoolkit::ConstSchemaIteratorFlat::ConstSchemaIteratorFlat(
   if (dialect.has_value() || default_dialect.has_value()) {
     const std::string &effective_dialect{
         dialect.has_value() ? dialect.value() : default_dialect.value()};
-    walk(this->subschemas, schema, walker, resolver, effective_dialect,
+    sourcemeta::jsontoolkit::Pointer pointer;
+    walk(pointer, this->pointers, schema, walker, resolver, effective_dialect,
          SchemaWalkerype_t::Flat, 0);
   }
 }
 
-sourcemeta::jsontoolkit::SchemaIteratorFlat::SchemaIteratorFlat(
-    sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::SchemaWalker &walker,
-    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-    const std::optional<std::string> &default_dialect) {
-  const std::optional<std::string> dialect{
-      sourcemeta::jsontoolkit::dialect(schema)};
-  if (dialect.has_value() || default_dialect.has_value()) {
-    const std::string &effective_dialect{
-        dialect.has_value() ? dialect.value() : default_dialect.value()};
-    walk(this->subschemas, schema, walker, resolver, effective_dialect,
-         SchemaWalkerype_t::Flat, 0);
-  }
+auto sourcemeta::jsontoolkit::SchemaIterator::begin() const -> const_iterator {
+  return this->pointers.begin();
+}
+auto sourcemeta::jsontoolkit::SchemaIterator::end() const -> const_iterator {
+  return this->pointers.end();
+}
+auto sourcemeta::jsontoolkit::SchemaIterator::cbegin() const -> const_iterator {
+  return this->pointers.cbegin();
+}
+auto sourcemeta::jsontoolkit::SchemaIterator::cend() const -> const_iterator {
+  return this->pointers.cend();
 }
 
-auto sourcemeta::jsontoolkit::ConstSchemaIterator::begin() const
+auto sourcemeta::jsontoolkit::SchemaIteratorFlat::begin() const
     -> const_iterator {
-  return this->subschemas.begin();
+  return this->pointers.begin();
 }
-auto sourcemeta::jsontoolkit::ConstSchemaIterator::end() const
+auto sourcemeta::jsontoolkit::SchemaIteratorFlat::end() const
     -> const_iterator {
-  return this->subschemas.end();
-}
-auto sourcemeta::jsontoolkit::ConstSchemaIterator::cbegin() const
-    -> const_iterator {
-  return this->subschemas.cbegin();
-}
-auto sourcemeta::jsontoolkit::ConstSchemaIterator::cend() const
-    -> const_iterator {
-  return this->subschemas.cend();
-}
-
-auto sourcemeta::jsontoolkit::ConstSchemaIteratorFlat::begin() const
-    -> const_iterator {
-  return this->subschemas.begin();
-}
-auto sourcemeta::jsontoolkit::ConstSchemaIteratorFlat::end() const
-    -> const_iterator {
-  return this->subschemas.end();
-}
-auto sourcemeta::jsontoolkit::ConstSchemaIteratorFlat::cbegin() const
-    -> const_iterator {
-  return this->subschemas.cbegin();
-}
-auto sourcemeta::jsontoolkit::ConstSchemaIteratorFlat::cend() const
-    -> const_iterator {
-  return this->subschemas.cend();
-}
-
-auto sourcemeta::jsontoolkit::SchemaIteratorFlat::begin() -> iterator {
-  return this->subschemas.begin();
-}
-auto sourcemeta::jsontoolkit::SchemaIteratorFlat::end() -> iterator {
-  return this->subschemas.end();
+  return this->pointers.end();
 }
 auto sourcemeta::jsontoolkit::SchemaIteratorFlat::cbegin() const
     -> const_iterator {
-  return this->subschemas.cbegin();
+  return this->pointers.cbegin();
 }
 auto sourcemeta::jsontoolkit::SchemaIteratorFlat::cend() const
     -> const_iterator {
-  return this->subschemas.cend();
+  return this->pointers.cend();
 }

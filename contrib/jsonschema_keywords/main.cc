@@ -1,4 +1,5 @@
 #include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
 #include <algorithm>  // std::sort
@@ -16,15 +17,15 @@
 namespace {
 auto analyze(const sourcemeta::jsontoolkit::JSON &schema,
              std::map<std::string, unsigned long> &accumulator) -> void {
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIterator(
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
            schema, sourcemeta::jsontoolkit::default_schema_walker,
            sourcemeta::jsontoolkit::official_resolver)) {
-    if (!subschema.is_object()) {
+    const auto &document{sourcemeta::jsontoolkit::get(schema, pointer)};
+    if (!document.is_object()) {
       continue;
     }
 
-    for (const auto &pair : subschema.as_object()) {
+    for (const auto &pair : document.as_object()) {
       const std::string keyword{pair.first};
       if (accumulator.find(keyword) == accumulator.end()) {
         accumulator.insert({keyword, 1});
