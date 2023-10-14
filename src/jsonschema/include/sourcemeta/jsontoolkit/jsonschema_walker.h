@@ -8,6 +8,7 @@
 #endif
 
 #include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 
 #include <functional>  // std::function, std::reference_wrapper
@@ -15,6 +16,7 @@
 #include <optional>    // std::optional
 #include <string>      // std::string
 #include <string_view> // std::string_view
+#include <utility>     // std::pair
 #include <vector>      // std::vector
 
 namespace sourcemeta::jsontoolkit {
@@ -96,6 +98,8 @@ auto default_schema_walker(std::string_view keyword,
 /// the JSON Schema definition, including the top-level schema in a read-only
 /// mode.
 ///
+/// The iterator is a pair that consist of a subschema and its JSON Pointer.
+///
 /// For example:
 ///
 /// ```cpp
@@ -117,17 +121,25 @@ auto default_schema_walker(std::string_view keyword,
 ///   }
 /// })JSON");
 ///
-/// for (const auto &subschema :
-/// sourcemeta::jsontoolkit::ConstSchemaIterator{
+/// for (const auto &pair :
+///          sourcemeta::jsontoolkit::ConstSchemaIterator{
 ///          document, sourcemeta::jsontoolkit::default_schema_walker,
 ///          sourcemeta::jsontoolkit::official_resolver}) {
-///   sourcemeta::jsontoolkit::prettify(subschema, std::cout);
+///   // The pointer
+///   sourcemeta::jsontoolkit::stringify(pair.second, std::cout);
+///
+///   std::cout << " => ";
+///
+///   // The subschema
+///   sourcemeta::jsontoolkit::prettify(pair.first.get(), std::cout);
+///
 ///   std::cout << "\n";
 /// }
 /// ```
 class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT ConstSchemaIterator {
 private:
-  using internal = typename std::vector<std::reference_wrapper<const JSON>>;
+  using internal = typename std::vector<
+      std::pair<std::reference_wrapper<const JSON>, const Pointer>>;
 
 public:
   using const_iterator = typename internal::const_iterator;
@@ -160,6 +172,8 @@ private:
 /// This walker traverse over the first-level of subschemas of the JSON Schema
 /// definition, ignoring the top-level schema in read-write modes.
 ///
+/// The iterator is a pair that consist of a subschema and its JSON Pointer.
+///
 /// For example:
 ///
 /// ```cpp
@@ -181,17 +195,25 @@ private:
 ///   }
 /// })JSON");
 ///
-/// for (const auto &subschema :
-/// sourcemeta::jsontoolkit::ConstSchemaIteratorFlat{
+/// for (const auto &pair :
+///          sourcemeta::jsontoolkit::ConstSchemaIteratorFlat{
 ///          document, sourcemeta::jsontoolkit::default_schema_walker,
 ///          sourcemeta::jsontoolkit::official_resolver}) {
-///   sourcemeta::jsontoolkit::prettify(subschema, std::cout);
+///   // The pointer
+///   sourcemeta::jsontoolkit::stringify(pair.second, std::cout);
+///
+///   std::cout << " => ";
+///
+///   // The subschema
+///   sourcemeta::jsontoolkit::prettify(pair.first.get(), std::cout);
+///
 ///   std::cout << "\n";
 /// }
 /// ```
 class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT ConstSchemaIteratorFlat {
 private:
-  using internal = typename std::vector<std::reference_wrapper<const JSON>>;
+  using internal = typename std::vector<
+      std::pair<std::reference_wrapper<const JSON>, const Pointer>>;
 
 public:
   using const_iterator = typename internal::const_iterator;
@@ -221,7 +243,8 @@ private:
 /// A mutable variant of sourcemeta::jsontoolkit::ConstSchemaIteratorFlat.
 class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaIteratorFlat {
 private:
-  using internal = typename std::vector<std::reference_wrapper<JSON>>;
+  using internal = typename std::vector<
+      std::pair<std::reference_wrapper<JSON>, const Pointer>>;
 
 public:
   using iterator = typename internal::iterator;
