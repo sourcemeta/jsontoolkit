@@ -43,12 +43,12 @@ if(JSONTOOLKIT_JSON)
   add_subdirectory(src/json)
 endif()
 
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
-  add_subdirectory(src/jsonschema)
-endif()
-
 if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
   add_subdirectory(src/jsonpointer)
+endif()
+
+if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
+  add_subdirectory(src/jsonschema)
 endif()
 
 if(JSONTOOLKIT_ADDRESS_SANITIZER)
