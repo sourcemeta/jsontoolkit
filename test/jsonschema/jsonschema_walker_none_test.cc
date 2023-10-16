@@ -2,6 +2,7 @@
 #include <vector>
 
 #include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
 TEST(JSONSchema_walker_none, flat_2020_12) {
@@ -16,14 +17,16 @@ TEST(JSONSchema_walker_none, flat_2020_12) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIteratorFlat(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIteratorFlat(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_TRUE(subschemas.empty());
+  EXPECT_TRUE(pointers.empty());
 }
 
 TEST(JSONSchema_walker_none, deep_2020_12) {
@@ -38,15 +41,18 @@ TEST(JSONSchema_walker_none, deep_2020_12) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIterator(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_EQ(subschemas.size(), 1);
   EXPECT_EQ(subschemas.front(), document);
+  EXPECT_EQ(pointers.size(), 1);
+  EXPECT_EQ(pointers.front(), sourcemeta::jsontoolkit::Pointer{});
 }
 
 TEST(JSONSchema_walker_none, flat_2019_09) {
@@ -60,14 +66,16 @@ TEST(JSONSchema_walker_none, flat_2019_09) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIteratorFlat(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIteratorFlat(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_TRUE(subschemas.empty());
+  EXPECT_TRUE(pointers.empty());
 }
 
 TEST(JSONSchema_walker_none, deep_2019_09) {
@@ -81,15 +89,18 @@ TEST(JSONSchema_walker_none, deep_2019_09) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIterator(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_EQ(subschemas.size(), 1);
   EXPECT_EQ(subschemas.front(), document);
+  EXPECT_EQ(pointers.size(), 1);
+  EXPECT_EQ(pointers.front(), sourcemeta::jsontoolkit::Pointer{});
 }
 
 TEST(JSONSchema_walker_none, flat_draft7) {
@@ -103,14 +114,16 @@ TEST(JSONSchema_walker_none, flat_draft7) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIteratorFlat(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIteratorFlat(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_TRUE(subschemas.empty());
+  EXPECT_TRUE(pointers.empty());
 }
 
 TEST(JSONSchema_walker_none, deep_draft7) {
@@ -124,15 +137,18 @@ TEST(JSONSchema_walker_none, deep_draft7) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIterator(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_EQ(subschemas.size(), 1);
   EXPECT_EQ(subschemas.front(), document);
+  EXPECT_EQ(pointers.size(), 1);
+  EXPECT_EQ(pointers.front(), sourcemeta::jsontoolkit::Pointer{});
 }
 
 TEST(JSONSchema_walker_none, flat_draft6) {
@@ -146,14 +162,16 @@ TEST(JSONSchema_walker_none, flat_draft6) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIteratorFlat(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIteratorFlat(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_TRUE(subschemas.empty());
+  EXPECT_TRUE(pointers.empty());
 }
 
 TEST(JSONSchema_walker_none, deep_draft6) {
@@ -167,15 +185,18 @@ TEST(JSONSchema_walker_none, deep_draft6) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIterator(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_EQ(subschemas.size(), 1);
   EXPECT_EQ(subschemas.front(), document);
+  EXPECT_EQ(pointers.size(), 1);
+  EXPECT_EQ(pointers.front(), sourcemeta::jsontoolkit::Pointer{});
 }
 
 TEST(JSONSchema_walker_none, flat_draft4) {
@@ -189,14 +210,16 @@ TEST(JSONSchema_walker_none, flat_draft4) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIteratorFlat(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIteratorFlat(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_TRUE(subschemas.empty());
+  EXPECT_TRUE(pointers.empty());
 }
 
 TEST(JSONSchema_walker_none, deep_draft4) {
@@ -210,15 +233,18 @@ TEST(JSONSchema_walker_none, deep_draft4) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIterator(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_EQ(subschemas.size(), 1);
   EXPECT_EQ(subschemas.front(), document);
+  EXPECT_EQ(pointers.size(), 1);
+  EXPECT_EQ(pointers.front(), sourcemeta::jsontoolkit::Pointer{});
 }
 
 TEST(JSONSchema_walker_none, flat_draft3) {
@@ -232,14 +258,16 @@ TEST(JSONSchema_walker_none, flat_draft3) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIteratorFlat(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIteratorFlat(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_TRUE(subschemas.empty());
+  EXPECT_TRUE(pointers.empty());
 }
 
 TEST(JSONSchema_walker_none, deep_draft3) {
@@ -253,15 +281,18 @@ TEST(JSONSchema_walker_none, deep_draft3) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIterator(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_EQ(subschemas.size(), 1);
   EXPECT_EQ(subschemas.front(), document);
+  EXPECT_EQ(pointers.size(), 1);
+  EXPECT_EQ(pointers.front(), sourcemeta::jsontoolkit::Pointer{});
 }
 
 TEST(JSONSchema_walker_none, flat_draft2) {
@@ -275,14 +306,16 @@ TEST(JSONSchema_walker_none, flat_draft2) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIteratorFlat(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIteratorFlat(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_TRUE(subschemas.empty());
+  EXPECT_TRUE(pointers.empty());
 }
 
 TEST(JSONSchema_walker_none, deep_draft2) {
@@ -296,15 +329,18 @@ TEST(JSONSchema_walker_none, deep_draft2) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIterator(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_EQ(subschemas.size(), 1);
   EXPECT_EQ(subschemas.front(), document);
+  EXPECT_EQ(pointers.size(), 1);
+  EXPECT_EQ(pointers.front(), sourcemeta::jsontoolkit::Pointer{});
 }
 
 TEST(JSONSchema_walker_none, flat_draft1) {
@@ -318,14 +354,16 @@ TEST(JSONSchema_walker_none, flat_draft1) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIteratorFlat(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIteratorFlat(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_TRUE(subschemas.empty());
+  EXPECT_TRUE(pointers.empty());
 }
 
 TEST(JSONSchema_walker_none, deep_draft1) {
@@ -339,15 +377,18 @@ TEST(JSONSchema_walker_none, deep_draft1) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIterator(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_EQ(subschemas.size(), 1);
   EXPECT_EQ(subschemas.front(), document);
+  EXPECT_EQ(pointers.size(), 1);
+  EXPECT_EQ(pointers.front(), sourcemeta::jsontoolkit::Pointer{});
 }
 
 TEST(JSONSchema_walker_none, flat_draft0) {
@@ -361,14 +402,16 @@ TEST(JSONSchema_walker_none, flat_draft0) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIteratorFlat(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIteratorFlat(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_TRUE(subschemas.empty());
+  EXPECT_TRUE(pointers.empty());
 }
 
 TEST(JSONSchema_walker_none, deep_draft0) {
@@ -382,13 +425,16 @@ TEST(JSONSchema_walker_none, deep_draft0) {
   })JSON");
 
   std::vector<sourcemeta::jsontoolkit::JSON> subschemas;
-  for (const sourcemeta::jsontoolkit::JSON &subschema :
-       sourcemeta::jsontoolkit::ConstSchemaIterator(
+  std::vector<sourcemeta::jsontoolkit::Pointer> pointers;
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
            document, sourcemeta::jsontoolkit::schema_walker_none,
            sourcemeta::jsontoolkit::official_resolver)) {
-    subschemas.push_back(subschema);
+    subschemas.push_back(sourcemeta::jsontoolkit::get(document, pointer));
+    pointers.push_back(pointer);
   }
 
   EXPECT_EQ(subschemas.size(), 1);
   EXPECT_EQ(subschemas.front(), document);
+  EXPECT_EQ(pointers.size(), 1);
+  EXPECT_EQ(pointers.front(), sourcemeta::jsontoolkit::Pointer{});
 }
