@@ -195,6 +195,13 @@ public:
     return this->data == other.data;
   }
 
+  /// Overload to support ordering of JSON Pointers. Typically for sorting
+  /// reasons.
+  auto operator<(const GenericPointer<CharT, Traits, Allocator> &other)
+      const noexcept -> bool {
+    return this->data < other.data;
+  }
+
 private:
   Container data;
 };

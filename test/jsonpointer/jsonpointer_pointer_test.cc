@@ -130,3 +130,12 @@ TEST(JSONPointer_pointer, pop_back_empty) {
   pointer.pop_back();
   EXPECT_EQ(pointer.size(), 0);
 }
+
+TEST(JSONPointer_pointer, ordering_less_than) {
+  const sourcemeta::jsontoolkit::Pointer pointer_1{"foo", "bar"};
+  const sourcemeta::jsontoolkit::Pointer pointer_2{"foo"};
+  const sourcemeta::jsontoolkit::Pointer pointer_3{"baz"};
+  EXPECT_TRUE(pointer_2 < pointer_1);
+  EXPECT_TRUE(pointer_3 < pointer_1);
+  EXPECT_TRUE(pointer_3 < pointer_2);
+}

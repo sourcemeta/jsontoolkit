@@ -190,6 +190,14 @@ public:
     return this->data == other.data;
   }
 
+  /// Overload to support ordering of JSON Pointer token. Typically for sorting
+  /// reasons.
+  auto
+  operator<(const GenericToken<CharT, Traits, Allocator> &other) const noexcept
+      -> bool {
+    return this->data < other.data;
+  }
+
 private:
   std::variant<Property, Index> data;
 };
