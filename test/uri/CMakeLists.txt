@@ -1,4 +1,5 @@
 add_executable(sourcemeta_jsontoolkit_uri_unit
+  uri_test.cc
   uri_fragment_test.cc
   uri_host_test.cc
   uri_is_absolute_test.cc

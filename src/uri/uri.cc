@@ -70,6 +70,13 @@ URI::URI(std::string input) : data{std::move(input)}, internal{new Internal} {
 
 URI::~URI() { uriFreeUriMembersA(&this->internal->uri); }
 
+URI::URI(const URI &other) : URI{other.recompose()} {}
+
+URI::URI(URI &&other)
+    : data{std::move(other.data)}, internal{std::move(other.internal)} {
+  other.internal = nullptr;
+}
+
 auto URI::is_absolute() const noexcept -> bool {
   // An absolute URI always contains a scheme component,
   return this->internal->uri.scheme.first != nullptr;
