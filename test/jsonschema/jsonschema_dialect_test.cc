@@ -23,3 +23,12 @@ TEST(JSONSchema_dialect, dialect_empty_object) {
       sourcemeta::jsontoolkit::dialect(document)};
   EXPECT_FALSE(dialect.has_value());
 }
+
+TEST(JSONSchema_dialect, dialect_empty_object_with_default) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{}");
+  const std::optional<std::string> dialect{sourcemeta::jsontoolkit::dialect(
+      document, "https://json-schema.org/draft/2020-12/schema")};
+  EXPECT_TRUE(dialect.has_value());
+  EXPECT_EQ(dialect.value(), "https://json-schema.org/draft/2020-12/schema");
+}

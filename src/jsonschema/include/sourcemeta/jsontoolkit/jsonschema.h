@@ -97,7 +97,9 @@ auto id(const JSON &schema, const SchemaResolver &resolver,
 ///   "https://json-schema.org/draft/2020-12/schema");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto dialect(const JSON &schema) -> std::optional<std::string>;
+auto dialect(const JSON &schema,
+             const std::optional<std::string> &default_dialect = std::nullopt)
+    -> std::optional<std::string>;
 
 /// @ingroup jsonschema
 ///
