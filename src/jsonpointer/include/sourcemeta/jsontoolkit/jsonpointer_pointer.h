@@ -170,6 +170,25 @@ public:
     return this->data.emplace_back(args...);
   }
 
+  /// Remove the last token of a JSON Pointer, if any.
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar"};
+  /// pointer.pop_back();
+  /// assert(pointer.size() == 1);
+  /// assert(pointer.at(0).is_property());
+  /// assert(pointer.at(0).to_property() == "foo");
+  /// ```
+  auto pop_back() -> void {
+    if (!this->empty()) {
+      this->data.pop_back();
+    }
+  }
+
   /// Compare JSON Pointer instances
   auto operator==(const GenericPointer<CharT, Traits, Allocator> &other)
       const noexcept -> bool {

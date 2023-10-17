@@ -116,3 +116,17 @@ TEST(JSONPointer_pointer, equality_false) {
   const sourcemeta::jsontoolkit::Pointer pointer_2{"foo", 2, "bar"};
   EXPECT_FALSE(pointer_1 == pointer_2);
 }
+
+TEST(JSONPointer_pointer, pop_back_non_empty) {
+  sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar"};
+  pointer.pop_back();
+  EXPECT_EQ(pointer.size(), 1);
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_EQ(pointer.at(0).to_property(), "foo");
+}
+
+TEST(JSONPointer_pointer, pop_back_empty) {
+  sourcemeta::jsontoolkit::Pointer pointer;
+  pointer.pop_back();
+  EXPECT_EQ(pointer.size(), 0);
+}
