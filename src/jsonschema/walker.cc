@@ -31,9 +31,8 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
   // contains pointers that use different dialect/vocabularies.
   // This is often the case for bundled schemas.
   const std::optional<std::string> current_dialect{
-      sourcemeta::jsontoolkit::dialect(subschema)};
-  const std::string &new_dialect{
-      current_dialect.has_value() ? current_dialect.value() : dialect};
+      sourcemeta::jsontoolkit::dialect(subschema, dialect)};
+  const std::string &new_dialect{current_dialect.value()};
   const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(subschema, resolver, new_dialect)
           .get()};
@@ -123,18 +122,16 @@ sourcemeta::jsontoolkit::SchemaIterator::SchemaIterator(
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect) {
   const std::optional<std::string> dialect{
-      sourcemeta::jsontoolkit::dialect(schema)};
+      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
 
   // If the given schema declares no dialect and the user didn't
   // not pass a default, then there is nothing we can do. We know
   // the current schema is a subschema, but cannot walk any further.
-  if (!dialect.has_value() && !default_dialect.has_value()) {
+  if (!dialect.has_value()) {
     this->pointers.push_back(sourcemeta::jsontoolkit::Pointer{});
   } else {
-    const std::string &effective_dialect{
-        dialect.has_value() ? dialect.value() : default_dialect.value()};
     sourcemeta::jsontoolkit::Pointer pointer;
-    walk(pointer, this->pointers, schema, walker, resolver, effective_dialect,
+    walk(pointer, this->pointers, schema, walker, resolver, dialect.value(),
          SchemaWalkerype_t::Deep, 0);
   }
 }
@@ -145,12 +142,10 @@ sourcemeta::jsontoolkit::SchemaIteratorFlat::SchemaIteratorFlat(
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect) {
   const std::optional<std::string> dialect{
-      sourcemeta::jsontoolkit::dialect(schema)};
-  if (dialect.has_value() || default_dialect.has_value()) {
-    const std::string &effective_dialect{
-        dialect.has_value() ? dialect.value() : default_dialect.value()};
+      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+  if (dialect.has_value()) {
     sourcemeta::jsontoolkit::Pointer pointer;
-    walk(pointer, this->pointers, schema, walker, resolver, effective_dialect,
+    walk(pointer, this->pointers, schema, walker, resolver, dialect.value(),
          SchemaWalkerype_t::Flat, 0);
   }
 }
