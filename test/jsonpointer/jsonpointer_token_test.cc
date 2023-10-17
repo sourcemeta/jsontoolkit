@@ -70,3 +70,12 @@ TEST(JSONPointer_token, hyphen_char_token) {
   EXPECT_FALSE(token.is_index());
   EXPECT_TRUE(token.is_hyphen());
 }
+
+TEST(JSONPointer_token, ordering_less_than) {
+  const sourcemeta::jsontoolkit::Pointer::Token token_1{"foo"};
+  const sourcemeta::jsontoolkit::Pointer::Token token_2{"bar"};
+  const sourcemeta::jsontoolkit::Pointer::Token token_3{"baz"};
+  EXPECT_TRUE(token_2 < token_1);
+  EXPECT_TRUE(token_3 < token_1);
+  EXPECT_TRUE(token_2 < token_3);
+}
