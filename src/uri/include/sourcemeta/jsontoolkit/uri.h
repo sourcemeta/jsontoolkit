@@ -40,7 +40,15 @@ public:
   /// const sourcemeta::jsontoolkit::URI uri{"https://www.sourcemeta.com"};
   /// ```
   URI(std::string input);
+
+  /// Destructor
   ~URI();
+
+  /// Copy constructor
+  URI(const URI &other);
+
+  /// Move constructor
+  URI(URI &&other);
 
   /// Check if the URI is absolute. For example:
   ///
@@ -146,10 +154,10 @@ private:
   // We need to keep the string as the URI structure just
   // points to fragments of it.
   // We keep this as const as this class is immutable
-  const std::string data;
+  std::string data;
   // Use PIMPL idiom to hide `urlparser`
   struct Internal;
-  const std::unique_ptr<Internal> internal;
+  std::unique_ptr<Internal> internal;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251)
 #endif
