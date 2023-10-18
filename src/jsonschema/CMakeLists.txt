@@ -4,6 +4,7 @@ configure_file(official_resolver.in.cc official_resolver.cc @ONLY)
 set(JSONSCHEMA_PUBLIC_HEADERS
   include/sourcemeta/jsontoolkit/jsonschema.h)
 set(JSONSCHEMA_PRIVATE_HEADERS
+  include/sourcemeta/jsontoolkit/jsonschema_anchor.h
   include/sourcemeta/jsontoolkit/jsonschema_resolver.h
   include/sourcemeta/jsontoolkit/jsonschema_walker.h
   include/sourcemeta/jsontoolkit/jsonschema_error.h
@@ -12,7 +13,7 @@ set(JSONSCHEMA_PRIVATE_HEADERS
 add_library(sourcemeta_jsontoolkit_jsonschema
   ${JSONSCHEMA_PUBLIC_HEADERS}
   ${JSONSCHEMA_PRIVATE_HEADERS}
-  jsonschema.cc default_walker.cc walker.cc
+  jsonschema.cc default_walker.cc anchor.cc walker.cc
   "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema)
 add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jsonschema)
