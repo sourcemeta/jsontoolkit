@@ -127,8 +127,8 @@ TEST(JSONPointer_pointer, pop_back_non_empty) {
 
 TEST(JSONPointer_pointer, pop_back_empty) {
   sourcemeta::jsontoolkit::Pointer pointer;
-  pointer.pop_back();
   EXPECT_EQ(pointer.size(), 0);
+  EXPECT_THROW(pointer.pop_back(), std::runtime_error);
 }
 
 TEST(JSONPointer_pointer, ordering_less_than) {

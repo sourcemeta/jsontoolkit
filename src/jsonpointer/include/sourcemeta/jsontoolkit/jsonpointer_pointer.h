@@ -5,6 +5,7 @@
 
 #include <cassert>          // assert
 #include <initializer_list> // std::initializer_list
+#include <stdexcept>        // std::runtime_error
 #include <utility>          // std::move
 #include <vector>           // std::vector
 
@@ -170,8 +171,7 @@ public:
     return this->data.emplace_back(args...);
   }
 
-  /// Remove the last token of a JSON Pointer, if any.
-  /// For example:
+  /// Remove the last token of a JSON Pointer For example:
   ///
   /// ```cpp
   /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
@@ -183,10 +183,14 @@ public:
   /// assert(pointer.at(0).is_property());
   /// assert(pointer.at(0).to_property() == "foo");
   /// ```
+  ///
+  /// If the JSON Pointer is empty, this method throws `std::runtime_error`.
   auto pop_back() -> void {
-    if (!this->empty()) {
-      this->data.pop_back();
+    if (this->empty()) {
+      throw std::runtime_error("Cannot pop an empty Pointer");
     }
+
+    this->data.pop_back();
   }
 
   /// Compare JSON Pointer instances
