@@ -8,6 +8,7 @@
 #endif
 
 #include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonschema_anchor.h>
 #include <sourcemeta/jsontoolkit/jsonschema_error.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
