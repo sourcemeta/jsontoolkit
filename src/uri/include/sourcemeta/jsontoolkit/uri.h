@@ -144,6 +144,17 @@ public:
   /// ```
   static auto unescape(std::istream &input, std::ostream &output) -> void;
 
+  /// Create a URI from a fragment. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{
+  ///   sourcemeta::jsontoolkit::URI::from_fragment("foo")};
+  /// assert(uri.recompose() == "#foo");
+  static auto from_fragment(std::string_view fragment) -> URI;
+
 private:
 // Exporting symbols that depends on the standard C++ library is considered
 // safe.
