@@ -3,6 +3,7 @@
 
 #include <cassert>   // assert
 #include <cstdint>   // std::uint64_t
+#include <sstream>   // std::ostringstream
 #include <stdexcept> // std::length_error, std::runtime_error
 #include <utility>   // std::move
 
@@ -121,6 +122,13 @@ auto URI::resolve_from(const URI &base) const -> std::string {
     uriFreeUriMembersA(&absoluteDest);
     throw;
   }
+}
+
+auto URI::from_fragment(std::string_view fragment) -> URI {
+  assert(fragment.front() != '#');
+  std::ostringstream uri;
+  uri << "#" << fragment;
+  return {uri.str()};
 }
 
 } // namespace sourcemeta::jsontoolkit
