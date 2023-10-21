@@ -181,7 +181,7 @@ auto stringify(const Pointer &pointer,
 /// std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
 ///
 /// for (const auto &subpointer :
-/// sourcemeta::jsontoolkit::SubPointerWalker{pointer}) {
+///   sourcemeta::jsontoolkit::SubPointerWalker{pointer}) {
 ///   subpointers.push_back(subpointer);
 /// }
 ///

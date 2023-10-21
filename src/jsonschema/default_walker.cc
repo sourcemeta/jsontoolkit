@@ -132,6 +132,12 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-02/schema#", "extends", ValueOrElements)
   WALK(HTTP_BASE "draft-02/schema#", "requires", Value)
   WALK(HTTP_BASE "draft-02/hyper-schema#", "targetSchema", Value)
+  WALK(HTTP_BASE "draft-02/hyper-schema#", "type", Elements)
+  WALK(HTTP_BASE "draft-02/hyper-schema#", "items", ValueOrElements)
+  WALK(HTTP_BASE "draft-02/hyper-schema#", "properties", Members)
+  WALK(HTTP_BASE "draft-02/hyper-schema#", "additionalProperties", Value)
+  WALK(HTTP_BASE "draft-02/hyper-schema#", "extends", ValueOrElements)
+  WALK(HTTP_BASE "draft-02/hyper-schema#", "requires", Value)
 
   // Draft1
   WALK(HTTP_BASE "draft-01/schema#", "type", Elements)
@@ -140,6 +146,12 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-01/schema#", "additionalProperties", Value)
   WALK(HTTP_BASE "draft-01/schema#", "extends", ValueOrElements)
   WALK(HTTP_BASE "draft-01/schema#", "requires", Value)
+  WALK(HTTP_BASE "draft-01/hyper-schema#", "type", Elements)
+  WALK(HTTP_BASE "draft-01/hyper-schema#", "items", ValueOrElements)
+  WALK(HTTP_BASE "draft-01/hyper-schema#", "properties", Members)
+  WALK(HTTP_BASE "draft-01/hyper-schema#", "additionalProperties", Value)
+  WALK(HTTP_BASE "draft-01/hyper-schema#", "extends", ValueOrElements)
+  WALK(HTTP_BASE "draft-01/hyper-schema#", "requires", Value)
 
   // Draft0
   WALK(HTTP_BASE "draft-00/schema#", "type", Elements)
@@ -148,6 +160,12 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-00/schema#", "additionalProperties", Value)
   WALK(HTTP_BASE "draft-00/schema#", "extends", ValueOrElements)
   WALK(HTTP_BASE "draft-00/schema#", "requires", Value)
+  WALK(HTTP_BASE "draft-00/hyper-schema#", "type", Elements)
+  WALK(HTTP_BASE "draft-00/hyper-schema#", "items", ValueOrElements)
+  WALK(HTTP_BASE "draft-00/hyper-schema#", "properties", Members)
+  WALK(HTTP_BASE "draft-00/hyper-schema#", "additionalProperties", Value)
+  WALK(HTTP_BASE "draft-00/hyper-schema#", "extends", ValueOrElements)
+  WALK(HTTP_BASE "draft-00/hyper-schema#", "requires", Value)
 #undef HTTP_BASE
 #undef WALK
   return sourcemeta::jsontoolkit::SchemaWalkerStrategy::None;
