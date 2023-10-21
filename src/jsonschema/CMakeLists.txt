@@ -8,13 +8,14 @@ set(JSONSCHEMA_PRIVATE_HEADERS
   include/sourcemeta/jsontoolkit/jsonschema_anchor.h
   include/sourcemeta/jsontoolkit/jsonschema_resolver.h
   include/sourcemeta/jsontoolkit/jsonschema_walker.h
+  include/sourcemeta/jsontoolkit/jsonschema_reference.h
   include/sourcemeta/jsontoolkit/jsonschema_error.h
   "${CMAKE_CURRENT_BINARY_DIR}/jsonschema_export.h")
 
 add_library(sourcemeta_jsontoolkit_jsonschema
   ${JSONSCHEMA_PUBLIC_HEADERS}
   ${JSONSCHEMA_PRIVATE_HEADERS}
-  jsonschema.cc default_walker.cc anchor.cc walker.cc
+  jsonschema.cc default_walker.cc reference.cc anchor.cc walker.cc
   "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema)
 add_library(sourcemeta::jsontoolkit::jsonschema ALIAS sourcemeta_jsontoolkit_jsonschema)
@@ -34,6 +35,8 @@ target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
   sourcemeta::jsontoolkit::json)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
   sourcemeta::jsontoolkit::jsonpointer)
+target_link_libraries(sourcemeta_jsontoolkit_jsonschema PRIVATE
+  sourcemeta::jsontoolkit::uri)
 
 include(GenerateExportHeader)
 generate_export_header(sourcemeta_jsontoolkit_jsonschema
