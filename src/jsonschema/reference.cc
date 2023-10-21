@@ -24,7 +24,6 @@ find_base(const std::map<sourcemeta::jsontoolkit::Pointer, std::string> &bases,
   return default_base.value();
 }
 
-// TODO: Test with schemas that mix dialects
 auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::JSON &schema,
     sourcemeta::jsontoolkit::ReferenceFrame &static_frame,
@@ -33,19 +32,28 @@ auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect) -> std::future<void> {
   std::map<sourcemeta::jsontoolkit::Pointer, std::string> base_uris;
+  std::map<sourcemeta::jsontoolkit::Pointer, std::string> base_dialects;
 
-  // TODO: We also need to keep updating the base dialect as we go
-  const std::optional<std::string> base_dialect{
+  const std::optional<std::string> root_dialect{
       sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
-  assert(base_dialect.has_value());
+  assert(root_dialect.has_value());
 
   for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator{
            schema, walker, resolver, default_dialect}) {
     const auto &subschema{sourcemeta::jsontoolkit::get(schema, pointer)};
+    const std::optional<std::string> current_dialect{
+        sourcemeta::jsontoolkit::dialect(subschema)};
+    if (current_dialect.has_value()) {
+      base_dialects.insert({pointer, current_dialect.value()});
+    }
+
+    const std::string effective_dialect{
+        find_base(base_dialects, pointer, root_dialect)};
 
     // Handle schema identifiers
     const std::optional<std::string> id{
-        sourcemeta::jsontoolkit::id(subschema, resolver, base_dialect).get()};
+        sourcemeta::jsontoolkit::id(subschema, resolver, effective_dialect)
+            .get()};
     if (id.has_value()) {
       const sourcemeta::jsontoolkit::URI base{
           find_base(base_uris, pointer, id)};
@@ -61,9 +69,9 @@ auto sourcemeta::jsontoolkit::frame(
     }
 
     // Handle schema anchors
-    for (const auto &[name, type] :
-         sourcemeta::jsontoolkit::anchors(subschema, resolver, base_dialect)
-             .get()) {
+    for (const auto &[name, type] : sourcemeta::jsontoolkit::anchors(
+                                        subschema, resolver, effective_dialect)
+                                        .get()) {
       const auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
       const sourcemeta::jsontoolkit::URI anchor_base{
           find_base(base_uris, pointer, id)};
