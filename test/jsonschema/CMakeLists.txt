@@ -21,6 +21,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_frame_draft2_test.cc
   jsonschema_frame_draft1_test.cc
   jsonschema_frame_draft0_test.cc
+  jsonschema_frame_test.cc
   jsonschema_dialect_test.cc
   jsonschema_dialect_2020_12_test.cc
   jsonschema_dialect_2019_09_test.cc
