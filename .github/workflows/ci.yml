@@ -111,3 +111,16 @@ jobs:
         env:
           # See https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
           UBSAN_OPTIONS: print_stacktrace=1
+
+  unikraft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # TODO: Run on LinuxU to get the actual exit code back
+      - uses: unikraft/kraftkit@staging
+        with:
+          workdir: unikraft
+          arch: x86_64
+          plat: qemu
+          execute: true
