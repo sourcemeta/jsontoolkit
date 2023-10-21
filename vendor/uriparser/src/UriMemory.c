@@ -42,7 +42,9 @@
  * Holds memory manager implementation.
  */
 
+#if !defined(__EMSCRIPTEN__) && !defined(__Unikraft__)
 #include "UriConfig.h"  /* for HAVE_REALLOCARRAY */
+#endif
 
 #ifdef HAVE_REALLOCARRAY
 # ifndef _GNU_SOURCE

@@ -1,7 +1,39 @@
 $(eval $(call addlib_s,libjsontoolkit,$(CONFIG_LIBJSONTOOLKIT)))
 
-# TODO: Support JSON Schema and JSON Pointer
+# Flags
 LIBJSONTOOLKIT_SRC = $(LIBJSONTOOLKIT_BASE)/src
+LIBJSONTOOLKIT_CXXFLAGS-y += --std=c++20
+
+# JSON
 CXXINCLUDES-$(CONFIG_LIBJSONTOOLKIT) += -I$(LIBJSONTOOLKIT_SRC)/json/include
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/json/json.cc
-LIBJSONTOOLKIT_CXXFLAGS-y += --std=c++20
+
+# JSON Pointer
+CXXINCLUDES-$(CONFIG_LIBJSONTOOLKIT) += -I$(LIBJSONTOOLKIT_SRC)/jsonpointer/include
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonpointer/jsonpointer.cc
+
+# uriparser
+CINCLUDES-$(CONFIG_LIBJSONTOOLKIT) += -I$(LIBJSONTOOLKIT_BASE)/vendor/uriparser/include
+CXXINCLUDES-$(CONFIG_LIBJSONTOOLKIT) += -I$(LIBJSONTOOLKIT_BASE)/vendor/uriparser/include
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriCommon.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriCompare.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriEscape.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriFile.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriIp4.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriIp4Base.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriMemory.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriNormalize.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriNormalizeBase.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriParse.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriParseBase.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriQuery.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriRecompose.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriResolve.c
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BASE)/vendor/uriparser/src/UriShorten.c
+
+# URI
+CXXINCLUDES-$(CONFIG_LIBJSONTOOLKIT) += -I$(LIBJSONTOOLKIT_SRC)/uri/include
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/uri/uri.cc
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/uri/escaping.cc
+
+# TODO: Support JSON Schema
