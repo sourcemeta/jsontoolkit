@@ -266,6 +266,195 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_links_without_hyperschema) {
   EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
 }
 
+TEST(JSONSchema_default_walker_draft2, hyperschema_schema) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("$schema", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_id) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("id", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_ref) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("$ref", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_items) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("items", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::ValueOrElements);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_properties) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("properties", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Members);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_additionalProperties) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("additionalProperties",
+                                            VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_type) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("type", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Elements);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_enum) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("enum", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_maximum) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maximum", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_minimum) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minimum", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_maximumCanEqual) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("maximumCanEqual",
+                                            VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_minimumCanEqual) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("minimumCanEqual",
+                                            VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_maxLength) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maxLength", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_minLength) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minLength", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_pattern) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("pattern", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_maxItems) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("maxItems", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_minItems) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("minItems", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_uniqueItems) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("uniqueItems", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_requires) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("requires", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::Value);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_format) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("format", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_title) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("title", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_description) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("description", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_default) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("default", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_divisibleBy) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("divisibleBy", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_disallow) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("disallow", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_extends) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{
+      default_schema_walker("extends", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::ValueOrElements);
+}
+
+TEST(JSONSchema_default_walker_draft2, hyperschema_contentEncoding) {
+  using namespace sourcemeta::jsontoolkit;
+  const auto strategy{default_schema_walker("contentEncoding",
+                                            VOCABULARIES_DRAFT2_HYPERSCHEMA)};
+  EXPECT_EQ(strategy, SchemaWalkerStrategy::None);
+}
+
 TEST(JSONSchema_default_walker_draft2,
      hyperschema_fragmentResolution_without_hyperschema) {
   using namespace sourcemeta::jsontoolkit;
