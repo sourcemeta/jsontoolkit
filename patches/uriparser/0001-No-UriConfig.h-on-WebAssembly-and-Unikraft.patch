@@ -1,0 +1,27 @@
+From 97416ab533eeadbd3549d3bddf06691ddd554ec4 Mon Sep 17 00:00:00 2001
+From: Juan Cruz Viotti <jv@jviotti.com>
+Date: Sat, 21 Oct 2023 11:41:01 -0400
+Subject: [PATCH] No `UriConfig.h` on WebAssembly and Unikraft
+
+Signed-off-by: Juan Cruz Viotti <jv@jviotti.com>
+---
+ src/UriMemory.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/UriMemory.c b/src/UriMemory.c
+index 916d7ce..c265295 100644
+--- a/src/UriMemory.c
++++ b/src/UriMemory.c
+@@ -42,7 +42,9 @@
+  * Holds memory manager implementation.
+  */
+ 
++#if !defined(__EMSCRIPTEN__) && !defined(__Unikraft__)
+ #include "UriConfig.h"  /* for HAVE_REALLOCARRAY */
++#endif
+ 
+ #ifdef HAVE_REALLOCARRAY
+ # ifndef _GNU_SOURCE
+-- 
+2.42.0
+
