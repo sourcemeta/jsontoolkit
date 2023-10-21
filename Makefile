@@ -1,6 +1,7 @@
 # Programs
 CMAKE = cmake
 CTEST = ctest
+KRAFT = kraft
 
 # Options
 PRESET = Debug
@@ -38,8 +39,13 @@ test: .always
 doxygen: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target doxygen
 
+unikraft: .always
+	$(KRAFT) fetch --log-type=basic unikraft
+	$(KRAFT) build --target development --jobs 4 --log-type=basic unikraft
+	$(KRAFT) run --target development unikraft
+
 clean: .always
-	$(CMAKE) -E rm -R -f build
+	$(CMAKE) -E rm -R -f build unikraft/.unikraft unikraft/.config*
 
 # For NMake, which doesn't support .PHONY
 .always:
