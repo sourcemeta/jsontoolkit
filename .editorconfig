@@ -14,3 +14,6 @@ indent_style = tab
 
 [*.mk]
 indent_style = tab
+
+[*.uk]
+indent_style = tab

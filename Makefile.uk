@@ -36,4 +36,19 @@ CXXINCLUDES-$(CONFIG_LIBJSONTOOLKIT) += -I$(LIBJSONTOOLKIT_SRC)/uri/include
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/uri/uri.cc
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/uri/escaping.cc
 
-# TODO: Support JSON Schema
+# JSON Schema
+CXXINCLUDES-$(CONFIG_LIBJSONTOOLKIT) += -I$(LIBJSONTOOLKIT_SRC)/jsonschema/include
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/anchor.cc
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/default_walker.cc
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/jsonschema.cc
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/walker.cc
+
+# TODO: Can we do this with standard POSIX tools?
+$(LIBJSONTOOLKIT_BUILD)/official_resolver.cc: \
+  $(LIBJSONTOOLKIT_SRC)/jsonschema/official_resolver.cmake \
+  $(LIBJSONTOOLKIT_SRC)/jsonschema/official_resolver.in.cc
+	cmake "-DPROJECT_SOURCE_DIR=$(LIBJSONTOOLKIT_BASE)" \
+		"-DOFFICIAL_RESOLVER_INPUT=$(word 2,$^)" \
+		"-DOFFICIAL_RESOLVER_OUTPUT=$@" \
+		-P "$<"
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_BUILD)/official_resolver.cc
