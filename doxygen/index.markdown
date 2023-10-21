@@ -62,6 +62,25 @@ target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::j
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonpointer)
 ```
 
+### Using Unikraft
+
+On your [`Kraftfile`](https://unikraft.org/docs/cli/reference/kraftfile/v0.5)
+libraries, declare JSON Toolkit as follows:
+
+```yml
+libraries:
+  ...
+  jsontoolkit:
+    source: https://github.com/sourcemeta/jsontoolkit.git
+    version: <sha-or-tag>
+```
+
+Then, on your target `kconfig` configuration, specify:
+
+```yml
+- CONFIG_LIBJSONTOOLKIT=y
+```
+
 CMake
 -----
 
