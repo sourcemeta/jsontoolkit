@@ -1,5 +1,6 @@
-include(./metaschemas.cmake)
-configure_file(official_resolver.in.cc official_resolver.cc @ONLY)
+set(OFFICIAL_RESOLVER_INPUT "${CMAKE_CURRENT_SOURCE_DIR}/official_resolver.in.cc")
+set(OFFICIAL_RESOLVER_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
+include(./official_resolver.cmake)
 
 set(JSONSCHEMA_PUBLIC_HEADERS
   include/sourcemeta/jsontoolkit/jsonschema.h)
