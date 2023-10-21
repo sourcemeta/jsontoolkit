@@ -4,6 +4,7 @@ set(JSONPOINTER_PRIVATE_HEADERS
   include/sourcemeta/jsontoolkit/jsonpointer_pointer.h
   include/sourcemeta/jsontoolkit/jsonpointer_error.h
   include/sourcemeta/jsontoolkit/jsonpointer_token.h
+  include/sourcemeta/jsontoolkit/jsonpointer_walker.h
   "${CMAKE_CURRENT_BINARY_DIR}/jsonpointer_export.h")
 
 add_library(sourcemeta_jsontoolkit_jsonpointer
