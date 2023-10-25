@@ -9,42 +9,42 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - os: macos-11
+          - os: macos-latest
             cc: clang
             cxx: clang++
             type: static
-          - os: macos-11
+          - os: macos-latest
             cc: clang
             cxx: clang++
             type: shared
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: static
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             cc: gcc
             cxx: g++
             type: static
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: shared
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             cc: gcc
             cxx: g++
             type: shared
-          - os: windows-2022
+          - os: windows-latest
             type: static
-          - os: windows-2022
+          - os: windows-latest
             type: shared
 
           # Sanitizers
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: static
             options: -DJSONTOOLKIT_ADDRESS_SANITIZER:BOOL=ON
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: static
