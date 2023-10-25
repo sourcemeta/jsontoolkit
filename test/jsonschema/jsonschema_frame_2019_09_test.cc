@@ -11,8 +11,7 @@ TEST(JSONSchema_frame_2019_09, empty_schema) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+  sourcemeta::jsontoolkit::frame(document, static_frame,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -21,8 +20,6 @@ TEST(JSONSchema_frame_2019_09, empty_schema) {
   EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/schema"));
   EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/schema"),
             sourcemeta::jsontoolkit::Pointer{});
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
@@ -37,8 +34,7 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+  sourcemeta::jsontoolkit::frame(document, static_frame,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -47,8 +43,6 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
   EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/schema"));
   EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/schema"),
             sourcemeta::jsontoolkit::Pointer{});
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
@@ -64,8 +58,7 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+  sourcemeta::jsontoolkit::frame(document, static_frame,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -84,8 +77,6 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
   EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/test/qux#bar"));
   EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/test/qux#bar"),
             sourcemeta::jsontoolkit::Pointer({"properties", "bar"}));
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
@@ -100,8 +91,7 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+  sourcemeta::jsontoolkit::frame(document, static_frame,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -113,7 +103,6 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
   EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/foo"));
   EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/foo"),
             sourcemeta::jsontoolkit::Pointer{"items"});
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2019_09, nested_schemas) {
@@ -145,8 +134,7 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+  sourcemeta::jsontoolkit::frame(document, static_frame,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -177,8 +165,6 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
             sourcemeta::jsontoolkit::Pointer({"properties", "foo", "items"}));
   EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/bar#xxx"),
             sourcemeta::jsontoolkit::Pointer({"properties", "bar", "items"}));
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2019_09, id_override) {
@@ -190,9 +176,8 @@ TEST(JSONSchema_frame_2019_09, id_override) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   EXPECT_THROW(sourcemeta::jsontoolkit::frame(
-                   document, static_frame, dynamic_frame,
+                   document, static_frame,
                    sourcemeta::jsontoolkit::default_schema_walker,
                    sourcemeta::jsontoolkit::official_resolver)
                    .wait(),
@@ -209,33 +194,10 @@ TEST(JSONSchema_frame_2019_09, static_anchor_override) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   EXPECT_THROW(sourcemeta::jsontoolkit::frame(
-                   document, static_frame, dynamic_frame,
+                   document, static_frame,
                    sourcemeta::jsontoolkit::default_schema_walker,
                    sourcemeta::jsontoolkit::official_resolver)
                    .wait(),
                sourcemeta::jsontoolkit::SchemaError);
-}
-
-TEST(JSONSchema_frame_2019_09, dynamic_anchor_override) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$id": "https://www.sourcemeta.com/schema",
-    "$schema": "https://json-schema.org/draft/2019-09/schema",
-    "$dynamicAnchor": "foo",
-    "items": { "$dynamicAnchor": "foo" }
-  })JSON");
-
-  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver)
-      .wait();
-
-  EXPECT_EQ(static_frame.size(), 1);
-  EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/schema"));
-  EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/schema"),
-            sourcemeta::jsontoolkit::Pointer{});
 }

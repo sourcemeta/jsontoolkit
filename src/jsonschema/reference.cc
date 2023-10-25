@@ -27,7 +27,6 @@ find_base(const std::map<sourcemeta::jsontoolkit::Pointer, std::string> &bases,
 auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::JSON &schema,
     sourcemeta::jsontoolkit::ReferenceFrame &static_frame,
-    sourcemeta::jsontoolkit::ReferenceFrame &dynamic_frame,
     const sourcemeta::jsontoolkit::SchemaWalker &walker,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect) -> std::future<void> {
@@ -78,12 +77,6 @@ auto sourcemeta::jsontoolkit::frame(
       const auto result{anchor_uri.resolve_from(anchor_base)};
       if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
         if (!static_frame.insert({result, pointer}).second) {
-          std::ostringstream error;
-          error << "Schema anchor already exists: " << name;
-          throw sourcemeta::jsontoolkit::SchemaError(error.str());
-        }
-      } else {
-        if (!dynamic_frame.insert({result, pointer}).second) {
           std::ostringstream error;
           error << "Schema anchor already exists: " << name;
           throw sourcemeta::jsontoolkit::SchemaError(error.str());

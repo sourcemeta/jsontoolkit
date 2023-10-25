@@ -25,8 +25,7 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+  sourcemeta::jsontoolkit::frame(document, static_frame,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -44,6 +43,4 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
   EXPECT_EQ(
       static_frame.at("https://www.sourcemeta.com/bar"),
       sourcemeta::jsontoolkit::Pointer({"$defs", "foo", "definitions", "bar"}));
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
