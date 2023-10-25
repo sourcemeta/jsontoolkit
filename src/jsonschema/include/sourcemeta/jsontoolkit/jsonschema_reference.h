@@ -24,9 +24,11 @@ namespace sourcemeta::jsontoolkit {
 /// resolving references.
 using ReferenceFrame = std::map<std::string, Pointer>;
 
+// TODO: Support dynamic anchors too
+
 /// @ingroup jsonschema
 ///
-/// This function computes the static and dynamic reference frames of a schema.
+/// This function computes the static reference frame of a schema.
 /// For example:
 ///
 /// ```cpp
@@ -40,14 +42,12 @@ using ReferenceFrame = std::map<std::string, Pointer>;
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "items": { "$id": "foo", "type": "string" },
 ///   "properties": {
-///     "foo": { "$anchor": "test", "type": "number" },
-///     "bar": { "$dynamicAnchor": "bar", "type": "array" }
+///     "foo": { "$anchor": "test", "type": "number" }
 ///   }
 /// })JSON");
 ///
 /// sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-/// sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-/// sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+/// sourcemeta::jsontoolkit::frame(document, static_frame,
 ///                                sourcemeta::jsontoolkit::default_schema_walker,
 ///                                sourcemeta::jsontoolkit::official_resolver)
 ///     .wait();
@@ -59,15 +59,10 @@ using ReferenceFrame = std::map<std::string, Pointer>;
 ///   == sourcemeta::jsonpointer::Pointer{"items"});
 /// assert(static_frame.at("https://www.example.com/schema#test")
 ///   == sourcemeta::jsonpointer::Pointer{"properties", "foo"});
-///
-/// assert(static_frame.size() == 1);
-/// assert(dynamic_frame.at("https://www.example.com/schema#bar")
-///   == sourcemeta::jsonpointer::Pointer{"properties", "bar"});
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto frame(const JSON &schema, ReferenceFrame &static_frame,
-           ReferenceFrame &dynamic_frame, const SchemaWalker &walker,
-           const SchemaResolver &resolver,
+           const SchemaWalker &walker, const SchemaResolver &resolver,
            const std::optional<std::string> &default_dialect = std::nullopt)
     -> std::future<void>;
 

@@ -11,8 +11,7 @@ TEST(JSONSchema_frame_draft7, empty_schema) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+  sourcemeta::jsontoolkit::frame(document, static_frame,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -21,8 +20,6 @@ TEST(JSONSchema_frame_draft7, empty_schema) {
   EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/schema"));
   EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/schema"),
             sourcemeta::jsontoolkit::Pointer{});
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_draft7, one_level_applicators_without_identifiers) {
@@ -37,8 +34,7 @@ TEST(JSONSchema_frame_draft7, one_level_applicators_without_identifiers) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+  sourcemeta::jsontoolkit::frame(document, static_frame,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -47,8 +43,6 @@ TEST(JSONSchema_frame_draft7, one_level_applicators_without_identifiers) {
   EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/schema"));
   EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/schema"),
             sourcemeta::jsontoolkit::Pointer{});
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_draft7, one_level_applicators_with_identifiers) {
@@ -60,8 +54,7 @@ TEST(JSONSchema_frame_draft7, one_level_applicators_with_identifiers) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+  sourcemeta::jsontoolkit::frame(document, static_frame,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -73,8 +66,6 @@ TEST(JSONSchema_frame_draft7, one_level_applicators_with_identifiers) {
   EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/foo"));
   EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/foo"),
             sourcemeta::jsontoolkit::Pointer{"items"});
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_draft7, subschema_absolute_identifier) {
@@ -89,8 +80,7 @@ TEST(JSONSchema_frame_draft7, subschema_absolute_identifier) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+  sourcemeta::jsontoolkit::frame(document, static_frame,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -102,7 +92,6 @@ TEST(JSONSchema_frame_draft7, subschema_absolute_identifier) {
   EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/foo"));
   EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/foo"),
             sourcemeta::jsontoolkit::Pointer{"items"});
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_draft7, id_override) {
@@ -114,9 +103,8 @@ TEST(JSONSchema_frame_draft7, id_override) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   EXPECT_THROW(sourcemeta::jsontoolkit::frame(
-                   document, static_frame, dynamic_frame,
+                   document, static_frame,
                    sourcemeta::jsontoolkit::default_schema_walker,
                    sourcemeta::jsontoolkit::official_resolver)
                    .wait(),
