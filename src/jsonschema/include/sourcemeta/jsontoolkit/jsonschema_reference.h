@@ -23,7 +23,8 @@ namespace sourcemeta::jsontoolkit {
 /// A JSON Schema reference frame is a mapping of URIs to JSON Pointers within a
 /// schema. We call it reference frame as this mapping is essential for
 /// resolving references.
-using ReferenceFrame = std::map<std::string, std::tuple<Pointer, std::string>>;
+using ReferenceFrame =
+    std::map<std::string, std::tuple<std::string, Pointer, std::string>>;
 
 // TODO: Support dynamic anchors too
 
