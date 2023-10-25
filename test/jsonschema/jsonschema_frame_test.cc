@@ -3,8 +3,6 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-// TODO: Make `frame()` report back not only the pointer
-// but the dialect that applies to each framed subschema
 TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -36,11 +34,35 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
   EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/foo"));
   EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/bar"));
 
-  EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/test"),
+  EXPECT_EQ(std::get<0>(static_frame.at("https://www.sourcemeta.com/test")),
             sourcemeta::jsontoolkit::Pointer{});
-  EXPECT_EQ(static_frame.at("https://www.sourcemeta.com/foo"),
+  EXPECT_EQ(std::get<1>(static_frame.at("https://www.sourcemeta.com/test")),
+            "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_EQ(std::get<0>(static_frame.at("https://www.sourcemeta.com/foo")),
             sourcemeta::jsontoolkit::Pointer({"$defs", "foo"}));
+  EXPECT_EQ(std::get<1>(static_frame.at("https://www.sourcemeta.com/foo")),
+            "http://json-schema.org/draft-04/schema#");
+
   EXPECT_EQ(
-      static_frame.at("https://www.sourcemeta.com/bar"),
+      std::get<0>(static_frame.at("https://www.sourcemeta.com/bar")),
       sourcemeta::jsontoolkit::Pointer({"$defs", "foo", "definitions", "bar"}));
+  EXPECT_EQ(std::get<1>(static_frame.at("https://www.sourcemeta.com/bar")),
+            "http://json-schema.org/draft-04/schema#");
+}
+
+TEST(JSONSchema_frame, no_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "items": { "type": "string" }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::frame(document, static_frame,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_TRUE(static_frame.empty());
 }

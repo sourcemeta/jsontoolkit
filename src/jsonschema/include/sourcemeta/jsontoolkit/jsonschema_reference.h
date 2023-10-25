@@ -15,6 +15,7 @@
 #include <map>      // std::map
 #include <optional> // std::optional
 #include <string>   // std::string
+#include <tuple>    // std::tuple
 
 namespace sourcemeta::jsontoolkit {
 
@@ -22,7 +23,7 @@ namespace sourcemeta::jsontoolkit {
 /// A JSON Schema reference frame is a mapping of URIs to JSON Pointers within a
 /// schema. We call it reference frame as this mapping is essential for
 /// resolving references.
-using ReferenceFrame = std::map<std::string, Pointer>;
+using ReferenceFrame = std::map<std::string, std::tuple<Pointer, std::string>>;
 
 // TODO: Support dynamic anchors too
 
@@ -53,11 +54,11 @@ using ReferenceFrame = std::map<std::string, Pointer>;
 ///     .wait();
 ///
 /// assert(static_frame.size() == 3);
-/// assert(static_frame.at("https://www.example.com/schema")
+/// assert(std::get<0>(static_frame.at("https://www.example.com/schema"))
 ///   == sourcemeta::jsonpointer::Pointer{});
-/// assert(static_frame.at("https://www.example.com/foo")
+/// assert(std::get<0>(static_frame.at("https://www.example.com/foo"))
 ///   == sourcemeta::jsonpointer::Pointer{"items"});
-/// assert(static_frame.at("https://www.example.com/schema#test")
+/// assert(std::get<0>(static_frame.at("https://www.example.com/schema#test"))
 ///   == sourcemeta::jsonpointer::Pointer{"properties", "foo"});
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT

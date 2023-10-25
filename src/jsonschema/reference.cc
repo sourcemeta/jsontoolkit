@@ -58,7 +58,7 @@ auto sourcemeta::jsontoolkit::frame(
           find_base(base_uris, pointer, id)};
       const sourcemeta::jsontoolkit::URI relative{id.value()};
       const std::string new_id{relative.resolve_from(base)};
-      if (!static_frame.insert({new_id, pointer}).second) {
+      if (!static_frame.insert({new_id, {pointer, effective_dialect}}).second) {
         std::ostringstream error;
         error << "Schema identifier already exists: " << new_id;
         throw sourcemeta::jsontoolkit::SchemaError(error.str());
@@ -76,7 +76,8 @@ auto sourcemeta::jsontoolkit::frame(
           find_base(base_uris, pointer, id)};
       const auto result{anchor_uri.resolve_from(anchor_base)};
       if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
-        if (!static_frame.insert({result, pointer}).second) {
+        if (!static_frame.insert({result, {pointer, effective_dialect}})
+                 .second) {
           std::ostringstream error;
           error << "Schema anchor already exists: " << name;
           throw sourcemeta::jsontoolkit::SchemaError(error.str());
