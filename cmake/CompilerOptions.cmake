@@ -41,6 +41,9 @@ function(sourcemeta_jsontoolkit_add_compile_options target)
   endif()
 
   if(NOA_COMPILER_LLVM)
+    # See https://stackoverflow.com/a/76860036/1641422
+    target_compile_options("${target}" PRIVATE -stdlib=libc++)
+
     target_compile_options("${target}" PRIVATE
       -Wbool-conversion
       -Wint-conversion
