@@ -11,6 +11,7 @@ option(JSONTOOLKIT_URI "Build the JSON Toolkit URI library" ON)
 option(JSONTOOLKIT_JSON "Build the JSON Toolkit JSON library" ON)
 option(JSONTOOLKIT_JSONSCHEMA "Build the JSON Toolkit JSON Schema library" ON)
 option(JSONTOOLKIT_JSONPOINTER "Build the JSON Toolkit JSON Pointer library" ON)
+option(JSONTOOLKIT_JSONL "Build the JSON Toolkit JSONL library" ON)
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" OFF)
 option(JSONTOOLKIT_CONTRIB "Build the JSON Toolkit extra programs" OFF)
 option(JSONTOOLKIT_DOCS "Build the JSON Toolkit docs" OFF)
@@ -49,6 +50,10 @@ endif()
 
 if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
   add_subdirectory(src/jsonschema)
+endif()
+
+if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
+  add_subdirectory(src/jsonl)
 endif()
 
 if(JSONTOOLKIT_ADDRESS_SANITIZER)
@@ -103,6 +108,10 @@ if(JSONTOOLKIT_TESTS)
 
   if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
     add_subdirectory(test/jsonpointer)
+  endif()
+
+  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
+    add_subdirectory(test/jsonl)
   endif()
 
   if(WIN32)

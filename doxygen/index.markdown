@@ -6,9 +6,10 @@ Getting Started
 JSON Toolkit is a swiss-army knife for [JSON](https://www.json.org) programming
 in modern C++. It comes with a built-in parser and growing support for
 standards such as [JSON Schema](http://json-schema.org), [JSON
-Pointer](https://www.rfc-editor.org/rfc/rfc6901), and more.  It targets C++20
-and supports the Clang, GCC, and MSVC compilers on macOS, GNU/Linux, FreeBSD,
-Windows, and Unikraft.
+Pointer](https://www.rfc-editor.org/rfc/rfc6901),
+[JSONL](https://jsonlines.org), and more.  It targets C++20 and supports the
+Clang, GCC, and MSVC compilers on macOS, GNU/Linux, FreeBSD, Windows, and
+Unikraft.
 
 Installation
 ------------
@@ -26,6 +27,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/deps/jsontoolkit")
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::json)
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonschema)
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonpointer)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonl)
 ```
 
 ### Using FetchContent
@@ -46,6 +48,7 @@ add_executable(my_example ...)
 target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::json)
 target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::jsonschema)
 target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::jsonpointer)
+target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::jsonl)
 ```
 
 ### Using find_package
@@ -60,6 +63,7 @@ find_package(JSONToolkit REQUIRED)
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::json)
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonschema)
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonpointer)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonl)
 ```
 
 ### Using Unikraft
@@ -92,6 +96,7 @@ CMake
 | `JSONTOOLKIT_JSON`                | Boolean | `ON`    | Build the JSON Toolkit JSON library         |
 | `JSONTOOLKIT_JSONSCHEMA`          | Boolean | `ON`    | Build the JSON Toolkit JSON Schema library  |
 | `JSONTOOLKIT_JSONPOINTER`         | Boolean | `ON`    | Build the JSON Toolkit JSON Pointer library |
+| `JSONTOOLKIT_JSONL`               | Boolean | `ON`    | Build the JSON Toolkit JSONL library        |
 | `JSONTOOLKIT_TESTS`               | Boolean | `OFF`   | Build the JSON Toolkit tests                |
 | `JSONTOOLKIT_CONTRIB`             | Boolean | `OFF`   | Build the JSON Toolkit `contrib` programs   |
 | `JSONTOOLKIT_DOCS`                | Boolean | `OFF`   | Build the JSON Toolkit docs                 |

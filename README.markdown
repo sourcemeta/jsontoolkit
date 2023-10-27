@@ -3,7 +3,8 @@
 JSON Toolkit is a swiss-army knife for [JSON](https://www.json.org) programming
 in modern C++. It comes with a built-in parser and growing support for
 standards such as [JSON Schema](http://json-schema.org), [JSON
-Pointer](https://www.rfc-editor.org/rfc/rfc6901), and more.
+Pointer](https://www.rfc-editor.org/rfc/rfc6901),
+[JSONL](https://jsonlines.org), and more.
 
 Documentation
 -------------
