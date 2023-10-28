@@ -1,5 +1,5 @@
-#ifndef JSONTOOLKIT_JSONPOINTER_GRAMMAR_H_
-#define JSONTOOLKIT_JSONPOINTER_GRAMMAR_H_
+#ifndef SOURCEMETA_JSONTOOLKIT_JSONPOINTER_GRAMMAR_H_
+#define SOURCEMETA_JSONTOOLKIT_JSONPOINTER_GRAMMAR_H_
 
 namespace sourcemeta::jsontoolkit::internal {
 template <typename CharT> static constexpr CharT token_pointer_slash{'\u002F'};
