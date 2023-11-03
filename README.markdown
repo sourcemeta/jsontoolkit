@@ -9,4 +9,4 @@ Documentation
 -------------
 
 Refer to the project website for documentation:
-[https://jsontoolkit.sourcemeta.org](https://jsontoolkit.sourcemeta.com).
+[https://jsontoolkit.sourcemeta.com](https://jsontoolkit.sourcemeta.com).
