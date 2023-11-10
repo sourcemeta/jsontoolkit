@@ -115,6 +115,8 @@ jobs:
   unikraft:
     runs-on: ubuntu-latest
     steps:
+      - name: Install dependencies (GNU/Linux)
+        run: sudo apt-get install --yes qemu-system-x86
       - uses: actions/checkout@v3
       - name: Install KraftKit
         run: |
@@ -125,3 +127,4 @@ jobs:
       - run: kraft build --target development --jobs 4 --log-type=basic unikraft
 
       # TODO: Run on LinuxU to get the actual exit code back
+      - run: qemu-system-x86_64 --nographic -kernel unikraft/.unikraft/build/development_qemu-x86_64
