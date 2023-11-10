@@ -116,11 +116,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Install KraftKit
+        run: |
+          wget https://github.com/unikraft/kraftkit/releases/download/v0.7.0/kraftkit_0.7.0_linux_amd64.deb
+          sudo dpkg -i kraftkit_0.7.0_linux_amd64.deb
+          rm kraftkit_0.7.0_linux_amd64.deb
+
+      - run: kraft build --target development --jobs 4 --log-type=basic unikraft
 
       # TODO: Run on LinuxU to get the actual exit code back
-      - uses: unikraft/kraftkit@staging
-        with:
-          workdir: unikraft
-          arch: x86_64
-          plat: qemu
-          execute: true
