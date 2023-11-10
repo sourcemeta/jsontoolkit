@@ -16,6 +16,18 @@ targets:
       - CONFIG_LIBJSONTOOLKIT=y
       - CONFIG_LIBGOOGLETEST=y
       - CONFIG_LIBGOOGLETEST_BUILD_MAIN=y
+  - name: ci
+    platform: linuxu
+    architecture: x86_64
+    kconfig:
+      - CONFIG_LIBCXXABI=y
+      - CONFIG_LIBCXX=y
+      - CONFIG_LIBUNWIND=y
+      - CONFIG_LIBCOMPILER_RT=y
+      - CONFIG_LIBMUSL=y
+      - CONFIG_LIBJSONTOOLKIT=y
+      - CONFIG_LIBGOOGLETEST=y
+      - CONFIG_LIBGOOGLETEST_BUILD_MAIN=y
 
 libraries:
   libcxxabi:

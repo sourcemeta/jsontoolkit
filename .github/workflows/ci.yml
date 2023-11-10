@@ -122,6 +122,5 @@ jobs:
           sudo dpkg -i kraftkit_0.7.0_linux_amd64.deb
           rm kraftkit_0.7.0_linux_amd64.deb
 
-      - run: kraft build --target development --jobs 4 --log-type=basic unikraft
-
-      # TODO: Run on LinuxU to get the actual exit code back
+      - run: kraft build --target ci --jobs 4 --log-type=basic unikraft
+      - run: kraft run --target ci unikraft
