@@ -71,7 +71,8 @@ if(JSONTOOLKIT_CONTRIB)
 endif()
 
 if(JSONTOOLKIT_DOCS)
-  include(Doxygen)
+  noa_target_doxygen(CONFIG "${PROJECT_SOURCE_DIR}/doxygen/Doxyfile.in"
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/website")
 endif()
 
 if(PROJECT_IS_TOP_LEVEL)
