@@ -126,6 +126,4 @@ jobs:
           rm kraftkit_0.7.0_linux_amd64.deb
 
       - run: kraft build --target development --jobs 4 --log-type=basic unikraft
-
-      # TODO: Run on LinuxU to get the actual exit code back
-      - run: qemu-system-x86_64 --nographic -kernel unikraft/.unikraft/build/development_qemu-x86_64
+      - run: kraft run --target development --disable-acceleration unikraft

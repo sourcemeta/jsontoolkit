@@ -23,7 +23,7 @@ libraries:
   libcxx:
     version: stable
   libunwind:
-    version: stable
+    version: staging
   compiler-rt:
     version: stable
   musl:
