@@ -57,7 +57,9 @@ jobs:
     steps:
       - name: Install dependencies (GNU/Linux)
         if: runner.os == 'linux'
-        run: sudo apt-get install --yes clang-format
+        run: |
+          sudo apt-get update --yes
+          sudo apt-get install --yes clang-format
 
       # See https://github.com/actions/runner-images/issues/8659
       - name: Workaround Clang issue (GNU/Linux)
