@@ -119,7 +119,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install dependencies (GNU/Linux)
-        run: sudo apt-get install --yes qemu-system-x86
+        run: |
+          sudo apt-get update --yes
+          sudo apt-get install --yes qemu-system-x86
       - uses: actions/checkout@v3
       - name: Install KraftKit
         run: |
