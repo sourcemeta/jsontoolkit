@@ -623,3 +623,8 @@ TEST(JSON_parse_error,
   std::istringstream input{"[3E-2-2]"};
   EXPECT_PARSE_ERROR(input, 1, 6);
 }
+
+TEST(JSON_parse_error, backspace_is_not_whitespace) {
+  std::istringstream input{"\bfalse\b"};
+  EXPECT_PARSE_ERROR(input, 1, 1);
+}
