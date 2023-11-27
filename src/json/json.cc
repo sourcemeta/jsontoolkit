@@ -3,6 +3,9 @@
 
 #include <sourcemeta/jsontoolkit/json.h>
 
+#include <fstream> // std::ifstream
+#include <ios>     // std::ios_base
+
 namespace sourcemeta::jsontoolkit {
 
 auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream) -> JSON {
@@ -12,6 +15,12 @@ auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream) -> JSON {
 auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input)
     -> JSON {
   return parse<JSON::Char, JSON::CharTraits, std::allocator>(input);
+}
+
+auto from_file(const std::filesystem::path &path) -> JSON {
+  std::ifstream stream{path};
+  stream.exceptions(std::ios_base::badbit);
+  return parse(stream);
 }
 
 auto stringify(const JSON &document,
