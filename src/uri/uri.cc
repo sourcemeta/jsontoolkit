@@ -83,6 +83,10 @@ auto URI::is_absolute() const noexcept -> bool {
   return this->internal->uri.scheme.first != nullptr;
 }
 
+auto URI::scheme() const -> std::optional<std::string_view> {
+  return uri_text_range(&this->internal->uri.scheme);
+}
+
 auto URI::host() const -> std::optional<std::string_view> {
   return uri_text_range(&this->internal->uri.hostText);
 }
