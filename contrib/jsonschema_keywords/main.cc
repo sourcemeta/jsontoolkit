@@ -6,8 +6,6 @@
 #include <cstdlib>    // EXIT_SUCCESS, EXIT_FAILURE
 #include <exception>  // std::exception
 #include <filesystem> // std::filesystem
-#include <fstream>    // std::ifstream
-#include <ios>        // std::ios_base
 #include <iostream>   // std::cout, std::cerr
 #include <map>        // std::map
 #include <span>       // std::span
@@ -46,9 +44,8 @@ auto scan(const std::filesystem::path &directory) -> int {
     }
 
     std::cerr << "Scanning: " << directory_entry.path().string() << "\n";
-    std::ifstream stream{directory_entry.path()};
-    stream.exceptions(std::ios_base::badbit);
-    analyze(sourcemeta::jsontoolkit::parse(stream), accumulator);
+    analyze(sourcemeta::jsontoolkit::from_file(directory_entry.path()),
+            accumulator);
   }
 
   std::vector<std::pair<std::string, unsigned long>> result;

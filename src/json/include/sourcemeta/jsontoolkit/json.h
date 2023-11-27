@@ -10,11 +10,12 @@
 #include <sourcemeta/jsontoolkit/json_error.h>
 #include <sourcemeta/jsontoolkit/json_value.h>
 
-#include <istream> // std::basic_istream
-#include <memory>  // std::allocator
-#include <ostream> // std::basic_ostream
-#include <sstream> // std::basic_istringstream
-#include <string>  // std::char_traits, std::basic_string
+#include <filesystem> // std::filesystem
+#include <istream>    // std::basic_istream
+#include <memory>     // std::allocator
+#include <ostream>    // std::basic_ostream
+#include <sstream>    // std::basic_istringstream
+#include <string>     // std::char_traits, std::basic_string
 
 /// @defgroup json JSON
 /// @brief A full-blown ECMA-404 implementation with read, write, and iterators
@@ -68,6 +69,25 @@ auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream) -> JSON;
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
 auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input)
     -> JSON;
+
+/// @ingroup json
+///
+/// A convenience function to create a JSON document from a file. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <cassert>
+/// #include <iostream>
+///
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::from_file("/tmp/foo.json");
+/// sourcemeta::jsontoolkit::stringify(document, std::cout);
+/// std::cout << std::endl;
+/// ```
+///
+/// If parsing fails, sourcemeta::jsontoolkit::ParseError will be thrown.
+SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
+auto from_file(const std::filesystem::path &path) -> JSON;
 
 /// @ingroup json
 ///
