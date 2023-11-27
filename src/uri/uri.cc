@@ -2,9 +2,10 @@
 #include <uriparser/Uri.h>
 
 #include <cassert>   // assert
-#include <cstdint>   // std::uint64_t
+#include <cstdint>   // std::uint32_t
 #include <sstream>   // std::ostringstream
 #include <stdexcept> // std::length_error, std::runtime_error
+#include <string>    // std::stoul, std::string
 #include <utility>   // std::move
 
 static auto uri_normalize(UriUriA *uri) -> void {
@@ -89,6 +90,15 @@ auto URI::scheme() const -> std::optional<std::string_view> {
 
 auto URI::host() const -> std::optional<std::string_view> {
   return uri_text_range(&this->internal->uri.hostText);
+}
+
+auto URI::port() const -> std::optional<std::uint32_t> {
+  const auto port_text{uri_text_range(&this->internal->uri.portText)};
+  if (!port_text.has_value()) {
+    return std::nullopt;
+  }
+
+  return std::stoul(std::string{port_text.value()});
 }
 
 auto URI::fragment() const -> std::optional<std::string_view> {

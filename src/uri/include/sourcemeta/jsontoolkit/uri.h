@@ -9,6 +9,7 @@
 
 #include <sourcemeta/jsontoolkit/uri_error.h>
 
+#include <cstdint>     // std::uint32_t
 #include <istream>     // std::istream
 #include <memory>      // std::unique_ptr
 #include <optional>    // std::optional
@@ -84,6 +85,18 @@ public:
   /// assert(uri.host().value() == "sourcemeta.com");
   /// ```
   [[nodiscard]] auto host() const -> std::optional<std::string_view>;
+
+  /// Get the port part of the URI, if any. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"http://localhost:8000"};
+  /// assert(uri.port().has_value());
+  /// assert(uri.port().value() == 8000);
+  /// ```
+  [[nodiscard]] auto port() const -> std::optional<std::uint32_t>;
 
   /// Get the fragment part of the URI, if any. For example:
   ///
