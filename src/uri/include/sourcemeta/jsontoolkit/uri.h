@@ -61,6 +61,18 @@ public:
   /// ```
   [[nodiscard]] auto is_absolute() const noexcept -> bool;
 
+  /// Get the scheme part of the URI, if any. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"https://www.sourcemeta.com"};
+  /// assert(uri.scheme().has_value());
+  /// assert(uri.scheme().value() == "https");
+  /// ```
+  [[nodiscard]] auto scheme() const -> std::optional<std::string_view>;
+
   /// Get the host part of the URI, if any. For example:
   ///
   /// ```cpp
