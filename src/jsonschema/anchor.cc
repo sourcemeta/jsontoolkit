@@ -15,7 +15,8 @@ auto anchors(const JSON &schema, const SchemaResolver &resolver,
   std::map<std::string, AnchorType> result;
 
   // 2020-12
-  if (vocabularies.contains(
+  if (schema.is_object() &&
+      vocabularies.contains(
           "https://json-schema.org/draft/2020-12/vocab/core")) {
     // A dynamic anchor takes precedence over a static anchor
     if (schema.defines("$dynamicAnchor")) {
@@ -32,7 +33,8 @@ auto anchors(const JSON &schema, const SchemaResolver &resolver,
   }
 
   // 2019-09
-  if (vocabularies.contains(
+  if (schema.is_object() &&
+      vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/core")) {
     if (schema.defines("$anchor")) {
       const auto &anchor{schema.at("$anchor")};
