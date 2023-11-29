@@ -2,6 +2,16 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
+TEST(JSONSchema_anchor_2020_12, boolean_schema) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("true");
+  const auto anchors{sourcemeta::jsontoolkit::anchors(
+                         document, sourcemeta::jsontoolkit::official_resolver,
+                         "https://json-schema.org/draft/2020-12/schema")
+                         .get()};
+  EXPECT_TRUE(anchors.empty());
+}
+
 TEST(JSONSchema_anchor_2020_12, top_level_no_anchor) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
