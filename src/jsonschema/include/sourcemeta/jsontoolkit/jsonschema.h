@@ -73,7 +73,8 @@ auto is_schema(const JSON &schema) -> bool;
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto id(const JSON &schema, const SchemaResolver &resolver,
-        const std::optional<std::string> &default_dialect = std::nullopt)
+        const std::optional<std::string> &default_dialect = std::nullopt,
+        const std::optional<std::string> &default_id = std::nullopt)
     -> std::future<std::optional<std::string>>;
 
 /// @ingroup jsonschema
