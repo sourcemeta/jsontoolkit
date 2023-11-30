@@ -29,12 +29,14 @@ auto sourcemeta::jsontoolkit::frame(
     sourcemeta::jsontoolkit::ReferenceFrame &static_frame,
     const sourcemeta::jsontoolkit::SchemaWalker &walker,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-    const std::optional<std::string> &default_dialect) -> std::future<void> {
+    const std::optional<std::string> &default_dialect,
+    const std::optional<std::string> &default_id) -> std::future<void> {
   std::map<sourcemeta::jsontoolkit::Pointer, std::string> base_uris;
   std::map<sourcemeta::jsontoolkit::Pointer, std::string> base_dialects;
 
   const std::optional<std::string> root_id{
-      sourcemeta::jsontoolkit::id(schema, resolver, default_dialect).get()};
+      sourcemeta::jsontoolkit::id(schema, resolver, default_dialect, default_id)
+          .get()};
   const std::optional<std::string> root_dialect{
       sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
   assert(root_dialect.has_value());
@@ -53,8 +55,13 @@ auto sourcemeta::jsontoolkit::frame(
 
     // Handle schema identifiers
     const std::optional<std::string> id{
-        sourcemeta::jsontoolkit::id(subschema, resolver, effective_dialect)
-            .get()};
+        pointer.empty()
+            ? sourcemeta::jsontoolkit::id(subschema, resolver,
+                                          effective_dialect, default_id)
+                  .get()
+            : sourcemeta::jsontoolkit::id(subschema, resolver,
+                                          effective_dialect)
+                  .get()};
     if (id.has_value()) {
       const sourcemeta::jsontoolkit::URI base{
           find_base(base_uris, pointer, id)};

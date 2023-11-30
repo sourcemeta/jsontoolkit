@@ -72,3 +72,28 @@ TEST(JSONSchema_frame, no_id) {
 
   EXPECT_TRUE(static_frame.empty());
 }
+
+TEST(JSONSchema_frame, no_id_with_default) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "items": { "type": "string" }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::frame(document, static_frame,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver,
+                                 "https://json-schema.org/draft/2020-12/schema",
+                                 "https://www.sourcemeta.com/schema")
+      .wait();
+
+  EXPECT_EQ(static_frame.size(), 1);
+  EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/schema"));
+  EXPECT_EQ(std::get<0>(static_frame.at("https://www.sourcemeta.com/schema")),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(std::get<1>(static_frame.at("https://www.sourcemeta.com/schema")),
+            sourcemeta::jsontoolkit::Pointer{});
+  EXPECT_EQ(std::get<2>(static_frame.at("https://www.sourcemeta.com/schema")),
+            "https://json-schema.org/draft/2020-12/schema");
+}
