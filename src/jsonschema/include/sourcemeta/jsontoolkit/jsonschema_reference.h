@@ -82,7 +82,8 @@ using ReferenceFrame =
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto frame(const JSON &schema, ReferenceFrame &static_frame,
            const SchemaWalker &walker, const SchemaResolver &resolver,
-           const std::optional<std::string> &default_dialect = std::nullopt)
+           const std::optional<std::string> &default_dialect = std::nullopt,
+           const std::optional<std::string> &default_id = std::nullopt)
     -> std::future<void>;
 
 } // namespace sourcemeta::jsontoolkit
