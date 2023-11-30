@@ -14,14 +14,15 @@ auto sourcemeta::jsontoolkit::is_schema(
 
 auto sourcemeta::jsontoolkit::id(
     const sourcemeta::jsontoolkit::JSON &schema, const SchemaResolver &resolver,
-    const std::optional<std::string> &default_dialect)
+    const std::optional<std::string> &default_dialect,
+    const std::optional<std::string> &default_id)
     -> std::future<std::optional<std::string>> {
   const std::optional<std::string> maybe_base_dialect{
       sourcemeta::jsontoolkit::base_dialect(schema, resolver, default_dialect)
           .get()};
   if (!maybe_base_dialect.has_value()) {
     std::promise<std::optional<std::string>> promise;
-    promise.set_value(std::nullopt);
+    promise.set_value(default_id);
     return promise.get_future();
   }
 
@@ -43,7 +44,7 @@ auto sourcemeta::jsontoolkit::id(
 
       promise.set_value(id.to_string());
     } else {
-      promise.set_value(std::nullopt);
+      promise.set_value(default_id);
     }
 
     return promise.get_future();
@@ -62,7 +63,7 @@ auto sourcemeta::jsontoolkit::id(
   }
 
   std::promise<std::optional<std::string>> promise;
-  promise.set_value(std::nullopt);
+  promise.set_value(default_id);
   return promise.get_future();
 }
 
