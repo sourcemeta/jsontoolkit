@@ -10,11 +10,11 @@
 #include <sourcemeta/jsontoolkit/json_error.h>
 #include <sourcemeta/jsontoolkit/json_value.h>
 
+#include <cstdint>    // std::uint64_t
 #include <filesystem> // std::filesystem
 #include <istream>    // std::basic_istream
 #include <memory>     // std::allocator
 #include <ostream>    // std::basic_ostream
-#include <sstream>    // std::basic_istringstream
 #include <string>     // std::char_traits, std::basic_string
 
 /// @defgroup json JSON
@@ -69,6 +69,44 @@ auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream) -> JSON;
 SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
 auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input)
     -> JSON;
+
+/// @ingroup json
+/// Create a JSON document from a C++ standard input stream, passing your own
+/// `line` and `column` read/write position indicators. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <cassert>
+/// #include <sstream>
+///
+/// std::istringstream stream{"[ 1, 2, 3 ]"};
+/// std::uint64_t line{1};
+/// std::uint64_t column{0};
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(stream, line, column);
+/// assert(document.is_array());
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
+auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream,
+           std::uint64_t &line, std::uint64_t &column) -> JSON;
+
+/// @ingroup json
+/// Create a JSON document from a JSON string, passing your own
+/// `line` and `column` read/write position indicators. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <cassert>
+///
+/// std::uint64_t line{1};
+/// std::uint64_t column{0};
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]", line, column);
+/// assert(document.is_array());
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
+auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input,
+           std::uint64_t &line, std::uint64_t &column) -> JSON;
 
 /// @ingroup json
 ///
