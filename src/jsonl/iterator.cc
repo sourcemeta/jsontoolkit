@@ -6,6 +6,10 @@
 
 namespace sourcemeta::jsontoolkit {
 
+struct ConstJSONLIterator::Internal {
+  sourcemeta::jsontoolkit::JSON current;
+};
+
 /*
  * Parsing
  */
@@ -61,7 +65,7 @@ element:
   }
 
 next:
-  this->current = this->parse_next();
+  this->internal->current = this->parse_next();
   return *this;
 
 end:
@@ -75,22 +79,25 @@ end:
 
 ConstJSONLIterator::ConstJSONLIterator(
     std::basic_istream<JSON::Char, JSON::CharTraits> *stream)
-    : data{stream}, current{this->parse_next()} {}
+    : data{stream}, internal{new Internal({this->parse_next()})} {}
+
+ConstJSONLIterator::~ConstJSONLIterator() {}
 
 auto operator==(const ConstJSONLIterator &left, const ConstJSONLIterator &right)
     -> bool {
   return (!left.data && !right.data) ||
-         (left.data && right.data && left.current == right.current);
+         (left.data && right.data &&
+          left.internal->current == right.internal->current);
 };
 
 auto ConstJSONLIterator::operator*() const -> ConstJSONLIterator::reference {
   assert(this->data);
-  return this->current;
+  return this->internal->current;
 }
 
 auto ConstJSONLIterator::operator->() const -> ConstJSONLIterator::pointer {
   assert(this->data);
-  return &(this->current);
+  return &(this->internal->current);
 }
 
 } // namespace sourcemeta::jsontoolkit

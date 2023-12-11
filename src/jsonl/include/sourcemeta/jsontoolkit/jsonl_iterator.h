@@ -13,6 +13,7 @@
 #include <cstdint>  // std::uint64_t
 #include <istream>  // std::basic_istream
 #include <iterator> // std::forward_iterator_tag
+#include <memory>   // std::unique_ptr
 
 namespace sourcemeta::jsontoolkit {
 
@@ -21,6 +22,7 @@ namespace sourcemeta::jsontoolkit {
 class SOURCEMETA_JSONTOOLKIT_JSONL_EXPORT ConstJSONLIterator {
 public:
   ConstJSONLIterator(std::basic_istream<JSON::Char, JSON::CharTraits> *stream);
+  ~ConstJSONLIterator();
   using iterator_category = std::forward_iterator_tag;
   using difference_type = std::ptrdiff_t;
   using value_type = JSON;
@@ -39,8 +41,13 @@ private:
   std::uint64_t line{1};
   std::uint64_t column{0};
   auto parse_next() -> JSON;
+  // TODO: Move this member into Internal
   std::basic_istream<JSON::Char, JSON::CharTraits> *data;
-  sourcemeta::jsontoolkit::JSON current;
+
+  // Use PIMPL idiom to hide internal details, mainly
+  // templated members, which are tricky to DLL-export.
+  struct Internal;
+  std::unique_ptr<Internal> internal;
 };
 
 } // namespace sourcemeta::jsontoolkit
