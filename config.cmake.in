@@ -7,6 +7,7 @@ endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/sourcemeta_jsontoolkit_uri.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/sourcemeta_jsontoolkit_json.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/sourcemeta_jsontoolkit_jsonl.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/sourcemeta_jsontoolkit_jsonpointer.cmake")
 
 # GCC does not allow the use of std::promise, std::future

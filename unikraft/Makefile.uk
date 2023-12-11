@@ -21,6 +21,10 @@ SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/json/json_value_test.cc
 
 # TODO: Port the JSON Test Suite
 
+# JSONL
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonl/jsonl_parse_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonl/jsonl_parse_error_test.cc
+
 # JSON Pointer
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_error_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_get_test.cc
