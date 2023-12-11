@@ -1417,3 +1417,22 @@ TEST(JSON_parse, rfc8259_example_2) {
   EXPECT_EQ(value.at(1).at("Zip").to_string(), "94085");
   EXPECT_EQ(value.at(1).at("Country").to_string(), "US");
 }
+
+TEST(JSON_parse, custom_line_column_from_string_stream) {
+  std::istringstream input{"[\n  false,\n  true\n]"};
+  std::uint64_t line{5};
+  std::uint64_t column{2};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input, line, column);
+
+  // Line & column get mutated
+  EXPECT_EQ(line, 8);
+  EXPECT_EQ(column, 1);
+
+  EXPECT_TRUE(document.is_array());
+  EXPECT_EQ(document.size(), 2);
+  EXPECT_TRUE(document.at(0).is_boolean());
+  EXPECT_FALSE(document.at(0).to_boolean());
+  EXPECT_TRUE(document.at(1).is_boolean());
+  EXPECT_TRUE(document.at(1).to_boolean());
+}

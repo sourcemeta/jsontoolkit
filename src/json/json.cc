@@ -8,13 +8,31 @@
 
 namespace sourcemeta::jsontoolkit {
 
+auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream,
+           std::uint64_t &line, std::uint64_t &column) -> JSON {
+  return parse<JSON::Char, JSON::CharTraits, std::allocator>(stream, line,
+                                                             column);
+}
+
+auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input,
+           std::uint64_t &line, std::uint64_t &column) -> JSON {
+  return parse<JSON::Char, JSON::CharTraits, std::allocator>(input, line,
+                                                             column);
+}
+
 auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream) -> JSON {
-  return parse<JSON::Char, JSON::CharTraits, std::allocator>(stream);
+  std::uint64_t line{1};
+  std::uint64_t column{0};
+  return parse<JSON::Char, JSON::CharTraits, std::allocator>(stream, line,
+                                                             column);
 }
 
 auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input)
     -> JSON {
-  return parse<JSON::Char, JSON::CharTraits, std::allocator>(input);
+  std::uint64_t line{1};
+  std::uint64_t column{0};
+  return parse<JSON::Char, JSON::CharTraits, std::allocator>(input, line,
+                                                             column);
 }
 
 auto from_file(const std::filesystem::path &path) -> JSON {

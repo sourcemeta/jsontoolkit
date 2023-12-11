@@ -588,8 +588,8 @@ auto parse_number(const std::uint64_t line, std::uint64_t &column,
 namespace sourcemeta::jsontoolkit {
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
-auto parse(std::basic_istream<CharT, Traits> &stream)
-    -> GenericValue<CharT, Traits, Allocator> {
+auto parse(std::basic_istream<CharT, Traits> &stream, std::uint64_t &line,
+           std::uint64_t &column) -> GenericValue<CharT, Traits, Allocator> {
   // Globals
   using Result = GenericValue<CharT, Traits, Allocator>;
   enum class Container { Array, Object };
@@ -598,8 +598,6 @@ auto parse(std::basic_istream<CharT, Traits> &stream)
   std::optional<Result> result;
   typename Result::String key{""};
   CharT character;
-  std::uint64_t line{1};
-  std::uint64_t column{0};
 
   /*
    * Parse any JSON document
@@ -1012,10 +1010,10 @@ do_parse_container_end:
 
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
-auto parse(const std::basic_string<CharT, Traits> &input)
-    -> GenericValue<CharT, Traits, Allocator> {
+auto parse(const std::basic_string<CharT, Traits> &input, std::uint64_t &line,
+           std::uint64_t &column) -> GenericValue<CharT, Traits, Allocator> {
   std::basic_istringstream<CharT, Traits, Allocator<CharT>> stream{input};
-  return parse<CharT, Traits, Allocator>(stream);
+  return parse<CharT, Traits, Allocator>(stream, line, column);
 }
 
 } // namespace sourcemeta::jsontoolkit
