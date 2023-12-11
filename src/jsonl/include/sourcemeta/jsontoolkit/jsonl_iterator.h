@@ -31,8 +31,9 @@ public:
   auto operator->() const -> pointer;
   auto operator++() -> ConstJSONLIterator &;
 
-  friend auto operator==(const ConstJSONLIterator &left,
-                         const ConstJSONLIterator &right) -> bool;
+  SOURCEMETA_JSONTOOLKIT_JSONL_EXPORT friend auto
+  operator==(const ConstJSONLIterator &left, const ConstJSONLIterator &right)
+      -> bool;
 
 private:
   std::uint64_t line{1};
