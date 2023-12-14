@@ -101,6 +101,24 @@ auto URI::port() const -> std::optional<std::uint32_t> {
   return std::stoul(std::string{port_text.value()});
 }
 
+auto URI::path() const -> std::optional<std::string> {
+  const UriPathSegmentA *segment{this->internal->uri.pathHead};
+  if (!segment) {
+    return std::nullopt;
+  }
+
+  std::ostringstream result;
+  while (segment) {
+    const auto part{uri_text_range(&segment->text)};
+    assert(part.has_value());
+    result << '/';
+    result << part.value();
+    segment = segment->next;
+  }
+
+  return result.str();
+}
+
 auto URI::fragment() const -> std::optional<std::string_view> {
   return uri_text_range(&this->internal->uri.fragment);
 }

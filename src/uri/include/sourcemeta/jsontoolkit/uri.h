@@ -98,6 +98,18 @@ public:
   /// ```
   [[nodiscard]] auto port() const -> std::optional<std::uint32_t>;
 
+  /// Get the path part of the URI, if any. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI
+  /// uri{"https://www.sourcemeta.com/foo/bar"}; assert(uri.path().has_value());
+  /// assert(uri.path().value() == "/foo/bar");
+  /// ```
+  [[nodiscard]] auto path() const -> std::optional<std::string>;
+
   /// Get the fragment part of the URI, if any. For example:
   ///
   /// ```cpp
