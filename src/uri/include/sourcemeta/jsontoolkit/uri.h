@@ -62,6 +62,17 @@ public:
   /// ```
   [[nodiscard]] auto is_absolute() const noexcept -> bool;
 
+  /// Check if the URI is a URN. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"urn:example:schema"};
+  /// assert(uri.is_urn());
+  /// ```
+  auto is_urn() const -> bool;
+
   /// Get the scheme part of the URI, if any. For example:
   ///
   /// ```cpp
