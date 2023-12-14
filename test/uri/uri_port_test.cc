@@ -22,3 +22,8 @@ TEST(URI_port, relative_url) {
   const sourcemeta::jsontoolkit::URI uri{"../foo"};
   EXPECT_FALSE(uri.port().has_value());
 }
+
+TEST(URI_port, urn) {
+  const sourcemeta::jsontoolkit::URI uri{"urn:example:schema"};
+  EXPECT_FALSE(uri.port().has_value());
+}
