@@ -84,6 +84,11 @@ auto URI::is_absolute() const noexcept -> bool {
   return this->internal->uri.scheme.first != nullptr;
 }
 
+auto URI::is_urn() const -> bool {
+  const auto scheme{this->scheme()};
+  return scheme.has_value() && scheme.value() == "urn";
+}
+
 auto URI::scheme() const -> std::optional<std::string_view> {
   return uri_text_range(&this->internal->uri.scheme);
 }
