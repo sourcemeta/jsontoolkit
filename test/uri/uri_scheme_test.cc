@@ -23,3 +23,9 @@ TEST(URI_scheme, urn) {
   EXPECT_TRUE(uri.scheme().has_value());
   EXPECT_EQ(uri.scheme().value(), "urn");
 }
+
+TEST(URI_scheme, urn_with_fragment) {
+  const sourcemeta::jsontoolkit::URI uri{"urn:example:schema#foo"};
+  EXPECT_TRUE(uri.scheme().has_value());
+  EXPECT_EQ(uri.scheme().value(), "urn");
+}
