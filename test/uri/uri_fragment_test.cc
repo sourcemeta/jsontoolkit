@@ -22,3 +22,8 @@ TEST(URI_fragment, invalid_fragment_with_pointer) {
   EXPECT_THROW(sourcemeta::jsontoolkit::URI{"#foo#/$defs/bar"},
                sourcemeta::jsontoolkit::URIParseError);
 }
+
+TEST(URI_fragment, urn) {
+  const sourcemeta::jsontoolkit::URI uri{"urn:example:schema"};
+  EXPECT_FALSE(uri.fragment().has_value());
+}

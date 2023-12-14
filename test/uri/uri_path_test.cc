@@ -29,3 +29,9 @@ TEST(URI_path, relative_multi) {
   EXPECT_TRUE(uri.path().has_value());
   EXPECT_EQ(uri.path().value(), "/../foo/bar");
 }
+
+TEST(URI_path, urn) {
+  const sourcemeta::jsontoolkit::URI uri{"urn:example:schema"};
+  EXPECT_TRUE(uri.path().has_value());
+  EXPECT_EQ(uri.path().value(), "example:schema");
+}

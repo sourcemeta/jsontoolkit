@@ -112,6 +112,13 @@ auto URI::path() const -> std::optional<std::string> {
     return std::nullopt;
   }
 
+  // URNs have a single path segment by definition
+  if (this->is_urn()) {
+    const auto part{uri_text_range(&segment->text)};
+    assert(part.has_value());
+    return std::string{part.value()};
+  }
+
   std::ostringstream result;
   while (segment) {
     const auto part{uri_text_range(&segment->text)};
