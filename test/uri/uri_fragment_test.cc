@@ -17,3 +17,8 @@ TEST(URI_fragment, https_with_escaped_jsonpointer) {
   EXPECT_TRUE(uri.fragment().has_value());
   EXPECT_EQ(uri.fragment().value(), "/c%25d");
 }
+
+TEST(URI_fragment, invalid_fragment_with_pointer) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::URI{"#foo#/$defs/bar"},
+               sourcemeta::jsontoolkit::URIParseError);
+}
