@@ -15,3 +15,8 @@ TEST(URI_recompose, urn) {
   const sourcemeta::jsontoolkit::URI uri{"urn:example:schema"};
   EXPECT_EQ(uri.recompose(), "urn:example:schema");
 }
+
+TEST(URI_recompose, https_with_empty_fragment) {
+  const sourcemeta::jsontoolkit::URI uri{"https://example.com/foo#"};
+  EXPECT_EQ(uri.recompose(), "https://example.com/foo#");
+}

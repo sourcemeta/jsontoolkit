@@ -12,6 +12,12 @@ TEST(URI_fragment, https_with_fragment) {
   EXPECT_EQ(uri.fragment().value(), "foo");
 }
 
+TEST(URI_fragment, https_with_empty_fragment) {
+  const sourcemeta::jsontoolkit::URI uri{"https://example.com/foo#"};
+  EXPECT_TRUE(uri.fragment().has_value());
+  EXPECT_EQ(uri.fragment().value(), "");
+}
+
 TEST(URI_fragment, https_with_escaped_jsonpointer) {
   const sourcemeta::jsontoolkit::URI uri{"https://example.com/#/c%25d"};
   EXPECT_TRUE(uri.fragment().has_value());
