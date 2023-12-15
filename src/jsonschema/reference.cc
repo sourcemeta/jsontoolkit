@@ -24,6 +24,49 @@ find_base(const std::map<sourcemeta::jsontoolkit::Pointer, std::string> &bases,
   return default_base.value();
 }
 
+auto sourcemeta::jsontoolkit::ReferenceFrame::defines(
+    const std::string &uri) const -> bool {
+  return this->data.contains(uri);
+}
+
+auto sourcemeta::jsontoolkit::ReferenceFrame::size() const -> std::size_t {
+  return this->data.size();
+}
+
+auto sourcemeta::jsontoolkit::ReferenceFrame::empty() const -> bool {
+  return this->data.empty();
+}
+
+auto sourcemeta::jsontoolkit::ReferenceFrame::base(const std::string &uri) const
+    -> const std::string & {
+  assert(this->defines(uri));
+  return std::get<0>(this->data.at(uri));
+}
+
+auto sourcemeta::jsontoolkit::ReferenceFrame::pointer(
+    const std::string &uri) const -> const sourcemeta::jsontoolkit::Pointer & {
+  assert(this->defines(uri));
+  return std::get<1>(this->data.at(uri));
+}
+
+auto sourcemeta::jsontoolkit::ReferenceFrame::dialect(
+    const std::string &uri) const -> const std::string & {
+  assert(this->defines(uri));
+  return std::get<2>(this->data.at(uri));
+}
+
+auto sourcemeta::jsontoolkit::ReferenceFrame::store(
+    const std::string &uri, const std::string &base_identifier,
+    const sourcemeta::jsontoolkit::Pointer &pointer_from_base,
+    const std::string &dialect) -> void {
+  if (!this->data.insert({uri, {base_identifier, pointer_from_base, dialect}})
+           .second) {
+    std::ostringstream error;
+    error << "Schema identifier already exists: " << uri;
+    throw SchemaError(error.str());
+  }
+}
+
 auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::JSON &schema,
     sourcemeta::jsontoolkit::ReferenceFrame &static_frame,
@@ -68,14 +111,7 @@ auto sourcemeta::jsontoolkit::frame(
       const sourcemeta::jsontoolkit::URI relative{id.value()};
       const std::string new_id{relative.resolve_from(base)};
       assert(root_id.has_value());
-      if (!static_frame
-               .insert({new_id, {root_id.value(), pointer, effective_dialect}})
-               .second) {
-        std::ostringstream error;
-        error << "Schema identifier already exists: " << new_id;
-        throw sourcemeta::jsontoolkit::SchemaError(error.str());
-      }
-
+      static_frame.store(new_id, root_id.value(), pointer, effective_dialect);
       base_uris.insert({pointer, new_id});
     }
 
@@ -89,14 +125,7 @@ auto sourcemeta::jsontoolkit::frame(
       const auto result{anchor_uri.resolve_from(anchor_base)};
       if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
         assert(root_id.has_value());
-        if (!static_frame
-                 .insert(
-                     {result, {root_id.value(), pointer, effective_dialect}})
-                 .second) {
-          std::ostringstream error;
-          error << "Schema anchor already exists: " << name;
-          throw sourcemeta::jsontoolkit::SchemaError(error.str());
-        }
+        static_frame.store(result, root_id.value(), pointer, effective_dialect);
       }
     }
   }

@@ -30,30 +30,30 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
 
   EXPECT_EQ(static_frame.size(), 3);
 
-  EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/test"));
-  EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/foo"));
-  EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/bar"));
+  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/test"));
+  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/foo"));
+  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/bar"));
 
-  EXPECT_EQ(std::get<0>(static_frame.at("https://www.sourcemeta.com/test")),
+  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/test"),
             "https://www.sourcemeta.com/test");
-  EXPECT_EQ(std::get<1>(static_frame.at("https://www.sourcemeta.com/test")),
+  EXPECT_EQ(static_frame.pointer("https://www.sourcemeta.com/test"),
             sourcemeta::jsontoolkit::Pointer{});
-  EXPECT_EQ(std::get<2>(static_frame.at("https://www.sourcemeta.com/test")),
+  EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/test"),
             "https://json-schema.org/draft/2020-12/schema");
 
-  EXPECT_EQ(std::get<0>(static_frame.at("https://www.sourcemeta.com/foo")),
+  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/foo"),
             "https://www.sourcemeta.com/test");
-  EXPECT_EQ(std::get<1>(static_frame.at("https://www.sourcemeta.com/foo")),
+  EXPECT_EQ(static_frame.pointer("https://www.sourcemeta.com/foo"),
             sourcemeta::jsontoolkit::Pointer({"$defs", "foo"}));
-  EXPECT_EQ(std::get<2>(static_frame.at("https://www.sourcemeta.com/foo")),
+  EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/foo"),
             "http://json-schema.org/draft-04/schema#");
 
-  EXPECT_EQ(std::get<0>(static_frame.at("https://www.sourcemeta.com/bar")),
+  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/bar"),
             "https://www.sourcemeta.com/test");
   EXPECT_EQ(
-      std::get<1>(static_frame.at("https://www.sourcemeta.com/bar")),
+      static_frame.pointer("https://www.sourcemeta.com/bar"),
       sourcemeta::jsontoolkit::Pointer({"$defs", "foo", "definitions", "bar"}));
-  EXPECT_EQ(std::get<2>(static_frame.at("https://www.sourcemeta.com/bar")),
+  EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/bar"),
             "http://json-schema.org/draft-04/schema#");
 }
 
@@ -89,11 +89,11 @@ TEST(JSONSchema_frame, no_id_with_default) {
       .wait();
 
   EXPECT_EQ(static_frame.size(), 1);
-  EXPECT_TRUE(static_frame.contains("https://www.sourcemeta.com/schema"));
-  EXPECT_EQ(std::get<0>(static_frame.at("https://www.sourcemeta.com/schema")),
+  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/schema"));
+  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/schema"),
             "https://www.sourcemeta.com/schema");
-  EXPECT_EQ(std::get<1>(static_frame.at("https://www.sourcemeta.com/schema")),
+  EXPECT_EQ(static_frame.pointer("https://www.sourcemeta.com/schema"),
             sourcemeta::jsontoolkit::Pointer{});
-  EXPECT_EQ(std::get<2>(static_frame.at("https://www.sourcemeta.com/schema")),
+  EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/schema"),
             "https://json-schema.org/draft/2020-12/schema");
 }
