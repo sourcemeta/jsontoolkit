@@ -55,13 +55,9 @@ auto sourcemeta::jsontoolkit::frame(
 
     // Handle schema identifiers
     const std::optional<std::string> id{
-        pointer.empty()
-            ? sourcemeta::jsontoolkit::id(subschema, resolver,
-                                          effective_dialect, default_id)
-                  .get()
-            : sourcemeta::jsontoolkit::id(subschema, resolver,
-                                          effective_dialect)
-                  .get()};
+        sourcemeta::jsontoolkit::id(subschema, resolver, effective_dialect,
+                                    pointer.empty() ? default_id : std::nullopt)
+            .get()};
     if (id.has_value()) {
       const sourcemeta::jsontoolkit::URI base{
           find_base(base_uris, pointer, id)};
