@@ -23,8 +23,46 @@ namespace sourcemeta::jsontoolkit {
 /// A JSON Schema reference frame is a mapping of URIs to schema identifiers,
 /// JSON Pointers within the schema, and subschemas dialects. We call it
 /// reference frame as this mapping is essential for resolving references.
-using ReferenceFrame =
-    std::map<std::string, std::tuple<std::string, Pointer, std::string>>;
+class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT ReferenceFrame {
+public:
+  /// Get the identifier of the root JSON Schema that declares the schema
+  /// registered at the given URI.
+  auto base(const std::string &uri) const -> const std::string &;
+
+  /// Get the JSON Pointer that must be used to get the schema registered at a
+  /// given URI, relative to its base schema
+  auto pointer(const std::string &uri) const -> const Pointer &;
+
+  /// Get the dialect that must be used to evaluate the schema registered at a
+  /// given URI
+  auto dialect(const std::string &uri) const -> const std::string &;
+
+  /// Check whether the reference frame defines a given URI
+  auto defines(const std::string &uri) const -> bool;
+
+  /// Check the number of entries stored in the reference frame
+  auto size() const -> std::size_t;
+
+  /// Check whether the reference frame is empty or not
+  auto empty() const -> bool;
+
+  /// Store a new entry in the reference frame
+  auto store(const std::string &uri, const std::string &base_identifier,
+             const Pointer &pointer_from_base, const std::string &dialect)
+      -> void;
+
+private:
+// Exporting symbols that depends on the standard C++ library is considered
+// safe.
+// https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4275?view=msvc-170&redirectedfrom=MSDN
+#if defined(_MSC_VER)
+#pragma warning(disable : 4251)
+#endif
+  std::map<std::string, std::tuple<std::string, Pointer, std::string>> data;
+#if defined(_MSC_VER)
+#pragma warning(default : 4251)
+#endif
+};
 
 // TODO: Support dynamic anchors too
 
