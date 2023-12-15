@@ -282,3 +282,113 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_same) {
   EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/schema"),
             "https://json-schema.org/draft/2020-12/schema");
 }
+
+TEST(JSONSchema_frame_2020_12, explicit_argument_id_different) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "items": {
+      "$anchor": "foo"
+    },
+    "properties": {
+      "one": {
+        "$id": "test",
+        "$anchor": "bar"
+      },
+      "two": {
+        "$id": "https://www.test.com",
+        "$anchor": "baz"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::frame(
+      document, static_frame, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      "https://json-schema.org/draft/2020-12/schema", "https://www.example.com")
+      .wait();
+
+  EXPECT_EQ(static_frame.size(), 10);
+  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/schema"));
+  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/schema#foo"));
+  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/test"));
+  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/test#bar"));
+  EXPECT_TRUE(static_frame.defines("https://www.example.com"));
+  EXPECT_TRUE(static_frame.defines("https://www.example.com#foo"));
+  EXPECT_TRUE(static_frame.defines("https://www.example.com/test"));
+  EXPECT_TRUE(static_frame.defines("https://www.example.com/test#bar"));
+  EXPECT_TRUE(static_frame.defines("https://www.test.com"));
+  EXPECT_TRUE(static_frame.defines("https://www.test.com#baz"));
+
+  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/schema"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.sourcemeta.com/schema"),
+            sourcemeta::jsontoolkit::Pointer{});
+  EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/schema"),
+            "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/schema#foo"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.sourcemeta.com/schema#foo"),
+            sourcemeta::jsontoolkit::Pointer({"items"}));
+  EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/schema#foo"),
+            "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/test"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.sourcemeta.com/test"),
+            sourcemeta::jsontoolkit::Pointer({"properties", "one"}));
+  EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/test"),
+            "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/test#bar"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.sourcemeta.com/test#bar"),
+            sourcemeta::jsontoolkit::Pointer({"properties", "one"}));
+  EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/test#bar"),
+            "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_EQ(static_frame.base("https://www.example.com"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.example.com"),
+            sourcemeta::jsontoolkit::Pointer{});
+  EXPECT_EQ(static_frame.dialect("https://www.example.com"),
+            "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_EQ(static_frame.base("https://www.example.com#foo"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.example.com#foo"),
+            sourcemeta::jsontoolkit::Pointer({"items"}));
+  EXPECT_EQ(static_frame.dialect("https://www.example.com#foo"),
+            "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_EQ(static_frame.base("https://www.example.com/test"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.example.com/test"),
+            sourcemeta::jsontoolkit::Pointer({"properties", "one"}));
+  EXPECT_EQ(static_frame.dialect("https://www.example.com/test"),
+            "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_EQ(static_frame.base("https://www.example.com/test#bar"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.example.com/test#bar"),
+            sourcemeta::jsontoolkit::Pointer({"properties", "one"}));
+  EXPECT_EQ(static_frame.dialect("https://www.example.com/test#bar"),
+            "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_EQ(static_frame.base("https://www.test.com"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.test.com"),
+            sourcemeta::jsontoolkit::Pointer({"properties", "two"}));
+  EXPECT_EQ(static_frame.dialect("https://www.test.com"),
+            "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_EQ(static_frame.base("https://www.test.com#baz"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.test.com#baz"),
+            sourcemeta::jsontoolkit::Pointer({"properties", "two"}));
+  EXPECT_EQ(static_frame.dialect("https://www.test.com#baz"),
+            "https://json-schema.org/draft/2020-12/schema");
+}

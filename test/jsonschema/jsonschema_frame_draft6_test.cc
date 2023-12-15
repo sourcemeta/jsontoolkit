@@ -164,3 +164,68 @@ TEST(JSONSchema_frame_draft6, explicit_argument_id_same) {
   EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/schema"),
             "http://json-schema.org/draft-06/schema#");
 }
+
+TEST(JSONSchema_frame_draft6, explicit_argument_id_different) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "properties": {
+      "one": {
+        "$id": "test"
+      },
+      "two": {
+        "$id": "https://www.test.com"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::frame(
+      document, static_frame, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      "http://json-schema.org/draft-06/schema#", "https://www.example.com")
+      .wait();
+
+  EXPECT_EQ(static_frame.size(), 5);
+  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/schema"));
+  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/test"));
+  EXPECT_TRUE(static_frame.defines("https://www.example.com"));
+  EXPECT_TRUE(static_frame.defines("https://www.example.com/test"));
+  EXPECT_TRUE(static_frame.defines("https://www.test.com"));
+
+  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/schema"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.sourcemeta.com/schema"),
+            sourcemeta::jsontoolkit::Pointer{});
+  EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/schema"),
+            "http://json-schema.org/draft-06/schema#");
+
+  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/test"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.sourcemeta.com/test"),
+            sourcemeta::jsontoolkit::Pointer({"properties", "one"}));
+  EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/test"),
+            "http://json-schema.org/draft-06/schema#");
+
+  EXPECT_EQ(static_frame.base("https://www.example.com"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.example.com"),
+            sourcemeta::jsontoolkit::Pointer{});
+  EXPECT_EQ(static_frame.dialect("https://www.example.com"),
+            "http://json-schema.org/draft-06/schema#");
+
+  EXPECT_EQ(static_frame.base("https://www.example.com/test"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.example.com/test"),
+            sourcemeta::jsontoolkit::Pointer({"properties", "one"}));
+  EXPECT_EQ(static_frame.dialect("https://www.example.com/test"),
+            "http://json-schema.org/draft-06/schema#");
+
+  EXPECT_EQ(static_frame.base("https://www.test.com"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.test.com"),
+            sourcemeta::jsontoolkit::Pointer({"properties", "two"}));
+  EXPECT_EQ(static_frame.dialect("https://www.test.com"),
+            "http://json-schema.org/draft-06/schema#");
+}
