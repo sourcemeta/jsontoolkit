@@ -20,3 +20,8 @@ TEST(URI_recompose, https_with_empty_fragment) {
   const sourcemeta::jsontoolkit::URI uri{"https://example.com/foo#"};
   EXPECT_EQ(uri.recompose(), "https://example.com/foo#");
 }
+
+TEST(URI_recompose, http_trailing_slash) {
+  const sourcemeta::jsontoolkit::URI uri{"http://example.com/"};
+  EXPECT_EQ(uri.recompose(), "http://example.com/");
+}
