@@ -124,3 +124,5 @@ SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_frame_d
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_frame_draft1_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_frame_draft0_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_frame_test.cc
+
+# TODO: Port the JSON Schema Referencing Suite
