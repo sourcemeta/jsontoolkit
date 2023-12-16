@@ -138,3 +138,29 @@ TEST(JSONSchema_frame_draft2, id_override) {
                    .wait(),
                sourcemeta::jsontoolkit::SchemaError);
 }
+
+TEST(JSONSchema_frame_draft2, explicit_argument_id_same) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "id": "https://www.sourcemeta.com/schema",
+    "$schema": "http://json-schema.org/draft-02/schema#"
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::frame(document, static_frame,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver,
+                                 "http://json-schema.org/draft-02/schema#",
+                                 "https://www.sourcemeta.com/schema")
+      .wait();
+
+  EXPECT_EQ(static_frame.size(), 1);
+  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/schema"));
+
+  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/schema"),
+            "https://www.sourcemeta.com/schema");
+  EXPECT_EQ(static_frame.pointer("https://www.sourcemeta.com/schema"),
+            sourcemeta::jsontoolkit::Pointer{});
+  EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/schema"),
+            "http://json-schema.org/draft-02/schema#");
+}
