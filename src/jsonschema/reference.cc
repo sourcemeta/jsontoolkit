@@ -108,8 +108,8 @@ auto sourcemeta::jsontoolkit::frame(
     if (id.has_value()) {
       for (const auto &base_string : find_bases(base_uris, pointer, id)) {
         const sourcemeta::jsontoolkit::URI base{base_string};
-        const sourcemeta::jsontoolkit::URI relative{id.value()};
-        const std::string new_id{relative.resolve_from(base)};
+        const sourcemeta::jsontoolkit::URI maybe_relative{id.value()};
+        const std::string new_id{maybe_relative.resolve_from(base)};
         assert(root_id.has_value());
         static_frame.store(new_id, root_id.value(), pointer,
                            effective_dialects.front());
