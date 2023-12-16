@@ -87,6 +87,20 @@ auto sourcemeta::jsontoolkit::frame(
       sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
   assert(root_dialect.has_value());
 
+  // If the top-level schema has a specific identifier but the user
+  // passes a different default identifier, then the schema is by
+  // definition known by two names, and we should handle that accordingly
+  const bool has_explicit_different_id{root_id.has_value() &&
+                                       default_id.has_value() &&
+                                       root_id.value() != default_id.value()};
+  if (has_explicit_different_id) {
+    static_frame.store(default_id.value(), root_id.value(),
+                       sourcemeta::jsontoolkit::empty_pointer,
+                       root_dialect.value());
+    base_uris.insert(
+        {sourcemeta::jsontoolkit::empty_pointer, {default_id.value()}});
+  }
+
   for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator{
            schema, walker, resolver, default_dialect}) {
     const auto &subschema{sourcemeta::jsontoolkit::get(schema, pointer)};
@@ -111,9 +125,16 @@ auto sourcemeta::jsontoolkit::frame(
         const sourcemeta::jsontoolkit::URI maybe_relative{id.value()};
         const std::string new_id{maybe_relative.resolve_from(base)};
         assert(root_id.has_value());
-        static_frame.store(new_id, root_id.value(), pointer,
-                           effective_dialects.front());
-        base_uris.insert({pointer, {new_id}});
+        if (!maybe_relative.is_absolute() || !static_frame.defines(new_id)) {
+          static_frame.store(new_id, root_id.value(), pointer,
+                             effective_dialects.front());
+        }
+
+        if (base_uris.contains(pointer)) {
+          base_uris.at(pointer).push_back(new_id);
+        } else {
+          base_uris.insert({pointer, {new_id}});
+        }
       }
     }
 
@@ -122,15 +143,22 @@ auto sourcemeta::jsontoolkit::frame(
          sourcemeta::jsontoolkit::anchors(subschema, resolver,
                                           effective_dialects.front())
              .get()) {
+      bool is_first = true;
       const auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
       for (const auto &base_string : find_bases(base_uris, pointer, id)) {
         const sourcemeta::jsontoolkit::URI anchor_base{base_string};
         const auto result{anchor_uri.resolve_from(anchor_base)};
+        assert(root_id.has_value());
         if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
-          assert(root_id.has_value());
+          if (!is_first && static_frame.defines(result)) {
+            continue;
+          }
+
           static_frame.store(result, root_id.value(), pointer,
                              effective_dialects.front());
         }
+
+        is_first = false;
       }
     }
   }
