@@ -1,4 +1,5 @@
 add_executable(sourcemeta_jsontoolkit_jsonpointer_unit
+  jsonpointer_empty_pointer_test.cc
   jsonpointer_get_test.cc
   jsonpointer_error_test.cc
   jsonpointer_parse_error_test.cc
