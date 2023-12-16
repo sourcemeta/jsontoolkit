@@ -32,8 +32,7 @@ using Pointer = GenericPointer<JSON::Char, JSON::CharTraits, std::allocator>;
 
 /// @ingroup jsonpointer
 /// A global constant instance of the empty JSON Pointer.
-SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
-static const Pointer empty_pointer{};
+const Pointer empty_pointer;
 
 /// @ingroup jsonpointer
 /// Get a value from a JSON document using a JSON Pointer (`const` overload).
