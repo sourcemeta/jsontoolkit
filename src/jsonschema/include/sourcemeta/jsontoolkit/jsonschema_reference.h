@@ -96,25 +96,25 @@ private:
 ///
 /// assert(static_frame.size() == 3);
 ///
-/// assert(std::get<0>(static_frame.at("https://www.example.com/schema"))
+/// assert(static_frame.base("https://www.example.com/schema")
 ///   == "https://www.example.com/schema");
-/// assert(std::get<1>(static_frame.at("https://www.example.com/schema"))
+/// assert(static_frame.pointer("https://www.example.com/schema")
 ///   == sourcemeta::jsonpointer::Pointer{});
-/// assert(std::get<2>(static_frame.at("https://www.example.com/schema"))
+/// assert(static_frame.dialect("https://www.example.com/schema")
 ///   == "https://json-schema.org/draft/2020-12/schema");
 ///
-/// assert(std::get<0>(static_frame.at("https://www.example.com/foo"))
+/// assert(static_frame.base("https://www.example.com/foo")
 ///   == "https://www.example.com/schema");
-/// assert(std::get<1>(static_frame.at("https://www.example.com/foo"))
+/// assert(static_frame.pointer("https://www.example.com/foo")
 ///   == sourcemeta::jsonpointer::Pointer{"items"});
-/// assert(std::get<2>(static_frame.at("https://www.example.com/foo"))
+/// assert(static_frame.dialect("https://www.example.com/foo")
 ///   == "https://json-schema.org/draft/2020-12/schema");
 ///
-/// assert(std::get<0>(static_frame.at("https://www.example.com/schema#test"))
+/// assert(static_frame.base("https://www.example.com/schema#test")
 ///   == "https://www.example.com/schema");
-/// assert(std::get<1>(static_frame.at("https://www.example.com/schema#test"))
+/// assert(static_frame.pointer("https://www.example.com/schema#test")
 ///   == sourcemeta::jsonpointer::Pointer{"properties", "foo"});
-/// assert(std::get<2>(static_frame.at("https://www.example.com/schema#test"))
+/// assert(static_frame.dialect("https://www.example.com/schema#test")
 ///   == "https://json-schema.org/draft/2020-12/schema");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
