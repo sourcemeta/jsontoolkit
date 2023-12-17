@@ -158,6 +158,17 @@ public:
   /// ```
   [[nodiscard]] auto recompose() const -> std::string;
 
+  /// Recompose and canonicalize a URI. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"hTtP://exAmpLe.com:80/TEST"};
+  /// assert(uri.recompose() == "http://example.com/TEST");
+  /// ```
+  [[nodiscard]] auto canonicalize() const -> std::string;
+
   /// Resolve a relative URI against a base URI as established by RFC 3986. For
   /// example:
   ///
