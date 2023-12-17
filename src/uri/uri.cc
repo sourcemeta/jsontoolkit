@@ -5,7 +5,7 @@
 #include <cstdint>   // std::uint32_t
 #include <sstream>   // std::ostringstream
 #include <stdexcept> // std::length_error, std::runtime_error
-#include <string>    // std::stoul, std::string
+#include <string>    // std::stoul, std::string, std::tolower
 #include <utility>   // std::move
 
 static auto uri_normalize(UriUriA *uri) -> void {
@@ -141,6 +141,67 @@ auto URI::query() const -> std::optional<std::string_view> {
 
 auto URI::recompose() const -> std::string {
   return uri_to_string(&this->internal->uri);
+}
+
+auto URI::canonicalize() const -> std::string {
+  std::ostringstream result;
+
+  // Scheme
+  const auto result_scheme{this->scheme()};
+  if (result_scheme.has_value()) {
+    for (const auto character : result_scheme.value()) {
+      result << static_cast<char>(std::tolower(character));
+    }
+
+    if (this->is_urn()) {
+      result << ":";
+    } else {
+      result << "://";
+    }
+  }
+
+  // Host
+  const auto result_host{this->host()};
+  if (result_host.has_value()) {
+    for (const auto character : result_host.value()) {
+      result << static_cast<char>(std::tolower(character));
+    }
+  }
+
+  // Port
+  const auto result_port{this->port()};
+  if (result_port.has_value()) {
+    const bool is_default_http_port{result_scheme.has_value() &&
+                                    result_scheme.value() == "http" &&
+                                    result_port.value() == 80};
+    const bool is_default_https_port{result_scheme.has_value() &&
+                                     result_scheme.value() == "https" &&
+                                     result_port.value() == 443};
+
+    if (!is_default_http_port && !is_default_https_port) {
+      result << ':' << result_port.value();
+    }
+  }
+
+  // Path
+  const auto result_path{this->path()};
+  if (result_path.has_value()) {
+    result << result_path.value();
+  }
+
+  // Query
+  const auto result_query{this->query()};
+  if (result_query.has_value()) {
+    result << '?' << result_query.value();
+  }
+
+  // Fragment
+  const auto result_fragment{this->fragment()};
+  if (result_fragment.has_value() && !result_fragment.value().empty()) {
+    result << '#' << result_fragment.value();
+  }
+
+  return result.str();
 }
 
 auto URI::resolve_from(const URI &base) const -> std::string {
