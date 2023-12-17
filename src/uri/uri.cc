@@ -89,6 +89,11 @@ auto URI::is_urn() const -> bool {
   return scheme.has_value() && scheme.value() == "urn";
 }
 
+auto URI::is_tag() const -> bool {
+  const auto scheme{this->scheme()};
+  return scheme.has_value() && scheme.value() == "tag";
+}
+
 auto URI::scheme() const -> std::optional<std::string_view> {
   return uri_text_range(&this->internal->uri.scheme);
 }
@@ -112,8 +117,8 @@ auto URI::path() const -> std::optional<std::string> {
     return std::nullopt;
   }
 
-  // URNs have a single path segment by definition
-  if (this->is_urn()) {
+  // URNs and tags have a single path segment by definition
+  if (this->is_urn() || this->is_tag()) {
     const auto part{uri_text_range(&segment->text)};
     assert(part.has_value());
     return std::string{part.value()};
@@ -153,7 +158,7 @@ auto URI::canonicalize() const -> std::string {
       result << static_cast<char>(std::tolower(character));
     }
 
-    if (this->is_urn()) {
+    if (this->is_urn() || this->is_tag()) {
       result << ":";
     } else {
       result << "://";

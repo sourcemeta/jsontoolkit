@@ -71,3 +71,10 @@ TEST(URI_canonicalize, example_12) {
   const sourcemeta::jsontoolkit::URI uri{"#foo"};
   EXPECT_EQ(uri.canonicalize(), "#foo");
 }
+
+TEST(URI_canonicalize, example_13) {
+  const sourcemeta::jsontoolkit::URI uri{
+      "tag:bowtie.report,2023-11:referencing-suite-tag-uris-id"};
+  EXPECT_EQ(uri.canonicalize(),
+            "tag:bowtie.report,2023-11:referencing-suite-tag-uris-id");
+}

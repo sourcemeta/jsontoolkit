@@ -15,3 +15,8 @@ TEST(URI_is_urn, relative) {
   const sourcemeta::jsontoolkit::URI uri{"../foo"};
   EXPECT_FALSE(uri.is_urn());
 }
+
+TEST(URI_is_urn, tag) {
+  const sourcemeta::jsontoolkit::URI uri{"tag:yaml.org,2002:int"};
+  EXPECT_FALSE(uri.is_urn());
+}
