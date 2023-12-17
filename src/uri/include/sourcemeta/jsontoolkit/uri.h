@@ -133,7 +133,7 @@ public:
   /// ```
   [[nodiscard]] auto fragment() const -> std::optional<std::string_view>;
 
-  /// Normalize and recompose a URI as established by RFC 3986. For example:
+  /// Recompose a URI as established by RFC 3986. For example:
   ///
   /// ```cpp
   /// #include <sourcemeta/jsontoolkit/uri.h>
