@@ -133,6 +133,19 @@ public:
   /// ```
   [[nodiscard]] auto fragment() const -> std::optional<std::string_view>;
 
+  /// Get the non-dissected query part of the URI, if any. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI
+  ///   uri{"https://www.sourcemeta.com/?foo=bar"};
+  /// assert(uri.query().has_value());
+  /// assert(uri.query().value() == "foo=bar");
+  /// ```
+  [[nodiscard]] auto query() const -> std::optional<std::string_view>;
+
   /// Recompose a URI as established by RFC 3986. For example:
   ///
   /// ```cpp
