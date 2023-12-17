@@ -41,3 +41,19 @@ TEST(URI_path, urn_with_fragment) {
   EXPECT_TRUE(uri.path().has_value());
   EXPECT_EQ(uri.path().value(), "example:schema");
 }
+
+TEST(URI_path, tag) {
+  const sourcemeta::jsontoolkit::URI uri{
+      "tag:bowtie.report,2023-11:referencing-suite-tag-uris-id"};
+  EXPECT_TRUE(uri.path().has_value());
+  EXPECT_EQ(uri.path().value(),
+            "bowtie.report,2023-11:referencing-suite-tag-uris-id");
+}
+
+TEST(URI_path, tag_with_fragment) {
+  const sourcemeta::jsontoolkit::URI uri{
+      "tag:bowtie.report,2023-11:referencing-suite-tag-uris-id#foo"};
+  EXPECT_TRUE(uri.path().has_value());
+  EXPECT_EQ(uri.path().value(),
+            "bowtie.report,2023-11:referencing-suite-tag-uris-id");
+}

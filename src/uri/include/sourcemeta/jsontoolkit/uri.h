@@ -73,6 +73,17 @@ public:
   /// ```
   auto is_urn() const -> bool;
 
+  /// Check if the URI is a tag as described by RFC 4151. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"tag:yaml.org,2002:int"};
+  /// assert(uri.is_tag());
+  /// ```
+  auto is_tag() const -> bool;
+
   /// Get the scheme part of the URI, if any. For example:
   ///
   /// ```cpp
