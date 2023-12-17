@@ -135,6 +135,10 @@ auto URI::fragment() const -> std::optional<std::string_view> {
   return uri_text_range(&this->internal->uri.fragment);
 }
 
+auto URI::query() const -> std::optional<std::string_view> {
+  return uri_text_range(&this->internal->uri.query);
+}
+
 auto URI::recompose() const -> std::string {
   return uri_to_string(&this->internal->uri);
 }

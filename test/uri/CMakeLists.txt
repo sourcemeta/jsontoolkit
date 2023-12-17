@@ -5,6 +5,7 @@ add_executable(sourcemeta_jsontoolkit_uri_unit
   uri_path_test.cc
   uri_port_test.cc
   uri_scheme_test.cc
+  uri_query_test.cc
   uri_is_absolute_test.cc
   uri_is_urn_test.cc
   uri_recompose_test.cc
