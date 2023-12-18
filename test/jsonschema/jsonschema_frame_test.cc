@@ -1,4 +1,7 @@
 #include <gtest/gtest.h>
+
+#include <set>
+
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
@@ -96,4 +99,34 @@ TEST(JSONSchema_frame, no_id_with_default) {
             sourcemeta::jsontoolkit::Pointer{});
   EXPECT_EQ(static_frame.dialect("https://www.sourcemeta.com/schema"),
             "https://json-schema.org/draft/2020-12/schema");
+}
+
+TEST(JSONSchema_frame, uri_iterators) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "items": {
+      "$id": "test",
+      "$anchor": "foo",
+      "type": "string"
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::frame(document, static_frame,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  std::set<std::string> uris;
+  for (const auto &uri : static_frame) {
+    uris.insert(uri);
+  }
+
+  EXPECT_EQ(static_frame.size(), 3);
+  EXPECT_EQ(uris.size(), 3);
+  EXPECT_TRUE(uris.contains("https://www.sourcemeta.com/schema"));
+  EXPECT_TRUE(uris.contains("https://www.sourcemeta.com/test"));
+  EXPECT_TRUE(uris.contains("https://www.sourcemeta.com/test#foo"));
 }

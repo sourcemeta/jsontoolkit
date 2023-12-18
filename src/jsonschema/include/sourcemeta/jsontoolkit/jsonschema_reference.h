@@ -16,6 +16,7 @@
 #include <optional> // std::optional
 #include <string>   // std::string
 #include <tuple>    // std::tuple
+#include <vector>   // std::vector
 
 namespace sourcemeta::jsontoolkit {
 
@@ -51,6 +52,12 @@ public:
              const Pointer &pointer_from_base, const std::string &dialect)
       -> void;
 
+  /// Get a begin iterator on the URIs registered in the static frame
+  inline auto begin() const -> decltype(auto) { return this->keys.begin(); }
+
+  /// Get an end iterator on the URIs registered in the static frame
+  inline auto end() const -> decltype(auto) { return this->keys.end(); }
+
 private:
 // Exporting symbols that depends on the standard C++ library is considered
 // safe.
@@ -59,6 +66,8 @@ private:
 #pragma warning(disable : 4251)
 #endif
   std::map<std::string, std::tuple<std::string, Pointer, std::string>> data;
+  // Keep a mirror of the map keys for iteration purposes
+  std::vector<std::string> keys;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251)
 #endif

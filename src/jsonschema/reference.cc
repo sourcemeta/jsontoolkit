@@ -68,6 +68,8 @@ auto sourcemeta::jsontoolkit::ReferenceFrame::store(
     error << "Schema identifier already exists: " << uri;
     throw SchemaError(error.str());
   }
+
+  this->keys.push_back(canonical);
 }
 
 auto sourcemeta::jsontoolkit::frame(
