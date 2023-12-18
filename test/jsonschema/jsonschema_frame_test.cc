@@ -130,3 +130,16 @@ TEST(JSONSchema_frame, uri_iterators) {
   EXPECT_TRUE(uris.contains("https://www.sourcemeta.com/test"));
   EXPECT_TRUE(uris.contains("https://www.sourcemeta.com/test#foo"));
 }
+
+TEST(JSONSchema_frame, reference_frame_uri_canonicalize) {
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  frame.store("https://example.com#", "https://example.com#",
+              sourcemeta::jsontoolkit::empty_pointer,
+              "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_EQ(frame.size(), 1);
+  EXPECT_TRUE(frame.defines("https://example.com"));
+  // This is canonicalized
+  EXPECT_TRUE(frame.defines("https://example.com#"));
+  // This must not be canonicalized
+  EXPECT_EQ(frame.base("https://example.com"), "https://example.com#");
+}
