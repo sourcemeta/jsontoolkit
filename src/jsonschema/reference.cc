@@ -9,22 +9,6 @@
 #include <sstream>  // std::ostringstream
 #include <vector>   // std::vector
 
-static auto find_bases(const std::map<sourcemeta::jsontoolkit::Pointer,
-                                      std::vector<std::string>> &bases,
-                       const sourcemeta::jsontoolkit::Pointer &pointer,
-                       const std::optional<std::string> &default_base)
-    -> std::vector<std::string> {
-  for (const auto &subpointer :
-       sourcemeta::jsontoolkit::SubPointerWalker{pointer}) {
-    if (bases.contains(subpointer)) {
-      return bases.at(subpointer);
-    }
-  }
-
-  assert(default_base.has_value());
-  return {default_base.value()};
-}
-
 auto sourcemeta::jsontoolkit::ReferenceFrame::defines(
     const std::string &uri) const -> bool {
   const auto canonical{sourcemeta::jsontoolkit::URI{uri}.canonicalize()};
@@ -73,6 +57,22 @@ auto sourcemeta::jsontoolkit::ReferenceFrame::store(
   this->keys.push_back(canonical);
 }
 
+static auto find_nearest_bases(const std::map<sourcemeta::jsontoolkit::Pointer,
+                                              std::vector<std::string>> &bases,
+                               const sourcemeta::jsontoolkit::Pointer &pointer,
+                               const std::optional<std::string> &default_base)
+    -> std::vector<std::string> {
+  for (const auto &subpointer :
+       sourcemeta::jsontoolkit::SubPointerWalker{pointer}) {
+    if (bases.contains(subpointer)) {
+      return bases.at(subpointer);
+    }
+  }
+
+  assert(default_base.has_value());
+  return {default_base.value()};
+}
+
 auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::JSON &schema,
     sourcemeta::jsontoolkit::ReferenceFrame &static_frame,
@@ -116,7 +116,7 @@ auto sourcemeta::jsontoolkit::frame(
     }
 
     const auto effective_dialects{
-        find_bases(base_dialects, pointer, root_dialect)};
+        find_nearest_bases(base_dialects, pointer, root_dialect)};
 
     // Handle schema identifiers
     const std::optional<std::string> id{
@@ -125,7 +125,8 @@ auto sourcemeta::jsontoolkit::frame(
                                     pointer.empty() ? default_id : std::nullopt)
             .get()};
     if (id.has_value()) {
-      for (const auto &base_string : find_bases(base_uris, pointer, id)) {
+      for (const auto &base_string :
+           find_nearest_bases(base_uris, pointer, id)) {
         const sourcemeta::jsontoolkit::URI base{base_string};
         const sourcemeta::jsontoolkit::URI maybe_relative{id.value()};
         const std::string new_id{maybe_relative.resolve_from(base)};
@@ -150,7 +151,8 @@ auto sourcemeta::jsontoolkit::frame(
              .get()) {
       bool is_first = true;
       const auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
-      for (const auto &base_string : find_bases(base_uris, pointer, id)) {
+      for (const auto &base_string :
+           find_nearest_bases(base_uris, pointer, id)) {
         const sourcemeta::jsontoolkit::URI anchor_base{base_string};
         const auto result{anchor_uri.resolve_from(anchor_base)};
         assert(root_id.has_value());
