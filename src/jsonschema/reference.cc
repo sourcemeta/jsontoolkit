@@ -117,6 +117,7 @@ auto sourcemeta::jsontoolkit::frame(
 
     const auto effective_dialects{
         find_nearest_bases(base_dialects, pointer, root_dialect)};
+    assert(effective_dialects.size() == 1);
 
     // Handle schema identifiers
     const std::optional<std::string> id{
