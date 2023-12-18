@@ -12,6 +12,7 @@
 #include <sourcemeta/jsontoolkit/jsonpointer_error.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_pointer.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_subpointer_walker.h>
+#include <sourcemeta/jsontoolkit/jsonpointer_walker.h>
 
 #include <memory>  // std::allocator
 #include <ostream> // std::basic_ostream
@@ -169,6 +170,35 @@ SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto stringify(const Pointer &pointer,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void;
+
+/// @ingroup jsonpointer
+///
+/// Walk over every element of a JSON document, top-down, using JSON Pointers.
+/// For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <cassert>
+/// #include <vector>
+///
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+/// std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+///
+/// for (const auto &subpointer :
+///   sourcemeta::jsontoolkit::PointerWalker{pointer}) {
+///   subpointers.push_back(subpointer);
+/// }
+///
+/// assert(subpointers.size() == 4);
+/// assert(subpointers.at(0) == sourcemeta::jsontoolkit::Pointer{});
+/// assert(subpointers.at(1) == sourcemeta::jsontoolkit::Pointer{0});
+/// assert(subpointers.at(2) == sourcemeta::jsontoolkit::Pointer{1});
+/// assert(subpointers.at(3) == sourcemeta::jsontoolkit::Pointer{2});
+/// ```
+using PointerWalker =
+    GenericPointerWalker<JSON::Char, JSON::CharTraits, std::allocator>;
 
 /// @ingroup jsonpointer
 ///
