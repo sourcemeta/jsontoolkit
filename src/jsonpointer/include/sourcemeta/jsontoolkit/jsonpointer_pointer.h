@@ -7,6 +7,7 @@
 #include <cassert>          // assert
 #include <initializer_list> // std::initializer_list
 #include <iterator>         // std::advance, std::back_inserter
+#include <sstream>          // std::basic_ostringstream
 #include <stdexcept>        // std::runtime_error
 #include <utility>          // std::move
 #include <vector>           // std::vector

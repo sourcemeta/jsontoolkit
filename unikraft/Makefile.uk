@@ -37,6 +37,7 @@ SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_strin
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_token_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_walker_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_subpointer_walker_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_to_string_test.cc
 
 # URI
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/uri/uri_canonicalize_test.cc
