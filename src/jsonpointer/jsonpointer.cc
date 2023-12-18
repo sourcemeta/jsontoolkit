@@ -7,7 +7,7 @@
 #include <functional>  // std::reference_wrapper
 #include <iterator>    // std::cbegin, std::cend, std::prev
 #include <memory>      // std::allocator
-#include <sstream>     // std::basic_istringstream
+#include <sstream>     // std::basic_ostringstream
 #include <type_traits> // std::is_same_v
 #include <utility>     // std::move
 
@@ -128,6 +128,16 @@ auto stringify(const Pointer &pointer,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
   stringify<JSON::Char, JSON::CharTraits, std::allocator>(pointer, stream);
+}
+
+auto to_string(const Pointer &pointer)
+    -> std::basic_string<JSON::Char, JSON::CharTraits,
+                         std::allocator<JSON::Char>> {
+  std::basic_ostringstream<JSON::Char, JSON::CharTraits,
+                           std::allocator<JSON::Char>>
+      result;
+  stringify(pointer, result);
+  return result.str();
 }
 
 } // namespace sourcemeta::jsontoolkit

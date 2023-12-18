@@ -16,6 +16,7 @@
 
 #include <memory>  // std::allocator
 #include <ostream> // std::basic_ostream
+#include <string>  // std::basic_string
 
 /// @defgroup jsonpointer JSON Pointer
 /// @brief An growing implementation of RFC 6901 JSON Pointer.
@@ -170,6 +171,24 @@ SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto stringify(const Pointer &pointer,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void;
+
+/// @ingroup jsonpointer
+///
+/// Stringify the input JSON Pointer into a C++ standard string. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <string>
+/// #include <iostream>
+///
+/// const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+/// const std::string result{sourcemeta::jsontoolkit::to_string(pointer)};
+/// std::cout << result << std::endl;
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto to_string(const Pointer &pointer)
+    -> std::basic_string<JSON::Char, JSON::CharTraits,
+                         std::allocator<JSON::Char>>;
 
 /// @ingroup jsonpointer
 ///
