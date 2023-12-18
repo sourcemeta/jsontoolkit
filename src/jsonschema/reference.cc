@@ -60,7 +60,9 @@ auto sourcemeta::jsontoolkit::ReferenceFrame::store(
     const std::string &uri, const std::string &base_identifier,
     const sourcemeta::jsontoolkit::Pointer &pointer_from_base,
     const std::string &dialect) -> void {
-  if (!this->data.insert({uri, {base_identifier, pointer_from_base, dialect}})
+  const auto canonical{sourcemeta::jsontoolkit::URI{uri}.canonicalize()};
+  if (!this->data
+           .insert({canonical, {base_identifier, pointer_from_base, dialect}})
            .second) {
     std::ostringstream error;
     error << "Schema identifier already exists: " << uri;
