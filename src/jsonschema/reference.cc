@@ -27,7 +27,8 @@ static auto find_bases(const std::map<sourcemeta::jsontoolkit::Pointer,
 
 auto sourcemeta::jsontoolkit::ReferenceFrame::defines(
     const std::string &uri) const -> bool {
-  return this->data.contains(uri);
+  const auto canonical{sourcemeta::jsontoolkit::URI{uri}.canonicalize()};
+  return this->data.contains(canonical);
 }
 
 auto sourcemeta::jsontoolkit::ReferenceFrame::size() const -> std::size_t {
