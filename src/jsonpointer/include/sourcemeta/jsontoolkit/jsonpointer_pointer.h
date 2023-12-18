@@ -3,8 +3,10 @@
 
 #include <sourcemeta/jsontoolkit/jsonpointer_token.h>
 
+#include <algorithm>        // std::copy
 #include <cassert>          // assert
 #include <initializer_list> // std::initializer_list
+#include <iterator>         // std::advance, std::back_inserter
 #include <stdexcept>        // std::runtime_error
 #include <utility>          // std::move
 #include <vector>           // std::vector
@@ -171,7 +173,7 @@ public:
     return this->data.emplace_back(args...);
   }
 
-  /// Remove the last token of a JSON Pointer For example:
+  /// Remove the last token of a JSON Pointer. For example:
   ///
   /// ```cpp
   /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
@@ -191,6 +193,39 @@ public:
     }
 
     this->data.pop_back();
+  }
+
+  /// Resolve a JSON Pointer relative to another JSON Pointer. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar"};
+  /// const sourcemeta::jsontoolkit::Pointer base{"foo"};
+  /// assert(pointer.resolve_from(base) ==
+  ///   sourcemeta::jsontoolkit::Pointer{"bar"});
+  /// ```
+  ///
+  /// If the JSON Pointer is not relative to the base, a copy of the original
+  /// input pointer is returned.
+  auto resolve_from(const GenericPointer<CharT, Traits, Allocator> &base) const
+      -> GenericPointer<CharT, Traits, Allocator> {
+    typename Container::size_type index{0};
+    while (index < base.size()) {
+      if (index >= this->size() || base.data[index] != this->data[index]) {
+        return *this;
+      } else {
+        index++;
+      }
+    }
+
+    // Make a pointer from the remaining tokens
+    auto new_begin{this->data.cbegin()};
+    std::advance(new_begin, index);
+    GenericPointer<CharT, Traits, Allocator> result;
+    std::copy(new_begin, this->data.cend(), std::back_inserter(result.data));
+    return result;
   }
 
   /// Compare JSON Pointer instances

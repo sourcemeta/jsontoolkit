@@ -5,6 +5,7 @@ add_executable(sourcemeta_jsontoolkit_jsonpointer_unit
   jsonpointer_parse_error_test.cc
   jsonpointer_parse_test.cc
   jsonpointer_pointer_test.cc
+  jsonpointer_resolve_from_test.cc
   jsonpointer_set_test.cc
   jsonpointer_stringify_test.cc
   jsonpointer_token_test.cc
