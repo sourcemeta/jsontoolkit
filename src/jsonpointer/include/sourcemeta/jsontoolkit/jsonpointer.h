@@ -11,7 +11,7 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_error.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_pointer.h>
-#include <sourcemeta/jsontoolkit/jsonpointer_walker.h>
+#include <sourcemeta/jsontoolkit/jsonpointer_subpointer_walker.h>
 
 #include <memory>  // std::allocator
 #include <ostream> // std::basic_ostream
