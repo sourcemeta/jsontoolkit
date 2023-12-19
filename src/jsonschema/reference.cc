@@ -7,6 +7,7 @@
 #include <map>      // std::map
 #include <optional> // std::optional
 #include <sstream>  // std::ostringstream
+#include <utility>  // std::pair
 #include <vector>   // std::vector
 
 auto sourcemeta::jsontoolkit::ReferenceFrame::defines(
@@ -71,6 +72,24 @@ static auto find_nearest_bases(const std::map<sourcemeta::jsontoolkit::Pointer,
 
   assert(default_base.has_value());
   return {default_base.value()};
+}
+
+static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
+                                           std::vector<std::string>> &bases,
+                            const sourcemeta::jsontoolkit::Pointer &pointer)
+    -> std::vector<std::pair<std::string, sourcemeta::jsontoolkit::Pointer>> {
+  std::vector<std::pair<std::string, sourcemeta::jsontoolkit::Pointer>> result;
+
+  for (const auto &subpointer :
+       sourcemeta::jsontoolkit::SubPointerWalker{pointer}) {
+    if (bases.contains(subpointer)) {
+      for (const auto &base : bases.at(subpointer)) {
+        result.push_back({base, subpointer});
+      }
+    }
+  }
+
+  return result;
 }
 
 auto sourcemeta::jsontoolkit::frame(
@@ -167,6 +186,25 @@ auto sourcemeta::jsontoolkit::frame(
         }
 
         is_first = false;
+      }
+    }
+  }
+
+  // Pre-compute every possible pointer to the schema
+  for (const auto &pointer : sourcemeta::jsontoolkit::PointerWalker{schema}) {
+    for (const auto &base : find_every_base(base_uris, pointer)) {
+      const auto dialects{
+          find_nearest_bases(base_dialects, pointer, root_dialect)};
+      assert(dialects.size() == 1);
+      const auto relative_pointer_uri{
+          sourcemeta::jsontoolkit::URI::from_fragment(
+              sourcemeta::jsontoolkit::to_string(
+                  pointer.resolve_from(base.second)))};
+      const sourcemeta::jsontoolkit::URI base_uri{base.first};
+      const auto result{relative_pointer_uri.resolve_from(base_uri)};
+
+      if (!static_frame.defines(result)) {
+        static_frame.store(result, root_id.value(), pointer, dialects.front());
       }
     }
   }
