@@ -1,4 +1,5 @@
 add_executable(sourcemeta_jsontoolkit_jsonschema_unit
+  jsonschema_test_utils.h
   jsonschema_anchor_2020_12_test.cc
   jsonschema_anchor_2019_09_test.cc
   jsonschema_id_2020_12_test.cc
