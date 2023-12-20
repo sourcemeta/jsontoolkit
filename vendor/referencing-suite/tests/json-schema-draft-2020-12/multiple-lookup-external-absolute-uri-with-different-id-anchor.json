@@ -37,6 +37,10 @@
         "ref": "http://example.org/foo#baz",
         "target": { "$anchor": "baz", "quux": "eggs" }
       }
+    },
+    {
+      "ref": "http://example.com/#baz",
+      "error": true
     }
   ]
 }
