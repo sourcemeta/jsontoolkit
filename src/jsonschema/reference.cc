@@ -30,24 +30,32 @@ auto sourcemeta::jsontoolkit::ReferenceFrame::root(const std::string &uri) const
   return std::get<0>(this->data.at(uri));
 }
 
+auto sourcemeta::jsontoolkit::ReferenceFrame::base(const std::string &uri) const
+    -> const std::string & {
+  assert(this->defines(uri));
+  return std::get<1>(this->data.at(uri));
+}
+
 auto sourcemeta::jsontoolkit::ReferenceFrame::pointer(
     const std::string &uri) const -> const sourcemeta::jsontoolkit::Pointer & {
   assert(this->defines(uri));
-  return std::get<1>(this->data.at(uri));
+  return std::get<2>(this->data.at(uri));
 }
 
 auto sourcemeta::jsontoolkit::ReferenceFrame::dialect(
     const std::string &uri) const -> const std::string & {
   assert(this->defines(uri));
-  return std::get<2>(this->data.at(uri));
+  return std::get<3>(this->data.at(uri));
 }
 
 auto sourcemeta::jsontoolkit::ReferenceFrame::store(
     const std::string &uri, const std::string &root_id,
+    const std::string &base_id,
     const sourcemeta::jsontoolkit::Pointer &pointer_from_root,
     const std::string &dialect) -> void {
   const auto canonical{sourcemeta::jsontoolkit::URI{uri}.canonicalize()};
-  if (!this->data.insert({canonical, {root_id, pointer_from_root, dialect}})
+  if (!this->data
+           .insert({canonical, {root_id, base_id, pointer_from_root, dialect}})
            .second) {
     std::ostringstream error;
     error << "Schema identifier already exists: " << uri;
@@ -117,7 +125,7 @@ auto sourcemeta::jsontoolkit::frame(
                                        default_id.has_value() &&
                                        root_id.value() != default_id.value()};
   if (has_explicit_different_id) {
-    static_frame.store(default_id.value(), root_id.value(),
+    static_frame.store(default_id.value(), root_id.value(), root_id.value(),
                        sourcemeta::jsontoolkit::empty_pointer,
                        root_dialect.value());
     base_uris.insert(
@@ -151,7 +159,7 @@ auto sourcemeta::jsontoolkit::frame(
         const std::string new_id{maybe_relative.resolve_from(base)};
         assert(root_id.has_value());
         if (!maybe_relative.is_absolute() || !static_frame.defines(new_id)) {
-          static_frame.store(new_id, root_id.value(), pointer,
+          static_frame.store(new_id, root_id.value(), new_id, pointer,
                              effective_dialects.front());
         }
 
@@ -180,7 +188,7 @@ auto sourcemeta::jsontoolkit::frame(
             continue;
           }
 
-          static_frame.store(result, root_id.value(), pointer,
+          static_frame.store(result, root_id.value(), base_string, pointer,
                              effective_dialects.front());
         }
 
@@ -191,19 +199,23 @@ auto sourcemeta::jsontoolkit::frame(
 
   // Pre-compute every possible pointer to the schema
   for (const auto &pointer : sourcemeta::jsontoolkit::PointerWalker{schema}) {
+    const auto dialects{
+        find_nearest_bases(base_dialects, pointer, root_dialect)};
+    assert(dialects.size() == 1);
+
     for (const auto &base : find_every_base(base_uris, pointer)) {
-      const auto dialects{
-          find_nearest_bases(base_dialects, pointer, root_dialect)};
-      assert(dialects.size() == 1);
       const auto relative_pointer_uri{
           sourcemeta::jsontoolkit::URI::from_fragment(
               sourcemeta::jsontoolkit::to_string(
                   pointer.resolve_from(base.second)))};
       const sourcemeta::jsontoolkit::URI base_uri{base.first};
       const auto result{relative_pointer_uri.resolve_from(base_uri)};
-
       if (!static_frame.defines(result)) {
-        static_frame.store(result, root_id.value(), pointer, dialects.front());
+        const auto nearest_bases{
+            find_nearest_bases(base_uris, pointer, base.first)};
+        assert(!nearest_bases.empty());
+        static_frame.store(result, root_id.value(), nearest_bases.front(),
+                           pointer, dialects.front());
       }
     }
   }
