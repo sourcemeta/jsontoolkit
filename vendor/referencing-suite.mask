@@ -6,5 +6,4 @@ README.md
 test-schema.json
 test_sanity.py
 tests/json-schema-draft-03/
-tests/json-schema-draft-04/
 tests/specifications.json
