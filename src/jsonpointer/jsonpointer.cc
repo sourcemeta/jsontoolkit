@@ -127,7 +127,8 @@ auto to_pointer(const JSON &document) -> Pointer {
 auto stringify(const Pointer &pointer,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
-  stringify<JSON::Char, JSON::CharTraits, std::allocator>(pointer, stream);
+  stringify<JSON::Char, JSON::CharTraits, std::allocator>(pointer, stream,
+                                                          false);
 }
 
 auto to_string(const Pointer &pointer)
@@ -138,6 +139,15 @@ auto to_string(const Pointer &pointer)
       result;
   stringify(pointer, result);
   return result.str();
+}
+
+auto to_uri(const Pointer &pointer) -> URI {
+  std::basic_ostringstream<JSON::Char, JSON::CharTraits,
+                           std::allocator<JSON::Char>>
+      result;
+  stringify<JSON::Char, JSON::CharTraits, std::allocator>(pointer, result,
+                                                          true);
+  return URI::from_fragment(result.str());
 }
 
 } // namespace sourcemeta::jsontoolkit

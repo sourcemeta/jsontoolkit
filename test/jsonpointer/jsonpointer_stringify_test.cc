@@ -367,3 +367,10 @@ TEST(JSONPointer_stringify, escape_1F) {
   sourcemeta::jsontoolkit::stringify(pointer, stream);
   EXPECT_EQ(stream.str(), "/foo\\u001Fbar");
 }
+
+TEST(JSONPointer_stringify, no_uri_escape) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "percent%field"};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(pointer, stream);
+  EXPECT_EQ(stream.str(), "/foo/percent%field");
+}

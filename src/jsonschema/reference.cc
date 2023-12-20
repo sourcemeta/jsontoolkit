@@ -205,9 +205,7 @@ auto sourcemeta::jsontoolkit::frame(
 
     for (const auto &base : find_every_base(base_uris, pointer)) {
       const auto relative_pointer_uri{
-          sourcemeta::jsontoolkit::URI::from_fragment(
-              sourcemeta::jsontoolkit::to_string(
-                  pointer.resolve_from(base.second)))};
+          sourcemeta::jsontoolkit::to_uri(pointer.resolve_from(base.second))};
       const sourcemeta::jsontoolkit::URI base_uri{base.first};
       const auto result{relative_pointer_uri.resolve_from(base_uri)};
       if (!static_frame.defines(result)) {
