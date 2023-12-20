@@ -151,22 +151,40 @@ auto sourcemeta::jsontoolkit::frame(
                                     effective_dialects.front(),
                                     pointer.empty() ? default_id : std::nullopt)
             .get()};
-    if (id.has_value()) {
-      for (const auto &base_string :
-           find_nearest_bases(base_uris, pointer, id)) {
-        const sourcemeta::jsontoolkit::URI base{base_string};
-        const sourcemeta::jsontoolkit::URI maybe_relative{id.value()};
-        const std::string new_id{maybe_relative.resolve_from(base)};
-        assert(root_id.has_value());
-        if (!maybe_relative.is_absolute() || !static_frame.defines(new_id)) {
-          static_frame.store(new_id, root_id.value(), new_id, pointer,
-                             effective_dialects.front());
-        }
 
-        if (base_uris.contains(pointer)) {
-          base_uris.at(pointer).push_back(new_id);
-        } else {
-          base_uris.insert({pointer, {new_id}});
+    if (id.has_value()) {
+      const std::optional<std::string> base_dialect{
+          sourcemeta::jsontoolkit::base_dialect(subschema, resolver,
+                                                effective_dialects.front())
+              .get()};
+
+      // In older drafts, the presence of `$ref` would override any sibling
+      // keywords
+      // See
+      // https://json-schema.org/draft-07/draft-handrews-json-schema-01#rfc.section.8.3
+      const bool ref_overrides_id =
+          base_dialect.has_value() &&
+          (base_dialect.value() == "http://json-schema.org/draft-07/schema#" ||
+           base_dialect.value() ==
+               "http://json-schema.org/draft-07/hyper-schema#");
+
+      if (!subschema.defines("$ref") || !ref_overrides_id) {
+        for (const auto &base_string :
+             find_nearest_bases(base_uris, pointer, id)) {
+          const sourcemeta::jsontoolkit::URI base{base_string};
+          const sourcemeta::jsontoolkit::URI maybe_relative{id.value()};
+          const std::string new_id{maybe_relative.resolve_from(base)};
+          assert(root_id.has_value());
+          if (!maybe_relative.is_absolute() || !static_frame.defines(new_id)) {
+            static_frame.store(new_id, root_id.value(), new_id, pointer,
+                               effective_dialects.front());
+          }
+
+          if (base_uris.contains(pointer)) {
+            base_uris.at(pointer).push_back(new_id);
+          } else {
+            base_uris.insert({pointer, {new_id}});
+          }
         }
       }
     }
