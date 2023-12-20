@@ -9,5 +9,4 @@ tests/json-schema-draft-03/
 tests/json-schema-draft-04/
 tests/json-schema-draft-06/
 tests/json-schema-draft-07/
-tests/json-schema-draft-2019-09/
 tests/specifications.json

@@ -166,5 +166,10 @@ int main(int argc, char **argv) {
                  "JSONSchemaReferencingSuite_2020_12",
                  "https://json-schema.org/draft/2020-12/schema", {});
 
+  // 2019-09
+  register_tests("json-schema-draft-2019-09",
+                 "JSONSchemaReferencingSuite_2019_09",
+                 "https://json-schema.org/draft/2019-09/schema", {});
+
   return RUN_ALL_TESTS();
 }
