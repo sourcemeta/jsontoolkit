@@ -215,5 +215,5 @@ TEST(JSONSchema_frame, reference_frame_uri_canonicalize) {
   // This is canonicalized
   EXPECT_TRUE(frame.defines("https://example.com#"));
   // This must not be canonicalized
-  EXPECT_EQ(frame.base("https://example.com"), "https://example.com#");
+  EXPECT_EQ(frame.root("https://example.com"), "https://example.com#");
 }
