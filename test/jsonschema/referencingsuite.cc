@@ -159,8 +159,6 @@ static auto register_tests(const std::filesystem::path &subdirectory,
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
 
-  // TODO: Add all remaining drafts
-
   // 2020-12
   register_tests("json-schema-draft-2020-12",
                  "JSONSchemaReferencingSuite_2020_12",
@@ -182,6 +180,17 @@ int main(int argc, char **argv) {
   // Draft4
   register_tests("json-schema-draft-04", "JSONSchemaReferencingSuite_Draft4",
                  "http://json-schema.org/draft-04/schema#", {});
+
+  // Draft3
+  register_tests("json-schema-draft-03", "JSONSchemaReferencingSuite_Draft3",
+                 "http://json-schema.org/draft-03/schema#",
+
+                 // TODO: Fix remaining tests
+                 {"pointer-crossing-id-in-dependencies-object",
+                  "pointer-crossing-id-in-items-object",
+                  "keywords-additionalItems-boolean",
+                  "keywords-additionalProperties-boolean",
+                  "pointer-crossing-id-in-items-array"});
 
   return RUN_ALL_TESTS();
 }
