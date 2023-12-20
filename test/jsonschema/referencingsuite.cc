@@ -175,5 +175,9 @@ int main(int argc, char **argv) {
   register_tests("json-schema-draft-07", "JSONSchemaReferencingSuite_Draft7",
                  "http://json-schema.org/draft-07/schema#", {});
 
+  // Draft6
+  register_tests("json-schema-draft-06", "JSONSchemaReferencingSuite_Draft6",
+                 "http://json-schema.org/draft-06/schema#", {});
+
   return RUN_ALL_TESTS();
 }

@@ -166,7 +166,10 @@ auto sourcemeta::jsontoolkit::frame(
           base_dialect.has_value() &&
           (base_dialect.value() == "http://json-schema.org/draft-07/schema#" ||
            base_dialect.value() ==
-               "http://json-schema.org/draft-07/hyper-schema#");
+               "http://json-schema.org/draft-07/hyper-schema#" ||
+           base_dialect.value() == "http://json-schema.org/draft-06/schema#" ||
+           base_dialect.value() ==
+               "http://json-schema.org/draft-06/hyper-schema#");
 
       if (!subschema.defines("$ref") || !ref_overrides_id) {
         for (const auto &base_string :
