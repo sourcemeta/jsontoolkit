@@ -13,6 +13,7 @@
 #include <sourcemeta/jsontoolkit/jsonpointer_pointer.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_subpointer_walker.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_walker.h>
+#include <sourcemeta/jsontoolkit/uri.h>
 
 #include <memory>  // std::allocator
 #include <ostream> // std::basic_ostream
@@ -189,6 +190,25 @@ SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto to_string(const Pointer &pointer)
     -> std::basic_string<JSON::Char, JSON::CharTraits,
                          std::allocator<JSON::Char>>;
+
+/// @ingroup jsonpointer
+///
+/// Stringify the input JSON Pointer into a properly escaped URI fragment. For
+/// example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/uri.h>
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+///
+/// #include <assert>
+///
+/// const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+/// const sourcemeta::jsontoolkit::URI fragment{
+///   sourcemeta::jsontoolkit::to_uri(pointer)};
+/// assert(fragment.recompose() == "#/foo");
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto to_uri(const Pointer &pointer) -> URI;
 
 /// @ingroup jsonpointer
 ///

@@ -207,7 +207,7 @@ public:
   ///
   /// std::istringstream input{"foo bar"};
   /// std::ostringstream output;
-  /// sourcemeta::jsontoolkit::URI::escape(input, output)};
+  /// sourcemeta::jsontoolkit::URI::escape(input, output);
   /// assert(output.str() == "foo%20bar");
   /// ```
   static auto escape(std::istream &input, std::ostream &output) -> void;
@@ -222,7 +222,7 @@ public:
   ///
   /// std::istringstream input{"foo%20bar"};
   /// std::ostringstream output;
-  /// sourcemeta::jsontoolkit::URI::unescape(input, output)};
+  /// sourcemeta::jsontoolkit::URI::unescape(input, output);
   /// assert(output.str() == "foo bar");
   /// ```
   static auto unescape(std::istream &input, std::ostream &output) -> void;
