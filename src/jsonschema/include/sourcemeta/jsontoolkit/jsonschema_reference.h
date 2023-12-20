@@ -30,6 +30,10 @@ public:
   /// registered at the given URI.
   auto root(const std::string &uri) const -> const std::string &;
 
+  /// Get the identifier that consists of the JSON Schema base URI of the JSON
+  /// document registered at the given URI.
+  auto base(const std::string &uri) const -> const std::string &;
+
   /// Get the JSON Pointer that must be used to get the schema registered at a
   /// given URI, relative to its root schema
   auto pointer(const std::string &uri) const -> const Pointer &;
@@ -49,8 +53,8 @@ public:
 
   /// Store a new entry in the reference frame
   auto store(const std::string &uri, const std::string &root,
-             const Pointer &pointer_from_root, const std::string &dialect)
-      -> void;
+             const std::string &base, const Pointer &pointer_from_root,
+             const std::string &dialect) -> void;
 
   /// Get a begin iterator on the URIs registered in the static frame
   inline auto begin() const -> decltype(auto) { return this->keys.begin(); }
@@ -65,7 +69,9 @@ private:
 #if defined(_MSC_VER)
 #pragma warning(disable : 4251)
 #endif
-  std::map<std::string, std::tuple<std::string, Pointer, std::string>> data;
+  std::map<std::string,
+           std::tuple<std::string, std::string, Pointer, std::string>>
+      data;
   // Keep a mirror of the map keys for iteration purposes
   std::vector<std::string> keys;
 #if defined(_MSC_VER)
