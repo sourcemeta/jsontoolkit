@@ -5,5 +5,4 @@ pyproject.toml
 README.md
 test-schema.json
 test_sanity.py
-tests/json-schema-draft-03/
 tests/specifications.json

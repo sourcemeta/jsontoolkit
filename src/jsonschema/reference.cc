@@ -172,7 +172,16 @@ auto sourcemeta::jsontoolkit::frame(
                "http://json-schema.org/draft-06/hyper-schema#" ||
            base_dialect.value() == "http://json-schema.org/draft-04/schema#" ||
            base_dialect.value() ==
-               "http://json-schema.org/draft-04/hyper-schema#");
+               "http://json-schema.org/draft-04/hyper-schema#" ||
+           base_dialect.value() == "http://json-schema.org/draft-03/schema#" ||
+           base_dialect.value() ==
+               "http://json-schema.org/draft-03/hyper-schema#" ||
+           base_dialect.value() ==
+               "http://json-schema.org/draft-02/hyper-schema#" ||
+           base_dialect.value() ==
+               "http://json-schema.org/draft-01/hyper-schema#" ||
+           base_dialect.value() ==
+               "http://json-schema.org/draft-00/hyper-schema#");
 
       if (!subschema.defines("$ref") || !ref_overrides_id) {
         for (const auto &base_string :
