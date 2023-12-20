@@ -78,3 +78,14 @@ TEST(URI_canonicalize, example_13) {
   EXPECT_EQ(uri.canonicalize(),
             "tag:bowtie.report,2023-11:referencing-suite-tag-uris-id");
 }
+
+TEST(URI_canonicalize, example_14) {
+  const sourcemeta::jsontoolkit::URI uri{"http://example.com/escapes/a%c2%b1b"};
+  EXPECT_EQ(uri.canonicalize(), "http://example.com/escapes/a%C2%B1b");
+}
+
+TEST(URI_canonicalize, example_15) {
+  const sourcemeta::jsontoolkit::URI uri{
+      "http://example.com/unreserved/%7Efoo"};
+  EXPECT_EQ(uri.canonicalize(), "http://example.com/unreserved/~foo");
+}
