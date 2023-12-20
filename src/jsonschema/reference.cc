@@ -24,7 +24,7 @@ auto sourcemeta::jsontoolkit::ReferenceFrame::empty() const -> bool {
   return this->data.empty();
 }
 
-auto sourcemeta::jsontoolkit::ReferenceFrame::base(const std::string &uri) const
+auto sourcemeta::jsontoolkit::ReferenceFrame::root(const std::string &uri) const
     -> const std::string & {
   assert(this->defines(uri));
   return std::get<0>(this->data.at(uri));
@@ -43,12 +43,11 @@ auto sourcemeta::jsontoolkit::ReferenceFrame::dialect(
 }
 
 auto sourcemeta::jsontoolkit::ReferenceFrame::store(
-    const std::string &uri, const std::string &base_identifier,
-    const sourcemeta::jsontoolkit::Pointer &pointer_from_base,
+    const std::string &uri, const std::string &root_id,
+    const sourcemeta::jsontoolkit::Pointer &pointer_from_root,
     const std::string &dialect) -> void {
   const auto canonical{sourcemeta::jsontoolkit::URI{uri}.canonicalize()};
-  if (!this->data
-           .insert({canonical, {base_identifier, pointer_from_base, dialect}})
+  if (!this->data.insert({canonical, {root_id, pointer_from_root, dialect}})
            .second) {
     std::ostringstream error;
     error << "Schema identifier already exists: " << uri;

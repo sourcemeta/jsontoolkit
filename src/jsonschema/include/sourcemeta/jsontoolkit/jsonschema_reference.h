@@ -28,10 +28,10 @@ class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT ReferenceFrame {
 public:
   /// Get the identifier of the root JSON Schema that declares the schema
   /// registered at the given URI.
-  auto base(const std::string &uri) const -> const std::string &;
+  auto root(const std::string &uri) const -> const std::string &;
 
   /// Get the JSON Pointer that must be used to get the schema registered at a
-  /// given URI, relative to its base schema
+  /// given URI, relative to its root schema
   auto pointer(const std::string &uri) const -> const Pointer &;
 
   /// Get the dialect that must be used to evaluate the schema registered at a
@@ -48,8 +48,8 @@ public:
   auto empty() const -> bool;
 
   /// Store a new entry in the reference frame
-  auto store(const std::string &uri, const std::string &base_identifier,
-             const Pointer &pointer_from_base, const std::string &dialect)
+  auto store(const std::string &uri, const std::string &root,
+             const Pointer &pointer_from_root, const std::string &dialect)
       -> void;
 
   /// Get a begin iterator on the URIs registered in the static frame

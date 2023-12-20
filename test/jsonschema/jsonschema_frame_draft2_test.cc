@@ -6,8 +6,8 @@
 
 #include "jsonschema_test_utils.h"
 
-#define EXPECT_FRAME_DRAFT2(frame, reference, base_id, expected_pointer)       \
-  EXPECT_FRAME(frame, reference, base_id, expected_pointer,                    \
+#define EXPECT_FRAME_DRAFT2(frame, reference, root_id, expected_pointer)       \
+  EXPECT_FRAME(frame, reference, root_id, expected_pointer,                    \
                "http://json-schema.org/draft-02/schema#");
 
 TEST(JSONSchema_frame_draft2, empty_schema) {
