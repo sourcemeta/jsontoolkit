@@ -3,7 +3,7 @@
   "registry": {
     "http://example.com/": {
       "additionalProperties": false,
-      "definitions": {
+      "properties": {
         "foo": { "id": "urn:example:foo" }
       }
     }

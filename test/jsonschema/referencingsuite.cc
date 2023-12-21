@@ -4,7 +4,6 @@
 #include <filesystem>
 #include <map>
 #include <optional>
-#include <set>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -120,19 +119,13 @@ private:
       registry;
 };
 
-// TODO: Remove blacklist argument once all JSON Schema versions are supported
 static auto register_tests(const std::filesystem::path &subdirectory,
                            const std::string &suite_name,
-                           const std::string &default_dialect,
-                           const std::set<std::string> &blacklist) -> void {
+                           const std::string &default_dialect) -> void {
   for (const std::filesystem::directory_entry &entry :
        std::filesystem::directory_iterator(
            std::filesystem::path{REFERENCING_SUITE_PATH} / subdirectory)) {
     const std::string name{entry.path().stem().string()};
-    if (blacklist.contains(name)) {
-      continue;
-    }
-
     const sourcemeta::jsontoolkit::JSON test =
         sourcemeta::jsontoolkit::from_file(entry.path());
     assert(test.is_object());
@@ -162,35 +155,28 @@ int main(int argc, char **argv) {
   // 2020-12
   register_tests("json-schema-draft-2020-12",
                  "JSONSchemaReferencingSuite_2020_12",
-                 "https://json-schema.org/draft/2020-12/schema", {});
+                 "https://json-schema.org/draft/2020-12/schema");
 
   // 2019-09
   register_tests("json-schema-draft-2019-09",
                  "JSONSchemaReferencingSuite_2019_09",
-                 "https://json-schema.org/draft/2019-09/schema", {});
+                 "https://json-schema.org/draft/2019-09/schema");
 
   // Draft7
   register_tests("json-schema-draft-07", "JSONSchemaReferencingSuite_Draft7",
-                 "http://json-schema.org/draft-07/schema#", {});
+                 "http://json-schema.org/draft-07/schema#");
 
   // Draft6
   register_tests("json-schema-draft-06", "JSONSchemaReferencingSuite_Draft6",
-                 "http://json-schema.org/draft-06/schema#", {});
+                 "http://json-schema.org/draft-06/schema#");
 
   // Draft4
   register_tests("json-schema-draft-04", "JSONSchemaReferencingSuite_Draft4",
-                 "http://json-schema.org/draft-04/schema#", {});
+                 "http://json-schema.org/draft-04/schema#");
 
   // Draft3
   register_tests("json-schema-draft-03", "JSONSchemaReferencingSuite_Draft3",
-                 "http://json-schema.org/draft-03/schema#",
-
-                 // TODO: Fix remaining tests
-                 {"pointer-crossing-id-in-dependencies-object",
-                  "pointer-crossing-id-in-items-object",
-                  "keywords-additionalItems-boolean",
-                  "keywords-additionalProperties-boolean",
-                  "pointer-crossing-id-in-items-array"});
+                 "http://json-schema.org/draft-03/schema#");
 
   return RUN_ALL_TESTS();
 }
