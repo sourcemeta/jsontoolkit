@@ -5,7 +5,7 @@
       "items": [
         {
           "id": "http://example.com/oh-hey-an-items",
-          "definitions": {
+          "properties": {
             "id": {},
             "foo": {
               "id": "foo",
@@ -18,7 +18,7 @@
   },
   "tests": [
     {
-      "ref": "http://example.com/#/items/0/definitions/foo",
+      "ref": "http://example.com/#/items/0/properties/foo",
       "target": { "id": "foo", "bar": "baz" },
       "then": {
         "ref": "#",

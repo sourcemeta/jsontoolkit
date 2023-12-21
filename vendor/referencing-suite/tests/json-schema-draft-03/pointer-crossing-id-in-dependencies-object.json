@@ -5,7 +5,7 @@
       "dependencies": {
         "foo": {
           "id": "http://example.com/oh-hey-a-subschema",
-          "definitions": {
+          "properties": {
             "id": {},
             "foo": {
               "id": "foo",
@@ -18,7 +18,7 @@
   },
   "tests": [
     {
-      "ref": "http://example.com/#/dependencies/foo/definitions/foo",
+      "ref": "http://example.com/#/dependencies/foo/properties/foo",
       "target": { "id": "foo", "bar": "baz" },
       "then": {
         "ref": "#",
