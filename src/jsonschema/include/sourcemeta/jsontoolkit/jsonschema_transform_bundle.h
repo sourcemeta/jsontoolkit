@@ -79,6 +79,21 @@ namespace sourcemeta::jsontoolkit {
 /// until no longer of them applies.
 class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaTransformBundle {
 public:
+  /// Create a transform bundle
+  SchemaTransformBundle() = default;
+
+  // Not worth documenting these details
+#if !defined(DOXYGEN)
+  // Explicitly disallow copying, as this class makes use of unique pointers,
+  // which by definition do not support copying. MSVC gets confused unless we
+  // are explicit about it here.
+  SchemaTransformBundle(const SchemaTransformBundle &) = delete;
+  auto operator=(const SchemaTransformBundle &)
+      -> SchemaTransformBundle & = delete;
+  SchemaTransformBundle(SchemaTransformBundle &&) = default;
+  auto operator=(SchemaTransformBundle &&) -> SchemaTransformBundle & = default;
+#endif
+
   /// Add a rule to the bundle
   template <std::derived_from<SchemaTransformRule> T> auto add() -> void {
     auto rule{std::make_unique<T>()};
