@@ -12,7 +12,8 @@ add_executable(sourcemeta_jsontoolkit_jsonpointer_unit
   jsonpointer_walker_test.cc
   jsonpointer_subpointer_walker_test.cc
   jsonpointer_to_string_test.cc
-  jsonpointer_to_uri_test.cc)
+  jsonpointer_to_uri_test.cc
+  jsonpointer_concat_test.cc)
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonpointer_unit)
 target_link_libraries(sourcemeta_jsontoolkit_jsonpointer_unit
   PRIVATE GTest::gtest GTest::gtest_main)
