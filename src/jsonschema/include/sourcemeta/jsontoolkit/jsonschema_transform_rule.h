@@ -54,6 +54,12 @@ public:
   // Necessary to wrap rules on smart pointers
   virtual ~SchemaTransformRule() = default;
 
+  // We don't need any of these
+  SchemaTransformRule(const SchemaTransformRule &) = delete;
+  SchemaTransformRule(SchemaTransformRule &&) = delete;
+  auto operator=(const SchemaTransformRule &) -> SchemaTransformRule & = delete;
+  auto operator=(SchemaTransformRule &&) -> SchemaTransformRule & = delete;
+
   /// Compare a rule against another rule.
   auto operator==(const SchemaTransformRule &other) const -> bool;
 

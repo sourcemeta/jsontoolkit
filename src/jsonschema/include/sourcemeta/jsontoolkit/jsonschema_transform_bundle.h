@@ -84,7 +84,7 @@ public:
     auto rule{std::make_unique<T>()};
     // Rules must only be defined once
     assert(!this->rules.contains(rule->name()));
-    this->rules.insert({rule->name(), std::move(rule)});
+    this->rules.emplace(rule->name(), std::move(rule));
   }
 
   /// Apply the bundle of rules to a schema
