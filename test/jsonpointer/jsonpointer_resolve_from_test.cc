@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 
 TEST(JSONPointer_resolve_from, mismatch_base_shorter) {

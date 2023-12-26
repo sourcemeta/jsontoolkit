@@ -196,6 +196,26 @@ public:
     this->data.pop_back();
   }
 
+  /// Concatenate a JSON Pointer with another JSON Pointer, getting a new
+  /// pointer as a result. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::Pointer left{"foo"};
+  /// const sourcemeta::jsontoolkit::Pointer right{"bar", "baz"};
+  /// assert(left.concat(right) ==
+  ///   sourcemeta::jsontoolkit::Pointer{"foo", "bar", "baz"});
+  /// ```
+  auto concat(const GenericPointer<CharT, Traits, Allocator> &other) const
+      -> GenericPointer<CharT, Traits, Allocator> {
+    GenericPointer<CharT, Traits, Allocator> result{*this};
+    std::copy(other.data.cbegin(), other.data.cend(),
+              std::back_inserter(result.data));
+    return result;
+  }
+
   /// Resolve a JSON Pointer relative to another JSON Pointer. For example:
   ///
   /// ```cpp
