@@ -40,6 +40,7 @@ SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_subpo
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_to_string_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_to_uri_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_concat_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonpointer/jsonpointer_starts_with_test.cc
 
 # URI
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/uri/uri_canonicalize_test.cc
