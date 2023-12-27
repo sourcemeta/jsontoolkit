@@ -3,7 +3,7 @@
 
 #include <sourcemeta/jsontoolkit/jsonpointer_token.h>
 
-#include <algorithm>        // std::copy
+#include <algorithm>        // std::copy, std::equal
 #include <cassert>          // assert
 #include <initializer_list> // std::initializer_list
 #include <iterator>         // std::advance, std::back_inserter
@@ -214,6 +214,24 @@ public:
     std::copy(other.data.cbegin(), other.data.cend(),
               std::back_inserter(result.data));
     return result;
+  }
+
+  /// Check whether a JSON Pointer starts with another JSON Pointer. For
+  /// example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  /// const sourcemeta::jsontoolkit::Pointer prefix{"foo", "bar"};
+  /// assert(pointer.starts_with(prefix));
+  /// ```
+  auto starts_with(const GenericPointer<CharT, Traits, Allocator> &other) const
+      -> bool {
+    return other.data.size() <= this->data.size() &&
+           std::equal(other.data.cbegin(), other.data.cend(),
+                      this->data.cbegin());
   }
 
   /// Resolve a JSON Pointer relative to another JSON Pointer. For example:
