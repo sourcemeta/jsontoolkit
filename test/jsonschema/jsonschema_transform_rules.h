@@ -18,8 +18,10 @@ public:
     return schema.defines("foo");
   }
 
-  auto transform(sourcemeta::jsontoolkit::JSON &schema) const -> void override {
+  auto transform(sourcemeta::jsontoolkit::JSON &schema) const
+      -> std::set<sourcemeta::jsontoolkit::Pointer> override {
     schema.erase("foo");
+    return {{"foo"}};
   }
 };
 
@@ -36,8 +38,10 @@ public:
     return schema.defines("bar");
   }
 
-  auto transform(sourcemeta::jsontoolkit::JSON &schema) const -> void override {
+  auto transform(sourcemeta::jsontoolkit::JSON &schema) const
+      -> std::set<sourcemeta::jsontoolkit::Pointer> override {
     schema.erase("bar");
+    return {{"bar"}};
   }
 };
 
@@ -54,8 +58,10 @@ public:
     return !schema.defines("top") && pointer.empty();
   }
 
-  auto transform(sourcemeta::jsontoolkit::JSON &schema) const -> void override {
+  auto transform(sourcemeta::jsontoolkit::JSON &schema) const
+      -> std::set<sourcemeta::jsontoolkit::Pointer> override {
     schema.assign("top", sourcemeta::jsontoolkit::JSON{true});
+    return {{"top"}};
   }
 };
 
@@ -72,8 +78,10 @@ public:
     return !schema.defines("here");
   }
 
-  auto transform(sourcemeta::jsontoolkit::JSON &schema) const -> void override {
+  auto transform(sourcemeta::jsontoolkit::JSON &schema) const
+      -> std::set<sourcemeta::jsontoolkit::Pointer> override {
     schema.assign("here", sourcemeta::jsontoolkit::JSON{true});
+    return {{"here"}};
   }
 };
 
@@ -91,8 +99,10 @@ public:
            pointer == sourcemeta::jsontoolkit::Pointer{"properties", "baz"};
   }
 
-  auto transform(sourcemeta::jsontoolkit::JSON &schema) const -> void override {
+  auto transform(sourcemeta::jsontoolkit::JSON &schema) const
+      -> std::set<sourcemeta::jsontoolkit::Pointer> override {
     schema.assign("baz", sourcemeta::jsontoolkit::JSON{true});
+    return {{"baz"}};
   }
 };
 
@@ -110,8 +120,10 @@ public:
            dialect == "http://json-schema.org/draft-03/schema#";
   }
 
-  auto transform(sourcemeta::jsontoolkit::JSON &schema) const -> void override {
+  auto transform(sourcemeta::jsontoolkit::JSON &schema) const
+      -> std::set<sourcemeta::jsontoolkit::Pointer> override {
     schema.assign("draft", sourcemeta::jsontoolkit::JSON{3});
+    return {{"draft"}};
   }
 };
 
@@ -130,8 +142,10 @@ public:
     return schema.defines("$schema") && schema.size() == 1;
   }
 
-  auto transform(sourcemeta::jsontoolkit::JSON &schema) const -> void override {
+  auto transform(sourcemeta::jsontoolkit::JSON &schema) const
+      -> std::set<sourcemeta::jsontoolkit::Pointer> override {
     schema.assign("foo", sourcemeta::jsontoolkit::JSON{true});
+    return {{"foo"}};
   }
 };
 

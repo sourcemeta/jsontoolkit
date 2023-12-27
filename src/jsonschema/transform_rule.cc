@@ -1,5 +1,6 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
+#include <cassert>   // assert
 #include <sstream>   // std::ostringstream
 #include <stdexcept> // std::runtime_error
 #include <utility>   // std::move
@@ -21,7 +22,8 @@ auto sourcemeta::jsontoolkit::SchemaTransformRule::name() const
 auto sourcemeta::jsontoolkit::SchemaTransformRule::apply(
     JSON &schema, const sourcemeta::jsontoolkit::Pointer &pointer,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-    const std::optional<std::string> &default_dialect) const -> bool {
+    const std::optional<std::string> &default_dialect) const
+    -> std::set<sourcemeta::jsontoolkit::Pointer> {
   const std::optional<std::string> dialect{
       sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
   if (!dialect.has_value()) {
@@ -37,10 +39,12 @@ auto sourcemeta::jsontoolkit::SchemaTransformRule::apply(
   }
 
   if (!this->condition(schema, dialect.value(), vocabularies, pointer)) {
-    return false;
+    return {};
   }
 
-  this->transform(schema);
+  const auto pointers{this->transform(schema)};
+  // If there are no resulting pointers, then nothing was modified?
+  assert(!pointers.empty());
 
   // The condition must always be false after applying the
   // transformation in order to avoid infinite loops
@@ -50,5 +54,5 @@ auto sourcemeta::jsontoolkit::SchemaTransformRule::apply(
     throw std::runtime_error(error.str());
   }
 
-  return true;
+  return pointers;
 }
