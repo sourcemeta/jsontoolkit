@@ -18,16 +18,14 @@ namespace sourcemeta::jsontoolkit {
 /// @ingroup jsonschema
 /// Represents a schema transformation operation that consists in deleting a
 /// property from a schema
-struct SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-    SchemaTransformerOperationErase {
+struct SchemaTransformerOperationErase {
   const Pointer pointer;
 };
 
 /// @ingroup jsonschema
 /// Represents a schema transformation operation that consists in adding a new
 /// property to a schema
-struct SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-    SchemaTransformerOperationAssign {
+struct SchemaTransformerOperationAssign {
   const Pointer pointer;
 };
 
