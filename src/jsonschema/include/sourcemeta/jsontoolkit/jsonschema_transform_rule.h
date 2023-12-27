@@ -70,7 +70,7 @@ public:
   auto
   apply(JSON &schema, const Pointer &pointer, const SchemaResolver &resolver,
         const std::optional<std::string> &default_dialect = std::nullopt) const
-      -> bool;
+      -> std::set<Pointer>;
 
 private:
   /// The rule condition
@@ -80,7 +80,7 @@ private:
             const Pointer &pointer) const -> bool = 0;
 
   /// The rule transformation
-  virtual auto transform(JSON &schema) const -> void = 0;
+  virtual auto transform(JSON &schema) const -> std::set<Pointer> = 0;
 
 // Exporting symbols that depends on the standard C++ library is considered
 // safe.
