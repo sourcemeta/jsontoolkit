@@ -43,10 +43,9 @@ namespace sourcemeta::jsontoolkit {
 ///     return schema.defines("foo");
 ///   }
 ///
-///   auto transform(sourcemeta::jsontoolkit::JSON &schema) const ->
-///     set::set<sourcemeta::jsontoolkit::Pointer> override {
+///   auto transform(sourcemeta::jsontoolkit::JSON &schema) const -> void
+///   override {
 ///     schema.erase("foo");
-///     return { {"foo"} };
 ///   }
 /// };
 ///
