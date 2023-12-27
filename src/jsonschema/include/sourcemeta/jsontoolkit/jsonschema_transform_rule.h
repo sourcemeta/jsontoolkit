@@ -9,10 +9,12 @@
 
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
+#include <sourcemeta/jsontoolkit/jsonschema_transformer.h>
 
 #include <optional> // std::optional, std::nullopt
 #include <set>      // std::set
 #include <string>   // std::string
+#include <vector>   // std::vector
 
 namespace sourcemeta::jsontoolkit {
 /// @ingroup jsonschema
@@ -40,8 +42,8 @@ namespace sourcemeta::jsontoolkit {
 ///     return schema.defines("foo");
 ///   }
 ///
-///   auto transform(sourcemeta::jsontoolkit::JSON &schema) const -> void
-///   override {
+///   auto transform(sourcemeta::jsontoolkit::SchemaTransformer &schema)
+///       const -> void override {
 ///     schema.erase("foo");
 ///   }
 /// };
@@ -70,7 +72,7 @@ public:
   auto
   apply(JSON &schema, const Pointer &pointer, const SchemaResolver &resolver,
         const std::optional<std::string> &default_dialect = std::nullopt) const
-      -> bool;
+      -> std::vector<SchemaTransformerOperation>;
 
 private:
   /// The rule condition
@@ -80,7 +82,7 @@ private:
             const Pointer &pointer) const -> bool = 0;
 
   /// The rule transformation
-  virtual auto transform(JSON &schema) const -> void = 0;
+  virtual auto transform(SchemaTransformer &schema) const -> void = 0;
 
 // Exporting symbols that depends on the standard C++ library is considered
 // safe.

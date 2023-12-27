@@ -25,9 +25,9 @@ auto sourcemeta::jsontoolkit::SchemaTransformBundle::apply(
   while (true) {
     auto matches{processed_rules.size()};
     for (const auto &[name, rule] : this->rules) {
-      const bool was_transformed{
-          rule->apply(current, pointer, resolver, dialect)};
-      if (was_transformed) {
+      // TODO: Process traces to fixup references
+      const auto traces{rule->apply(current, pointer, resolver, dialect)};
+      if (!traces.empty()) {
         if (processed_rules.contains(name)) {
           std::ostringstream error;
           error << "Rules must only be processed once: " << name;

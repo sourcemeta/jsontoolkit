@@ -50,6 +50,7 @@ LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/walker.cc
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/reference.cc
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/transform_rule.cc
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/transform_bundle.cc
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/transformer.cc
 
 # TODO: Can we do this with standard POSIX tools?
 $(LIBJSONTOOLKIT_BUILD)/official_resolver.cc: \
