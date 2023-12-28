@@ -25,7 +25,7 @@ auto sourcemeta::jsontoolkit::ReferenceFrame::empty() const -> bool {
 }
 
 auto sourcemeta::jsontoolkit::ReferenceFrame::root(const std::string &uri) const
-    -> const std::string & {
+    -> std::optional<std::string> {
   assert(this->defines(uri));
   return std::get<0>(this->data.at(uri));
 }
@@ -49,7 +49,7 @@ auto sourcemeta::jsontoolkit::ReferenceFrame::dialect(
 }
 
 auto sourcemeta::jsontoolkit::ReferenceFrame::store(
-    const std::string &uri, const std::string &root_id,
+    const std::string &uri, const std::optional<std::string> &root_id,
     const std::string &base_id,
     const sourcemeta::jsontoolkit::Pointer &pointer_from_root,
     const std::string &dialect) -> void {
@@ -94,6 +94,12 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
         result.push_back({base, subpointer});
       }
     }
+  }
+
+  // TODO: Support anonymous frames for every schema, including
+  // the ones with valid root identifiers.
+  if (result.empty()) {
+    result.push_back({"", sourcemeta::jsontoolkit::empty_pointer});
   }
 
   return result;
@@ -239,14 +245,15 @@ auto sourcemeta::jsontoolkit::frame(
     for (const auto &base : find_every_base(base_uris, pointer)) {
       const auto relative_pointer_uri{
           sourcemeta::jsontoolkit::to_uri(pointer.resolve_from(base.second))};
-      const sourcemeta::jsontoolkit::URI base_uri{base.first};
-      const auto result{relative_pointer_uri.resolve_from(base_uri)};
+      const auto result{base.first.empty()
+                            ? relative_pointer_uri.recompose()
+                            : relative_pointer_uri.resolve_from({base.first})};
       if (!static_frame.defines(result)) {
         const auto nearest_bases{
             find_nearest_bases(base_uris, pointer, base.first)};
         assert(!nearest_bases.empty());
-        static_frame.store(result, root_id.value(), nearest_bases.front(),
-                           pointer, dialects.front());
+        static_frame.store(result, root_id, nearest_bases.front(), pointer,
+                           dialects.front());
       }
     }
   }
