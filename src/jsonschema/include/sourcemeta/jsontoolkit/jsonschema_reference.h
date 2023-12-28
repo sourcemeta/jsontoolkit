@@ -28,7 +28,7 @@ class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT ReferenceFrame {
 public:
   /// Get the identifier of the root JSON Schema that declares the schema
   /// registered at the given URI.
-  auto root(const std::string &uri) const -> const std::string &;
+  auto root(const std::string &uri) const -> std::optional<std::string>;
 
   /// Get the identifier that consists of the JSON Schema base URI of the JSON
   /// document registered at the given URI.
@@ -52,7 +52,7 @@ public:
   auto empty() const -> bool;
 
   /// Store a new entry in the reference frame
-  auto store(const std::string &uri, const std::string &root,
+  auto store(const std::string &uri, const std::optional<std::string> &root,
              const std::string &base, const Pointer &pointer_from_root,
              const std::string &dialect) -> void;
 
@@ -69,8 +69,8 @@ private:
 #if defined(_MSC_VER)
 #pragma warning(disable : 4251)
 #endif
-  std::map<std::string,
-           std::tuple<std::string, std::string, Pointer, std::string>>
+  std::map<std::string, std::tuple<std::optional<std::string>, std::string,
+                                   Pointer, std::string>>
       data;
   // Keep a mirror of the map keys for iteration purposes
   std::vector<std::string> keys;

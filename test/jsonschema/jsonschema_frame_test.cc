@@ -186,7 +186,16 @@ TEST(JSONSchema_frame, no_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_TRUE(static_frame.empty());
+  EXPECT_EQ(static_frame.size(), 4);
+
+  EXPECT_ANONYMOUS_FRAME(static_frame, "", "",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/$schema", "/$schema",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/items", "/items",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/items/type", "/items/type",
+                         "https://json-schema.org/draft/2020-12/schema");
 }
 
 TEST(JSONSchema_frame, no_id_with_default) {
@@ -236,7 +245,7 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://www.example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "items": { 
+    "items": {
       "$id": "https://www.example.org",
       "items": {
         "$anchor": "foo"
@@ -370,6 +379,7 @@ TEST(JSONSchema_frame, reference_frame_uri_canonicalize) {
   // This is canonicalized
   EXPECT_TRUE(frame.defines("https://example.com#"));
   // These must not be canonicalized
-  EXPECT_EQ(frame.root("https://example.com"), "https://example.com#");
+  EXPECT_TRUE(frame.root("https://example.com").has_value());
+  EXPECT_EQ(frame.root("https://example.com").value(), "https://example.com#");
   EXPECT_EQ(frame.base("https://example.com"), "https://example.com#");
 }
