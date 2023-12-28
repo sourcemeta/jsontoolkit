@@ -72,6 +72,7 @@ if(JSONTOOLKIT_CONTRIB)
   if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
     add_subdirectory(contrib/jsonschema_walker)
     add_subdirectory(contrib/jsonschema_keywords)
+    add_subdirectory(contrib/jsonschema_frame)
   endif()
 endif()
 
