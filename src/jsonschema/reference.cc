@@ -217,6 +217,8 @@ auto sourcemeta::jsontoolkit::frame(
              .get()) {
       bool is_first = true;
       const auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
+      // TODO: Store anonymous frame entries for anchors on schemas
+      // with no identifiers
       for (const auto &base_string :
            find_nearest_bases(base_uris, pointer, id)) {
         const sourcemeta::jsontoolkit::URI anchor_base{base_string};
