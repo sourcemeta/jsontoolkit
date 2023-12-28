@@ -151,6 +151,22 @@ auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void;
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto to_pointer(const JSON &document) -> Pointer;
 
+/// @ingroup jsonpointer
+/// Create a JSON Pointer from a standard C++ string. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <cassert>
+///
+/// const sourcemeta::jsontoolkit::Pointer pointer =
+///   sourcemeta::jsontoolkit::to_pointer("/foo/bar/0");
+/// assert(pointer.size() == 3);
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto to_pointer(const std::basic_string<JSON::Char, JSON::CharTraits,
+                                        std::allocator<JSON::Char>> &input)
+    -> Pointer;
+
 // TODO: Add an operator<< overload
 
 /// @ingroup jsonpointer

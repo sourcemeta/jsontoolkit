@@ -20,11 +20,7 @@
 
 #define EXPECT_POINTER_PARSE_ERROR(input, expected_column)                     \
   try {                                                                        \
-    std::ostringstream stream;                                                 \
-    stream << "\"" << (input) << "\"";                                         \
-    const sourcemeta::jsontoolkit::JSON document =                             \
-        sourcemeta::jsontoolkit::parse(stream.str());                          \
-    sourcemeta::jsontoolkit::to_pointer(document);                             \
+    sourcemeta::jsontoolkit::to_pointer(input);                                \
     FAIL() << "The to_pointer function was expected to throw";                 \
   } catch (const sourcemeta::jsontoolkit::PointerParseError &error) {          \
     EXPECT_EQ(error.column(), expected_column);                                \
