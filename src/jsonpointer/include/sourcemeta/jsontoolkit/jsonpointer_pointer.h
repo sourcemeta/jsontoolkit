@@ -234,6 +234,40 @@ public:
                       this->data.cbegin());
   }
 
+  /// Replace a base of a JSON Pointer with another JSON Pointer. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  /// const sourcemeta::jsontoolkit::Pointer prefix{"foo", "bar"};
+  /// const sourcemeta::jsontoolkit::Pointer replacement{"qux"};
+  ///
+  /// assert(pointer.rebase(prefix, replacement) ==
+  ///   sourcemeta::jsontoolkit::Pointer{"qux", "baz"});
+  /// ```
+  auto rebase(const GenericPointer<CharT, Traits, Allocator> &prefix,
+              const GenericPointer<CharT, Traits, Allocator> &replacement) const
+      -> GenericPointer<CharT, Traits, Allocator> {
+    typename Container::size_type index{0};
+    while (index < prefix.size()) {
+      if (index >= this->size() || prefix.data[index] != this->data[index]) {
+        return *this;
+      } else {
+        index++;
+      }
+    }
+
+    assert(index == prefix.size());
+    assert(this->starts_with(prefix));
+    auto new_begin{this->data.cbegin()};
+    std::advance(new_begin, index);
+    GenericPointer<CharT, Traits, Allocator> result{replacement};
+    std::copy(new_begin, this->data.cend(), std::back_inserter(result.data));
+    return result;
+  }
+
   /// Resolve a JSON Pointer relative to another JSON Pointer. For example:
   ///
   /// ```cpp
