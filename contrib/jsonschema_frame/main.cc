@@ -24,7 +24,7 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
 
   std::cout << "Static frames: " << static_frame.size() << "\n";
   for (const auto &uri : static_frame) {
-    std::cout << "\n";
+    std::cout << "URI: ";
     std::cout << uri << "\n";
     std::cout << "    Location : "
               << static_frame.root(uri).value_or("<ANONYMOUS>") << "\n";
