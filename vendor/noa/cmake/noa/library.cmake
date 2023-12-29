@@ -49,8 +49,21 @@ function(noa_library)
   # To find the generated files
   target_include_directories(${NOA_LIBRARY_NAMESPACE}_${NOA_LIBRARY_PROJECT}_${NOA_LIBRARY_NAME}
     PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>")
+endfunction()
 
-  # Installation
+function(noa_library_install)
+  cmake_parse_arguments(NOA_LIBRARY "" "NAMESPACE;PROJECT;NAME" "" ${ARGN})
+
+  if(NOT NOA_LIBRARY_NAMESPACE)
+    message(FATAL_ERROR "You must pass the namespace name using the NAMESPACE option")
+  endif()
+  if(NOT NOA_LIBRARY_PROJECT)
+    message(FATAL_ERROR "You must pass the project name using the PROJECT option")
+  endif()
+  if(NOT NOA_LIBRARY_NAME)
+    message(FATAL_ERROR "You must pass the library name using the NAME option")
+  endif()
+
   include(GNUInstallDirs)
   install(TARGETS ${NOA_LIBRARY_NAMESPACE}_${NOA_LIBRARY_PROJECT}_${NOA_LIBRARY_NAME}
     EXPORT ${NOA_LIBRARY_NAMESPACE}_${NOA_LIBRARY_PROJECT}_${NOA_LIBRARY_NAME}

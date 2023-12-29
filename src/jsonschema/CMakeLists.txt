@@ -10,6 +10,10 @@ noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
     transformer.cc transform_rule.cc transform_bundle.cc
     "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 
+if(JSONTOOLKIT_INSTALL)
+  noa_library_install(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema)
+endif()
+
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
   sourcemeta::jsontoolkit::json)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
