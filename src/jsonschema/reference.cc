@@ -99,6 +99,7 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
   // TODO: Support anonymous frames for every schema, including
   // the ones with valid root identifiers.
   if (result.empty()) {
+    // TODO: Allow base URIs to be nullopt, instead of passing an empty string
     result.push_back({"", sourcemeta::jsontoolkit::empty_pointer});
   }
 
