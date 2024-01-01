@@ -107,7 +107,7 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
 auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::JSON &schema,
     sourcemeta::jsontoolkit::ReferenceFrame &static_frame,
-    sourcemeta::jsontoolkit::ReferenceMap &,
+    sourcemeta::jsontoolkit::ReferenceMap &references,
     const sourcemeta::jsontoolkit::SchemaWalker &walker,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect,
@@ -207,6 +207,18 @@ auto sourcemeta::jsontoolkit::frame(
           }
         }
       }
+    }
+
+    // TODO: Handle $dynamicRef and $recursiveRef too
+    if (subschema.is_object() && subschema.defines("$ref")) {
+      assert(subschema.at("$ref").is_string());
+      const sourcemeta::jsontoolkit::URI ref{subschema.at("$ref").to_string()};
+      const auto nearest_bases{find_nearest_bases(base_uris, pointer, id)};
+      references.insert(
+          {pointer.concat({"$ref"}),
+           {ReferenceType::Static,
+            nearest_bases.empty() ? ref.recompose()
+                                  : ref.resolve_from(nearest_bases.front())}});
     }
 
     // Handle schema anchors
