@@ -23,7 +23,7 @@ TEST(JSONSchema_frame_2019_09, empty_schema) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 3);
+  EXPECT_EQ(static_frame.size(), 6);
   EXPECT_FRAME_2019_09(static_frame, "https://www.sourcemeta.com/schema",
                        "https://www.sourcemeta.com/schema", "");
 
@@ -33,6 +33,13 @@ TEST(JSONSchema_frame_2019_09, empty_schema) {
                        "https://www.sourcemeta.com/schema", "/$id");
   EXPECT_FRAME_2019_09(static_frame,
                        "https://www.sourcemeta.com/schema#/$schema",
+                       "https://www.sourcemeta.com/schema", "/$schema");
+
+  EXPECT_FRAME_2019_09(static_frame, "", "https://www.sourcemeta.com/schema",
+                       "");
+  EXPECT_FRAME_2019_09(static_frame, "#/$id",
+                       "https://www.sourcemeta.com/schema", "/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/$schema",
                        "https://www.sourcemeta.com/schema", "/$schema");
 }
 
@@ -53,7 +60,7 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 8);
+  EXPECT_EQ(static_frame.size(), 16);
   EXPECT_FRAME_2019_09(static_frame, "https://www.sourcemeta.com/schema",
                        "https://www.sourcemeta.com/schema", "");
 
@@ -78,6 +85,24 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
   EXPECT_FRAME_2019_09(
       static_frame, "https://www.sourcemeta.com/schema#/properties/foo/type",
       "https://www.sourcemeta.com/schema", "/properties/foo/type");
+
+  EXPECT_FRAME_2019_09(static_frame, "", "https://www.sourcemeta.com/schema",
+                       "");
+  EXPECT_FRAME_2019_09(static_frame, "#/$id",
+                       "https://www.sourcemeta.com/schema", "/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/$schema",
+                       "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_2019_09(static_frame, "#/items",
+                       "https://www.sourcemeta.com/schema", "/items");
+  EXPECT_FRAME_2019_09(static_frame, "#/items/type",
+                       "https://www.sourcemeta.com/schema", "/items/type");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties",
+                       "https://www.sourcemeta.com/schema", "/properties");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/foo",
+                       "https://www.sourcemeta.com/schema", "/properties/foo");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/foo/type",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/type");
 }
 
 TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
@@ -97,7 +122,7 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 14);
+  EXPECT_EQ(static_frame.size(), 24);
   EXPECT_FRAME_2019_09(static_frame, "https://www.sourcemeta.com/test/qux",
                        "https://www.sourcemeta.com/test/qux", "");
   EXPECT_FRAME_2019_09(static_frame, "https://www.sourcemeta.com/foo",
@@ -140,6 +165,30 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
                        "https://www.sourcemeta.com/test/qux", "/items/$id");
   EXPECT_FRAME_2019_09(static_frame, "https://www.sourcemeta.com/foo#/type",
                        "https://www.sourcemeta.com/test/qux", "/items/type");
+
+  EXPECT_FRAME_2019_09(static_frame, "", "https://www.sourcemeta.com/test/qux",
+                       "");
+  EXPECT_FRAME_2019_09(static_frame, "#/$id",
+                       "https://www.sourcemeta.com/test/qux", "/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/$schema",
+                       "https://www.sourcemeta.com/test/qux", "/$schema");
+  EXPECT_FRAME_2019_09(static_frame, "#/items",
+                       "https://www.sourcemeta.com/test/qux", "/items");
+  EXPECT_FRAME_2019_09(static_frame, "#/items/$id",
+                       "https://www.sourcemeta.com/test/qux", "/items/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/items/type",
+                       "https://www.sourcemeta.com/test/qux", "/items/type");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties",
+                       "https://www.sourcemeta.com/test/qux", "/properties");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/foo",
+                       "https://www.sourcemeta.com/test/qux",
+                       "/properties/foo");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/foo/$anchor",
+                       "https://www.sourcemeta.com/test/qux",
+                       "/properties/foo/$anchor");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/foo/type",
+                       "https://www.sourcemeta.com/test/qux",
+                       "/properties/foo/type");
 }
 
 TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
@@ -159,7 +208,7 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 9);
+  EXPECT_EQ(static_frame.size(), 15);
   EXPECT_FRAME_2019_09(static_frame, "https://www.sourcemeta.com/schema",
                        "https://www.sourcemeta.com/schema", "");
   EXPECT_FRAME_2019_09(static_frame, "https://www.sourcemeta.com/foo",
@@ -183,6 +232,19 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
   EXPECT_FRAME_2019_09(static_frame, "https://www.sourcemeta.com/foo#/$id",
                        "https://www.sourcemeta.com/schema", "/items/$id");
   EXPECT_FRAME_2019_09(static_frame, "https://www.sourcemeta.com/foo#/type",
+                       "https://www.sourcemeta.com/schema", "/items/type");
+
+  EXPECT_FRAME_2019_09(static_frame, "", "https://www.sourcemeta.com/schema",
+                       "");
+  EXPECT_FRAME_2019_09(static_frame, "#/$id",
+                       "https://www.sourcemeta.com/schema", "/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/$schema",
+                       "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_2019_09(static_frame, "#/items",
+                       "https://www.sourcemeta.com/schema", "/items");
+  EXPECT_FRAME_2019_09(static_frame, "#/items/$id",
+                       "https://www.sourcemeta.com/schema", "/items/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/items/type",
                        "https://www.sourcemeta.com/schema", "/items/type");
 }
 
@@ -217,7 +279,7 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 30);
+  EXPECT_EQ(static_frame.size(), 45);
   EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/schema"));
   EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/foo"));
   EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/foo#test"));
@@ -323,6 +385,45 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   EXPECT_FRAME_2019_09(
       static_frame, "https://www.sourcemeta.com/baz#/items/$anchor",
       "https://www.sourcemeta.com/schema", "/properties/baz/items/$anchor");
+
+  EXPECT_FRAME_2019_09(static_frame, "", "https://www.sourcemeta.com/schema",
+                       "");
+  EXPECT_FRAME_2019_09(static_frame, "#/$id",
+                       "https://www.sourcemeta.com/schema", "/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/$schema",
+                       "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties",
+                       "https://www.sourcemeta.com/schema", "/properties");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/foo",
+                       "https://www.sourcemeta.com/schema", "/properties/foo");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/foo/$id",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/foo/$anchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/$anchor");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/foo/items",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/items");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/foo/items/$id",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/items/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/bar",
+                       "https://www.sourcemeta.com/schema", "/properties/bar");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/bar/$id",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/bar/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/baz",
+                       "https://www.sourcemeta.com/schema", "/properties/baz");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/baz/$id",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/baz/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/baz/items",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/baz/items");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/baz/items/$anchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/baz/items/$anchor");
 }
 
 TEST(JSONSchema_frame_2019_09, id_override) {
@@ -375,7 +476,7 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_same) {
                                  "https://www.sourcemeta.com/schema")
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 3);
+  EXPECT_EQ(static_frame.size(), 6);
   EXPECT_FRAME_2019_09(static_frame, "https://www.sourcemeta.com/schema",
                        "https://www.sourcemeta.com/schema", "");
 
@@ -385,6 +486,13 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_same) {
                        "https://www.sourcemeta.com/schema", "/$id");
   EXPECT_FRAME_2019_09(static_frame,
                        "https://www.sourcemeta.com/schema#/$schema",
+                       "https://www.sourcemeta.com/schema", "/$schema");
+
+  EXPECT_FRAME_2019_09(static_frame, "", "https://www.sourcemeta.com/schema",
+                       "");
+  EXPECT_FRAME_2019_09(static_frame, "#/$id",
+                       "https://www.sourcemeta.com/schema", "/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/$schema",
                        "https://www.sourcemeta.com/schema", "/$schema");
 }
 
@@ -415,7 +523,7 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
       "https://json-schema.org/draft/2019-09/schema", "https://www.example.com")
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 38);
+  EXPECT_EQ(static_frame.size(), 50);
   EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/schema"));
   EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/schema#foo"));
   EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/test"));
@@ -491,6 +599,35 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
                        "https://www.sourcemeta.com/schema",
                        "/properties/two/$id");
   EXPECT_FRAME_2019_09(static_frame, "https://www.test.com#/$anchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/two/$anchor");
+
+  EXPECT_FRAME_2019_09(static_frame, "", "https://www.sourcemeta.com/schema",
+                       "");
+  EXPECT_FRAME_2019_09(static_frame, "#/$id",
+                       "https://www.sourcemeta.com/schema", "/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/$schema",
+                       "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_2019_09(static_frame, "#/items",
+                       "https://www.sourcemeta.com/schema", "/items");
+  EXPECT_FRAME_2019_09(static_frame, "#/items/$anchor",
+                       "https://www.sourcemeta.com/schema", "/items/$anchor");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties",
+                       "https://www.sourcemeta.com/schema", "/properties");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/one",
+                       "https://www.sourcemeta.com/schema", "/properties/one");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/one/$id",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/one/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/one/$anchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/one/$anchor");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/two",
+                       "https://www.sourcemeta.com/schema", "/properties/two");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/two/$id",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/two/$id");
+  EXPECT_FRAME_2019_09(static_frame, "#/properties/two/$anchor",
                        "https://www.sourcemeta.com/schema",
                        "/properties/two/$anchor");
 }
