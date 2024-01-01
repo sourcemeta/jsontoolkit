@@ -23,7 +23,7 @@ TEST(JSONSchema_frame_draft2, empty_schema) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 3);
+  EXPECT_EQ(static_frame.size(), 6);
   EXPECT_FRAME_DRAFT2(static_frame, "https://www.sourcemeta.com/schema",
                       "https://www.sourcemeta.com/schema", "");
 
@@ -33,6 +33,13 @@ TEST(JSONSchema_frame_draft2, empty_schema) {
                       "https://www.sourcemeta.com/schema", "/id");
   EXPECT_FRAME_DRAFT2(static_frame,
                       "https://www.sourcemeta.com/schema#/$schema",
+                      "https://www.sourcemeta.com/schema", "/$schema");
+
+  EXPECT_FRAME_DRAFT2(static_frame, "", "https://www.sourcemeta.com/schema",
+                      "");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/id", "https://www.sourcemeta.com/schema",
+                      "/id");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/$schema",
                       "https://www.sourcemeta.com/schema", "/$schema");
 }
 
@@ -53,7 +60,7 @@ TEST(JSONSchema_frame_draft2, one_level_applicators_without_identifiers) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 8);
+  EXPECT_EQ(static_frame.size(), 16);
   EXPECT_FRAME_DRAFT2(static_frame, "https://www.sourcemeta.com/schema",
                       "https://www.sourcemeta.com/schema", "");
 
@@ -78,6 +85,24 @@ TEST(JSONSchema_frame_draft2, one_level_applicators_without_identifiers) {
   EXPECT_FRAME_DRAFT2(
       static_frame, "https://www.sourcemeta.com/schema#/properties/foo/type",
       "https://www.sourcemeta.com/schema", "/properties/foo/type");
+
+  EXPECT_FRAME_DRAFT2(static_frame, "", "https://www.sourcemeta.com/schema",
+                      "");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/id", "https://www.sourcemeta.com/schema",
+                      "/id");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/$schema",
+                      "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/items",
+                      "https://www.sourcemeta.com/schema", "/items");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/items/type",
+                      "https://www.sourcemeta.com/schema", "/items/type");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/properties",
+                      "https://www.sourcemeta.com/schema", "/properties");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/properties/foo",
+                      "https://www.sourcemeta.com/schema", "/properties/foo");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/properties/foo/type",
+                      "https://www.sourcemeta.com/schema",
+                      "/properties/foo/type");
 }
 
 TEST(JSONSchema_frame_draft2, one_level_applicators_with_identifiers) {
@@ -94,7 +119,7 @@ TEST(JSONSchema_frame_draft2, one_level_applicators_with_identifiers) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 9);
+  EXPECT_EQ(static_frame.size(), 15);
   EXPECT_FRAME_DRAFT2(static_frame, "https://www.sourcemeta.com/test/qux",
                       "https://www.sourcemeta.com/test/qux", "");
   EXPECT_FRAME_DRAFT2(static_frame, "https://www.sourcemeta.com/foo",
@@ -120,6 +145,19 @@ TEST(JSONSchema_frame_draft2, one_level_applicators_with_identifiers) {
                       "https://www.sourcemeta.com/test/qux", "/items/id");
   EXPECT_FRAME_DRAFT2(static_frame, "https://www.sourcemeta.com/foo#/type",
                       "https://www.sourcemeta.com/test/qux", "/items/type");
+
+  EXPECT_FRAME_DRAFT2(static_frame, "", "https://www.sourcemeta.com/test/qux",
+                      "");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/id",
+                      "https://www.sourcemeta.com/test/qux", "/id");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/$schema",
+                      "https://www.sourcemeta.com/test/qux", "/$schema");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/items",
+                      "https://www.sourcemeta.com/test/qux", "/items");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/items/id",
+                      "https://www.sourcemeta.com/test/qux", "/items/id");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/items/type",
+                      "https://www.sourcemeta.com/test/qux", "/items/type");
 }
 
 TEST(JSONSchema_frame_draft2, subschema_absolute_identifier) {
@@ -139,7 +177,7 @@ TEST(JSONSchema_frame_draft2, subschema_absolute_identifier) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 9);
+  EXPECT_EQ(static_frame.size(), 15);
   EXPECT_FRAME_DRAFT2(static_frame, "https://www.sourcemeta.com/schema",
                       "https://www.sourcemeta.com/schema", "");
   EXPECT_FRAME_DRAFT2(static_frame, "https://www.sourcemeta.com/foo",
@@ -163,6 +201,19 @@ TEST(JSONSchema_frame_draft2, subschema_absolute_identifier) {
   EXPECT_FRAME_DRAFT2(static_frame, "https://www.sourcemeta.com/foo#/id",
                       "https://www.sourcemeta.com/schema", "/items/id");
   EXPECT_FRAME_DRAFT2(static_frame, "https://www.sourcemeta.com/foo#/type",
+                      "https://www.sourcemeta.com/schema", "/items/type");
+
+  EXPECT_FRAME_DRAFT2(static_frame, "", "https://www.sourcemeta.com/schema",
+                      "");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/id", "https://www.sourcemeta.com/schema",
+                      "/id");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/$schema",
+                      "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/items",
+                      "https://www.sourcemeta.com/schema", "/items");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/items/id",
+                      "https://www.sourcemeta.com/schema", "/items/id");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/items/type",
                       "https://www.sourcemeta.com/schema", "/items/type");
 }
 
@@ -198,7 +249,7 @@ TEST(JSONSchema_frame_draft2, explicit_argument_id_same) {
                                  "https://www.sourcemeta.com/schema")
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 3);
+  EXPECT_EQ(static_frame.size(), 6);
   EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/schema"));
   EXPECT_FRAME_DRAFT2(static_frame, "https://www.sourcemeta.com/schema",
                       "https://www.sourcemeta.com/schema", "");
@@ -209,6 +260,13 @@ TEST(JSONSchema_frame_draft2, explicit_argument_id_same) {
                       "https://www.sourcemeta.com/schema", "/id");
   EXPECT_FRAME_DRAFT2(static_frame,
                       "https://www.sourcemeta.com/schema#/$schema",
+                      "https://www.sourcemeta.com/schema", "/$schema");
+
+  EXPECT_FRAME_DRAFT2(static_frame, "", "https://www.sourcemeta.com/schema",
+                      "");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/id", "https://www.sourcemeta.com/schema",
+                      "/id");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/$schema",
                       "https://www.sourcemeta.com/schema", "/$schema");
 }
 
@@ -234,7 +292,7 @@ TEST(JSONSchema_frame_draft2, explicit_argument_id_different) {
       "http://json-schema.org/draft-02/schema#", "https://www.example.com")
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 22);
+  EXPECT_EQ(static_frame.size(), 30);
   EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/schema"));
   EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/test"));
   EXPECT_TRUE(static_frame.defines("https://www.example.com"));
@@ -278,6 +336,25 @@ TEST(JSONSchema_frame_draft2, explicit_argument_id_different) {
                       "https://www.sourcemeta.com/schema",
                       "/properties/one/id");
   EXPECT_FRAME_DRAFT2(static_frame, "https://www.test.com#/id",
+                      "https://www.sourcemeta.com/schema",
+                      "/properties/two/id");
+
+  EXPECT_FRAME_DRAFT2(static_frame, "", "https://www.sourcemeta.com/schema",
+                      "");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/id", "https://www.sourcemeta.com/schema",
+                      "/id");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/$schema",
+                      "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/properties",
+                      "https://www.sourcemeta.com/schema", "/properties");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/properties/one",
+                      "https://www.sourcemeta.com/schema", "/properties/one");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/properties/one/id",
+                      "https://www.sourcemeta.com/schema",
+                      "/properties/one/id");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/properties/two",
+                      "https://www.sourcemeta.com/schema", "/properties/two");
+  EXPECT_FRAME_DRAFT2(static_frame, "#/properties/two/id",
                       "https://www.sourcemeta.com/schema",
                       "/properties/two/id");
 }
