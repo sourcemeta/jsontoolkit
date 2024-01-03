@@ -194,9 +194,8 @@ auto sourcemeta::jsontoolkit::frame(
           const sourcemeta::jsontoolkit::URI base{base_string};
           const sourcemeta::jsontoolkit::URI maybe_relative{id.value()};
           const std::string new_id{maybe_relative.resolve_from(base)};
-          assert(root_id.has_value());
           if (!maybe_relative.is_absolute() || !static_frame.defines(new_id)) {
-            static_frame.store(new_id, root_id.value(), new_id, pointer,
+            static_frame.store(new_id, root_id, new_id, pointer,
                                effective_dialects.front());
           }
 
@@ -214,25 +213,30 @@ auto sourcemeta::jsontoolkit::frame(
          sourcemeta::jsontoolkit::anchors(subschema, resolver,
                                           effective_dialects.front())
              .get()) {
-      bool is_first = true;
       const auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
-      // TODO: Store anonymous frame entries for anchors on schemas
-      // with no identifiers
-      for (const auto &base_string :
-           find_nearest_bases(base_uris, pointer, id)) {
-        const sourcemeta::jsontoolkit::URI anchor_base{base_string};
-        const auto result{anchor_uri.resolve_from(anchor_base)};
-        assert(root_id.has_value());
-        if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
-          if (!is_first && static_frame.defines(result)) {
-            continue;
-          }
+      const auto bases{find_nearest_bases(base_uris, pointer, id)};
 
-          static_frame.store(result, root_id.value(), base_string, pointer,
+      if (bases.empty()) {
+        if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
+          static_frame.store(anchor_uri.recompose(), root_id, "", pointer,
                              effective_dialects.front());
         }
+      } else {
+        bool is_first = true;
+        for (const auto &base_string : bases) {
+          const sourcemeta::jsontoolkit::URI anchor_base{base_string};
+          const auto result{anchor_uri.resolve_from(anchor_base)};
+          if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
+            if (!is_first && static_frame.defines(result)) {
+              continue;
+            }
 
-        is_first = false;
+            static_frame.store(result, root_id, base_string, pointer,
+                               effective_dialects.front());
+          }
+
+          is_first = false;
+        }
       }
     }
   }

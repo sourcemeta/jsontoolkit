@@ -208,9 +208,15 @@ TEST(JSONSchema_frame, no_id) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "items": {
-      "$anchor": "foo",
-      "type": "string"
+    "properties": {
+      "foo": {
+        "$anchor": "foo",
+        "type": "string"
+      },
+      "bar": {
+        "$id": "https://example.com",
+        "$anchor": "bar"
+      }
     }
   })JSON");
 
@@ -220,17 +226,42 @@ TEST(JSONSchema_frame, no_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 5);
+  EXPECT_EQ(static_frame.size(), 14);
 
   EXPECT_ANONYMOUS_FRAME(static_frame, "", "",
                          "https://json-schema.org/draft/2020-12/schema");
   EXPECT_ANONYMOUS_FRAME(static_frame, "#/$schema", "/$schema",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "#/items", "/items",
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties", "/properties",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "#/items/type", "/items/type",
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/foo", "/properties/foo",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "#/items/$anchor", "/items/$anchor",
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/foo/$anchor",
+                         "/properties/foo/$anchor",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/foo/type",
+                         "/properties/foo/type",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#foo", "/properties/foo",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/bar", "/properties/bar",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/bar/$id",
+                         "/properties/bar/$id",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/bar/$anchor",
+                         "/properties/bar/$anchor",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "https://example.com", "/properties/bar",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "https://example.com#bar",
+                         "/properties/bar",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "https://example.com#/$id",
+                         "/properties/bar/$id",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "https://example.com#/$anchor",
+                         "/properties/bar/$anchor",
                          "https://json-schema.org/draft/2020-12/schema");
 }
 
