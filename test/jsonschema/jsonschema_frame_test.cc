@@ -208,7 +208,10 @@ TEST(JSONSchema_frame, no_id) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "items": { "type": "string" }
+    "items": {
+      "$anchor": "foo",
+      "type": "string"
+    }
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
@@ -217,7 +220,7 @@ TEST(JSONSchema_frame, no_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 4);
+  EXPECT_EQ(static_frame.size(), 5);
 
   EXPECT_ANONYMOUS_FRAME(static_frame, "", "",
                          "https://json-schema.org/draft/2020-12/schema");
@@ -226,6 +229,8 @@ TEST(JSONSchema_frame, no_id) {
   EXPECT_ANONYMOUS_FRAME(static_frame, "#/items", "/items",
                          "https://json-schema.org/draft/2020-12/schema");
   EXPECT_ANONYMOUS_FRAME(static_frame, "#/items/type", "/items/type",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/items/$anchor", "/items/$anchor",
                          "https://json-schema.org/draft/2020-12/schema");
 }
 
