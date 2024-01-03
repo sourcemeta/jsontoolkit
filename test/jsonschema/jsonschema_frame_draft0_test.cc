@@ -18,7 +18,8 @@ TEST(JSONSchema_frame_draft0, empty_schema) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -42,6 +43,10 @@ TEST(JSONSchema_frame_draft0, empty_schema) {
                       "/id");
   EXPECT_FRAME_DRAFT0(static_frame, "#/$schema",
                       "https://www.sourcemeta.com/schema", "/$schema");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame_draft0, one_level_applicators_without_identifiers) {
@@ -56,7 +61,8 @@ TEST(JSONSchema_frame_draft0, one_level_applicators_without_identifiers) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -104,6 +110,10 @@ TEST(JSONSchema_frame_draft0, one_level_applicators_without_identifiers) {
   EXPECT_FRAME_DRAFT0(static_frame, "#/properties/foo/type",
                       "https://www.sourcemeta.com/schema",
                       "/properties/foo/type");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame_draft0, one_level_applicators_with_identifiers) {
@@ -115,7 +125,8 @@ TEST(JSONSchema_frame_draft0, one_level_applicators_with_identifiers) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -159,6 +170,10 @@ TEST(JSONSchema_frame_draft0, one_level_applicators_with_identifiers) {
                       "https://www.sourcemeta.com/test/qux", "/items/id");
   EXPECT_FRAME_DRAFT0(static_frame, "#/items/type",
                       "https://www.sourcemeta.com/test/qux", "/items/type");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame_draft0, subschema_absolute_identifier) {
@@ -173,7 +188,8 @@ TEST(JSONSchema_frame_draft0, subschema_absolute_identifier) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -216,6 +232,10 @@ TEST(JSONSchema_frame_draft0, subschema_absolute_identifier) {
                       "https://www.sourcemeta.com/schema", "/items/id");
   EXPECT_FRAME_DRAFT0(static_frame, "#/items/type",
                       "https://www.sourcemeta.com/schema", "/items/type");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame_draft0, id_override) {
@@ -227,8 +247,9 @@ TEST(JSONSchema_frame_draft0, id_override) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
   EXPECT_THROW(sourcemeta::jsontoolkit::frame(
-                   document, static_frame,
+                   document, static_frame, references,
                    sourcemeta::jsontoolkit::default_schema_walker,
                    sourcemeta::jsontoolkit::official_resolver)
                    .wait(),
@@ -243,7 +264,8 @@ TEST(JSONSchema_frame_draft0, explicit_argument_id_same) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver,
                                  "http://json-schema.org/draft-00/schema#",
@@ -269,6 +291,10 @@ TEST(JSONSchema_frame_draft0, explicit_argument_id_same) {
                       "/id");
   EXPECT_FRAME_DRAFT0(static_frame, "#/$schema",
                       "https://www.sourcemeta.com/schema", "/$schema");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame_draft0, explicit_argument_id_different) {
@@ -287,10 +313,12 @@ TEST(JSONSchema_frame_draft0, explicit_argument_id_different) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(
-      document, static_frame, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      "http://json-schema.org/draft-00/schema#", "https://www.example.com")
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver,
+                                 "http://json-schema.org/draft-00/schema#",
+                                 "https://www.example.com")
       .wait();
 
   EXPECT_EQ(static_frame.size(), 30);
@@ -358,4 +386,8 @@ TEST(JSONSchema_frame_draft0, explicit_argument_id_different) {
   EXPECT_FRAME_DRAFT0(static_frame, "#/properties/two/id",
                       "https://www.sourcemeta.com/schema",
                       "/properties/two/id");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }

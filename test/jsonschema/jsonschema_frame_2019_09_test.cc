@@ -18,7 +18,8 @@ TEST(JSONSchema_frame_2019_09, empty_schema) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -41,6 +42,10 @@ TEST(JSONSchema_frame_2019_09, empty_schema) {
                        "https://www.sourcemeta.com/schema", "/$id");
   EXPECT_FRAME_2019_09(static_frame, "#/$schema",
                        "https://www.sourcemeta.com/schema", "/$schema");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
@@ -55,7 +60,8 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -103,6 +109,10 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
   EXPECT_FRAME_2019_09(static_frame, "#/properties/foo/type",
                        "https://www.sourcemeta.com/schema",
                        "/properties/foo/type");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
@@ -117,7 +127,8 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -189,6 +200,10 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
   EXPECT_FRAME_2019_09(static_frame, "#/properties/foo/type",
                        "https://www.sourcemeta.com/test/qux",
                        "/properties/foo/type");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
@@ -203,7 +218,8 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -246,6 +262,10 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
                        "https://www.sourcemeta.com/schema", "/items/$id");
   EXPECT_FRAME_2019_09(static_frame, "#/items/type",
                        "https://www.sourcemeta.com/schema", "/items/type");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame_2019_09, nested_schemas) {
@@ -274,7 +294,8 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -424,6 +445,11 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   EXPECT_FRAME_2019_09(static_frame, "#/properties/baz/items/$anchor",
                        "https://www.sourcemeta.com/schema",
                        "/properties/baz/items/$anchor");
+
+  // References
+
+  // TODO: Get anchors
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame_2019_09, id_override) {
@@ -435,8 +461,9 @@ TEST(JSONSchema_frame_2019_09, id_override) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
   EXPECT_THROW(sourcemeta::jsontoolkit::frame(
-                   document, static_frame,
+                   document, static_frame, references,
                    sourcemeta::jsontoolkit::default_schema_walker,
                    sourcemeta::jsontoolkit::official_resolver)
                    .wait(),
@@ -453,8 +480,9 @@ TEST(JSONSchema_frame_2019_09, static_anchor_override) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
   EXPECT_THROW(sourcemeta::jsontoolkit::frame(
-                   document, static_frame,
+                   document, static_frame, references,
                    sourcemeta::jsontoolkit::default_schema_walker,
                    sourcemeta::jsontoolkit::official_resolver)
                    .wait(),
@@ -469,7 +497,8 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_same) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver,
                                  "https://json-schema.org/draft/2019-09/schema",
@@ -494,6 +523,10 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_same) {
                        "https://www.sourcemeta.com/schema", "/$id");
   EXPECT_FRAME_2019_09(static_frame, "#/$schema",
                        "https://www.sourcemeta.com/schema", "/$schema");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
@@ -517,10 +550,12 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(
-      document, static_frame, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      "https://json-schema.org/draft/2019-09/schema", "https://www.example.com")
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver,
+                                 "https://json-schema.org/draft/2019-09/schema",
+                                 "https://www.example.com")
       .wait();
 
   EXPECT_EQ(static_frame.size(), 50);
@@ -630,4 +665,9 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
   EXPECT_FRAME_2019_09(static_frame, "#/properties/two/$anchor",
                        "https://www.sourcemeta.com/schema",
                        "/properties/two/$anchor");
+
+  // References
+
+  // TODO: Get anchors
+  EXPECT_TRUE(references.empty());
 }

@@ -17,7 +17,9 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
       sourcemeta::jsontoolkit::parse(stream);
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(schema, static_frame,
+  // TODO: Print out references
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(schema, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
