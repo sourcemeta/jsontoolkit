@@ -77,8 +77,11 @@ static auto find_nearest_bases(const std::map<sourcemeta::jsontoolkit::Pointer,
     }
   }
 
-  assert(default_base.has_value());
-  return {default_base.value()};
+  if (default_base.has_value()) {
+    return {default_base.value()};
+  }
+
+  return {};
 }
 
 static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
