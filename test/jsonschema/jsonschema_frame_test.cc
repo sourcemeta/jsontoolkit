@@ -28,7 +28,8 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -202,6 +203,10 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
                "https://www.sourcemeta.com/test",
                "/$defs/foo/definitions/bar/type",
                "http://json-schema.org/draft-04/schema#");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame, no_id) {
@@ -221,7 +226,8 @@ TEST(JSONSchema_frame, no_id) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -263,6 +269,11 @@ TEST(JSONSchema_frame, no_id) {
   EXPECT_ANONYMOUS_FRAME(static_frame, "https://example.com#/$anchor",
                          "/properties/bar/$anchor",
                          "https://json-schema.org/draft/2020-12/schema");
+
+  // References
+
+  // TODO: Get anchors
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame, no_id_with_default) {
@@ -273,7 +284,8 @@ TEST(JSONSchema_frame, no_id_with_default) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver,
                                  "https://json-schema.org/draft/2020-12/schema",
@@ -316,6 +328,10 @@ TEST(JSONSchema_frame, no_id_with_default) {
             "https://www.sourcemeta.com/schema");
   EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/schema#/items/type"),
             "https://www.sourcemeta.com/schema");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame, anchor_on_absolute_subid) {
@@ -332,7 +348,8 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -421,6 +438,11 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
             "https://www.example.org");
   EXPECT_EQ(static_frame.base("https://www.example.org#/items/$anchor"),
             "https://www.example.org");
+
+  // References
+
+  // TODO: Get anchors
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame, uri_iterators) {
@@ -436,7 +458,8 @@ TEST(JSONSchema_frame, uri_iterators) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::frame(document, static_frame,
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -470,6 +493,11 @@ TEST(JSONSchema_frame, uri_iterators) {
   EXPECT_TRUE(uris.contains("#/items/$id"));
   EXPECT_TRUE(uris.contains("#/items/$anchor"));
   EXPECT_TRUE(uris.contains("#/items/type"));
+
+  // References
+
+  // TODO: Get anchors
+  EXPECT_TRUE(references.empty());
 }
 
 TEST(JSONSchema_frame, reference_frame_uri_canonicalize) {

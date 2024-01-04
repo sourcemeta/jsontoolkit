@@ -16,9 +16,19 @@
 #include <optional> // std::optional
 #include <string>   // std::string
 #include <tuple>    // std::tuple
+#include <utility>  // std::pair
 #include <vector>   // std::vector
 
 namespace sourcemeta::jsontoolkit {
+
+/// @ingroup jsonschema
+/// The reference type
+enum class ReferenceType { Static, Dynamic };
+
+/// @ingroup jsonschema
+/// A JSON Schema reference map is a mapping of a JSON Pointer of a subschema to
+/// a reference type and destination reference URI.
+using ReferenceMap = std::map<Pointer, std::pair<ReferenceType, std::string>>;
 
 /// @ingroup jsonschema
 /// A JSON Schema reference frame is a mapping of URIs to schema identifiers,
@@ -104,37 +114,52 @@ private:
 /// })JSON");
 ///
 /// sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-/// sourcemeta::jsontoolkit::frame(document, static_frame,
+/// sourcemeta::jsontoolkit::ReferenceMap references;
+/// sourcemeta::jsontoolkit::frame(document, static_frame, references,
 ///                                sourcemeta::jsontoolkit::default_schema_walker,
 ///                                sourcemeta::jsontoolkit::official_resolver)
 ///     .wait();
 ///
-/// assert(static_frame.size() == 3);
+/// // IDs
+/// assert(static_frame.defines("https://www.example.com/schema"));
+/// assert(static_frame.defines("https://www.example.com/foo"));
 ///
-/// assert(static_frame.base("https://www.example.com/schema")
-///   == "https://www.example.com/schema");
-/// assert(static_frame.pointer("https://www.example.com/schema")
-///   == sourcemeta::jsonpointer::Pointer{});
-/// assert(static_frame.dialect("https://www.example.com/schema")
-///   == "https://json-schema.org/draft/2020-12/schema");
+/// // Anchors
+/// assert(static_frame.defines("https://www.example.com/schema#test"));
 ///
-/// assert(static_frame.base("https://www.example.com/foo")
-///   == "https://www.example.com/schema");
-/// assert(static_frame.pointer("https://www.example.com/foo")
-///   == sourcemeta::jsonpointer::Pointer{"items"});
-/// assert(static_frame.dialect("https://www.example.com/foo")
-///   == "https://json-schema.org/draft/2020-12/schema");
+/// // Root Pointers
+/// assert(static_frame.defines("https://www.example.com/schema#/$id"));
+/// assert(static_frame.defines("https://www.example.com/schema#/$schema"));
+/// assert(static_frame.defines("https://www.example.com/schema#/items"));
+/// assert(static_frame.defines("https://www.example.com/schema#/items/$id"));
+/// assert(static_frame.defines("https://www.example.com/schema#/items/type"));
+/// assert(static_frame.defines("https://www.example.com/schema#/properties"));
+/// assert(static_frame.defines("https://www.example.com/schema#/properties/foo"));
+/// assert(static_frame.defines("https://www.example.com/schema#/properties/foo/$anchor"));
+/// assert(static_frame.defines("https://www.example.com/schema#/properties/foo/type"));
 ///
-/// assert(static_frame.base("https://www.example.com/schema#test")
-///   == "https://www.example.com/schema");
-/// assert(static_frame.pointer("https://www.example.com/schema#test")
-///   == sourcemeta::jsonpointer::Pointer{"properties", "foo"});
-/// assert(static_frame.dialect("https://www.example.com/schema#test")
-///   == "https://json-schema.org/draft/2020-12/schema");
+/// // Subpointers
+/// assert(static_frame.defines("https://www.example.com/foo#/$id"));
+/// assert(static_frame.defines("https://www.example.com/foo#/type"));
+///
+/// // Anonymous pointers
+/// assert(static_frame.defines(""));
+/// assert(static_frame.defines("#/$id"));
+/// assert(static_frame.defines("#/$schema"));
+/// assert(static_frame.defines("#/items"));
+/// assert(static_frame.defines("#/items/$id"));
+/// assert(static_frame.defines("#/items/type"));
+/// assert(static_frame.defines("#/properties"));
+/// assert(static_frame.defines("#/properties/foo"));
+/// assert(static_frame.defines("#/properties/foo/$anchor"));
+/// assert(static_frame.defines("#/properties/foo/type"));
+///
+/// // TODO: Assert on anchors in `references`
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto frame(const JSON &schema, ReferenceFrame &static_frame,
-           const SchemaWalker &walker, const SchemaResolver &resolver,
+           ReferenceMap &references, const SchemaWalker &walker,
+           const SchemaResolver &resolver,
            const std::optional<std::string> &default_dialect = std::nullopt,
            const std::optional<std::string> &default_id = std::nullopt)
     -> std::future<void>;
