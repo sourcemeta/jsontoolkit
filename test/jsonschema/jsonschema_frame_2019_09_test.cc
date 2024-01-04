@@ -448,7 +448,6 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
 
   // References
 
-  // TODO: Get anchors
   EXPECT_TRUE(references.empty());
 }
 
@@ -668,6 +667,5 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
 
   // References
 
-  // TODO: Get anchors
   EXPECT_TRUE(references.empty());
 }
