@@ -203,7 +203,6 @@ TEST(JSONSchema_frame_2020_12, one_level_applicators_with_identifiers) {
 
   // References
 
-  // TODO: Get anchors
   EXPECT_TRUE(references.empty());
 }
 
@@ -445,7 +444,6 @@ TEST(JSONSchema_frame_2020_12, nested_schemas) {
 
   // References
 
-  // TODO: Get anchors
   EXPECT_TRUE(references.empty());
 }
 
@@ -665,6 +663,5 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_different) {
 
   // References
 
-  // TODO: Get anchors
   EXPECT_TRUE(references.empty());
 }

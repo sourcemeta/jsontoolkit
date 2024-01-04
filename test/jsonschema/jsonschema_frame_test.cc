@@ -272,7 +272,6 @@ TEST(JSONSchema_frame, no_id) {
 
   // References
 
-  // TODO: Get anchors
   EXPECT_TRUE(references.empty());
 }
 
@@ -441,7 +440,6 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
 
   // References
 
-  // TODO: Get anchors
   EXPECT_TRUE(references.empty());
 }
 
@@ -496,7 +494,6 @@ TEST(JSONSchema_frame, uri_iterators) {
 
   // References
 
-  // TODO: Get anchors
   EXPECT_TRUE(references.empty());
 }
 
@@ -513,4 +510,26 @@ TEST(JSONSchema_frame, reference_frame_uri_canonicalize) {
   EXPECT_TRUE(frame.root("https://example.com").has_value());
   EXPECT_EQ(frame.root("https://example.com").value(), "https://example.com#");
   EXPECT_EQ(frame.base("https://example.com"), "https://example.com#");
+}
+
+TEST(JSONSchema_frame, no_refs) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": { "type": "string" },
+      "bar": { "type": "number" },
+      "baz": { "type": "array" }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_TRUE(references.empty());
 }
