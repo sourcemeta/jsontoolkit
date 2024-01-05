@@ -219,7 +219,6 @@ auto sourcemeta::jsontoolkit::frame(
 
       if (bases.empty()) {
         if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
-          // TODO: Resolve anchor and insert to `references`
           static_frame.store(anchor_uri.recompose(), root_id, "", pointer,
                              effective_dialects.front());
         }
@@ -233,7 +232,6 @@ auto sourcemeta::jsontoolkit::frame(
               continue;
             }
 
-            // TODO: Resolve anchor and insert to `references`
             static_frame.store(result, root_id, base_string, pointer,
                                effective_dialects.front());
           }
