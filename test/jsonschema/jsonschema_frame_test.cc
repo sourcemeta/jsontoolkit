@@ -533,3 +533,80 @@ TEST(JSONSchema_frame, no_refs) {
 
   EXPECT_TRUE(references.empty());
 }
+
+TEST(JSONSchema_frame, refs_with_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": { "$ref": "#" },
+      "bar": { "$ref": "#/properties/baz" },
+      "baz": {
+        "$anchor": "baz",
+        "type": "string"
+      },
+      "qux": {
+        "$id": "test",
+        "$ref": "#"
+      },
+      "anchor": {
+        "$ref": "#baz"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(references.size(), 4);
+  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref",
+                          "https://www.sourcemeta.com/schema#");
+  EXPECT_STATIC_REFERENCE(references, "/properties/bar/$ref",
+                          "https://www.sourcemeta.com/schema#/properties/baz");
+  EXPECT_STATIC_REFERENCE(references, "/properties/qux/$ref",
+                          "https://www.sourcemeta.com/test#");
+  EXPECT_STATIC_REFERENCE(references, "/properties/anchor/$ref",
+                          "https://www.sourcemeta.com/schema#baz");
+}
+
+TEST(JSONSchema_frame, refs_with_no_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": { "$ref": "#" },
+      "bar": { "$ref": "#/properties/baz" },
+      "baz": {
+        "$anchor": "baz",
+        "type": "string"
+      },
+      "qux": {
+        "$id": "https://www.example.com",
+        "$ref": "#"
+      },
+      "anchor": {
+        "$ref": "#baz"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(references.size(), 4);
+  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref", "#");
+  EXPECT_STATIC_REFERENCE(references, "/properties/bar/$ref",
+                          "#/properties/baz");
+  EXPECT_STATIC_REFERENCE(references, "/properties/qux/$ref",
+                          "https://www.example.com#");
+  EXPECT_STATIC_REFERENCE(references, "/properties/anchor/$ref", "#baz");
+}
