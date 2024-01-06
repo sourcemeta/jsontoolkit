@@ -246,6 +246,11 @@ auto sourcemeta::jsontoolkit::frame(
 
             static_frame.store(result, root_id, base_string, pointer,
                                effective_dialects.front());
+
+            if (root_id.has_value() && root_id.value() == base_string) {
+              static_frame.store(anchor_uri.recompose(), root_id, "", pointer,
+                                 effective_dialects.front());
+            }
           }
 
           is_first = false;
