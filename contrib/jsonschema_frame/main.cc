@@ -17,14 +17,15 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
       sourcemeta::jsontoolkit::parse(stream);
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  // TODO: Print out references
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(schema, static_frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
+  std::cout << "--------------------------------------------------\n";
   std::cout << "Static frames: " << static_frame.size() << "\n";
+  std::cout << "--------------------------------------------------\n";
   for (const auto &uri : static_frame) {
     std::cout << "URI: ";
     std::cout << uri << "\n";
@@ -35,6 +36,17 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
     std::cout << "\n";
     std::cout << "    Base URI : " << static_frame.base(uri) << "\n";
     std::cout << "    Dialect  : " << static_frame.dialect(uri) << "\n";
+  }
+
+  std::cout << "--------------------------------------------------\n";
+  std::cout << "References: " << references.size() << "\n";
+  std::cout << "--------------------------------------------------\n";
+  for (const auto &[pointer, reference] : references) {
+    if (reference.first == sourcemeta::jsontoolkit::ReferenceType::Static) {
+      std::cout << "(STATIC) ";
+      sourcemeta::jsontoolkit::stringify(pointer, std::cout);
+      std::cout << "\n         --> " << reference.second << "\n";
+    }
   }
 
   return EXIT_SUCCESS;
