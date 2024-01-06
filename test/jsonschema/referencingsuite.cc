@@ -51,9 +51,10 @@ public:
         new_entries;
     for (const auto &[uri, schema] : this->registry) {
       sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+      sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
       sourcemeta::jsontoolkit::ReferenceMap references;
       sourcemeta::jsontoolkit::frame(
-          schema.first, static_frame, references,
+          schema.first, static_frame, dynamic_frame, references,
           sourcemeta::jsontoolkit::default_schema_walker,
           sourcemeta::jsontoolkit::official_resolver, this->dialect, uri)
           .wait();

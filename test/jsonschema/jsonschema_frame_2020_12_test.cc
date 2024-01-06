@@ -18,8 +18,10 @@ TEST(JSONSchema_frame_2020_12, empty_schema) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -46,6 +48,10 @@ TEST(JSONSchema_frame_2020_12, empty_schema) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2020_12, one_level_applicators_without_identifiers) {
@@ -60,8 +66,10 @@ TEST(JSONSchema_frame_2020_12, one_level_applicators_without_identifiers) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -113,6 +121,10 @@ TEST(JSONSchema_frame_2020_12, one_level_applicators_without_identifiers) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2020_12, one_level_applicators_with_identifiers) {
@@ -127,8 +139,10 @@ TEST(JSONSchema_frame_2020_12, one_level_applicators_with_identifiers) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -210,6 +224,10 @@ TEST(JSONSchema_frame_2020_12, one_level_applicators_with_identifiers) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2020_12, subschema_absolute_identifier) {
@@ -224,8 +242,10 @@ TEST(JSONSchema_frame_2020_12, subschema_absolute_identifier) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -268,6 +288,10 @@ TEST(JSONSchema_frame_2020_12, subschema_absolute_identifier) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2020_12, nested_schemas) {
@@ -296,8 +320,10 @@ TEST(JSONSchema_frame_2020_12, nested_schemas) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -451,6 +477,10 @@ TEST(JSONSchema_frame_2020_12, nested_schemas) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2020_12, id_override) {
@@ -462,9 +492,10 @@ TEST(JSONSchema_frame_2020_12, id_override) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
   EXPECT_THROW(sourcemeta::jsontoolkit::frame(
-                   document, static_frame, references,
+                   document, static_frame, dynamic_frame, references,
                    sourcemeta::jsontoolkit::default_schema_walker,
                    sourcemeta::jsontoolkit::official_resolver)
                    .wait(),
@@ -481,9 +512,10 @@ TEST(JSONSchema_frame_2020_12, static_anchor_override) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
   EXPECT_THROW(sourcemeta::jsontoolkit::frame(
-                   document, static_frame, references,
+                   document, static_frame, dynamic_frame, references,
                    sourcemeta::jsontoolkit::default_schema_walker,
                    sourcemeta::jsontoolkit::official_resolver)
                    .wait(),
@@ -498,8 +530,10 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_same) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver,
                                  "https://json-schema.org/draft/2020-12/schema",
@@ -528,6 +562,10 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_same) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2020_12, anchor_top_level) {
@@ -539,8 +577,10 @@ TEST(JSONSchema_frame_2020_12, anchor_top_level) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -579,6 +619,10 @@ TEST(JSONSchema_frame_2020_12, anchor_top_level) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame_2020_12, explicit_argument_id_different) {
@@ -602,12 +646,13 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_different) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver,
-                                 "https://json-schema.org/draft/2020-12/schema",
-                                 "https://www.example.com")
+  sourcemeta::jsontoolkit::frame(
+      document, static_frame, dynamic_frame, references,
+      sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      "https://json-schema.org/draft/2020-12/schema", "https://www.example.com")
       .wait();
 
   EXPECT_EQ(static_frame.size(), 51);
@@ -716,4 +761,297 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_different) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
+}
+
+TEST(JSONSchema_frame_2020_12, dynamic_anchor) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": {
+        "$dynamicAnchor": "foo",
+        "$anchor": "extra",
+        "items": {
+          "$id": "test",
+          "$dynamicAnchor": "foo"
+        }
+      },
+      "bar": {
+        "$dynamicAnchor": "bar",
+        "$anchor": "bar"
+      },
+      "baz": {
+        "$dynamicAnchor": "baz",
+        "items": {
+          "$dynamicAnchor": "baz"
+        }
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  // Static
+
+  EXPECT_EQ(static_frame.size(), 46);
+  EXPECT_FRAME_2020_12(static_frame, "https://www.sourcemeta.com/schema",
+                       "https://www.sourcemeta.com/schema", "");
+  EXPECT_FRAME_2020_12(static_frame, "https://www.sourcemeta.com/schema#/$id",
+                       "https://www.sourcemeta.com/schema", "/$id");
+  EXPECT_FRAME_2020_12(static_frame,
+                       "https://www.sourcemeta.com/schema#/$schema",
+                       "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_2020_12(static_frame,
+                       "https://www.sourcemeta.com/schema#/properties",
+                       "https://www.sourcemeta.com/schema", "/properties");
+  EXPECT_FRAME_2020_12(static_frame, "https://www.sourcemeta.com/test",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/items");
+  EXPECT_FRAME_2020_12(static_frame, "https://www.sourcemeta.com/test#/$id",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/items/$id");
+  EXPECT_FRAME_2020_12(static_frame,
+                       "https://www.sourcemeta.com/test#/$dynamicAnchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/items/$dynamicAnchor");
+
+  // foo
+  EXPECT_FRAME_2020_12(static_frame,
+                       "https://www.sourcemeta.com/schema#/properties/foo",
+                       "https://www.sourcemeta.com/schema", "/properties/foo");
+  EXPECT_FRAME_2020_12(
+      static_frame,
+      "https://www.sourcemeta.com/schema#/properties/foo/$dynamicAnchor",
+      "https://www.sourcemeta.com/schema", "/properties/foo/$dynamicAnchor");
+  EXPECT_FRAME_2020_12(
+      static_frame, "https://www.sourcemeta.com/schema#/properties/foo/$anchor",
+      "https://www.sourcemeta.com/schema", "/properties/foo/$anchor");
+  EXPECT_FRAME_2020_12(
+      static_frame, "https://www.sourcemeta.com/schema#/properties/foo/items",
+      "https://www.sourcemeta.com/schema", "/properties/foo/items");
+  EXPECT_FRAME_2020_12(
+      static_frame,
+      "https://www.sourcemeta.com/schema#/properties/foo/items/$id",
+      "https://www.sourcemeta.com/schema", "/properties/foo/items/$id");
+  EXPECT_FRAME_2020_12(
+      static_frame,
+      "https://www.sourcemeta.com/schema#/properties/foo/items/$dynamicAnchor",
+      "https://www.sourcemeta.com/schema",
+      "/properties/foo/items/$dynamicAnchor");
+
+  // bar
+  EXPECT_FRAME_2020_12(static_frame,
+                       "https://www.sourcemeta.com/schema#/properties/bar",
+                       "https://www.sourcemeta.com/schema", "/properties/bar");
+  EXPECT_FRAME_2020_12(
+      static_frame,
+      "https://www.sourcemeta.com/schema#/properties/bar/$dynamicAnchor",
+      "https://www.sourcemeta.com/schema", "/properties/bar/$dynamicAnchor");
+  EXPECT_FRAME_2020_12(
+      static_frame, "https://www.sourcemeta.com/schema#/properties/bar/$anchor",
+      "https://www.sourcemeta.com/schema", "/properties/bar/$anchor");
+
+  // baz
+  EXPECT_FRAME_2020_12(static_frame,
+                       "https://www.sourcemeta.com/schema#/properties/baz",
+                       "https://www.sourcemeta.com/schema", "/properties/baz");
+  EXPECT_FRAME_2020_12(
+      static_frame,
+      "https://www.sourcemeta.com/schema#/properties/baz/$dynamicAnchor",
+      "https://www.sourcemeta.com/schema", "/properties/baz/$dynamicAnchor");
+  EXPECT_FRAME_2020_12(
+      static_frame, "https://www.sourcemeta.com/schema#/properties/baz/items",
+      "https://www.sourcemeta.com/schema", "/properties/baz/items");
+  EXPECT_FRAME_2020_12(
+      static_frame,
+      "https://www.sourcemeta.com/schema#/properties/baz/items/$dynamicAnchor",
+      "https://www.sourcemeta.com/schema",
+      "/properties/baz/items/$dynamicAnchor");
+
+  // JSON Pointers
+
+  EXPECT_FRAME_2020_12(static_frame, "", "https://www.sourcemeta.com/schema",
+                       "");
+  EXPECT_FRAME_2020_12(static_frame, "#/$id",
+                       "https://www.sourcemeta.com/schema", "/$id");
+  EXPECT_FRAME_2020_12(static_frame, "#/$schema",
+                       "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_2020_12(static_frame, "#/properties",
+                       "https://www.sourcemeta.com/schema", "/properties");
+
+  // foo
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/foo",
+                       "https://www.sourcemeta.com/schema", "/properties/foo");
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/foo/$dynamicAnchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/$dynamicAnchor");
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/foo/$anchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/$anchor");
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/foo/items",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/items");
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/foo/items/$id",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/items/$id");
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/foo/items/$dynamicAnchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/items/$dynamicAnchor");
+
+  // bar
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/bar",
+                       "https://www.sourcemeta.com/schema", "/properties/bar");
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/bar/$dynamicAnchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/bar/$dynamicAnchor");
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/bar/$anchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/bar/$anchor");
+
+  // baz
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/baz",
+                       "https://www.sourcemeta.com/schema", "/properties/baz");
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/baz/$dynamicAnchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/baz/$dynamicAnchor");
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/baz/items",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/baz/items");
+  EXPECT_FRAME_2020_12(static_frame, "#/properties/baz/items/$dynamicAnchor",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/baz/items/$dynamicAnchor");
+
+  // Static anchors
+
+  EXPECT_FRAME_2020_12(static_frame, "https://www.sourcemeta.com/schema#foo",
+                       "https://www.sourcemeta.com/schema", "/properties/foo");
+  EXPECT_FRAME_2020_12(static_frame, "#foo",
+                       "https://www.sourcemeta.com/schema", "/properties/foo");
+  EXPECT_FRAME_2020_12(static_frame, "https://www.sourcemeta.com/schema#extra",
+                       "https://www.sourcemeta.com/schema", "/properties/foo");
+  EXPECT_FRAME_2020_12(static_frame, "#extra",
+                       "https://www.sourcemeta.com/schema", "/properties/foo");
+  EXPECT_FRAME_2020_12(static_frame, "https://www.sourcemeta.com/test#foo",
+                       "https://www.sourcemeta.com/schema",
+                       "/properties/foo/items");
+
+  EXPECT_FRAME_2020_12(static_frame, "https://www.sourcemeta.com/schema#bar",
+                       "https://www.sourcemeta.com/schema", "/properties/bar");
+  EXPECT_FRAME_2020_12(static_frame, "#bar",
+                       "https://www.sourcemeta.com/schema", "/properties/bar");
+
+  EXPECT_FRAME_2020_12(static_frame, "https://www.sourcemeta.com/schema#baz",
+                       "https://www.sourcemeta.com/schema", "/properties/baz");
+  EXPECT_FRAME_2020_12(static_frame, "#baz",
+                       "https://www.sourcemeta.com/schema", "/properties/baz");
+
+  // Dynamic Anchor
+
+  EXPECT_EQ(dynamic_frame.size(), 3);
+  EXPECT_FRAME_2020_12(dynamic_frame, "#foo",
+                       "https://www.sourcemeta.com/schema", "/properties/foo");
+  EXPECT_FRAME_2020_12(dynamic_frame, "#bar",
+                       "https://www.sourcemeta.com/schema", "/properties/bar");
+  EXPECT_FRAME_2020_12(dynamic_frame, "#baz",
+                       "https://www.sourcemeta.com/schema", "/properties/baz");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
+}
+
+TEST(JSONSchema_frame_2020_12, dynamic_anchor_no_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": {
+        "$dynamicAnchor": "foo",
+        "items": {
+          "$dynamicAnchor": "foo"
+        }
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  // Static
+
+  EXPECT_EQ(static_frame.size(), 8);
+
+  EXPECT_ANONYMOUS_FRAME(static_frame, "", "",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/$schema", "/$schema",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties", "/properties",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/foo", "/properties/foo",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/foo/$dynamicAnchor",
+                         "/properties/foo/$dynamicAnchor",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/foo/items",
+                         "/properties/foo/items",
+                         "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/foo/items/$dynamicAnchor",
+                         "/properties/foo/items/$dynamicAnchor",
+                         "https://json-schema.org/draft/2020-12/schema");
+
+  // Static anchors
+
+  EXPECT_ANONYMOUS_FRAME(static_frame, "#foo", "/properties/foo",
+                         "https://json-schema.org/draft/2020-12/schema");
+
+  // Dynamic Anchor
+
+  EXPECT_EQ(dynamic_frame.size(), 1);
+  EXPECT_ANONYMOUS_FRAME(dynamic_frame, "#foo", "/properties/foo",
+                         "https://json-schema.org/draft/2020-12/schema");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
+}
+
+TEST(JSONSchema_frame_2020_12, dynamic_static_anchor_mismatch) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$anchor": "foo",
+    "items": {
+      "$dynamicAnchor": "foo"
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::frame(
+                   document, static_frame, dynamic_frame, references,
+                   sourcemeta::jsontoolkit::default_schema_walker,
+                   sourcemeta::jsontoolkit::official_resolver)
+                   .wait(),
+               sourcemeta::jsontoolkit::SchemaError);
 }

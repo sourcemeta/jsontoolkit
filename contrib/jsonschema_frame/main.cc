@@ -11,32 +11,44 @@
 #include <span>       // std::span
 
 namespace {
+
+auto print_frame(const sourcemeta::jsontoolkit::ReferenceFrame &frame) -> void {
+  for (const auto &uri : frame) {
+    std::cout << "URI: ";
+    std::cout << uri << "\n";
+    std::cout << "    Location : " << frame.root(uri).value_or("<ANONYMOUS>")
+              << "\n";
+    std::cout << "    Pointer  : ";
+    sourcemeta::jsontoolkit::stringify(frame.pointer(uri), std::cout);
+    std::cout << "\n";
+    std::cout << "    Base URI : " << frame.base(uri) << "\n";
+    std::cout << "    Dialect  : " << frame.dialect(uri) << "\n";
+  }
+}
+
 template <typename CharT, typename Traits>
 auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
   const sourcemeta::jsontoolkit::JSON schema =
       sourcemeta::jsontoolkit::parse(stream);
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(schema, static_frame, references,
+  sourcemeta::jsontoolkit::frame(schema, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
   std::cout << "--------------------------------------------------\n";
-  std::cout << "Static frames: " << static_frame.size() << "\n";
+  std::cout << "Static frame: " << static_frame.size() << "\n";
   std::cout << "--------------------------------------------------\n";
-  for (const auto &uri : static_frame) {
-    std::cout << "URI: ";
-    std::cout << uri << "\n";
-    std::cout << "    Location : "
-              << static_frame.root(uri).value_or("<ANONYMOUS>") << "\n";
-    std::cout << "    Pointer  : ";
-    sourcemeta::jsontoolkit::stringify(static_frame.pointer(uri), std::cout);
-    std::cout << "\n";
-    std::cout << "    Base URI : " << static_frame.base(uri) << "\n";
-    std::cout << "    Dialect  : " << static_frame.dialect(uri) << "\n";
-  }
+  print_frame(static_frame);
+
+  std::cout << "--------------------------------------------------\n";
+  std::cout << "Dynamic frame: " << dynamic_frame.size() << "\n";
+  std::cout << "--------------------------------------------------\n";
+  print_frame(dynamic_frame);
 
   std::cout << "--------------------------------------------------\n";
   std::cout << "References: " << references.size() << "\n";
