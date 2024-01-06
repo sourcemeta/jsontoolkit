@@ -109,7 +109,8 @@ private:
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "items": { "$id": "foo", "type": "string" },
 ///   "properties": {
-///     "foo": { "$anchor": "test", "type": "number" }
+///     "foo": { "$anchor": "test", "type": "number" },
+///     "bar": { "$ref": "#/properties/foo" }
 ///   }
 /// })JSON");
 ///
@@ -137,6 +138,8 @@ private:
 /// assert(static_frame.defines("https://www.example.com/schema#/properties/foo"));
 /// assert(static_frame.defines("https://www.example.com/schema#/properties/foo/$anchor"));
 /// assert(static_frame.defines("https://www.example.com/schema#/properties/foo/type"));
+/// assert(static_frame.defines("https://www.example.com/schema#/properties/bar"));
+/// assert(static_frame.defines("https://www.example.com/schema#/properties/bar/$ref"));
 ///
 /// // Subpointers
 /// assert(static_frame.defines("https://www.example.com/foo#/$id"));
@@ -153,8 +156,15 @@ private:
 /// assert(static_frame.defines("#/properties/foo"));
 /// assert(static_frame.defines("#/properties/foo/$anchor"));
 /// assert(static_frame.defines("#/properties/foo/type"));
+/// assert(static_frame.defines("#/properties/bar"));
+/// assert(static_frame.defines("#/properties/bar/$ref"));
 ///
-/// // TODO: Assert on anchors in `references`
+/// // References
+/// assert(references.contains({ "properties", "bar", "$ref" }));
+/// assert(references.at({ "properties", "bar", "$ref" }).first ==
+///   sourcemeta::jsontoolkit::ReferenceType::Static);
+/// assert(references.at({ "properties", "bar", "$ref" }).second ==
+///   "https://www.example.com/schema#/properties/foo");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto frame(const JSON &schema, ReferenceFrame &static_frame,
