@@ -4,9 +4,9 @@ include(./official_resolver.cmake)
 
 noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
   FOLDER "JSON Toolkit/JSON Schema"
-  PRIVATE_HEADERS anchor.h resolver.h walker.h reference.h error.h
+  PRIVATE_HEADERS anchor.h resolver.h walker.h reference.h reference_frame.h error.h
     transformer.h transform_rule.h transform_bundle.h
-  SOURCES jsonschema.cc default_walker.cc reference.cc anchor.cc walker.cc
+  SOURCES jsonschema.cc default_walker.cc reference.cc reference_frame.cc anchor.cc walker.cc
     transformer.cc transform_rule.cc transform_bundle.cc
     "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 
