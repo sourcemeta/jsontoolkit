@@ -89,7 +89,9 @@ private:
 #endif
 };
 
-// TODO: Support dynamic anchors too
+// TODO: Support $dynamicRef
+// TODO: Support $recursiveAnchor
+// TODO: Support $recursiveRef
 
 /// @ingroup jsonschema
 ///
@@ -115,8 +117,10 @@ private:
 /// })JSON");
 ///
 /// sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+/// sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
 /// sourcemeta::jsontoolkit::ReferenceMap references;
-/// sourcemeta::jsontoolkit::frame(document, static_frame, references,
+/// sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+/// references,
 ///                                sourcemeta::jsontoolkit::default_schema_walker,
 ///                                sourcemeta::jsontoolkit::official_resolver)
 ///     .wait();
@@ -168,8 +172,8 @@ private:
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto frame(const JSON &schema, ReferenceFrame &static_frame,
-           ReferenceMap &references, const SchemaWalker &walker,
-           const SchemaResolver &resolver,
+           ReferenceFrame &dynamic_frame, ReferenceMap &references,
+           const SchemaWalker &walker, const SchemaResolver &resolver,
            const std::optional<std::string> &default_dialect = std::nullopt,
            const std::optional<std::string> &default_id = std::nullopt)
     -> std::future<void>;

@@ -28,8 +28,10 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -207,6 +209,10 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, no_id) {
@@ -226,8 +232,10 @@ TEST(JSONSchema_frame, no_id) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -273,6 +281,10 @@ TEST(JSONSchema_frame, no_id) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, no_id_with_default) {
@@ -283,8 +295,10 @@ TEST(JSONSchema_frame, no_id_with_default) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver,
                                  "https://json-schema.org/draft/2020-12/schema",
@@ -331,6 +345,10 @@ TEST(JSONSchema_frame, no_id_with_default) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, anchor_on_absolute_subid) {
@@ -347,8 +365,10 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -441,6 +461,10 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, uri_iterators) {
@@ -456,8 +480,10 @@ TEST(JSONSchema_frame, uri_iterators) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -495,6 +521,10 @@ TEST(JSONSchema_frame, uri_iterators) {
   // References
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, reference_frame_uri_canonicalize) {
@@ -525,13 +555,19 @@ TEST(JSONSchema_frame, no_refs) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
   EXPECT_TRUE(references.empty());
+
+  // Dynamic frame
+
+  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, refs_with_id) {
@@ -557,8 +593,10 @@ TEST(JSONSchema_frame, refs_with_id) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -596,8 +634,10 @@ TEST(JSONSchema_frame, refs_with_no_id) {
   })JSON");
 
   sourcemeta::jsontoolkit::ReferenceFrame static_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, references,
+  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+                                 references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
