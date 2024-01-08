@@ -210,18 +210,6 @@ auto sourcemeta::jsontoolkit::frame(
       }
     }
 
-    // TODO: Handle $dynamicRef and $recursiveRef too
-    if (subschema.is_object() && subschema.defines("$ref")) {
-      assert(subschema.at("$ref").is_string());
-      const sourcemeta::jsontoolkit::URI ref{subschema.at("$ref").to_string()};
-      const auto nearest_bases{find_nearest_bases(base_uris, pointer, id)};
-      references.insert(
-          {pointer.concat({"$ref"}),
-           {ReferenceType::Static,
-            nearest_bases.empty() ? ref.recompose()
-                                  : ref.resolve_from(nearest_bases.front())}});
-    }
-
     // Handle schema anchors
     for (const auto &[name, type] :
          sourcemeta::jsontoolkit::anchors(subschema, resolver,
@@ -302,6 +290,34 @@ auto sourcemeta::jsontoolkit::frame(
         static_frame.store(result, root_id, nearest_bases.front(), pointer,
                            dialects.front());
       }
+    }
+  }
+
+  // Resolve references after all framing was performed
+  // TODO: Given that this is standalone enough, maybe move into a separate
+  // function?
+  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator{
+           schema, walker, resolver, default_dialect}) {
+    const auto &subschema{sourcemeta::jsontoolkit::get(schema, pointer)};
+    const auto effective_dialects{
+        find_nearest_bases(base_dialects, pointer, root_dialect)};
+    assert(effective_dialects.size() == 1);
+    const std::optional<std::string> id{
+        sourcemeta::jsontoolkit::id(subschema, resolver,
+                                    effective_dialects.front(),
+                                    pointer.empty() ? default_id : std::nullopt)
+            .get()};
+
+    // TODO: Handle $dynamicRef and $recursiveRef too
+    if (subschema.is_object() && subschema.defines("$ref")) {
+      assert(subschema.at("$ref").is_string());
+      const sourcemeta::jsontoolkit::URI ref{subschema.at("$ref").to_string()};
+      const auto nearest_bases{find_nearest_bases(base_uris, pointer, id)};
+      references.insert(
+          {pointer.concat({"$ref"}),
+           {ReferenceType::Static,
+            nearest_bases.empty() ? ref.recompose()
+                                  : ref.resolve_from(nearest_bases.front())}});
     }
   }
 
