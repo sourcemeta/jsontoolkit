@@ -238,8 +238,6 @@ auto sourcemeta::jsontoolkit::frame(
   }
 
   // Resolve references after all framing was performed
-  // TODO: Given that this is standalone enough, maybe move into a separate
-  // function?
   for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator{
            schema, walker, resolver, default_dialect}) {
     const auto &subschema{sourcemeta::jsontoolkit::get(schema, pointer)};
