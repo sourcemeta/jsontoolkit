@@ -48,10 +48,11 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
   return result;
 }
 
+// TODO: Populate the dynamic frame
 auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::JSON &schema,
     sourcemeta::jsontoolkit::ReferenceFrame &static_frame,
-    sourcemeta::jsontoolkit::ReferenceFrame &dynamic_frame,
+    sourcemeta::jsontoolkit::ReferenceFrame &,
     sourcemeta::jsontoolkit::ReferenceMap &references,
     const sourcemeta::jsontoolkit::SchemaWalker &walker,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
@@ -164,18 +165,9 @@ auto sourcemeta::jsontoolkit::frame(
       const auto relative_anchor_uri{anchor_uri.recompose()};
 
       if (bases.empty()) {
-        if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic &&
-            static_frame.defines(relative_anchor_uri) &&
-            dynamic_frame.defines(relative_anchor_uri)) {
-          continue;
-        }
-
-        // Anchors are always still statically defined
-        static_frame.store(relative_anchor_uri, root_id, "", pointer,
-                           effective_dialects.front());
-        if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic) {
-          dynamic_frame.store(relative_anchor_uri, root_id, "", pointer,
-                              effective_dialects.front());
+        if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
+          static_frame.store(relative_anchor_uri, root_id, "", pointer,
+                             effective_dialects.front());
         }
       } else {
         bool is_first = true;
@@ -186,26 +178,13 @@ auto sourcemeta::jsontoolkit::frame(
             continue;
           }
 
-          if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic &&
-              static_frame.defines(absolute_anchor_uri) &&
-              dynamic_frame.defines(relative_anchor_uri)) {
-            continue;
-          }
+          if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
+            static_frame.store(absolute_anchor_uri, root_id, base_string,
+                               pointer, effective_dialects.front());
 
-          // Anchors are always still statically defined
-          static_frame.store(absolute_anchor_uri, root_id, base_string, pointer,
-                             effective_dialects.front());
-
-          if (root_id.has_value() && root_id.value() == base_string) {
-            static_frame.store(relative_anchor_uri, root_id, "", pointer,
-                               effective_dialects.front());
-          }
-
-          if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic) {
-            if (!dynamic_frame.defines(relative_anchor_uri)) {
-              // We only store the standalone anchor for dynamic frames
-              dynamic_frame.store(relative_anchor_uri, root_id, base_string,
-                                  pointer, effective_dialects.front());
+            if (root_id.has_value() && root_id.value() == base_string) {
+              static_frame.store(relative_anchor_uri, root_id, "", pointer,
+                                 effective_dialects.front());
             }
           }
 
