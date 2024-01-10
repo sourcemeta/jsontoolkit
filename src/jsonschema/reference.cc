@@ -43,8 +43,10 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
     }
   }
 
-  // The empty base is always a base
-  result.push_back({"", sourcemeta::jsontoolkit::empty_pointer});
+  if (result.empty()) {
+    result.push_back({"", sourcemeta::jsontoolkit::empty_pointer});
+  }
+
   return result;
 }
 
