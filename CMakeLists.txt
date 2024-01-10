@@ -4,7 +4,7 @@ project(jsontoolkit VERSION 0.0.1 LANGUAGES CXX
   HOMEPAGE_URL "https://jsontoolkit.sourcemeta.com")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 include(vendor/noa/cmake/noa.cmake)
-include(CompilerOptions)
+include(cmake/CompilerOptions.cmake)
 
 # Options
 option(JSONTOOLKIT_URI "Build the JSON Toolkit URI library" ON)
