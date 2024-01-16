@@ -527,14 +527,14 @@ TEST(JSONSchema_frame, refs_with_id) {
       .wait();
 
   EXPECT_EQ(references.size(), 4);
-  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref",
-                          "https://www.sourcemeta.com/schema#");
-  EXPECT_STATIC_REFERENCE(references, "/properties/bar/$ref",
-                          "https://www.sourcemeta.com/schema#/properties/baz");
-  EXPECT_STATIC_REFERENCE(references, "/properties/qux/$ref",
-                          "https://www.sourcemeta.com/test#");
-  EXPECT_STATIC_REFERENCE(references, "/properties/anchor/$ref",
-                          "https://www.sourcemeta.com/schema#baz");
+  EXPECT_REFERENCE(references, "/properties/foo/$ref",
+                   "https://www.sourcemeta.com/schema#");
+  EXPECT_REFERENCE(references, "/properties/bar/$ref",
+                   "https://www.sourcemeta.com/schema#/properties/baz");
+  EXPECT_REFERENCE(references, "/properties/qux/$ref",
+                   "https://www.sourcemeta.com/test#");
+  EXPECT_REFERENCE(references, "/properties/anchor/$ref",
+                   "https://www.sourcemeta.com/schema#baz");
 }
 
 TEST(JSONSchema_frame, refs_with_no_id) {
@@ -568,10 +568,9 @@ TEST(JSONSchema_frame, refs_with_no_id) {
       .wait();
 
   EXPECT_EQ(references.size(), 4);
-  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref", "#");
-  EXPECT_STATIC_REFERENCE(references, "/properties/bar/$ref",
-                          "#/properties/baz");
-  EXPECT_STATIC_REFERENCE(references, "/properties/qux/$ref",
-                          "https://www.example.com#");
-  EXPECT_STATIC_REFERENCE(references, "/properties/anchor/$ref", "#baz");
+  EXPECT_REFERENCE(references, "/properties/foo/$ref", "#");
+  EXPECT_REFERENCE(references, "/properties/bar/$ref", "#/properties/baz");
+  EXPECT_REFERENCE(references, "/properties/qux/$ref",
+                   "https://www.example.com#");
+  EXPECT_REFERENCE(references, "/properties/anchor/$ref", "#baz");
 }

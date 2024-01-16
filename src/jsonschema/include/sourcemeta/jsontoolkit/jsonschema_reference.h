@@ -21,13 +21,9 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
-/// The reference type
-enum class ReferenceType { Static, Dynamic };
-
-/// @ingroup jsonschema
-/// A JSON Schema reference map is a mapping of a JSON Pointer of a subschema to
-/// a reference type and destination reference URI.
-using ReferenceMap = std::map<Pointer, std::pair<ReferenceType, std::string>>;
+/// A JSON Schema reference map is a mapping of a JSON Pointer
+/// of a subschema to a destination static reference URI.
+using ReferenceMap = std::map<Pointer, std::string>;
 
 // TODO: Support $dynamicRef
 // TODO: Support $recursiveAnchor
@@ -89,25 +85,9 @@ using ReferenceMap = std::map<Pointer, std::pair<ReferenceType, std::string>>;
 /// assert(static_frame.defines("https://www.example.com/foo#/$id"));
 /// assert(static_frame.defines("https://www.example.com/foo#/type"));
 ///
-/// // Anonymous pointers
-/// assert(static_frame.defines(""));
-/// assert(static_frame.defines("#/$id"));
-/// assert(static_frame.defines("#/$schema"));
-/// assert(static_frame.defines("#/items"));
-/// assert(static_frame.defines("#/items/$id"));
-/// assert(static_frame.defines("#/items/type"));
-/// assert(static_frame.defines("#/properties"));
-/// assert(static_frame.defines("#/properties/foo"));
-/// assert(static_frame.defines("#/properties/foo/$anchor"));
-/// assert(static_frame.defines("#/properties/foo/type"));
-/// assert(static_frame.defines("#/properties/bar"));
-/// assert(static_frame.defines("#/properties/bar/$ref"));
-///
 /// // References
 /// assert(references.contains({ "properties", "bar", "$ref" }));
-/// assert(references.at({ "properties", "bar", "$ref" }).first ==
-///   sourcemeta::jsontoolkit::ReferenceType::Static);
-/// assert(references.at({ "properties", "bar", "$ref" }).second ==
+/// assert(references.at({ "properties", "bar", "$ref" }) ==
 ///   "https://www.example.com/schema#/properties/foo");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
