@@ -236,11 +236,10 @@ auto sourcemeta::jsontoolkit::frame(
       assert(subschema.at("$ref").is_string());
       const sourcemeta::jsontoolkit::URI ref{subschema.at("$ref").to_string()};
       const auto nearest_bases{find_nearest_bases(base_uris, pointer, id)};
-      references.insert(
-          {pointer.concat({"$ref"}),
-           {ReferenceType::Static,
-            nearest_bases.empty() ? ref.recompose()
-                                  : ref.resolve_from(nearest_bases.front())}});
+      references.insert({pointer.concat({"$ref"}),
+                         nearest_bases.empty()
+                             ? ref.recompose()
+                             : ref.resolve_from(nearest_bases.front())});
     }
   }
 
