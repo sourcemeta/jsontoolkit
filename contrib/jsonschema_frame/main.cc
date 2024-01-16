@@ -31,24 +31,17 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
   const sourcemeta::jsontoolkit::JSON schema =
       sourcemeta::jsontoolkit::parse(stream);
 
-  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(schema, static_frame, dynamic_frame,
-                                 references,
+  sourcemeta::jsontoolkit::frame(schema, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
   std::cout << "--------------------------------------------------\n";
-  std::cout << "Static frame: " << static_frame.size() << "\n";
+  std::cout << "Static frame: " << frame.size() << "\n";
   std::cout << "--------------------------------------------------\n";
-  print_frame(static_frame);
-
-  std::cout << "--------------------------------------------------\n";
-  std::cout << "Dynamic frame: " << dynamic_frame.size() << "\n";
-  std::cout << "--------------------------------------------------\n";
-  print_frame(dynamic_frame);
+  print_frame(frame);
 
   std::cout << "--------------------------------------------------\n";
   std::cout << "References: " << references.size() << "\n";
