@@ -52,38 +52,37 @@ using ReferenceMap = std::map<Pointer, std::string>;
 ///   }
 /// })JSON");
 ///
-/// sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-/// sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+/// sourcemeta::jsontoolkit::ReferenceFrame frame;
 /// sourcemeta::jsontoolkit::ReferenceMap references;
-/// sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
+/// sourcemeta::jsontoolkit::frame(document, frame,
 /// references,
 ///                                sourcemeta::jsontoolkit::default_schema_walker,
 ///                                sourcemeta::jsontoolkit::official_resolver)
 ///     .wait();
 ///
 /// // IDs
-/// assert(static_frame.defines("https://www.example.com/schema"));
-/// assert(static_frame.defines("https://www.example.com/foo"));
+/// assert(frame.defines("https://www.example.com/schema"));
+/// assert(frame.defines("https://www.example.com/foo"));
 ///
 /// // Anchors
-/// assert(static_frame.defines("https://www.example.com/schema#test"));
+/// assert(frame.defines("https://www.example.com/schema#test"));
 ///
 /// // Root Pointers
-/// assert(static_frame.defines("https://www.example.com/schema#/$id"));
-/// assert(static_frame.defines("https://www.example.com/schema#/$schema"));
-/// assert(static_frame.defines("https://www.example.com/schema#/items"));
-/// assert(static_frame.defines("https://www.example.com/schema#/items/$id"));
-/// assert(static_frame.defines("https://www.example.com/schema#/items/type"));
-/// assert(static_frame.defines("https://www.example.com/schema#/properties"));
-/// assert(static_frame.defines("https://www.example.com/schema#/properties/foo"));
-/// assert(static_frame.defines("https://www.example.com/schema#/properties/foo/$anchor"));
-/// assert(static_frame.defines("https://www.example.com/schema#/properties/foo/type"));
-/// assert(static_frame.defines("https://www.example.com/schema#/properties/bar"));
-/// assert(static_frame.defines("https://www.example.com/schema#/properties/bar/$ref"));
+/// assert(frame.defines("https://www.example.com/schema#/$id"));
+/// assert(frame.defines("https://www.example.com/schema#/$schema"));
+/// assert(frame.defines("https://www.example.com/schema#/items"));
+/// assert(frame.defines("https://www.example.com/schema#/items/$id"));
+/// assert(frame.defines("https://www.example.com/schema#/items/type"));
+/// assert(frame.defines("https://www.example.com/schema#/properties"));
+/// assert(frame.defines("https://www.example.com/schema#/properties/foo"));
+/// assert(frame.defines("https://www.example.com/schema#/properties/foo/$anchor"));
+/// assert(frame.defines("https://www.example.com/schema#/properties/foo/type"));
+/// assert(frame.defines("https://www.example.com/schema#/properties/bar"));
+/// assert(frame.defines("https://www.example.com/schema#/properties/bar/$ref"));
 ///
 /// // Subpointers
-/// assert(static_frame.defines("https://www.example.com/foo#/$id"));
-/// assert(static_frame.defines("https://www.example.com/foo#/type"));
+/// assert(frame.defines("https://www.example.com/foo#/$id"));
+/// assert(frame.defines("https://www.example.com/foo#/type"));
 ///
 /// // References
 /// assert(references.contains({ "properties", "bar", "$ref" }));
@@ -91,8 +90,7 @@ using ReferenceMap = std::map<Pointer, std::string>;
 ///   "https://www.example.com/schema#/properties/foo");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto frame(const JSON &schema, ReferenceFrame &static_frame,
-           ReferenceFrame &dynamic_frame, ReferenceMap &references,
+auto frame(const JSON &schema, ReferenceFrame &frame, ReferenceMap &references,
            const SchemaWalker &walker, const SchemaResolver &resolver,
            const std::optional<std::string> &default_dialect = std::nullopt,
            const std::optional<std::string> &default_id = std::nullopt)

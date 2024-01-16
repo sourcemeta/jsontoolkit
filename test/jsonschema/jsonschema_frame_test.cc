@@ -27,150 +27,140 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
-                                 references,
+  sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 21);
+  EXPECT_EQ(frame.size(), 21);
 
-  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/test"));
-  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/foo"));
-  EXPECT_TRUE(static_frame.defines("https://www.sourcemeta.com/bar"));
+  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/test"));
+  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/foo"));
+  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/bar"));
 
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/test",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/test",
                "https://www.sourcemeta.com/test", "",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/foo",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/foo",
                "https://www.sourcemeta.com/test", "/$defs/foo",
                "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/bar",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/bar",
                "https://www.sourcemeta.com/test", "/$defs/foo/definitions/bar",
                "http://json-schema.org/draft-04/schema#");
 
   // Bases
 
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/test"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test"),
             "https://www.sourcemeta.com/test");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/foo"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo"),
             "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/bar"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/bar"),
             "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/test#/$id"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$id"),
             "https://www.sourcemeta.com/test");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/test#/$schema"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$schema"),
             "https://www.sourcemeta.com/test");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/test#/$defs"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$defs"),
             "https://www.sourcemeta.com/test");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/test#/$defs/foo"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$defs/foo"),
             "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/test#/$defs/foo/id"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$defs/foo/id"),
+            "https://www.sourcemeta.com/foo");
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$defs/foo/$schema"),
             "https://www.sourcemeta.com/foo");
   EXPECT_EQ(
-      static_frame.base("https://www.sourcemeta.com/test#/$defs/foo/$schema"),
+      frame.base("https://www.sourcemeta.com/test#/$defs/foo/definitions"),
       "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(static_frame.base(
-                "https://www.sourcemeta.com/test#/$defs/foo/definitions"),
-            "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(static_frame.base(
-                "https://www.sourcemeta.com/test#/$defs/foo/definitions/bar"),
-            "https://www.sourcemeta.com/bar");
   EXPECT_EQ(
-      static_frame.base(
+      frame.base("https://www.sourcemeta.com/test#/$defs/foo/definitions/bar"),
+      "https://www.sourcemeta.com/bar");
+  EXPECT_EQ(
+      frame.base(
           "https://www.sourcemeta.com/test#/$defs/foo/definitions/bar/id"),
       "https://www.sourcemeta.com/bar");
   EXPECT_EQ(
-      static_frame.base(
+      frame.base(
           "https://www.sourcemeta.com/test#/$defs/foo/definitions/bar/type"),
       "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/foo#/id"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/id"),
             "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/foo#/$schema"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/$schema"),
             "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/foo#/definitions"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/definitions"),
             "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(
-      static_frame.base("https://www.sourcemeta.com/foo#/definitions/bar"),
-      "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(
-      static_frame.base("https://www.sourcemeta.com/foo#/definitions/bar/id"),
-      "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(
-      static_frame.base("https://www.sourcemeta.com/foo#/definitions/bar/type"),
-      "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/bar#/id"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/definitions/bar"),
             "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/bar#/type"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/definitions/bar/id"),
+            "https://www.sourcemeta.com/bar");
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/definitions/bar/type"),
+            "https://www.sourcemeta.com/bar");
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/bar#/id"),
+            "https://www.sourcemeta.com/bar");
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/bar#/type"),
             "https://www.sourcemeta.com/bar");
 
   // JSON Pointers
 
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/test#/$id",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/test#/$id",
                "https://www.sourcemeta.com/test", "/$id",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/test#/$schema",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/test#/$schema",
                "https://www.sourcemeta.com/test", "/$schema",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/test#/$defs",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/test#/$defs",
                "https://www.sourcemeta.com/test", "/$defs",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/test#/$defs/foo",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/test#/$defs/foo",
                "https://www.sourcemeta.com/test", "/$defs/foo",
                "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/test#/$defs/foo/id",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/test#/$defs/foo/id",
                "https://www.sourcemeta.com/test", "/$defs/foo/id",
                "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame,
-               "https://www.sourcemeta.com/test#/$defs/foo/$schema",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/test#/$defs/foo/$schema",
                "https://www.sourcemeta.com/test", "/$defs/foo/$schema",
                "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame,
-               "https://www.sourcemeta.com/test#/$defs/foo/definitions",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/test#/$defs/foo/definitions",
                "https://www.sourcemeta.com/test", "/$defs/foo/definitions",
                "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame,
+  EXPECT_FRAME(frame,
                "https://www.sourcemeta.com/test#/$defs/foo/definitions/bar",
                "https://www.sourcemeta.com/test", "/$defs/foo/definitions/bar",
                "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame,
-               "https://www.sourcemeta.com/test#/$defs/foo/definitions/bar/id",
-               "https://www.sourcemeta.com/test",
-               "/$defs/foo/definitions/bar/id",
-               "http://json-schema.org/draft-04/schema#");
   EXPECT_FRAME(
-      static_frame,
-      "https://www.sourcemeta.com/test#/$defs/foo/definitions/bar/type",
-      "https://www.sourcemeta.com/test", "/$defs/foo/definitions/bar/type",
-      "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/foo#/id",
-               "https://www.sourcemeta.com/test", "/$defs/foo/id",
-               "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/foo#/$schema",
-               "https://www.sourcemeta.com/test", "/$defs/foo/$schema",
-               "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/foo#/definitions",
-               "https://www.sourcemeta.com/test", "/$defs/foo/definitions",
-               "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/foo#/definitions/bar",
-               "https://www.sourcemeta.com/test", "/$defs/foo/definitions/bar",
-               "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(
-      static_frame, "https://www.sourcemeta.com/foo#/definitions/bar/id",
+      frame, "https://www.sourcemeta.com/test#/$defs/foo/definitions/bar/id",
       "https://www.sourcemeta.com/test", "/$defs/foo/definitions/bar/id",
       "http://json-schema.org/draft-04/schema#");
   EXPECT_FRAME(
-      static_frame, "https://www.sourcemeta.com/foo#/definitions/bar/type",
+      frame, "https://www.sourcemeta.com/test#/$defs/foo/definitions/bar/type",
       "https://www.sourcemeta.com/test", "/$defs/foo/definitions/bar/type",
       "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/bar#/id",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/foo#/id",
+               "https://www.sourcemeta.com/test", "/$defs/foo/id",
+               "http://json-schema.org/draft-04/schema#");
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/foo#/$schema",
+               "https://www.sourcemeta.com/test", "/$defs/foo/$schema",
+               "http://json-schema.org/draft-04/schema#");
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/foo#/definitions",
+               "https://www.sourcemeta.com/test", "/$defs/foo/definitions",
+               "http://json-schema.org/draft-04/schema#");
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/foo#/definitions/bar",
+               "https://www.sourcemeta.com/test", "/$defs/foo/definitions/bar",
+               "http://json-schema.org/draft-04/schema#");
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/foo#/definitions/bar/id",
                "https://www.sourcemeta.com/test",
                "/$defs/foo/definitions/bar/id",
                "http://json-schema.org/draft-04/schema#");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/bar#/type",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/foo#/definitions/bar/type",
+               "https://www.sourcemeta.com/test",
+               "/$defs/foo/definitions/bar/type",
+               "http://json-schema.org/draft-04/schema#");
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/bar#/id",
+               "https://www.sourcemeta.com/test",
+               "/$defs/foo/definitions/bar/id",
+               "http://json-schema.org/draft-04/schema#");
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/bar#/type",
                "https://www.sourcemeta.com/test",
                "/$defs/foo/definitions/bar/type",
                "http://json-schema.org/draft-04/schema#");
@@ -178,10 +168,6 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
   // References
 
   EXPECT_TRUE(references.empty());
-
-  // Dynamic frame
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, no_id) {
@@ -200,52 +186,44 @@ TEST(JSONSchema_frame, no_id) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
-                                 references,
+  sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 11);
+  EXPECT_EQ(frame.size(), 11);
 
-  EXPECT_ANONYMOUS_FRAME(static_frame, "", "",
+  EXPECT_ANONYMOUS_FRAME(frame, "", "",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "#/$schema", "/$schema",
+  EXPECT_ANONYMOUS_FRAME(frame, "#/$schema", "/$schema",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties", "/properties",
+  EXPECT_ANONYMOUS_FRAME(frame, "#/properties", "/properties",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/foo", "/properties/foo",
+  EXPECT_ANONYMOUS_FRAME(frame, "#/properties/foo", "/properties/foo",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/foo/$anchor",
+  EXPECT_ANONYMOUS_FRAME(frame, "#/properties/foo/$anchor",
                          "/properties/foo/$anchor",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "#/properties/foo/type",
-                         "/properties/foo/type",
+  EXPECT_ANONYMOUS_FRAME(frame, "#/properties/foo/type", "/properties/foo/type",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "#foo", "/properties/foo",
+  EXPECT_ANONYMOUS_FRAME(frame, "#foo", "/properties/foo",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "https://example.com", "/properties/bar",
+  EXPECT_ANONYMOUS_FRAME(frame, "https://example.com", "/properties/bar",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "https://example.com#bar",
-                         "/properties/bar",
+  EXPECT_ANONYMOUS_FRAME(frame, "https://example.com#bar", "/properties/bar",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "https://example.com#/$id",
+  EXPECT_ANONYMOUS_FRAME(frame, "https://example.com#/$id",
                          "/properties/bar/$id",
                          "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_ANONYMOUS_FRAME(static_frame, "https://example.com#/$anchor",
+  EXPECT_ANONYMOUS_FRAME(frame, "https://example.com#/$anchor",
                          "/properties/bar/$anchor",
                          "https://json-schema.org/draft/2020-12/schema");
 
   // References
 
   EXPECT_TRUE(references.empty());
-
-  // Dynamic frame
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, no_id_with_default) {
@@ -255,49 +233,43 @@ TEST(JSONSchema_frame, no_id_with_default) {
     "items": { "type": "string" }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
-                                 references,
+  sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver,
                                  "https://json-schema.org/draft/2020-12/schema",
                                  "https://www.sourcemeta.com/schema")
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 4);
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/schema",
+  EXPECT_EQ(frame.size(), 4);
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/schema",
                "https://www.sourcemeta.com/schema", "",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/schema#/$schema",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/schema#/$schema",
                "https://www.sourcemeta.com/schema", "/$schema",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/schema#/items",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/schema#/items",
                "https://www.sourcemeta.com/schema", "/items",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.sourcemeta.com/schema#/items/type",
+  EXPECT_FRAME(frame, "https://www.sourcemeta.com/schema#/items/type",
                "https://www.sourcemeta.com/schema", "/items/type",
                "https://json-schema.org/draft/2020-12/schema");
 
   // Bases
 
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/schema"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/schema"),
             "https://www.sourcemeta.com/schema");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/schema#/$schema"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/schema#/$schema"),
             "https://www.sourcemeta.com/schema");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/schema#/items"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/schema#/items"),
             "https://www.sourcemeta.com/schema");
-  EXPECT_EQ(static_frame.base("https://www.sourcemeta.com/schema#/items/type"),
+  EXPECT_EQ(frame.base("https://www.sourcemeta.com/schema#/items/type"),
             "https://www.sourcemeta.com/schema");
 
   // References
 
   EXPECT_TRUE(references.empty());
-
-  // Dynamic frame
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, anchor_on_absolute_subid) {
@@ -313,91 +285,78 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
-                                 references,
+  sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(static_frame.size(), 12);
-  EXPECT_FRAME(static_frame, "https://www.example.com",
-               "https://www.example.com", "",
+  EXPECT_EQ(frame.size(), 12);
+  EXPECT_FRAME(frame, "https://www.example.com", "https://www.example.com", "",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.example.org",
-               "https://www.example.com", "/items",
-               "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.example.org#foo",
-               "https://www.example.com", "/items/items",
-               "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_FRAME(frame, "https://www.example.org", "https://www.example.com",
+               "/items", "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_FRAME(frame, "https://www.example.org#foo", "https://www.example.com",
+               "/items/items", "https://json-schema.org/draft/2020-12/schema");
 
   // JSON Pointers
 
-  EXPECT_FRAME(static_frame, "https://www.example.com#/$id",
-               "https://www.example.com", "/$id",
-               "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.example.com#/$schema",
+  EXPECT_FRAME(frame, "https://www.example.com#/$id", "https://www.example.com",
+               "/$id", "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_FRAME(frame, "https://www.example.com#/$schema",
                "https://www.example.com", "/$schema",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.example.com#/items",
+  EXPECT_FRAME(frame, "https://www.example.com#/items",
                "https://www.example.com", "/items",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.example.com#/items/$id",
+  EXPECT_FRAME(frame, "https://www.example.com#/items/$id",
                "https://www.example.com", "/items/$id",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.example.com#/items/items",
+  EXPECT_FRAME(frame, "https://www.example.com#/items/items",
                "https://www.example.com", "/items/items",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.example.com#/items/items/$anchor",
+  EXPECT_FRAME(frame, "https://www.example.com#/items/items/$anchor",
                "https://www.example.com", "/items/items/$anchor",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.example.org#/$id",
-               "https://www.example.com", "/items/$id",
-               "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.example.org#/items",
+  EXPECT_FRAME(frame, "https://www.example.org#/$id", "https://www.example.com",
+               "/items/$id", "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_FRAME(frame, "https://www.example.org#/items",
                "https://www.example.com", "/items/items",
                "https://json-schema.org/draft/2020-12/schema");
-  EXPECT_FRAME(static_frame, "https://www.example.org#/items/$anchor",
+  EXPECT_FRAME(frame, "https://www.example.org#/items/$anchor",
                "https://www.example.com", "/items/items/$anchor",
                "https://json-schema.org/draft/2020-12/schema");
 
   // Bases
 
-  EXPECT_EQ(static_frame.base("https://www.example.com"),
+  EXPECT_EQ(frame.base("https://www.example.com"), "https://www.example.com");
+  EXPECT_EQ(frame.base("https://www.example.com#/$id"),
             "https://www.example.com");
-  EXPECT_EQ(static_frame.base("https://www.example.com#/$id"),
-            "https://www.example.com");
-  EXPECT_EQ(static_frame.base("https://www.example.com#/$schema"),
+  EXPECT_EQ(frame.base("https://www.example.com#/$schema"),
             "https://www.example.com");
 
-  EXPECT_EQ(static_frame.base("https://www.example.org"),
+  EXPECT_EQ(frame.base("https://www.example.org"), "https://www.example.org");
+  EXPECT_EQ(frame.base("https://www.example.org#foo"),
             "https://www.example.org");
-  EXPECT_EQ(static_frame.base("https://www.example.org#foo"),
+  EXPECT_EQ(frame.base("https://www.example.com#/items"),
             "https://www.example.org");
-  EXPECT_EQ(static_frame.base("https://www.example.com#/items"),
+  EXPECT_EQ(frame.base("https://www.example.com#/items/$id"),
             "https://www.example.org");
-  EXPECT_EQ(static_frame.base("https://www.example.com#/items/$id"),
+  EXPECT_EQ(frame.base("https://www.example.com#/items/items"),
             "https://www.example.org");
-  EXPECT_EQ(static_frame.base("https://www.example.com#/items/items"),
+  EXPECT_EQ(frame.base("https://www.example.com#/items/items/$anchor"),
             "https://www.example.org");
-  EXPECT_EQ(static_frame.base("https://www.example.com#/items/items/$anchor"),
+  EXPECT_EQ(frame.base("https://www.example.org#/$id"),
             "https://www.example.org");
-  EXPECT_EQ(static_frame.base("https://www.example.org#/$id"),
+  EXPECT_EQ(frame.base("https://www.example.org#/items"),
             "https://www.example.org");
-  EXPECT_EQ(static_frame.base("https://www.example.org#/items"),
-            "https://www.example.org");
-  EXPECT_EQ(static_frame.base("https://www.example.org#/items/$anchor"),
+  EXPECT_EQ(frame.base("https://www.example.org#/items/$anchor"),
             "https://www.example.org");
 
   // References
 
   EXPECT_TRUE(references.empty());
-
-  // Dynamic frame
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, uri_iterators) {
@@ -412,21 +371,19 @@ TEST(JSONSchema_frame, uri_iterators) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
-                                 references,
+  sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
   std::set<std::string> uris;
-  for (const auto &uri : static_frame) {
+  for (const auto &uri : frame) {
     uris.insert(uri);
   }
 
-  EXPECT_EQ(static_frame.size(), 12);
+  EXPECT_EQ(frame.size(), 12);
   EXPECT_EQ(uris.size(), 12);
 
   EXPECT_TRUE(uris.contains("https://www.sourcemeta.com/schema"));
@@ -446,10 +403,6 @@ TEST(JSONSchema_frame, uri_iterators) {
   // References
 
   EXPECT_TRUE(references.empty());
-
-  // Dynamic frame
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, reference_frame_uri_canonicalize) {
@@ -479,20 +432,14 @@ TEST(JSONSchema_frame, no_refs) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
-                                 references,
+  sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
   EXPECT_TRUE(references.empty());
-
-  // Dynamic frame
-
-  EXPECT_TRUE(dynamic_frame.empty());
 }
 
 TEST(JSONSchema_frame, refs_with_id) {
@@ -517,11 +464,9 @@ TEST(JSONSchema_frame, refs_with_id) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
-                                 references,
+  sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
@@ -558,11 +503,9 @@ TEST(JSONSchema_frame, refs_with_no_id) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame static_frame;
-  sourcemeta::jsontoolkit::ReferenceFrame dynamic_frame;
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(document, static_frame, dynamic_frame,
-                                 references,
+  sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
