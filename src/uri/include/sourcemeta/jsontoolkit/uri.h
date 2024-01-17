@@ -186,6 +186,8 @@ public:
   [[nodiscard]] auto recompose_without_fragment() const
       -> std::optional<std::string>;
 
+  // TODO: Make this method mutate the URI instance itself, and return
+  // "this" for chaining. This pattern would simplify a lot of the code.
   /// Recompose and canonicalize a URI. For example:
   ///
   /// ```cpp
@@ -197,6 +199,8 @@ public:
   /// ```
   [[nodiscard]] auto canonicalize() const -> std::string;
 
+  // TODO: Make this method mutate the URI instance itself, and return
+  // "this" for chaining. This pattern would simplify a lot of the code.
   /// Resolve a relative URI against a base URI as established by RFC 3986. For
   /// example:
   ///
