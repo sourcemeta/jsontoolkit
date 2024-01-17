@@ -232,6 +232,7 @@ auto sourcemeta::jsontoolkit::frame(
     if (subschema.is_object()) {
       const auto nearest_bases{find_nearest_bases(base_uris, pointer, id)};
 
+      // TODO: Check that static destinations actually exist in the frame
       if (subschema.defines("$ref")) {
         assert(subschema.at("$ref").is_string());
         const sourcemeta::jsontoolkit::URI ref{
