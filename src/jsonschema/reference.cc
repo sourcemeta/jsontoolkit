@@ -50,6 +50,16 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
   return result;
 }
 
+static auto fragment_string(const sourcemeta::jsontoolkit::URI uri)
+    -> std::optional<std::string> {
+  const auto fragment{uri.fragment()};
+  if (fragment.has_value()) {
+    return std::string{fragment.value()};
+  }
+
+  return std::nullopt;
+}
+
 auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::JSON &schema,
     sourcemeta::jsontoolkit::ReferenceFrame &frame,
@@ -237,21 +247,32 @@ auto sourcemeta::jsontoolkit::frame(
         assert(subschema.at("$ref").is_string());
         const sourcemeta::jsontoolkit::URI ref{
             subschema.at("$ref").to_string()};
-        references.insert({{pointer.concat({"$ref"}), ReferenceType::Static},
-                           nearest_bases.empty()
-                               ? ref.recompose()
-                               : ref.resolve_from(nearest_bases.front())});
+        const auto destination{nearest_bases.empty()
+                                   ? ref.recompose()
+                                   : ref.resolve_from(nearest_bases.front())};
+        // TODO: We shouldn't need to reparse if the URI handled mutations
+        const sourcemeta::jsontoolkit::URI destination_uri{destination};
+        references.insert(
+            {{pointer.concat({"$ref"}), ReferenceType::Static},
+             {destination, destination_uri.recompose_without_fragment(),
+              fragment_string(destination_uri)}});
       }
 
+      // TODO: Check for the 2020-12 core vocabulary first
       if (subschema.defines("$dynamicRef")) {
         assert(subschema.at("$dynamicRef").is_string());
         const sourcemeta::jsontoolkit::URI ref{
             subschema.at("$dynamicRef").to_string()};
         // TODO: Check bookending requirement
+        const auto destination{nearest_bases.empty()
+                                   ? ref.recompose()
+                                   : ref.resolve_from(nearest_bases.front())};
+        // TODO: We shouldn't need to reparse if the URI handled mutations
+        const sourcemeta::jsontoolkit::URI destination_uri{destination};
         references.insert(
             {{pointer.concat({"$dynamicRef"}), ReferenceType::Dynamic},
-             nearest_bases.empty() ? ref.recompose()
-                                   : ref.resolve_from(nearest_bases.front())});
+             {destination, destination_uri.recompose_without_fragment(),
+              fragment_string(destination_uri)}});
       }
     }
   }
