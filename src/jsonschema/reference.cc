@@ -50,7 +50,6 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
   return result;
 }
 
-// TODO: Populate the dynamic frame
 auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::JSON &schema,
     sourcemeta::jsontoolkit::ReferenceFrame &frame,
@@ -234,10 +233,11 @@ auto sourcemeta::jsontoolkit::frame(
       assert(subschema.at("$ref").is_string());
       const sourcemeta::jsontoolkit::URI ref{subschema.at("$ref").to_string()};
       const auto nearest_bases{find_nearest_bases(base_uris, pointer, id)};
-      references.insert({pointer.concat({"$ref"}),
-                         nearest_bases.empty()
-                             ? ref.recompose()
-                             : ref.resolve_from(nearest_bases.front())});
+      references.insert(
+          {pointer.concat({"$ref"}),
+           {ReferenceType::Static,
+            nearest_bases.empty() ? ref.recompose()
+                                  : ref.resolve_from(nearest_bases.front())}});
     }
   }
 

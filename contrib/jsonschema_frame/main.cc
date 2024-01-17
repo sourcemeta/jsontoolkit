@@ -49,7 +49,7 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
   for (const auto &[pointer, destination] : references) {
     std::cout << "(STATIC) ";
     sourcemeta::jsontoolkit::stringify(pointer, std::cout);
-    std::cout << "\n         --> " << destination << "\n";
+    std::cout << "\n         --> " << destination.second << "\n";
   }
 
   return EXIT_SUCCESS;
