@@ -9,6 +9,7 @@
 
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema_reference_frame.h>
+#include <sourcemeta/jsontoolkit/jsonschema_reference_type.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
@@ -20,10 +21,6 @@
 #include <utility>  // std::pair
 
 namespace sourcemeta::jsontoolkit {
-
-/// @ingroup jsonschema
-/// The reference type
-enum class ReferenceType { Static, Dynamic };
 
 // TODO: Encapsulate this behind a class to make sure we
 // can keep a stable API even if changing the underlying map.
