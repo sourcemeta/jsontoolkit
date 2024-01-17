@@ -10,6 +10,7 @@ add_executable(sourcemeta_jsontoolkit_uri_unit
   uri_is_urn_test.cc
   uri_is_tag_test.cc
   uri_recompose_test.cc
+  uri_recompose_without_fragment_test.cc
   uri_canonicalize_test.cc
   uri_resolve_from_test.cc
   uri_escape_test.cc

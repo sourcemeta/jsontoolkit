@@ -148,6 +148,47 @@ auto URI::recompose() const -> std::string {
   return uri_to_string(&this->internal->uri);
 }
 
+auto URI::recompose_without_fragment() const -> std::string {
+  std::ostringstream result;
+
+  // Scheme
+  const auto result_scheme{this->scheme()};
+  if (result_scheme.has_value()) {
+    result << result_scheme.value();
+    if (this->is_urn() || this->is_tag()) {
+      result << ":";
+    } else {
+      result << "://";
+    }
+  }
+
+  // Host
+  const auto result_host{this->host()};
+  if (result_host.has_value()) {
+    result << result_host.value();
+  }
+
+  // Port
+  const auto result_port{this->port()};
+  if (result_port.has_value()) {
+    result << ':' << result_port.value();
+  }
+
+  // Path
+  const auto result_path{this->path()};
+  if (result_path.has_value()) {
+    result << result_path.value();
+  }
+
+  // Query
+  const auto result_query{this->query()};
+  if (result_query.has_value()) {
+    result << '?' << result_query.value();
+  }
+
+  return result.str();
+}
+
 auto URI::canonicalize() const -> std::string {
   std::ostringstream result;
 
