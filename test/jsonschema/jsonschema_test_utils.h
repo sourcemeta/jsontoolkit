@@ -4,20 +4,22 @@
 #define TO_POINTER(pointer_string)                                             \
   sourcemeta::jsontoolkit::to_pointer((pointer_string))
 
-#define EXPECT_FRAME(frame, reference, root_id, expected_pointer,              \
-                     expected_dialect)                                         \
+#define EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,       \
+                            expected_dialect)                                  \
   EXPECT_TRUE((frame).defines((reference)));                                   \
   EXPECT_TRUE((frame).root((reference)).has_value());                          \
   EXPECT_EQ((frame).root((reference)).value(), (root_id));                     \
   EXPECT_EQ((frame).pointer((reference)), TO_POINTER(expected_pointer));       \
-  EXPECT_EQ((frame).dialect((reference)), (expected_dialect));
+  EXPECT_EQ((frame).dialect((reference)), (expected_dialect));                 \
+  EXPECT_TRUE((frame).is_static((reference)));
 
-#define EXPECT_ANONYMOUS_FRAME(frame, reference, expected_pointer,             \
-                               expected_dialect)                               \
+#define EXPECT_ANONYMOUS_FRAME_STATIC(frame, reference, expected_pointer,      \
+                                      expected_dialect)                        \
   EXPECT_TRUE((frame).defines((reference)));                                   \
   EXPECT_FALSE((frame).root((reference)).has_value());                         \
   EXPECT_EQ((frame).pointer((reference)), TO_POINTER(expected_pointer));       \
-  EXPECT_EQ((frame).dialect((reference)), (expected_dialect));
+  EXPECT_EQ((frame).dialect((reference)), (expected_dialect));                 \
+  EXPECT_TRUE((frame).is_static((reference)));
 
 #define EXPECT_REFERENCE(references, expected_type, expected_pointer,          \
                          expected_uri, expected_base, expected_fragment)       \

@@ -8,6 +8,7 @@
 #endif
 
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
+#include <sourcemeta/jsontoolkit/jsonschema_reference_type.h>
 
 #include <map>      // std::map
 #include <optional> // std::optional
@@ -42,6 +43,12 @@ public:
   /// Check whether the reference frame defines a given URI
   auto defines(const std::string &uri) const -> bool;
 
+  /// Check whether the reference frame is static
+  auto is_static(const std::string &uri) const -> bool;
+
+  /// Check whether the reference frame is dynamic
+  auto is_dynamic(const std::string &uri) const -> bool;
+
   /// Check the number of entries stored in the reference frame
   auto size() const -> std::size_t;
 
@@ -49,9 +56,10 @@ public:
   auto empty() const -> bool;
 
   /// Store a new entry in the reference frame
-  auto store(const std::string &uri, const std::optional<std::string> &root,
-             const std::string &base, const Pointer &pointer_from_root,
-             const std::string &dialect) -> void;
+  auto store(const std::string &uri, const ReferenceType type,
+             const std::optional<std::string> &root, const std::string &base,
+             const Pointer &pointer_from_root, const std::string &dialect)
+      -> void;
 
   /// Get a begin iterator on the URIs registered in the static frame
   inline auto begin() const -> decltype(auto) { return this->keys.begin(); }
@@ -67,7 +75,7 @@ private:
 #pragma warning(disable : 4251)
 #endif
   std::map<std::string, std::tuple<std::optional<std::string>, std::string,
-                                   Pointer, std::string>>
+                                   Pointer, std::string, ReferenceType>>
       data;
   // Keep a mirror of the map keys for iteration purposes
   std::vector<std::string> keys;
