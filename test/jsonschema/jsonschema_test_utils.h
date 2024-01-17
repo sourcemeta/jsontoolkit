@@ -22,14 +22,18 @@
 
 #define EXPECT_REFERENCE(references, expected_type, expected_pointer,          \
                          expected_uri)                                         \
-  EXPECT_TRUE((references).contains(TO_POINTER(expected_pointer)));            \
-  EXPECT_EQ((references).at(TO_POINTER(expected_pointer)).first,               \
-            (expected_type));                                                  \
-  EXPECT_EQ((references).at(TO_POINTER(expected_pointer)).second,              \
+  EXPECT_TRUE(                                                                 \
+      (references).contains({TO_POINTER(expected_pointer), expected_type}));   \
+  EXPECT_EQ((references).at({TO_POINTER(expected_pointer), expected_type}),    \
             (expected_uri));
 
 #define EXPECT_STATIC_REFERENCE(references, expected_pointer, expected_uri)    \
   EXPECT_REFERENCE(references, sourcemeta::jsontoolkit::ReferenceType::Static, \
+                   expected_pointer, expected_uri)
+
+#define EXPECT_DYNAMIC_REFERENCE(references, expected_pointer, expected_uri)   \
+  EXPECT_REFERENCE(references,                                                 \
+                   sourcemeta::jsontoolkit::ReferenceType::Dynamic,            \
                    expected_pointer, expected_uri)
 
 #endif

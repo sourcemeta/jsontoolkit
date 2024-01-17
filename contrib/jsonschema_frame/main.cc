@@ -47,9 +47,14 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
   std::cout << "References: " << references.size() << "\n";
   std::cout << "--------------------------------------------------\n";
   for (const auto &[pointer, destination] : references) {
-    std::cout << "(STATIC) ";
-    sourcemeta::jsontoolkit::stringify(pointer, std::cout);
-    std::cout << "\n         --> " << destination.second << "\n";
+    if (pointer.second == sourcemeta::jsontoolkit::ReferenceType::Dynamic) {
+      std::cout << "(DYNAMIC) ";
+    } else {
+      std::cout << "(STATIC) ";
+    }
+
+    sourcemeta::jsontoolkit::stringify(pointer.first, std::cout);
+    std::cout << "\n         --> " << destination << "\n";
   }
 
   return EXIT_SUCCESS;
