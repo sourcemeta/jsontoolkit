@@ -228,16 +228,30 @@ auto sourcemeta::jsontoolkit::frame(
                                     pointer.empty() ? default_id : std::nullopt)
             .get()};
 
-    // TODO: Handle $dynamicRef and $recursiveRef too
-    if (subschema.is_object() && subschema.defines("$ref")) {
-      assert(subschema.at("$ref").is_string());
-      const sourcemeta::jsontoolkit::URI ref{subschema.at("$ref").to_string()};
+    // TODO: Handle $recursiveRef too
+    if (subschema.is_object()) {
       const auto nearest_bases{find_nearest_bases(base_uris, pointer, id)};
-      references.insert(
-          {pointer.concat({"$ref"}),
-           {ReferenceType::Static,
-            nearest_bases.empty() ? ref.recompose()
-                                  : ref.resolve_from(nearest_bases.front())}});
+
+      if (subschema.defines("$ref")) {
+        assert(subschema.at("$ref").is_string());
+        const sourcemeta::jsontoolkit::URI ref{
+            subschema.at("$ref").to_string()};
+        references.insert({{pointer.concat({"$ref"}), ReferenceType::Static},
+                           nearest_bases.empty()
+                               ? ref.recompose()
+                               : ref.resolve_from(nearest_bases.front())});
+      }
+
+      if (subschema.defines("$dynamicRef")) {
+        assert(subschema.at("$dynamicRef").is_string());
+        const sourcemeta::jsontoolkit::URI ref{
+            subschema.at("$dynamicRef").to_string()};
+        // TODO: Check bookending requirement
+        references.insert(
+            {{pointer.concat({"$dynamicRef"}), ReferenceType::Dynamic},
+             nearest_bases.empty() ? ref.recompose()
+                                   : ref.resolve_from(nearest_bases.front())});
+      }
     }
   }
 

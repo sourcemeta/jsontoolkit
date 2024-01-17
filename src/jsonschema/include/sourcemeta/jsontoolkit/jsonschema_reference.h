@@ -27,9 +27,11 @@ enum class ReferenceType { Static, Dynamic };
 /// @ingroup jsonschema
 /// A JSON Schema reference map is a mapping of a JSON Pointer
 /// of a subschema to a destination static reference URI.
-using ReferenceMap = std::map<Pointer, std::pair<ReferenceType, std::string>>;
+/// The reference type is part of the key as it is possible to
+/// have a static and a dynamic reference to the same location
+/// on the same schema object.
+using ReferenceMap = std::map<std::pair<Pointer, ReferenceType>, std::string>;
 
-// TODO: Support $dynamicRef
 // TODO: Support $recursiveAnchor
 // TODO: Support $recursiveRef
 
@@ -89,9 +91,11 @@ using ReferenceMap = std::map<Pointer, std::pair<ReferenceType, std::string>>;
 /// assert(frame.defines("https://www.example.com/foo#/type"));
 ///
 /// // References
-/// assert(references.contains({ "properties", "bar", "$ref" }));
-/// assert(references.at({ "properties", "bar", "$ref" }) ==
-///   "https://www.example.com/schema#/properties/foo");
+/// assert(references.contains({{ "properties", "bar", "$ref" },
+///   sourcemeta::jsontoolkit::ReferenceType::Static}));
+/// assert(references.at({{ "properties", "bar", "$ref" },
+///   sourcemeta::jsontoolkit::ReferenceType::Static}) ==
+///     "https://www.example.com/schema#/properties/foo");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto frame(const JSON &schema, ReferenceFrame &frame, ReferenceMap &references,

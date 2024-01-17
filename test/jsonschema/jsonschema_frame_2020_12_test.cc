@@ -545,3 +545,141 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_different) {
 
   EXPECT_TRUE(references.empty());
 }
+
+TEST(JSONSchema_frame_2020_12, dynamic_refs_with_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": { "$dynamicRef": "#" },
+      "bar": { "$dynamicRef": "#/properties/baz" },
+      "baz": {
+        "$anchor": "baz",
+        "type": "string"
+      },
+      "qux": {
+        "$id": "test",
+        "$dynamicRef": "#"
+      },
+      "anchor": {
+        "$dynamicRef": "#baz"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(references.size(), 4);
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef",
+                           "https://www.sourcemeta.com/schema#");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/bar/$dynamicRef",
+                           "https://www.sourcemeta.com/schema#/properties/baz");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/qux/$dynamicRef",
+                           "https://www.sourcemeta.com/test#");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/anchor/$dynamicRef",
+                           "https://www.sourcemeta.com/schema#baz");
+}
+
+TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": { "$dynamicRef": "#" },
+      "bar": { "$dynamicRef": "#/properties/baz" },
+      "baz": {
+        "$anchor": "baz",
+        "type": "string"
+      },
+      "qux": {
+        "$id": "https://www.example.com",
+        "$dynamicRef": "#"
+      },
+      "anchor": {
+        "$dynamicRef": "#baz"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(references.size(), 4);
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef", "#");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/bar/$dynamicRef",
+                           "#/properties/baz");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/qux/$dynamicRef",
+                           "https://www.example.com#");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/anchor/$dynamicRef",
+                           "#baz");
+}
+
+TEST(JSONSchema_frame_2020_12, different_dynamic_and_refs_in_same_object) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": {
+        "$ref": "#/properties/bar",
+        "$dynamicRef": "#"
+      },
+      "bar": {
+        "type": "string"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(references.size(), 2);
+  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref",
+                          "https://www.sourcemeta.com/schema#/properties/bar");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef",
+                           "https://www.sourcemeta.com/schema#");
+}
+
+TEST(JSONSchema_frame_2020_12, same_dynamic_and_refs_in_same_object) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": {
+        "$ref": "#/properties/bar",
+        "$dynamicRef": "#/properties/bar"
+      },
+      "bar": {
+        "type": "string"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(references.size(), 2);
+  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref",
+                          "https://www.sourcemeta.com/schema#/properties/bar");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef",
+                           "https://www.sourcemeta.com/schema#/properties/bar");
+}
