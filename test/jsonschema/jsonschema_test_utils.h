@@ -2,8 +2,7 @@
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_TEST_UTILS_H_
 
 #define TO_POINTER(pointer_string)                                             \
-  sourcemeta::jsontoolkit::to_pointer(                                         \
-      sourcemeta::jsontoolkit::JSON((pointer_string)))
+  sourcemeta::jsontoolkit::to_pointer((pointer_string))
 
 #define EXPECT_FRAME(frame, reference, root_id, expected_pointer,              \
                      expected_dialect)                                         \
