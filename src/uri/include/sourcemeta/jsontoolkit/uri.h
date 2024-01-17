@@ -169,6 +169,19 @@ public:
   /// ```
   [[nodiscard]] auto recompose() const -> std::string;
 
+  /// Recompose a URI as established by RFC 3986, but without including the
+  /// fragment component. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI
+  ///   uri{"https://www.sourcemeta.com/foo#bar"};
+  /// assert(uri.recompose_without_fragment() == "https://sourcemeta.com/foo");
+  /// ```
+  [[nodiscard]] auto recompose_without_fragment() const -> std::string;
+
   /// Recompose and canonicalize a URI. For example:
   ///
   /// ```cpp
