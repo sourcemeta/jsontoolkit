@@ -21,9 +21,13 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
+/// The reference type
+enum class ReferenceType { Static, Dynamic };
+
+/// @ingroup jsonschema
 /// A JSON Schema reference map is a mapping of a JSON Pointer
 /// of a subschema to a destination static reference URI.
-using ReferenceMap = std::map<Pointer, std::string>;
+using ReferenceMap = std::map<Pointer, std::pair<ReferenceType, std::string>>;
 
 // TODO: Support $dynamicRef
 // TODO: Support $recursiveAnchor
