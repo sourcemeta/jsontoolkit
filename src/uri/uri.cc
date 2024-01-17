@@ -148,7 +148,7 @@ auto URI::recompose() const -> std::string {
   return uri_to_string(&this->internal->uri);
 }
 
-auto URI::recompose_without_fragment() const -> std::string {
+auto URI::recompose_without_fragment() const -> std::optional<std::string> {
   std::ostringstream result;
 
   // Scheme
@@ -184,6 +184,10 @@ auto URI::recompose_without_fragment() const -> std::string {
   const auto result_query{this->query()};
   if (result_query.has_value()) {
     result << '?' << result_query.value();
+  }
+
+  if (result.tellp() == 0) {
+    return std::nullopt;
   }
 
   return result.str();
