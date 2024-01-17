@@ -16,6 +16,7 @@
 #include <map>      // std::map
 #include <optional> // std::optional
 #include <string>   // std::string
+#include <tuple>    // std::tuple
 #include <utility>  // std::pair
 
 namespace sourcemeta::jsontoolkit {
@@ -24,13 +25,20 @@ namespace sourcemeta::jsontoolkit {
 /// The reference type
 enum class ReferenceType { Static, Dynamic };
 
+// TODO: Encapsulate this behind a class to make sure we
+// can keep a stable API even if changing the underlying map.
 /// @ingroup jsonschema
 /// A JSON Schema reference map is a mapping of a JSON Pointer
 /// of a subschema to a destination static reference URI.
+/// For convenient, the value consists of the URI on its entirety,
+/// but also broken down by its potential fragment component.
 /// The reference type is part of the key as it is possible to
 /// have a static and a dynamic reference to the same location
 /// on the same schema object.
-using ReferenceMap = std::map<std::pair<Pointer, ReferenceType>, std::string>;
+using ReferenceMap =
+    std::map<std::pair<Pointer, ReferenceType>,
+             std::tuple<std::string, std::optional<std::string>,
+                        std::optional<std::string>>>;
 
 // TODO: Support $recursiveAnchor
 // TODO: Support $recursiveRef

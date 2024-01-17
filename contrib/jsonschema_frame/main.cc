@@ -54,7 +54,17 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
     }
 
     sourcemeta::jsontoolkit::stringify(pointer.first, std::cout);
-    std::cout << "\n         --> " << destination << "\n";
+    std::cout << "\n         --> " << std::get<0>(destination) << "\n";
+
+    if (std::get<1>(destination).has_value()) {
+      std::cout << "\n         --> (without fragment) "
+                << std::get<1>(destination).value() << "\n";
+    }
+
+    if (std::get<2>(destination).has_value()) {
+      std::cout << "\n         --> (fragment) "
+                << std::get<2>(destination).value() << "\n";
+    }
   }
 
   return EXIT_SUCCESS;

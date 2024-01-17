@@ -21,19 +21,32 @@
   EXPECT_EQ((frame).dialect((reference)), (expected_dialect));
 
 #define EXPECT_REFERENCE(references, expected_type, expected_pointer,          \
-                         expected_uri)                                         \
+                         expected_uri, expected_base, expected_fragment)       \
   EXPECT_TRUE(                                                                 \
       (references).contains({TO_POINTER(expected_pointer), expected_type}));   \
-  EXPECT_EQ((references).at({TO_POINTER(expected_pointer), expected_type}),    \
-            (expected_uri));
+  EXPECT_EQ(                                                                   \
+      std::get<0>(                                                             \
+          (references).at({TO_POINTER(expected_pointer), expected_type})),     \
+      (expected_uri));                                                         \
+  EXPECT_EQ(                                                                   \
+      std::get<1>(                                                             \
+          (references).at({TO_POINTER(expected_pointer), expected_type})),     \
+      (expected_base));                                                        \
+  EXPECT_EQ(                                                                   \
+      std::get<2>(                                                             \
+          (references).at({TO_POINTER(expected_pointer), expected_type})),     \
+      (expected_fragment));
 
-#define EXPECT_STATIC_REFERENCE(references, expected_pointer, expected_uri)    \
+#define EXPECT_STATIC_REFERENCE(references, expected_pointer, expected_uri,    \
+                                expected_base, expected_fragment)              \
   EXPECT_REFERENCE(references, sourcemeta::jsontoolkit::ReferenceType::Static, \
-                   expected_pointer, expected_uri)
+                   expected_pointer, expected_uri, expected_base,              \
+                   expected_fragment)
 
-#define EXPECT_DYNAMIC_REFERENCE(references, expected_pointer, expected_uri)   \
-  EXPECT_REFERENCE(references,                                                 \
-                   sourcemeta::jsontoolkit::ReferenceType::Dynamic,            \
-                   expected_pointer, expected_uri)
+#define EXPECT_DYNAMIC_REFERENCE(references, expected_pointer, expected_uri,   \
+                                 expected_base, expected_fragment)             \
+  EXPECT_REFERENCE(                                                            \
+      references, sourcemeta::jsontoolkit::ReferenceType::Dynamic,             \
+      expected_pointer, expected_uri, expected_base, expected_fragment)
 
 #endif
