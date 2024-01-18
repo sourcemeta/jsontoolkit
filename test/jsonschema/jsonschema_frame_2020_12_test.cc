@@ -109,7 +109,7 @@ TEST(JSONSchema_frame_2020_12, one_level_applicators_with_identifiers) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(frame.size(), 15);
+  EXPECT_EQ(frame.size(), 14);
   EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/test/qux",
                               "https://www.sourcemeta.com/test/qux", "");
   EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/foo",
@@ -120,8 +120,6 @@ TEST(JSONSchema_frame_2020_12, one_level_applicators_with_identifiers) {
   EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/test/qux#test",
                               "https://www.sourcemeta.com/test/qux",
                               "/properties/foo");
-  EXPECT_FRAME_STATIC_2020_12(
-      frame, "#test", "https://www.sourcemeta.com/test/qux", "/properties/foo");
 
   // JSON Pointers
 
@@ -440,7 +438,7 @@ TEST(JSONSchema_frame_2020_12, anchor_top_level) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(frame.size(), 6);
+  EXPECT_EQ(frame.size(), 5);
 
   EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/schema",
                               "https://www.sourcemeta.com/schema", "");
@@ -456,8 +454,6 @@ TEST(JSONSchema_frame_2020_12, anchor_top_level) {
   // Anchors
 
   EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/schema#foo",
-                              "https://www.sourcemeta.com/schema", "");
-  EXPECT_FRAME_STATIC_2020_12(frame, "#foo",
                               "https://www.sourcemeta.com/schema", "");
 
   // References
@@ -494,7 +490,7 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_different) {
                                  "https://www.example.com")
       .wait();
 
-  EXPECT_EQ(frame.size(), 39);
+  EXPECT_EQ(frame.size(), 38);
 
   EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/schema",
                               "https://www.sourcemeta.com/schema", "");
@@ -525,8 +521,6 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_different) {
   EXPECT_FRAME_STATIC_2020_12(frame, "https://www.test.com#baz",
                               "https://www.sourcemeta.com/schema",
                               "/properties/two");
-  EXPECT_FRAME_STATIC_2020_12(frame, "#foo",
-                              "https://www.sourcemeta.com/schema", "/items");
 
   // JSON Pointers
 
