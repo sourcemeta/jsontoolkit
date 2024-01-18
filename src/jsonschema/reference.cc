@@ -191,11 +191,6 @@ auto sourcemeta::jsontoolkit::frame(
           if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
             frame.store(absolute_anchor_uri, ReferenceType::Static, root_id,
                         base_string, pointer, effective_dialects.front());
-
-            if (root_id.has_value() && root_id.value() == base_string) {
-              frame.store(relative_anchor_uri, ReferenceType::Static, root_id,
-                          "", pointer, effective_dialects.front());
-            }
           }
 
           is_first = false;
