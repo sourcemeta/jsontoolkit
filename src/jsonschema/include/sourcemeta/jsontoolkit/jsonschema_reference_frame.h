@@ -14,6 +14,7 @@
 #include <optional> // std::optional
 #include <string>   // std::string
 #include <tuple>    // std::tuple
+#include <utility>  // std::pair
 #include <vector>   // std::vector
 
 namespace sourcemeta::jsontoolkit {
@@ -26,28 +27,26 @@ class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT ReferenceFrame {
 public:
   /// Get the identifier of the root JSON Schema that declares the schema
   /// registered at the given URI.
-  auto root(const std::string &uri) const -> std::optional<std::string>;
+  auto root(const ReferenceType type, const std::string &uri) const
+      -> std::optional<std::string>;
 
   /// Get the identifier that consists of the JSON Schema base URI of the JSON
   /// document registered at the given URI.
-  auto base(const std::string &uri) const -> const std::string &;
+  auto base(const ReferenceType type, const std::string &uri) const
+      -> const std::string &;
 
   /// Get the JSON Pointer that must be used to get the schema registered at a
   /// given URI, relative to its root schema
-  auto pointer(const std::string &uri) const -> const Pointer &;
+  auto pointer(const ReferenceType type, const std::string &uri) const
+      -> const Pointer &;
 
   /// Get the dialect that must be used to evaluate the schema registered at a
   /// given URI
-  auto dialect(const std::string &uri) const -> const std::string &;
+  auto dialect(const ReferenceType type, const std::string &uri) const
+      -> const std::string &;
 
   /// Check whether the reference frame defines a given URI
-  auto defines(const std::string &uri) const -> bool;
-
-  /// Check whether the reference frame is static
-  auto is_static(const std::string &uri) const -> bool;
-
-  /// Check whether the reference frame is dynamic
-  auto is_dynamic(const std::string &uri) const -> bool;
+  auto defines(const ReferenceType type, const std::string &uri) const -> bool;
 
   /// Check the number of entries stored in the reference frame
   auto size() const -> std::size_t;
@@ -56,7 +55,7 @@ public:
   auto empty() const -> bool;
 
   /// Store a new entry in the reference frame
-  auto store(const std::string &uri, const ReferenceType type,
+  auto store(const ReferenceType type, const std::string &uri,
              const std::optional<std::string> &root, const std::string &base,
              const Pointer &pointer_from_root, const std::string &dialect)
       -> void;
@@ -74,11 +73,14 @@ private:
 #if defined(_MSC_VER)
 #pragma warning(disable : 4251)
 #endif
-  std::map<std::string, std::tuple<std::optional<std::string>, std::string,
-                                   Pointer, std::string, ReferenceType>>
+  std::map<
+      std::pair<ReferenceType, std::string>,
+      std::tuple<std::optional<std::string>, std::string, Pointer, std::string>>
       data;
-  // Keep a mirror of the map keys for iteration purposes
-  std::vector<std::string> keys;
+  // TODO: Revise the design of this class. The fact that we need this mirror
+  // indicates a bad interface design Keep a mirror of the map keys for
+  // iteration purposes
+  std::vector<std::pair<ReferenceType, std::string>> keys;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251)
 #endif

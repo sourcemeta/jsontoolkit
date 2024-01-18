@@ -57,11 +57,11 @@ public:
           sourcemeta::jsontoolkit::default_schema_walker,
           sourcemeta::jsontoolkit::official_resolver, this->dialect, uri)
           .wait();
-      for (const auto &entry : frame) {
-        new_entries.insert(
-            {entry,
-             {sourcemeta::jsontoolkit::get(schema.first, frame.pointer(entry)),
-              frame.base(entry)}});
+      for (const auto &[type, entry] : frame) {
+        new_entries.insert({entry,
+                            {sourcemeta::jsontoolkit::get(
+                                 schema.first, frame.pointer(type, entry)),
+                             frame.base(type, entry)}});
       }
     }
 

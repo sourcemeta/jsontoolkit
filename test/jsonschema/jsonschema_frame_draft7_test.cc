@@ -266,11 +266,6 @@ TEST(JSONSchema_frame_draft7, explicit_argument_id_different) {
       .wait();
 
   EXPECT_EQ(frame.size(), 22);
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/schema"));
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/test"));
-  EXPECT_TRUE(frame.defines("https://www.example.com"));
-  EXPECT_TRUE(frame.defines("https://www.example.com/test"));
-  EXPECT_TRUE(frame.defines("https://www.test.com"));
 
   EXPECT_FRAME_STATIC_DRAFT7(frame, "https://www.sourcemeta.com/schema",
                              "https://www.sourcemeta.com/schema", "");
