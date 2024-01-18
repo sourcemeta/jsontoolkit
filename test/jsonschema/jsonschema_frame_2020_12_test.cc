@@ -11,6 +11,11 @@
   EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,             \
                       "https://json-schema.org/draft/2020-12/schema");
 
+#define EXPECT_FRAME_DYNAMIC_2020_12(frame, reference, root_id,                \
+                                     expected_pointer)                         \
+  EXPECT_FRAME_DYNAMIC(frame, reference, root_id, expected_pointer,            \
+                       "https://json-schema.org/draft/2020-12/schema");
+
 TEST(JSONSchema_frame_2020_12, empty_schema) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -716,4 +721,168 @@ TEST(JSONSchema_frame_2020_12, same_dynamic_and_refs_in_same_object) {
                            "https://www.sourcemeta.com/schema#/properties/bar",
                            "https://www.sourcemeta.com/schema",
                            "/properties/bar");
+}
+
+TEST(JSONSchema_frame_2020_12, dynamic_anchor_with_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$dynamicAnchor": "foo",
+    "properties": {
+      "foo": {
+        "$dynamicAnchor": "test"
+      },
+      "bar": {
+        "$id": "bar",
+        "$dynamicAnchor": "test",
+        "$anchor": "test"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 19);
+
+  // Dynamic anchors
+
+  EXPECT_FRAME_DYNAMIC_2020_12(frame, "https://www.sourcemeta.com/schema#foo",
+                               "https://www.sourcemeta.com/schema", "");
+  EXPECT_FRAME_DYNAMIC_2020_12(frame, "https://www.sourcemeta.com/schema#test",
+                               "https://www.sourcemeta.com/schema",
+                               "/properties/foo");
+  EXPECT_FRAME_DYNAMIC_2020_12(frame, "https://www.sourcemeta.com/bar#test",
+                               "https://www.sourcemeta.com/schema",
+                               "/properties/bar");
+
+  // Static anchors
+
+  EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/bar#test",
+                              "https://www.sourcemeta.com/schema",
+                              "/properties/bar");
+
+  // Static identifiers
+
+  EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/schema",
+                              "https://www.sourcemeta.com/schema", "");
+  EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/bar",
+                              "https://www.sourcemeta.com/schema",
+                              "/properties/bar");
+
+  // Static pointers
+
+  EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/schema#/$id",
+                              "https://www.sourcemeta.com/schema", "/$id");
+  EXPECT_FRAME_STATIC_2020_12(frame,
+                              "https://www.sourcemeta.com/schema#/$schema",
+                              "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_STATIC_2020_12(
+      frame, "https://www.sourcemeta.com/schema#/$dynamicAnchor",
+      "https://www.sourcemeta.com/schema", "/$dynamicAnchor");
+  EXPECT_FRAME_STATIC_2020_12(
+      frame, "https://www.sourcemeta.com/schema#/properties",
+      "https://www.sourcemeta.com/schema", "/properties");
+  EXPECT_FRAME_STATIC_2020_12(
+      frame, "https://www.sourcemeta.com/schema#/properties/foo",
+      "https://www.sourcemeta.com/schema", "/properties/foo");
+  EXPECT_FRAME_STATIC_2020_12(
+      frame, "https://www.sourcemeta.com/schema#/properties/foo/$dynamicAnchor",
+      "https://www.sourcemeta.com/schema", "/properties/foo/$dynamicAnchor");
+  EXPECT_FRAME_STATIC_2020_12(
+      frame, "https://www.sourcemeta.com/schema#/properties/bar",
+      "https://www.sourcemeta.com/schema", "/properties/bar");
+  EXPECT_FRAME_STATIC_2020_12(
+      frame, "https://www.sourcemeta.com/schema#/properties/bar/$id",
+      "https://www.sourcemeta.com/schema", "/properties/bar/$id");
+  EXPECT_FRAME_STATIC_2020_12(
+      frame, "https://www.sourcemeta.com/schema#/properties/bar/$dynamicAnchor",
+      "https://www.sourcemeta.com/schema", "/properties/bar/$dynamicAnchor");
+  EXPECT_FRAME_STATIC_2020_12(
+      frame, "https://www.sourcemeta.com/schema#/properties/bar/$anchor",
+      "https://www.sourcemeta.com/schema", "/properties/bar/$anchor");
+  EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/bar#/$id",
+                              "https://www.sourcemeta.com/schema",
+                              "/properties/bar/$id");
+  EXPECT_FRAME_STATIC_2020_12(
+      frame, "https://www.sourcemeta.com/bar#/$dynamicAnchor",
+      "https://www.sourcemeta.com/schema", "/properties/bar/$dynamicAnchor");
+  EXPECT_FRAME_STATIC_2020_12(frame, "https://www.sourcemeta.com/bar#/$anchor",
+                              "https://www.sourcemeta.com/schema",
+                              "/properties/bar/$anchor");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
+}
+
+TEST(JSONSchema_frame_2020_12, dynamic_anchor_without_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": {
+        "$dynamicAnchor": "test"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 6);
+
+  // Dynamic anchors
+
+  EXPECT_ANONYMOUS_FRAME_DYNAMIC(
+      frame, "#test", "/properties/foo",
+      "https://json-schema.org/draft/2020-12/schema");
+
+  // Static frames
+
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "", "",
+                                "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/$schema", "/$schema",
+                                "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/properties", "/properties",
+                                "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/properties/foo", "/properties/foo",
+                                "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/properties/foo/$dynamicAnchor",
+                                "/properties/foo/$dynamicAnchor",
+                                "https://json-schema.org/draft/2020-12/schema");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
+}
+
+TEST(JSONSchema_frame_2020_12, dynamic_anchor_same_on_schema_resource) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$dynamicAnchor": "foo",
+    "items": {
+      "$dynamicAnchor": "foo"
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  EXPECT_THROW(sourcemeta::jsontoolkit::frame(
+                   document, frame, references,
+                   sourcemeta::jsontoolkit::default_schema_walker,
+                   sourcemeta::jsontoolkit::official_resolver)
+                   .wait(),
+               sourcemeta::jsontoolkit::SchemaError);
 }

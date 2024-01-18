@@ -60,6 +60,9 @@ static auto fragment_string(const sourcemeta::jsontoolkit::URI uri)
   return std::nullopt;
 }
 
+// TODO: Revise this function, try to simplify it, and avoid redundant
+// operations (like resolving schemas) by adding relevant overloads
+// for the functions it consumes.
 auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::JSON &schema,
     sourcemeta::jsontoolkit::ReferenceFrame &frame,
@@ -178,8 +181,15 @@ auto sourcemeta::jsontoolkit::frame(
       const auto relative_anchor_uri{anchor_uri.recompose()};
 
       if (bases.empty()) {
-        if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
+        if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
+            type == sourcemeta::jsontoolkit::AnchorType::All) {
           frame.store(ReferenceType::Static, relative_anchor_uri, root_id, "",
+                      pointer, effective_dialects.front());
+        }
+
+        if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
+            type == sourcemeta::jsontoolkit::AnchorType::All) {
+          frame.store(ReferenceType::Dynamic, relative_anchor_uri, root_id, "",
                       pointer, effective_dialects.front());
         }
       } else {
@@ -192,9 +202,18 @@ auto sourcemeta::jsontoolkit::frame(
             continue;
           }
 
-          if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
-            frame.store(ReferenceType::Static, absolute_anchor_uri, root_id,
-                        base_string, pointer, effective_dialects.front());
+          if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
+              type == sourcemeta::jsontoolkit::AnchorType::All) {
+            frame.store(sourcemeta::jsontoolkit::ReferenceType::Static,
+                        absolute_anchor_uri, root_id, base_string, pointer,
+                        effective_dialects.front());
+          }
+
+          if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
+              type == sourcemeta::jsontoolkit::AnchorType::All) {
+            frame.store(sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+                        absolute_anchor_uri, root_id, base_string, pointer,
+                        effective_dialects.front());
           }
 
           is_first = false;
