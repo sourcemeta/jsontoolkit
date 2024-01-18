@@ -42,10 +42,16 @@ using ReferenceMap =
 
 /// @ingroup jsonschema
 ///
-/// This function computes the static reference frame of a schema. Each entry
-/// consists in the URI of the resulting schema, the JSON Pointer within that
-/// resulting schema, and the dialect URI of the resulting subschema. For
-/// example:
+/// This function computes the static identifiers and references of a schema.
+/// Each entry consists in the URI of the resulting schema, the JSON Pointer
+/// within that resulting schema, and the dialect URI of the resulting
+/// subschema.
+///
+/// Note that dynamic references cannot be resolved without the presence of an
+/// instance. Therefore, framing does what it can with dynamic references to let
+/// a higher level evaluate function perform its work.
+///
+/// For example:
 ///
 /// ```cpp
 /// #include <sourcemeta/jsontoolkit/json.h>
