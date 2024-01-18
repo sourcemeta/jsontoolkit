@@ -87,8 +87,9 @@ auto sourcemeta::jsontoolkit::frame(
                                        default_id.has_value() &&
                                        root_id.value() != default_id.value()};
   if (has_explicit_different_id) {
-    frame.store(default_id.value(), root_id.value(), root_id.value(),
-                sourcemeta::jsontoolkit::empty_pointer, root_dialect.value());
+    frame.store(default_id.value(), ReferenceType::Static, root_id.value(),
+                root_id.value(), sourcemeta::jsontoolkit::empty_pointer,
+                root_dialect.value());
     base_uris.insert(
         {sourcemeta::jsontoolkit::empty_pointer, {default_id.value()}});
   }
@@ -151,7 +152,7 @@ auto sourcemeta::jsontoolkit::frame(
           const sourcemeta::jsontoolkit::URI maybe_relative{id.value()};
           const std::string new_id{maybe_relative.resolve_from(base)};
           if (!maybe_relative.is_absolute() || !frame.defines(new_id)) {
-            frame.store(new_id, root_id, new_id, pointer,
+            frame.store(new_id, ReferenceType::Static, root_id, new_id, pointer,
                         effective_dialects.front());
           }
 
@@ -175,8 +176,8 @@ auto sourcemeta::jsontoolkit::frame(
 
       if (bases.empty()) {
         if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
-          frame.store(relative_anchor_uri, root_id, "", pointer,
-                      effective_dialects.front());
+          frame.store(relative_anchor_uri, ReferenceType::Static, root_id, "",
+                      pointer, effective_dialects.front());
         }
       } else {
         bool is_first = true;
@@ -188,12 +189,12 @@ auto sourcemeta::jsontoolkit::frame(
           }
 
           if (type == sourcemeta::jsontoolkit::AnchorType::Static) {
-            frame.store(absolute_anchor_uri, root_id, base_string, pointer,
-                        effective_dialects.front());
+            frame.store(absolute_anchor_uri, ReferenceType::Static, root_id,
+                        base_string, pointer, effective_dialects.front());
 
             if (root_id.has_value() && root_id.value() == base_string) {
-              frame.store(relative_anchor_uri, root_id, "", pointer,
-                          effective_dialects.front());
+              frame.store(relative_anchor_uri, ReferenceType::Static, root_id,
+                          "", pointer, effective_dialects.front());
             }
           }
 
@@ -219,8 +220,8 @@ auto sourcemeta::jsontoolkit::frame(
         const auto nearest_bases{
             find_nearest_bases(base_uris, pointer, base.first)};
         assert(!nearest_bases.empty());
-        frame.store(result, root_id, nearest_bases.front(), pointer,
-                    dialects.front());
+        frame.store(result, ReferenceType::Static, root_id,
+                    nearest_bases.front(), pointer, dialects.front());
       }
     }
   }

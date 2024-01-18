@@ -43,14 +43,26 @@ auto sourcemeta::jsontoolkit::ReferenceFrame::dialect(
   return std::get<3>(this->data.at(uri));
 }
 
+auto sourcemeta::jsontoolkit::ReferenceFrame::is_static(
+    const std::string &uri) const -> bool {
+  assert(this->defines(uri));
+  return std::get<4>(this->data.at(uri)) == ReferenceType::Static;
+}
+
+auto sourcemeta::jsontoolkit::ReferenceFrame::is_dynamic(
+    const std::string &uri) const -> bool {
+  return !this->is_static(uri);
+}
+
 auto sourcemeta::jsontoolkit::ReferenceFrame::store(
-    const std::string &uri, const std::optional<std::string> &root_id,
-    const std::string &base_id,
+    const std::string &uri, const ReferenceType type,
+    const std::optional<std::string> &root_id, const std::string &base_id,
     const sourcemeta::jsontoolkit::Pointer &pointer_from_root,
     const std::string &dialect) -> void {
   const auto canonical{sourcemeta::jsontoolkit::URI{uri}.canonicalize()};
   if (!this->data
-           .insert({canonical, {root_id, base_id, pointer_from_root, dialect}})
+           .insert({canonical,
+                    {root_id, base_id, pointer_from_root, dialect, type}})
            .second) {
     std::ostringstream error;
     error << "Schema identifier already exists: " << uri;
