@@ -36,10 +36,6 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
 
   EXPECT_EQ(frame.size(), 21);
 
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/test"));
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/foo"));
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/bar"));
-
   EXPECT_FRAME_STATIC(frame, "https://www.sourcemeta.com/test",
                       "https://www.sourcemeta.com/test", "",
                       "https://json-schema.org/draft/2020-12/schema");
@@ -53,53 +49,74 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
 
   // Bases
 
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/test"),
             "https://www.sourcemeta.com/test");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/foo"),
             "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/bar"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/bar"),
             "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$id"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/test#/$id"),
             "https://www.sourcemeta.com/test");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$schema"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/test#/$schema"),
             "https://www.sourcemeta.com/test");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$defs"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/test#/$defs"),
             "https://www.sourcemeta.com/test");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$defs/foo"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/test#/$defs/foo"),
             "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$defs/foo/id"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/test#/$defs/foo/id"),
             "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/test#/$defs/foo/$schema"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/test#/$defs/foo/$schema"),
             "https://www.sourcemeta.com/foo");
   EXPECT_EQ(
-      frame.base("https://www.sourcemeta.com/test#/$defs/foo/definitions"),
+      frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                 "https://www.sourcemeta.com/test#/$defs/foo/definitions"),
       "https://www.sourcemeta.com/foo");
   EXPECT_EQ(
-      frame.base("https://www.sourcemeta.com/test#/$defs/foo/definitions/bar"),
+      frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                 "https://www.sourcemeta.com/test#/$defs/foo/definitions/bar"),
       "https://www.sourcemeta.com/bar");
   EXPECT_EQ(
       frame.base(
+          sourcemeta::jsontoolkit::ReferenceType::Static,
           "https://www.sourcemeta.com/test#/$defs/foo/definitions/bar/id"),
       "https://www.sourcemeta.com/bar");
   EXPECT_EQ(
       frame.base(
+          sourcemeta::jsontoolkit::ReferenceType::Static,
           "https://www.sourcemeta.com/test#/$defs/foo/definitions/bar/type"),
       "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/id"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/foo#/id"),
             "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/$schema"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/foo#/$schema"),
             "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/definitions"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/foo#/definitions"),
             "https://www.sourcemeta.com/foo");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/definitions/bar"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/foo#/definitions/bar"),
             "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/definitions/bar/id"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/foo#/definitions/bar/id"),
             "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/foo#/definitions/bar/type"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/foo#/definitions/bar/type"),
             "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/bar#/id"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/bar#/id"),
             "https://www.sourcemeta.com/bar");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/bar#/type"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/bar#/type"),
             "https://www.sourcemeta.com/bar");
 
   // JSON Pointers
@@ -265,13 +282,17 @@ TEST(JSONSchema_frame, no_id_with_default) {
 
   // Bases
 
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/schema"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/schema"),
             "https://www.sourcemeta.com/schema");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/schema#/$schema"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/schema#/$schema"),
             "https://www.sourcemeta.com/schema");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/schema#/items"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/schema#/items"),
             "https://www.sourcemeta.com/schema");
-  EXPECT_EQ(frame.base("https://www.sourcemeta.com/schema#/items/type"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.sourcemeta.com/schema#/items/type"),
             "https://www.sourcemeta.com/schema");
 
   // References
@@ -342,28 +363,42 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
 
   // Bases
 
-  EXPECT_EQ(frame.base("https://www.example.com"), "https://www.example.com");
-  EXPECT_EQ(frame.base("https://www.example.com#/$id"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.com"),
             "https://www.example.com");
-  EXPECT_EQ(frame.base("https://www.example.com#/$schema"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.com#/$id"),
+            "https://www.example.com");
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.com#/$schema"),
             "https://www.example.com");
 
-  EXPECT_EQ(frame.base("https://www.example.org"), "https://www.example.org");
-  EXPECT_EQ(frame.base("https://www.example.org#foo"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.org"),
             "https://www.example.org");
-  EXPECT_EQ(frame.base("https://www.example.com#/items"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.org#foo"),
             "https://www.example.org");
-  EXPECT_EQ(frame.base("https://www.example.com#/items/$id"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.com#/items"),
             "https://www.example.org");
-  EXPECT_EQ(frame.base("https://www.example.com#/items/items"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.com#/items/$id"),
             "https://www.example.org");
-  EXPECT_EQ(frame.base("https://www.example.com#/items/items/$anchor"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.com#/items/items"),
             "https://www.example.org");
-  EXPECT_EQ(frame.base("https://www.example.org#/$id"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.com#/items/items/$anchor"),
             "https://www.example.org");
-  EXPECT_EQ(frame.base("https://www.example.org#/items"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.org#/$id"),
             "https://www.example.org");
-  EXPECT_EQ(frame.base("https://www.example.org#/items/$anchor"),
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.org#/items"),
+            "https://www.example.org");
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://www.example.org#/items/$anchor"),
             "https://www.example.org");
 
   // References
@@ -392,7 +427,7 @@ TEST(JSONSchema_frame, uri_iterators) {
 
   std::set<std::string> uris;
   for (const auto &uri : frame) {
-    uris.insert(uri);
+    uris.insert(uri.second);
   }
 
   EXPECT_EQ(frame.size(), 12);
@@ -419,45 +454,72 @@ TEST(JSONSchema_frame, uri_iterators) {
 
 TEST(JSONSchema_frame, reference_frame_uri_canonicalize) {
   sourcemeta::jsontoolkit::ReferenceFrame frame;
-  frame.store("https://example.com#",
-              sourcemeta::jsontoolkit::ReferenceType::Static,
+  frame.store(sourcemeta::jsontoolkit::ReferenceType::Static,
               "https://example.com#", "https://example.com#",
-              sourcemeta::jsontoolkit::empty_pointer,
+              "https://example.com#", sourcemeta::jsontoolkit::empty_pointer,
               "https://json-schema.org/draft/2020-12/schema");
   EXPECT_EQ(frame.size(), 1);
-  EXPECT_TRUE(frame.defines("https://example.com"));
+  EXPECT_TRUE(frame.defines(sourcemeta::jsontoolkit::ReferenceType::Static,
+                            "https://example.com"));
   // This is canonicalized
-  EXPECT_TRUE(frame.defines("https://example.com#"));
+  EXPECT_TRUE(frame.defines(sourcemeta::jsontoolkit::ReferenceType::Static,
+                            "https://example.com#"));
   // These must not be canonicalized
-  EXPECT_TRUE(frame.root("https://example.com").has_value());
-  EXPECT_EQ(frame.root("https://example.com").value(), "https://example.com#");
-  EXPECT_EQ(frame.base("https://example.com"), "https://example.com#");
+  EXPECT_TRUE(frame
+                  .root(sourcemeta::jsontoolkit::ReferenceType::Static,
+                        "https://example.com")
+                  .has_value());
+  EXPECT_EQ(frame
+                .root(sourcemeta::jsontoolkit::ReferenceType::Static,
+                      "https://example.com")
+                .value(),
+            "https://example.com#");
+  EXPECT_EQ(frame.base(sourcemeta::jsontoolkit::ReferenceType::Static,
+                       "https://example.com"),
+            "https://example.com#");
 }
 
-TEST(JSONSchema_frame, reference_frame_is_static) {
+TEST(JSONSchema_frame, reference_frame_static) {
   sourcemeta::jsontoolkit::ReferenceFrame frame;
-  frame.store("https://example.com",
-              sourcemeta::jsontoolkit::ReferenceType::Static,
+  frame.store(sourcemeta::jsontoolkit::ReferenceType::Static,
               "https://example.com", "https://example.com",
-              sourcemeta::jsontoolkit::empty_pointer,
+              "https://example.com", sourcemeta::jsontoolkit::empty_pointer,
               "https://json-schema.org/draft/2020-12/schema");
   EXPECT_EQ(frame.size(), 1);
-  EXPECT_TRUE(frame.defines("https://example.com"));
-  EXPECT_TRUE(frame.is_static("https://example.com"));
-  EXPECT_FALSE(frame.is_dynamic("https://example.com"));
+  EXPECT_TRUE(frame.defines(sourcemeta::jsontoolkit::ReferenceType::Static,
+                            "https://example.com"));
+  EXPECT_FALSE(frame.defines(sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+                             "https://example.com"));
 }
 
-TEST(JSONSchema_frame, reference_frame_is_dynamic) {
+TEST(JSONSchema_frame, reference_frame_dynamic) {
   sourcemeta::jsontoolkit::ReferenceFrame frame;
-  frame.store("https://example.com",
-              sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+  frame.store(sourcemeta::jsontoolkit::ReferenceType::Dynamic,
               "https://example.com", "https://example.com",
-              sourcemeta::jsontoolkit::empty_pointer,
+              "https://example.com", sourcemeta::jsontoolkit::empty_pointer,
               "https://json-schema.org/draft/2020-12/schema");
   EXPECT_EQ(frame.size(), 1);
-  EXPECT_TRUE(frame.defines("https://example.com"));
-  EXPECT_FALSE(frame.is_static("https://example.com"));
-  EXPECT_TRUE(frame.is_dynamic("https://example.com"));
+  EXPECT_FALSE(frame.defines(sourcemeta::jsontoolkit::ReferenceType::Static,
+                             "https://example.com"));
+  EXPECT_TRUE(frame.defines(sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+                            "https://example.com"));
+}
+
+TEST(JSONSchema_frame, reference_frame_both) {
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  frame.store(sourcemeta::jsontoolkit::ReferenceType::Static,
+              "https://example.com", "https://example.com",
+              "https://example.com", sourcemeta::jsontoolkit::empty_pointer,
+              "https://json-schema.org/draft/2020-12/schema");
+  frame.store(sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+              "https://example.com", "https://example.com",
+              "https://example.com", sourcemeta::jsontoolkit::empty_pointer,
+              "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_EQ(frame.size(), 2);
+  EXPECT_TRUE(frame.defines(sourcemeta::jsontoolkit::ReferenceType::Static,
+                            "https://example.com"));
+  EXPECT_TRUE(frame.defines(sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+                            "https://example.com"));
 }
 
 TEST(JSONSchema_frame, no_refs) {

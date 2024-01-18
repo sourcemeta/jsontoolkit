@@ -12,20 +12,6 @@
 
 namespace {
 
-auto print_frame(const sourcemeta::jsontoolkit::ReferenceFrame &frame) -> void {
-  for (const auto &uri : frame) {
-    std::cout << "URI: ";
-    std::cout << uri << "\n";
-    std::cout << "    Location : " << frame.root(uri).value_or("<ANONYMOUS>")
-              << "\n";
-    std::cout << "    Pointer  : ";
-    sourcemeta::jsontoolkit::stringify(frame.pointer(uri), std::cout);
-    std::cout << "\n";
-    std::cout << "    Base URI : " << frame.base(uri) << "\n";
-    std::cout << "    Dialect  : " << frame.dialect(uri) << "\n";
-  }
-}
-
 template <typename CharT, typename Traits>
 auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
   const sourcemeta::jsontoolkit::JSON schema =
@@ -39,9 +25,25 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
       .wait();
 
   std::cout << "--------------------------------------------------\n";
-  std::cout << "Static frame: " << frame.size() << "\n";
+  std::cout << "Frames: " << frame.size() << "\n";
   std::cout << "--------------------------------------------------\n";
-  print_frame(frame);
+  for (const auto &[type, uri] : frame) {
+    if (type == sourcemeta::jsontoolkit::ReferenceType::Dynamic) {
+      std::cout << "(DYNAMIC) ";
+    } else {
+      std::cout << "(STATIC) ";
+    }
+
+    std::cout << "URI: ";
+    std::cout << uri << "\n";
+    std::cout << "    Location : "
+              << frame.root(type, uri).value_or("<ANONYMOUS>") << "\n";
+    std::cout << "    Pointer  : ";
+    sourcemeta::jsontoolkit::stringify(frame.pointer(type, uri), std::cout);
+    std::cout << "\n";
+    std::cout << "    Base URI : " << frame.base(type, uri) << "\n";
+    std::cout << "    Dialect  : " << frame.dialect(type, uri) << "\n";
+  }
 
   std::cout << "--------------------------------------------------\n";
   std::cout << "References: " << references.size() << "\n";

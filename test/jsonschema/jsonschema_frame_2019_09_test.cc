@@ -247,13 +247,6 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
       .wait();
 
   EXPECT_EQ(frame.size(), 30);
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/schema"));
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/foo"));
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/foo#test"));
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/bar"));
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/baz"));
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/baz#extra"));
-  EXPECT_TRUE(frame.defines("https://www.sourcemeta.com/qux"));
 
   EXPECT_FRAME_STATIC_2019_09(frame, "https://www.sourcemeta.com/schema",
                               "https://www.sourcemeta.com/schema", "");
