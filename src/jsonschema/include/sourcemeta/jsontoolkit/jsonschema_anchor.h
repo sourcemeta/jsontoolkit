@@ -19,7 +19,7 @@ namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
 /// The anchor type
-enum class AnchorType { Static, Dynamic };
+enum class AnchorType { Static, Dynamic, All };
 
 /// @ingroup jsonschema
 ///

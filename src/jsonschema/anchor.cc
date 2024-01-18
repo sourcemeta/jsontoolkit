@@ -18,7 +18,6 @@ auto anchors(const JSON &schema, const SchemaResolver &resolver,
   if (schema.is_object() &&
       vocabularies.contains(
           "https://json-schema.org/draft/2020-12/vocab/core")) {
-    // A dynamic anchor takes precedence over a static anchor
     if (schema.defines("$dynamicAnchor")) {
       const auto &anchor{schema.at("$dynamicAnchor")};
       assert(anchor.is_string());
@@ -28,7 +27,12 @@ auto anchors(const JSON &schema, const SchemaResolver &resolver,
     if (schema.defines("$anchor")) {
       const auto &anchor{schema.at("$anchor")};
       assert(anchor.is_string());
-      result.insert({anchor.to_string(), AnchorType::Static});
+      const auto anchor_string{anchor.to_string()};
+      const auto success = result.insert({anchor_string, AnchorType::Static});
+      assert(success.second || result.contains(anchor_string));
+      if (!success.second) {
+        result[anchor_string] = AnchorType::All;
+      }
     }
   }
 
