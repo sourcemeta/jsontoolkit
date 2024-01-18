@@ -526,3 +526,23 @@ TEST(JSONSchema_frame, refs_with_no_id) {
   EXPECT_STATIC_REFERENCE(references, "/properties/anchor/$ref", "#baz",
                           std::nullopt, "baz");
 }
+
+TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "properties": {
+      "foo": { "$dynamicRef": "#" }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_TRUE(references.empty());
+}

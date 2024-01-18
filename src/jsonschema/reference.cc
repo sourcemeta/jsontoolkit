@@ -258,8 +258,14 @@ auto sourcemeta::jsontoolkit::frame(
               fragment_string(destination_uri)}});
       }
 
-      // TODO: Check for the 2020-12 core vocabulary first
-      if (subschema.defines("$dynamicRef")) {
+      const auto vocabularies{
+          sourcemeta::jsontoolkit::vocabularies(subschema, resolver,
+                                                effective_dialects.front())
+              .get()};
+
+      if (vocabularies.contains(
+              "https://json-schema.org/draft/2020-12/vocab/core") &&
+          subschema.defines("$dynamicRef")) {
         assert(subschema.at("$dynamicRef").is_string());
         const sourcemeta::jsontoolkit::URI ref{
             subschema.at("$dynamicRef").to_string()};
