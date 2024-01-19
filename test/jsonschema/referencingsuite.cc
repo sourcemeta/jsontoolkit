@@ -89,13 +89,11 @@ public:
     const std::string ref_string{current.at("ref").to_string()};
 
     try {
-      // TODO: Avoid this double URI parsing
-      const std::string ref{
-          base_uri.has_value()
-              ? sourcemeta::jsontoolkit::URI{ref_string}.resolve_from(
-                    base_uri.value())
-              : ref_string};
-      sourcemeta::jsontoolkit::URI ref_uri{ref};
+      sourcemeta::jsontoolkit::URI ref_uri{ref_string};
+      if (base_uri.has_value()) {
+        ref_uri.resolve_from(base_uri.value());
+      }
+
       ref_uri.canonicalize();
       const auto result{dereference(ref_uri.recompose(), this->registry)};
 

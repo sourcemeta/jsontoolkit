@@ -175,9 +175,12 @@ auto sourcemeta::jsontoolkit::frame(
         for (const auto &base_string :
              find_nearest_bases(base_uris, pointer, id)) {
           const sourcemeta::jsontoolkit::URI base{base_string};
-          const sourcemeta::jsontoolkit::URI maybe_relative{id.value()};
-          const std::string new_id{maybe_relative.resolve_from(base)};
-          if (!maybe_relative.is_absolute() ||
+          sourcemeta::jsontoolkit::URI maybe_relative{id.value()};
+          const bool maybe_relative_is_absolute{maybe_relative.is_absolute()};
+          maybe_relative.resolve_from(base);
+          const std::string new_id{maybe_relative.recompose()};
+
+          if (!maybe_relative_is_absolute ||
               !frame.contains({ReferenceType::Static, new_id})) {
             store(frame, ReferenceType::Static, new_id, root_id, new_id,
                   pointer, effective_dialects.front());
@@ -201,11 +204,13 @@ auto sourcemeta::jsontoolkit::frame(
     // Support $recursiveAnchor
     for (const auto &[name, type] :
          sourcemeta::jsontoolkit::anchors(subschema, vocabularies)) {
-      const auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
       const auto bases{find_nearest_bases(base_uris, pointer, id)};
-      const auto relative_anchor_uri{anchor_uri.recompose()};
 
       if (bases.empty()) {
+        const auto anchor_uri{
+            sourcemeta::jsontoolkit::URI::from_fragment(name)};
+        const auto relative_anchor_uri{anchor_uri.recompose()};
+
         if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
             type == sourcemeta::jsontoolkit::AnchorType::All) {
           store(frame, ReferenceType::Static, relative_anchor_uri, root_id, "",
@@ -220,8 +225,11 @@ auto sourcemeta::jsontoolkit::frame(
       } else {
         bool is_first = true;
         for (const auto &base_string : bases) {
+          auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
           const sourcemeta::jsontoolkit::URI anchor_base{base_string};
-          const auto absolute_anchor_uri{anchor_uri.resolve_from(anchor_base)};
+          anchor_uri.resolve_from(anchor_base);
+          const auto absolute_anchor_uri{anchor_uri.recompose()};
+
           if (!is_first &&
               frame.contains({ReferenceType::Static, absolute_anchor_uri})) {
             continue;
@@ -254,20 +262,20 @@ auto sourcemeta::jsontoolkit::frame(
     assert(dialects.size() == 1);
 
     for (const auto &base : find_every_base(base_uris, pointer)) {
-      // TODO: Simplify this URI mess
       auto relative_pointer_uri{
           sourcemeta::jsontoolkit::to_uri(pointer.resolve_from(base.second))};
-      const auto result{base.first.empty()
-                            ? relative_pointer_uri.recompose()
-                            : relative_pointer_uri.resolve_from({base.first})};
-      const auto canonical_result{
-          sourcemeta::jsontoolkit::URI{result}.canonicalize().recompose()};
+      if (!base.first.empty()) {
+        relative_pointer_uri.resolve_from({base.first});
+      }
 
-      if (!frame.contains({ReferenceType::Static, canonical_result})) {
+      relative_pointer_uri.canonicalize();
+      const auto result{relative_pointer_uri.recompose()};
+
+      if (!frame.contains({ReferenceType::Static, result})) {
         const auto nearest_bases{
             find_nearest_bases(base_uris, pointer, base.first)};
         assert(!nearest_bases.empty());
-        store(frame, ReferenceType::Static, canonical_result, root_id,
+        store(frame, ReferenceType::Static, result, root_id,
               nearest_bases.front(), pointer, dialects.front());
       }
     }
@@ -293,17 +301,14 @@ auto sourcemeta::jsontoolkit::frame(
       // TODO: Check that static destinations actually exist in the frame
       if (subschema.defines("$ref")) {
         assert(subschema.at("$ref").is_string());
-        const sourcemeta::jsontoolkit::URI ref{
-            subschema.at("$ref").to_string()};
-        const auto destination{nearest_bases.empty()
-                                   ? ref.recompose()
-                                   : ref.resolve_from(nearest_bases.front())};
-        // TODO: We shouldn't need to reparse if the URI handled mutations
-        const sourcemeta::jsontoolkit::URI destination_uri{destination};
-        references.insert(
-            {{ReferenceType::Static, pointer.concat({"$ref"})},
-             {destination, destination_uri.recompose_without_fragment(),
-              fragment_string(destination_uri)}});
+        sourcemeta::jsontoolkit::URI ref{subschema.at("$ref").to_string()};
+        if (!nearest_bases.empty()) {
+          ref.resolve_from(nearest_bases.front());
+        }
+
+        references.insert({{ReferenceType::Static, pointer.concat({"$ref"})},
+                           {ref.recompose(), ref.recompose_without_fragment(),
+                            fragment_string(ref)}});
       }
 
       const std::optional<std::string> schema_base_dialect{
@@ -321,12 +326,14 @@ auto sourcemeta::jsontoolkit::frame(
               "https://json-schema.org/draft/2020-12/vocab/core") &&
           subschema.defines("$dynamicRef")) {
         assert(subschema.at("$dynamicRef").is_string());
-        const sourcemeta::jsontoolkit::URI ref{
+        sourcemeta::jsontoolkit::URI ref{
             subschema.at("$dynamicRef").to_string()};
+        if (!nearest_bases.empty()) {
+          ref.resolve_from(nearest_bases.front());
+        }
+
         // TODO: Check bookending requirement
-        const auto destination{nearest_bases.empty()
-                                   ? ref.recompose()
-                                   : ref.resolve_from(nearest_bases.front())};
+        const auto destination{ref.recompose()};
         // TODO: We shouldn't need to reparse if the URI handled mutations
         const sourcemeta::jsontoolkit::URI destination_uri{destination};
         references.insert(
