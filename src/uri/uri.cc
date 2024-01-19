@@ -195,7 +195,7 @@ auto URI::recompose_without_fragment() const -> std::optional<std::string> {
   return result.str();
 }
 
-auto URI::canonicalize() const -> std::string {
+auto URI::canonicalize() -> URI & {
   std::ostringstream result;
 
   // Scheme
@@ -253,7 +253,10 @@ auto URI::canonicalize() const -> std::string {
     result << '#' << result_fragment.value();
   }
 
-  return result.str();
+  this->data = result.str();
+  uriFreeUriMembersA(&this->internal->uri);
+  uri_parse(this->data, &this->internal->uri);
+  return *this;
 }
 
 auto URI::resolve_from(const URI &base) const -> std::string {
