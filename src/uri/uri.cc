@@ -42,21 +42,13 @@ static auto uri_text_range(const UriTextRangeA *const range)
                               range->afterLast - range->first)};
 }
 
-namespace sourcemeta::jsontoolkit {
-
-struct URI::Internal {
-  UriUriA uri;
-};
-
-URI::URI(std::string input) : data{std::move(input)}, internal{new Internal} {
+static auto uri_parse(const std::string &data, UriUriA *uri) -> void {
   const char *error_position;
-  const auto code{uriParseSingleUriA(&this->internal->uri, this->data.c_str(),
-                                     &error_position)};
-  switch (code) {
+  switch (uriParseSingleUriA(uri, data.c_str(), &error_position)) {
     case URI_ERROR_SYNTAX:
       // TODO: Test the positions of this error
-      throw URIParseError{
-          static_cast<std::uint64_t>(error_position - this->data.c_str() + 1)};
+      throw sourcemeta::jsontoolkit::URIParseError{
+          static_cast<std::uint64_t>(error_position - data.c_str() + 1)};
     case URI_ERROR_MALLOC:
       throw std::runtime_error("URI malloc error");
     case URI_ERROR_OUTPUT_TOO_LARGE:
@@ -64,10 +56,20 @@ URI::URI(std::string input) : data{std::move(input)}, internal{new Internal} {
     case URI_SUCCESS:
       break;
     default:
-      throw URIError{"Unknown URI error"};
+      throw sourcemeta::jsontoolkit::URIError{"Unknown URI error"};
   }
 
-  uri_normalize(&this->internal->uri);
+  uri_normalize(uri);
+}
+
+namespace sourcemeta::jsontoolkit {
+
+struct URI::Internal {
+  UriUriA uri;
+};
+
+URI::URI(std::string input) : data{std::move(input)}, internal{new Internal} {
+  uri_parse(this->data, &this->internal->uri);
 }
 
 URI::~URI() { uriFreeUriMembersA(&this->internal->uri); }
