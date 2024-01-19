@@ -166,11 +166,13 @@ auto sourcemeta::jsontoolkit::frame(
       }
     }
 
+    const auto vocabularies{sourcemeta::jsontoolkit::vocabularies(
+                                subschema, resolver, effective_dialects.front())
+                                .get()};
+
     // Handle schema anchors
     for (const auto &[name, type] :
-         sourcemeta::jsontoolkit::anchors(subschema, resolver,
-                                          effective_dialects.front())
-             .get()) {
+         sourcemeta::jsontoolkit::anchors(subschema, vocabularies)) {
       const auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
       const auto bases{find_nearest_bases(base_uris, pointer, id)};
       const auto relative_anchor_uri{anchor_uri.recompose()};
