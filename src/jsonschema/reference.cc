@@ -101,6 +101,8 @@ auto sourcemeta::jsontoolkit::frame(
         {sourcemeta::jsontoolkit::empty_pointer, {default_id.value()}});
   }
 
+  // TODO: Extend SchemaIterator to return the subschema vocabularies,
+  // dialect, base dialect, etc as it has this information already.
   for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator{
            schema, walker, resolver, default_dialect}) {
     const auto &subschema{sourcemeta::jsontoolkit::get(schema, pointer)};
