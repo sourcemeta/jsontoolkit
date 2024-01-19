@@ -184,6 +184,15 @@ auto vocabularies(const JSON &schema, const SchemaResolver &resolver,
                   const std::optional<std::string> &default_dialect =
                       std::nullopt) -> std::future<std::map<std::string, bool>>;
 
+/// @ingroup jsonschema
+///
+/// A shortcut to sourcemeta::jsontoolkit::vocabularies based on the base
+/// dialect and dialect URI.
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+auto vocabularies(const SchemaResolver &resolver,
+                  const std::string &base_dialect, const std::string &dialect)
+    -> std::future<std::map<std::string, bool>>;
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif
