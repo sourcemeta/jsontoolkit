@@ -76,9 +76,13 @@ auto sourcemeta::jsontoolkit::frame(
   std::map<sourcemeta::jsontoolkit::Pointer, std::vector<std::string>>
       base_dialects;
 
-  const std::optional<std::string> root_id{
-      sourcemeta::jsontoolkit::id(schema, resolver, default_dialect, default_id)
+  const std::optional<std::string> root_base_dialect{
+      sourcemeta::jsontoolkit::base_dialect(schema, resolver, default_dialect)
           .get()};
+  assert(root_base_dialect.has_value());
+
+  const std::optional<std::string> root_id{sourcemeta::jsontoolkit::id(
+      schema, root_base_dialect.value(), default_id)};
   const std::optional<std::string> root_dialect{
       sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
   assert(root_dialect.has_value());
@@ -110,17 +114,16 @@ auto sourcemeta::jsontoolkit::frame(
         find_nearest_bases(base_dialects, pointer, root_dialect)};
     assert(effective_dialects.size() == 1);
 
-    // Handle schema identifiers
-    const std::optional<std::string> id{
-        sourcemeta::jsontoolkit::id(subschema, resolver,
-                                    effective_dialects.front(),
-                                    pointer.empty() ? default_id : std::nullopt)
-            .get()};
-
     const std::optional<std::string> base_dialect{
         sourcemeta::jsontoolkit::base_dialect(subschema, resolver,
                                               effective_dialects.front())
             .get()};
+    assert(base_dialect.has_value());
+
+    // Handle schema identifiers
+    const std::optional<std::string> id{sourcemeta::jsontoolkit::id(
+        subschema, base_dialect.value(),
+        pointer.empty() ? default_id : std::nullopt)};
 
     if (id.has_value()) {
       // In older drafts, the presence of `$ref` would override any sibling

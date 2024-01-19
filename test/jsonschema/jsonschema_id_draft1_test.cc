@@ -103,3 +103,15 @@ TEST(JSONSchema_id_draft1, default_dialect_precedence) {
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
+
+TEST(JSONSchema_id_draft1, base_dialect_shortcut) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "id": "https://example.com/my-schema",
+    "$schema": "http://json-schema.org/draft-01/schema#"
+  })JSON");
+  const std::optional<std::string> id{sourcemeta::jsontoolkit::id(
+      document, "http://json-schema.org/draft-01/hyper-schema#")};
+  EXPECT_TRUE(id.has_value());
+  EXPECT_EQ(id.value(), "https://example.com/my-schema");
+}
