@@ -202,6 +202,35 @@ auto sourcemeta::jsontoolkit::vocabularies(const SchemaResolver &resolver,
                                            const std::string &base_dialect,
                                            const std::string &dialect)
     -> std::future<std::map<std::string, bool>> {
+  // As a performance optimization shortcut
+  if (base_dialect == dialect) {
+    if (dialect == "https://json-schema.org/draft/2020-12/schema") {
+      std::promise<std::map<std::string, bool>> promise;
+      promise.set_value(
+          {{"https://json-schema.org/draft/2020-12/vocab/core", true},
+           {"https://json-schema.org/draft/2020-12/vocab/applicator", true},
+           {"https://json-schema.org/draft/2020-12/vocab/unevaluated", true},
+           {"https://json-schema.org/draft/2020-12/vocab/validation", true},
+           {"https://json-schema.org/draft/2020-12/vocab/meta-data", true},
+           {"https://json-schema.org/draft/2020-12/vocab/format-annotation",
+            true},
+           {"https://json-schema.org/draft/2020-12/vocab/content", true}});
+
+      return promise.get_future();
+    } else if (dialect == "https://json-schema.org/draft/2019-09/schema") {
+      std::promise<std::map<std::string, bool>> promise;
+      promise.set_value(
+          {{"https://json-schema.org/draft/2019-09/vocab/core", true},
+           {"https://json-schema.org/draft/2019-09/vocab/applicator", true},
+           {"https://json-schema.org/draft/2019-09/vocab/validation", true},
+           {"https://json-schema.org/draft/2019-09/vocab/meta-data", true},
+           {"https://json-schema.org/draft/2019-09/vocab/format", false},
+           {"https://json-schema.org/draft/2019-09/vocab/content", true}});
+
+      return promise.get_future();
+    }
+  }
+
   /*
    * (1) If the base dialect is pre-vocabularies, then the
    * base dialect itself is conceptually the only vocabulary
