@@ -82,6 +82,15 @@ auto id(const JSON &schema, const SchemaResolver &resolver,
 
 /// @ingroup jsonschema
 ///
+/// A shortcut to sourcemeta::jsontoolkit::id if you know the base dialect of
+/// the schema.
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+auto id(const JSON &schema, const std::string &base_dialect,
+        const std::optional<std::string> &default_id = std::nullopt)
+    -> std::optional<std::string>;
+
+/// @ingroup jsonschema
+///
 /// Get the dialect URI that corresponds to a JSON Schema instance.
 /// The result is empty if the dialect cannot be determined. For example:
 ///

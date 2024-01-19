@@ -26,7 +26,16 @@ auto sourcemeta::jsontoolkit::id(
     return promise.get_future();
   }
 
-  const std::string &base_dialect{maybe_base_dialect.value()};
+  std::promise<std::optional<std::string>> promise;
+  promise.set_value(id(schema, maybe_base_dialect.value(), default_id));
+  return promise.get_future();
+}
+
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+auto sourcemeta::jsontoolkit::id(const JSON &schema,
+                                 const std::string &base_dialect,
+                                 const std::optional<std::string> &default_id)
+    -> std::optional<std::string> {
   if (base_dialect == "http://json-schema.org/draft-00/hyper-schema#" ||
       base_dialect == "http://json-schema.org/draft-01/hyper-schema#" ||
       base_dialect == "http://json-schema.org/draft-02/hyper-schema#" ||
@@ -34,7 +43,6 @@ auto sourcemeta::jsontoolkit::id(
       base_dialect == "http://json-schema.org/draft-03/schema#" ||
       base_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
       base_dialect == "http://json-schema.org/draft-04/schema#") {
-    std::promise<std::optional<std::string>> promise;
     if (schema.is_object() && schema.defines("id")) {
       const sourcemeta::jsontoolkit::JSON &id{schema.at("id")};
       if (!id.is_string() || id.empty()) {
@@ -42,12 +50,10 @@ auto sourcemeta::jsontoolkit::id(
             "The value of the id property is not valid");
       }
 
-      promise.set_value(id.to_string());
+      return id.to_string();
     } else {
-      promise.set_value(default_id);
+      return default_id;
     }
-
-    return promise.get_future();
   }
 
   if (schema.is_object() && schema.defines("$id")) {
@@ -57,14 +63,10 @@ auto sourcemeta::jsontoolkit::id(
           "The value of the $id property is not valid");
     }
 
-    std::promise<std::optional<std::string>> promise;
-    promise.set_value(id.to_string());
-    return promise.get_future();
+    return id.to_string();
   }
 
-  std::promise<std::optional<std::string>> promise;
-  promise.set_value(default_id);
-  return promise.get_future();
+  return default_id;
 }
 
 auto sourcemeta::jsontoolkit::dialect(
