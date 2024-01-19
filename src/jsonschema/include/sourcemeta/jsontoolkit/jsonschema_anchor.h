@@ -51,6 +51,15 @@ auto anchors(const JSON &schema, const SchemaResolver &resolver,
              const std::optional<std::string> &default_dialect = std::nullopt)
     -> std::future<std::map<std::string, AnchorType>>;
 
+/// @ingroup jsonschema
+///
+/// This function is a shortcut to sourcemeta::jsontoolkit::anchors if you have
+/// already computed the vocabularies that the given schema makes use of.
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+auto anchors(const JSON &schema,
+             const std::map<std::string, bool> &vocabularies)
+    -> std::map<std::string, AnchorType>;
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif

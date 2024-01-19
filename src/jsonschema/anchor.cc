@@ -12,6 +12,13 @@ auto anchors(const JSON &schema, const SchemaResolver &resolver,
       sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)
           .get()};
   std::promise<std::map<std::string, AnchorType>> promise;
+  promise.set_value(anchors(schema, vocabularies));
+  return promise.get_future();
+}
+
+auto anchors(const JSON &schema,
+             const std::map<std::string, bool> &vocabularies)
+    -> std::map<std::string, AnchorType> {
   std::map<std::string, AnchorType> result;
 
   // 2020-12
@@ -47,8 +54,7 @@ auto anchors(const JSON &schema, const SchemaResolver &resolver,
     }
   }
 
-  promise.set_value(std::move(result));
-  return promise.get_future();
+  return result;
 }
 
 } // namespace sourcemeta::jsontoolkit

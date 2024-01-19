@@ -102,3 +102,24 @@ TEST(JSONSchema_anchor_2020_12, nested_static_with_default_dialect) {
   EXPECT_TRUE(anchors.contains("foo"));
   EXPECT_EQ(anchors.at("foo"), sourcemeta::jsontoolkit::AnchorType::Static);
 }
+
+TEST(JSONSchema_anchor_2020_12, vocabularies_shortcut) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$anchor": "foo",
+    "$dynamicAnchor": "bar"
+  })JSON");
+
+  const std::map<std::string, bool> vocabularies{
+      sourcemeta::jsontoolkit::vocabularies(
+          document, sourcemeta::jsontoolkit::official_resolver)
+          .get()};
+
+  const auto anchors{sourcemeta::jsontoolkit::anchors(document, vocabularies)};
+  EXPECT_EQ(anchors.size(), 2);
+  EXPECT_TRUE(anchors.contains("foo"));
+  EXPECT_TRUE(anchors.contains("bar"));
+  EXPECT_EQ(anchors.at("foo"), sourcemeta::jsontoolkit::AnchorType::Static);
+  EXPECT_EQ(anchors.at("bar"), sourcemeta::jsontoolkit::AnchorType::Dynamic);
+}
