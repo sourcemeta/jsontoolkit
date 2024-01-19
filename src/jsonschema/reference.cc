@@ -171,9 +171,10 @@ auto sourcemeta::jsontoolkit::frame(
       }
     }
 
-    const auto vocabularies{sourcemeta::jsontoolkit::vocabularies(
-                                subschema, resolver, effective_dialects.front())
-                                .get()};
+    const auto vocabularies{
+        sourcemeta::jsontoolkit::vocabularies(resolver, base_dialect.value(),
+                                              effective_dialects.front())
+            .get()};
 
     // Handle schema anchors
     for (const auto &[name, type] :
@@ -279,9 +280,15 @@ auto sourcemeta::jsontoolkit::frame(
               fragment_string(destination_uri)}});
       }
 
-      const auto vocabularies{
-          sourcemeta::jsontoolkit::vocabularies(subschema, resolver,
+      const std::optional<std::string> schema_base_dialect{
+          sourcemeta::jsontoolkit::base_dialect(subschema, resolver,
                                                 effective_dialects.front())
+              .get()};
+      assert(schema_base_dialect.has_value());
+
+      const auto vocabularies{
+          sourcemeta::jsontoolkit::vocabularies(
+              resolver, schema_base_dialect.value(), effective_dialects.front())
               .get()};
 
       if (vocabularies.contains(

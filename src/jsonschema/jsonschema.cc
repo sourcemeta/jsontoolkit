@@ -176,10 +176,6 @@ auto sourcemeta::jsontoolkit::vocabularies(
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect)
     -> std::future<std::map<std::string, bool>> {
-  /*
-   * (1) Determine the base dialect. We need this to unambiguously
-   * determine if the `$vocabulary` is supported
-   */
   const std::optional<std::string> maybe_base_dialect{
       sourcemeta::jsontoolkit::base_dialect(schema, resolver, default_dialect)
           .get()};
@@ -187,10 +183,27 @@ auto sourcemeta::jsontoolkit::vocabularies(
     throw sourcemeta::jsontoolkit::SchemaError(
         "Could not determine base dialect for schema");
   }
-  const std::string &base_dialect{maybe_base_dialect.value()};
 
+  const std::optional<std::string> maybe_dialect{
+      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+  if (!maybe_dialect.has_value()) {
+    // If the schema has no declared metaschema and the user didn't
+    // provide a explicit default, then we cannot do anything.
+    // Better to abort instead of trying to guess.
+    throw sourcemeta::jsontoolkit::SchemaError(
+        "Cannot determine the dialect of the schema");
+  }
+
+  return vocabularies(resolver, maybe_base_dialect.value(),
+                      maybe_dialect.value());
+}
+
+auto sourcemeta::jsontoolkit::vocabularies(const SchemaResolver &resolver,
+                                           const std::string &base_dialect,
+                                           const std::string &dialect)
+    -> std::future<std::map<std::string, bool>> {
   /*
-   * (2) If the base dialect is pre-vocabularies, then the
+   * (1) If the base dialect is pre-vocabularies, then the
    * base dialect itself is conceptually the only vocabulary
    */
 
@@ -212,24 +225,14 @@ auto sourcemeta::jsontoolkit::vocabularies(
   }
 
   /*
-   * (3) If the dialect is vocabulary aware, then fetch such dialect
+   * (2) If the dialect is vocabulary aware, then fetch such dialect
    */
 
-  const std::optional<std::string> maybe_dialect{
-      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
-  if (!maybe_dialect.has_value()) {
-    // If the schema has no declared metaschema and the user didn't
-    // provide a explicit default, then we cannot do anything.
-    // Better to abort instead of trying to guess.
-    throw sourcemeta::jsontoolkit::SchemaError(
-        "Cannot determine the dialect of the schema");
-  }
-  const std::string &dialect_id{maybe_dialect.value()};
   const std::optional<sourcemeta::jsontoolkit::JSON> maybe_schema_dialect{
-      resolver(dialect_id).get()};
+      resolver(dialect).get()};
   if (!maybe_schema_dialect.has_value()) {
     throw sourcemeta::jsontoolkit::SchemaResolutionError(
-        dialect_id, "Could not resolve schema");
+        dialect, "Could not resolve schema");
   }
   const sourcemeta::jsontoolkit::JSON &schema_dialect{
       maybe_schema_dialect.value()};
@@ -238,10 +241,10 @@ auto sourcemeta::jsontoolkit::vocabularies(
   // complexity of the generic `id` function.
   assert(schema_dialect.defines("$id") &&
          schema_dialect.at("$id").is_string() &&
-         schema_dialect.at("$id").to_string() == dialect_id);
+         schema_dialect.at("$id").to_string() == dialect);
 
   /*
-   * (4) Retrieve the vocabularies explicitly or implicitly declared by the
+   * (3) Retrieve the vocabularies explicitly or implicitly declared by the
    * dialect
    */
 
