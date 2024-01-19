@@ -7,10 +7,7 @@
 
 auto sourcemeta::jsontoolkit::ReferenceFrame::defines(
     const ReferenceType type, const std::string &uri) const -> bool {
-  // TODO: Canonicalize BEFORE checking on the reference frame
-  const auto canonical{
-      sourcemeta::jsontoolkit::URI{uri}.canonicalize().recompose()};
-  return this->data.contains({type, canonical});
+  return this->data.contains({type, uri});
 }
 
 auto sourcemeta::jsontoolkit::ReferenceFrame::size() const -> std::size_t {
