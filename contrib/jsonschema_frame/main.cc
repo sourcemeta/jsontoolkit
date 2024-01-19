@@ -27,22 +27,22 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
   std::cout << "--------------------------------------------------\n";
   std::cout << "Frames: " << frame.size() << "\n";
   std::cout << "--------------------------------------------------\n";
-  for (const auto &[type, uri] : frame) {
-    if (type == sourcemeta::jsontoolkit::ReferenceType::Dynamic) {
+  for (const auto &[key, entry] : frame) {
+    if (key.first == sourcemeta::jsontoolkit::ReferenceType::Dynamic) {
       std::cout << "(DYNAMIC) ";
     } else {
       std::cout << "(STATIC) ";
     }
 
     std::cout << "URI: ";
-    std::cout << uri << "\n";
-    std::cout << "    Location : "
-              << frame.root(type, uri).value_or("<ANONYMOUS>") << "\n";
+    std::cout << key.second << "\n";
+    std::cout << "    Location : " << entry.root.value_or("<ANONYMOUS>")
+              << "\n";
     std::cout << "    Pointer  : ";
-    sourcemeta::jsontoolkit::stringify(frame.pointer(type, uri), std::cout);
+    sourcemeta::jsontoolkit::stringify(entry.pointer, std::cout);
     std::cout << "\n";
-    std::cout << "    Base URI : " << frame.base(type, uri) << "\n";
-    std::cout << "    Dialect  : " << frame.dialect(type, uri) << "\n";
+    std::cout << "    Base URI : " << entry.base << "\n";
+    std::cout << "    Dialect  : " << entry.dialect << "\n";
   }
 
   std::cout << "--------------------------------------------------\n";

@@ -6,6 +6,7 @@
 #include <cassert>  // assert
 #include <map>      // std::map
 #include <optional> // std::optional
+#include <sstream>  // std::ostringstream
 #include <utility>  // std::pair
 #include <vector>   // std::vector
 
@@ -79,6 +80,26 @@ static auto fragment_string(const sourcemeta::jsontoolkit::URI uri)
   return std::nullopt;
 }
 
+static auto store(sourcemeta::jsontoolkit::ReferenceFrame &frame,
+                  const sourcemeta::jsontoolkit::ReferenceType type,
+                  const std::string &uri,
+                  const std::optional<std::string> &root_id,
+                  const std::string &base_id,
+                  const sourcemeta::jsontoolkit::Pointer &pointer_from_root,
+                  const std::string &dialect) -> void {
+  const auto canonical{
+      sourcemeta::jsontoolkit::URI{uri}.canonicalize().recompose()};
+  // TODO: Should we emplace here?
+  if (!frame
+           .insert({{type, canonical},
+                    {root_id, base_id, pointer_from_root, dialect}})
+           .second) {
+    std::ostringstream error;
+    error << "Schema identifier already exists: " << uri;
+    throw sourcemeta::jsontoolkit::SchemaError(error.str());
+  }
+}
+
 // TODO: Revise this function, try to simplify it, and avoid redundant
 // operations (like resolving schemas) by adding relevant overloads
 // for the functions it consumes.
@@ -113,9 +134,9 @@ auto sourcemeta::jsontoolkit::frame(
                                        default_id.has_value() &&
                                        root_id.value() != default_id.value()};
   if (has_explicit_different_id) {
-    frame.store(ReferenceType::Static, default_id.value(), root_id.value(),
-                root_id.value(), sourcemeta::jsontoolkit::empty_pointer,
-                root_dialect.value());
+    store(frame, ReferenceType::Static, default_id.value(), root_id.value(),
+          root_id.value(), sourcemeta::jsontoolkit::empty_pointer,
+          root_dialect.value());
     base_uris.insert(
         {sourcemeta::jsontoolkit::empty_pointer, {default_id.value()}});
   }
@@ -157,9 +178,9 @@ auto sourcemeta::jsontoolkit::frame(
           const sourcemeta::jsontoolkit::URI maybe_relative{id.value()};
           const std::string new_id{maybe_relative.resolve_from(base)};
           if (!maybe_relative.is_absolute() ||
-              !frame.defines(ReferenceType::Static, new_id)) {
-            frame.store(ReferenceType::Static, new_id, root_id, new_id, pointer,
-                        effective_dialects.front());
+              !frame.contains({ReferenceType::Static, new_id})) {
+            store(frame, ReferenceType::Static, new_id, root_id, new_id,
+                  pointer, effective_dialects.front());
           }
 
           if (base_uris.contains(pointer)) {
@@ -186,14 +207,14 @@ auto sourcemeta::jsontoolkit::frame(
       if (bases.empty()) {
         if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
             type == sourcemeta::jsontoolkit::AnchorType::All) {
-          frame.store(ReferenceType::Static, relative_anchor_uri, root_id, "",
-                      pointer, effective_dialects.front());
+          store(frame, ReferenceType::Static, relative_anchor_uri, root_id, "",
+                pointer, effective_dialects.front());
         }
 
         if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
             type == sourcemeta::jsontoolkit::AnchorType::All) {
-          frame.store(ReferenceType::Dynamic, relative_anchor_uri, root_id, "",
-                      pointer, effective_dialects.front());
+          store(frame, ReferenceType::Dynamic, relative_anchor_uri, root_id, "",
+                pointer, effective_dialects.front());
         }
       } else {
         bool is_first = true;
@@ -201,22 +222,22 @@ auto sourcemeta::jsontoolkit::frame(
           const sourcemeta::jsontoolkit::URI anchor_base{base_string};
           const auto absolute_anchor_uri{anchor_uri.resolve_from(anchor_base)};
           if (!is_first &&
-              frame.defines(ReferenceType::Static, absolute_anchor_uri)) {
+              frame.contains({ReferenceType::Static, absolute_anchor_uri})) {
             continue;
           }
 
           if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
               type == sourcemeta::jsontoolkit::AnchorType::All) {
-            frame.store(sourcemeta::jsontoolkit::ReferenceType::Static,
-                        absolute_anchor_uri, root_id, base_string, pointer,
-                        effective_dialects.front());
+            store(frame, sourcemeta::jsontoolkit::ReferenceType::Static,
+                  absolute_anchor_uri, root_id, base_string, pointer,
+                  effective_dialects.front());
           }
 
           if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
               type == sourcemeta::jsontoolkit::AnchorType::All) {
-            frame.store(sourcemeta::jsontoolkit::ReferenceType::Dynamic,
-                        absolute_anchor_uri, root_id, base_string, pointer,
-                        effective_dialects.front());
+            store(frame, sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+                  absolute_anchor_uri, root_id, base_string, pointer,
+                  effective_dialects.front());
           }
 
           is_first = false;
@@ -241,12 +262,12 @@ auto sourcemeta::jsontoolkit::frame(
       const auto canonical_result{
           sourcemeta::jsontoolkit::URI{result}.canonicalize().recompose()};
 
-      if (!frame.defines(ReferenceType::Static, canonical_result)) {
+      if (!frame.contains({ReferenceType::Static, canonical_result})) {
         const auto nearest_bases{
             find_nearest_bases(base_uris, pointer, base.first)};
         assert(!nearest_bases.empty());
-        frame.store(ReferenceType::Static, canonical_result, root_id,
-                    nearest_bases.front(), pointer, dialects.front());
+        store(frame, ReferenceType::Static, canonical_result, root_id,
+              nearest_bases.front(), pointer, dialects.front());
       }
     }
   }
