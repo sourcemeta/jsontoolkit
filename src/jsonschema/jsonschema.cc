@@ -100,7 +100,17 @@ auto sourcemeta::jsontoolkit::base_dialect(
     return promise.get_future();
   }
 
-  const std::optional<std::string> &effective_dialect{dialect.value()};
+  const std::string &effective_dialect{dialect.value()};
+
+  // As a performance optimization shortcut
+  if (effective_dialect == "https://json-schema.org/draft/2020-12/schema" ||
+      effective_dialect == "https://json-schema.org/draft/2019-09/schema" ||
+      effective_dialect == "http://json-schema.org/draft-07/schema#" ||
+      effective_dialect == "http://json-schema.org/draft-06/schema#") {
+    std::promise<std::optional<std::string>> promise;
+    promise.set_value(effective_dialect);
+    return promise.get_future();
+  }
 
   // For compatibility with older JSON Schema drafts that didn't support $id nor
   // $vocabulary
@@ -108,20 +118,15 @@ auto sourcemeta::jsontoolkit::base_dialect(
       // In Draft 0, 1, and 2, the official metaschema is defined on top of
       // the official hyper-schema metaschema. See
       // http://json-schema.org/draft-00/schema#
-      effective_dialect.value() ==
-          "http://json-schema.org/draft-00/hyper-schema#" ||
-      effective_dialect.value() ==
-          "http://json-schema.org/draft-01/hyper-schema#" ||
-      effective_dialect.value() ==
-          "http://json-schema.org/draft-02/hyper-schema#" ||
+      effective_dialect == "http://json-schema.org/draft-00/hyper-schema#" ||
+      effective_dialect == "http://json-schema.org/draft-01/hyper-schema#" ||
+      effective_dialect == "http://json-schema.org/draft-02/hyper-schema#" ||
 
       // Draft 3 and 4 have both schema and hyper-schema dialects
-      effective_dialect.value() ==
-          "http://json-schema.org/draft-03/hyper-schema#" ||
-      effective_dialect.value() == "http://json-schema.org/draft-03/schema#" ||
-      effective_dialect.value() ==
-          "http://json-schema.org/draft-04/hyper-schema#" ||
-      effective_dialect.value() == "http://json-schema.org/draft-04/schema#") {
+      effective_dialect == "http://json-schema.org/draft-03/hyper-schema#" ||
+      effective_dialect == "http://json-schema.org/draft-03/schema#" ||
+      effective_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
+      effective_dialect == "http://json-schema.org/draft-04/schema#") {
     std::promise<std::optional<std::string>> promise;
     promise.set_value(effective_dialect);
     return promise.get_future();
@@ -131,7 +136,7 @@ auto sourcemeta::jsontoolkit::base_dialect(
   // defines itself, then we got to the base dialect
   if (schema.is_object() && schema.defines("$id")) {
     assert(schema.at("$id").is_string());
-    if (schema.at("$id").to_string() == effective_dialect.value()) {
+    if (schema.at("$id").to_string() == effective_dialect) {
       std::promise<std::optional<std::string>> promise;
       promise.set_value(schema.at("$id").to_string());
       return promise.get_future();
@@ -140,13 +145,13 @@ auto sourcemeta::jsontoolkit::base_dialect(
 
   // Otherwise, traverse the metaschema hierarchy up
   const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
-      resolver(effective_dialect.value()).get()};
+      resolver(effective_dialect).get()};
   if (!metaschema.has_value()) {
     throw sourcemeta::jsontoolkit::SchemaResolutionError(
-        effective_dialect.value(), "Could not resolve schema");
+        effective_dialect, "Could not resolve schema");
   }
 
-  return base_dialect(metaschema.value(), resolver, effective_dialect.value());
+  return base_dialect(metaschema.value(), resolver, effective_dialect);
 }
 
 namespace {
