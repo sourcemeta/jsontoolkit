@@ -50,6 +50,25 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
   return result;
 }
 
+static auto ref_overrides_adjacent_keywords(const std::string &base_dialect)
+    -> bool {
+  // In older drafts, the presence of `$ref` would override any sibling
+  // keywords
+  // See
+  // https://json-schema.org/draft-07/draft-handrews-json-schema-01#rfc.section.8.3
+  return base_dialect == "http://json-schema.org/draft-07/schema#" ||
+         base_dialect == "http://json-schema.org/draft-07/hyper-schema#" ||
+         base_dialect == "http://json-schema.org/draft-06/schema#" ||
+         base_dialect == "http://json-schema.org/draft-06/hyper-schema#" ||
+         base_dialect == "http://json-schema.org/draft-04/schema#" ||
+         base_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
+         base_dialect == "http://json-schema.org/draft-03/schema#" ||
+         base_dialect == "http://json-schema.org/draft-03/hyper-schema#" ||
+         base_dialect == "http://json-schema.org/draft-02/hyper-schema#" ||
+         base_dialect == "http://json-schema.org/draft-01/hyper-schema#" ||
+         base_dialect == "http://json-schema.org/draft-00/hyper-schema#";
+}
+
 static auto fragment_string(const sourcemeta::jsontoolkit::URI uri)
     -> std::optional<std::string> {
   const auto fragment{uri.fragment()};
@@ -128,32 +147,10 @@ auto sourcemeta::jsontoolkit::frame(
         pointer.empty() ? default_id : std::nullopt)};
 
     if (id.has_value()) {
-      // In older drafts, the presence of `$ref` would override any sibling
-      // keywords
-      // See
-      // https://json-schema.org/draft-07/draft-handrews-json-schema-01#rfc.section.8.3
-      const bool ref_overrides_id =
+      const bool ref_overrides =
           base_dialect.has_value() &&
-          (base_dialect.value() == "http://json-schema.org/draft-07/schema#" ||
-           base_dialect.value() ==
-               "http://json-schema.org/draft-07/hyper-schema#" ||
-           base_dialect.value() == "http://json-schema.org/draft-06/schema#" ||
-           base_dialect.value() ==
-               "http://json-schema.org/draft-06/hyper-schema#" ||
-           base_dialect.value() == "http://json-schema.org/draft-04/schema#" ||
-           base_dialect.value() ==
-               "http://json-schema.org/draft-04/hyper-schema#" ||
-           base_dialect.value() == "http://json-schema.org/draft-03/schema#" ||
-           base_dialect.value() ==
-               "http://json-schema.org/draft-03/hyper-schema#" ||
-           base_dialect.value() ==
-               "http://json-schema.org/draft-02/hyper-schema#" ||
-           base_dialect.value() ==
-               "http://json-schema.org/draft-01/hyper-schema#" ||
-           base_dialect.value() ==
-               "http://json-schema.org/draft-00/hyper-schema#");
-
-      if (!subschema.defines("$ref") || !ref_overrides_id) {
+          ref_overrides_adjacent_keywords(base_dialect.value());
+      if (!subschema.defines("$ref") || !ref_overrides) {
         for (const auto &base_string :
              find_nearest_bases(base_uris, pointer, id)) {
           const sourcemeta::jsontoolkit::URI base{base_string};
