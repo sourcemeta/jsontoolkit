@@ -8,7 +8,8 @@
 auto sourcemeta::jsontoolkit::ReferenceFrame::defines(
     const ReferenceType type, const std::string &uri) const -> bool {
   // TODO: Canonicalize BEFORE checking on the reference frame
-  const auto canonical{sourcemeta::jsontoolkit::URI{uri}.canonicalize()};
+  const auto canonical{
+      sourcemeta::jsontoolkit::URI{uri}.canonicalize().recompose()};
   return this->data.contains({type, canonical});
 }
 
@@ -54,7 +55,8 @@ auto sourcemeta::jsontoolkit::ReferenceFrame::store(
     const sourcemeta::jsontoolkit::Pointer &pointer_from_root,
     const std::string &dialect) -> void {
   // TODO: Canonicalize BEFORE inserting to the reference frame
-  const auto canonical{sourcemeta::jsontoolkit::URI{uri}.canonicalize()};
+  const auto canonical{
+      sourcemeta::jsontoolkit::URI{uri}.canonicalize().recompose()};
   if (!this->data
            .insert({{type, canonical},
                     {root_id, base_id, pointer_from_root, dialect}})

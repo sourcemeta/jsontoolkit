@@ -186,18 +186,17 @@ public:
   [[nodiscard]] auto recompose_without_fragment() const
       -> std::optional<std::string>;
 
-  // TODO: Make this method mutate the URI instance itself, and return
-  // "this" for chaining. This pattern would simplify a lot of the code.
   /// Recompose and canonicalize a URI. For example:
   ///
   /// ```cpp
   /// #include <sourcemeta/jsontoolkit/uri.h>
   /// #include <cassert>
   ///
-  /// const sourcemeta::jsontoolkit::URI uri{"hTtP://exAmpLe.com:80/TEST"};
+  /// sourcemeta::jsontoolkit::URI uri{"hTtP://exAmpLe.com:80/TEST"};
+  /// uri.canonicalize():
   /// assert(uri.recompose() == "http://example.com/TEST");
   /// ```
-  [[nodiscard]] auto canonicalize() const -> std::string;
+  auto canonicalize() -> URI &;
 
   // TODO: Make this method mutate the URI instance itself, and return
   // "this" for chaining. This pattern would simplify a lot of the code.

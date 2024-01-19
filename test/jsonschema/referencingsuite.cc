@@ -18,12 +18,11 @@ dereference(const std::string &uri,
             const std::map<std::string, std::pair<sourcemeta::jsontoolkit::JSON,
                                                   std::string>> &registry)
     -> std::optional<std::pair<sourcemeta::jsontoolkit::JSON, std::string>> {
-  const auto canonical{sourcemeta::jsontoolkit::URI{uri}.canonicalize()};
-  if (!registry.contains(canonical)) {
+  if (!registry.contains(uri)) {
     return std::nullopt;
   }
 
-  return registry.at(canonical);
+  return registry.at(uri);
 }
 
 class ReferencingTest : public testing::Test {
@@ -90,12 +89,15 @@ public:
     const std::string ref_string{current.at("ref").to_string()};
 
     try {
+      // TODO: Avoid this double URI parsing
       const std::string ref{
           base_uri.has_value()
               ? sourcemeta::jsontoolkit::URI{ref_string}.resolve_from(
                     base_uri.value())
               : ref_string};
-      const auto result{dereference(ref, this->registry)};
+      sourcemeta::jsontoolkit::URI ref_uri{ref};
+      ref_uri.canonicalize();
+      const auto result{dereference(ref_uri.recompose(), this->registry)};
 
       if (is_error) {
         EXPECT_FALSE(result.has_value());
