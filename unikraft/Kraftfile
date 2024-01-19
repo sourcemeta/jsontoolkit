@@ -1,4 +1,4 @@
-specification: v0.5
+specification: v0.6
 name: sourcemeta_jsontoolkit_test
 unikraft:
   version: stable
@@ -18,7 +18,7 @@ libraries:
   libcxx:
     version: stable
   libunwind:
-    version: staging
+    version: stable
   compiler-rt:
     version: stable
   musl:
