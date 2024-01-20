@@ -198,6 +198,7 @@ auto sourcemeta::jsontoolkit::frame(
             .get()};
 
     // Handle schema anchors
+    // Support $recursiveAnchor
     for (const auto &[name, type] :
          sourcemeta::jsontoolkit::anchors(subschema, vocabularies)) {
       const auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
@@ -300,7 +301,7 @@ auto sourcemeta::jsontoolkit::frame(
         // TODO: We shouldn't need to reparse if the URI handled mutations
         const sourcemeta::jsontoolkit::URI destination_uri{destination};
         references.insert(
-            {{pointer.concat({"$ref"}), ReferenceType::Static},
+            {{ReferenceType::Static, pointer.concat({"$ref"})},
              {destination, destination_uri.recompose_without_fragment(),
               fragment_string(destination_uri)}});
       }
@@ -329,7 +330,7 @@ auto sourcemeta::jsontoolkit::frame(
         // TODO: We shouldn't need to reparse if the URI handled mutations
         const sourcemeta::jsontoolkit::URI destination_uri{destination};
         references.insert(
-            {{pointer.concat({"$dynamicRef"}), ReferenceType::Dynamic},
+            {{ReferenceType::Dynamic, pointer.concat({"$dynamicRef"})},
              {destination, destination_uri.recompose_without_fragment(),
               fragment_string(destination_uri)}});
       }

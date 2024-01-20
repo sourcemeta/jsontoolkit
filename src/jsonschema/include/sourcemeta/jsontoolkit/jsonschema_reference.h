@@ -56,12 +56,8 @@ struct ReferenceMapEntry {
 /// The reference type is part of the key as it is possible to
 /// have a static and a dynamic reference to the same location
 /// on the same schema object.
-// TODO: Swap pointer/reference type to match ReferenceFrame
 using ReferenceMap =
-    std::map<std::pair<Pointer, ReferenceType>, ReferenceMapEntry>;
-
-// TODO: Support $recursiveAnchor
-// TODO: Support $recursiveRef
+    std::map<std::pair<ReferenceType, Pointer>, ReferenceMapEntry>;
 
 /// @ingroup jsonschema
 ///
@@ -141,10 +137,10 @@ using ReferenceMap =
 ///   "https://www.example.com/foo#/type"}));
 ///
 /// // References
-/// assert(references.contains({{ "properties", "bar", "$ref" },
-///   sourcemeta::jsontoolkit::ReferenceType::Static}));
-/// assert(references.at({{ "properties", "bar", "$ref" },
-///   sourcemeta::jsontoolkit::ReferenceType::Static}).destination ==
+/// assert(references.contains({sourcemeta::jsontoolkit::ReferenceType::Static,
+///   { "properties", "bar", "$ref" }}));
+/// assert(references.at({sourcemeta::jsontoolkit::ReferenceType::Static,
+///   { "properties", "bar", "$ref" }}).destination ==
 ///     "https://www.example.com/schema#/properties/foo");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
