@@ -259,7 +259,7 @@ auto URI::canonicalize() -> URI & {
   return *this;
 }
 
-auto URI::resolve_from(const URI &base) const -> std::string {
+auto URI::resolve_from(const URI &base) -> URI & {
   UriUriA absoluteDest;
   // Looks like this function allocates to the output variable
   // even on failure.
@@ -279,9 +279,11 @@ auto URI::resolve_from(const URI &base) const -> std::string {
 
   try {
     uri_normalize(&absoluteDest);
-    const auto result{uri_to_string(&absoluteDest)};
+    this->data = uri_to_string(&absoluteDest);
     uriFreeUriMembersA(&absoluteDest);
-    return result;
+    uriFreeUriMembersA(&this->internal->uri);
+    uri_parse(this->data, &this->internal->uri);
+    return *this;
   } catch (...) {
     uriFreeUriMembersA(&absoluteDest);
     throw;

@@ -198,8 +198,6 @@ public:
   /// ```
   auto canonicalize() -> URI &;
 
-  // TODO: Make this method mutate the URI instance itself, and return
-  // "this" for chaining. This pattern would simplify a lot of the code.
   /// Resolve a relative URI against a base URI as established by RFC 3986. For
   /// example:
   ///
@@ -208,14 +206,11 @@ public:
   /// #include <cassert>
   ///
   /// const sourcemeta::jsontoolkit::URI base{"https://www.sourcemeta.com"};
-  /// const sourcemeta::jsontoolkit::URI relative{"foo"};
-  /// assert(relative.resolve_from(base) == "https://sourcemeta.com/foo");
+  /// sourcemeta::jsontoolkit::URI result{"foo"};
+  /// result.resolve_from(base);
+  /// assert(result.recompose() == "https://sourcemeta.com/foo");
   /// ```
-  ///
-  /// Note that we return a string, and not a sourcemeta::jsontoolkit::URI for
-  /// performance reasons. The user can always parse the string back into a URI
-  /// object if they wish.
-  auto resolve_from(const URI &base) const -> std::string;
+  auto resolve_from(const URI &base) -> URI &;
 
   /// Esscape a string as established by RFC 3986 using C++ standard stream. For
   /// example:
