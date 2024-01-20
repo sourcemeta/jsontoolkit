@@ -232,16 +232,20 @@ auto sourcemeta::jsontoolkit::frame(
     assert(dialects.size() == 1);
 
     for (const auto &base : find_every_base(base_uris, pointer)) {
-      const auto relative_pointer_uri{
+      // TODO: Simplify this URI mess
+      auto relative_pointer_uri{
           sourcemeta::jsontoolkit::to_uri(pointer.resolve_from(base.second))};
       const auto result{base.first.empty()
                             ? relative_pointer_uri.recompose()
                             : relative_pointer_uri.resolve_from({base.first})};
-      if (!frame.defines(ReferenceType::Static, result)) {
+      const auto canonical_result{
+          sourcemeta::jsontoolkit::URI{result}.canonicalize().recompose()};
+
+      if (!frame.defines(ReferenceType::Static, canonical_result)) {
         const auto nearest_bases{
             find_nearest_bases(base_uris, pointer, base.first)};
         assert(!nearest_bases.empty());
-        frame.store(ReferenceType::Static, result, root_id,
+        frame.store(ReferenceType::Static, canonical_result, root_id,
                     nearest_bases.front(), pointer, dialects.front());
       }
     }

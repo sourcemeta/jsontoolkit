@@ -461,10 +461,9 @@ TEST(JSONSchema_frame, reference_frame_uri_canonicalize) {
   EXPECT_EQ(frame.size(), 1);
   EXPECT_TRUE(frame.defines(sourcemeta::jsontoolkit::ReferenceType::Static,
                             "https://example.com"));
-  // This is canonicalized
-  EXPECT_TRUE(frame.defines(sourcemeta::jsontoolkit::ReferenceType::Static,
-                            "https://example.com#"));
   // These must not be canonicalized
+  EXPECT_FALSE(frame.defines(sourcemeta::jsontoolkit::ReferenceType::Static,
+                             "https://example.com#"));
   EXPECT_TRUE(frame
                   .root(sourcemeta::jsontoolkit::ReferenceType::Static,
                         "https://example.com")
