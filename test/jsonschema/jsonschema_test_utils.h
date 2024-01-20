@@ -49,16 +49,16 @@
 #define EXPECT_REFERENCE(references, expected_type, expected_pointer,          \
                          expected_uri, expected_base, expected_fragment)       \
   EXPECT_TRUE(                                                                 \
-      (references).contains({TO_POINTER(expected_pointer), expected_type}));   \
+      (references).contains({expected_type, TO_POINTER(expected_pointer)}));   \
   EXPECT_EQ((references)                                                       \
-                .at({TO_POINTER(expected_pointer), expected_type})             \
+                .at({expected_type, TO_POINTER(expected_pointer)})             \
                 .destination,                                                  \
             (expected_uri));                                                   \
   EXPECT_EQ(                                                                   \
-      (references).at({TO_POINTER(expected_pointer), expected_type}).base,     \
+      (references).at({expected_type, TO_POINTER(expected_pointer)}).base,     \
       (expected_base));                                                        \
   EXPECT_EQ(                                                                   \
-      (references).at({TO_POINTER(expected_pointer), expected_type}).fragment, \
+      (references).at({expected_type, TO_POINTER(expected_pointer)}).fragment, \
       (expected_fragment));
 
 #define EXPECT_STATIC_REFERENCE(references, expected_pointer, expected_uri,    \
