@@ -40,20 +40,25 @@ struct ReferenceFrameEntry {
 using ReferenceFrame =
     std::map<std::pair<ReferenceType, std::string>, ReferenceFrameEntry>;
 
-// TODO: Encapsulate this behind a class to make sure we
-// can keep a stable API even if changing the underlying map.
+/// @ingroup jsonschema
+/// A single entry in a JSON Schema reference map
+struct ReferenceMapEntry {
+  const std::string destination;
+  const std::optional<std::string> base;
+  const std::optional<std::string> fragment;
+};
+
 /// @ingroup jsonschema
 /// A JSON Schema reference map is a mapping of a JSON Pointer
 /// of a subschema to a destination static reference URI.
-/// For convenient, the value consists of the URI on its entirety,
+/// For convenience, the value consists of the URI on its entirety,
 /// but also broken down by its potential fragment component.
 /// The reference type is part of the key as it is possible to
 /// have a static and a dynamic reference to the same location
 /// on the same schema object.
+// TODO: Swap pointer/reference type to match ReferenceFrame
 using ReferenceMap =
-    std::map<std::pair<Pointer, ReferenceType>,
-             std::tuple<std::string, std::optional<std::string>,
-                        std::optional<std::string>>>;
+    std::map<std::pair<Pointer, ReferenceType>, ReferenceMapEntry>;
 
 // TODO: Support $recursiveAnchor
 // TODO: Support $recursiveRef
@@ -139,7 +144,7 @@ using ReferenceMap =
 /// assert(references.contains({{ "properties", "bar", "$ref" },
 ///   sourcemeta::jsontoolkit::ReferenceType::Static}));
 /// assert(references.at({{ "properties", "bar", "$ref" },
-///   sourcemeta::jsontoolkit::ReferenceType::Static}) ==
+///   sourcemeta::jsontoolkit::ReferenceType::Static}).destination ==
 ///     "https://www.example.com/schema#/properties/foo");
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT

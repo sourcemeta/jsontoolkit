@@ -48,7 +48,7 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
   std::cout << "--------------------------------------------------\n";
   std::cout << "References: " << references.size() << "\n";
   std::cout << "--------------------------------------------------\n";
-  for (const auto &[pointer, destination] : references) {
+  for (const auto &[pointer, entry] : references) {
     if (pointer.second == sourcemeta::jsontoolkit::ReferenceType::Dynamic) {
       std::cout << "(DYNAMIC) ";
     } else {
@@ -56,16 +56,16 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
     }
 
     sourcemeta::jsontoolkit::stringify(pointer.first, std::cout);
-    std::cout << "\n         --> " << std::get<0>(destination) << "\n";
+    std::cout << "\n         --> " << entry.destination << "\n";
 
-    if (std::get<1>(destination).has_value()) {
-      std::cout << "\n         --> (without fragment) "
-                << std::get<1>(destination).value() << "\n";
+    if (entry.base.has_value()) {
+      std::cout << "\n         --> (without fragment) " << entry.base.value()
+                << "\n";
     }
 
-    if (std::get<2>(destination).has_value()) {
-      std::cout << "\n         --> (fragment) "
-                << std::get<2>(destination).value() << "\n";
+    if (entry.fragment.has_value()) {
+      std::cout << "\n         --> (fragment) " << entry.fragment.value()
+                << "\n";
     }
   }
 
