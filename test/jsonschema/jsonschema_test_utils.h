@@ -6,12 +6,14 @@
 
 #define EXPECT_FRAME(frame, expected_type, reference, root_id,                 \
                      expected_pointer, expected_dialect)                       \
-  EXPECT_TRUE((frame).defines((expected_type), (reference)));                  \
-  EXPECT_TRUE((frame).root((expected_type), (reference)).has_value());         \
-  EXPECT_EQ((frame).root((expected_type), (reference)).value(), (root_id));    \
-  EXPECT_EQ((frame).pointer((expected_type), (reference)),                     \
+  EXPECT_TRUE((frame).contains({(expected_type), (reference)}));               \
+  EXPECT_TRUE((frame).at({(expected_type), (reference)}).root.has_value());    \
+  EXPECT_EQ((frame).at({(expected_type), (reference)}).root.value(),           \
+            (root_id));                                                        \
+  EXPECT_EQ((frame).at({(expected_type), (reference)}).pointer,                \
             TO_POINTER(expected_pointer));                                     \
-  EXPECT_EQ((frame).dialect((expected_type), (reference)), (expected_dialect));
+  EXPECT_EQ((frame).at({(expected_type), (reference)}).dialect,                \
+            (expected_dialect));
 
 #define EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,       \
                             expected_dialect)                                  \
@@ -25,11 +27,12 @@
 
 #define EXPECT_ANONYMOUS_FRAME(frame, expected_type, reference,                \
                                expected_pointer, expected_dialect)             \
-  EXPECT_TRUE((frame).defines((expected_type), (reference)));                  \
-  EXPECT_FALSE((frame).root((expected_type), (reference)).has_value());        \
-  EXPECT_EQ((frame).pointer((expected_type), (reference)),                     \
+  EXPECT_TRUE((frame).contains({(expected_type), (reference)}));               \
+  EXPECT_FALSE((frame).at({(expected_type), (reference)}).root.has_value());   \
+  EXPECT_EQ((frame).at({(expected_type), (reference)}).pointer,                \
             TO_POINTER(expected_pointer));                                     \
-  EXPECT_EQ((frame).dialect((expected_type), (reference)), (expected_dialect));
+  EXPECT_EQ((frame).at({(expected_type), (reference)}).dialect,                \
+            (expected_dialect));
 
 #define EXPECT_ANONYMOUS_FRAME_STATIC(frame, reference, expected_pointer,      \
                                       expected_dialect)                        \
