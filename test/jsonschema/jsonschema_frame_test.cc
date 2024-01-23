@@ -696,3 +696,33 @@ TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
 
   EXPECT_TRUE(references.empty());
 }
+
+TEST(JSONSchema_frame, remote_refs) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": { "$ref": "https://www.example.com" },
+      "bar": { "$ref": "https://www.example.com/test#foo" },
+      "baz": { "$ref": "https://www.example.com/x/y#/foo/bar" }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(references.size(), 3);
+  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref",
+                          "https://www.example.com", "https://www.example.com",
+                          std::nullopt);
+  EXPECT_STATIC_REFERENCE(references, "/properties/bar/$ref",
+                          "https://www.example.com/test#foo",
+                          "https://www.example.com/test", "foo");
+  EXPECT_STATIC_REFERENCE(references, "/properties/baz/$ref",
+                          "https://www.example.com/x/y#/foo/bar",
+                          "https://www.example.com/x/y", "/foo/bar");
+}
