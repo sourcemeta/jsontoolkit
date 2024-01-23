@@ -15,10 +15,10 @@
 namespace {
 auto analyze(const sourcemeta::jsontoolkit::JSON &schema,
              std::map<std::string, unsigned long> &accumulator) -> void {
-  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
+  for (const auto &entry : sourcemeta::jsontoolkit::SchemaIterator(
            schema, sourcemeta::jsontoolkit::default_schema_walker,
            sourcemeta::jsontoolkit::official_resolver)) {
-    const auto &document{sourcemeta::jsontoolkit::get(schema, pointer)};
+    const auto &document{sourcemeta::jsontoolkit::get(schema, entry.pointer)};
     if (!document.is_object()) {
       continue;
     }

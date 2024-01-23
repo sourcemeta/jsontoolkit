@@ -46,8 +46,8 @@ auto sourcemeta::jsontoolkit::SchemaTransformBundle::apply(
   }
 
   // (2) Transform its sub-schemas
-  for (const auto &subpointer : sourcemeta::jsontoolkit::SchemaIteratorFlat{
+  for (const auto &entry : sourcemeta::jsontoolkit::SchemaIteratorFlat{
            current, walker, resolver, dialect}) {
-    apply(schema, walker, resolver, pointer.concat(subpointer), dialect);
+    apply(schema, walker, resolver, pointer.concat(entry.pointer), dialect);
   }
 }
