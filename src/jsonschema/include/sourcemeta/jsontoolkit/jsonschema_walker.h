@@ -90,12 +90,22 @@ auto default_schema_walker(std::string_view keyword,
     -> sourcemeta::jsontoolkit::SchemaWalkerStrategy;
 
 /// @ingroup jsonschema
+/// An entry of a schema iterator.
+struct SchemaIteratorEntry {
+  Pointer pointer;
+  std::optional<std::string> dialect;
+  std::map<std::string, bool> vocabularies;
+  std::optional<std::string> base_dialect;
+  JSON schema;
+};
+
+/// @ingroup jsonschema
 ///
 /// Return an iterator over the subschemas of a given JSON Schema definition
 /// according to the applicators understood by the provided walker function.
 /// This walker recursively traverses over every subschema of
 /// the JSON Schema definition, including the top-level schema, reporting back
-/// JSON Pointers that correspond to each subschema.
+/// each subschema.
 ///
 /// For example:
 ///
@@ -118,18 +128,18 @@ auto default_schema_walker(std::string_view keyword,
 ///   }
 /// })JSON");
 ///
-/// for (const auto &pointer :
+/// for (const auto &entry :
 ///          sourcemeta::jsontoolkit::SchemaIterator{
 ///          document, sourcemeta::jsontoolkit::default_schema_walker,
 ///          sourcemeta::jsontoolkit::official_resolver}) {
 ///   sourcemeta::jsontoolkit::prettify(
-///     sourcemeta::jsontoolkit::get(document, pointer), std::cout);
+///     sourcemeta::jsontoolkit::get(document, entry.pointer), std::cout);
 ///   std::cout << "\n";
 /// }
 /// ```
 class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaIterator {
 private:
-  using internal = typename std::vector<Pointer>;
+  using internal = typename std::vector<SchemaIteratorEntry>;
 
 public:
   using const_iterator = typename internal::const_iterator;
@@ -149,7 +159,7 @@ private:
 #if defined(_MSC_VER)
 #pragma warning(disable : 4251)
 #endif
-  internal pointers;
+  internal subschemas;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251)
 #endif
@@ -160,8 +170,7 @@ private:
 /// Return an iterator over the subschemas of a given JSON Schema definition
 /// according to the applicators understood by the provided walker function.
 /// This walker traverse over the first-level of subschemas of the JSON Schema
-/// definition, ignoring the top-level schema and reporting back JSON Pointers
-/// that correspond to each subschema.
+/// definition, ignoring the top-level schema and reporting back each subschema.
 ///
 /// For example:
 ///
@@ -184,18 +193,18 @@ private:
 ///   }
 /// })JSON");
 ///
-/// for (const auto &pointer :
+/// for (const auto &entry :
 ///          sourcemeta::jsontoolkit::SchemaIteratorFlat{
 ///          document, sourcemeta::jsontoolkit::default_schema_walker,
 ///          sourcemeta::jsontoolkit::official_resolver}) {
 ///   sourcemeta::jsontoolkit::prettify(
-///     sourcemeta::jsontoolkit::get(document, pointer), std::cout);
+///     sourcemeta::jsontoolkit::get(document, entry.pointer), std::cout);
 ///   std::cout << "\n";
 /// }
 /// ```
 class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaIteratorFlat {
 private:
-  using internal = typename std::vector<Pointer>;
+  using internal = typename std::vector<SchemaIteratorEntry>;
 
 public:
   using const_iterator = typename internal::const_iterator;
@@ -215,7 +224,7 @@ private:
 #if defined(_MSC_VER)
 #pragma warning(disable : 4251)
 #endif
-  internal pointers;
+  internal subschemas;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251)
 #endif

@@ -26,19 +26,19 @@ auto walk(const std::string &mode, std::basic_istream<CharT, Traits> &stream)
   }
 
   if (mode == "deep") {
-    for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator(
+    for (const auto &entry : sourcemeta::jsontoolkit::SchemaIterator(
              document, sourcemeta::jsontoolkit::default_schema_walker,
              sourcemeta::jsontoolkit::official_resolver)) {
       sourcemeta::jsontoolkit::prettify(
-          sourcemeta::jsontoolkit::get(document, pointer), std::cout);
+          sourcemeta::jsontoolkit::get(document, entry.pointer), std::cout);
       std::cout << "\n";
     }
   } else if (mode == "flat") {
-    for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIteratorFlat{
+    for (const auto &entry : sourcemeta::jsontoolkit::SchemaIteratorFlat{
              document, sourcemeta::jsontoolkit::default_schema_walker,
              sourcemeta::jsontoolkit::official_resolver}) {
       sourcemeta::jsontoolkit::prettify(
-          sourcemeta::jsontoolkit::get(document, pointer), std::cout);
+          sourcemeta::jsontoolkit::get(document, entry.pointer), std::cout);
       std::cout << "\n";
     }
   } else {

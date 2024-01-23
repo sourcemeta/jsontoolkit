@@ -7,7 +7,7 @@
 #include <map>      // std::map
 #include <optional> // std::optional
 #include <sstream>  // std::ostringstream
-#include <utility>  // std::pair
+#include <utility>  // std::pair, std::move
 #include <vector>   // std::vector
 
 static auto find_nearest_bases(const std::map<sourcemeta::jsontoolkit::Pointer,
@@ -100,13 +100,9 @@ static auto store(sourcemeta::jsontoolkit::ReferenceFrame &frame,
   }
 }
 
-struct SchemaIteratorEntry {
-  const sourcemeta::jsontoolkit::Pointer pointer;
-  const sourcemeta::jsontoolkit::JSON schema;
-  const std::string dialect;
-  const std::string base_dialect;
+struct InternalEntry {
+  const sourcemeta::jsontoolkit::SchemaIteratorEntry common;
   const std::optional<std::string> id;
-  const std::map<std::string, bool> vocabularies;
 };
 
 // TODO: Revise this function, try to simplify it, and avoid redundant
@@ -120,7 +116,7 @@ auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect,
     const std::optional<std::string> &default_id) -> std::future<void> {
-  std::vector<SchemaIteratorEntry> subschema_entries;
+  std::vector<InternalEntry> subschema_entries;
   std::map<sourcemeta::jsontoolkit::Pointer, std::vector<std::string>>
       base_uris;
   std::map<sourcemeta::jsontoolkit::Pointer, std::vector<std::string>>
@@ -151,55 +147,32 @@ auto sourcemeta::jsontoolkit::frame(
         {sourcemeta::jsontoolkit::empty_pointer, {default_id.value()}});
   }
 
-  // TODO: Extend SchemaIterator to return the subschema vocabularies,
-  // dialect, base dialect, etc as it has this information already.
-  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator{
+  for (auto &entry : sourcemeta::jsontoolkit::SchemaIterator{
            schema, walker, resolver, default_dialect}) {
-    // Subschema
-    const auto &subschema{sourcemeta::jsontoolkit::get(schema, pointer)};
-
     // Dialect
-    const std::optional<std::string> current_dialect{
-        sourcemeta::jsontoolkit::dialect(subschema)};
-    if (current_dialect.has_value()) {
-      base_dialects.insert({pointer, {current_dialect.value()}});
-    }
-    const auto effective_dialects{
-        find_nearest_bases(base_dialects, pointer, root_dialect)};
-    assert(effective_dialects.size() == 1);
+    assert(entry.dialect.has_value());
+    base_dialects.insert({entry.pointer, {entry.dialect.value()}});
 
     // Base dialect
-    const std::optional<std::string> base_dialect{
-        sourcemeta::jsontoolkit::base_dialect(subschema, resolver,
-                                              effective_dialects.front())
-            .get()};
-    assert(base_dialect.has_value());
+    assert(entry.base_dialect.has_value());
 
     // Schema identifier
-    const std::optional<std::string> id{sourcemeta::jsontoolkit::id(
-        subschema, base_dialect.value(),
-        pointer.empty() ? default_id : std::nullopt)};
-
-    // Vocabularies
-    const auto vocabularies{
-        sourcemeta::jsontoolkit::vocabularies(resolver, base_dialect.value(),
-                                              effective_dialects.front())
-            .get()};
+    std::optional<std::string> id{sourcemeta::jsontoolkit::id(
+        entry.schema, entry.base_dialect.value(),
+        entry.pointer.empty() ? default_id : std::nullopt)};
 
     // Store information
-    // TODO: Move whenever possible to avoid copies
     subschema_entries.emplace_back(
-        SchemaIteratorEntry{pointer, subschema, effective_dialects.front(),
-                            base_dialect.value(), id, vocabularies});
+        InternalEntry{std::move(entry), std::move(id)});
   }
 
   for (const auto &entry : subschema_entries) {
     if (entry.id.has_value()) {
       const bool ref_overrides =
-          ref_overrides_adjacent_keywords(entry.base_dialect);
-      if (!entry.schema.defines("$ref") || !ref_overrides) {
+          ref_overrides_adjacent_keywords(entry.common.base_dialect.value());
+      if (!entry.common.schema.defines("$ref") || !ref_overrides) {
         for (const auto &base_string :
-             find_nearest_bases(base_uris, entry.pointer, entry.id)) {
+             find_nearest_bases(base_uris, entry.common.pointer, entry.id)) {
           const sourcemeta::jsontoolkit::URI base{base_string};
           sourcemeta::jsontoolkit::URI maybe_relative{entry.id.value()};
           const bool maybe_relative_is_absolute{maybe_relative.is_absolute()};
@@ -209,13 +182,13 @@ auto sourcemeta::jsontoolkit::frame(
           if (!maybe_relative_is_absolute ||
               !frame.contains({ReferenceType::Static, new_id})) {
             store(frame, ReferenceType::Static, new_id, root_id, new_id,
-                  entry.pointer, entry.dialect);
+                  entry.common.pointer, entry.common.dialect.value());
           }
 
-          if (base_uris.contains(entry.pointer)) {
-            base_uris.at(entry.pointer).push_back(new_id);
+          if (base_uris.contains(entry.common.pointer)) {
+            base_uris.at(entry.common.pointer).push_back(new_id);
           } else {
-            base_uris.insert({entry.pointer, {new_id}});
+            base_uris.insert({entry.common.pointer, {new_id}});
           }
         }
       }
@@ -223,9 +196,10 @@ auto sourcemeta::jsontoolkit::frame(
 
     // Handle schema anchors
     // TODO: Support $recursiveAnchor
-    for (const auto &[name, type] :
-         sourcemeta::jsontoolkit::anchors(entry.schema, entry.vocabularies)) {
-      const auto bases{find_nearest_bases(base_uris, entry.pointer, entry.id)};
+    for (const auto &[name, type] : sourcemeta::jsontoolkit::anchors(
+             entry.common.schema, entry.common.vocabularies)) {
+      const auto bases{
+          find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
 
       if (bases.empty()) {
         const auto anchor_uri{
@@ -235,13 +209,13 @@ auto sourcemeta::jsontoolkit::frame(
         if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
             type == sourcemeta::jsontoolkit::AnchorType::All) {
           store(frame, ReferenceType::Static, relative_anchor_uri, root_id, "",
-                entry.pointer, entry.dialect);
+                entry.common.pointer, entry.common.dialect.value());
         }
 
         if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
             type == sourcemeta::jsontoolkit::AnchorType::All) {
           store(frame, ReferenceType::Dynamic, relative_anchor_uri, root_id, "",
-                entry.pointer, entry.dialect);
+                entry.common.pointer, entry.common.dialect.value());
         }
       } else {
         bool is_first = true;
@@ -259,15 +233,15 @@ auto sourcemeta::jsontoolkit::frame(
           if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
               type == sourcemeta::jsontoolkit::AnchorType::All) {
             store(frame, sourcemeta::jsontoolkit::ReferenceType::Static,
-                  absolute_anchor_uri, root_id, base_string, entry.pointer,
-                  entry.dialect);
+                  absolute_anchor_uri, root_id, base_string,
+                  entry.common.pointer, entry.common.dialect.value());
           }
 
           if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
               type == sourcemeta::jsontoolkit::AnchorType::All) {
             store(frame, sourcemeta::jsontoolkit::ReferenceType::Dynamic,
-                  absolute_anchor_uri, root_id, base_string, entry.pointer,
-                  entry.dialect);
+                  absolute_anchor_uri, root_id, base_string,
+                  entry.common.pointer, entry.common.dialect.value());
           }
 
           is_first = false;
@@ -305,30 +279,31 @@ auto sourcemeta::jsontoolkit::frame(
   // Resolve references after all framing was performed
   for (const auto &entry : subschema_entries) {
     // TODO: Handle $recursiveRef too
-    if (entry.schema.is_object()) {
+    if (entry.common.schema.is_object()) {
       const auto nearest_bases{
-          find_nearest_bases(base_uris, entry.pointer, entry.id)};
+          find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
 
       // TODO: Check that static destinations actually exist in the frame
-      if (entry.schema.defines("$ref")) {
-        assert(entry.schema.at("$ref").is_string());
-        sourcemeta::jsontoolkit::URI ref{entry.schema.at("$ref").to_string()};
+      if (entry.common.schema.defines("$ref")) {
+        assert(entry.common.schema.at("$ref").is_string());
+        sourcemeta::jsontoolkit::URI ref{
+            entry.common.schema.at("$ref").to_string()};
         if (!nearest_bases.empty()) {
           ref.resolve_from(nearest_bases.front());
         }
 
         references.insert(
-            {{ReferenceType::Static, entry.pointer.concat({"$ref"})},
+            {{ReferenceType::Static, entry.common.pointer.concat({"$ref"})},
              {ref.recompose(), ref.recompose_without_fragment(),
               fragment_string(ref)}});
       }
 
-      if (entry.vocabularies.contains(
+      if (entry.common.vocabularies.contains(
               "https://json-schema.org/draft/2020-12/vocab/core") &&
-          entry.schema.defines("$dynamicRef")) {
-        assert(entry.schema.at("$dynamicRef").is_string());
+          entry.common.schema.defines("$dynamicRef")) {
+        assert(entry.common.schema.at("$dynamicRef").is_string());
         sourcemeta::jsontoolkit::URI ref{
-            entry.schema.at("$dynamicRef").to_string()};
+            entry.common.schema.at("$dynamicRef").to_string()};
         if (!nearest_bases.empty()) {
           ref.resolve_from(nearest_bases.front());
         }
@@ -338,7 +313,8 @@ auto sourcemeta::jsontoolkit::frame(
         // TODO: We shouldn't need to reparse if the URI handled mutations
         const sourcemeta::jsontoolkit::URI destination_uri{destination};
         references.insert(
-            {{ReferenceType::Dynamic, entry.pointer.concat({"$dynamicRef"})},
+            {{ReferenceType::Dynamic,
+              entry.common.pointer.concat({"$dynamicRef"})},
              {destination, destination_uri.recompose_without_fragment(),
               fragment_string(destination_uri)}});
       }
