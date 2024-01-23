@@ -23,6 +23,16 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_frame_draft1_test.cc
   jsonschema_frame_draft0_test.cc
   jsonschema_frame_test.cc
+  jsonschema_bundle_2020_12_test.cc
+  jsonschema_bundle_2019_09_test.cc
+  jsonschema_bundle_draft7_test.cc
+  jsonschema_bundle_draft6_test.cc
+  jsonschema_bundle_draft4_test.cc
+  jsonschema_bundle_draft3_test.cc
+  jsonschema_bundle_draft2_test.cc
+  jsonschema_bundle_draft1_test.cc
+  jsonschema_bundle_draft0_test.cc
+  jsonschema_bundle_test.cc
   jsonschema_dialect_test.cc
   jsonschema_dialect_2020_12_test.cc
   jsonschema_dialect_2019_09_test.cc

@@ -128,6 +128,16 @@ SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_frame_d
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_frame_draft1_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_frame_draft0_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_frame_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_bundle_2020_12_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_bundle_2019_09_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_bundle_draft7_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_bundle_draft6_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_bundle_draft4_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_bundle_draft3_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_bundle_draft2_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_bundle_draft1_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_bundle_draft0_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_bundle_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_transform_rule_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_transform_bundle_test.cc
 
