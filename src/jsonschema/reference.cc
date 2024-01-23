@@ -100,6 +100,15 @@ static auto store(sourcemeta::jsontoolkit::ReferenceFrame &frame,
   }
 }
 
+struct SchemaIteratorEntry {
+  const sourcemeta::jsontoolkit::Pointer pointer;
+  const sourcemeta::jsontoolkit::JSON schema;
+  const std::string dialect;
+  const std::string base_dialect;
+  const std::optional<std::string> id;
+  const std::map<std::string, bool> vocabularies;
+};
+
 // TODO: Revise this function, try to simplify it, and avoid redundant
 // operations (like resolving schemas) by adding relevant overloads
 // for the functions it consumes.
@@ -111,6 +120,7 @@ auto sourcemeta::jsontoolkit::frame(
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect,
     const std::optional<std::string> &default_id) -> std::future<void> {
+  std::vector<SchemaIteratorEntry> subschema_entries;
   std::map<sourcemeta::jsontoolkit::Pointer, std::vector<std::string>>
       base_uris;
   std::map<sourcemeta::jsontoolkit::Pointer, std::vector<std::string>>
@@ -145,37 +155,53 @@ auto sourcemeta::jsontoolkit::frame(
   // dialect, base dialect, etc as it has this information already.
   for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator{
            schema, walker, resolver, default_dialect}) {
+    // Subschema
     const auto &subschema{sourcemeta::jsontoolkit::get(schema, pointer)};
+
+    // Dialect
     const std::optional<std::string> current_dialect{
         sourcemeta::jsontoolkit::dialect(subschema)};
     if (current_dialect.has_value()) {
       base_dialects.insert({pointer, {current_dialect.value()}});
     }
-
     const auto effective_dialects{
         find_nearest_bases(base_dialects, pointer, root_dialect)};
     assert(effective_dialects.size() == 1);
 
+    // Base dialect
     const std::optional<std::string> base_dialect{
         sourcemeta::jsontoolkit::base_dialect(subschema, resolver,
                                               effective_dialects.front())
             .get()};
     assert(base_dialect.has_value());
 
-    // Handle schema identifiers
+    // Schema identifier
     const std::optional<std::string> id{sourcemeta::jsontoolkit::id(
         subschema, base_dialect.value(),
         pointer.empty() ? default_id : std::nullopt)};
 
-    if (id.has_value()) {
+    // Vocabularies
+    const auto vocabularies{
+        sourcemeta::jsontoolkit::vocabularies(resolver, base_dialect.value(),
+                                              effective_dialects.front())
+            .get()};
+
+    // Store information
+    // TODO: Move whenever possible to avoid copies
+    subschema_entries.emplace_back(
+        SchemaIteratorEntry{pointer, subschema, effective_dialects.front(),
+                            base_dialect.value(), id, vocabularies});
+  }
+
+  for (const auto &entry : subschema_entries) {
+    if (entry.id.has_value()) {
       const bool ref_overrides =
-          base_dialect.has_value() &&
-          ref_overrides_adjacent_keywords(base_dialect.value());
-      if (!subschema.defines("$ref") || !ref_overrides) {
+          ref_overrides_adjacent_keywords(entry.base_dialect);
+      if (!entry.schema.defines("$ref") || !ref_overrides) {
         for (const auto &base_string :
-             find_nearest_bases(base_uris, pointer, id)) {
+             find_nearest_bases(base_uris, entry.pointer, entry.id)) {
           const sourcemeta::jsontoolkit::URI base{base_string};
-          sourcemeta::jsontoolkit::URI maybe_relative{id.value()};
+          sourcemeta::jsontoolkit::URI maybe_relative{entry.id.value()};
           const bool maybe_relative_is_absolute{maybe_relative.is_absolute()};
           maybe_relative.resolve_from(base);
           const std::string new_id{maybe_relative.recompose()};
@@ -183,28 +209,23 @@ auto sourcemeta::jsontoolkit::frame(
           if (!maybe_relative_is_absolute ||
               !frame.contains({ReferenceType::Static, new_id})) {
             store(frame, ReferenceType::Static, new_id, root_id, new_id,
-                  pointer, effective_dialects.front());
+                  entry.pointer, entry.dialect);
           }
 
-          if (base_uris.contains(pointer)) {
-            base_uris.at(pointer).push_back(new_id);
+          if (base_uris.contains(entry.pointer)) {
+            base_uris.at(entry.pointer).push_back(new_id);
           } else {
-            base_uris.insert({pointer, {new_id}});
+            base_uris.insert({entry.pointer, {new_id}});
           }
         }
       }
     }
 
-    const auto vocabularies{
-        sourcemeta::jsontoolkit::vocabularies(resolver, base_dialect.value(),
-                                              effective_dialects.front())
-            .get()};
-
     // Handle schema anchors
-    // Support $recursiveAnchor
+    // TODO: Support $recursiveAnchor
     for (const auto &[name, type] :
-         sourcemeta::jsontoolkit::anchors(subschema, vocabularies)) {
-      const auto bases{find_nearest_bases(base_uris, pointer, id)};
+         sourcemeta::jsontoolkit::anchors(entry.schema, entry.vocabularies)) {
+      const auto bases{find_nearest_bases(base_uris, entry.pointer, entry.id)};
 
       if (bases.empty()) {
         const auto anchor_uri{
@@ -214,13 +235,13 @@ auto sourcemeta::jsontoolkit::frame(
         if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
             type == sourcemeta::jsontoolkit::AnchorType::All) {
           store(frame, ReferenceType::Static, relative_anchor_uri, root_id, "",
-                pointer, effective_dialects.front());
+                entry.pointer, entry.dialect);
         }
 
         if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
             type == sourcemeta::jsontoolkit::AnchorType::All) {
           store(frame, ReferenceType::Dynamic, relative_anchor_uri, root_id, "",
-                pointer, effective_dialects.front());
+                entry.pointer, entry.dialect);
         }
       } else {
         bool is_first = true;
@@ -238,15 +259,15 @@ auto sourcemeta::jsontoolkit::frame(
           if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
               type == sourcemeta::jsontoolkit::AnchorType::All) {
             store(frame, sourcemeta::jsontoolkit::ReferenceType::Static,
-                  absolute_anchor_uri, root_id, base_string, pointer,
-                  effective_dialects.front());
+                  absolute_anchor_uri, root_id, base_string, entry.pointer,
+                  entry.dialect);
           }
 
           if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
               type == sourcemeta::jsontoolkit::AnchorType::All) {
             store(frame, sourcemeta::jsontoolkit::ReferenceType::Dynamic,
-                  absolute_anchor_uri, root_id, base_string, pointer,
-                  effective_dialects.front());
+                  absolute_anchor_uri, root_id, base_string, entry.pointer,
+                  entry.dialect);
           }
 
           is_first = false;
@@ -282,52 +303,32 @@ auto sourcemeta::jsontoolkit::frame(
   }
 
   // Resolve references after all framing was performed
-  for (const auto &pointer : sourcemeta::jsontoolkit::SchemaIterator{
-           schema, walker, resolver, default_dialect}) {
-    const auto &subschema{sourcemeta::jsontoolkit::get(schema, pointer)};
-    const auto effective_dialects{
-        find_nearest_bases(base_dialects, pointer, root_dialect)};
-    assert(effective_dialects.size() == 1);
-    const std::optional<std::string> id{
-        sourcemeta::jsontoolkit::id(subschema, resolver,
-                                    effective_dialects.front(),
-                                    pointer.empty() ? default_id : std::nullopt)
-            .get()};
-
+  for (const auto &entry : subschema_entries) {
     // TODO: Handle $recursiveRef too
-    if (subschema.is_object()) {
-      const auto nearest_bases{find_nearest_bases(base_uris, pointer, id)};
+    if (entry.schema.is_object()) {
+      const auto nearest_bases{
+          find_nearest_bases(base_uris, entry.pointer, entry.id)};
 
       // TODO: Check that static destinations actually exist in the frame
-      if (subschema.defines("$ref")) {
-        assert(subschema.at("$ref").is_string());
-        sourcemeta::jsontoolkit::URI ref{subschema.at("$ref").to_string()};
+      if (entry.schema.defines("$ref")) {
+        assert(entry.schema.at("$ref").is_string());
+        sourcemeta::jsontoolkit::URI ref{entry.schema.at("$ref").to_string()};
         if (!nearest_bases.empty()) {
           ref.resolve_from(nearest_bases.front());
         }
 
-        references.insert({{ReferenceType::Static, pointer.concat({"$ref"})},
-                           {ref.recompose(), ref.recompose_without_fragment(),
-                            fragment_string(ref)}});
+        references.insert(
+            {{ReferenceType::Static, entry.pointer.concat({"$ref"})},
+             {ref.recompose(), ref.recompose_without_fragment(),
+              fragment_string(ref)}});
       }
 
-      const std::optional<std::string> schema_base_dialect{
-          sourcemeta::jsontoolkit::base_dialect(subschema, resolver,
-                                                effective_dialects.front())
-              .get()};
-      assert(schema_base_dialect.has_value());
-
-      const auto vocabularies{
-          sourcemeta::jsontoolkit::vocabularies(
-              resolver, schema_base_dialect.value(), effective_dialects.front())
-              .get()};
-
-      if (vocabularies.contains(
+      if (entry.vocabularies.contains(
               "https://json-schema.org/draft/2020-12/vocab/core") &&
-          subschema.defines("$dynamicRef")) {
-        assert(subschema.at("$dynamicRef").is_string());
+          entry.schema.defines("$dynamicRef")) {
+        assert(entry.schema.at("$dynamicRef").is_string());
         sourcemeta::jsontoolkit::URI ref{
-            subschema.at("$dynamicRef").to_string()};
+            entry.schema.at("$dynamicRef").to_string()};
         if (!nearest_bases.empty()) {
           ref.resolve_from(nearest_bases.front());
         }
@@ -337,7 +338,7 @@ auto sourcemeta::jsontoolkit::frame(
         // TODO: We shouldn't need to reparse if the URI handled mutations
         const sourcemeta::jsontoolkit::URI destination_uri{destination};
         references.insert(
-            {{ReferenceType::Dynamic, pointer.concat({"$dynamicRef"})},
+            {{ReferenceType::Dynamic, entry.pointer.concat({"$dynamicRef"})},
              {destination, destination_uri.recompose_without_fragment(),
               fragment_string(destination_uri)}});
       }
