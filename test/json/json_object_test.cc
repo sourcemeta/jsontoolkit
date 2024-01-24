@@ -489,3 +489,93 @@ TEST(JSON_object, defines_property_using_integer) {
   EXPECT_TRUE(document.defines(1));
   EXPECT_TRUE(document.defines(2));
 }
+
+TEST(JSON_object, assign_if_missing_not_missing_lvalue) {
+  sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{false}},
+      {"bar", sourcemeta::jsontoolkit::JSON{true}}};
+
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 2);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_TRUE(document.defines("bar"));
+  EXPECT_FALSE(document.at("foo").to_boolean());
+  EXPECT_TRUE(document.at("bar").to_boolean());
+
+  const sourcemeta::jsontoolkit::JSON new_value{1};
+  document.assign_if_missing("foo", new_value);
+
+  EXPECT_EQ(document.size(), 2);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_TRUE(document.defines("bar"));
+  EXPECT_FALSE(document.at("foo").to_boolean());
+  EXPECT_TRUE(document.at("bar").to_boolean());
+}
+
+TEST(JSON_object, assign_if_missing_missing_lvalue) {
+  sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{false}},
+      {"bar", sourcemeta::jsontoolkit::JSON{true}}};
+
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 2);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_TRUE(document.defines("bar"));
+  EXPECT_FALSE(document.at("foo").to_boolean());
+  EXPECT_TRUE(document.at("bar").to_boolean());
+
+  const sourcemeta::jsontoolkit::JSON new_value{1};
+  document.assign_if_missing("baz", new_value);
+
+  EXPECT_EQ(document.size(), 3);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_TRUE(document.defines("bar"));
+  EXPECT_TRUE(document.defines("baz"));
+  EXPECT_FALSE(document.at("foo").to_boolean());
+  EXPECT_TRUE(document.at("bar").to_boolean());
+  EXPECT_EQ(document.at("baz").to_integer(), 1);
+}
+
+TEST(JSON_object, assign_if_missing_not_missing_rvalue) {
+  sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{false}},
+      {"bar", sourcemeta::jsontoolkit::JSON{true}}};
+
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 2);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_TRUE(document.defines("bar"));
+  EXPECT_FALSE(document.at("foo").to_boolean());
+  EXPECT_TRUE(document.at("bar").to_boolean());
+
+  document.assign_if_missing("foo", sourcemeta::jsontoolkit::JSON{1});
+
+  EXPECT_EQ(document.size(), 2);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_TRUE(document.defines("bar"));
+  EXPECT_FALSE(document.at("foo").to_boolean());
+  EXPECT_TRUE(document.at("bar").to_boolean());
+}
+
+TEST(JSON_object, assign_if_missing_missing_rvalue) {
+  sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{false}},
+      {"bar", sourcemeta::jsontoolkit::JSON{true}}};
+
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 2);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_TRUE(document.defines("bar"));
+  EXPECT_FALSE(document.at("foo").to_boolean());
+  EXPECT_TRUE(document.at("bar").to_boolean());
+
+  document.assign_if_missing("baz", sourcemeta::jsontoolkit::JSON{1});
+
+  EXPECT_EQ(document.size(), 3);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_TRUE(document.defines("bar"));
+  EXPECT_TRUE(document.defines("baz"));
+  EXPECT_FALSE(document.at("foo").to_boolean());
+  EXPECT_TRUE(document.at("bar").to_boolean());
+  EXPECT_EQ(document.at("baz").to_integer(), 1);
+}

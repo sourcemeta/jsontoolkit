@@ -1080,6 +1080,57 @@ public:
     std::get<Object>(this->data).data.insert_or_assign(key, std::move(value));
   }
 
+  /// This method sets an object key if it is not already defined. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }");
+  ///
+  /// const sourcemeta::jsontoolkit::JSON value_1{1};
+  /// const sourcemeta::jsontoolkit::JSON value_2{2};
+  ///
+  /// document.assign_if_missing("foo", value_1);
+  /// document.assign_if_missing("bar", value_2);
+  ///
+  /// assert(document.defines("foo"));
+  /// assert(document.at("foo").is_boolean());
+  /// assert(document.defines("bar"));
+  /// assert(document.at("bar").is_integer());
+  /// ```
+  auto assign_if_missing(const String &key, const GenericValue &value) -> void {
+    assert(this->is_object());
+    if (!this->defines(key)) {
+      this->assign(key, value);
+    }
+  }
+
+  /// This method sets an object key if it is not already defined. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": true }");
+  ///
+  /// document.assign_if_missing("foo", sourcemeta::jsontoolkit::JSON{1});
+  /// document.assign_if_missing("bar", sourcemeta::jsontoolkit::JSON{2});
+  ///
+  /// assert(document.defines("foo"));
+  /// assert(document.at("foo").is_boolean());
+  /// assert(document.defines("bar"));
+  /// assert(document.at("bar").is_integer());
+  /// ```
+  auto assign_if_missing(const String &key, GenericValue &&value) -> void {
+    assert(this->is_object());
+    if (!this->defines(key)) {
+      this->assign(key, std::move(value));
+    }
+  }
+
   /// This method deletes an object key. For example:
   ///
   /// ```cpp
