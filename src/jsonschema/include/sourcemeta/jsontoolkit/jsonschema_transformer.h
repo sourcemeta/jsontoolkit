@@ -30,10 +30,18 @@ struct SchemaTransformerOperationAssign {
 };
 
 /// @ingroup jsonschema
+/// Represents a schema transformation operation that consists in replacing a
+/// part of a schema
+struct SchemaTransformerOperationReplace {
+  const Pointer pointer;
+};
+
+/// @ingroup jsonschema
 /// Represents a schema transformation operation
 using SchemaTransformerOperation =
     std::variant<SchemaTransformerOperationErase,
-                 SchemaTransformerOperationAssign>;
+                 SchemaTransformerOperationAssign,
+                 SchemaTransformerOperationReplace>;
 
 /// @ingroup jsonschema
 /// This is a proxy class to intercept transformations applied to a schema. We
@@ -43,6 +51,12 @@ public:
   /// Construct a transformer given a schema
   SchemaTransformer(JSON &schema);
 
+  /// Proxy to sourcemeta::jsontoolkit::JSON::at
+  auto at(const JSON::Array::size_type index) const -> const JSON &;
+  /// Proxy to sourcemeta::jsontoolkit::JSON::at
+  auto at(const JSON::String &key) const -> const JSON &;
+  /// Proxy to sourcemeta::jsontoolkit::JSON::into_object
+  auto into_object() -> void;
   /// Proxy to sourcemeta::jsontoolkit::JSON::erase
   auto erase(const JSON::String &key) -> void;
   /// Proxy to sourcemeta::jsontoolkit::JSON::assign
