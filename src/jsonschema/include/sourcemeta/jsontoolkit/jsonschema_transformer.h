@@ -51,10 +51,8 @@ public:
   /// Construct a transformer given a schema
   SchemaTransformer(JSON &schema);
 
-  /// Proxy to sourcemeta::jsontoolkit::JSON::at
-  auto at(const JSON::Array::size_type index) const -> const JSON &;
-  /// Proxy to sourcemeta::jsontoolkit::JSON::at
-  auto at(const JSON::String &key) const -> const JSON &;
+  /// Get the underlying schema
+  auto schema() const -> const JSON &;
   /// Proxy to sourcemeta::jsontoolkit::JSON::into_object
   auto into_object() -> void;
   /// Proxy to sourcemeta::jsontoolkit::JSON::erase
