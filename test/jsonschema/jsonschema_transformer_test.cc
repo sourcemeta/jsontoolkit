@@ -4,6 +4,8 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
+#include <vector>
+
 TEST(JSONSchema_transformer, schema) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
@@ -139,7 +141,8 @@ TEST(JSONSchema_transformer, erase_many) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }");
   sourcemeta::jsontoolkit::SchemaTransformer transformer{document};
-  transformer.erase_keys({"foo", "baz"});
+  std::vector<std::string> keys{"foo", "baz"};
+  transformer.erase_keys(keys.cbegin(), keys.cend());
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse("{ \"bar\": 2 }");
@@ -163,7 +166,8 @@ TEST(JSONSchema_transformer, erase_many_in_subobject) {
   sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(
       "{ \"foo\": { \"bar\": 1, \"baz\": 2, \"qux\": 3 } }");
   sourcemeta::jsontoolkit::SchemaTransformer transformer{document};
-  transformer.erase_keys({"foo"}, {"bar", "qux"});
+  std::vector<std::string> keys{"bar", "qux"};
+  transformer.erase_keys({"foo"}, keys.cbegin(), keys.cend());
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"baz\": 2 } }");
