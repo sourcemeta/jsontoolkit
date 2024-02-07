@@ -18,9 +18,9 @@ public:
     return schema.defines("foo");
   }
 
-  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &schema) const
+  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &transformer) const
       -> void override {
-    schema.erase("foo");
+    transformer.erase("foo");
   }
 };
 
@@ -37,9 +37,9 @@ public:
     return schema.defines("bar");
   }
 
-  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &schema) const
+  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &transformer) const
       -> void override {
-    schema.erase("bar");
+    transformer.erase("bar");
   }
 };
 
@@ -56,9 +56,9 @@ public:
     return !schema.defines("top") && pointer.empty();
   }
 
-  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &schema) const
+  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &transformer) const
       -> void override {
-    schema.assign("top", sourcemeta::jsontoolkit::JSON{true});
+    transformer.assign("top", sourcemeta::jsontoolkit::JSON{true});
   }
 };
 
@@ -75,9 +75,9 @@ public:
     return !schema.defines("here");
   }
 
-  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &schema) const
+  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &transformer) const
       -> void override {
-    schema.assign("here", sourcemeta::jsontoolkit::JSON{true});
+    transformer.assign("here", sourcemeta::jsontoolkit::JSON{true});
   }
 };
 
@@ -95,9 +95,9 @@ public:
            pointer == sourcemeta::jsontoolkit::Pointer{"properties", "baz"};
   }
 
-  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &schema) const
+  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &transformer) const
       -> void override {
-    schema.assign("baz", sourcemeta::jsontoolkit::JSON{true});
+    transformer.assign("baz", sourcemeta::jsontoolkit::JSON{true});
   }
 };
 
@@ -115,9 +115,9 @@ public:
            dialect == "http://json-schema.org/draft-03/schema#";
   }
 
-  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &schema) const
+  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &transformer) const
       -> void override {
-    schema.assign("draft", sourcemeta::jsontoolkit::JSON{3});
+    transformer.assign("draft", sourcemeta::jsontoolkit::JSON{3});
   }
 };
 
@@ -136,9 +136,9 @@ public:
     return schema.defines("$schema") && schema.size() == 1;
   }
 
-  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &schema) const
+  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &transformer) const
       -> void override {
-    schema.assign("foo", sourcemeta::jsontoolkit::JSON{true});
+    transformer.assign("foo", sourcemeta::jsontoolkit::JSON{true});
   }
 };
 

@@ -42,9 +42,9 @@ namespace sourcemeta::jsontoolkit {
 ///     return schema.defines("foo");
 ///   }
 ///
-///   auto transform(sourcemeta::jsontoolkit::SchemaTransformer &schema)
+///   auto transform(sourcemeta::jsontoolkit::SchemaTransformer &transformer)
 ///       const -> void override {
-///     schema.erase("foo");
+///     transformer.erase("foo");
 ///   }
 /// };
 /// ```
@@ -82,7 +82,7 @@ private:
             const Pointer &pointer) const -> bool = 0;
 
   /// The rule transformation
-  virtual auto transform(SchemaTransformer &schema) const -> void = 0;
+  virtual auto transform(SchemaTransformer &transformer) const -> void = 0;
 
 // Exporting symbols that depends on the standard C++ library is considered
 // safe.
