@@ -11,8 +11,16 @@ auto sourcemeta::jsontoolkit::SchemaTransformer::schema() const
   return this->data;
 }
 
-auto sourcemeta::jsontoolkit::SchemaTransformer::into_object() -> void {
-  this->data.into_object();
+auto sourcemeta::jsontoolkit::SchemaTransformer::replace(
+    const sourcemeta::jsontoolkit::JSON &value) -> void {
+  this->data = value;
+  this->operations.push_back(SchemaTransformerOperationReplace{
+      sourcemeta::jsontoolkit::empty_pointer});
+}
+
+auto sourcemeta::jsontoolkit::SchemaTransformer::replace(
+    sourcemeta::jsontoolkit::JSON &&value) -> void {
+  this->data = std::move(value);
   this->operations.push_back(SchemaTransformerOperationReplace{
       sourcemeta::jsontoolkit::empty_pointer});
 }
