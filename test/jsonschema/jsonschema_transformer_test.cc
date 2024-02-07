@@ -4,6 +4,17 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
+TEST(JSONSchema_transformer, schema) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  sourcemeta::jsontoolkit::SchemaTransformer transformer{document};
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  EXPECT_EQ(transformer.schema(), document);
+  EXPECT_EQ(transformer.schema(), expected);
+  EXPECT_EQ(expected, document);
+}
+
 TEST(JSONSchema_transformer, into_object) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");

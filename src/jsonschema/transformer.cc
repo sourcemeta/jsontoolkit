@@ -6,16 +6,9 @@ sourcemeta::jsontoolkit::SchemaTransformer::SchemaTransformer(
     sourcemeta::jsontoolkit::JSON &schema)
     : data{schema} {}
 
-auto sourcemeta::jsontoolkit::SchemaTransformer::at(
-    const sourcemeta::jsontoolkit::JSON::Array::size_type index) const
+auto sourcemeta::jsontoolkit::SchemaTransformer::schema() const
     -> const sourcemeta::jsontoolkit::JSON & {
-  return this->data.at(index);
-}
-
-auto sourcemeta::jsontoolkit::SchemaTransformer::at(
-    const sourcemeta::jsontoolkit::JSON::String &key) const
-    -> const sourcemeta::jsontoolkit::JSON & {
-  return this->data.at(key);
+  return this->data;
 }
 
 auto sourcemeta::jsontoolkit::SchemaTransformer::into_object() -> void {
