@@ -12,17 +12,29 @@ auto sourcemeta::jsontoolkit::SchemaTransformer::schema() const
 }
 
 auto sourcemeta::jsontoolkit::SchemaTransformer::replace(
+    const sourcemeta::jsontoolkit::Pointer &path,
     const sourcemeta::jsontoolkit::JSON &value) -> void {
-  this->data = value;
-  this->operations.push_back(SchemaTransformerOperationReplace{
-      sourcemeta::jsontoolkit::empty_pointer});
+  // TODO: Check that the path exists with an assert
+  sourcemeta::jsontoolkit::set(this->data, path, value);
+  this->operations.push_back(SchemaTransformerOperationReplace{path});
+}
+
+auto sourcemeta::jsontoolkit::SchemaTransformer::replace(
+    const sourcemeta::jsontoolkit::Pointer &path,
+    sourcemeta::jsontoolkit::JSON &&value) -> void {
+  // TODO: Check that the path exists with an assert
+  sourcemeta::jsontoolkit::set(this->data, path, std::move(value));
+  this->operations.push_back(SchemaTransformerOperationReplace{path});
+}
+
+auto sourcemeta::jsontoolkit::SchemaTransformer::replace(
+    const sourcemeta::jsontoolkit::JSON &value) -> void {
+  this->replace(sourcemeta::jsontoolkit::empty_pointer, value);
 }
 
 auto sourcemeta::jsontoolkit::SchemaTransformer::replace(
     sourcemeta::jsontoolkit::JSON &&value) -> void {
-  this->data = std::move(value);
-  this->operations.push_back(SchemaTransformerOperationReplace{
-      sourcemeta::jsontoolkit::empty_pointer});
+  this->replace(sourcemeta::jsontoolkit::empty_pointer, std::move(value));
 }
 
 auto sourcemeta::jsontoolkit::SchemaTransformer::erase(

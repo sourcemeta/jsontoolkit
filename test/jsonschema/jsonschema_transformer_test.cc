@@ -35,6 +35,26 @@ TEST(JSONSchema_transformer, replace_with_empty_object) {
                   .pointer.empty());
 }
 
+TEST(JSONSchema_transformer, replace_subschema_with_empty_object) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  sourcemeta::jsontoolkit::SchemaTransformer transformer{document};
+  transformer.replace({1}, sourcemeta::jsontoolkit::JSON::make_object());
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse("[ 1, {}, 3 ]");
+  const auto &traces{transformer.traces()};
+
+  EXPECT_EQ(document, expected);
+  EXPECT_EQ(traces.size(), 1);
+
+  using namespace sourcemeta::jsontoolkit;
+  EXPECT_TRUE(
+      std::holds_alternative<SchemaTransformerOperationReplace>(traces.at(0)));
+  EXPECT_EQ(std::get<SchemaTransformerOperationReplace>(traces.at(0)).pointer,
+            sourcemeta::jsontoolkit::Pointer({1}));
+}
+
 TEST(JSONSchema_transformer, assign) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
