@@ -60,13 +60,15 @@ public:
   auto replace(const Pointer &path, const JSON &value) -> void;
   /// Replace a subschema with another value
   auto replace(const Pointer &path, JSON &&value) -> void;
+  /// Assign an object property
+  auto assign(const Pointer &path, const JSON::String &key, const JSON &value)
+      -> void;
+  /// Assign an object property
+  auto assign(const Pointer &path, const JSON::String &key, JSON &&value)
+      -> void;
 
   /// Proxy to sourcemeta::jsontoolkit::JSON::erase
   auto erase(const JSON::String &key) -> void;
-  /// Proxy to sourcemeta::jsontoolkit::JSON::assign
-  auto assign(const JSON::String &key, const JSON &value) -> void;
-  /// Proxy to sourcemeta::jsontoolkit::JSON::assign
-  auto assign(const JSON::String &key, JSON &&value) -> void;
 
   // For convenience
 
@@ -74,6 +76,10 @@ public:
   auto replace(const JSON &value) -> void;
   /// Replace a schema with another value
   auto replace(JSON &&value) -> void;
+  /// Assign an object property
+  auto assign(const JSON::String &key, const JSON &value) -> void;
+  /// Assign an object property
+  auto assign(const JSON::String &key, JSON &&value) -> void;
 
 private:
   JSON &data;

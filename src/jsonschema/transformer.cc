@@ -39,22 +39,42 @@ auto sourcemeta::jsontoolkit::SchemaTransformer::replace(
 
 auto sourcemeta::jsontoolkit::SchemaTransformer::erase(
     const sourcemeta::jsontoolkit::JSON::String &key) -> void {
+  // TODO: Check that the path exists with an assert
   this->data.erase(key);
   this->operations.push_back(SchemaTransformerOperationErase{{key}});
 }
 
 auto sourcemeta::jsontoolkit::SchemaTransformer::assign(
+    const sourcemeta::jsontoolkit::Pointer &path,
     const sourcemeta::jsontoolkit::JSON::String &key,
     const sourcemeta::jsontoolkit::JSON &value) -> void {
-  this->data.assign(key, value);
-  this->operations.push_back(SchemaTransformerOperationAssign{{key}});
+  const auto destination{path.concat({key})};
+  // TODO: Check that the path DOES NOT exist with an assert
+  sourcemeta::jsontoolkit::get(this->data, path).assign(key, value);
+  this->operations.push_back(
+      SchemaTransformerOperationAssign{path.concat({key})});
+}
+
+auto sourcemeta::jsontoolkit::SchemaTransformer::assign(
+    const sourcemeta::jsontoolkit::Pointer &path,
+    const sourcemeta::jsontoolkit::JSON::String &key,
+    sourcemeta::jsontoolkit::JSON &&value) -> void {
+  // TODO: Check that the path DOES NOT exist with an assert
+  sourcemeta::jsontoolkit::get(this->data, path).assign(key, std::move(value));
+  this->operations.push_back(
+      SchemaTransformerOperationAssign{path.concat({key})});
+}
+
+auto sourcemeta::jsontoolkit::SchemaTransformer::assign(
+    const sourcemeta::jsontoolkit::JSON::String &key,
+    const sourcemeta::jsontoolkit::JSON &value) -> void {
+  this->assign(sourcemeta::jsontoolkit::empty_pointer, key, value);
 }
 
 auto sourcemeta::jsontoolkit::SchemaTransformer::assign(
     const sourcemeta::jsontoolkit::JSON::String &key,
     sourcemeta::jsontoolkit::JSON &&value) -> void {
-  this->data.assign(key, std::move(value));
-  this->operations.push_back(SchemaTransformerOperationAssign{{key}});
+  this->assign(sourcemeta::jsontoolkit::empty_pointer, key, std::move(value));
 }
 
 auto sourcemeta::jsontoolkit::SchemaTransformer::traces() const

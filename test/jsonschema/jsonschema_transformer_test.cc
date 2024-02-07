@@ -75,6 +75,26 @@ TEST(JSONSchema_transformer, assign) {
             sourcemeta::jsontoolkit::Pointer{"bar"});
 }
 
+TEST(JSONSchema_transformer, assign_subobject) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": {} }");
+  sourcemeta::jsontoolkit::SchemaTransformer transformer{document};
+  transformer.assign({"bar"}, "baz", sourcemeta::jsontoolkit::JSON{2});
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": { \"baz\": 2 } }");
+  const auto &traces{transformer.traces()};
+
+  EXPECT_EQ(document, expected);
+  EXPECT_EQ(traces.size(), 1);
+
+  using namespace sourcemeta::jsontoolkit;
+  EXPECT_TRUE(
+      std::holds_alternative<SchemaTransformerOperationAssign>(traces.at(0)));
+  EXPECT_EQ(std::get<SchemaTransformerOperationAssign>(traces.at(0)).pointer,
+            sourcemeta::jsontoolkit::Pointer({"bar", "baz"}));
+}
+
 TEST(JSONSchema_transformer, erase) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }");
