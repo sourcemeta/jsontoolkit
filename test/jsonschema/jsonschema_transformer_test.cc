@@ -15,11 +15,11 @@ TEST(JSONSchema_transformer, schema) {
   EXPECT_EQ(expected, document);
 }
 
-TEST(JSONSchema_transformer, into_object) {
+TEST(JSONSchema_transformer, replace_with_empty_object) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
   sourcemeta::jsontoolkit::SchemaTransformer transformer{document};
-  transformer.into_object();
+  transformer.replace(sourcemeta::jsontoolkit::JSON::make_object());
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse("{}");

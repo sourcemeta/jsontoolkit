@@ -53,8 +53,10 @@ public:
 
   /// Get the underlying schema
   auto schema() const -> const JSON &;
-  /// Proxy to sourcemeta::jsontoolkit::JSON::into_object
-  auto into_object() -> void;
+  /// Replace a schema with another value
+  auto replace(const JSON &value) -> void;
+  /// Replace a schema with another value
+  auto replace(JSON &&value) -> void;
   /// Proxy to sourcemeta::jsontoolkit::JSON::erase
   auto erase(const JSON::String &key) -> void;
   /// Proxy to sourcemeta::jsontoolkit::JSON::assign
