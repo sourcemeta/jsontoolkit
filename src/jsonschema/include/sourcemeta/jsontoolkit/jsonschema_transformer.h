@@ -66,9 +66,8 @@ public:
   /// Assign an object property
   auto assign(const Pointer &path, const JSON::String &key, JSON &&value)
       -> void;
-
-  /// Proxy to sourcemeta::jsontoolkit::JSON::erase
-  auto erase(const JSON::String &key) -> void;
+  /// Remove an object property
+  auto erase(const Pointer &path, const JSON::String &key) -> void;
 
   // For convenience
 
@@ -80,6 +79,8 @@ public:
   auto assign(const JSON::String &key, const JSON &value) -> void;
   /// Assign an object property
   auto assign(const JSON::String &key, JSON &&value) -> void;
+  /// Remove an object property
+  auto erase(const JSON::String &key) -> void;
 
 private:
   JSON &data;

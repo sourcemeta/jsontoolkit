@@ -114,3 +114,23 @@ TEST(JSONSchema_transformer, erase) {
   EXPECT_EQ(std::get<SchemaTransformerOperationErase>(traces.at(0)).pointer,
             sourcemeta::jsontoolkit::Pointer{"foo"});
 }
+
+TEST(JSONSchema_transformer, erase_in_subobject) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{ \"foo\": { \"bar\": 1, \"baz\": 2 } }");
+  sourcemeta::jsontoolkit::SchemaTransformer transformer{document};
+  transformer.erase({"foo"}, "bar");
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse("{ \"foo\": { \"baz\": 2 } }");
+  const auto &traces{transformer.traces()};
+
+  EXPECT_EQ(document, expected);
+  EXPECT_EQ(traces.size(), 1);
+
+  using namespace sourcemeta::jsontoolkit;
+  EXPECT_TRUE(
+      std::holds_alternative<SchemaTransformerOperationErase>(traces.at(0)));
+  EXPECT_EQ(std::get<SchemaTransformerOperationErase>(traces.at(0)).pointer,
+            sourcemeta::jsontoolkit::Pointer({"foo", "bar"}));
+}

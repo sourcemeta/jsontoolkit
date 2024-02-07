@@ -38,10 +38,17 @@ auto sourcemeta::jsontoolkit::SchemaTransformer::replace(
 }
 
 auto sourcemeta::jsontoolkit::SchemaTransformer::erase(
+    const sourcemeta::jsontoolkit::Pointer &path,
     const sourcemeta::jsontoolkit::JSON::String &key) -> void {
   // TODO: Check that the path exists with an assert
-  this->data.erase(key);
-  this->operations.push_back(SchemaTransformerOperationErase{{key}});
+  sourcemeta::jsontoolkit::get(this->data, path).erase(key);
+  this->operations.push_back(
+      SchemaTransformerOperationErase{path.concat({key})});
+}
+
+auto sourcemeta::jsontoolkit::SchemaTransformer::erase(
+    const sourcemeta::jsontoolkit::JSON::String &key) -> void {
+  this->erase(sourcemeta::jsontoolkit::empty_pointer, key);
 }
 
 auto sourcemeta::jsontoolkit::SchemaTransformer::assign(
