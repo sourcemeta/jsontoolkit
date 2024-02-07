@@ -10,8 +10,9 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 
-#include <variant> // std::variant
-#include <vector>  // std::vector
+#include <initializer_list> // std::initializer_list
+#include <variant>          // std::variant
+#include <vector>           // std::vector
 
 namespace sourcemeta::jsontoolkit {
 
@@ -68,6 +69,9 @@ public:
       -> void;
   /// Remove an object property
   auto erase(const Pointer &path, const JSON::String &key) -> void;
+  /// Remove multiple object properties
+  auto erase_keys(const Pointer &path, std::initializer_list<JSON::String> keys)
+      -> void;
 
   // For convenience
 
@@ -81,6 +85,8 @@ public:
   auto assign(const JSON::String &key, JSON &&value) -> void;
   /// Remove an object property
   auto erase(const JSON::String &key) -> void;
+  /// Remove multiple object properties
+  auto erase_keys(std::initializer_list<JSON::String> keys) -> void;
 
 private:
   JSON &data;

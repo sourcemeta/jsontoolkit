@@ -134,3 +134,51 @@ TEST(JSONSchema_transformer, erase_in_subobject) {
   EXPECT_EQ(std::get<SchemaTransformerOperationErase>(traces.at(0)).pointer,
             sourcemeta::jsontoolkit::Pointer({"foo", "bar"}));
 }
+
+TEST(JSONSchema_transformer, erase_many) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }");
+  sourcemeta::jsontoolkit::SchemaTransformer transformer{document};
+  transformer.erase_keys({"foo", "baz"});
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2 }");
+  const auto &traces{transformer.traces()};
+
+  EXPECT_EQ(document, expected);
+  EXPECT_EQ(traces.size(), 2);
+
+  using namespace sourcemeta::jsontoolkit;
+  EXPECT_TRUE(
+      std::holds_alternative<SchemaTransformerOperationErase>(traces.at(0)));
+  EXPECT_TRUE(
+      std::holds_alternative<SchemaTransformerOperationErase>(traces.at(1)));
+  EXPECT_EQ(std::get<SchemaTransformerOperationErase>(traces.at(0)).pointer,
+            sourcemeta::jsontoolkit::Pointer{"foo"});
+  EXPECT_EQ(std::get<SchemaTransformerOperationErase>(traces.at(1)).pointer,
+            sourcemeta::jsontoolkit::Pointer{"baz"});
+}
+
+TEST(JSONSchema_transformer, erase_many_in_subobject) {
+  sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(
+      "{ \"foo\": { \"bar\": 1, \"baz\": 2, \"qux\": 3 } }");
+  sourcemeta::jsontoolkit::SchemaTransformer transformer{document};
+  transformer.erase_keys({"foo"}, {"bar", "qux"});
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse("{ \"foo\": { \"baz\": 2 } }");
+  const auto &traces{transformer.traces()};
+
+  EXPECT_EQ(document, expected);
+  EXPECT_EQ(traces.size(), 2);
+
+  using namespace sourcemeta::jsontoolkit;
+  EXPECT_TRUE(
+      std::holds_alternative<SchemaTransformerOperationErase>(traces.at(0)));
+  EXPECT_TRUE(
+      std::holds_alternative<SchemaTransformerOperationErase>(traces.at(1)));
+  EXPECT_EQ(std::get<SchemaTransformerOperationErase>(traces.at(0)).pointer,
+            sourcemeta::jsontoolkit::Pointer({"foo", "bar"}));
+  EXPECT_EQ(std::get<SchemaTransformerOperationErase>(traces.at(1)).pointer,
+            sourcemeta::jsontoolkit::Pointer({"foo", "qux"}));
+}
