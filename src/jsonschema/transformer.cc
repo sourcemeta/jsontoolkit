@@ -51,19 +51,6 @@ auto sourcemeta::jsontoolkit::SchemaTransformer::erase(
   this->erase(sourcemeta::jsontoolkit::empty_pointer, key);
 }
 
-auto sourcemeta::jsontoolkit::SchemaTransformer::erase_keys(
-    const sourcemeta::jsontoolkit::Pointer &path,
-    std::initializer_list<sourcemeta::jsontoolkit::JSON::String> keys) -> void {
-  for (const auto &key : keys) {
-    this->erase(path, key);
-  }
-}
-
-auto sourcemeta::jsontoolkit::SchemaTransformer::erase_keys(
-    std::initializer_list<sourcemeta::jsontoolkit::JSON::String> keys) -> void {
-  this->erase_keys(sourcemeta::jsontoolkit::empty_pointer, keys);
-}
-
 auto sourcemeta::jsontoolkit::SchemaTransformer::assign(
     const sourcemeta::jsontoolkit::Pointer &path,
     const sourcemeta::jsontoolkit::JSON::String &key,
