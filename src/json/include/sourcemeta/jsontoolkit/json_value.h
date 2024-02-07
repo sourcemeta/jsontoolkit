@@ -1207,7 +1207,7 @@ public:
   ///
   /// sourcemeta::jsontoolkit::JSON array =
   ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
-  /// array.erase_keys(std::next(array.begin()));
+  /// array.erase(std::next(array.begin()));
   /// assert(array.size(), 2);
   /// assert(array.at(0), 1);
   /// assert(array.at(1), 3);
@@ -1227,7 +1227,7 @@ public:
   ///
   /// sourcemeta::jsontoolkit::JSON array =
   ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
-  /// array.erase_keys(std::next(array.begin()), array.end());
+  /// array.erase(std::next(array.begin()), array.end());
   /// assert(array.size(), 1);
   /// assert(array.at(0), 1);
   /// ```
