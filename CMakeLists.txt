@@ -59,9 +59,7 @@ endif()
 
 if(JSONTOOLKIT_ADDRESS_SANITIZER)
   noa_sanitizer(TYPE address)
-  noa_sanitizer(TYPE address)
 elseif(JSONTOOLKIT_UNDEFINED_SANITIZER)
-  noa_sanitizer(TYPE undefined)
   noa_sanitizer(TYPE undefined)
 endif()
 
