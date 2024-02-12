@@ -59,6 +59,9 @@ package config file:
 ```sh
 find_package(JSONToolkit REQUIRED)
 
+# This package also supports component-based inclusion
+find_package(JSONToolkit REQUIRED COMPONENTS json jsonschema jsonpointer jsonl)
+
 # Link your targets accordingly
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::json)
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonschema)
