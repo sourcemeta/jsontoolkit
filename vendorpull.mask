@@ -25,7 +25,6 @@ vendor/googletest.mask
 vendor/referencing-suite
 vendor/referencing-suite.mask
 .editorconfig
-config.cmake.in
 .ackrc
 .gitattributes
 .cirrus.yml
