@@ -23,3 +23,12 @@ TEST(JSON_integer, zero) {
   EXPECT_TRUE(document.is_integer());
   EXPECT_EQ(document.to_integer(), 0);
 }
+
+// We have seen GCC getting confused about this one,
+// creating an array with a single integer item instead.
+TEST(JSON_integer, copy_constructor) {
+  const sourcemeta::jsontoolkit::JSON integer{5};
+  const sourcemeta::jsontoolkit::JSON document{integer};
+  EXPECT_TRUE(document.is_integer());
+  EXPECT_EQ(document.to_integer(), 5);
+}
