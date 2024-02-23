@@ -8,6 +8,7 @@
 #endif
 
 #include <sourcemeta/jsontoolkit/json_error.h>
+#include <sourcemeta/jsontoolkit/json_lru.h>
 #include <sourcemeta/jsontoolkit/json_value.h>
 
 #include <cstdint>    // std::uint64_t
