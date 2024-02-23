@@ -397,3 +397,15 @@ TEST(JSON_array, clear) {
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
 }
+
+TEST(JSON_array, estimated_byte_size_integers) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  EXPECT_EQ(document.estimated_byte_size(), 24);
+}
+
+TEST(JSON_array, estimated_byte_size_nested) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[1,[\"foo\"],[[true]]]");
+  EXPECT_EQ(document.estimated_byte_size(), 12);
+}

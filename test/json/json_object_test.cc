@@ -579,3 +579,15 @@ TEST(JSON_object, assign_if_missing_missing_rvalue) {
   EXPECT_TRUE(document.at("bar").to_boolean());
   EXPECT_EQ(document.at("baz").to_integer(), 1);
 }
+
+TEST(JSON_object, estimated_byte_size_integers) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }");
+  EXPECT_EQ(document.estimated_byte_size(), 22);
+}
+
+TEST(JSON_object, estimated_byte_size_nested) {
+  const sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(
+      "{ \"foo\": 1, \"bar\": { \"bar\": true } }");
+  EXPECT_EQ(document.estimated_byte_size(), 18);
+}

@@ -54,3 +54,23 @@ TEST(JSON_real, float_infinity) {
   const float value{std::numeric_limits<float>::infinity()};
   EXPECT_THROW(sourcemeta::jsontoolkit::JSON{value}, std::invalid_argument);
 }
+
+TEST(JSON_real, estimated_byte_size_3_14) {
+  const sourcemeta::jsontoolkit::JSON document{3.14};
+  EXPECT_EQ(document.estimated_byte_size(), 8);
+}
+
+TEST(JSON_real, estimated_byte_size_minus_3_14) {
+  const sourcemeta::jsontoolkit::JSON document{-3.14};
+  EXPECT_EQ(document.estimated_byte_size(), 8);
+}
+
+TEST(JSON_real, estimated_byte_size_minus_5_0) {
+  const sourcemeta::jsontoolkit::JSON document{5.0};
+  EXPECT_EQ(document.estimated_byte_size(), 8);
+}
+
+TEST(JSON_real, estimated_byte_size_minus_0_0) {
+  const sourcemeta::jsontoolkit::JSON document{0.0};
+  EXPECT_EQ(document.estimated_byte_size(), 8);
+}

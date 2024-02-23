@@ -10,6 +10,7 @@
 #include <cstdint>          // std::int64_t, std::uint8_t
 #include <functional>       // std::less
 #include <initializer_list> // std::initializer_list
+#include <numeric>          // std::transform
 #include <set>              // std::set
 #include <sstream>          // std::basic_istringstream
 #include <stdexcept>        // std::invalid_argument
@@ -892,6 +893,56 @@ public:
       return std::get<Array>(this->data).data.size();
     } else {
       return std::get<String>(this->data).size();
+    }
+  }
+
+  /// Estimate the byte size occupied by the given parsed JSON instance (not its
+  /// stringified representation). Keep in mind that as the method name implies,
+  /// this is just a rough estimate. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON value =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
+  ///
+  /// // Byte length of "foo" (3) + byte length of 1 (8)
+  /// assert(value.estimated_byte_size() == 11);
+  /// ```
+  [[nodiscard]] auto estimated_byte_size() const -> std::uint64_t {
+    // Of course, container have some overhead of their own
+    // which we are not taking into account here, as its typically
+    // implementation dependent. This function is just a rough estimate.
+    if (this->is_object()) {
+      return std::accumulate(this->as_object().cbegin(),
+                             this->as_object().cend(),
+                             static_cast<std::uint64_t>(0),
+                             [](const std::uint64_t accumulator,
+                                const typename Object::value_type &pair) {
+                               return accumulator +
+                                      (pair.first.size() * sizeof(CharT)) +
+                                      pair.second.estimated_byte_size();
+                             });
+    } else if (this->is_array()) {
+      return std::accumulate(
+          this->as_array().cbegin(), this->as_array().cend(),
+          static_cast<std::uint64_t>(0),
+          [](const std::uint64_t accumulator, const GenericValue &item) {
+            return accumulator + item.estimated_byte_size();
+          });
+    } else if (this->is_string()) {
+      // Keep in mind that standard strings might reserve more
+      // space than what it is actually used by the string
+      return this->to_string().size() * sizeof(CharT);
+    } else if (this->is_integer()) {
+      return sizeof(std::int64_t);
+    } else if (this->is_real()) {
+      return sizeof(double);
+    } else if (this->is_boolean()) {
+      return sizeof(bool);
+    } else {
+      return sizeof(std::nullptr_t);
     }
   }
 
