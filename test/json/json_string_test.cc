@@ -38,3 +38,18 @@ TEST(JSON_string, to_stringstream) {
   EXPECT_EQ(stream.get(), -1);
   EXPECT_TRUE(stream.eof());
 }
+
+TEST(JSON_string, estimated_byte_size_foo) {
+  const sourcemeta::jsontoolkit::JSON document{"foo"};
+  EXPECT_EQ(document.estimated_byte_size(), 3);
+}
+
+TEST(JSON_string, estimated_byte_size_foo_bar_baz) {
+  const sourcemeta::jsontoolkit::JSON document{"foo bar baz"};
+  EXPECT_EQ(document.estimated_byte_size(), 11);
+}
+
+TEST(JSON_string, estimated_byte_size_empty) {
+  const sourcemeta::jsontoolkit::JSON document{""};
+  EXPECT_EQ(document.estimated_byte_size(), 0);
+}

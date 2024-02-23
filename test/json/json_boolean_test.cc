@@ -46,3 +46,13 @@ TEST(JSON_boolean, literal_equality_true) {
   EXPECT_FALSE(left == extra);
   EXPECT_FALSE(right == extra);
 }
+
+TEST(JSON_boolean, estimated_byte_size_false) {
+  const sourcemeta::jsontoolkit::JSON document{false};
+  EXPECT_EQ(document.estimated_byte_size(), 1);
+}
+
+TEST(JSON_boolean, estimated_byte_size_true) {
+  const sourcemeta::jsontoolkit::JSON document{true};
+  EXPECT_EQ(document.estimated_byte_size(), 1);
+}
