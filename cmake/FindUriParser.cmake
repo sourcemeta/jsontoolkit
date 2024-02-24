@@ -10,10 +10,6 @@ if(NOT UriParser_FOUND)
   include(GNUInstallDirs)
   install(TARGETS uriparser
     EXPORT uriparser
-    PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/uriparser"
-      COMPONENT sourcemeta_jsontoolkit_dev
-    PRIVATE_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/uriparser"
-      COMPONENT sourcemeta_jsontoolkit_dev
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
       COMPONENT sourcemeta_jsontoolkit
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
