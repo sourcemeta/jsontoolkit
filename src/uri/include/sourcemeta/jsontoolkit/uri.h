@@ -212,7 +212,7 @@ public:
   /// ```
   auto resolve_from(const URI &base) -> URI &;
 
-  /// Esscape a string as established by RFC 3986 using C++ standard stream. For
+  /// Escape a string as established by RFC 3986 using C++ standard stream. For
   /// example:
   ///
   /// ```cpp
