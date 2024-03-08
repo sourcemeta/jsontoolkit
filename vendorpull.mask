@@ -24,6 +24,7 @@ vendor/googletest
 vendor/googletest.mask
 vendor/referencing-suite
 vendor/referencing-suite.mask
+cmake/FindGoogleTest.cmake
 .editorconfig
 .ackrc
 .gitattributes
