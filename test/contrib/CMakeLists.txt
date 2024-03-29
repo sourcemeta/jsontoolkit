@@ -37,6 +37,20 @@ if(JSONTOOLKIT_JSON)
     "${IS_SAME_STDIN_BIN}" "${MINIFY_BIN}"
     "${CMAKE_CURRENT_SOURCE_DIR}/minify_output.json"
     "${CMAKE_CURRENT_SOURCE_DIR}/minify_input.json")
+
+  # For some strange reason, Windows throws weird errors on GitHub Actions
+  # when running these Batch-based tests in parallel
+  if(WIN32)
+    set_tests_properties(
+      prettify_invalid prettify_not_found
+      prettify
+      prettify_stdin
+      minify_invalid
+      minify_not_found
+      minify
+      minify_stdin
+      PROPERTIES RUN_SERIAL TRUE)
+  endif()
 endif()
 
 if(JSONTOOLKIT_JSONSCHEMA)
@@ -72,4 +86,17 @@ if(JSONTOOLKIT_JSONSCHEMA)
     "${IS_SAME_BIN}" "${JSONSCHEMA_KEYWORDS_BIN}"
     "${CMAKE_CURRENT_SOURCE_DIR}/schemas/keyword_count.txt"
     "${CMAKE_CURRENT_SOURCE_DIR}/schemas")
+
+  # For some strange reason, Windows throws weird errors on GitHub Actions
+  # when running these Batch-based tests in parallel
+  if(WIN32)
+    set_tests_properties(
+      jsonschema_walker_deep_2020_12
+      jsonschema_walker_flat_2020_12
+      jsonschema_walker_deep_2020_12_stdin
+      jsonschema_walker_flat_2020_12_stdin
+      jsonschema_walker_invalid_mode
+      jsonschema_keywords
+      PROPERTIES RUN_SERIAL TRUE)
+  endif()
 endif()
