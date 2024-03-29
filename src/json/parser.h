@@ -559,8 +559,8 @@ auto parse_number_any_negative_first(
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
 auto parse_number(const std::uint64_t line, std::uint64_t &column,
-                  std::basic_istream<CharT, Traits> &stream, const CharT first)
-    -> GenericValue<CharT, Traits, Allocator> {
+                  std::basic_istream<CharT, Traits> &stream,
+                  const CharT first) -> GenericValue<CharT, Traits, Allocator> {
   std::basic_ostringstream<CharT, Traits, Allocator<CharT>> result;
   result.put(first);
 

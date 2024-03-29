@@ -69,10 +69,10 @@ public:
   [[nodiscard]] auto name() const -> const std::string &;
 
   /// Apply the rule to a schema
-  auto
-  apply(JSON &schema, const Pointer &pointer, const SchemaResolver &resolver,
-        const std::optional<std::string> &default_dialect = std::nullopt) const
-      -> std::vector<SchemaTransformerOperation>;
+  auto apply(JSON &schema, const Pointer &pointer,
+             const SchemaResolver &resolver,
+             const std::optional<std::string> &default_dialect =
+                 std::nullopt) const -> std::vector<SchemaTransformerOperation>;
 
 private:
   /// The rule condition

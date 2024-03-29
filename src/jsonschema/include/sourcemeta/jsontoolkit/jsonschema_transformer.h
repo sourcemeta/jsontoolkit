@@ -61,11 +61,11 @@ public:
   /// Replace a subschema with another value
   auto replace(const Pointer &path, JSON &&value) -> void;
   /// Assign an object property
-  auto assign(const Pointer &path, const JSON::String &key, const JSON &value)
-      -> void;
+  auto assign(const Pointer &path, const JSON::String &key,
+              const JSON &value) -> void;
   /// Assign an object property
-  auto assign(const Pointer &path, const JSON::String &key, JSON &&value)
-      -> void;
+  auto assign(const Pointer &path, const JSON::String &key,
+              JSON &&value) -> void;
   /// Remove an object property
   auto erase(const Pointer &path, const JSON::String &key) -> void;
   /// Remove multiple object properties

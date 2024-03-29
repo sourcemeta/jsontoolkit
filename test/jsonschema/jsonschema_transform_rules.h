@@ -10,11 +10,10 @@ public:
   ExampleRule1()
       : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_1"){};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
-                               const std::string &,
-                               const std::set<std::string> &,
-                               const sourcemeta::jsontoolkit::Pointer &) const
-      -> bool override {
+  [[nodiscard]] auto
+  condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
+            const std::set<std::string> &,
+            const sourcemeta::jsontoolkit::Pointer &) const -> bool override {
     return schema.defines("foo");
   }
 
@@ -29,11 +28,10 @@ public:
   ExampleRule2()
       : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_2"){};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
-                               const std::string &,
-                               const std::set<std::string> &,
-                               const sourcemeta::jsontoolkit::Pointer &) const
-      -> bool override {
+  [[nodiscard]] auto
+  condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
+            const std::set<std::string> &,
+            const sourcemeta::jsontoolkit::Pointer &) const -> bool override {
     return schema.defines("bar");
   }
 
@@ -48,11 +46,10 @@ public:
   ExampleRule3()
       : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_3"){};
 
-  [[nodiscard]] auto
-  condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
-            const std::set<std::string> &,
-            const sourcemeta::jsontoolkit::Pointer &pointer) const
-      -> bool override {
+  [[nodiscard]] auto condition(
+      const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
+      const std::set<std::string> &,
+      const sourcemeta::jsontoolkit::Pointer &pointer) const -> bool override {
     return !schema.defines("top") && pointer.empty();
   }
 
@@ -67,11 +64,10 @@ public:
   ExampleRule4()
       : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_4"){};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
-                               const std::string &,
-                               const std::set<std::string> &,
-                               const sourcemeta::jsontoolkit::Pointer &) const
-      -> bool override {
+  [[nodiscard]] auto
+  condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
+            const std::set<std::string> &,
+            const sourcemeta::jsontoolkit::Pointer &) const -> bool override {
     return !schema.defines("here");
   }
 
@@ -86,11 +82,10 @@ public:
   ExampleRule5()
       : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_5"){};
 
-  [[nodiscard]] auto
-  condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
-            const std::set<std::string> &,
-            const sourcemeta::jsontoolkit::Pointer &pointer) const
-      -> bool override {
+  [[nodiscard]] auto condition(
+      const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
+      const std::set<std::string> &,
+      const sourcemeta::jsontoolkit::Pointer &pointer) const -> bool override {
     return !schema.defines("baz") &&
            pointer == sourcemeta::jsontoolkit::Pointer{"properties", "baz"};
   }
@@ -106,11 +101,10 @@ public:
   ExampleRule6()
       : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_6"){};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
-                               const std::string &dialect,
-                               const std::set<std::string> &,
-                               const sourcemeta::jsontoolkit::Pointer &) const
-      -> bool override {
+  [[nodiscard]] auto
+  condition(const sourcemeta::jsontoolkit::JSON &schema,
+            const std::string &dialect, const std::set<std::string> &,
+            const sourcemeta::jsontoolkit::Pointer &) const -> bool override {
     return !schema.defines("draft") &&
            dialect == "http://json-schema.org/draft-03/schema#";
   }
@@ -128,11 +122,10 @@ public:
       : sourcemeta::jsontoolkit::SchemaTransformRule(
             "example_rule_conflicts_with_1"){};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
-                               const std::string &,
-                               const std::set<std::string> &,
-                               const sourcemeta::jsontoolkit::Pointer &) const
-      -> bool override {
+  [[nodiscard]] auto
+  condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
+            const std::set<std::string> &,
+            const sourcemeta::jsontoolkit::Pointer &) const -> bool override {
     return schema.defines("$schema") && schema.size() == 1;
   }
 
