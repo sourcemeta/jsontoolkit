@@ -291,7 +291,7 @@ auto URI::resolve_from(const URI &base) -> URI & {
 }
 
 auto URI::from_fragment(std::string_view fragment) -> URI {
-  assert(fragment.front() != '#');
+  assert(fragment.empty() || fragment.front() != '#');
   std::ostringstream uri;
   uri << "#" << fragment;
   return {uri.str()};
