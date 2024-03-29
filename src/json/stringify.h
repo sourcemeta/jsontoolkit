@@ -25,16 +25,16 @@ namespace sourcemeta::jsontoolkit {
 
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
-auto stringify(const std::nullptr_t, std::basic_ostream<CharT, Traits> &stream)
-    -> void {
+auto stringify(const std::nullptr_t,
+               std::basic_ostream<CharT, Traits> &stream) -> void {
   stream.write(internal::constant_null<CharT, Traits>.data(),
                internal::constant_null<CharT, Traits>.size());
 }
 
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
-auto stringify(const bool value, std::basic_ostream<CharT, Traits> &stream)
-    -> void {
+auto stringify(const bool value,
+               std::basic_ostream<CharT, Traits> &stream) -> void {
   if (value) {
     stream.write(internal::constant_true<CharT, Traits>.data(),
                  internal::constant_true<CharT, Traits>.size());
@@ -57,8 +57,8 @@ auto stringify(const std::int64_t value,
 
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
-auto stringify(const double value, std::basic_ostream<CharT, Traits> &stream)
-    -> void {
+auto stringify(const double value,
+               std::basic_ostream<CharT, Traits> &stream) -> void {
   if (value == static_cast<double>(0.0)) {
     stream.write("0.0", 3);
   } else {
@@ -411,8 +411,8 @@ template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
 auto prettify(
     const typename GenericValue<CharT, Traits, Allocator>::Array &document,
-    std::basic_ostream<CharT, Traits> &stream, const std::size_t indentation)
-    -> void {
+    std::basic_ostream<CharT, Traits> &stream,
+    const std::size_t indentation) -> void {
   stream.put(internal::token_array_begin<CharT>);
   const auto end{std::cend(document)};
   for (auto iterator = std::cbegin(document); iterator != end; ++iterator) {
@@ -437,8 +437,8 @@ template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
 auto prettify(
     const typename GenericValue<CharT, Traits, Allocator>::Object &document,
-    std::basic_ostream<CharT, Traits> &stream, const std::size_t indentation)
-    -> void {
+    std::basic_ostream<CharT, Traits> &stream,
+    const std::size_t indentation) -> void {
   stream.put(internal::token_object_begin<CharT>);
   const auto end{std::cend(document)};
   for (auto iterator = std::cbegin(document); iterator != end; ++iterator) {

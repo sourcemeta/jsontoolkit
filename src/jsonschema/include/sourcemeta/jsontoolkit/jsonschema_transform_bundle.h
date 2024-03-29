@@ -88,8 +88,8 @@ public:
   // which by definition do not support copying. MSVC gets confused unless we
   // are explicit about it here.
   SchemaTransformBundle(const SchemaTransformBundle &) = delete;
-  auto operator=(const SchemaTransformBundle &)
-      -> SchemaTransformBundle & = delete;
+  auto
+  operator=(const SchemaTransformBundle &) -> SchemaTransformBundle & = delete;
   SchemaTransformBundle(SchemaTransformBundle &&) = default;
   auto operator=(SchemaTransformBundle &&) -> SchemaTransformBundle & = default;
 #endif
@@ -103,11 +103,11 @@ public:
   }
 
   /// Apply the bundle of rules to a schema
-  auto
-  apply(JSON &schema, const SchemaWalker &walker,
-        const SchemaResolver &resolver, const Pointer &pointer = empty_pointer,
-        const std::optional<std::string> &default_dialect = std::nullopt) const
-      -> void;
+  auto apply(JSON &schema, const SchemaWalker &walker,
+             const SchemaResolver &resolver,
+             const Pointer &pointer = empty_pointer,
+             const std::optional<std::string> &default_dialect =
+                 std::nullopt) const -> void;
 
 private:
 // Exporting symbols that depends on the standard C++ library is considered

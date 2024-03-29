@@ -198,10 +198,9 @@ auto sourcemeta::jsontoolkit::vocabularies(
                       maybe_dialect.value());
 }
 
-auto sourcemeta::jsontoolkit::vocabularies(const SchemaResolver &resolver,
-                                           const std::string &base_dialect,
-                                           const std::string &dialect)
-    -> std::future<std::map<std::string, bool>> {
+auto sourcemeta::jsontoolkit::vocabularies(
+    const SchemaResolver &resolver, const std::string &base_dialect,
+    const std::string &dialect) -> std::future<std::map<std::string, bool>> {
   // As a performance optimization shortcut
   if (base_dialect == dialect) {
     if (dialect == "https://json-schema.org/draft/2020-12/schema") {

@@ -13,8 +13,8 @@
 
 namespace {
 template <typename CharT, typename Traits>
-auto walk(const std::string &mode, std::basic_istream<CharT, Traits> &stream)
-    -> int {
+auto walk(const std::string &mode,
+          std::basic_istream<CharT, Traits> &stream) -> int {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(stream);
 

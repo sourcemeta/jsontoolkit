@@ -256,9 +256,8 @@ public:
 
   /// Overload to support ordering of JSON documents. Typically for sorting
   /// reasons.
-  auto
-  operator<(const GenericValue<CharT, Traits, Allocator> &other) const noexcept
-      -> bool {
+  auto operator<(const GenericValue<CharT, Traits, Allocator> &other)
+      const noexcept -> bool {
     if (this->type() == Type::Integer && other.type() == Type::Real) {
       return static_cast<double>(this->to_integer()) < other.to_real();
     } else if (this->type() == Type::Real && other.type() == Type::Integer) {
@@ -290,9 +289,8 @@ public:
   }
 
   /// Overload to support deep equality of JSON documents.
-  auto
-  operator==(const GenericValue<CharT, Traits, Allocator> &other) const noexcept
-      -> bool {
+  auto operator==(const GenericValue<CharT, Traits, Allocator> &other)
+      const noexcept -> bool {
     return this->data == other.data;
   }
 
@@ -710,8 +708,8 @@ public:
   ///   sourcemeta::jsontoolkit::parse_json("{ \"1\": "foo" }");
   /// assert(my_array.at(1).to_string() == "foo");
   /// ```
-  [[nodiscard]] auto at(const typename Array::size_type index) const
-      -> const GenericValue & {
+  [[nodiscard]] auto
+  at(const typename Array::size_type index) const -> const GenericValue & {
     // In practice, this case only applies in some edge cases when
     // using JSON Pointers
     if (this->is_object()) [[unlikely]] {
@@ -741,8 +739,8 @@ public:
   ///   sourcemeta::jsontoolkit::parse_json("{ \"1\": "foo" }");
   /// assert(my_array.at(1).to_string() == "foo");
   /// ```
-  [[nodiscard]] auto at(const typename Array::size_type index)
-      -> GenericValue & {
+  [[nodiscard]] auto
+  at(const typename Array::size_type index) -> GenericValue & {
     // In practice, this case only applies in some edge cases when
     // using JSON Pointers
     if (this->is_object()) [[unlikely]] {
@@ -1004,8 +1002,8 @@ public:
   /// assert(document.defines(0));
   /// assert(!document.defines(1));
   /// ```
-  [[nodiscard]] auto defines(const typename Array::size_type index) const
-      -> bool {
+  [[nodiscard]] auto
+  defines(const typename Array::size_type index) const -> bool {
     return this->defines(std::to_string(index));
   }
 
@@ -1043,8 +1041,8 @@ public:
   ///
   /// assert(document.defines_any({ "foo", "qux" }));
   /// ```
-  [[nodiscard]] auto defines_any(std::initializer_list<String> keys) const
-      -> bool {
+  [[nodiscard]] auto
+  defines_any(std::initializer_list<String> keys) const -> bool {
     return this->defines_any(keys.begin(), keys.end());
   }
 

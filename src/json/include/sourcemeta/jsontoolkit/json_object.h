@@ -16,14 +16,12 @@ public:
   GenericObject() : data{} {}
   GenericObject(std::initializer_list<typename Container::value_type> values)
       : data{values} {}
-  auto
-  operator<(const GenericObject<Key, Value, Allocator> &other) const noexcept
-      -> bool {
+  auto operator<(const GenericObject<Key, Value, Allocator> &other)
+      const noexcept -> bool {
     return this->data < other.data;
   }
-  auto
-  operator==(const GenericObject<Key, Value, Allocator> &other) const noexcept
-      -> bool {
+  auto operator==(const GenericObject<Key, Value, Allocator> &other)
+      const noexcept -> bool {
     return this->data == other.data;
   }
 
