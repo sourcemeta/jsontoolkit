@@ -46,7 +46,7 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
   }
 
   for (auto &pair : subschema.as_object()) {
-    switch (walker(pair.first, vocabularies)) {
+    switch (walker(pair.first, vocabularies).strategy) {
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value: {
         sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
         new_pointer.emplace_back(pair.first);

@@ -2,10 +2,10 @@
 
 auto sourcemeta::jsontoolkit::default_schema_walker(
     std::string_view keyword, const std::map<std::string, bool> &vocabularies)
-    -> sourcemeta::jsontoolkit::SchemaWalkerStrategy {
+    -> sourcemeta::jsontoolkit::SchemaWalkerResult {
 #define WALK(vocabulary, _keyword, strategy)                                   \
   if (vocabularies.contains(vocabulary) && keyword == _keyword)                \
-    return sourcemeta::jsontoolkit::SchemaWalkerStrategy::strategy;
+    return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::strategy};
 
 #define HTTPS_BASE "https://json-schema.org/draft/"
   // 2020-12
@@ -168,5 +168,5 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-00/hyper-schema#", "requires", Value)
 #undef HTTP_BASE
 #undef WALK
-  return sourcemeta::jsontoolkit::SchemaWalkerStrategy::None;
+  return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::None};
 }

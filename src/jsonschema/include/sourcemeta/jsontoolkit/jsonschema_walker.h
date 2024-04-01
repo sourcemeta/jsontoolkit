@@ -56,6 +56,12 @@ enum class SchemaWalkerStrategy {
 #pragma GCC diagnostic pop
 #endif
 
+/// A structure that encapsulates the result of walker over a specific keyword
+struct SchemaWalkerResult {
+  /// The walker strategy to continue traversing across the schema
+  const SchemaWalkerStrategy strategy;
+};
+
 // Take a keyword + vocabularies in use and guide subschema walking
 /// @ingroup jsonschema
 ///
@@ -63,14 +69,13 @@ enum class SchemaWalkerStrategy {
 /// keywords declare other JSON Schema definitions. To accomplish this in a
 /// generic and flexible way that does not assume the use any vocabulary other
 /// than `core`, these functions take a walker function as argument, of the type
-/// sourcemeta::jsontoolkit::SchemaWalker. This function returns a
-/// sourcemeta::jsontoolkit::SchemaWalkerStrategy.
+/// sourcemeta::jsontoolkit::SchemaWalker.
 ///
 /// For convenience, we provide the following default walkers:
 ///
 /// - sourcemeta::jsontoolkit::default_schema_walker
 /// - sourcemeta::jsontoolkit::schema_walker_none
-using SchemaWalker = std::function<SchemaWalkerStrategy(
+using SchemaWalker = std::function<SchemaWalkerResult(
     std::string_view, const std::map<std::string, bool> &)>;
 
 /// @ingroup jsonschema
@@ -78,8 +83,8 @@ using SchemaWalker = std::function<SchemaWalkerStrategy(
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 inline auto schema_walker_none(std::string_view,
                                const std::map<std::string, bool> &)
-    -> sourcemeta::jsontoolkit::SchemaWalkerStrategy {
-  return SchemaWalkerStrategy::None;
+    -> sourcemeta::jsontoolkit::SchemaWalkerResult {
+  return {SchemaWalkerStrategy::None};
 }
 
 /// @ingroup jsonschema
@@ -87,7 +92,7 @@ inline auto schema_walker_none(std::string_view,
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto default_schema_walker(std::string_view keyword,
                            const std::map<std::string, bool> &vocabularies)
-    -> sourcemeta::jsontoolkit::SchemaWalkerStrategy;
+    -> sourcemeta::jsontoolkit::SchemaWalkerResult;
 
 /// @ingroup jsonschema
 /// An entry of a schema iterator.
