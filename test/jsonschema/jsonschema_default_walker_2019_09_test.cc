@@ -1163,3 +1163,48 @@ TEST(JSONSchema_default_walker_2019_09,
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
   EXPECT_TRUE(result.dependencies.empty());
 }
+
+TEST(JSONSchema_default_walker_2019_09, keyword_priority_array) {
+  std::map<std::string, bool> vocabularies;
+  std::copy(VOCABULARIES_2019_09_APPLICATOR.cbegin(),
+            VOCABULARIES_2019_09_APPLICATOR.cend(),
+            std::inserter(vocabularies, vocabularies.end()));
+  std::copy(VOCABULARIES_2019_09_VALIDATION.cbegin(),
+            VOCABULARIES_2019_09_VALIDATION.cend(),
+            std::inserter(vocabularies, vocabularies.end()));
+
+  const auto &walker = sourcemeta::jsontoolkit::default_schema_walker;
+  using namespace sourcemeta::jsontoolkit;
+  EXPECT_EQ(keyword_priority("items", vocabularies, walker), 0);
+  EXPECT_EQ(keyword_priority("additionalItems", vocabularies, walker), 1);
+  EXPECT_EQ(keyword_priority("minContains", vocabularies, walker), 0);
+  EXPECT_EQ(keyword_priority("maxContains", vocabularies, walker), 0);
+  EXPECT_EQ(keyword_priority("contains", vocabularies, walker), 1);
+  EXPECT_EQ(keyword_priority("unevaluatedItems", vocabularies, walker), 2);
+}
+
+TEST(JSONSchema_default_walker_2019_09, keyword_priority_object) {
+  const auto &vocabularies = VOCABULARIES_2019_09_APPLICATOR;
+  const auto &walker = sourcemeta::jsontoolkit::default_schema_walker;
+  using namespace sourcemeta::jsontoolkit;
+  EXPECT_EQ(keyword_priority("properties", vocabularies, walker), 0);
+  EXPECT_EQ(keyword_priority("patternProperties", vocabularies, walker), 0);
+  EXPECT_EQ(keyword_priority("additionalProperties", vocabularies, walker), 1);
+  EXPECT_EQ(keyword_priority("unevaluatedProperties", vocabularies, walker), 2);
+}
+
+TEST(JSONSchema_default_walker_2019_09, keyword_priority_other) {
+  const auto &vocabularies = VOCABULARIES_2019_09_APPLICATOR;
+  const auto &walker = sourcemeta::jsontoolkit::default_schema_walker;
+  using namespace sourcemeta::jsontoolkit;
+  EXPECT_EQ(keyword_priority("if", vocabularies, walker), 0);
+  EXPECT_EQ(keyword_priority("then", vocabularies, walker), 1);
+  EXPECT_EQ(keyword_priority("else", vocabularies, walker), 1);
+}
+
+TEST(JSONSchema_default_walker_2019_09, keyword_priority_unknown) {
+  const auto &vocabularies = VOCABULARIES_2019_09_CORE;
+  const auto &walker = sourcemeta::jsontoolkit::default_schema_walker;
+  using namespace sourcemeta::jsontoolkit;
+  EXPECT_EQ(keyword_priority("foobar", vocabularies, walker), 0);
+}
