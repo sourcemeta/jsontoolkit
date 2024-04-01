@@ -605,3 +605,18 @@ TEST(JSONSchema_default_walker_draft2,
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
   EXPECT_TRUE(result.dependencies.empty());
 }
+
+TEST(JSONSchema_default_walker_draft2, keyword_priority_object) {
+  const auto &vocabularies = VOCABULARIES_DRAFT2;
+  const auto &walker = sourcemeta::jsontoolkit::default_schema_walker;
+  using namespace sourcemeta::jsontoolkit;
+  EXPECT_EQ(keyword_priority("properties", vocabularies, walker), 0);
+  EXPECT_EQ(keyword_priority("additionalProperties", vocabularies, walker), 1);
+}
+
+TEST(JSONSchema_default_walker_draft2, keyword_priority_unknown) {
+  const auto &vocabularies = VOCABULARIES_DRAFT2;
+  const auto &walker = sourcemeta::jsontoolkit::default_schema_walker;
+  using namespace sourcemeta::jsontoolkit;
+  EXPECT_EQ(keyword_priority("foobar", vocabularies, walker), 0);
+}

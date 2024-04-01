@@ -240,6 +240,45 @@ private:
 #endif
 };
 
+/// @ingroup jsonschema
+///
+/// Calculate the priority of a keyword that determines the ordering in which a
+/// JSON Schema implementation should evaluate keyword on a subschema. It does
+/// so based on the keyword dependencies expressed in the schema walker. The
+/// higher the priority, the more the evaluation of such keyword must be
+/// delayed.
+///
+/// For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonschema.h>
+/// #include <cassert>
+///
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(R"JSON({
+///   "$schema": "https://json-schema.org/draft/2020-12/schema",
+///   "prefixItems": [ true, true ],
+///   "items": false
+/// })JSON");
+///
+/// const auto vocabularies{
+///   sourcemeta::jsontoolkit::vocabularies(
+///     document, sourcemeta::jsontoolkit::official_resolver).get()};
+///
+/// assert(sourcemeta::jsontoolkit::keyword_priority(
+///   "prefixItems", vocabularies,
+///   sourcemeta::jsontoolkit::default_schema_walker) == 0);
+///
+/// // The "items" keyword must be evaluated after the "prefixItems" keyword
+/// assert(sourcemeta::jsontoolkit::keyword_priority(
+///   "items", vocabularies,
+///   sourcemeta::jsontoolkit::default_schema_walker) == 1);
+/// ```
+auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT keyword_priority(
+    std::string_view keyword, const std::map<std::string, bool> &vocabularies,
+    const SchemaWalker &walker) -> std::uint64_t;
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif

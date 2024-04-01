@@ -2,6 +2,8 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
+#include <algorithm> // std::max, std::accumulate
+
 namespace {
 enum class SchemaWalkerype_t { Deep, Flat };
 
@@ -190,4 +192,17 @@ auto sourcemeta::jsontoolkit::SchemaIteratorFlat::cbegin() const
 auto sourcemeta::jsontoolkit::SchemaIteratorFlat::cend() const
     -> const_iterator {
   return this->subschemas.cend();
+}
+
+auto sourcemeta::jsontoolkit::keyword_priority(
+    std::string_view keyword, const std::map<std::string, bool> &vocabularies,
+    const sourcemeta::jsontoolkit::SchemaWalker &walker) -> std::uint64_t {
+  const auto result{walker(keyword, vocabularies)};
+  return std::accumulate(
+      result.dependencies.cbegin(), result.dependencies.cend(),
+      static_cast<std::uint64_t>(0),
+      [&vocabularies, &walker](const auto accumulator, const auto &dependency) {
+        return std::max(accumulator,
+                        keyword_priority(dependency, vocabularies, walker) + 1);
+      });
 }
