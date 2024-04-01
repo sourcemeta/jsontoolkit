@@ -14,6 +14,7 @@
 #include <functional>  // std::function
 #include <map>         // std::map
 #include <optional>    // std::optional
+#include <set>         // std::set
 #include <string>      // std::string
 #include <string_view> // std::string_view
 #include <vector>      // std::vector
@@ -56,10 +57,14 @@ enum class SchemaWalkerStrategy {
 #pragma GCC diagnostic pop
 #endif
 
+/// @ingroup jsonschema
 /// A structure that encapsulates the result of walker over a specific keyword
 struct SchemaWalkerResult {
   /// The walker strategy to continue traversing across the schema
   const SchemaWalkerStrategy strategy;
+  /// The keywords a given keyword depends on (if any) during the evaluation
+  /// process
+  const std::set<std::string> dependencies;
 };
 
 // Take a keyword + vocabularies in use and guide subschema walking
@@ -84,7 +89,7 @@ SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 inline auto schema_walker_none(std::string_view,
                                const std::map<std::string, bool> &)
     -> sourcemeta::jsontoolkit::SchemaWalkerResult {
-  return {SchemaWalkerStrategy::None};
+  return {SchemaWalkerStrategy::None, {}};
 }
 
 /// @ingroup jsonschema
