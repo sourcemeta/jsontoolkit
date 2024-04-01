@@ -106,7 +106,7 @@ struct SchemaIteratorEntry {
   std::optional<std::string> dialect;
   std::map<std::string, bool> vocabularies;
   std::optional<std::string> base_dialect;
-  JSON schema;
+  JSON value;
 };
 
 /// @ingroup jsonschema

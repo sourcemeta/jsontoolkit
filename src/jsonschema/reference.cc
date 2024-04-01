@@ -158,7 +158,7 @@ auto sourcemeta::jsontoolkit::frame(
 
     // Schema identifier
     std::optional<std::string> id{sourcemeta::jsontoolkit::id(
-        entry.schema, entry.base_dialect.value(),
+        entry.value, entry.base_dialect.value(),
         entry.pointer.empty() ? default_id : std::nullopt)};
 
     // Store information
@@ -170,7 +170,7 @@ auto sourcemeta::jsontoolkit::frame(
     if (entry.id.has_value()) {
       const bool ref_overrides =
           ref_overrides_adjacent_keywords(entry.common.base_dialect.value());
-      if (!entry.common.schema.defines("$ref") || !ref_overrides) {
+      if (!entry.common.value.defines("$ref") || !ref_overrides) {
         for (const auto &base_string :
              find_nearest_bases(base_uris, entry.common.pointer, entry.id)) {
           const sourcemeta::jsontoolkit::URI base{base_string};
@@ -197,7 +197,7 @@ auto sourcemeta::jsontoolkit::frame(
     // Handle schema anchors
     // TODO: Support $recursiveAnchor
     for (const auto &[name, type] : sourcemeta::jsontoolkit::anchors(
-             entry.common.schema, entry.common.vocabularies)) {
+             entry.common.value, entry.common.vocabularies)) {
       const auto bases{
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
 
@@ -279,15 +279,15 @@ auto sourcemeta::jsontoolkit::frame(
   // Resolve references after all framing was performed
   for (const auto &entry : subschema_entries) {
     // TODO: Handle $recursiveRef too
-    if (entry.common.schema.is_object()) {
+    if (entry.common.value.is_object()) {
       const auto nearest_bases{
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
 
       // TODO: Check that static destinations actually exist in the frame
-      if (entry.common.schema.defines("$ref")) {
-        assert(entry.common.schema.at("$ref").is_string());
+      if (entry.common.value.defines("$ref")) {
+        assert(entry.common.value.at("$ref").is_string());
         sourcemeta::jsontoolkit::URI ref{
-            entry.common.schema.at("$ref").to_string()};
+            entry.common.value.at("$ref").to_string()};
         if (!nearest_bases.empty()) {
           ref.resolve_from(nearest_bases.front());
         }
@@ -300,10 +300,10 @@ auto sourcemeta::jsontoolkit::frame(
 
       if (entry.common.vocabularies.contains(
               "https://json-schema.org/draft/2020-12/vocab/core") &&
-          entry.common.schema.defines("$dynamicRef")) {
-        assert(entry.common.schema.at("$dynamicRef").is_string());
+          entry.common.value.defines("$dynamicRef")) {
+        assert(entry.common.value.at("$dynamicRef").is_string());
         sourcemeta::jsontoolkit::URI ref{
-            entry.common.schema.at("$dynamicRef").to_string()};
+            entry.common.value.at("$dynamicRef").to_string()};
         if (!nearest_bases.empty()) {
           ref.resolve_from(nearest_bases.front());
         }
