@@ -67,7 +67,6 @@ struct SchemaWalkerResult {
   const std::set<std::string> dependencies;
 };
 
-// Take a keyword + vocabularies in use and guide subschema walking
 /// @ingroup jsonschema
 ///
 /// For walking purposes, some functions need to understand which JSON Schema
