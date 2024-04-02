@@ -2,7 +2,21 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
-#include <algorithm> // std::max, std::accumulate
+#include <algorithm> // std::max, std::accumulate, std::sort
+#include <cassert>   // assert
+
+auto sourcemeta::jsontoolkit::keyword_priority(
+    std::string_view keyword, const std::map<std::string, bool> &vocabularies,
+    const sourcemeta::jsontoolkit::SchemaWalker &walker) -> std::uint64_t {
+  const auto result{walker(keyword, vocabularies)};
+  return std::accumulate(
+      result.dependencies.cbegin(), result.dependencies.cend(),
+      static_cast<std::uint64_t>(0),
+      [&vocabularies, &walker](const auto accumulator, const auto &dependency) {
+        return std::max(accumulator,
+                        keyword_priority(dependency, vocabularies, walker) + 1);
+      });
+}
 
 namespace {
 enum class SchemaWalkerype_t { Deep, Flat };
@@ -164,6 +178,59 @@ sourcemeta::jsontoolkit::SchemaIteratorFlat::SchemaIteratorFlat(
   }
 }
 
+sourcemeta::jsontoolkit::SchemaKeywordIterator::SchemaKeywordIterator(
+    const sourcemeta::jsontoolkit::JSON &schema,
+    const sourcemeta::jsontoolkit::SchemaWalker &walker,
+    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+    const std::optional<std::string> &default_dialect) {
+  assert(is_schema(schema));
+  if (schema.is_boolean()) {
+    return;
+  }
+
+  const std::optional<std::string> dialect{
+      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+  const std::optional<std::string> base_dialect{
+      sourcemeta::jsontoolkit::base_dialect(schema, resolver, dialect).get()};
+
+  std::map<std::string, bool> vocabularies;
+  if (base_dialect.has_value() && dialect.has_value()) {
+    vocabularies.merge(sourcemeta::jsontoolkit::vocabularies(
+                           resolver, base_dialect.value(), dialect.value())
+                           .get());
+  }
+
+  for (const auto &[key, value] : schema.as_object()) {
+    this->entries.push_back(
+        {{key}, dialect, vocabularies, base_dialect, value});
+  }
+
+  // Sort keywords based on priority for correct evaluation
+  std::sort(
+      this->entries.begin(), this->entries.end(),
+      [&vocabularies, &walker](const auto &left, const auto &right) -> bool {
+        // These cannot be empty or indexes, as we created
+        // the entries array from a JSON object
+        assert(!left.pointer.empty() && left.pointer.back().is_property());
+        assert(!right.pointer.empty() && right.pointer.back().is_property());
+
+        const auto left_priority = keyword_priority(
+            left.pointer.back().to_property(), vocabularies, walker);
+        const auto right_priority = keyword_priority(
+            right.pointer.back().to_property(), vocabularies, walker);
+
+        // Sort first on priority, second on actual keywords. The latter is to
+        // make sure different compilers with different STL implementations end
+        // up at the exact same result. Not really mandatory, but useful for
+        // writing tests on the iterator output.
+        if (left_priority != right_priority) {
+          return left_priority < right_priority;
+        } else {
+          return left.pointer < right.pointer;
+        }
+      });
+}
+
 auto sourcemeta::jsontoolkit::SchemaIterator::begin() const -> const_iterator {
   return this->subschemas.begin();
 }
@@ -194,15 +261,19 @@ auto sourcemeta::jsontoolkit::SchemaIteratorFlat::cend() const
   return this->subschemas.cend();
 }
 
-auto sourcemeta::jsontoolkit::keyword_priority(
-    std::string_view keyword, const std::map<std::string, bool> &vocabularies,
-    const sourcemeta::jsontoolkit::SchemaWalker &walker) -> std::uint64_t {
-  const auto result{walker(keyword, vocabularies)};
-  return std::accumulate(
-      result.dependencies.cbegin(), result.dependencies.cend(),
-      static_cast<std::uint64_t>(0),
-      [&vocabularies, &walker](const auto accumulator, const auto &dependency) {
-        return std::max(accumulator,
-                        keyword_priority(dependency, vocabularies, walker) + 1);
-      });
+auto sourcemeta::jsontoolkit::SchemaKeywordIterator::begin() const
+    -> const_iterator {
+  return this->entries.begin();
+}
+auto sourcemeta::jsontoolkit::SchemaKeywordIterator::end() const
+    -> const_iterator {
+  return this->entries.end();
+}
+auto sourcemeta::jsontoolkit::SchemaKeywordIterator::cbegin() const
+    -> const_iterator {
+  return this->entries.cbegin();
+}
+auto sourcemeta::jsontoolkit::SchemaKeywordIterator::cend() const
+    -> const_iterator {
+  return this->entries.cend();
 }

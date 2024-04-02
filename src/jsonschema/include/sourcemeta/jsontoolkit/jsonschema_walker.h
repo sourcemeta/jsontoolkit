@@ -279,6 +279,63 @@ auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT keyword_priority(
     std::string_view keyword, const std::map<std::string, bool> &vocabularies,
     const SchemaWalker &walker) -> std::uint64_t;
 
+/// @ingroup jsonschema
+///
+/// Return an iterator over the top-level keywords of a given JSON Schema
+/// definition in the order in which an implementation must evaluate them.
+///
+/// For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonschema.h>
+/// #include <iostream>
+///
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(R"JSON({
+///   "$schema": "https://json-schema.org/draft/2020-12/schema",
+///   "type": "object",
+///   "properties": {},
+///   "additionalProperties": true,
+///   "patternProperties": {}
+/// })JSON");
+///
+/// for (const auto &entry :
+///          sourcemeta::jsontoolkit::SchemaKeywordIterator{
+///          document, sourcemeta::jsontoolkit::default_schema_walker,
+///          sourcemeta::jsontoolkit::official_resolver}) {
+///   sourcemeta::jsontoolkit::stringify(entry.pointer, std::cout);
+///   std::cout << "\n";
+/// }
+/// ```
+class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaKeywordIterator {
+private:
+  using internal = typename std::vector<SchemaIteratorEntry>;
+
+public:
+  using const_iterator = typename internal::const_iterator;
+  SchemaKeywordIterator(
+      const JSON &input, const SchemaWalker &walker,
+      const SchemaResolver &resolver,
+      const std::optional<std::string> &default_dialect = std::nullopt);
+  auto begin() const -> const_iterator;
+  auto end() const -> const_iterator;
+  auto cbegin() const -> const_iterator;
+  auto cend() const -> const_iterator;
+
+private:
+// Exporting symbols that depends on the standard C++ library is considered
+// safe.
+// https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4275?view=msvc-170&redirectedfrom=MSDN
+#if defined(_MSC_VER)
+#pragma warning(disable : 4251)
+#endif
+  internal entries;
+#if defined(_MSC_VER)
+#pragma warning(default : 4251)
+#endif
+};
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif
