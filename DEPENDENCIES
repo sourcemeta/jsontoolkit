@@ -13,3 +13,4 @@ jsonschema-draft1 https://github.com/json-schema-org/json-schema-spec 2072feec9f
 jsonschema-draft0 https://github.com/json-schema-org/json-schema-spec 7ea575aef8d5c0183acbe6ff65b4c98ee9c236ec
 referencing-suite https://github.com/python-jsonschema/referencing-suite 61c4cc202b1e96ed5adcaf4842a595f68d659212
 uriparser https://github.com/uriparser/uriparser 634b678fa858abf1d1ebc0634e96e9e29596e92a
+doxygen-awesome-css https://github.com/jothepro/doxygen-awesome-css v2.3.2
