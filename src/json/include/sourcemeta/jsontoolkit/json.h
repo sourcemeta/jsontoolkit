@@ -190,6 +190,26 @@ auto operator<<(std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
                 const JSON &document)
     -> std::basic_ostream<JSON::Char, JSON::CharTraits> &;
 
+/// @ingroup json
+///
+/// Encode the input JSON type as a string into a given standard output stream.
+/// For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <iostream>
+/// #include <sstream>
+///
+/// std::ostringstream stream;
+/// stream << sourcemeta::jsontoolkit::JSON::Type::String;
+/// // Will print "string"
+/// std::cout << stream.str() << std::endl;
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
+auto operator<<(std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
+                const JSON::Type type)
+    -> std::basic_ostream<JSON::Char, JSON::CharTraits> &;
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <sourcemeta/jsontoolkit/json.h>
 
+#include <cassert> // assert
 #include <fstream> // std::ifstream
 #include <ios>     // std::ios_base
 
@@ -62,6 +63,31 @@ auto operator<<(std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
   prettify(document, stream);
 #endif
   return stream;
+}
+
+auto operator<<(std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
+                const JSON::Type type)
+    -> std::basic_ostream<JSON::Char, JSON::CharTraits> & {
+  switch (type) {
+    case sourcemeta::jsontoolkit::JSON::Type::Null:
+      return stream << "null";
+    case sourcemeta::jsontoolkit::JSON::Type::Boolean:
+      return stream << "boolean";
+    case sourcemeta::jsontoolkit::JSON::Type::Integer:
+      return stream << "integer";
+    case sourcemeta::jsontoolkit::JSON::Type::Real:
+      return stream << "real";
+    case sourcemeta::jsontoolkit::JSON::Type::String:
+      return stream << "string";
+    case sourcemeta::jsontoolkit::JSON::Type::Array:
+      return stream << "array";
+    case sourcemeta::jsontoolkit::JSON::Type::Object:
+      return stream << "object";
+    default:
+      // Should never happen, but some compilers are not happy without this
+      assert(false);
+      return stream;
+  }
 }
 
 } // namespace sourcemeta::jsontoolkit
