@@ -12,7 +12,8 @@ add_executable(sourcemeta_jsontoolkit_json_unit
   json_real_test.cc
   json_string_test.cc
   json_stringify_test.cc
-  json_value_test.cc)
+  json_value_test.cc
+  json_type_test.cc)
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_json_unit)
 target_link_libraries(sourcemeta_jsontoolkit_json_unit
   PRIVATE GTest::gtest GTest::gtest_main)

@@ -18,6 +18,7 @@ SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/json/json_real_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/json/json_string_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/json/json_stringify_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/json/json_value_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/json/json_type_test.cc
 
 # TODO: Port the JSON Test Suite
 
