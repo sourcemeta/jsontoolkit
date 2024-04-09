@@ -1,6 +1,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
 #include "default_compiler_2020_12.h"
+#include "default_compiler_draft0.h"
 
 #include <cassert> // assert
 
@@ -16,6 +17,12 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
       context.vocabularies.contains(
           "https://json-schema.org/draft/2020-12/vocab/validation")) {
     return internal::compiler_2020_12_validation_type(context);
+  }
+
+  if (context.keyword == "type" &&
+      context.vocabularies.contains(
+          "http://json-schema.org/draft-00/hyper-schema#")) {
+    return internal::compiler_draft0_validation_type(context);
   }
 
   return {};
