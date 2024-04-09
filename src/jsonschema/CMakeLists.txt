@@ -8,7 +8,8 @@ noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
     error.h transformer.h transform_rule.h transform_bundle.h compile.h
   SOURCES jsonschema.cc default_walker.cc reference.cc anchor.cc
     walker.cc bundle.cc transformer.cc transform_rule.cc transform_bundle.cc
-    compile.cc compile_evaluate.cc compile_json.cc default_compiler.cc
+    compile.cc compile_evaluate.cc compile_json.cc
+    default_compiler.cc default_compiler_2020_12.h
     "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 
 if(JSONTOOLKIT_INSTALL)
