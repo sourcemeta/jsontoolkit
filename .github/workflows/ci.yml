@@ -48,6 +48,12 @@ jobs:
           - os: windows-latest
             type: shared
             shell: pwsh
+          - os: windows-latest
+            type: static
+            shell: msys2 {0}
+          - os: windows-latest
+            type: shared
+            shell: msys2 {0}
 
           # Sanitizers
           - os: ubuntu-latest
@@ -72,6 +78,14 @@ jobs:
       CC: ${{ matrix.platform.cc }}
       CXX: ${{ matrix.platform.cxx }}
     steps:
+      - name: Setup MSYS2 (Windows)
+        if: runner.os == 'windows' && matrix.platform.shell == 'msys2 {0}'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: git python python-pip mingw-w64-ucrt-x86_64-gcc
+
       - name: Install ClangFormat
         run: pip install clang-format==18.1.0
 
