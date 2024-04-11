@@ -16,42 +16,56 @@ jobs:
             cc: clang
             cxx: clang++
             type: static
+            shell: sh
           - os: macos-latest
             cc: clang
             cxx: clang++
             type: shared
+            shell: sh
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: static
+            shell: sh
           - os: ubuntu-latest
             cc: gcc
             cxx: g++
             type: static
+            shell: sh
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: shared
+            shell: sh
           - os: ubuntu-latest
             cc: gcc
             cxx: g++
             type: shared
+            shell: sh
           - os: windows-latest
             type: static
+            shell: pwsh
           - os: windows-latest
             type: shared
+            shell: pwsh
 
           # Sanitizers
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: static
+            shell: sh
             options: -DJSONTOOLKIT_ADDRESS_SANITIZER:BOOL=ON
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: static
+            shell: sh
             options: -DJSONTOOLKIT_UNDEFINED_SANITIZER:BOOL=ON
+
+    defaults:
+      run:
+        shell: ${{ matrix.platform.shell }}
 
     runs-on: ${{ matrix.platform.os }}
     env:
