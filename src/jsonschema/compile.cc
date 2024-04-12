@@ -4,9 +4,12 @@
 #include <cassert> // assert
 #include <utility> // std::move
 
-namespace sourcemeta::jsontoolkit {
+namespace {
 
-auto compile(const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
+auto compile_subschema(
+    const sourcemeta::jsontoolkit::SchemaCompilerContext &context)
+    -> sourcemeta::jsontoolkit::SchemaCompilerTemplate {
+  using namespace sourcemeta::jsontoolkit;
   assert(is_schema(context.schema));
 
   // Handle boolean schemas earlier on, as nobody should be able to
@@ -41,6 +44,10 @@ auto compile(const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
   return steps;
 }
 
+} // namespace
+
+namespace sourcemeta::jsontoolkit {
+
 auto compile(const JSON &schema, const SchemaWalker &walker,
              const SchemaResolver &resolver, const SchemaCompiler &compiler,
              const std::optional<std::string> &default_dialect)
@@ -63,18 +70,28 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
                                  default_dialect)
       .wait();
 
-  return compile({"",
-                  result,
-                  {},
-                  result,
-                  {},
-                  {},
-                  frame,
-                  references,
-                  walker,
-                  resolver,
-                  compiler,
-                  dialect});
+  return compile_subschema({"",
+                            result,
+                            {},
+                            result,
+                            {},
+                            {},
+                            frame,
+                            references,
+                            walker,
+                            resolver,
+                            compiler,
+                            dialect});
+}
+
+auto compile(const SchemaCompilerContext &context,
+             const Pointer &pointer) -> SchemaCompilerTemplate {
+  return compile_subschema(
+      {context.keyword, get(context.value, pointer), context.vocabularies,
+       context.value, context.schema_location.concat(pointer),
+       context.instance_location, context.frame, context.references,
+       context.walker, context.resolver, context.compiler,
+       context.default_dialect});
 }
 
 } // namespace sourcemeta::jsontoolkit

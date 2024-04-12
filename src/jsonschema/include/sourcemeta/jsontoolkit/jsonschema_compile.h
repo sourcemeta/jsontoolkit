@@ -275,11 +275,13 @@ compile(const JSON &schema, const SchemaWalker &walker,
 
 /// @ingroup jsonschema
 ///
-/// This function compiles a single keyword into a compiler template. It is not
-/// meant to be used directly, but instead as a building block for supporting
-/// applicators on compiler functions.
+/// This function compiles a single subschema into a compiler template as
+/// determined by the given pointer. It is not meant to be used directly, but
+/// instead as a building block for supporting applicators on compiler
+/// functions.
 auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-compile(const SchemaCompilerContext &context) -> SchemaCompilerTemplate;
+compile(const SchemaCompilerContext &context,
+        const Pointer &pointer) -> SchemaCompilerTemplate;
 
 /// @ingroup jsonschema
 ///
