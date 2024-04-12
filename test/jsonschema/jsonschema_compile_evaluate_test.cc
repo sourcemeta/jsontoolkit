@@ -283,3 +283,51 @@ TEST(JSONSchema_compile_evaluate,
   EXPECT_TRUE(
       std::holds_alternative<SchemaCompilerLogicalOr>(trace.at(2).second));
 }
+
+TEST(JSONSchema_compile_evaluate, fast_step_and_empty_no_condition) {
+  using namespace sourcemeta::jsontoolkit;
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalAnd{Pointer{}, {}, {}}};
+
+  const JSON instance{parse("{ \"foo\": 1 }")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_true) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{
+      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+                                  Pointer{},
+                                  SchemaCompilerValueType{JSON::Type::Object},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalAnd{Pointer{}, {}, children}};
+
+  const JSON instance{parse("{ \"foo\": 1 }")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_false) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{
+      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+                                  Pointer{},
+                                  SchemaCompilerValueType{JSON::Type::String},
+                                  {}},
+      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+                                  Pointer{},
+                                  SchemaCompilerValueType{JSON::Type::Array},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalAnd{Pointer{}, {}, children}};
+
+  const JSON instance{parse("{ \"foo\": 1 }")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_FALSE(result);
+}

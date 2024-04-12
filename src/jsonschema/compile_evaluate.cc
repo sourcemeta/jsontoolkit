@@ -96,6 +96,35 @@ struct StepVisitor {
     }
   }
 
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalAnd
+                      &logical) const -> bool {
+    using namespace sourcemeta::jsontoolkit;
+    if (!evaluate(logical.condition, this->instance_,
+                  SchemaCompilerEvaluationMode::Fast, callback_noop) ||
+        logical.children.empty()) {
+      return true;
+    } else if (this->mode_ == SchemaCompilerEvaluationMode::Fast) {
+      for (const auto &child : logical.children) {
+        if (!evaluate_step(child, this->instance_, this->mode_,
+                           this->callback_)) {
+          return false;
+        }
+      }
+
+      return true;
+    } else {
+      bool overall{true};
+      for (const auto &child : logical.children) {
+        if (!evaluate_step(child, this->instance_, this->mode_,
+                           this->callback_)) {
+          overall = false;
+        }
+      }
+
+      return overall;
+    }
+  }
+
 private:
   const sourcemeta::jsontoolkit::JSON &instance_;
   const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode_;

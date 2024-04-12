@@ -343,3 +343,171 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
 
   EXPECT_EQ(result, expected);
 }
+
+TEST(JSONSchema_compile_json, and_empty) {
+  using namespace sourcemeta::jsontoolkit;
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalAnd{Pointer{}, {}, {}}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "logical",
+      "type": "and",
+      "schemaLocation": "",
+      "children": [],
+      "condition": []
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}
+
+TEST(JSONSchema_compile_json, and_single_child) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{
+      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+                                  Pointer{},
+                                  SchemaCompilerValueType{JSON::Type::String},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalAnd{Pointer{}, {}, children}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "logical",
+      "type": "and",
+      "schemaLocation": "",
+      "children": [
+        {
+          "category": "assertion",
+          "type": "type",
+          "schemaLocation": "",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
+          "value": {
+            "category": "value",
+            "type": "type",
+            "value": "string"
+          },
+          "condition": []
+        }
+      ],
+      "condition": []
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}
+
+TEST(JSONSchema_compile_json, and_multiple_children) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{
+      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+                                  Pointer{},
+                                  SchemaCompilerValueType{JSON::Type::String},
+                                  {}},
+      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+                                  Pointer{},
+                                  SchemaCompilerValueType{JSON::Type::Array},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalAnd{Pointer{}, {}, children}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "logical",
+      "type": "and",
+      "schemaLocation": "",
+      "children": [
+        {
+          "category": "assertion",
+          "type": "type",
+          "schemaLocation": "",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
+          "value": {
+            "category": "value",
+            "type": "type",
+            "value": "string"
+          },
+          "condition": []
+        },
+        {
+          "category": "assertion",
+          "type": "type",
+          "schemaLocation": "",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
+          "value": {
+            "category": "value",
+            "type": "type",
+            "value": "array"
+          },
+          "condition": []
+        }
+      ],
+      "condition": []
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}
+
+TEST(JSONSchema_compile_json, and_empty_single_condition) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate condition{
+      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+                                  Pointer{},
+                                  SchemaCompilerValueType{JSON::Type::String},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalAnd{Pointer{}, condition, {}}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "logical",
+      "type": "and",
+      "schemaLocation": "",
+      "children": [],
+      "condition": [
+        {
+          "category": "assertion",
+          "type": "type",
+          "schemaLocation": "",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
+          "value": {
+            "category": "value",
+            "type": "type",
+            "value": "string"
+          },
+          "condition": []
+        }
+      ]
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}

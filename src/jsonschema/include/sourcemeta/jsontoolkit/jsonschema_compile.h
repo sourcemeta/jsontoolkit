@@ -62,10 +62,15 @@ struct SchemaCompilerAssertionType;
 struct SchemaCompilerLogicalOr;
 
 /// @ingroup jsonschema
+/// Represents a compiler logical step that represents a conjunction
+struct SchemaCompilerLogicalAnd;
+
+/// @ingroup jsonschema
 /// Represents a schema compilation result that can be evaluated
 using SchemaCompilerTemplate = std::vector<
     std::variant<SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
-                 SchemaCompilerAssertionType, SchemaCompilerLogicalOr>>;
+                 SchemaCompilerAssertionType, SchemaCompilerLogicalOr,
+                 SchemaCompilerLogicalAnd>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_ASSERTION(name, type)                                           \
@@ -87,6 +92,7 @@ DEFINE_ASSERTION(Fail, SchemaCompilerValueNone)
 DEFINE_ASSERTION(Defines, SchemaCompilerValueString)
 DEFINE_ASSERTION(Type, SchemaCompilerValueType)
 DEFINE_LOGICAL(Or)
+DEFINE_LOGICAL(And)
 
 #undef DEFINE_ASSERTION
 #undef DEFINE_LOGICAL
