@@ -44,7 +44,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // patternProperties
   // dependencies
   // enum
-  // allOf
   // anyOf
   // oneOf
   // format
@@ -53,6 +52,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_type);
   COMPILE("http://json-schema.org/draft-04/schema#", "required",
           compiler_draft4_validation_required);
+  COMPILE("http://json-schema.org/draft-04/schema#", "allOf",
+          compiler_draft4_validation_allof);
 
 #undef COMPILE
 
