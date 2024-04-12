@@ -1,6 +1,7 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_DEFAULT_COMPILER_DRAFT4_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_DEFAULT_COMPILER_DRAFT4_H_
 
+#include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
 #include <cassert> // assert
@@ -100,6 +101,25 @@ auto compiler_draft4_validation_required(
 
   return {SchemaCompilerLogicalAnd{
       context.schema_location, {std::move(condition)}, std::move(children)}};
+}
+
+auto compiler_draft4_validation_allof(
+    const sourcemeta::jsontoolkit::SchemaCompilerContext &context)
+    -> sourcemeta::jsontoolkit::SchemaCompilerTemplate {
+  using namespace sourcemeta::jsontoolkit;
+  assert(context.value.is_array());
+  assert(!context.value.empty());
+  SchemaCompilerTemplate children;
+
+  for (std::uint64_t index = 0; index < context.value.size(); index++) {
+    for (auto &&step :
+         compile(context, {static_cast<Pointer::Token::Index>(index)})) {
+      children.push_back(std::move(step));
+    }
+  }
+
+  return {SchemaCompilerLogicalAnd{
+      context.schema_location, {}, std::move(children)}};
 }
 
 } // namespace internal
