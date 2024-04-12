@@ -54,11 +54,6 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
     -> SchemaCompilerTemplate {
   assert(is_schema(schema));
 
-  const std::optional<std::string> maybe_dialect{
-      sourcemeta::jsontoolkit::dialect(schema)};
-  const std::optional<std::string> dialect{
-      maybe_dialect.has_value() ? maybe_dialect : default_dialect};
-
   // Make sure the input schema is bundled, otherwise we won't be able to
   // resolve remote references here
   const JSON result{bundle(schema, walker, resolver, default_dialect).get()};
@@ -70,18 +65,26 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
                                  default_dialect)
       .wait();
 
-  return compile_subschema({"",
-                            result,
-                            {},
-                            result,
-                            {},
-                            {},
-                            frame,
-                            references,
-                            walker,
-                            resolver,
-                            compiler,
-                            dialect});
+  const std::string base{
+      sourcemeta::jsontoolkit::id(schema, resolver, default_dialect)
+          .get()
+          .value_or("")};
+  assert(frame.contains({ReferenceType::Static, base}));
+  const auto root_frame_entry{frame.at({ReferenceType::Static, base})};
+
+  return compile_subschema(
+      {"",
+       result,
+       vocabularies(schema, resolver, default_dialect).get(),
+       result,
+       {},
+       {},
+       frame,
+       references,
+       walker,
+       resolver,
+       compiler,
+       root_frame_entry.dialect});
 }
 
 auto compile(const SchemaCompilerContext &context,
