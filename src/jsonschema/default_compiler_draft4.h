@@ -83,23 +83,23 @@ auto compiler_draft4_validation_required(
   using namespace sourcemeta::jsontoolkit;
   assert(context.value.is_array());
   assert(!context.value.empty());
-  SchemaCompilerTemplate result;
+  SchemaCompilerTemplate children;
 
   for (const auto &property : context.value.as_array()) {
     assert(property.is_string());
-    // TODO: Instead of adding the same "is object" condition to every assertion
-    // do it once, and grop the rest in an "and" logical operator.
-    result.push_back(SchemaCompilerAssertionDefines{
-        context.instance_location,
-        context.schema_location,
-        property.to_string(),
-        {SchemaCompilerAssertionType{context.instance_location,
-                                     context.schema_location,
-                                     JSON::Type::Object,
-                                     {}}}});
+    children.push_back(SchemaCompilerAssertionDefines{context.instance_location,
+                                                      context.schema_location,
+                                                      property.to_string(),
+                                                      {}});
   }
 
-  return result;
+  auto condition{SchemaCompilerAssertionType{context.instance_location,
+                                             context.schema_location,
+                                             JSON::Type::Object,
+                                             {}}};
+
+  return {SchemaCompilerLogicalAnd{
+      context.schema_location, {std::move(condition)}, std::move(children)}};
 }
 
 } // namespace internal

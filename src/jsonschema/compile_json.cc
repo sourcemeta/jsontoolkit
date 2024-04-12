@@ -128,6 +128,12 @@ struct StepVisitor {
     return logical_to_json("or", logical.schema_location, logical.children,
                            logical.condition);
   }
+
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalAnd
+                      &logical) const -> sourcemeta::jsontoolkit::JSON {
+    return logical_to_json("and", logical.schema_location, logical.children,
+                           logical.condition);
+  }
 };
 
 auto step_to_json(
