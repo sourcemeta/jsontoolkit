@@ -30,6 +30,7 @@ struct ReferenceFrameEntry {
   const std::optional<std::string> root;
   const std::string base;
   const Pointer pointer;
+  const Pointer relative_pointer;
   const std::string dialect;
 };
 
