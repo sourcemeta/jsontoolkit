@@ -39,7 +39,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // uniqueItems
   // maxProperties
   // minProperties
-  // required
   // additionalProperties
   // properties
   // patternProperties
@@ -52,6 +51,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
 
   COMPILE("http://json-schema.org/draft-04/schema#", "type",
           compiler_draft4_validation_type);
+  COMPILE("http://json-schema.org/draft-04/schema#", "required",
+          compiler_draft4_validation_required);
 
 #undef COMPILE
 
