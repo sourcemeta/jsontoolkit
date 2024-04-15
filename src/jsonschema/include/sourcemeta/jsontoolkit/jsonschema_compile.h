@@ -19,6 +19,7 @@
 #include <map>        // std::map
 #include <optional>   // std::optional, std::nullopt
 #include <string>     // std::string
+#include <utility>    // std::move
 #include <variant>    // std::variant
 #include <vector>     // std::vector
 
@@ -78,6 +79,7 @@ using SchemaCompilerTemplate = std::vector<
   struct SchemaCompilerAssertion##name {                                       \
     const SchemaCompilerTarget target;                                         \
     const Pointer evaluation_path;                                             \
+    const std::string keyword_location;                                        \
     const std::variant<type> value;                                            \
     const SchemaCompilerTemplate condition;                                    \
   };
@@ -85,6 +87,7 @@ using SchemaCompilerTemplate = std::vector<
 #define DEFINE_LOGICAL(name)                                                   \
   struct SchemaCompilerLogical##name {                                         \
     const Pointer evaluation_path;                                             \
+    const std::string keyword_location;                                        \
     const SchemaCompilerTemplate condition;                                    \
     const SchemaCompilerTemplate children;                                     \
   };
@@ -143,6 +146,33 @@ struct SchemaCompilerContext {
   /// The default dialect of the schema
   const std::optional<std::string> &default_dialect;
 };
+
+/// @ingroup jsonschema
+/// Helper function to instantiate an assertion step
+template <typename Step, typename ValueType>
+auto make(const SchemaCompilerContext &context, ValueType &&type,
+          SchemaCompilerTemplate &&condition) -> Step {
+  return {context.instance_location, context.evaluation_path,
+          to_uri(context.relative_pointer)
+              .resolve_from_if_absolute(context.base)
+              .canonicalize()
+              .recompose(),
+          std::move(type), std::move(condition)};
+}
+
+/// @ingroup jsonschema
+/// Helper function to instantiate a logical step
+template <typename Step>
+auto make(const SchemaCompilerContext &context,
+          SchemaCompilerTemplate &&condition,
+          SchemaCompilerTemplate &&children) -> Step {
+  return {context.evaluation_path,
+          to_uri(context.relative_pointer)
+              .resolve_from_if_absolute(context.base)
+              .canonicalize()
+              .recompose(),
+          std::move(condition), std::move(children)};
+}
 
 /// @ingroup jsonschema
 /// Represents the mode of evalution

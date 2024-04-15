@@ -18,10 +18,8 @@ auto compile_subschema(
     if (context.schema.to_boolean()) {
       return {};
     } else {
-      return {SchemaCompilerAssertionFail{context.instance_location,
-                                          context.evaluation_path,
-                                          SchemaCompilerValueNone{},
-                                          {}}};
+      return {make<SchemaCompilerAssertionFail>(context,
+                                                SchemaCompilerValueNone{}, {})};
     }
   }
 
