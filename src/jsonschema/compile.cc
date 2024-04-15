@@ -88,24 +88,25 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
        root_frame_entry.dialect});
 }
 
-auto compile(const SchemaCompilerContext &context,
-             const Pointer &pointer) -> SchemaCompilerTemplate {
+auto compile(const SchemaCompilerContext &context, const Pointer &suffix,
+             const std::optional<std::string> &uri) -> SchemaCompilerTemplate {
   // Determine URI of the destination after recursion
-  const std::string destination{to_uri(context.relative_pointer.concat(pointer))
-                                    .resolve_from_if_absolute(context.base)
-                                    .canonicalize()
-                                    .recompose()};
+  const std::string destination{
+      uri.value_or(to_uri(context.relative_pointer.concat(suffix))
+                       .resolve_from_if_absolute(context.base)
+                       .canonicalize()
+                       .recompose())};
 
   // Otherwise the recursion attempt is non-sense
   assert(context.frame.contains({ReferenceType::Static, destination}));
   const auto &entry{context.frame.at({ReferenceType::Static, destination})};
 
-  const auto &new_schema{get(context.value, pointer)};
+  const auto &new_schema{get(context.schema, entry.pointer)};
   return compile_subschema(
       {context.keyword, new_schema,
        vocabularies(new_schema, context.resolver, entry.dialect).get(),
        context.value, entry.base, entry.relative_pointer,
-       context.evaluation_path.concat(pointer), context.instance_location,
+       context.evaluation_path.concat(suffix), context.instance_location,
        context.frame, context.references, context.walker, context.resolver,
        context.compiler, entry.dialect});
 }
