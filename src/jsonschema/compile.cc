@@ -19,7 +19,7 @@ auto compile_subschema(
       return {};
     } else {
       return {SchemaCompilerAssertionFail{context.instance_location,
-                                          context.schema_location,
+                                          context.evaluation_path,
                                           SchemaCompilerValueNone{},
                                           {}}};
     }
@@ -33,7 +33,7 @@ auto compile_subschema(
     const auto &keyword{entry.pointer.back().to_property()};
     for (auto &&step : context.compiler(
              {keyword, context.schema, entry.vocabularies, entry.value,
-              context.schema_location.concat({keyword}),
+              context.evaluation_path.concat({keyword}),
               context.instance_location, context.frame, context.references,
               context.walker, context.resolver, context.compiler,
               context.default_dialect})) {
@@ -91,7 +91,7 @@ auto compile(const SchemaCompilerContext &context,
              const Pointer &pointer) -> SchemaCompilerTemplate {
   return compile_subschema(
       {context.keyword, get(context.value, pointer), context.vocabularies,
-       context.value, context.schema_location.concat(pointer),
+       context.value, context.evaluation_path.concat(pointer),
        context.instance_location, context.frame, context.references,
        context.walker, context.resolver, context.compiler,
        context.default_dialect});
