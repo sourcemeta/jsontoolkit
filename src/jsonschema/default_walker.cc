@@ -154,22 +154,31 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   }
 
   // Draft4
-  WALK(HTTP_BASE "draft-04/schema#", "definitions", Members)
-  WALK(HTTP_BASE "draft-04/schema#", "dependencies", Members)
-  WALK(HTTP_BASE "draft-04/schema#", "items", ValueOrElements)
-  WALK(HTTP_BASE "draft-04/schema#", "properties", Members)
-  WALK(HTTP_BASE "draft-04/schema#", "patternProperties", Members)
-  WALK(HTTP_BASE "draft-04/schema#", "allOf", Elements)
-  WALK(HTTP_BASE "draft-04/schema#", "anyOf", Elements)
-  WALK(HTTP_BASE "draft-04/schema#", "oneOf", Elements)
-  WALK(HTTP_BASE "draft-04/schema#", "not", Value)
-  WALK(HTTP_BASE "draft-04/hyper-schema#", "targetSchema", Value)
-  WALK(HTTP_BASE "draft-04/hyper-schema#", "schema", Value)
+  WALK(HTTP_BASE "draft-04/schema#", "definitions", Members, "$ref")
+  WALK(HTTP_BASE "draft-04/schema#", "dependencies", Members, "$ref")
+  WALK(HTTP_BASE "draft-04/schema#", "items", ValueOrElements, "$ref")
+  WALK(HTTP_BASE "draft-04/schema#", "properties", Members, "$ref")
+  WALK(HTTP_BASE "draft-04/schema#", "patternProperties", Members, "$ref")
+  WALK(HTTP_BASE "draft-04/schema#", "allOf", Elements, "$ref")
+  WALK(HTTP_BASE "draft-04/schema#", "anyOf", Elements, "$ref")
+  WALK(HTTP_BASE "draft-04/schema#", "oneOf", Elements, "$ref")
+  WALK(HTTP_BASE "draft-04/schema#", "not", Value, "$ref")
+
+  WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-04/hyper-schema#", "targetSchema",
+                       Value, HTTP_BASE "draft-04/schema#", "$ref")
+  WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-04/hyper-schema#", "schema", Value,
+                       HTTP_BASE "draft-04/schema#", "$ref")
 
   // See https://json-schema.org/draft-04/draft-fge-json-schema-validation-00
   WALK(HTTP_BASE "draft-04/schema#", "additionalItems", Value, "items")
   WALK(HTTP_BASE "draft-04/schema#", "additionalProperties", Value,
        "properties", "patternProperties")
+
+  // $ref also takes precedence over any unknown keyword
+  if (vocabularies.contains(HTTP_BASE "draft-04/schema#") &&
+      keyword != "$ref") {
+    return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::None, {"$ref"}};
+  }
 
   // Draft3
   WALK(HTTP_BASE "draft-03/schema#", "type", Elements)
