@@ -86,22 +86,27 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
 
 #define HTTP_BASE "http://json-schema.org/"
   // Draft7
-  WALK(HTTP_BASE "draft-07/schema#", "definitions", Members)
-  WALK(HTTP_BASE "draft-07/schema#", "dependencies", Members)
-  WALK(HTTP_BASE "draft-07/schema#", "items", ValueOrElements)
-  WALK(HTTP_BASE "draft-07/schema#", "properties", Members)
-  WALK(HTTP_BASE "draft-07/schema#", "patternProperties", Members)
-  WALK(HTTP_BASE "draft-07/schema#", "allOf", Elements)
-  WALK(HTTP_BASE "draft-07/schema#", "anyOf", Elements)
-  WALK(HTTP_BASE "draft-07/schema#", "oneOf", Elements)
-  WALK(HTTP_BASE "draft-07/schema#", "not", Value)
-  WALK(HTTP_BASE "draft-07/schema#", "if", Value)
-  WALK(HTTP_BASE "draft-07/schema#", "contains", Value)
-  WALK(HTTP_BASE "draft-07/schema#", "propertyNames", Value)
-  WALK(HTTP_BASE "draft-07/hyper-schema#", "hrefSchema", Value)
-  WALK(HTTP_BASE "draft-07/hyper-schema#", "targetSchema", Value)
-  WALK(HTTP_BASE "draft-07/hyper-schema#", "headerSchema", Value)
-  WALK(HTTP_BASE "draft-07/hyper-schema#", "submissionSchema", Value)
+  WALK(HTTP_BASE "draft-07/schema#", "definitions", Members, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "dependencies", Members, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "items", ValueOrElements, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "properties", Members, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "patternProperties", Members, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "allOf", Elements, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "anyOf", Elements, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "oneOf", Elements, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "not", Value, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "if", Value, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "contains", Value, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "propertyNames", Value, "$ref")
+
+  WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-07/hyper-schema#", "hrefSchema", Value,
+                       HTTP_BASE "draft-07/schema#", "$ref")
+  WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-07/hyper-schema#", "targetSchema",
+                       Value, HTTP_BASE "draft-07/schema#", "$ref")
+  WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-07/hyper-schema#", "headerSchema",
+                       Value, HTTP_BASE "draft-07/schema#", "$ref")
+  WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-07/hyper-schema#", "submissionSchema",
+                       Value, HTTP_BASE "draft-07/schema#", "$ref")
 
   // See
   // https://json-schema.org/draft-07/draft-handrews-json-schema-validation-01
@@ -110,6 +115,12 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
        "properties", "patternProperties")
   WALK(HTTP_BASE "draft-07/schema#", "then", Value, "if")
   WALK(HTTP_BASE "draft-07/schema#", "else", Value, "if")
+
+  // $ref also takes precedence over any unknown keyword
+  if (vocabularies.contains(HTTP_BASE "draft-07/schema#") &&
+      keyword != "$ref") {
+    return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::None, {"$ref"}};
+  }
 
   // Draft6
   WALK(HTTP_BASE "draft-06/schema#", "definitions", Members)
