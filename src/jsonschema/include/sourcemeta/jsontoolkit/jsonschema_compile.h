@@ -76,14 +76,14 @@ using SchemaCompilerTemplate = std::vector<
 #define DEFINE_ASSERTION(name, type)                                           \
   struct SchemaCompilerAssertion##name {                                       \
     const SchemaCompilerTarget target;                                         \
-    const Pointer schema_location;                                             \
+    const Pointer evaluation_path;                                             \
     const std::variant<type> value;                                            \
     const SchemaCompilerTemplate condition;                                    \
   };
 
 #define DEFINE_LOGICAL(name)                                                   \
   struct SchemaCompilerLogical##name {                                         \
-    const Pointer schema_location;                                             \
+    const Pointer evaluation_path;                                             \
     const SchemaCompilerTemplate condition;                                    \
     const SchemaCompilerTemplate children;                                     \
   };
@@ -121,8 +121,8 @@ struct SchemaCompilerContext {
   const std::map<std::string, bool> &vocabularies;
   /// The value of the keyword
   const JSON &value;
-  /// The schema location of the keyword
-  const Pointer schema_location;
+  /// The schema evaluation path
+  const Pointer evaluation_path;
   /// The instance location that the keyword must be evaluated to
   const Pointer instance_location;
   /// The reference frame of the entire schema

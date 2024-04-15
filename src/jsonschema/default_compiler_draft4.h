@@ -11,36 +11,36 @@ namespace {
 
 auto type_string_to_assertion(
     const sourcemeta::jsontoolkit::Pointer &instance_location,
-    const sourcemeta::jsontoolkit::Pointer &schema_location,
+    const sourcemeta::jsontoolkit::Pointer &evaluation_path,
     const std::string &type)
     -> sourcemeta::jsontoolkit::SchemaCompilerTemplate {
   using namespace sourcemeta::jsontoolkit;
   if (type == "null") {
     return {SchemaCompilerAssertionType{
-        instance_location, schema_location, JSON::Type::Null, {}}};
+        instance_location, evaluation_path, JSON::Type::Null, {}}};
   } else if (type == "boolean") {
     return {SchemaCompilerAssertionType{
-        instance_location, schema_location, JSON::Type::Boolean, {}}};
+        instance_location, evaluation_path, JSON::Type::Boolean, {}}};
   } else if (type == "object") {
     return {SchemaCompilerAssertionType{
-        instance_location, schema_location, JSON::Type::Object, {}}};
+        instance_location, evaluation_path, JSON::Type::Object, {}}};
   } else if (type == "array") {
     return {SchemaCompilerAssertionType{
-        instance_location, schema_location, JSON::Type::Array, {}}};
+        instance_location, evaluation_path, JSON::Type::Array, {}}};
   } else if (type == "number") {
     return {SchemaCompilerLogicalOr{
-        schema_location,
+        evaluation_path,
         {},
         {SchemaCompilerAssertionType{
-             instance_location, schema_location, JSON::Type::Real, {}},
+             instance_location, evaluation_path, JSON::Type::Real, {}},
          SchemaCompilerAssertionType{
-             instance_location, schema_location, JSON::Type::Integer, {}}}}};
+             instance_location, evaluation_path, JSON::Type::Integer, {}}}}};
   } else if (type == "integer") {
     return {SchemaCompilerAssertionType{
-        instance_location, schema_location, JSON::Type::Integer, {}}};
+        instance_location, evaluation_path, JSON::Type::Integer, {}}};
   } else if (type == "string") {
     return {SchemaCompilerAssertionType{
-        instance_location, schema_location, JSON::Type::String, {}}};
+        instance_location, evaluation_path, JSON::Type::String, {}}};
   } else {
     return {};
   }
@@ -56,7 +56,7 @@ auto compiler_draft4_validation_type(
   using namespace sourcemeta::jsontoolkit;
   if (context.value.is_string()) {
     return type_string_to_assertion(context.instance_location,
-                                    context.schema_location,
+                                    context.evaluation_path,
                                     context.value.to_string());
   } else if (context.value.is_array()) {
     assert(!context.value.empty());
@@ -65,14 +65,14 @@ auto compiler_draft4_validation_type(
       assert(type.is_string());
       SchemaCompilerTemplate disjunctor{
           type_string_to_assertion(context.instance_location,
-                                   context.schema_location, type.to_string())};
+                                   context.evaluation_path, type.to_string())};
       assert(disjunctor.size() == 1);
       disjunctors.push_back(std::move(disjunctor).front());
     }
 
     assert(disjunctors.size() == context.value.size());
     return {SchemaCompilerLogicalOr{
-        context.schema_location, {}, std::move(disjunctors)}};
+        context.evaluation_path, {}, std::move(disjunctors)}};
   }
 
   return {};
@@ -89,18 +89,18 @@ auto compiler_draft4_validation_required(
   for (const auto &property : context.value.as_array()) {
     assert(property.is_string());
     children.push_back(SchemaCompilerAssertionDefines{context.instance_location,
-                                                      context.schema_location,
+                                                      context.evaluation_path,
                                                       property.to_string(),
                                                       {}});
   }
 
   auto condition{SchemaCompilerAssertionType{context.instance_location,
-                                             context.schema_location,
+                                             context.evaluation_path,
                                              JSON::Type::Object,
                                              {}}};
 
   return {SchemaCompilerLogicalAnd{
-      context.schema_location, {std::move(condition)}, std::move(children)}};
+      context.evaluation_path, {std::move(condition)}, std::move(children)}};
 }
 
 auto compiler_draft4_validation_allof(
@@ -119,7 +119,7 @@ auto compiler_draft4_validation_allof(
   }
 
   return {SchemaCompilerLogicalAnd{
-      context.schema_location, {}, std::move(children)}};
+      context.evaluation_path, {}, std::move(children)}};
 }
 
 } // namespace internal
