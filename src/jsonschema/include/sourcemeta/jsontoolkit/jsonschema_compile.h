@@ -13,6 +13,7 @@
 
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
+#include <sourcemeta/jsontoolkit/uri.h>
 
 #include <functional> // std::function
 #include <map>        // std::map
@@ -121,6 +122,10 @@ struct SchemaCompilerContext {
   const std::map<std::string, bool> &vocabularies;
   /// The value of the keyword
   const JSON &value;
+  /// The schema base URI
+  const URI base;
+  /// The schema location relative to the base URI
+  const Pointer relative_pointer;
   /// The schema evaluation path
   const Pointer evaluation_path;
   /// The instance location that the keyword must be evaluated to
