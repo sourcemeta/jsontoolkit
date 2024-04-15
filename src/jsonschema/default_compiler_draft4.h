@@ -10,37 +10,29 @@
 namespace {
 
 auto type_string_to_assertion(
-    const sourcemeta::jsontoolkit::Pointer &instance_location,
-    const sourcemeta::jsontoolkit::Pointer &evaluation_path,
+    const sourcemeta::jsontoolkit::SchemaCompilerContext &context,
     const std::string &type)
     -> sourcemeta::jsontoolkit::SchemaCompilerTemplate {
   using namespace sourcemeta::jsontoolkit;
   if (type == "null") {
-    return {SchemaCompilerAssertionType{
-        instance_location, evaluation_path, JSON::Type::Null, {}}};
+    return {make<SchemaCompilerAssertionType>(context, JSON::Type::Null, {})};
   } else if (type == "boolean") {
-    return {SchemaCompilerAssertionType{
-        instance_location, evaluation_path, JSON::Type::Boolean, {}}};
+    return {
+        make<SchemaCompilerAssertionType>(context, JSON::Type::Boolean, {})};
   } else if (type == "object") {
-    return {SchemaCompilerAssertionType{
-        instance_location, evaluation_path, JSON::Type::Object, {}}};
+    return {make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})};
   } else if (type == "array") {
-    return {SchemaCompilerAssertionType{
-        instance_location, evaluation_path, JSON::Type::Array, {}}};
+    return {make<SchemaCompilerAssertionType>(context, JSON::Type::Array, {})};
   } else if (type == "number") {
-    return {SchemaCompilerLogicalOr{
-        evaluation_path,
-        {},
-        {SchemaCompilerAssertionType{
-             instance_location, evaluation_path, JSON::Type::Real, {}},
-         SchemaCompilerAssertionType{
-             instance_location, evaluation_path, JSON::Type::Integer, {}}}}};
+    return {make<SchemaCompilerLogicalOr>(
+        context, {},
+        {make<SchemaCompilerAssertionType>(context, JSON::Type::Real, {}),
+         make<SchemaCompilerAssertionType>(context, JSON::Type::Integer, {})})};
   } else if (type == "integer") {
-    return {SchemaCompilerAssertionType{
-        instance_location, evaluation_path, JSON::Type::Integer, {}}};
+    return {
+        make<SchemaCompilerAssertionType>(context, JSON::Type::Integer, {})};
   } else if (type == "string") {
-    return {SchemaCompilerAssertionType{
-        instance_location, evaluation_path, JSON::Type::String, {}}};
+    return {make<SchemaCompilerAssertionType>(context, JSON::Type::String, {})};
   } else {
     return {};
   }
@@ -55,24 +47,20 @@ auto compiler_draft4_validation_type(
     -> sourcemeta::jsontoolkit::SchemaCompilerTemplate {
   using namespace sourcemeta::jsontoolkit;
   if (context.value.is_string()) {
-    return type_string_to_assertion(context.instance_location,
-                                    context.evaluation_path,
-                                    context.value.to_string());
+    return type_string_to_assertion(context, context.value.to_string());
   } else if (context.value.is_array()) {
     assert(!context.value.empty());
     SchemaCompilerTemplate disjunctors;
     for (const auto &type : context.value.as_array()) {
       assert(type.is_string());
       SchemaCompilerTemplate disjunctor{
-          type_string_to_assertion(context.instance_location,
-                                   context.evaluation_path, type.to_string())};
+          type_string_to_assertion(context, type.to_string())};
       assert(disjunctor.size() == 1);
       disjunctors.push_back(std::move(disjunctor).front());
     }
 
     assert(disjunctors.size() == context.value.size());
-    return {SchemaCompilerLogicalOr{
-        context.evaluation_path, {}, std::move(disjunctors)}};
+    return {make<SchemaCompilerLogicalOr>(context, {}, std::move(disjunctors))};
   }
 
   return {};
@@ -88,19 +76,14 @@ auto compiler_draft4_validation_required(
 
   for (const auto &property : context.value.as_array()) {
     assert(property.is_string());
-    children.push_back(SchemaCompilerAssertionDefines{context.instance_location,
-                                                      context.evaluation_path,
-                                                      property.to_string(),
-                                                      {}});
+    children.push_back(make<SchemaCompilerAssertionDefines>(
+        context, property.to_string(), {}));
   }
 
-  auto condition{SchemaCompilerAssertionType{context.instance_location,
-                                             context.evaluation_path,
-                                             JSON::Type::Object,
-                                             {}}};
-
-  return {SchemaCompilerLogicalAnd{
-      context.evaluation_path, {std::move(condition)}, std::move(children)}};
+  return {make<SchemaCompilerLogicalAnd>(
+      context,
+      {make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})},
+      std::move(children))};
 }
 
 auto compiler_draft4_validation_allof(
@@ -118,8 +101,7 @@ auto compiler_draft4_validation_allof(
     }
   }
 
-  return {SchemaCompilerLogicalAnd{
-      context.evaluation_path, {}, std::move(children)}};
+  return {make<SchemaCompilerLogicalAnd>(context, {}, std::move(children))};
 }
 
 } // namespace internal

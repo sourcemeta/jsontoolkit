@@ -12,6 +12,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_true_no_condition) {
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionDefines{SchemaCompilerTargetInstance{},
                                      Pointer{},
+                                     "#",
                                      SchemaCompilerValueString{"foo"},
                                      {}}};
 
@@ -25,6 +26,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_false_no_condition) {
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionDefines{SchemaCompilerTargetInstance{},
                                      Pointer{},
+                                     "#",
                                      SchemaCompilerValueString{"bar"},
                                      {}}};
 
@@ -39,11 +41,12 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_true_with_condition) {
   const SchemaCompilerTemplate condition{
       SchemaCompilerAssertionDefines{SchemaCompilerTargetInstance{},
                                      Pointer{},
+                                     "#",
                                      SchemaCompilerValueString{"foo"},
                                      {}}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionDefines{
-      SchemaCompilerTargetInstance{}, Pointer{},
+      SchemaCompilerTargetInstance{}, Pointer{}, "#",
       SchemaCompilerValueString{"bar"}, condition}};
 
   const JSON instance{parse("{ \"foo\": 1, \"bar\": 2 }")};
@@ -57,11 +60,12 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_false_with_condition) {
   const SchemaCompilerTemplate condition{
       SchemaCompilerAssertionDefines{SchemaCompilerTargetInstance{},
                                      Pointer{},
+                                     "#",
                                      SchemaCompilerValueString{"xxx"},
                                      {}}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionDefines{
-      SchemaCompilerTargetInstance{}, Pointer{},
+      SchemaCompilerTargetInstance{}, Pointer{}, "#",
       SchemaCompilerValueString{"baz"}, condition}};
 
   const JSON instance{parse("{ \"foo\": 1, \"bar\": 2 }")};
@@ -76,6 +80,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_fail_no_condition) {
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionFail{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueNone{},
                                   {}}};
 
@@ -90,12 +95,13 @@ TEST(JSONSchema_compile_evaluate, fast_step_fail_with_condition_true) {
   const SchemaCompilerTemplate condition{
       SchemaCompilerAssertionDefines{SchemaCompilerTargetInstance{},
                                      Pointer{},
+                                     "#",
                                      SchemaCompilerValueString{"foo"},
                                      {}}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionFail{SchemaCompilerTargetInstance{}, Pointer{},
-                                  SchemaCompilerValueNone{}, condition}};
+                                  "#", SchemaCompilerValueNone{}, condition}};
 
   const JSON instance{parse("{ \"foo\": 1, \"bar\": 2 }")};
   const auto result{evaluate(steps, instance)};
@@ -108,12 +114,13 @@ TEST(JSONSchema_compile_evaluate, fast_step_fail_with_condition_false) {
   const SchemaCompilerTemplate condition{
       SchemaCompilerAssertionDefines{SchemaCompilerTargetInstance{},
                                      Pointer{},
+                                     "#",
                                      SchemaCompilerValueString{"xxx"},
                                      {}}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionFail{SchemaCompilerTargetInstance{}, Pointer{},
-                                  SchemaCompilerValueNone{}, condition}};
+                                  "#", SchemaCompilerValueNone{}, condition}};
 
   const JSON instance{parse("{ \"foo\": 1, \"bar\": 2 }")};
   const auto result{evaluate(steps, instance)};
@@ -125,6 +132,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_type_true_no_condition) {
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::Object},
                                   {}}};
 
@@ -138,6 +146,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_type_false_no_condition) {
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}}};
 
@@ -149,7 +158,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_type_false_no_condition) {
 TEST(JSONSchema_compile_evaluate, fast_step_or_empty_no_condition) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalOr{Pointer{}, {}, {}}};
+      SchemaCompilerLogicalOr{Pointer{}, "#", {}, {}}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -162,15 +171,17 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_true) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}},
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::Object},
                                   {}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalOr{Pointer{}, {}, children}};
+      SchemaCompilerLogicalOr{Pointer{}, "#", {}, children}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -183,15 +194,17 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_false) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}},
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::Array},
                                   {}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalOr{Pointer{}, {}, children}};
+      SchemaCompilerLogicalOr{Pointer{}, "#", {}, children}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -205,18 +218,20 @@ TEST(JSONSchema_compile_evaluate,
   const auto assertion_1{
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}}};
   const auto assertion_2{
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::Object},
                                   {}}};
 
   const SchemaCompilerTemplate children{assertion_1, assertion_2};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalOr{Pointer{}, {assertion_1}, children}};
+      SchemaCompilerLogicalOr{Pointer{}, "#", {assertion_1}, children}};
 
   std::vector<std::pair<bool, SchemaCompilerTemplate::value_type>> trace;
   const JSON instance{"foo bar"};
@@ -246,18 +261,20 @@ TEST(JSONSchema_compile_evaluate,
   const auto assertion_1{
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}}};
   const auto assertion_2{
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::Object},
                                   {}}};
 
   const SchemaCompilerTemplate children{assertion_1, assertion_2};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalOr{Pointer{}, {assertion_1}, children}};
+      SchemaCompilerLogicalOr{Pointer{}, "#", {assertion_1}, children}};
 
   std::vector<std::pair<bool, SchemaCompilerTemplate::value_type>> trace;
   const JSON instance{"foo bar"};
@@ -287,7 +304,7 @@ TEST(JSONSchema_compile_evaluate,
 TEST(JSONSchema_compile_evaluate, fast_step_and_empty_no_condition) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalAnd{Pointer{}, {}, {}}};
+      SchemaCompilerLogicalAnd{Pointer{}, "#", {}, {}}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -300,11 +317,12 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_true) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::Object},
                                   {}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalAnd{Pointer{}, {}, children}};
+      SchemaCompilerLogicalAnd{Pointer{}, "#", {}, children}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -317,15 +335,17 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_false) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}},
       SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
                                   Pointer{},
+                                  "#",
                                   SchemaCompilerValueType{JSON::Type::Array},
                                   {}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalAnd{Pointer{}, {}, children}};
+      SchemaCompilerLogicalAnd{Pointer{}, "#", {}, children}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
