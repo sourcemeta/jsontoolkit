@@ -41,11 +41,10 @@ auto type_string_to_assertion(
 } // namespace
 
 namespace internal {
+using namespace sourcemeta::jsontoolkit;
 
-auto compiler_draft4_validation_type(
-    const sourcemeta::jsontoolkit::SchemaCompilerContext &context)
-    -> sourcemeta::jsontoolkit::SchemaCompilerTemplate {
-  using namespace sourcemeta::jsontoolkit;
+auto compiler_draft4_validation_type(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
   if (context.value.is_string()) {
     return type_string_to_assertion(context, context.value.to_string());
   } else if (context.value.is_array()) {
@@ -66,10 +65,8 @@ auto compiler_draft4_validation_type(
   return {};
 }
 
-auto compiler_draft4_validation_required(
-    const sourcemeta::jsontoolkit::SchemaCompilerContext &context)
-    -> sourcemeta::jsontoolkit::SchemaCompilerTemplate {
-  using namespace sourcemeta::jsontoolkit;
+auto compiler_draft4_validation_required(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
   assert(context.value.is_array());
   assert(!context.value.empty());
   SchemaCompilerTemplate children;
@@ -86,10 +83,8 @@ auto compiler_draft4_validation_required(
       std::move(children))};
 }
 
-auto compiler_draft4_validation_allof(
-    const sourcemeta::jsontoolkit::SchemaCompilerContext &context)
-    -> sourcemeta::jsontoolkit::SchemaCompilerTemplate {
-  using namespace sourcemeta::jsontoolkit;
+auto compiler_draft4_validation_allof(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
   assert(context.value.is_array());
   assert(!context.value.empty());
   SchemaCompilerTemplate children;

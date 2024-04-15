@@ -6,10 +6,10 @@
 #include "default_compiler_draft4.h"
 
 namespace internal {
+using namespace sourcemeta::jsontoolkit;
 
-auto compiler_2020_12_validation_type(
-    const sourcemeta::jsontoolkit::SchemaCompilerContext &context)
-    -> sourcemeta::jsontoolkit::SchemaCompilerTemplate {
+auto compiler_2020_12_validation_type(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
   return compiler_draft4_validation_type(context);
 }
 
