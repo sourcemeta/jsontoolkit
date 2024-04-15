@@ -213,6 +213,20 @@ public:
   /// ```
   auto resolve_from(const URI &base) -> URI &;
 
+  /// Resolve a relative URI against an absolute base URI as established by RFC
+  /// 3986. If the base is not a relative URI, nothing happens. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI base{"bar"};
+  /// sourcemeta::jsontoolkit::URI result{"foo"};
+  /// result.resolve_from_if_absolute(base);
+  /// assert(result.recompose() == "foo");
+  /// ```
+  auto resolve_from_if_absolute(const URI &base) -> URI &;
+
   /// Escape a string as established by RFC 3986 using C++ standard stream. For
   /// example:
   ///

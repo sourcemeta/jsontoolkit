@@ -93,11 +93,10 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
 auto compile(const SchemaCompilerContext &context,
              const Pointer &pointer) -> SchemaCompilerTemplate {
   // Determine URI of the destination after recursion
-  URI destination_uri{to_uri(context.relative_pointer.concat(pointer))};
-  if (context.base.is_absolute()) {
-    destination_uri.resolve_from(context.base);
-  }
-  const std::string destination{destination_uri.canonicalize().recompose()};
+  const std::string destination{to_uri(context.relative_pointer.concat(pointer))
+                                    .resolve_from_if_absolute(context.base)
+                                    .canonicalize()
+                                    .recompose()};
 
   // Otherwise the recursion attempt is non-sense
   assert(context.frame.contains({ReferenceType::Static, destination}));
