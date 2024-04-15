@@ -181,19 +181,27 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   }
 
   // Draft3
-  WALK(HTTP_BASE "draft-03/schema#", "type", Elements)
-  WALK(HTTP_BASE "draft-03/schema#", "dependencies", Members)
-  WALK(HTTP_BASE "draft-03/schema#", "items", ValueOrElements)
-  WALK(HTTP_BASE "draft-03/schema#", "properties", Members)
-  WALK(HTTP_BASE "draft-03/schema#", "patternProperties", Members)
-  WALK(HTTP_BASE "draft-03/schema#", "disallow", Elements)
-  WALK(HTTP_BASE "draft-03/schema#", "extends", ValueOrElements)
-  WALK(HTTP_BASE "draft-03/hyper-schema#", "targetSchema", Value)
+  WALK(HTTP_BASE "draft-03/schema#", "type", Elements, "$ref")
+  WALK(HTTP_BASE "draft-03/schema#", "dependencies", Members, "$ref")
+  WALK(HTTP_BASE "draft-03/schema#", "items", ValueOrElements, "$ref")
+  WALK(HTTP_BASE "draft-03/schema#", "properties", Members, "$ref")
+  WALK(HTTP_BASE "draft-03/schema#", "patternProperties", Members, "$ref")
+  WALK(HTTP_BASE "draft-03/schema#", "disallow", Elements, "$ref")
+  WALK(HTTP_BASE "draft-03/schema#", "extends", ValueOrElements, "$ref")
+
+  WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-03/hyper-schema#", "targetSchema",
+                       Value, HTTP_BASE "draft-03/schema#", "$ref")
 
   // See https://json-schema.org/draft-03/draft-zyp-json-schema-03.pdf
   WALK(HTTP_BASE "draft-03/schema#", "additionalItems", Value, "items")
   WALK(HTTP_BASE "draft-03/schema#", "additionalProperties", Value,
        "properties", "patternProperties")
+
+  // $ref also takes precedence over any unknown keyword
+  if (vocabularies.contains(HTTP_BASE "draft-03/schema#") &&
+      keyword != "$ref") {
+    return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::None, {"$ref"}};
+  }
 
   // Draft2
   WALK(HTTP_BASE "draft-02/schema#", "type", Elements)
