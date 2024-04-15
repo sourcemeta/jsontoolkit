@@ -36,13 +36,16 @@ auto frame(std::basic_istream<CharT, Traits> &stream) -> int {
 
     std::cout << "URI: ";
     std::cout << key.second << "\n";
-    std::cout << "    Location : " << entry.root.value_or("<ANONYMOUS>")
+    std::cout << "    Location         : " << entry.root.value_or("<ANONYMOUS>")
               << "\n";
-    std::cout << "    Pointer  : ";
+    std::cout << "    Pointer          : ";
     sourcemeta::jsontoolkit::stringify(entry.pointer, std::cout);
     std::cout << "\n";
-    std::cout << "    Base URI : " << entry.base << "\n";
-    std::cout << "    Dialect  : " << entry.dialect << "\n";
+    std::cout << "    Base URI         : " << entry.base << "\n";
+    std::cout << "    Relative Pointer : ";
+    sourcemeta::jsontoolkit::stringify(entry.relative_pointer, std::cout);
+    std::cout << "\n";
+    std::cout << "    Dialect          : " << entry.dialect << "\n";
   }
 
   std::cout << "--------------------------------------------------\n";

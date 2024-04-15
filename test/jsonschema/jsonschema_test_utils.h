@@ -5,7 +5,8 @@
   sourcemeta::jsontoolkit::to_pointer((pointer_string))
 
 #define EXPECT_FRAME(frame, expected_type, reference, root_id,                 \
-                     expected_pointer, expected_dialect, expected_base)        \
+                     expected_pointer, expected_dialect, expected_base,        \
+                     expected_relative_pointer)                                \
   EXPECT_TRUE((frame).contains({(expected_type), (reference)}));               \
   EXPECT_TRUE((frame).at({(expected_type), (reference)}).root.has_value());    \
   EXPECT_EQ((frame).at({(expected_type), (reference)}).root.value(),           \
@@ -14,19 +15,23 @@
             TO_POINTER(expected_pointer));                                     \
   EXPECT_EQ((frame).at({(expected_type), (reference)}).dialect,                \
             (expected_dialect));                                               \
-  EXPECT_EQ((frame).at({(expected_type), (reference)}).base, (expected_base));
+  EXPECT_EQ((frame).at({(expected_type), (reference)}).base, (expected_base)); \
+  EXPECT_EQ((frame).at({(expected_type), (reference)}).relative_pointer,       \
+            TO_POINTER(expected_relative_pointer));
 
 #define EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,       \
-                            expected_dialect, expected_base)                   \
+                            expected_dialect, expected_base,                   \
+                            expected_relative_pointer)                         \
   EXPECT_FRAME(frame, sourcemeta::jsontoolkit::ReferenceType::Static,          \
                reference, root_id, expected_pointer, expected_dialect,         \
-               expected_base)
+               expected_base, expected_relative_pointer)
 
 #define EXPECT_FRAME_DYNAMIC(frame, reference, root_id, expected_pointer,      \
-                             expected_dialect, expected_base)                  \
+                             expected_dialect, expected_base,                  \
+                             expected_relative_pointer)                        \
   EXPECT_FRAME(frame, sourcemeta::jsontoolkit::ReferenceType::Dynamic,         \
                reference, root_id, expected_pointer, expected_dialect,         \
-               expected_base)
+               expected_base, expected_relative_pointer)
 
 #define EXPECT_ANONYMOUS_FRAME(frame, expected_type, reference,                \
                                expected_pointer, expected_dialect)             \
