@@ -123,25 +123,35 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   }
 
   // Draft6
-  WALK(HTTP_BASE "draft-06/schema#", "definitions", Members)
-  WALK(HTTP_BASE "draft-06/schema#", "dependencies", Members)
-  WALK(HTTP_BASE "draft-06/schema#", "items", ValueOrElements)
-  WALK(HTTP_BASE "draft-06/schema#", "properties", Members)
-  WALK(HTTP_BASE "draft-06/schema#", "patternProperties", Members)
-  WALK(HTTP_BASE "draft-06/schema#", "allOf", Elements)
-  WALK(HTTP_BASE "draft-06/schema#", "anyOf", Elements)
-  WALK(HTTP_BASE "draft-06/schema#", "oneOf", Elements)
-  WALK(HTTP_BASE "draft-06/schema#", "not", Value)
-  WALK(HTTP_BASE "draft-06/schema#", "contains", Value)
-  WALK(HTTP_BASE "draft-06/schema#", "propertyNames", Value)
-  WALK(HTTP_BASE "draft-06/hyper-schema#", "hrefSchema", Value)
-  WALK(HTTP_BASE "draft-06/hyper-schema#", "targetSchema", Value)
-  WALK(HTTP_BASE "draft-06/hyper-schema#", "submissionSchema", Value)
+  WALK(HTTP_BASE "draft-06/schema#", "definitions", Members, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "dependencies", Members, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "items", ValueOrElements, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "properties", Members, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "patternProperties", Members, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "allOf", Elements, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "anyOf", Elements, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "oneOf", Elements, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "not", Value, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "contains", Value, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "propertyNames", Value, "$ref")
+
+  WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-06/hyper-schema#", "hrefSchema", Value,
+                       HTTP_BASE "draft-06/schema#", "$ref")
+  WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-06/hyper-schema#", "targetSchema",
+                       Value, HTTP_BASE "draft-06/schema#", "$ref")
+  WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-06/hyper-schema#", "submissionSchema",
+                       Value, HTTP_BASE "draft-06/schema#", "$ref")
 
   // See https://json-schema.org/draft-06/draft-wright-json-schema-validation-01
   WALK(HTTP_BASE "draft-06/schema#", "additionalItems", Value, "items")
   WALK(HTTP_BASE "draft-06/schema#", "additionalProperties", Value,
        "properties", "patternProperties")
+
+  // $ref also takes precedence over any unknown keyword
+  if (vocabularies.contains(HTTP_BASE "draft-06/schema#") &&
+      keyword != "$ref") {
+    return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::None, {"$ref"}};
+  }
 
   // Draft4
   WALK(HTTP_BASE "draft-04/schema#", "definitions", Members)
