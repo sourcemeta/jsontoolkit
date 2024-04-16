@@ -29,13 +29,14 @@ auto compile_subschema(
                              context.default_dialect}) {
     assert(entry.pointer.back().is_property());
     const auto &keyword{entry.pointer.back().to_property()};
-    for (auto &&step : context.compiler(
-             {keyword, context.schema, entry.vocabularies, entry.value,
-              context.base, context.relative_pointer.concat({keyword}),
-              context.evaluation_path.concat({keyword}),
-              context.instance_location, context.frame, context.references,
-              context.walker, context.resolver, context.compiler,
-              context.default_dialect})) {
+    for (auto &&step :
+         context.compiler({keyword, context.schema, entry.vocabularies,
+                           entry.value, context.root, context.base,
+                           context.relative_pointer.concat({keyword}),
+                           context.evaluation_path.concat({keyword}),
+                           context.instance_location, context.frame,
+                           context.references, context.walker, context.resolver,
+                           context.compiler, context.default_dialect})) {
       steps.push_back(std::move(step));
     }
   }
@@ -75,6 +76,7 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
       {"",
        result,
        vocabularies(schema, resolver, default_dialect).get(),
+       JSON{nullptr},
        result,
        root_frame_entry.base,
        {},
@@ -99,11 +101,11 @@ auto compile(const SchemaCompilerContext &context, const Pointer &suffix,
   assert(context.frame.contains({ReferenceType::Static, destination}));
   const auto &entry{context.frame.at({ReferenceType::Static, destination})};
 
-  const auto &new_schema{get(context.schema, entry.pointer)};
+  const auto &new_schema{get(context.root, entry.pointer)};
   return compile_subschema(
       {context.keyword, new_schema,
        vocabularies(new_schema, context.resolver, entry.dialect).get(),
-       context.value, entry.base, entry.relative_pointer,
+       context.value, context.root, entry.base, entry.relative_pointer,
        context.evaluation_path.concat(suffix), context.instance_location,
        context.frame, context.references, context.walker, context.resolver,
        context.compiler, entry.dialect});
