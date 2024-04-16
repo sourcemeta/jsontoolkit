@@ -368,3 +368,29 @@ TEST(JSONSchema_bundle_draft4, taken_definitions_entry) {
 
   EXPECT_EQ(document, expected);
 }
+
+TEST(JSONSchema_bundle_draft4, allof_ref_definitions_type_no_id_no_external) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "allOf": [ { "$ref": "#/definitions/string" } ],
+    "definitions": {
+      "string": { "type": "string" }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "allOf": [ { "$ref": "#/definitions/string" } ],
+    "definitions": {
+      "string": { "type": "string" }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
