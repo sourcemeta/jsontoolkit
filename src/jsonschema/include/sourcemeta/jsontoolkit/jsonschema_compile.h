@@ -119,12 +119,14 @@ using SchemaCompiler =
 struct SchemaCompilerContext {
   /// The schema keyword
   const std::string keyword;
-  /// The schema object
+  /// The current subschema
   const JSON &schema;
   /// The schema vocabularies in use
   const std::map<std::string, bool> &vocabularies;
   /// The value of the keyword
   const JSON &value;
+  /// The root schema resource
+  const JSON &root;
   /// The schema base URI
   const URI base;
   /// The schema location relative to the base URI
