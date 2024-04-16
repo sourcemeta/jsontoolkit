@@ -218,7 +218,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
                                   {}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalOr{Pointer{}, "#", {}, children}};
+      SchemaCompilerLogicalOr{Pointer{}, "#", children, {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -269,7 +269,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
                                   {}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalOr{Pointer{}, "#", {}, children}};
+      SchemaCompilerLogicalOr{Pointer{}, "#", children, {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -332,7 +332,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
                                   {}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalOr{Pointer{}, "#", condition, {}}};
+      SchemaCompilerLogicalOr{Pointer{}, "#", {}, condition}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -398,7 +398,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
                                   {}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalAnd{Pointer{}, "#", {}, children}};
+      SchemaCompilerLogicalAnd{Pointer{}, "#", children, {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -449,7 +449,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
                                   {}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalAnd{Pointer{}, "#", {}, children}};
+      SchemaCompilerLogicalAnd{Pointer{}, "#", children, {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -512,7 +512,7 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
                                   {}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalAnd{Pointer{}, "#", condition, {}}};
+      SchemaCompilerLogicalAnd{Pointer{}, "#", {}, condition}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
