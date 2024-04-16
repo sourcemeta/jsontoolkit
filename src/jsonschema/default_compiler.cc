@@ -14,15 +14,20 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
 
 #define COMPILE(vocabulary, _keyword, handler)                                 \
   if (context.vocabularies.contains(vocabulary) &&                             \
-      context.keyword == _keyword) {                                           \
+      context.keyword == (_keyword)) {                                         \
     return internal::handler(context);                                         \
+  }
+
+#define STOP_IF_SIBLING_KEYWORD(vocabulary, _keyword)                          \
+  if (context.vocabularies.contains(vocabulary) &&                             \
+      context.schema.is_object() && context.schema.defines(_keyword)) {        \
+    return {};                                                                 \
   }
 
   COMPILE("https://json-schema.org/draft/2020-12/vocab/validation", "type",
           compiler_2020_12_validation_type);
 
   // TODO: Draft 4
-  // $ref
   // not
   // multipleOf
   // maximum
@@ -48,6 +53,10 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // oneOf
   // format
 
+  COMPILE("http://json-schema.org/draft-04/schema#", "$ref",
+          compiler_draft4_core_ref);
+  STOP_IF_SIBLING_KEYWORD("http://json-schema.org/draft-04/schema#", "$ref");
+
   COMPILE("http://json-schema.org/draft-04/schema#", "type",
           compiler_draft4_validation_type);
   COMPILE("http://json-schema.org/draft-04/schema#", "required",
@@ -56,6 +65,7 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_allof);
 
 #undef COMPILE
+#undef STOP_IF_SIBLING_KEYWORD
 
   return {};
 }
