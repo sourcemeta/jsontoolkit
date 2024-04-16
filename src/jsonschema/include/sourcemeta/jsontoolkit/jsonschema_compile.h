@@ -334,7 +334,8 @@ compile(const JSON &schema, const SchemaWalker &walker,
 /// directly, but instead as a building block for supporting applicators on
 /// compiler functions.
 auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-compile(const SchemaCompilerContext &context, const Pointer &suffix,
+compile(const SchemaCompilerContext &context, const Pointer &schema_suffix,
+        const Pointer &instance_suffix = empty_pointer,
         const std::optional<std::string> &uri = std::nullopt)
     -> SchemaCompilerTemplate;
 

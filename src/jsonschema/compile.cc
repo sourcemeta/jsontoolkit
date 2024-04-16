@@ -90,12 +90,13 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
        root_frame_entry.dialect});
 }
 
-auto compile(const SchemaCompilerContext &context, const Pointer &suffix,
+auto compile(const SchemaCompilerContext &context, const Pointer &schema_suffix,
+             const Pointer &instance_suffix,
              const std::optional<std::string> &uri) -> SchemaCompilerTemplate {
   // Determine URI of the destination after recursion
-  const std::string destination{
-      uri.value_or(to_uri(context.relative_pointer.concat(suffix), context.base)
-                       .recompose())};
+  const std::string destination{uri.value_or(
+      to_uri(context.relative_pointer.concat(schema_suffix), context.base)
+          .recompose())};
 
   // Otherwise the recursion attempt is non-sense
   assert(context.frame.contains({ReferenceType::Static, destination}));
@@ -106,9 +107,10 @@ auto compile(const SchemaCompilerContext &context, const Pointer &suffix,
       {context.keyword, new_schema,
        vocabularies(new_schema, context.resolver, entry.dialect).get(),
        context.value, context.root, entry.base, entry.relative_pointer,
-       context.evaluation_path.concat(suffix), context.instance_location,
-       context.frame, context.references, context.walker, context.resolver,
-       context.compiler, entry.dialect});
+       context.evaluation_path.concat(schema_suffix),
+       context.instance_location.concat(instance_suffix), context.frame,
+       context.references, context.walker, context.resolver, context.compiler,
+       entry.dialect});
 }
 
 } // namespace sourcemeta::jsontoolkit
