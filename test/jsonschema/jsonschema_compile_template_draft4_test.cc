@@ -144,3 +144,54 @@ TEST(JSONSchema_compile_template_draft4, allof_type_with_id) {
 
   EXPECT_EQ(compiled_schema_json, expected);
 }
+
+TEST(JSONSchema_compile_template_draft4, allof_ref_definitions_type) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "allOf": [ { "$ref": "#/definitions/string" } ],
+    "definitions": {
+      "string": { "type": "string" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON compiled_schema_json{
+      sourcemeta::jsontoolkit::to_json(compiled_schema)};
+
+  const sourcemeta::jsontoolkit::JSON expected{
+      sourcemeta::jsontoolkit::parse(R"EOF([
+    {
+      "category": "logical",
+      "type": "and",
+      "keywordLocation": "/allOf",
+      "absoluteKeywordLocation": "#/allOf",
+      "condition": [],
+      "children": [
+        {
+          "category": "assertion",
+          "type": "type",
+          "condition": [],
+          "keywordLocation": "/allOf/0/$ref/type",
+          "absoluteKeywordLocation": "#/definitions/string/type",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
+          "value": {
+            "category": "value",
+            "type": "type",
+            "value": "string"
+          }
+        }
+      ]
+    }
+  ])EOF")};
+
+  EXPECT_EQ(compiled_schema_json, expected);
+}

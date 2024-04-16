@@ -44,6 +44,19 @@ auto type_string_to_assertion(
 namespace internal {
 using namespace sourcemeta::jsontoolkit;
 
+// TODO: Handle recursive references
+auto compiler_draft4_core_ref(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  const auto type{ReferenceType::Static};
+  const auto current{
+      to_uri(context.relative_pointer, context.base).recompose()};
+  assert(context.frame.contains({type, current}));
+  const auto &entry{context.frame.at({type, current})};
+  assert(context.references.contains({type, entry.pointer}));
+  const auto &reference{context.references.at({type, entry.pointer})};
+  return compile(context, empty_pointer, reference.destination);
+}
+
 auto compiler_draft4_validation_type(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   if (context.value.is_string()) {
