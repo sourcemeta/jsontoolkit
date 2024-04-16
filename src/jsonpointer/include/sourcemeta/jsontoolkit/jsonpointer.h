@@ -228,6 +228,26 @@ auto to_uri(const Pointer &pointer) -> URI;
 
 /// @ingroup jsonpointer
 ///
+/// Stringify the input JSON Pointer into a properly escaped URI fragment
+/// alongside a base URI. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/uri.h>
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+///
+/// #include <assert>
+///
+/// const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+/// const sourcemeta::jsontoolkit::URI base{"https://www.example.com"};
+/// const sourcemeta::jsontoolkit::URI fragment{
+///   sourcemeta::jsontoolkit::to_uri(pointer, base)};
+/// assert(fragment.recompose() == "https://example.com#/foo");
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto to_uri(const Pointer &pointer, const URI &base) -> URI;
+
+/// @ingroup jsonpointer
+///
 /// Walk over every element of a JSON document, top-down, using JSON Pointers.
 /// For example:
 ///

@@ -320,3 +320,19 @@ TEST(JSONPointer_to_uri, escape_1F) {
       sourcemeta::jsontoolkit::to_uri(pointer)};
   EXPECT_EQ(fragment.recompose(), "#/foo%5Cu001Fbar");
 }
+
+TEST(JSONPointer_to_uri, with_absolute_base) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar"};
+  const sourcemeta::jsontoolkit::URI base{"https://www.example.com"};
+  const sourcemeta::jsontoolkit::URI fragment{
+      sourcemeta::jsontoolkit::to_uri(pointer, base)};
+  EXPECT_EQ(fragment.recompose(), "https://www.example.com#/foo/bar");
+}
+
+TEST(JSONPointer_to_uri, with_relative_base) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar"};
+  const sourcemeta::jsontoolkit::URI base{"../baz"};
+  const sourcemeta::jsontoolkit::URI fragment{
+      sourcemeta::jsontoolkit::to_uri(pointer, base)};
+  EXPECT_EQ(fragment.recompose(), "#/foo/bar");
+}
