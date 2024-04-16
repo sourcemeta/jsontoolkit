@@ -74,6 +74,22 @@ auto logical_to_json(
   return result;
 }
 
+auto control_to_json(const std::string_view type, const std::size_t id,
+                     const sourcemeta::jsontoolkit::SchemaCompilerTemplate
+                         &children) -> sourcemeta::jsontoolkit::JSON {
+  using namespace sourcemeta::jsontoolkit;
+  JSON result{JSON::make_object()};
+  result.assign("category", JSON{"control"});
+  result.assign("type", JSON{type});
+  result.assign("id", JSON{id});
+  result.assign("children", JSON::make_array());
+  for (const auto &child : children) {
+    result.at("children").push_back(step_to_json(child));
+  }
+
+  return result;
+}
+
 auto value_string(const sourcemeta::jsontoolkit::SchemaCompilerValueString
                       &value) -> sourcemeta::jsontoolkit::JSON {
   using namespace sourcemeta::jsontoolkit;
@@ -140,6 +156,11 @@ struct StepVisitor {
     return logical_to_json("and", logical.evaluation_path,
                            logical.keyword_location, logical.children,
                            logical.condition);
+  }
+
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerControlLabel
+                      &control) const -> sourcemeta::jsontoolkit::JSON {
+    return control_to_json("label", control.id, control.children);
   }
 };
 

@@ -68,11 +68,15 @@ struct SchemaCompilerLogicalOr;
 struct SchemaCompilerLogicalAnd;
 
 /// @ingroup jsonschema
+/// Represents a compiler step that consists of a mark to jump to
+struct SchemaCompilerControlLabel;
+
+/// @ingroup jsonschema
 /// Represents a schema compilation result that can be evaluated
 using SchemaCompilerTemplate = std::vector<
     std::variant<SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
                  SchemaCompilerAssertionType, SchemaCompilerLogicalOr,
-                 SchemaCompilerLogicalAnd>>;
+                 SchemaCompilerLogicalAnd, SchemaCompilerControlLabel>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_ASSERTION(name, type)                                           \
@@ -92,14 +96,22 @@ using SchemaCompilerTemplate = std::vector<
     const SchemaCompilerTemplate condition;                                    \
   };
 
+#define DEFINE_CONTROL(name)                                                   \
+  struct SchemaCompilerControl##name {                                         \
+    const std::size_t id;                                                      \
+    const SchemaCompilerTemplate children;                                     \
+  };
+
 DEFINE_ASSERTION(Fail, SchemaCompilerValueNone)
 DEFINE_ASSERTION(Defines, SchemaCompilerValueString)
 DEFINE_ASSERTION(Type, SchemaCompilerValueType)
 DEFINE_LOGICAL(Or)
 DEFINE_LOGICAL(And)
+DEFINE_CONTROL(Label)
 
 #undef DEFINE_ASSERTION
 #undef DEFINE_LOGICAL
+#undef DEFINE_CONTROL
 #endif
 
 #if !defined(DOXYGEN)
@@ -170,6 +182,13 @@ auto make(const SchemaCompilerContext &context,
   return {context.evaluation_path,
           to_uri(context.relative_pointer, context.base).recompose(),
           std::move(children), std::move(condition)};
+}
+
+/// @ingroup jsonschema
+/// Helper function to instantiate a control step
+template <typename Step>
+auto make(const std::size_t id, SchemaCompilerTemplate &&children) -> Step {
+  return {id, std::move(children)};
 }
 
 /// @ingroup jsonschema

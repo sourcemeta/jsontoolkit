@@ -284,3 +284,45 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
       sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
   EXPECT_FALSE(result);
 }
+
+TEST(JSONSchema_compile_draft4, ref_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "allOf": [ { "$ref": "#/definitions/string" } ],
+    "definitions": {
+      "string": { "type": "string" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  const auto result{
+      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
+  EXPECT_FALSE(result);
+}
+
+TEST(JSONSchema_compile_draft4, ref_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "allOf": [ { "$ref": "#/definitions/string" } ],
+    "definitions": {
+      "string": { "type": "string" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  const auto result{
+      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
+  EXPECT_TRUE(result);
+}
