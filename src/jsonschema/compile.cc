@@ -92,9 +92,7 @@ auto compile(const SchemaCompilerContext &context, const Pointer &suffix,
              const std::optional<std::string> &uri) -> SchemaCompilerTemplate {
   // Determine URI of the destination after recursion
   const std::string destination{
-      uri.value_or(to_uri(context.relative_pointer.concat(suffix))
-                       .resolve_from_if_absolute(context.base)
-                       .canonicalize()
+      uri.value_or(to_uri(context.relative_pointer.concat(suffix), context.base)
                        .recompose())};
 
   // Otherwise the recursion attempt is non-sense

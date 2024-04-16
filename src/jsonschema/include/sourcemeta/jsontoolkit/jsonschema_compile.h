@@ -147,16 +147,15 @@ struct SchemaCompilerContext {
   const std::optional<std::string> &default_dialect;
 };
 
+// TODO: Give these functions better names
+
 /// @ingroup jsonschema
 /// Helper function to instantiate an assertion step
 template <typename Step, typename ValueType>
 auto make(const SchemaCompilerContext &context, ValueType &&type,
           SchemaCompilerTemplate &&condition) -> Step {
   return {context.instance_location, context.evaluation_path,
-          to_uri(context.relative_pointer)
-              .resolve_from_if_absolute(context.base)
-              .canonicalize()
-              .recompose(),
+          to_uri(context.relative_pointer, context.base).recompose(),
           std::move(type), std::move(condition)};
 }
 
@@ -167,10 +166,8 @@ auto make(const SchemaCompilerContext &context,
           SchemaCompilerTemplate &&condition,
           SchemaCompilerTemplate &&children) -> Step {
   return {context.evaluation_path,
-          to_uri(context.relative_pointer)
-              .resolve_from_if_absolute(context.base)
-              .canonicalize()
-              .recompose(),
+          to_uri(context.relative_pointer, context.base).recompose(),
+          // TODO: Fix ordering here. Keep condition last
           std::move(condition), std::move(children)};
 }
 
