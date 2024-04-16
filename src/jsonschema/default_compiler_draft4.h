@@ -5,6 +5,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
 #include <cassert> // assert
+#include <sstream> // std::ostringstream
 #include <utility> // std::move
 
 namespace {
@@ -44,7 +45,9 @@ auto type_string_to_assertion(
 namespace internal {
 using namespace sourcemeta::jsontoolkit;
 
-// TODO: Handle recursive references
+// TODO: Handle recursive references by detecting if the corresponding
+// label was registered already or not. If it was, jump to it with a step
+// instruction rather than compiling the destination.
 auto compiler_draft4_core_ref(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   const auto type{ReferenceType::Static};
@@ -54,7 +57,13 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context)
   const auto &entry{context.frame.at({type, current})};
   assert(context.references.contains({type, entry.pointer}));
   const auto &reference{context.references.at({type, entry.pointer})};
-  return compile(context, empty_pointer, reference.destination);
+
+  // The label captures the origin and the destination
+  std::ostringstream label;
+  label << current << "|" << reference.destination;
+  return {make<SchemaCompilerControlLabel>(
+      std::hash<std::string>{}(label.str()),
+      compile(context, empty_pointer, reference.destination))};
 }
 
 auto compiler_draft4_validation_type(const SchemaCompilerContext &context)

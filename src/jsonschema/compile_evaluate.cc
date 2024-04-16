@@ -125,6 +125,14 @@ struct StepVisitor {
     }
   }
 
+  // TODO: Store the label position in an internal cache for future jumping
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerControlLabel
+                      &control) const -> bool {
+    using namespace sourcemeta::jsontoolkit;
+    return evaluate(control.children, this->instance_, this->mode_,
+                    this->callback_);
+  }
+
 private:
   const sourcemeta::jsontoolkit::JSON &instance_;
   const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode_;
