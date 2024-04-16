@@ -45,7 +45,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // maxProperties
   // minProperties
   // additionalProperties
-  // properties
   // patternProperties
   // dependencies
   // enum
@@ -63,6 +62,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_required);
   COMPILE("http://json-schema.org/draft-04/schema#", "allOf",
           compiler_draft4_validation_allof);
+  COMPILE("http://json-schema.org/draft-04/schema#", "properties",
+          compiler_draft4_validation_properties);
 
 #undef COMPILE
 #undef STOP_IF_SIBLING_KEYWORD
