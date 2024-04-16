@@ -21,18 +21,35 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
   const sourcemeta::jsontoolkit::JSON expected{
       sourcemeta::jsontoolkit::parse(R"EOF([
     {
-      "category": "logical",
-      "type": "and",
-      "keywordLocation": "/allOf",
-      "absoluteKeywordLocation": "#/allOf",
+      "category": "assertion",
+      "type": "type",
       "condition": [],
+      "keywordLocation": "/allOf/0/type",
+      "absoluteKeywordLocation": "#/allOf/0/type",
+      "target": {
+        "category": "target",
+        "location": "",
+        "type": "instance"
+      },
+      "value": {
+        "category": "value",
+        "type": "type",
+        "value": "integer"
+      }
+    },
+    {
+      "category": "logical",
+      "type": "or",
+      "condition": [],
+      "keywordLocation": "/allOf/1/type",
+      "absoluteKeywordLocation": "#/allOf/1/type",
       "children": [
         {
           "category": "assertion",
           "type": "type",
           "condition": [],
-          "keywordLocation": "/allOf/0/type",
-          "absoluteKeywordLocation": "#/allOf/0/type",
+          "keywordLocation": "/allOf/1/type",
+          "absoluteKeywordLocation": "#/allOf/1/type",
           "target": {
             "category": "target",
             "location": "",
@@ -41,51 +58,25 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
           "value": {
             "category": "value",
             "type": "type",
-            "value": "integer"
+            "value": "real"
           }
         },
         {
-          "category": "logical",
-          "type": "or",
+          "category": "assertion",
           "condition": [],
           "keywordLocation": "/allOf/1/type",
           "absoluteKeywordLocation": "#/allOf/1/type",
-          "children": [
-            {
-              "category": "assertion",
-              "type": "type",
-              "condition": [],
-              "keywordLocation": "/allOf/1/type",
-              "absoluteKeywordLocation": "#/allOf/1/type",
-              "target": {
-                "category": "target",
-                "location": "",
-                "type": "instance"
-              },
-              "value": {
-                "category": "value",
-                "type": "type",
-                "value": "real"
-              }
-            },
-            {
-              "category": "assertion",
-              "condition": [],
-              "keywordLocation": "/allOf/1/type",
-              "absoluteKeywordLocation": "#/allOf/1/type",
-              "target": {
-                "category": "target",
-                "location": "",
-                "type": "instance"
-              },
-              "type": "type",
-              "value": {
-                "category": "value",
-                "type": "type",
-                "value": "integer"
-              }
-            }
-          ]
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
+          "type": "type",
+          "value": {
+            "category": "value",
+            "type": "type",
+            "value": "integer"
+          }
         }
       ]
     }
@@ -115,30 +106,21 @@ TEST(JSONSchema_compile_template_draft4, allof_type_with_id) {
   const sourcemeta::jsontoolkit::JSON expected{
       sourcemeta::jsontoolkit::parse(R"EOF([
     {
-      "category": "logical",
-      "type": "and",
-      "keywordLocation": "/allOf",
-      "absoluteKeywordLocation": "https://www.example.com#/allOf",
+      "category": "assertion",
+      "type": "type",
       "condition": [],
-      "children": [
-        {
-          "category": "assertion",
-          "type": "type",
-          "condition": [],
-          "keywordLocation": "/allOf/0/type",
-          "absoluteKeywordLocation": "https://www.example.com/nested#/type",
-          "target": {
-            "category": "target",
-            "location": "",
-            "type": "instance"
-          },
-          "value": {
-            "category": "value",
-            "type": "type",
-            "value": "integer"
-          }
-        }
-      ]
+      "keywordLocation": "/allOf/0/type",
+      "absoluteKeywordLocation": "https://www.example.com/nested#/type",
+      "target": {
+        "category": "target",
+        "location": "",
+        "type": "instance"
+      },
+      "value": {
+        "category": "value",
+        "type": "type",
+        "value": "integer"
+      }
     }
   ])EOF")};
 

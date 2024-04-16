@@ -109,17 +109,16 @@ auto compiler_draft4_validation_allof(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_array());
   assert(!context.value.empty());
-  SchemaCompilerTemplate children;
 
+  SchemaCompilerTemplate result;
   for (std::uint64_t index = 0; index < context.value.size(); index++) {
     for (auto &&step :
          compile(context, {static_cast<Pointer::Token::Index>(index)})) {
-      children.push_back(std::move(step));
+      result.push_back(std::move(step));
     }
   }
 
-  // TODO: Why not return children directly?
-  return {make<SchemaCompilerLogicalAnd>(context, std::move(children), {})};
+  return result;
 }
 
 auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
