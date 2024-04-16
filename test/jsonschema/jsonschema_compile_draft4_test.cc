@@ -326,3 +326,69 @@ TEST(JSONSchema_compile_draft4, ref_2) {
       sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
   EXPECT_TRUE(result);
 }
+
+TEST(JSONSchema_compile_draft4, properties_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "foo": { "type": "string" },
+      "bar": { "type": "integer" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  const auto result{
+      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
+  EXPECT_FALSE(result);
+}
+
+TEST(JSONSchema_compile_draft4, properties_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "foo": { "type": "string" },
+      "bar": { "type": "integer" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"xxx\", \"bar\": 2 }")};
+  const auto result{
+      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_draft4, properties_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "foo": { "type": "string" },
+      "bar": { "type": "integer" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"baz\": [] }")};
+  const auto result{
+      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
+  EXPECT_TRUE(result);
+}

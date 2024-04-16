@@ -118,7 +118,29 @@ auto compiler_draft4_validation_allof(const SchemaCompilerContext &context)
     }
   }
 
+  // TODO: Why not return children directly?
   return {make<SchemaCompilerLogicalAnd>(context, std::move(children), {})};
+}
+
+auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  assert(context.value.is_object());
+  if (context.value.empty()) {
+    return {};
+  }
+
+  SchemaCompilerTemplate children;
+  for (auto &[key, subschema] : context.value.as_object()) {
+    // TODO: Emit some sort of internal annotation to support
+    // `additionalProperties`
+    children.push_back(make<SchemaCompilerLogicalAnd>(
+        context, compile(context, {key}, {key}),
+        {make<SchemaCompilerAssertionDefines>(context, key, {})}));
+  }
+
+  return {make<SchemaCompilerLogicalAnd>(
+      context, std::move(children),
+      {make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})})};
 }
 
 } // namespace internal
