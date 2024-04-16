@@ -88,8 +88,8 @@ using SchemaCompilerTemplate = std::vector<
   struct SchemaCompilerLogical##name {                                         \
     const Pointer evaluation_path;                                             \
     const std::string keyword_location;                                        \
-    const SchemaCompilerTemplate condition;                                    \
     const SchemaCompilerTemplate children;                                     \
+    const SchemaCompilerTemplate condition;                                    \
   };
 
 DEFINE_ASSERTION(Fail, SchemaCompilerValueNone)
@@ -163,12 +163,11 @@ auto make(const SchemaCompilerContext &context, ValueType &&type,
 /// Helper function to instantiate a logical step
 template <typename Step>
 auto make(const SchemaCompilerContext &context,
-          SchemaCompilerTemplate &&condition,
-          SchemaCompilerTemplate &&children) -> Step {
+          SchemaCompilerTemplate &&children,
+          SchemaCompilerTemplate &&condition) -> Step {
   return {context.evaluation_path,
           to_uri(context.relative_pointer, context.base).recompose(),
-          // TODO: Fix ordering here. Keep condition last
-          std::move(condition), std::move(children)};
+          std::move(children), std::move(condition)};
 }
 
 /// @ingroup jsonschema

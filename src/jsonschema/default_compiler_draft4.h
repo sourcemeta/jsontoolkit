@@ -25,9 +25,10 @@ auto type_string_to_assertion(
     return {make<SchemaCompilerAssertionType>(context, JSON::Type::Array, {})};
   } else if (type == "number") {
     return {make<SchemaCompilerLogicalOr>(
-        context, {},
+        context,
         {make<SchemaCompilerAssertionType>(context, JSON::Type::Real, {}),
-         make<SchemaCompilerAssertionType>(context, JSON::Type::Integer, {})})};
+         make<SchemaCompilerAssertionType>(context, JSON::Type::Integer, {})},
+        {})};
   } else if (type == "integer") {
     return {
         make<SchemaCompilerAssertionType>(context, JSON::Type::Integer, {})};
@@ -59,7 +60,7 @@ auto compiler_draft4_validation_type(const SchemaCompilerContext &context)
     }
 
     assert(disjunctors.size() == context.value.size());
-    return {make<SchemaCompilerLogicalOr>(context, {}, std::move(disjunctors))};
+    return {make<SchemaCompilerLogicalOr>(context, std::move(disjunctors), {})};
   }
 
   return {};
@@ -78,9 +79,8 @@ auto compiler_draft4_validation_required(const SchemaCompilerContext &context)
   }
 
   return {make<SchemaCompilerLogicalAnd>(
-      context,
-      {make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})},
-      std::move(children))};
+      context, std::move(children),
+      {make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})})};
 }
 
 auto compiler_draft4_validation_allof(const SchemaCompilerContext &context)
@@ -96,7 +96,7 @@ auto compiler_draft4_validation_allof(const SchemaCompilerContext &context)
     }
   }
 
-  return {make<SchemaCompilerLogicalAnd>(context, {}, std::move(children))};
+  return {make<SchemaCompilerLogicalAnd>(context, std::move(children), {})};
 }
 
 } // namespace internal
