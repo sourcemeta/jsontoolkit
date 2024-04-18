@@ -27,129 +27,62 @@ auto evaluate_step(
     const sourcemeta::jsontoolkit::JSON &instance,
     const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode,
     const sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback &callback)
-    -> bool;
+    -> bool {
+  using namespace sourcemeta::jsontoolkit;
+  bool result{false};
 
-struct StepVisitor {
-  StepVisitor(
-      const sourcemeta::jsontoolkit::JSON &instance,
-      const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode,
-      const sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback &callback)
-      : instance_{instance}, mode_{mode}, callback_{callback},
-        target_visitor{instance} {}
-
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionFail
-                      &assertion) const -> bool {
-    using namespace sourcemeta::jsontoolkit;
-    assert(std::holds_alternative<SchemaCompilerValueNone>(assertion.value));
-    return !evaluate(assertion.condition, this->instance_,
-                     SchemaCompilerEvaluationMode::Fast, callback_noop);
+#define EVALUATE_CONDITION_GUARD(condition, instance)                          \
+  if (!evaluate(condition, instance, SchemaCompilerEvaluationMode::Fast,       \
+                callback_noop)) {                                              \
+    return true;                                                               \
   }
 
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionDefines
-                      &assertion) const -> bool {
-    using namespace sourcemeta::jsontoolkit;
-    const auto &target{std::visit(this->target_visitor, assertion.target)};
+  if (std::holds_alternative<SchemaCompilerAssertionFail>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionFail>(step)};
+    assert(std::holds_alternative<SchemaCompilerValueNone>(assertion.value));
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+  } else if (std::holds_alternative<SchemaCompilerAssertionDefines>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionDefines>(step)};
     assert(std::holds_alternative<SchemaCompilerValueString>(assertion.value));
     const auto &value{std::get<SchemaCompilerValueString>(assertion.value)};
-    return !evaluate(assertion.condition, this->instance_,
-                     SchemaCompilerEvaluationMode::Fast, callback_noop) ||
-           target.defines(value);
-  }
-
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionType
-                      &assertion) const -> bool {
-    using namespace sourcemeta::jsontoolkit;
-    const auto &target{std::visit(this->target_visitor, assertion.target)};
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &target{std::visit(TargetVisitor{instance}, assertion.target)};
+    assert(target.is_object());
+    result = target.defines(value);
+  } else if (std::holds_alternative<SchemaCompilerAssertionType>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionType>(step)};
     assert(std::holds_alternative<SchemaCompilerValueType>(assertion.value));
     const auto value{std::get<SchemaCompilerValueType>(assertion.value)};
-    return !evaluate(assertion.condition, this->instance_,
-                     SchemaCompilerEvaluationMode::Fast, callback_noop) ||
-           target.type() == value;
-  }
-
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalOr
-                      &logical) const -> bool {
-    using namespace sourcemeta::jsontoolkit;
-    if (!evaluate(logical.condition, this->instance_,
-                  SchemaCompilerEvaluationMode::Fast, callback_noop) ||
-        logical.children.empty()) {
-      return true;
-    } else if (this->mode_ == SchemaCompilerEvaluationMode::Fast) {
-      for (const auto &child : logical.children) {
-        if (evaluate_step(child, this->instance_, this->mode_,
-                          this->callback_)) {
-          return true;
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &target{std::visit(TargetVisitor{instance}, assertion.target)};
+    result = target.type() == value;
+  } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
+    const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
+    EVALUATE_CONDITION_GUARD(logical.condition, instance);
+    result = logical.children.empty();
+    for (const auto &child : logical.children) {
+      if (evaluate_step(child, instance, mode, callback)) {
+        result = true;
+        if (mode == SchemaCompilerEvaluationMode::Fast) {
+          break;
         }
       }
-
-      return false;
-    } else {
-      bool overall{false};
-      for (const auto &child : logical.children) {
-        if (evaluate_step(child, this->instance_, this->mode_,
-                          this->callback_)) {
-          overall = true;
-        }
-      }
-
-      return overall;
     }
+  } else if (std::holds_alternative<SchemaCompilerLogicalAnd>(step)) {
+    const auto &logical{std::get<SchemaCompilerLogicalAnd>(step)};
+    EVALUATE_CONDITION_GUARD(logical.condition, instance);
+    result = evaluate(logical.children, instance, mode, callback);
+  } else if (std::holds_alternative<SchemaCompilerControlLabel>(step)) {
+    const auto &control{std::get<SchemaCompilerControlLabel>(step)};
+    // TODO: Store the label position in an internal cache for future jumping
+    result = evaluate(control.children, instance, mode, callback);
   }
 
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalAnd
-                      &logical) const -> bool {
-    using namespace sourcemeta::jsontoolkit;
-    if (!evaluate(logical.condition, this->instance_,
-                  SchemaCompilerEvaluationMode::Fast, callback_noop) ||
-        logical.children.empty()) {
-      return true;
-    } else if (this->mode_ == SchemaCompilerEvaluationMode::Fast) {
-      for (const auto &child : logical.children) {
-        if (!evaluate_step(child, this->instance_, this->mode_,
-                           this->callback_)) {
-          return false;
-        }
-      }
+#undef EVALUATE_CONDITION_GUARD
 
-      return true;
-    } else {
-      bool overall{true};
-      for (const auto &child : logical.children) {
-        if (!evaluate_step(child, this->instance_, this->mode_,
-                           this->callback_)) {
-          overall = false;
-        }
-      }
-
-      return overall;
-    }
-  }
-
-  // TODO: Store the label position in an internal cache for future jumping
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerControlLabel
-                      &control) const -> bool {
-    using namespace sourcemeta::jsontoolkit;
-    return evaluate(control.children, this->instance_, this->mode_,
-                    this->callback_);
-  }
-
-private:
-  const sourcemeta::jsontoolkit::JSON &instance_;
-  const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode_;
-  const sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback &callback_;
-  const TargetVisitor target_visitor;
-};
-
-auto evaluate_step(
-    const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step,
-    const sourcemeta::jsontoolkit::JSON &instance,
-    const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode,
-    const sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback &callback)
-    -> bool {
-  const bool result{std::visit(StepVisitor{instance, mode, callback}, step)};
   callback(result, step);
   return result;
-}
+} // namespace
 
 } // namespace
 
@@ -158,24 +91,17 @@ namespace sourcemeta::jsontoolkit {
 auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
               const SchemaCompilerEvaluationMode mode,
               const SchemaCompilerEvaluationCallback &callback) -> bool {
-  if (mode == SchemaCompilerEvaluationMode::Fast) {
-    for (const auto &step : steps) {
-      if (!evaluate_step(step, instance, mode, callback)) {
-        return false;
+  bool overall{true};
+  for (const auto &step : steps) {
+    if (!evaluate_step(step, instance, mode, callback)) {
+      overall = false;
+      if (mode == SchemaCompilerEvaluationMode::Fast) {
+        break;
       }
     }
-
-    return true;
-  } else {
-    bool overall{true};
-    for (const auto &step : steps) {
-      if (!evaluate_step(step, instance, mode, callback)) {
-        overall = false;
-      }
-    }
-
-    return overall;
   }
+
+  return overall;
 }
 
 auto evaluate(const SchemaCompilerTemplate &steps,
