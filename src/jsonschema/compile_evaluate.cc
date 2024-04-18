@@ -5,6 +5,9 @@
 
 namespace {
 
+// TODO: Keep track of annotations
+struct EvaluationContext {};
+
 struct TargetVisitor {
   TargetVisitor(const sourcemeta::jsontoolkit::JSON &instance)
       : instance_{instance} {}
@@ -26,15 +29,17 @@ auto evaluate_step(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step,
     const sourcemeta::jsontoolkit::JSON &instance,
     const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode,
-    const sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback &callback)
-    -> bool {
+    const sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback &callback,
+    EvaluationContext &context) -> bool {
   using namespace sourcemeta::jsontoolkit;
   bool result{false};
 
 #define EVALUATE_CONDITION_GUARD(condition, instance)                          \
-  if (!evaluate(condition, instance, SchemaCompilerEvaluationMode::Fast,       \
-                callback_noop)) {                                              \
-    return true;                                                               \
+  for (const auto &child : condition) {                                        \
+    if (!evaluate_step(child, instance, SchemaCompilerEvaluationMode::Fast,    \
+                       callback_noop, context)) {                              \
+      return true;                                                             \
+    }                                                                          \
   }
 
   if (std::holds_alternative<SchemaCompilerAssertionFail>(step)) {
@@ -61,7 +66,7 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD(logical.condition, instance);
     result = logical.children.empty();
     for (const auto &child : logical.children) {
-      if (evaluate_step(child, instance, mode, callback)) {
+      if (evaluate_step(child, instance, mode, callback, context)) {
         result = true;
         if (mode == SchemaCompilerEvaluationMode::Fast) {
           break;
@@ -71,11 +76,27 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerLogicalAnd>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalAnd>(step)};
     EVALUATE_CONDITION_GUARD(logical.condition, instance);
-    result = evaluate(logical.children, instance, mode, callback);
+    result = true;
+    for (const auto &child : logical.children) {
+      if (!evaluate_step(child, instance, mode, callback, context)) {
+        result = false;
+        if (mode == SchemaCompilerEvaluationMode::Fast) {
+          break;
+        }
+      }
+    }
   } else if (std::holds_alternative<SchemaCompilerControlLabel>(step)) {
     const auto &control{std::get<SchemaCompilerControlLabel>(step)};
     // TODO: Store the label position in an internal cache for future jumping
-    result = evaluate(control.children, instance, mode, callback);
+    result = true;
+    for (const auto &child : control.children) {
+      if (!evaluate_step(child, instance, mode, callback, context)) {
+        result = false;
+        if (mode == SchemaCompilerEvaluationMode::Fast) {
+          break;
+        }
+      }
+    }
   }
 
 #undef EVALUATE_CONDITION_GUARD
@@ -91,9 +112,10 @@ namespace sourcemeta::jsontoolkit {
 auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
               const SchemaCompilerEvaluationMode mode,
               const SchemaCompilerEvaluationCallback &callback) -> bool {
+  EvaluationContext context;
   bool overall{true};
   for (const auto &step : steps) {
-    if (!evaluate_step(step, instance, mode, callback)) {
+    if (!evaluate_step(step, instance, mode, callback, context)) {
       overall = false;
       if (mode == SchemaCompilerEvaluationMode::Fast) {
         break;
