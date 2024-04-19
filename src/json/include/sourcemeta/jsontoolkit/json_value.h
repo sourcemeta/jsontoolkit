@@ -705,7 +705,7 @@ public:
   /// assert(my_array.at(1).to_integer() == 2);
   ///
   /// const sourcemeta::jsontoolkit::JSON my_object =
-  ///   sourcemeta::jsontoolkit::parse_json("{ \"1\": "foo" }");
+  ///   sourcemeta::jsontoolkit::parse("{ \"1\": "foo" }");
   /// assert(my_array.at(1).to_string() == "foo");
   /// ```
   [[nodiscard]] auto
@@ -736,7 +736,7 @@ public:
   /// assert(my_array.at(1).to_integer() == 2);
   ///
   /// sourcemeta::jsontoolkit::JSON my_object =
-  ///   sourcemeta::jsontoolkit::parse_json("{ \"1\": "foo" }");
+  ///   sourcemeta::jsontoolkit::parse("{ \"1\": "foo" }");
   /// assert(my_array.at(1).to_string() == "foo");
   /// ```
   [[nodiscard]] auto
@@ -998,7 +998,7 @@ public:
   /// #include <cassert>
   ///
   /// const sourcemeta::jsontoolkit::JSON document =
-  ///   sourcemeta::jsontoolkit::parse_json("{ \"0\": 1 }");
+  ///   sourcemeta::jsontoolkit::parse("{ \"0\": 1 }");
   /// assert(document.defines(0));
   /// assert(!document.defines(1));
   /// ```
