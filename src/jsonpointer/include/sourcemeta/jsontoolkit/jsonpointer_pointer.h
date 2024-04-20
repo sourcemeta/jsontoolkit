@@ -135,7 +135,7 @@ public:
   /// #include <cassert>
   ///
   /// const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar"};
-  /// assert(pointer.size() == 3);
+  /// assert(pointer.size() == 2);
   /// ```
   [[nodiscard]] auto size() const noexcept -> size_type {
     return this->data.size();

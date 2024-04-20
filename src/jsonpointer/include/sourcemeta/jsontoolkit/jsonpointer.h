@@ -1,5 +1,5 @@
-#ifndef SOURCEMETA_SONTOOLKIT_JSONPOINTER_H_
-#define SOURCEMETA_SONTOOLKIT_JSONPOINTER_H_
+#ifndef SOURCEMETA_JSONTOOLKIT_JSONPOINTER_H_
+#define SOURCEMETA_JSONTOOLKIT_JSONPOINTER_H_
 
 #if defined(__EMSCRIPTEN__) || defined(__Unikraft__)
 #define SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
@@ -262,7 +262,7 @@ auto to_uri(const Pointer &pointer, const URI &base) -> URI;
 /// std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
 ///
 /// for (const auto &subpointer :
-///   sourcemeta::jsontoolkit::PointerWalker{pointer}) {
+///   sourcemeta::jsontoolkit::PointerWalker{document}) {
 ///   subpointers.push_back(subpointer);
 /// }
 ///
