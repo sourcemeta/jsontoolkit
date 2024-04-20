@@ -546,3 +546,157 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
 
   EXPECT_EQ(result, expected);
 }
+
+TEST(JSONSchema_compile_json, public_annotation_without_condition) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPublic{
+      Pointer{"foo"}, Pointer{"test"}, "#/test", JSON{5}, {}}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "annotation",
+      "type": "public",
+      "keywordLocation": "/test",
+      "absoluteKeywordLocation": "#/test",
+      "target": {
+        "category": "target",
+        "location": "/foo",
+        "type": "instance"
+      },
+      "value": 5,
+      "condition": []
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}
+
+TEST(JSONSchema_compile_json, private_annotation_without_condition) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPrivate{
+      Pointer{"foo"}, Pointer{"test"}, "#/test", JSON{5}, {}}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "annotation",
+      "type": "private",
+      "keywordLocation": "/test",
+      "absoluteKeywordLocation": "#/test",
+      "target": {
+        "category": "target",
+        "location": "/foo",
+        "type": "instance"
+      },
+      "value": 5,
+      "condition": []
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}
+
+TEST(JSONSchema_compile_json, public_annotation_with_condition) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate condition{
+      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+                                  Pointer{},
+                                  "#",
+                                  SchemaCompilerValueType{JSON::Type::Object},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPublic{
+      Pointer{"foo"}, Pointer{"test"}, "#/test", JSON{5}, condition}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "annotation",
+      "type": "public",
+      "keywordLocation": "/test",
+      "absoluteKeywordLocation": "#/test",
+      "target": {
+        "category": "target",
+        "location": "/foo",
+        "type": "instance"
+      },
+      "value": 5,
+      "condition": [
+        {
+          "category": "assertion",
+          "type": "type",
+          "keywordLocation": "",
+          "absoluteKeywordLocation": "#",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
+          "value": {
+            "category": "value",
+            "type": "type",
+            "value": "object"
+          },
+          "condition": []
+        }
+      ]
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}
+
+TEST(JSONSchema_compile_json, private_annotation_with_condition) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate condition{
+      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+                                  Pointer{},
+                                  "#",
+                                  SchemaCompilerValueType{JSON::Type::Object},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPrivate{
+      Pointer{"foo"}, Pointer{"test"}, "#/test", JSON{5}, condition}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "annotation",
+      "type": "private",
+      "keywordLocation": "/test",
+      "absoluteKeywordLocation": "#/test",
+      "target": {
+        "category": "target",
+        "location": "/foo",
+        "type": "instance"
+      },
+      "value": 5,
+      "condition": [
+        {
+          "category": "assertion",
+          "type": "type",
+          "keywordLocation": "",
+          "absoluteKeywordLocation": "#",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
+          "value": {
+            "category": "value",
+            "type": "type",
+            "value": "object"
+          },
+          "condition": []
+        }
+      ]
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}

@@ -130,10 +130,17 @@ auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
 
   SchemaCompilerTemplate children;
   for (auto &[key, subschema] : context.value.as_object()) {
-    // TODO: Emit some sort of internal annotation to support
-    // `additionalProperties`
+    auto substeps{compile(context, {key}, {key})};
+    // Annotations as such don't exist in Draft 4,
+    // so emit a private annotation instead
+    substeps.push_back(SchemaCompilerAnnotationPrivate{
+        context.instance_location,
+        context.evaluation_path,
+        to_uri(context.relative_pointer, context.base).recompose(),
+        JSON{key},
+        {}});
     children.push_back(make<SchemaCompilerLogicalAnd>(
-        context, compile(context, {key}, {key}),
+        context, std::move(substeps),
         {make<SchemaCompilerAssertionDefines>(context, key, {})}));
   }
 
