@@ -90,6 +90,31 @@ auto control_to_json(const std::string_view type, const std::size_t id,
   return result;
 }
 
+auto annotation_to_json(
+    const std::string_view type,
+    const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
+    const sourcemeta::jsontoolkit::Pointer &evaluation_path,
+    const std::string &keyword_location,
+    const sourcemeta::jsontoolkit::JSON &value,
+    const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
+    -> sourcemeta::jsontoolkit::JSON {
+  using namespace sourcemeta::jsontoolkit;
+  static const TargetVisitor visitor;
+  JSON result{JSON::make_object()};
+  result.assign("category", JSON{"annotation"});
+  result.assign("type", JSON{type});
+  result.assign("target", std::visit(visitor, target));
+  result.assign("keywordLocation", JSON{to_string(evaluation_path)});
+  result.assign("absoluteKeywordLocation", JSON{keyword_location});
+  result.assign("value", value);
+  result.assign("condition", JSON::make_array());
+  for (const auto &substep : condition) {
+    result.at("condition").push_back(step_to_json(substep));
+  }
+
+  return result;
+}
+
 auto value_string(const sourcemeta::jsontoolkit::SchemaCompilerValueString
                       &value) -> sourcemeta::jsontoolkit::JSON {
   using namespace sourcemeta::jsontoolkit;
@@ -161,6 +186,20 @@ struct StepVisitor {
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerControlLabel
                       &control) const -> sourcemeta::jsontoolkit::JSON {
     return control_to_json("label", control.id, control.children);
+  }
+
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAnnotationPublic
+                      &annotation) const -> sourcemeta::jsontoolkit::JSON {
+    return annotation_to_json(
+        "public", annotation.target, annotation.evaluation_path,
+        annotation.keyword_location, annotation.value, annotation.condition);
+  }
+
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAnnotationPrivate
+                      &annotation) const -> sourcemeta::jsontoolkit::JSON {
+    return annotation_to_json(
+        "private", annotation.target, annotation.evaluation_path,
+        annotation.keyword_location, annotation.value, annotation.condition);
   }
 };
 

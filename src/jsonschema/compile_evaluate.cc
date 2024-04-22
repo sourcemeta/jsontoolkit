@@ -2,11 +2,37 @@
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
 #include <cassert> // assert
+#include <map>     // std::map
+#include <set>     // std::set
+#include <vector>  // std::vector
 
 namespace {
 
-// TODO: Keep track of annotations
-struct EvaluationContext {};
+class EvaluationContext {
+public:
+  using Pointer = sourcemeta::jsontoolkit::Pointer;
+  using JSON = sourcemeta::jsontoolkit::JSON;
+
+  auto annotate(const Pointer &instance_location,
+                const Pointer &evaluation_path, const JSON &value) -> void {
+    // Will do nothing if the key already exists
+    this->annotations.insert({instance_location, {}});
+    assert(this->annotations.contains(instance_location));
+    this->annotations[instance_location].insert({evaluation_path, {}});
+    assert(this->annotations[instance_location].contains(evaluation_path));
+    // Insert the actual value
+    this->annotations[instance_location][evaluation_path].insert(value);
+  }
+
+private:
+  // Maps the instance location + evaluation path to an annotation value
+  // We need to use the evaluation path pointer instead of the keyword
+  // location URI as we need to quickly determine the keyword name that
+  // produced the annotation.
+  // We also don't use a pair for holding the two pointers for runtime
+  // efficiency when resolving keywords like `unevaluatedProperties`
+  std::map<Pointer, std::map<Pointer, std::set<JSON>>> annotations;
+};
 
 struct TargetVisitor {
   TargetVisitor(const sourcemeta::jsontoolkit::JSON &instance)
@@ -19,6 +45,14 @@ struct TargetVisitor {
 
 private:
   const sourcemeta::jsontoolkit::JSON &instance_;
+};
+
+struct TargetLocationVisitor {
+  auto operator()(
+      const sourcemeta::jsontoolkit::SchemaCompilerTargetInstance &pointer)
+      const -> const sourcemeta::jsontoolkit::Pointer & {
+    return pointer;
+  }
 };
 
 auto callback_noop(
@@ -97,6 +131,33 @@ auto evaluate_step(
         }
       }
     }
+  } else if (std::holds_alternative<SchemaCompilerAnnotationPublic>(step)) {
+    // Annotations never fail
+    result = true;
+
+    // No reasons to emit public annotations on this mode
+    if (mode == SchemaCompilerEvaluationMode::Fast) {
+      return result;
+    }
+
+    const auto &annotation{std::get<SchemaCompilerAnnotationPublic>(step)};
+    EVALUATE_CONDITION_GUARD(annotation.condition, instance);
+    static TargetLocationVisitor target_location_visitor;
+    const auto &instance_location{
+        std::visit(target_location_visitor, annotation.target)};
+    context.annotate(instance_location, annotation.evaluation_path,
+                     annotation.value);
+  } else if (std::holds_alternative<SchemaCompilerAnnotationPrivate>(step)) {
+    const auto &annotation{std::get<SchemaCompilerAnnotationPrivate>(step)};
+    EVALUATE_CONDITION_GUARD(annotation.condition, instance);
+    static TargetLocationVisitor target_location_visitor;
+    const auto &instance_location{
+        std::visit(target_location_visitor, annotation.target)};
+    context.annotate(instance_location, annotation.evaluation_path,
+                     annotation.value);
+
+    // Don't execute the step callback, as this is a private annotation
+    return true;
   }
 
 #undef EVALUATE_CONDITION_GUARD

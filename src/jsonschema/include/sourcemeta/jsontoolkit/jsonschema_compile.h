@@ -72,11 +72,20 @@ struct SchemaCompilerLogicalAnd;
 struct SchemaCompilerControlLabel;
 
 /// @ingroup jsonschema
+/// Represents a compiler step that emits a public annotation
+struct SchemaCompilerAnnotationPublic;
+
+/// @ingroup jsonschema
+/// Represents a compiler step that emits a private annotation
+struct SchemaCompilerAnnotationPrivate;
+
+/// @ingroup jsonschema
 /// Represents a schema compilation result that can be evaluated
-using SchemaCompilerTemplate = std::vector<
-    std::variant<SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
-                 SchemaCompilerAssertionType, SchemaCompilerLogicalOr,
-                 SchemaCompilerLogicalAnd, SchemaCompilerControlLabel>>;
+using SchemaCompilerTemplate = std::vector<std::variant<
+    SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
+    SchemaCompilerAssertionType, SchemaCompilerLogicalOr,
+    SchemaCompilerLogicalAnd, SchemaCompilerControlLabel,
+    SchemaCompilerAnnotationPublic, SchemaCompilerAnnotationPrivate>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_ASSERTION(name, type)                                           \
@@ -102,16 +111,28 @@ using SchemaCompilerTemplate = std::vector<
     const SchemaCompilerTemplate children;                                     \
   };
 
+#define DEFINE_ANNOTATION(name)                                                \
+  struct SchemaCompilerAnnotation##name {                                      \
+    const SchemaCompilerTarget target;                                         \
+    const Pointer evaluation_path;                                             \
+    const std::string keyword_location;                                        \
+    const JSON value;                                                          \
+    const SchemaCompilerTemplate condition;                                    \
+  };
+
 DEFINE_ASSERTION(Fail, SchemaCompilerValueNone)
 DEFINE_ASSERTION(Defines, SchemaCompilerValueString)
 DEFINE_ASSERTION(Type, SchemaCompilerValueType)
 DEFINE_LOGICAL(Or)
 DEFINE_LOGICAL(And)
 DEFINE_CONTROL(Label)
+DEFINE_ANNOTATION(Public)
+DEFINE_ANNOTATION(Private)
 
 #undef DEFINE_ASSERTION
 #undef DEFINE_LOGICAL
 #undef DEFINE_CONTROL
+#undef DEFINE_ANNOTATION
 #endif
 
 #if !defined(DOXYGEN)

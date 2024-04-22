@@ -214,6 +214,19 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
                 "type": "type",
                 "value": "string"
               }
+            },
+            {
+              "category": "annotation",
+              "type": "private",
+              "condition": [],
+              "keywordLocation": "/properties",
+              "absoluteKeywordLocation": "#/properties",
+              "target": {
+                "category": "target",
+                "location": "",
+                "type": "instance"
+              },
+              "value": "foo"
             }
           ],
           "condition": [
@@ -310,6 +323,19 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
                 "type": "type",
                 "value": "integer"
               }
+            },
+            {
+              "category": "annotation",
+              "type": "private",
+              "condition": [],
+              "keywordLocation": "/properties",
+              "absoluteKeywordLocation": "#/properties",
+              "target": {
+                "category": "target",
+                "location": "",
+                "type": "instance"
+              },
+              "value": "bar"
             }
           ],
           "condition": [
@@ -354,6 +380,19 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
                 "type": "type",
                 "value": "string"
               }
+            },
+            {
+              "category": "annotation",
+              "type": "private",
+              "condition": [],
+              "keywordLocation": "/properties",
+              "absoluteKeywordLocation": "#/properties",
+              "target": {
+                "category": "target",
+                "location": "",
+                "type": "instance"
+              },
+              "value": "foo"
             }
           ],
           "condition": [
