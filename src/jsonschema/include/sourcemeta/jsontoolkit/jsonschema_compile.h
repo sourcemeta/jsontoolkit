@@ -51,6 +51,9 @@ enum class SchemaCompilerTargetType {
   /// An static instance literal
   Instance,
 
+  /// A pointer to the property name of an instance location
+  TemplateProperty,
+
   /// A pointer to an instance
   TemplateInstance
 };

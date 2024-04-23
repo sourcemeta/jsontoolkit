@@ -483,3 +483,57 @@ TEST(JSONSchema_compile_evaluate, fast_regex_false) {
   const auto result{evaluate(steps, instance)};
   EXPECT_FALSE(result);
 }
+
+TEST(JSONSchema_compile_evaluate, fast_loop_regex_property_empty) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionRegex{
+      {SchemaCompilerTargetType::TemplateProperty, {"loop"}},
+      Pointer{"loop", "regex"},
+      "#/loop/regex",
+      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
+      {}}};
+
+  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
+      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+
+  const JSON instance{parse("{}")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_loop_regex_property_multi_true) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionRegex{
+      {SchemaCompilerTargetType::TemplateProperty, {"loop"}},
+      Pointer{"loop", "regex"},
+      "#/loop/regex",
+      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
+      {}}};
+
+  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
+      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+
+  const JSON instance{parse("{ \"aaa\": 1, \"abc\": true }")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_loop_regex_property_multi_false) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionRegex{
+      {SchemaCompilerTargetType::TemplateProperty, {"loop"}},
+      Pointer{"loop", "regex"},
+      "#/loop/regex",
+      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
+      {}}};
+
+  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
+      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+
+  const JSON instance{parse("{ \"aaa\": 1, \"bbb\": true }")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_FALSE(result);
+}

@@ -12,8 +12,11 @@ class EvaluationContext {
 public:
   using Pointer = sourcemeta::jsontoolkit::Pointer;
   std::map<Pointer, Pointer> templates;
-
   using JSON = sourcemeta::jsontoolkit::JSON;
+
+  // For efficiency, as we likely reference the same instance property names
+  // over and over again
+  std::set<JSON> properties;
 
   auto annotate(const Pointer &instance_location,
                 const Pointer &evaluation_path, const JSON &value) -> void {
@@ -43,6 +46,9 @@ auto target_location(
   switch (target.first) {
     case SchemaCompilerTargetType::Instance:
       return target.second;
+    case SchemaCompilerTargetType::TemplateProperty:
+      assert(context.templates.contains(target.second));
+      return context.templates[target.second];
     case SchemaCompilerTargetType::TemplateInstance:
       assert(context.templates.contains(target.second));
       return context.templates[target.second];
@@ -59,8 +65,17 @@ auto target_value(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
                   EvaluationContext &context)
     -> const sourcemeta::jsontoolkit::JSON & {
   using namespace sourcemeta::jsontoolkit;
-  // Follow the actual target location on the instance
-  return get(instance, target_location(target, context));
+  const auto &location{target_location(target, context)};
+  switch (target.first) {
+    // For properties, we need to just get that
+    case SchemaCompilerTargetType::TemplateProperty:
+      // Otherwise we are not operating on an object
+      assert(location.back().is_property());
+      return *(context.properties.emplace(location.back().to_property()).first);
+    default:
+      // Follow the actual target location on the instance
+      return get(instance, location);
+  }
 }
 
 auto callback_noop(
