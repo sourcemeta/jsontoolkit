@@ -11,6 +11,8 @@ namespace {
 class EvaluationContext {
 public:
   using Pointer = sourcemeta::jsontoolkit::Pointer;
+  std::map<Pointer, Pointer> templates;
+
   using JSON = sourcemeta::jsontoolkit::JSON;
 
   auto annotate(const Pointer &instance_location,
@@ -34,34 +36,31 @@ private:
   std::map<Pointer, std::map<Pointer, std::set<JSON>>> annotations;
 };
 
-auto target_instance(
+auto target_location(
     const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
-    const sourcemeta::jsontoolkit::JSON &instance)
-    -> const sourcemeta::jsontoolkit::JSON & {
-  using namespace sourcemeta::jsontoolkit;
-  switch (target.first) {
-    case SchemaCompilerTargetType::Instance:
-      return get(instance, target.second);
-    default:
-      // We should never get here
-      assert(false);
-      static JSON placeholder{nullptr};
-      return placeholder;
-  }
-}
-
-auto target_location(const sourcemeta::jsontoolkit::SchemaCompilerTarget
-                         &target) -> const sourcemeta::jsontoolkit::Pointer & {
+    EvaluationContext &context) -> const sourcemeta::jsontoolkit::Pointer & {
   using namespace sourcemeta::jsontoolkit;
   switch (target.first) {
     case SchemaCompilerTargetType::Instance:
       return target.second;
+    case SchemaCompilerTargetType::TemplateInstance:
+      assert(context.templates.contains(target.second));
+      return context.templates[target.second];
     default:
       // We should never get here
       assert(false);
       static Pointer placeholder;
       return placeholder;
   }
+}
+
+auto target_instance(
+    const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
+    const sourcemeta::jsontoolkit::JSON &instance,
+    EvaluationContext &context) -> const sourcemeta::jsontoolkit::JSON & {
+  using namespace sourcemeta::jsontoolkit;
+  // Follow the actual target location on the instance
+  return get(instance, target_location(target, context));
 }
 
 auto callback_noop(
@@ -94,7 +93,7 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueString>(assertion.value));
     const auto &value{std::get<SchemaCompilerValueString>(assertion.value)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
-    const auto &target{target_instance(assertion.target, instance)};
+    const auto &target{target_instance(assertion.target, instance, context)};
     assert(target.is_object());
     result = target.defines(value);
   } else if (std::holds_alternative<SchemaCompilerAssertionType>(step)) {
@@ -102,7 +101,7 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueType>(assertion.value));
     const auto value{std::get<SchemaCompilerValueType>(assertion.value)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
-    const auto &target{target_instance(assertion.target, instance)};
+    const auto &target{target_instance(assertion.target, instance, context)};
     result = target.type() == value;
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
@@ -151,13 +150,13 @@ auto evaluate_step(
 
     const auto &annotation{std::get<SchemaCompilerAnnotationPublic>(step)};
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
-    const auto &instance_location{target_location(annotation.target)};
+    const auto &instance_location{target_location(annotation.target, context)};
     context.annotate(instance_location, annotation.evaluation_path,
                      annotation.value);
   } else if (std::holds_alternative<SchemaCompilerAnnotationPrivate>(step)) {
     const auto &annotation{std::get<SchemaCompilerAnnotationPrivate>(step)};
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
-    const auto &instance_location{target_location(annotation.target)};
+    const auto &instance_location{target_location(annotation.target, context)};
     context.annotate(instance_location, annotation.evaluation_path,
                      annotation.value);
 

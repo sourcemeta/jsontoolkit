@@ -719,3 +719,36 @@ TEST(JSONSchema_compile_json, private_annotation_with_condition) {
 
   EXPECT_EQ(result, expected);
 }
+
+TEST(JSONSchema_compile_json, target_instance_template) {
+  using namespace sourcemeta::jsontoolkit;
+  const SchemaCompilerTemplate steps{SchemaCompilerAssertionDefines{
+      {SchemaCompilerTargetType::TemplateInstance, {"xxx"}},
+      Pointer{},
+      "#",
+      SchemaCompilerValueString{"foo"},
+      {}}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "assertion",
+      "type": "defines",
+      "keywordLocation": "",
+      "absoluteKeywordLocation": "#",
+      "target": {
+        "category": "target",
+        "location": "/xxx",
+        "type": "template-instance"
+      },
+      "value": {
+        "category": "value",
+        "type": "string",
+        "value": "foo"
+      },
+      "condition": []
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}
