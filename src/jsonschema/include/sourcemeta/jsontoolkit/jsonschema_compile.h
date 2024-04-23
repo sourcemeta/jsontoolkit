@@ -41,7 +41,10 @@ using SchemaCompilerValueType = JSON::Type;
 /// Represents a type of compiler step target
 enum class SchemaCompilerTargetType {
   /// An static instance literal
-  Instance
+  Instance,
+
+  /// A pointer to an instance
+  TemplateInstance
 };
 
 /// @ingroup jsonschema
