@@ -34,8 +34,8 @@ private:
   std::map<Pointer, std::map<Pointer, std::set<JSON>>> annotations;
 };
 
-struct TargetVisitor {
-  TargetVisitor(const sourcemeta::jsontoolkit::JSON &instance)
+struct TargetInstanceVisitor {
+  TargetInstanceVisitor(const sourcemeta::jsontoolkit::JSON &instance)
       : instance_{instance} {}
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerTargetInstance
@@ -85,7 +85,8 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueString>(assertion.value));
     const auto &value{std::get<SchemaCompilerValueString>(assertion.value)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
-    const auto &target{std::visit(TargetVisitor{instance}, assertion.target)};
+    const auto &target{
+        std::visit(TargetInstanceVisitor{instance}, assertion.target)};
     assert(target.is_object());
     result = target.defines(value);
   } else if (std::holds_alternative<SchemaCompilerAssertionType>(step)) {
@@ -93,7 +94,8 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueType>(assertion.value));
     const auto value{std::get<SchemaCompilerValueType>(assertion.value)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
-    const auto &target{std::visit(TargetVisitor{instance}, assertion.target)};
+    const auto &target{
+        std::visit(TargetInstanceVisitor{instance}, assertion.target)};
     result = target.type() == value;
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
