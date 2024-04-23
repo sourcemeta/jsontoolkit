@@ -19,7 +19,7 @@
 #include <map>        // std::map
 #include <optional>   // std::optional, std::nullopt
 #include <string>     // std::string
-#include <utility>    // std::move
+#include <utility>    // std::move, std::pair
 #include <variant>    // std::variant
 #include <vector>     // std::vector
 
@@ -38,12 +38,15 @@ using SchemaCompilerValueString = JSON::String;
 using SchemaCompilerValueType = JSON::Type;
 
 /// @ingroup jsonschema
-/// Represents a compiler step target that corresponds to an instance location
-using SchemaCompilerTargetInstance = Pointer;
+/// Represents a type of compiler step target
+enum class SchemaCompilerTargetType {
+  /// An static instance literal
+  Instance
+};
 
 /// @ingroup jsonschema
 /// Represents a generic compiler step target
-using SchemaCompilerTarget = std::variant<SchemaCompilerTargetInstance>;
+using SchemaCompilerTarget = std::pair<SchemaCompilerTargetType, Pointer>;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that always fails
@@ -189,9 +192,11 @@ struct SchemaCompilerContext {
 template <typename Step, typename ValueType>
 auto make(const SchemaCompilerContext &context, ValueType &&type,
           SchemaCompilerTemplate &&condition) -> Step {
-  return {context.instance_location, context.evaluation_path,
+  return {{SchemaCompilerTargetType::Instance, context.instance_location},
+          context.evaluation_path,
           to_uri(context.relative_pointer, context.base).recompose(),
-          std::move(type), std::move(condition)};
+          std::move(type),
+          std::move(condition)};
 }
 
 /// @ingroup jsonschema

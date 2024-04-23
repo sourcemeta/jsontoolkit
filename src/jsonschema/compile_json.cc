@@ -7,17 +7,22 @@
 
 namespace {
 
-struct TargetVisitor {
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerTargetInstance
-                      &pointer) const -> sourcemeta::jsontoolkit::JSON {
-    using namespace sourcemeta::jsontoolkit;
-    JSON result{JSON::make_object()};
-    result.assign("category", JSON{"target"});
-    result.assign("type", JSON{"instance"});
-    result.assign("location", JSON{to_string(pointer)});
-    return result;
+auto target_to_json(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target)
+    -> sourcemeta::jsontoolkit::JSON {
+  using namespace sourcemeta::jsontoolkit;
+  JSON result{JSON::make_object()};
+  switch (target.first) {
+    case SchemaCompilerTargetType::Instance:
+      result.assign("category", JSON{"target"});
+      result.assign("type", JSON{"instance"});
+      result.assign("location", JSON{to_string(target.second)});
+      return result;
+    default:
+      // We should never get here
+      assert(false);
+      return result;
   }
-};
+}
 
 auto step_to_json(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step)
@@ -31,11 +36,10 @@ auto assertion_to_json(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
     -> sourcemeta::jsontoolkit::JSON {
   using namespace sourcemeta::jsontoolkit;
-  static const TargetVisitor visitor;
   JSON result{JSON::make_object()};
   result.assign("category", JSON{"assertion"});
   result.assign("type", JSON{type});
-  result.assign("target", std::visit(visitor, target));
+  result.assign("target", target_to_json(target));
   result.assign("keywordLocation", JSON{to_string(evaluation_path)});
   result.assign("absoluteKeywordLocation", JSON{keyword_location});
   result.assign("value", std::move(value));
@@ -99,11 +103,10 @@ auto annotation_to_json(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
     -> sourcemeta::jsontoolkit::JSON {
   using namespace sourcemeta::jsontoolkit;
-  static const TargetVisitor visitor;
   JSON result{JSON::make_object()};
   result.assign("category", JSON{"annotation"});
   result.assign("type", JSON{type});
-  result.assign("target", std::visit(visitor, target));
+  result.assign("target", target_to_json(target));
   result.assign("keywordLocation", JSON{to_string(evaluation_path)});
   result.assign("absoluteKeywordLocation", JSON{keyword_location});
   result.assign("value", value);

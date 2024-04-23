@@ -6,7 +6,7 @@
 TEST(JSONSchema_compile_json, defines_basic_root) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
-      SchemaCompilerAssertionDefines{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionDefines{{SchemaCompilerTargetType::Instance, {}},
                                      Pointer{},
                                      "#",
                                      SchemaCompilerValueString{"foo"},
@@ -38,12 +38,12 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
 
 TEST(JSONSchema_compile_json, defines_basic_nested) {
   using namespace sourcemeta::jsontoolkit;
-  const SchemaCompilerTemplate steps{
-      SchemaCompilerAssertionDefines{SchemaCompilerTargetInstance{"xxx"},
-                                     Pointer{"foo", "bar"},
-                                     "#/foo/bar",
-                                     SchemaCompilerValueString{"foo"},
-                                     {}}};
+  const SchemaCompilerTemplate steps{SchemaCompilerAssertionDefines{
+      {SchemaCompilerTargetType::Instance, {"xxx"}},
+      Pointer{"foo", "bar"},
+      "#/foo/bar",
+      SchemaCompilerValueString{"foo"},
+      {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -73,15 +73,18 @@ TEST(JSONSchema_compile_json, defines_with_condition) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate condition{
-      SchemaCompilerAssertionDefines{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionDefines{{SchemaCompilerTargetType::Instance, {}},
                                      Pointer{},
                                      "#",
                                      SchemaCompilerValueString{"xxx"},
                                      {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerAssertionDefines{
-      SchemaCompilerTargetInstance{}, Pointer{}, "#",
-      SchemaCompilerValueString{"baz"}, condition}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerAssertionDefines{{SchemaCompilerTargetType::Instance, {}},
+                                     Pointer{},
+                                     "#",
+                                     SchemaCompilerValueString{"baz"},
+                                     condition}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -128,7 +131,7 @@ TEST(JSONSchema_compile_json, defines_with_condition) {
 TEST(JSONSchema_compile_json, fail_basic_root) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
-      SchemaCompilerAssertionFail{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionFail{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueNone{},
@@ -157,7 +160,7 @@ TEST(JSONSchema_compile_json, fail_basic_root) {
 TEST(JSONSchema_compile_json, type_basic_root) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
-      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
@@ -211,7 +214,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{
-      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
@@ -257,12 +260,12 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{
-      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}},
-      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::Array},
@@ -325,7 +328,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate condition{
-      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
@@ -391,7 +394,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{
-      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
@@ -437,12 +440,12 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{
-      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}},
-      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::Array},
@@ -505,7 +508,7 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate condition{
-      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
@@ -551,7 +554,11 @@ TEST(JSONSchema_compile_json, public_annotation_without_condition) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPublic{
-      Pointer{"foo"}, Pointer{"test"}, "#/test", JSON{5}, {}}};
+      {SchemaCompilerTargetType::Instance, {"foo"}},
+      Pointer{"test"},
+      "#/test",
+      JSON{5},
+      {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -577,7 +584,11 @@ TEST(JSONSchema_compile_json, private_annotation_without_condition) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPrivate{
-      Pointer{"foo"}, Pointer{"test"}, "#/test", JSON{5}, {}}};
+      {SchemaCompilerTargetType::Instance, {"foo"}},
+      Pointer{"test"},
+      "#/test",
+      JSON{5},
+      {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -603,14 +614,18 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate condition{
-      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::Object},
                                   {}}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPublic{
-      Pointer{"foo"}, Pointer{"test"}, "#/test", JSON{5}, condition}};
+      {SchemaCompilerTargetType::Instance, {"foo"}},
+      Pointer{"test"},
+      "#/test",
+      JSON{5},
+      condition}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -654,14 +669,18 @@ TEST(JSONSchema_compile_json, private_annotation_with_condition) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate condition{
-      SchemaCompilerAssertionType{SchemaCompilerTargetInstance{},
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::Object},
                                   {}}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPrivate{
-      Pointer{"foo"}, Pointer{"test"}, "#/test", JSON{5}, condition}};
+      {SchemaCompilerTargetType::Instance, {"foo"}},
+      Pointer{"test"},
+      "#/test",
+      JSON{5},
+      condition}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([

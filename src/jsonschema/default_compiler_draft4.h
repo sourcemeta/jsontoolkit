@@ -134,7 +134,7 @@ auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
     // Annotations as such don't exist in Draft 4,
     // so emit a private annotation instead
     substeps.push_back(SchemaCompilerAnnotationPrivate{
-        context.instance_location,
+        {SchemaCompilerTargetType::Instance, context.instance_location},
         context.evaluation_path,
         to_uri(context.relative_pointer, context.base).recompose(),
         JSON{key},
