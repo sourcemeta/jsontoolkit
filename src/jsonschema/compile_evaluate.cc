@@ -103,6 +103,14 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
     const auto &target{target_instance(assertion.target, instance, context)};
     result = target.type() == value;
+  } else if (std::holds_alternative<SchemaCompilerAssertionRegex>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionRegex>(step)};
+    assert(std::holds_alternative<SchemaCompilerValueRegex>(assertion.value));
+    const auto &value{std::get<SchemaCompilerValueRegex>(assertion.value)};
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &target{target_instance(assertion.target, instance, context)};
+    assert(target.is_string());
+    result = std::regex_search(target.to_string(), value.first);
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
     EVALUATE_CONDITION_GUARD(logical.condition, instance);

@@ -18,6 +18,7 @@
 #include <functional> // std::function
 #include <map>        // std::map
 #include <optional>   // std::optional, std::nullopt
+#include <regex>      // std::regex
 #include <string>     // std::string
 #include <utility>    // std::move, std::pair
 #include <variant>    // std::variant
@@ -36,6 +37,13 @@ using SchemaCompilerValueString = JSON::String;
 /// @ingroup jsonschema
 /// Represents a compiler step JSON type value
 using SchemaCompilerValueType = JSON::Type;
+
+/// @ingroup jsonschema
+/// Represents a compiler step ECMA regular expression value. We store both the
+/// original string and the regular expression as standard regular expressions
+/// do not keep a copy of their original value (which we need for serialization
+/// purposes)
+using SchemaCompilerValueRegex = std::pair<std::regex, std::string>;
 
 /// @ingroup jsonschema
 /// Represents a type of compiler step target
@@ -66,6 +74,11 @@ struct SchemaCompilerAssertionDefines;
 struct SchemaCompilerAssertionType;
 
 /// @ingroup jsonschema
+/// Represents a compiler assertion step that checks a string against an ECMA
+/// regular expression
+struct SchemaCompilerAssertionRegex;
+
+/// @ingroup jsonschema
 /// Represents a compiler logical step that represents a disjunction
 struct SchemaCompilerLogicalOr;
 
@@ -93,10 +106,10 @@ struct SchemaCompilerLoopProperties;
 /// Represents a schema compilation result that can be evaluated
 using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
-    SchemaCompilerAssertionType, SchemaCompilerLogicalOr,
-    SchemaCompilerLogicalAnd, SchemaCompilerControlLabel,
-    SchemaCompilerAnnotationPublic, SchemaCompilerAnnotationPrivate,
-    SchemaCompilerLoopProperties>>;
+    SchemaCompilerAssertionType, SchemaCompilerAssertionRegex,
+    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd,
+    SchemaCompilerControlLabel, SchemaCompilerAnnotationPublic,
+    SchemaCompilerAnnotationPrivate, SchemaCompilerLoopProperties>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_ASSERTION(name, type)                                           \
@@ -142,6 +155,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 DEFINE_ASSERTION(Fail, SchemaCompilerValueNone)
 DEFINE_ASSERTION(Defines, SchemaCompilerValueString)
 DEFINE_ASSERTION(Type, SchemaCompilerValueType)
+DEFINE_ASSERTION(Regex, SchemaCompilerValueRegex)
 DEFINE_LOGICAL(Or)
 DEFINE_LOGICAL(And)
 DEFINE_CONTROL(Label)
