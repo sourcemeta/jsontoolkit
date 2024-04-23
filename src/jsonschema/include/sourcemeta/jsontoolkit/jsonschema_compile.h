@@ -226,8 +226,12 @@ struct SchemaCompilerContext {
 /// Helper function to instantiate an assertion step
 template <typename Step, typename ValueType>
 auto make(const SchemaCompilerContext &context, ValueType &&type,
-          SchemaCompilerTemplate &&condition) -> Step {
-  return {{SchemaCompilerTargetType::Instance, context.instance_location},
+          SchemaCompilerTemplate &&condition,
+          const SchemaCompilerTargetType target_type =
+              SchemaCompilerTargetType::Instance,
+          const std::optional<Pointer> &target_location = std::nullopt)
+    -> Step {
+  return {{target_type, target_location.value_or(context.instance_location)},
           context.evaluation_path,
           to_uri(context.relative_pointer, context.base).recompose(),
           std::move(type),
