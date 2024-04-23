@@ -162,6 +162,34 @@ auto evaluate_step(
 
     // Don't execute the step callback, as this is a private annotation
     return true;
+  } else if (std::holds_alternative<SchemaCompilerLoopProperties>(step)) {
+    const auto &loop{std::get<SchemaCompilerLoopProperties>(step)};
+    EVALUATE_CONDITION_GUARD(loop.condition, instance);
+    const auto &target{target_instance(loop.target, instance, context)};
+    assert(target.is_object());
+    assert(!context.templates.contains(loop.evaluation_path));
+    const auto &instance_location{target_location(loop.target, context)};
+    result = true;
+    for (const auto &[key, value] : target.as_object()) {
+      context.templates.insert_or_assign(loop.evaluation_path,
+                                         instance_location.concat({key}));
+      for (const auto &child : loop.children) {
+        if (!evaluate_step(child, instance, mode, callback, context)) {
+          result = false;
+          if (mode == SchemaCompilerEvaluationMode::Fast) {
+            // For efficiently breaking from the outer loop too
+            goto loop_properties_end;
+          } else {
+            break;
+          }
+        }
+      }
+    }
+
+  loop_properties_end:
+    // Clear the template registries for memory efficiency
+    context.templates.erase(loop.evaluation_path);
+    assert(!context.templates.contains(loop.evaluation_path));
   }
 
 #undef EVALUATE_CONDITION_GUARD
@@ -197,6 +225,6 @@ auto evaluate(const SchemaCompilerTemplate &steps,
   // evaluation if you don't get the results?
   return evaluate(steps, instance, SchemaCompilerEvaluationMode::Fast,
                   callback_noop);
-} // namespace sourcemeta::jsontoolkit
+}
 
 } // namespace sourcemeta::jsontoolkit

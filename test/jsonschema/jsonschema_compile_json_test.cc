@@ -752,3 +752,81 @@ TEST(JSONSchema_compile_json, target_instance_template) {
 
   EXPECT_EQ(result, expected);
 }
+
+TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionType{
+      {SchemaCompilerTargetType::TemplateInstance, {"loop"}},
+      Pointer{},
+      "#",
+      SchemaCompilerValueType{JSON::Type::String},
+      {}}};
+
+  const SchemaCompilerTemplate condition{
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
+                                  Pointer{},
+                                  "#",
+                                  SchemaCompilerValueType{JSON::Type::Object},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   Pointer{"loop"},
+                                   children,
+                                   condition}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "loop",
+      "type": "properties",
+      "keywordLocation": "/loop",
+      "target": {
+        "category": "target",
+        "type": "instance",
+        "location": ""
+      },
+      "children": [
+        {
+          "category": "assertion",
+          "type": "type",
+          "keywordLocation": "",
+          "absoluteKeywordLocation": "#",
+          "target": {
+            "category": "target",
+            "location": "/loop",
+            "type": "template-instance"
+          },
+          "value": {
+            "category": "value",
+            "type": "type",
+            "value": "string"
+          },
+          "condition": []
+        }
+      ],
+      "condition": [
+        {
+          "category": "assertion",
+          "type": "type",
+          "keywordLocation": "",
+          "absoluteKeywordLocation": "#",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
+          "value": {
+            "category": "value",
+            "type": "type",
+            "value": "object"
+          },
+          "condition": []
+        }
+      ]
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}

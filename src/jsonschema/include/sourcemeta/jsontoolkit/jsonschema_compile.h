@@ -86,12 +86,17 @@ struct SchemaCompilerAnnotationPublic;
 struct SchemaCompilerAnnotationPrivate;
 
 /// @ingroup jsonschema
+/// Represents a compiler step that loops over object properties
+struct SchemaCompilerLoopProperties;
+
+/// @ingroup jsonschema
 /// Represents a schema compilation result that can be evaluated
 using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
     SchemaCompilerAssertionType, SchemaCompilerLogicalOr,
     SchemaCompilerLogicalAnd, SchemaCompilerControlLabel,
-    SchemaCompilerAnnotationPublic, SchemaCompilerAnnotationPrivate>>;
+    SchemaCompilerAnnotationPublic, SchemaCompilerAnnotationPrivate,
+    SchemaCompilerLoopProperties>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_ASSERTION(name, type)                                           \
@@ -126,6 +131,14 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const SchemaCompilerTemplate condition;                                    \
   };
 
+#define DEFINE_LOOP(name)                                                      \
+  struct SchemaCompilerLoop##name {                                            \
+    const SchemaCompilerTarget target;                                         \
+    const Pointer evaluation_path;                                             \
+    const SchemaCompilerTemplate children;                                     \
+    const SchemaCompilerTemplate condition;                                    \
+  };
+
 DEFINE_ASSERTION(Fail, SchemaCompilerValueNone)
 DEFINE_ASSERTION(Defines, SchemaCompilerValueString)
 DEFINE_ASSERTION(Type, SchemaCompilerValueType)
@@ -134,11 +147,13 @@ DEFINE_LOGICAL(And)
 DEFINE_CONTROL(Label)
 DEFINE_ANNOTATION(Public)
 DEFINE_ANNOTATION(Private)
+DEFINE_LOOP(Properties)
 
 #undef DEFINE_ASSERTION
 #undef DEFINE_LOGICAL
 #undef DEFINE_CONTROL
 #undef DEFINE_ANNOTATION
+#undef DEFINE_LOOP
 #endif
 
 #if !defined(DOXYGEN)

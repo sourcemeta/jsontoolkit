@@ -123,6 +123,33 @@ auto annotation_to_json(
   return result;
 }
 
+auto loop_to_json(
+    const std::string_view type,
+    const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
+    const sourcemeta::jsontoolkit::Pointer &evaluation_path,
+    const sourcemeta::jsontoolkit::SchemaCompilerTemplate &children,
+    const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
+    -> sourcemeta::jsontoolkit::JSON {
+  using namespace sourcemeta::jsontoolkit;
+  JSON result{JSON::make_object()};
+  result.assign("category", JSON{"loop"});
+  result.assign("type", JSON{type});
+  result.assign("target", target_to_json(target));
+  result.assign("keywordLocation", JSON{to_string(evaluation_path)});
+  result.assign("condition", JSON::make_array());
+  result.assign("children", JSON::make_array());
+
+  for (const auto &substep : condition) {
+    result.at("condition").push_back(step_to_json(substep));
+  }
+
+  for (const auto &child : children) {
+    result.at("children").push_back(step_to_json(child));
+  }
+
+  return result;
+}
+
 auto value_string(const sourcemeta::jsontoolkit::SchemaCompilerValueString
                       &value) -> sourcemeta::jsontoolkit::JSON {
   using namespace sourcemeta::jsontoolkit;
@@ -208,6 +235,12 @@ struct StepVisitor {
     return annotation_to_json(
         "private", annotation.target, annotation.evaluation_path,
         annotation.keyword_location, annotation.value, annotation.condition);
+  }
+
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLoopProperties
+                      &loop) const -> sourcemeta::jsontoolkit::JSON {
+    return loop_to_json("properties", loop.target, loop.evaluation_path,
+                        loop.children, loop.condition);
   }
 };
 

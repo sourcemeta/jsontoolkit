@@ -363,3 +363,93 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_false) {
   const auto result{evaluate(steps, instance)};
   EXPECT_FALSE(result);
 }
+
+TEST(JSONSchema_compile_evaluate, fast_loop_properties_empty) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionType{
+      {SchemaCompilerTargetType::TemplateInstance, {"loop"}},
+      Pointer{"loop", "type"},
+      "#/loop/type",
+      SchemaCompilerValueType{JSON::Type::String},
+      {}}};
+
+  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
+      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+
+  const JSON instance{parse("{}")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_true) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionType{
+      {SchemaCompilerTargetType::TemplateInstance, {"loop"}},
+      Pointer{"loop", "type"},
+      "#/loop/type",
+      SchemaCompilerValueType{JSON::Type::Integer},
+      {}}};
+
+  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
+      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+
+  const JSON instance{parse("{ \"foo\": 1 }")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_false) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionType{
+      {SchemaCompilerTargetType::TemplateInstance, {"loop"}},
+      Pointer{"loop", "type"},
+      "#/loop/type",
+      SchemaCompilerValueType{JSON::Type::Integer},
+      {}}};
+
+  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
+      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+
+  const JSON instance{parse("{ \"foo\": true }")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_FALSE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_true) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionType{
+      {SchemaCompilerTargetType::TemplateInstance, {"loop"}},
+      Pointer{"loop", "type"},
+      "#/loop/type",
+      SchemaCompilerValueType{JSON::Type::Integer},
+      {}}};
+
+  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
+      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+
+  const JSON instance{parse("{ \"foo\": 1, \"bar\": 2 }")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_false) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionType{
+      {SchemaCompilerTargetType::TemplateInstance, {"loop"}},
+      Pointer{"loop", "type"},
+      "#/loop/type",
+      SchemaCompilerValueType{JSON::Type::Integer},
+      {}}};
+
+  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
+      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+
+  const JSON instance{parse("{ \"foo\": 1, \"bar\": true }")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_FALSE(result);
+}
