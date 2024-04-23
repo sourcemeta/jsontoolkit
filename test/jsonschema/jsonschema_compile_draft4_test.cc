@@ -392,3 +392,57 @@ TEST(JSONSchema_compile_draft4, properties_3) {
       sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
   EXPECT_TRUE(result);
 }
+
+TEST(JSONSchema_compile_draft4, pattern_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "pattern": "^x"
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"xxx"};
+  const auto result{
+      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_draft4, pattern_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "pattern": "^x"
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"aaa"};
+  const auto result{
+      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
+  EXPECT_FALSE(result);
+}
+
+TEST(JSONSchema_compile_draft4, pattern_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "pattern": "^x"
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  const auto result{
+      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
+  EXPECT_TRUE(result);
+}
