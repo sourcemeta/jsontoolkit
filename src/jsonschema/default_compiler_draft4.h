@@ -5,6 +5,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
 #include <cassert> // assert
+#include <regex>   // std::regex
 #include <sstream> // std::ostringstream
 #include <utility> // std::move
 
@@ -147,6 +148,17 @@ auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
   return {make<SchemaCompilerLogicalAnd>(
       context, std::move(children),
       {make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})})};
+}
+
+auto compiler_draft4_validation_pattern(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  assert(context.value.is_string());
+  const auto &regex_string{context.value.to_string()};
+  return {make<SchemaCompilerAssertionRegex>(
+      context,
+      SchemaCompilerValueRegex{std::regex{regex_string, std::regex::ECMAScript},
+                               regex_string},
+      {make<SchemaCompilerAssertionType>(context, JSON::Type::String, {})})};
 }
 
 } // namespace internal

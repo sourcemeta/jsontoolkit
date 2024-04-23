@@ -28,7 +28,7 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_2020_12_validation_type);
 
   // TODO: Draft 4
-  // not
+  // - Simple:
   // multipleOf
   // maximum
   // exclusiveMaximum
@@ -36,21 +36,23 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // exclusiveMinimum
   // maxLength
   // minLength
-  // pattern
-  // additionalItems
-  // items
   // maxItems
   // minItems
   // uniqueItems
   // maxProperties
   // minProperties
-  // additionalProperties
-  // patternProperties
-  // dependencies
   // enum
+  // format
+  // - Semi Complex
+  // not
   // anyOf
   // oneOf
-  // format
+  // dependencies
+  // items
+  // - Complex
+  // additionalProperties
+  // patternProperties
+  // additionalItems
 
   COMPILE("http://json-schema.org/draft-04/schema#", "$ref",
           compiler_draft4_core_ref);
@@ -64,6 +66,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_allof);
   COMPILE("http://json-schema.org/draft-04/schema#", "properties",
           compiler_draft4_validation_properties);
+  COMPILE("http://json-schema.org/draft-04/schema#", "pattern",
+          compiler_draft4_validation_pattern);
 
 #undef COMPILE
 #undef STOP_IF_SIBLING_KEYWORD
