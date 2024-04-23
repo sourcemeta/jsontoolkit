@@ -172,6 +172,16 @@ auto value_type(const sourcemeta::jsontoolkit::SchemaCompilerValueType &value)
   return result;
 }
 
+auto value_regex(const sourcemeta::jsontoolkit::SchemaCompilerValueRegex &value)
+    -> sourcemeta::jsontoolkit::JSON {
+  using namespace sourcemeta::jsontoolkit;
+  JSON result{JSON::make_object()};
+  result.assign("category", JSON{"value"});
+  result.assign("type", JSON{"regex"});
+  result.assign("value", JSON{value.second});
+  return result;
+}
+
 struct StepVisitor {
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionFail
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
@@ -201,6 +211,17 @@ struct StepVisitor {
         "type", assertion.target, assertion.evaluation_path,
         assertion.keyword_location,
         value_type(std::get<SchemaCompilerValueType>(assertion.value)),
+        assertion.condition);
+  }
+
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionRegex
+                      &assertion) const -> sourcemeta::jsontoolkit::JSON {
+    using namespace sourcemeta::jsontoolkit;
+    assert(std::holds_alternative<SchemaCompilerValueRegex>(assertion.value));
+    return assertion_to_json(
+        "regex", assertion.target, assertion.evaluation_path,
+        assertion.keyword_location,
+        value_regex(std::get<SchemaCompilerValueRegex>(assertion.value)),
         assertion.condition);
   }
 

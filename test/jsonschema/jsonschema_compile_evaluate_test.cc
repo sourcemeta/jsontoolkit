@@ -453,3 +453,33 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_false) {
   const auto result{evaluate(steps, instance)};
   EXPECT_FALSE(result);
 }
+
+TEST(JSONSchema_compile_evaluate, fast_regex_true) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate steps{SchemaCompilerAssertionRegex{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      "#",
+      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
+      {}}};
+
+  const JSON instance{"abc"};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_regex_false) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate steps{SchemaCompilerAssertionRegex{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      "#",
+      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
+      {}}};
+
+  const JSON instance{"foo"};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_FALSE(result);
+}

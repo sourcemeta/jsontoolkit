@@ -830,3 +830,36 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
 
   EXPECT_EQ(result, expected);
 }
+
+TEST(JSONSchema_compile_json, regex_basic) {
+  using namespace sourcemeta::jsontoolkit;
+  const SchemaCompilerTemplate steps{SchemaCompilerAssertionRegex{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      "#",
+      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
+      {}}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "assertion",
+      "type": "regex",
+      "keywordLocation": "",
+      "absoluteKeywordLocation": "#",
+      "target": {
+        "category": "target",
+        "location": "",
+        "type": "instance"
+      },
+      "value": {
+        "category": "value",
+        "type": "regex",
+        "value": "^a"
+      },
+      "condition": []
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}
