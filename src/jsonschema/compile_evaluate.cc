@@ -54,10 +54,10 @@ auto target_location(
   }
 }
 
-auto target_instance(
-    const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
-    const sourcemeta::jsontoolkit::JSON &instance,
-    EvaluationContext &context) -> const sourcemeta::jsontoolkit::JSON & {
+auto target_value(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
+                  const sourcemeta::jsontoolkit::JSON &instance,
+                  EvaluationContext &context)
+    -> const sourcemeta::jsontoolkit::JSON & {
   using namespace sourcemeta::jsontoolkit;
   // Follow the actual target location on the instance
   return get(instance, target_location(target, context));
@@ -93,7 +93,7 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueString>(assertion.value));
     const auto &value{std::get<SchemaCompilerValueString>(assertion.value)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
-    const auto &target{target_instance(assertion.target, instance, context)};
+    const auto &target{target_value(assertion.target, instance, context)};
     assert(target.is_object());
     result = target.defines(value);
   } else if (std::holds_alternative<SchemaCompilerAssertionType>(step)) {
@@ -101,14 +101,14 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueType>(assertion.value));
     const auto value{std::get<SchemaCompilerValueType>(assertion.value)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
-    const auto &target{target_instance(assertion.target, instance, context)};
+    const auto &target{target_value(assertion.target, instance, context)};
     result = target.type() == value;
   } else if (std::holds_alternative<SchemaCompilerAssertionRegex>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionRegex>(step)};
     assert(std::holds_alternative<SchemaCompilerValueRegex>(assertion.value));
     const auto &value{std::get<SchemaCompilerValueRegex>(assertion.value)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
-    const auto &target{target_instance(assertion.target, instance, context)};
+    const auto &target{target_value(assertion.target, instance, context)};
     assert(target.is_string());
     result = std::regex_search(target.to_string(), value.first);
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
@@ -173,7 +173,7 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerLoopProperties>(step)) {
     const auto &loop{std::get<SchemaCompilerLoopProperties>(step)};
     EVALUATE_CONDITION_GUARD(loop.condition, instance);
-    const auto &target{target_instance(loop.target, instance, context)};
+    const auto &target{target_value(loop.target, instance, context)};
     assert(target.is_object());
     assert(!context.templates.contains(loop.evaluation_path));
     const auto &instance_location{target_location(loop.target, context)};
