@@ -100,6 +100,7 @@ auto step_with_value_to_json(
 
 auto logical_to_json(
     const std::string_view type,
+    const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
     const sourcemeta::jsontoolkit::Pointer &evaluation_path,
     const std::string &keyword_location,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &children,
@@ -109,6 +110,7 @@ auto logical_to_json(
   JSON result{JSON::make_object()};
   result.assign("category", JSON{"logical"});
   result.assign("type", JSON{type});
+  result.assign("target", target_to_json(target));
   result.assign("keywordLocation", JSON{to_string(evaluation_path)});
   result.assign("absoluteKeywordLocation", JSON{keyword_location});
   result.assign("condition", JSON::make_array());
@@ -201,14 +203,14 @@ struct StepVisitor {
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalOr
                       &logical) const -> sourcemeta::jsontoolkit::JSON {
-    return logical_to_json("or", logical.evaluation_path,
+    return logical_to_json("or", logical.target, logical.evaluation_path,
                            logical.keyword_location, logical.children,
                            logical.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalAnd
                       &logical) const -> sourcemeta::jsontoolkit::JSON {
-    return logical_to_json("and", logical.evaluation_path,
+    return logical_to_json("and", logical.target, logical.evaluation_path,
                            logical.keyword_location, logical.children,
                            logical.condition);
   }
