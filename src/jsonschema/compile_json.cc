@@ -145,6 +145,7 @@ auto loop_to_json(
     const std::string_view type,
     const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
     const sourcemeta::jsontoolkit::Pointer &evaluation_path,
+    const std::string &keyword_location,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &children,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
     -> sourcemeta::jsontoolkit::JSON {
@@ -154,6 +155,7 @@ auto loop_to_json(
   result.assign("type", JSON{type});
   result.assign("target", target_to_json(target));
   result.assign("keywordLocation", JSON{to_string(evaluation_path)});
+  result.assign("absoluteKeywordLocation", JSON{keyword_location});
   result.assign("condition", JSON::make_array());
   result.assign("children", JSON::make_array());
 
@@ -233,7 +235,7 @@ struct StepVisitor {
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLoopProperties
                       &loop) const -> sourcemeta::jsontoolkit::JSON {
     return loop_to_json("properties", loop.target, loop.evaluation_path,
-                        loop.children, loop.condition);
+                        loop.keyword_location, loop.children, loop.condition);
   }
 };
 

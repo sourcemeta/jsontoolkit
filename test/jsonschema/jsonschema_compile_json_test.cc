@@ -789,6 +789,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
                                    Pointer{"loop"},
+                                   "#/loop",
                                    children,
                                    condition}};
 
@@ -798,6 +799,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
       "category": "loop",
       "type": "properties",
       "keywordLocation": "/loop",
+      "absoluteKeywordLocation": "#/loop",
       "target": {
         "category": "target",
         "type": "instance",

@@ -374,8 +374,12 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_empty) {
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
-      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   {"loop"},
+                                   "#/loop",
+                                   children,
+                                   {}}};
 
   const JSON instance{parse("{}")};
   const auto result{evaluate(steps, instance)};
@@ -392,8 +396,12 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_true) {
       SchemaCompilerValueType{JSON::Type::Integer},
       {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
-      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   {"loop"},
+                                   "#/loop",
+                                   children,
+                                   {}}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -410,8 +418,12 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_false) {
       SchemaCompilerValueType{JSON::Type::Integer},
       {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
-      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   {"loop"},
+                                   "#/loop",
+                                   children,
+                                   {}}};
 
   const JSON instance{parse("{ \"foo\": true }")};
   const auto result{evaluate(steps, instance)};
@@ -428,8 +440,12 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_true) {
       SchemaCompilerValueType{JSON::Type::Integer},
       {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
-      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   {"loop"},
+                                   "#/loop",
+                                   children,
+                                   {}}};
 
   const JSON instance{parse("{ \"foo\": 1, \"bar\": 2 }")};
   const auto result{evaluate(steps, instance)};
@@ -446,8 +462,12 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_false) {
       SchemaCompilerValueType{JSON::Type::Integer},
       {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
-      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   {"loop"},
+                                   "#/loop",
+                                   children,
+                                   {}}};
 
   const JSON instance{parse("{ \"foo\": 1, \"bar\": true }")};
   const auto result{evaluate(steps, instance)};
@@ -494,8 +514,12 @@ TEST(JSONSchema_compile_evaluate, fast_loop_regex_property_empty) {
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
       {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
-      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   {"loop"},
+                                   "#/loop",
+                                   children,
+                                   {}}};
 
   const JSON instance{parse("{}")};
   const auto result{evaluate(steps, instance)};
@@ -512,8 +536,12 @@ TEST(JSONSchema_compile_evaluate, fast_loop_regex_property_multi_true) {
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
       {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
-      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   {"loop"},
+                                   "#/loop",
+                                   children,
+                                   {}}};
 
   const JSON instance{parse("{ \"aaa\": 1, \"abc\": true }")};
   const auto result{evaluate(steps, instance)};
@@ -530,8 +558,12 @@ TEST(JSONSchema_compile_evaluate, fast_loop_regex_property_multi_false) {
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
       {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLoopProperties{
-      {SchemaCompilerTargetType::Instance, {}}, {"loop"}, children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   {"loop"},
+                                   "#/loop",
+                                   children,
+                                   {}}};
 
   const JSON instance{parse("{ \"aaa\": 1, \"bbb\": true }")};
   const auto result{evaluate(steps, instance)};

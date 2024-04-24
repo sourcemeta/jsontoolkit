@@ -151,6 +151,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
   struct SchemaCompilerLoop##name {                                            \
     const SchemaCompilerTarget target;                                         \
     const Pointer evaluation_path;                                             \
+    const std::string keyword_location;                                        \
     const SchemaCompilerTemplate children;                                     \
     const SchemaCompilerTemplate condition;                                    \
   };
