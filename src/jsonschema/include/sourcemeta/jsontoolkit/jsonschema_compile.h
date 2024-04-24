@@ -135,6 +135,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 
 #define DEFINE_LOGICAL(name)                                                   \
   struct SchemaCompilerLogical##name {                                         \
+    const SchemaCompilerTarget target;                                         \
     const Pointer evaluation_path;                                             \
     const std::string keyword_location;                                        \
     const SchemaCompilerTemplate children;                                     \
@@ -244,9 +245,11 @@ template <typename Step>
 auto make(const SchemaCompilerContext &context,
           SchemaCompilerTemplate &&children,
           SchemaCompilerTemplate &&condition) -> Step {
-  return {context.evaluation_path,
+  return {{SchemaCompilerTargetType::Instance, context.instance_location},
+          context.evaluation_path,
           to_uri(context.relative_pointer, context.base).recompose(),
-          std::move(children), std::move(condition)};
+          std::move(children),
+          std::move(condition)};
 }
 
 /// @ingroup jsonschema
