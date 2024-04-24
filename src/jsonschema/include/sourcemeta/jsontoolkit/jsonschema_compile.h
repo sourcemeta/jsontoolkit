@@ -68,7 +68,8 @@ using SchemaCompilerValueRegex = std::pair<std::regex, std::string>;
 
 /// @ingroup jsonschema
 /// Represents a value in a compiler step
-template <typename T> using SchemaCompilerValue = std::variant<T>;
+template <typename T>
+using SchemaCompilerValue = std::variant<T, SchemaCompilerTarget>;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that always fails
