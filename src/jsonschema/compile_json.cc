@@ -23,6 +23,11 @@ auto target_to_json(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target)
       result.assign("type", JSON{"template-instance"});
       result.assign("location", JSON{to_string(target.second)});
       return result;
+    case SchemaCompilerTargetType::TemplateProperty:
+      result.assign("category", JSON{"target"});
+      result.assign("type", JSON{"template-property"});
+      result.assign("location", JSON{to_string(target.second)});
+      return result;
     default:
       // We should never get here
       assert(false);
