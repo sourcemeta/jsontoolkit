@@ -82,6 +82,14 @@ auto callback_noop(
     bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type
               &) noexcept -> void {}
 
+template <typename T>
+auto resolve_value(const sourcemeta::jsontoolkit::SchemaCompilerValue<T> &value)
+    -> T {
+  // TODO: Support templated values too
+  assert(std::holds_alternative<T>(value));
+  return std::get<T>(value);
+}
+
 auto evaluate_step(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step,
     const sourcemeta::jsontoolkit::JSON &instance,
@@ -105,23 +113,20 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
   } else if (std::holds_alternative<SchemaCompilerAssertionDefines>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionDefines>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueString>(assertion.value));
-    const auto &value{std::get<SchemaCompilerValueString>(assertion.value)};
+    const auto &value{resolve_value(assertion.value)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
     const auto &target{target_value(assertion.target, instance, context)};
     assert(target.is_object());
     result = target.defines(value);
   } else if (std::holds_alternative<SchemaCompilerAssertionType>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionType>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueType>(assertion.value));
-    const auto value{std::get<SchemaCompilerValueType>(assertion.value)};
+    const auto &value{resolve_value(assertion.value)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
     const auto &target{target_value(assertion.target, instance, context)};
     result = target.type() == value;
   } else if (std::holds_alternative<SchemaCompilerAssertionRegex>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionRegex>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueRegex>(assertion.value));
-    const auto &value{std::get<SchemaCompilerValueRegex>(assertion.value)};
+    const auto &value{resolve_value(assertion.value)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
     const auto &target{target_value(assertion.target, instance, context)};
     assert(target.is_string());
@@ -175,13 +180,13 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
     const auto &instance_location{target_location(annotation.target, context)};
     context.annotate(instance_location, annotation.evaluation_path,
-                     annotation.value);
+                     resolve_value(annotation.value));
   } else if (std::holds_alternative<SchemaCompilerAnnotationPrivate>(step)) {
     const auto &annotation{std::get<SchemaCompilerAnnotationPrivate>(step)};
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
     const auto &instance_location{target_location(annotation.target, context)};
     context.annotate(instance_location, annotation.evaluation_path,
-                     annotation.value);
+                     resolve_value(annotation.value));
 
     // Don't execute the step callback, as this is a private annotation
     return true;

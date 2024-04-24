@@ -3,6 +3,7 @@
 #include <cassert>     // assert
 #include <sstream>     // std::ostringstream
 #include <string_view> // std::string_view
+#include <type_traits> // std::is_same_v
 #include <utility>     // std::move
 
 namespace {
@@ -33,21 +34,62 @@ auto step_to_json(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step)
     -> sourcemeta::jsontoolkit::JSON;
 
-auto assertion_to_json(
-    const std::string_view type,
+template <typename T>
+auto value_to_json(const sourcemeta::jsontoolkit::SchemaCompilerValue<T> &value)
+    -> sourcemeta::jsontoolkit::JSON {
+  using namespace sourcemeta::jsontoolkit;
+  // TODO: Support templated values too
+  assert(std::holds_alternative<T>(value));
+
+  if constexpr (std::is_same_v<SchemaCompilerValueJSON, T>) {
+    JSON result{JSON::make_object()};
+    result.assign("category", JSON{"value"});
+    result.assign("type", JSON{"json"});
+    result.assign("value", JSON{std::get<T>(value)});
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueRegex, T>) {
+    JSON result{JSON::make_object()};
+    result.assign("category", JSON{"value"});
+    result.assign("type", JSON{"regex"});
+    result.assign("value", JSON{std::get<T>(value).second});
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueType, T>) {
+    JSON result{JSON::make_object()};
+    result.assign("category", JSON{"value"});
+    result.assign("type", JSON{"type"});
+    std::ostringstream type_string;
+    type_string << std::get<T>(value);
+    result.assign("value", JSON{type_string.str()});
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueString, T>) {
+    JSON result{JSON::make_object()};
+    result.assign("category", JSON{"value"});
+    result.assign("type", JSON{"string"});
+    result.assign("value", JSON{std::get<T>(value)});
+    return result;
+  } else {
+    static_assert(std::is_same_v<SchemaCompilerValueNone, T>);
+    return JSON{nullptr};
+  }
+}
+
+template <typename ValueType>
+auto step_with_value_to_json(
+    const std::string_view category, const std::string_view type,
     const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
     const sourcemeta::jsontoolkit::Pointer &evaluation_path,
-    const std::string &keyword_location, sourcemeta::jsontoolkit::JSON &&value,
+    const std::string &keyword_location,
+    const sourcemeta::jsontoolkit::SchemaCompilerValue<ValueType> &value,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
     -> sourcemeta::jsontoolkit::JSON {
   using namespace sourcemeta::jsontoolkit;
   JSON result{JSON::make_object()};
-  result.assign("category", JSON{"assertion"});
+  result.assign("category", JSON{category});
   result.assign("type", JSON{type});
   result.assign("target", target_to_json(target));
   result.assign("keywordLocation", JSON{to_string(evaluation_path)});
   result.assign("absoluteKeywordLocation", JSON{keyword_location});
-  result.assign("value", std::move(value));
+  result.assign("value", value_to_json(value));
   result.assign("condition", JSON::make_array());
   for (const auto &substep : condition) {
     result.at("condition").push_back(step_to_json(substep));
@@ -99,30 +141,6 @@ auto control_to_json(const std::string_view type, const std::size_t id,
   return result;
 }
 
-auto annotation_to_json(
-    const std::string_view type,
-    const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
-    const sourcemeta::jsontoolkit::Pointer &evaluation_path,
-    const std::string &keyword_location,
-    const sourcemeta::jsontoolkit::JSON &value,
-    const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
-    -> sourcemeta::jsontoolkit::JSON {
-  using namespace sourcemeta::jsontoolkit;
-  JSON result{JSON::make_object()};
-  result.assign("category", JSON{"annotation"});
-  result.assign("type", JSON{type});
-  result.assign("target", target_to_json(target));
-  result.assign("keywordLocation", JSON{to_string(evaluation_path)});
-  result.assign("absoluteKeywordLocation", JSON{keyword_location});
-  result.assign("value", value);
-  result.assign("condition", JSON::make_array());
-  for (const auto &substep : condition) {
-    result.at("condition").push_back(step_to_json(substep));
-  }
-
-  return result;
-}
-
 auto loop_to_json(
     const std::string_view type,
     const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
@@ -150,79 +168,33 @@ auto loop_to_json(
   return result;
 }
 
-auto value_string(const sourcemeta::jsontoolkit::SchemaCompilerValueString
-                      &value) -> sourcemeta::jsontoolkit::JSON {
-  using namespace sourcemeta::jsontoolkit;
-  JSON result{JSON::make_object()};
-  result.assign("category", JSON{"value"});
-  result.assign("type", JSON{"string"});
-  result.assign("value", JSON{value});
-  return result;
-}
-
-auto value_type(const sourcemeta::jsontoolkit::SchemaCompilerValueType &value)
-    -> sourcemeta::jsontoolkit::JSON {
-  using namespace sourcemeta::jsontoolkit;
-  JSON result{JSON::make_object()};
-  result.assign("category", JSON{"value"});
-  result.assign("type", JSON{"type"});
-  std::ostringstream type_string;
-  type_string << value;
-  result.assign("value", JSON{type_string.str()});
-  return result;
-}
-
-auto value_regex(const sourcemeta::jsontoolkit::SchemaCompilerValueRegex &value)
-    -> sourcemeta::jsontoolkit::JSON {
-  using namespace sourcemeta::jsontoolkit;
-  JSON result{JSON::make_object()};
-  result.assign("category", JSON{"value"});
-  result.assign("type", JSON{"regex"});
-  result.assign("value", JSON{value.second});
-  return result;
-}
-
 struct StepVisitor {
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionFail
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    using namespace sourcemeta::jsontoolkit;
-    assert(std::holds_alternative<SchemaCompilerValueNone>(assertion.value));
-    return assertion_to_json(
-        "fail", assertion.target, assertion.evaluation_path,
-        assertion.keyword_location, JSON{nullptr}, assertion.condition);
+    return step_with_value_to_json(
+        "assertion", "fail", assertion.target, assertion.evaluation_path,
+        assertion.keyword_location, assertion.value, assertion.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionDefines
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    using namespace sourcemeta::jsontoolkit;
-    assert(std::holds_alternative<SchemaCompilerValueString>(assertion.value));
-    return assertion_to_json(
-        "defines", assertion.target, assertion.evaluation_path,
-        assertion.keyword_location,
-        value_string(std::get<SchemaCompilerValueString>(assertion.value)),
-        assertion.condition);
+    return step_with_value_to_json(
+        "assertion", "defines", assertion.target, assertion.evaluation_path,
+        assertion.keyword_location, assertion.value, assertion.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionType
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    using namespace sourcemeta::jsontoolkit;
-    assert(std::holds_alternative<SchemaCompilerValueType>(assertion.value));
-    return assertion_to_json(
-        "type", assertion.target, assertion.evaluation_path,
-        assertion.keyword_location,
-        value_type(std::get<SchemaCompilerValueType>(assertion.value)),
-        assertion.condition);
+    return step_with_value_to_json(
+        "assertion", "type", assertion.target, assertion.evaluation_path,
+        assertion.keyword_location, assertion.value, assertion.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionRegex
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    using namespace sourcemeta::jsontoolkit;
-    assert(std::holds_alternative<SchemaCompilerValueRegex>(assertion.value));
-    return assertion_to_json(
-        "regex", assertion.target, assertion.evaluation_path,
-        assertion.keyword_location,
-        value_regex(std::get<SchemaCompilerValueRegex>(assertion.value)),
-        assertion.condition);
+    return step_with_value_to_json(
+        "assertion", "regex", assertion.target, assertion.evaluation_path,
+        assertion.keyword_location, assertion.value, assertion.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalOr
@@ -246,15 +218,15 @@ struct StepVisitor {
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAnnotationPublic
                       &annotation) const -> sourcemeta::jsontoolkit::JSON {
-    return annotation_to_json(
-        "public", annotation.target, annotation.evaluation_path,
+    return step_with_value_to_json(
+        "annotation", "public", annotation.target, annotation.evaluation_path,
         annotation.keyword_location, annotation.value, annotation.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAnnotationPrivate
                       &annotation) const -> sourcemeta::jsontoolkit::JSON {
-    return annotation_to_json(
-        "private", annotation.target, annotation.evaluation_path,
+    return step_with_value_to_json(
+        "annotation", "private", annotation.target, annotation.evaluation_path,
         annotation.keyword_location, annotation.value, annotation.condition);
   }
 

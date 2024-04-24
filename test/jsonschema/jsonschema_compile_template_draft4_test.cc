@@ -226,7 +226,11 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
                 "location": "",
                 "type": "instance"
               },
-              "value": "foo"
+              "value": {
+                "category": "value",
+                "type": "json",
+                "value": "foo"
+              }
             }
           ],
           "condition": [
@@ -335,7 +339,11 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
                 "location": "",
                 "type": "instance"
               },
-              "value": "bar"
+              "value": {
+                "category": "value",
+                "type": "json",
+                "value": "bar"
+              }
             }
           ],
           "condition": [
@@ -392,7 +400,11 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
                 "location": "",
                 "type": "instance"
               },
-              "value": "foo"
+              "value": {
+                "category": "value",
+                "type": "json",
+                "value": "foo"
+              }
             }
           ],
           "condition": [
