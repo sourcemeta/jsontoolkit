@@ -90,18 +90,6 @@ struct SchemaCompilerAssertionType;
 struct SchemaCompilerAssertionRegex;
 
 /// @ingroup jsonschema
-/// Represents a compiler logical step that represents a disjunction
-struct SchemaCompilerLogicalOr;
-
-/// @ingroup jsonschema
-/// Represents a compiler logical step that represents a conjunction
-struct SchemaCompilerLogicalAnd;
-
-/// @ingroup jsonschema
-/// Represents a compiler step that consists of a mark to jump to
-struct SchemaCompilerControlLabel;
-
-/// @ingroup jsonschema
 /// Represents a compiler step that emits a public annotation
 struct SchemaCompilerAnnotationPublic;
 
@@ -110,19 +98,30 @@ struct SchemaCompilerAnnotationPublic;
 struct SchemaCompilerAnnotationPrivate;
 
 /// @ingroup jsonschema
+/// Represents a compiler logical step that represents a disjunction
+struct SchemaCompilerLogicalOr;
+
+/// @ingroup jsonschema
+/// Represents a compiler logical step that represents a conjunction
+struct SchemaCompilerLogicalAnd;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that loops over object properties
 struct SchemaCompilerLoopProperties;
+
+/// @ingroup jsonschema
+/// Represents a compiler step that consists of a mark to jump to
+struct SchemaCompilerControlLabel;
 
 /// @ingroup jsonschema
 /// Represents a schema compilation result that can be evaluated
 using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
     SchemaCompilerAssertionType, SchemaCompilerAssertionRegex,
+    SchemaCompilerAnnotationPublic, SchemaCompilerAnnotationPrivate,
     SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd,
-    SchemaCompilerControlLabel, SchemaCompilerAnnotationPublic,
-    SchemaCompilerAnnotationPrivate, SchemaCompilerLoopProperties>>;
+    SchemaCompilerLoopProperties, SchemaCompilerControlLabel>>;
 
-// TODO: Try to reduce the different type of steps to a minimum
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
   struct SchemaCompiler##category##name {                                      \
@@ -133,8 +132,8 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const SchemaCompilerTemplate condition;                                    \
   };
 
-#define DEFINE_LOGICAL(name)                                                   \
-  struct SchemaCompilerLogical##name {                                         \
+#define DEFINE_STEP_APPLICATOR(category, name)                                 \
+  struct SchemaCompiler##category##name {                                      \
     const SchemaCompilerTarget target;                                         \
     const Pointer evaluation_path;                                             \
     const std::string keyword_location;                                        \
@@ -148,30 +147,20 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const SchemaCompilerTemplate children;                                     \
   };
 
-#define DEFINE_LOOP(name)                                                      \
-  struct SchemaCompilerLoop##name {                                            \
-    const SchemaCompilerTarget target;                                         \
-    const Pointer evaluation_path;                                             \
-    const std::string keyword_location;                                        \
-    const SchemaCompilerTemplate children;                                     \
-    const SchemaCompilerTemplate condition;                                    \
-  };
-
 DEFINE_STEP_WITH_VALUE(Assertion, Fail, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Assertion, Defines, SchemaCompilerValueString)
 DEFINE_STEP_WITH_VALUE(Assertion, Type, SchemaCompilerValueType)
 DEFINE_STEP_WITH_VALUE(Assertion, Regex, SchemaCompilerValueRegex)
-DEFINE_LOGICAL(Or)
-DEFINE_LOGICAL(And)
-DEFINE_CONTROL(Label)
 DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, Private, SchemaCompilerValueJSON)
-DEFINE_LOOP(Properties)
+DEFINE_STEP_APPLICATOR(Logical, Or)
+DEFINE_STEP_APPLICATOR(Logical, And)
+DEFINE_STEP_APPLICATOR(Loop, Properties)
+DEFINE_CONTROL(Label)
 
 #undef DEFINE_STEP_WITH_VALUE
-#undef DEFINE_LOGICAL
+#undef DEFINE_STEP_APPLICATOR
 #undef DEFINE_CONTROL
-#undef DEFINE_LOOP
 #endif
 
 #if !defined(DOXYGEN)
@@ -224,7 +213,7 @@ struct SchemaCompilerContext {
 // TODO: Give these functions better names
 
 /// @ingroup jsonschema
-/// Helper function to instantiate an assertion step
+/// Helper function to instantiate a value-oriented step
 template <typename Step, typename ValueType>
 auto make(const SchemaCompilerContext &context, ValueType &&type,
           SchemaCompilerTemplate &&condition,
@@ -240,7 +229,7 @@ auto make(const SchemaCompilerContext &context, ValueType &&type,
 }
 
 /// @ingroup jsonschema
-/// Helper function to instantiate a logical step
+/// Helper function to instantiate an applicator step
 template <typename Step>
 auto make(const SchemaCompilerContext &context,
           SchemaCompilerTemplate &&children,
