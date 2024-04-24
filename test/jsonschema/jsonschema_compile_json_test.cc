@@ -572,7 +572,11 @@ TEST(JSONSchema_compile_json, public_annotation_without_condition) {
         "location": "/foo",
         "type": "instance"
       },
-      "value": 5,
+      "value": {
+        "category": "value",
+        "type": "json",
+        "value": 5
+      },
       "condition": []
     }
   ])EOF")};
@@ -602,7 +606,11 @@ TEST(JSONSchema_compile_json, private_annotation_without_condition) {
         "location": "/foo",
         "type": "instance"
       },
-      "value": 5,
+      "value": {
+        "category": "value",
+        "type": "json",
+        "value": 5
+      },
       "condition": []
     }
   ])EOF")};
@@ -639,7 +647,11 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
         "location": "/foo",
         "type": "instance"
       },
-      "value": 5,
+      "value": {
+        "category": "value",
+        "type": "json",
+        "value": 5
+      },
       "condition": [
         {
           "category": "assertion",
@@ -694,7 +706,11 @@ TEST(JSONSchema_compile_json, private_annotation_with_condition) {
         "location": "/foo",
         "type": "instance"
       },
-      "value": 5,
+      "value": {
+        "category": "value",
+        "type": "json",
+        "value": 5
+      },
       "condition": [
         {
           "category": "assertion",

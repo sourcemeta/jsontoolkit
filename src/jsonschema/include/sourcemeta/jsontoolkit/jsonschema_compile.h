@@ -27,8 +27,29 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
+/// Represents a type of compiler step target
+enum class SchemaCompilerTargetType {
+  /// An static instance literal
+  Instance,
+
+  /// A pointer to the property name of an instance location
+  TemplateProperty,
+
+  /// A pointer to an instance
+  TemplateInstance
+};
+
+/// @ingroup jsonschema
+/// Represents a generic compiler step target
+using SchemaCompilerTarget = std::pair<SchemaCompilerTargetType, Pointer>;
+
+/// @ingroup jsonschema
 /// Represents a compiler step empty value
 struct SchemaCompilerValueNone {};
+
+/// @ingroup jsonschema
+/// Represents a compiler step JSON value
+using SchemaCompilerValueJSON = JSON;
 
 /// @ingroup jsonschema
 /// Represents a compiler step string value
@@ -46,21 +67,8 @@ using SchemaCompilerValueType = JSON::Type;
 using SchemaCompilerValueRegex = std::pair<std::regex, std::string>;
 
 /// @ingroup jsonschema
-/// Represents a type of compiler step target
-enum class SchemaCompilerTargetType {
-  /// An static instance literal
-  Instance,
-
-  /// A pointer to the property name of an instance location
-  TemplateProperty,
-
-  /// A pointer to an instance
-  TemplateInstance
-};
-
-/// @ingroup jsonschema
-/// Represents a generic compiler step target
-using SchemaCompilerTarget = std::pair<SchemaCompilerTargetType, Pointer>;
+/// Represents a value in a compiler step
+template <typename T> using SchemaCompilerValue = std::variant<T>;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that always fails
@@ -114,13 +122,14 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerControlLabel, SchemaCompilerAnnotationPublic,
     SchemaCompilerAnnotationPrivate, SchemaCompilerLoopProperties>>;
 
+// TODO: Try to reduce the different type of steps to a minimum
 #if !defined(DOXYGEN)
-#define DEFINE_ASSERTION(name, type)                                           \
-  struct SchemaCompilerAssertion##name {                                       \
+#define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
+  struct SchemaCompiler##category##name {                                      \
     const SchemaCompilerTarget target;                                         \
     const Pointer evaluation_path;                                             \
     const std::string keyword_location;                                        \
-    const std::variant<type> value;                                            \
+    const SchemaCompilerValue<type> value;                                     \
     const SchemaCompilerTemplate condition;                                    \
   };
 
@@ -138,15 +147,6 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const SchemaCompilerTemplate children;                                     \
   };
 
-#define DEFINE_ANNOTATION(name)                                                \
-  struct SchemaCompilerAnnotation##name {                                      \
-    const SchemaCompilerTarget target;                                         \
-    const Pointer evaluation_path;                                             \
-    const std::string keyword_location;                                        \
-    const JSON value;                                                          \
-    const SchemaCompilerTemplate condition;                                    \
-  };
-
 #define DEFINE_LOOP(name)                                                      \
   struct SchemaCompilerLoop##name {                                            \
     const SchemaCompilerTarget target;                                         \
@@ -155,21 +155,20 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const SchemaCompilerTemplate condition;                                    \
   };
 
-DEFINE_ASSERTION(Fail, SchemaCompilerValueNone)
-DEFINE_ASSERTION(Defines, SchemaCompilerValueString)
-DEFINE_ASSERTION(Type, SchemaCompilerValueType)
-DEFINE_ASSERTION(Regex, SchemaCompilerValueRegex)
+DEFINE_STEP_WITH_VALUE(Assertion, Fail, SchemaCompilerValueNone)
+DEFINE_STEP_WITH_VALUE(Assertion, Defines, SchemaCompilerValueString)
+DEFINE_STEP_WITH_VALUE(Assertion, Type, SchemaCompilerValueType)
+DEFINE_STEP_WITH_VALUE(Assertion, Regex, SchemaCompilerValueRegex)
 DEFINE_LOGICAL(Or)
 DEFINE_LOGICAL(And)
 DEFINE_CONTROL(Label)
-DEFINE_ANNOTATION(Public)
-DEFINE_ANNOTATION(Private)
+DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
+DEFINE_STEP_WITH_VALUE(Annotation, Private, SchemaCompilerValueJSON)
 DEFINE_LOOP(Properties)
 
-#undef DEFINE_ASSERTION
+#undef DEFINE_STEP_WITH_VALUE
 #undef DEFINE_LOGICAL
 #undef DEFINE_CONTROL
-#undef DEFINE_ANNOTATION
 #undef DEFINE_LOOP
 #endif
 
