@@ -1,6 +1,9 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_TEST_UTILS_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_TEST_UTILS_H_
 
+#include <tuple>
+#include <vector>
+
 #define TO_POINTER(pointer_string)                                             \
   sourcemeta::jsontoolkit::to_pointer((pointer_string))
 
@@ -80,5 +83,53 @@
   EXPECT_REFERENCE(                                                            \
       references, sourcemeta::jsontoolkit::ReferenceType::Dynamic,             \
       expected_pointer, expected_uri, expected_base, expected_fragment)
+
+#define EVALUATE_WITH_TRACE(mode, schema_template, instance, count)            \
+  std::vector<                                                                 \
+      std::tuple<bool, sourcemeta::jsontoolkit::Pointer,                       \
+                 sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type>> \
+      trace;                                                                   \
+  const auto result{sourcemeta::jsontoolkit::evaluate(                         \
+      schema_template, instance,                                               \
+      sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::mode,             \
+      [&trace](                                                                \
+          const bool valid,                                                    \
+          const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type    \
+              &step,                                                           \
+          const sourcemeta::jsontoolkit::Pointer &evaluate_path,               \
+          const sourcemeta::jsontoolkit::JSON &) {                             \
+        trace.push_back({valid, evaluate_path, step});                         \
+      })};                                                                     \
+  EXPECT_EQ(trace.size(), count);
+
+#define EVALUATE_WITH_TRACE_FAST_SUCCESS(schema_template, instance, count)     \
+  EVALUATE_WITH_TRACE(Fast, schema_template, instance, count)                  \
+  EXPECT_TRUE(result);
+
+#define EVALUATE_WITH_TRACE_FAST_FAILURE(schema_template, instance, count)     \
+  EVALUATE_WITH_TRACE(Fast, schema_template, instance, count)                  \
+  EXPECT_FALSE(result);
+
+// TODO: Test instance location too
+#define EVALUATE_TRACE(index, step_type, evaluate_path,                        \
+                       expected_keyword_location)                              \
+  EXPECT_EQ(std::get<1>(trace.at(index)), TO_POINTER(evaluate_path));          \
+  EXPECT_TRUE(std::holds_alternative<                                          \
+              sourcemeta::jsontoolkit::SchemaCompiler##step_type>(             \
+      std::get<2>(trace.at(index))));                                          \
+  EXPECT_EQ(std::get<sourcemeta::jsontoolkit::SchemaCompiler##step_type>(      \
+                std::get<2>(trace.at(index)))                                  \
+                .keyword_location,                                             \
+            expected_keyword_location);
+
+#define EVALUATE_TRACE_SUCCESS(index, step_type, evaluate_path,                \
+                               keyword_location)                               \
+  EXPECT_TRUE(std::get<0>(trace.at(index)));                                   \
+  EVALUATE_TRACE(index, step_type, evaluate_path, keyword_location);
+
+#define EVALUATE_TRACE_FAILURE(index, step_type, evaluate_path,                \
+                               keyword_location)                               \
+  EXPECT_FALSE(std::get<0>(trace.at(index)));                                  \
+  EVALUATE_TRACE(index, step_type, evaluate_path, keyword_location);
 
 #endif

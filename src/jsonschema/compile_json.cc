@@ -139,7 +139,7 @@ auto step_applicator_to_json(
 auto control_to_json(
     const std::string_view type,
     const sourcemeta::jsontoolkit::Pointer &relative_schema_location,
-    const std::size_t id,
+    const std::string &keyword_location, const std::size_t id,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &children)
     -> sourcemeta::jsontoolkit::JSON {
   using namespace sourcemeta::jsontoolkit;
@@ -148,6 +148,7 @@ auto control_to_json(
   result.assign("type", JSON{type});
   result.assign("relativeSchemaLocation",
                 JSON{to_string(relative_schema_location)});
+  result.assign("absoluteKeywordLocation", JSON{keyword_location});
   result.assign("id", JSON{id});
   result.assign("children", JSON::make_array());
   for (const auto &child : children) {
@@ -207,7 +208,8 @@ struct StepVisitor {
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerControlLabel
                       &control) const -> sourcemeta::jsontoolkit::JSON {
     return control_to_json("label", control.relative_schema_location,
-                           control.id, control.children);
+                           control.keyword_location, control.id,
+                           control.children);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAnnotationPublic
