@@ -174,6 +174,59 @@ public:
     return this->data.emplace_back(args...);
   }
 
+  /// Push a copy of a JSON Pointer into the back of a JSON Pointer.
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+  /// const sourcemeta::jsontoolkit::Pointer other{"bar", "baz"};
+  /// pointer.push_back(other);
+  /// assert(pointer.size() == 3);
+  ///
+  /// assert(pointer.at(0).is_property());
+  /// assert(pointer.at(1).is_property());
+  /// assert(pointer.at(2).is_property());
+  ///
+  /// assert(pointer.at(0).to_property() == "foo");
+  /// assert(pointer.at(1).to_property() == "bar");
+  /// assert(pointer.at(2).to_property() == "baz");
+  /// ```
+  auto
+  push_back(const GenericPointer<CharT, Traits, Allocator> &other) -> void {
+    this->data.reserve(this->data.size() + other.size());
+    std::copy(other.data.cbegin(), other.data.cend(),
+              std::back_inserter(this->data));
+  }
+
+  /// Move a JSON Pointer into the back of a JSON Pointer. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  /// #include <utility>
+  ///
+  /// sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+  /// sourcemeta::jsontoolkit::Pointer other{"bar", "baz"};
+  /// pointer.push_back(std::move(other));
+  /// assert(pointer.size() == 3);
+  ///
+  /// assert(pointer.at(0).is_property());
+  /// assert(pointer.at(1).is_property());
+  /// assert(pointer.at(2).is_property());
+  ///
+  /// assert(pointer.at(0).to_property() == "foo");
+  /// assert(pointer.at(1).to_property() == "bar");
+  /// assert(pointer.at(2).to_property() == "baz");
+  /// ```
+  auto push_back(GenericPointer<CharT, Traits, Allocator> &&other) -> void {
+    this->data.reserve(this->data.size() + other.size());
+    std::move(other.data.begin(), other.data.end(),
+              std::back_inserter(this->data));
+  }
+
   /// Remove the last token of a JSON Pointer. For example:
   ///
   /// ```cpp
@@ -230,8 +283,7 @@ public:
   auto concat(const GenericPointer<CharT, Traits, Allocator> &other) const
       -> GenericPointer<CharT, Traits, Allocator> {
     GenericPointer<CharT, Traits, Allocator> result{*this};
-    std::copy(other.data.cbegin(), other.data.cend(),
-              std::back_inserter(result.data));
+    result.push_back(other);
     return result;
   }
 
