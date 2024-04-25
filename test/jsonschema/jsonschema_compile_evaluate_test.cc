@@ -577,3 +577,45 @@ TEST(JSONSchema_compile_evaluate, fast_loop_regex_property_multi_false) {
   const auto result{evaluate(steps, instance)};
   EXPECT_FALSE(result);
 }
+
+TEST(JSONSchema_compile_evaluate,
+     exhaustive_loop_properties_annotation_property_template_with_callback) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAnnotationPublic{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      "#",
+      SchemaCompilerTarget{SchemaCompilerTargetType::TemplateProperty,
+                           {"loop"}},
+      {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   Pointer{"loop"},
+                                   "#/loop",
+                                   children,
+                                   {}}};
+
+  std::vector<std::pair<bool, SchemaCompilerTemplate::value_type>> trace;
+  const JSON instance{parse("{ \"foo\": 1 }")};
+  const auto result{
+      evaluate(steps, instance, SchemaCompilerEvaluationMode::Exhaustive,
+               [&trace](const bool subresult,
+                        const SchemaCompilerTemplate::value_type &step) {
+                 trace.push_back({subresult, step});
+               })};
+
+  EXPECT_TRUE(result);
+  EXPECT_EQ(trace.size(), 2);
+
+  // TODO: Assert that we get the right assertion value, which is not yet
+  // exposed to the callback (we get the templated step definition instead)
+  EXPECT_TRUE(trace.at(0).first);
+  EXPECT_TRUE(std::holds_alternative<SchemaCompilerAnnotationPublic>(
+      trace.at(0).second));
+
+  EXPECT_TRUE(trace.at(1).first);
+  EXPECT_TRUE(
+      std::holds_alternative<SchemaCompilerLoopProperties>(trace.at(1).second));
+}

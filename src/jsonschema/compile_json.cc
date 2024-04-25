@@ -43,9 +43,11 @@ template <typename T>
 auto value_to_json(const sourcemeta::jsontoolkit::SchemaCompilerValue<T> &value)
     -> sourcemeta::jsontoolkit::JSON {
   using namespace sourcemeta::jsontoolkit;
-  // TODO: Support templated values too
-  assert(std::holds_alternative<T>(value));
+  if (std::holds_alternative<SchemaCompilerTarget>(value)) {
+    return target_to_json(std::get<SchemaCompilerTarget>(value));
+  }
 
+  assert(std::holds_alternative<T>(value));
   if constexpr (std::is_same_v<SchemaCompilerValueJSON, T>) {
     JSON result{JSON::make_object()};
     result.assign("category", JSON{"value"});

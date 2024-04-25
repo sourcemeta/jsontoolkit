@@ -921,3 +921,59 @@ TEST(JSONSchema_compile_json, regex_basic) {
 
   EXPECT_EQ(result, expected);
 }
+
+TEST(JSONSchema_compile_json, loop_properties_annotation_property_template) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAnnotationPublic{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      "#",
+      SchemaCompilerTarget{SchemaCompilerTargetType::TemplateProperty,
+                           {"loop"}},
+      {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   Pointer{"loop"},
+                                   "#/loop",
+                                   children,
+                                   {}}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "loop",
+      "type": "properties",
+      "keywordLocation": "/loop",
+      "absoluteKeywordLocation": "#/loop",
+      "target": {
+        "category": "target",
+        "type": "instance",
+        "location": ""
+      },
+      "children": [
+        {
+          "category": "annotation",
+          "type": "public",
+          "keywordLocation": "",
+          "absoluteKeywordLocation": "#",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
+          "value": {
+            "category": "target",
+            "type": "template-property",
+            "location": "/loop"
+          },
+          "condition": []
+        }
+      ],
+      "condition": []
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}
