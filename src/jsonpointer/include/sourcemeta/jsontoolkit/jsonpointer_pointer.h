@@ -196,6 +196,25 @@ public:
     this->data.pop_back();
   }
 
+  /// Remove a number of tokens from the back of a JSON Pointer. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  /// pointer.pop_back(2);
+  /// assert(pointer.size() == 1);
+  /// assert(pointer.at(0).is_property());
+  /// assert(pointer.at(0).to_property() == "foo");
+  /// ```
+  auto pop_back(const size_type count) -> void {
+    assert(this->size() >= count);
+    for (std::size_t index = 0; index < count; index++) {
+      this->data.pop_back();
+    }
+  }
+
   /// Concatenate a JSON Pointer with another JSON Pointer, getting a new
   /// pointer as a result. For example:
   ///
