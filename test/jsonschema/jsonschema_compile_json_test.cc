@@ -17,7 +17,7 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
     {
       "category": "assertion",
       "type": "defines",
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -50,7 +50,7 @@ TEST(JSONSchema_compile_json, defines_basic_nested) {
     {
       "category": "assertion",
       "type": "defines",
-      "keywordLocation": "/foo/bar",
+      "relativeSchemaLocation": "/foo/bar",
       "absoluteKeywordLocation": "#/foo/bar",
       "target": {
         "category": "target",
@@ -91,7 +91,7 @@ TEST(JSONSchema_compile_json, defines_with_condition) {
     {
       "category": "assertion",
       "type": "defines",
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -107,7 +107,7 @@ TEST(JSONSchema_compile_json, defines_with_condition) {
         {
           "category": "assertion",
           "condition": [],
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -142,7 +142,7 @@ TEST(JSONSchema_compile_json, fail_basic_root) {
     {
       "category": "assertion",
       "type": "fail",
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -171,7 +171,7 @@ TEST(JSONSchema_compile_json, type_basic_root) {
     {
       "category": "assertion",
       "type": "type",
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -205,7 +205,7 @@ TEST(JSONSchema_compile_json, or_empty) {
         "location": "",
         "type": "instance"
       },
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": []
@@ -238,13 +238,13 @@ TEST(JSONSchema_compile_json, or_single_child) {
         "location": "",
         "type": "instance"
       },
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -294,13 +294,13 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
         "location": "",
         "type": "instance"
       },
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -317,7 +317,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -362,14 +362,14 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
         "location": "",
         "type": "instance"
       },
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": [
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -405,7 +405,7 @@ TEST(JSONSchema_compile_json, and_empty) {
         "location": "",
         "type": "instance"
       },
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": []
@@ -438,13 +438,13 @@ TEST(JSONSchema_compile_json, and_single_child) {
         "location": "",
         "type": "instance"
       },
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -494,13 +494,13 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
         "location": "",
         "type": "instance"
       },
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -517,7 +517,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -562,14 +562,14 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
         "location": "",
         "type": "instance"
       },
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": [
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -605,7 +605,7 @@ TEST(JSONSchema_compile_json, public_annotation_without_condition) {
     {
       "category": "annotation",
       "type": "public",
-      "keywordLocation": "/test",
+      "relativeSchemaLocation": "/test",
       "absoluteKeywordLocation": "#/test",
       "target": {
         "category": "target",
@@ -639,7 +639,7 @@ TEST(JSONSchema_compile_json, private_annotation_without_condition) {
     {
       "category": "annotation",
       "type": "private",
-      "keywordLocation": "/test",
+      "relativeSchemaLocation": "/test",
       "absoluteKeywordLocation": "#/test",
       "target": {
         "category": "target",
@@ -680,7 +680,7 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
     {
       "category": "annotation",
       "type": "public",
-      "keywordLocation": "/test",
+      "relativeSchemaLocation": "/test",
       "absoluteKeywordLocation": "#/test",
       "target": {
         "category": "target",
@@ -696,7 +696,7 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -739,7 +739,7 @@ TEST(JSONSchema_compile_json, private_annotation_with_condition) {
     {
       "category": "annotation",
       "type": "private",
-      "keywordLocation": "/test",
+      "relativeSchemaLocation": "/test",
       "absoluteKeywordLocation": "#/test",
       "target": {
         "category": "target",
@@ -755,7 +755,7 @@ TEST(JSONSchema_compile_json, private_annotation_with_condition) {
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -790,7 +790,7 @@ TEST(JSONSchema_compile_json, target_instance_template) {
     {
       "category": "assertion",
       "type": "defines",
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -838,7 +838,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
     {
       "category": "loop",
       "type": "properties",
-      "keywordLocation": "/loop",
+      "relativeSchemaLocation": "/loop",
       "absoluteKeywordLocation": "#/loop",
       "target": {
         "category": "target",
@@ -849,7 +849,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -868,7 +868,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
         {
           "category": "assertion",
           "type": "type",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -903,7 +903,7 @@ TEST(JSONSchema_compile_json, regex_basic) {
     {
       "category": "assertion",
       "type": "regex",
-      "keywordLocation": "",
+      "relativeSchemaLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -945,7 +945,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_property_template) {
     {
       "category": "loop",
       "type": "properties",
-      "keywordLocation": "/loop",
+      "relativeSchemaLocation": "/loop",
       "absoluteKeywordLocation": "#/loop",
       "target": {
         "category": "target",
@@ -956,7 +956,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_property_template) {
         {
           "category": "annotation",
           "type": "public",
-          "keywordLocation": "",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",

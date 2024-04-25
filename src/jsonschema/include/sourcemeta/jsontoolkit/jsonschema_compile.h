@@ -127,7 +127,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
   struct SchemaCompiler##category##name {                                      \
     const SchemaCompilerTarget target;                                         \
-    const Pointer evaluation_path;                                             \
+    const Pointer relative_schema_location;                                    \
     const std::string keyword_location;                                        \
     const SchemaCompilerValue<type> value;                                     \
     const SchemaCompilerTemplate condition;                                    \
@@ -136,7 +136,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 #define DEFINE_STEP_APPLICATOR(category, name)                                 \
   struct SchemaCompiler##category##name {                                      \
     const SchemaCompilerTarget target;                                         \
-    const Pointer evaluation_path;                                             \
+    const Pointer relative_schema_location;                                    \
     const std::string keyword_location;                                        \
     const SchemaCompilerTemplate children;                                     \
     const SchemaCompilerTemplate condition;                                    \
@@ -144,6 +144,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 
 #define DEFINE_CONTROL(name)                                                   \
   struct SchemaCompilerControl##name {                                         \
+    const Pointer relative_schema_location;                                    \
     const std::size_t id;                                                      \
     const SchemaCompilerTemplate children;                                     \
   };
@@ -193,8 +194,8 @@ struct SchemaCompilerContext {
   const URI base;
   /// The schema location relative to the base URI
   const Pointer relative_pointer;
-  /// The schema evaluation path
-  const Pointer evaluation_path;
+  /// The schema base keyword path
+  const Pointer base_schema_location;
   /// The instance location that the keyword must be evaluated to
   const Pointer instance_location;
   /// The reference frame of the entire schema
@@ -211,7 +212,7 @@ struct SchemaCompilerContext {
   const std::optional<std::string> &default_dialect;
 };
 
-// TODO: Give these functions better names
+// TODO: Improve and give these helper functions better names
 
 /// @ingroup jsonschema
 /// Helper function to instantiate a value-oriented step
@@ -223,7 +224,9 @@ auto make(const SchemaCompilerContext &context, ValueType &&type,
           const std::optional<Pointer> &target_location = std::nullopt)
     -> Step {
   return {{target_type, target_location.value_or(context.instance_location)},
-          context.evaluation_path,
+          context.keyword.empty()
+              ? context.base_schema_location
+              : context.base_schema_location.concat({context.keyword}),
           to_uri(context.relative_pointer, context.base).recompose(),
           std::move(type),
           std::move(condition)};
@@ -236,7 +239,9 @@ auto make(const SchemaCompilerContext &context,
           SchemaCompilerTemplate &&children,
           SchemaCompilerTemplate &&condition) -> Step {
   return {{SchemaCompilerTargetType::Instance, context.instance_location},
-          context.evaluation_path,
+          context.keyword.empty()
+              ? context.base_schema_location
+              : context.base_schema_location.concat({context.keyword}),
           to_uri(context.relative_pointer, context.base).recompose(),
           std::move(children),
           std::move(condition)};
@@ -245,9 +250,18 @@ auto make(const SchemaCompilerContext &context,
 /// @ingroup jsonschema
 /// Helper function to instantiate a control step
 template <typename Step>
-auto make(const std::size_t id, SchemaCompilerTemplate &&children) -> Step {
-  return {id, std::move(children)};
+auto make(const SchemaCompilerContext &context, const std::size_t id,
+          SchemaCompilerTemplate &&children) -> Step {
+  return {context.keyword.empty()
+              ? context.base_schema_location
+              : context.base_schema_location.concat({context.keyword}),
+          id, std::move(children)};
 }
+
+/// @ingroup jsonschema
+/// Helper function to prepare a context for an applicator
+auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+applicate(const SchemaCompilerContext &context) -> SchemaCompilerContext;
 
 /// @ingroup jsonschema
 /// Represents the mode of evalution

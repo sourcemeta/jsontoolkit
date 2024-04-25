@@ -24,7 +24,7 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
       "category": "assertion",
       "type": "type",
       "condition": [],
-      "keywordLocation": "/allOf/0/type",
+      "relativeSchemaLocation": "/allOf/0/type",
       "absoluteKeywordLocation": "#/allOf/0/type",
       "target": {
         "category": "target",
@@ -46,14 +46,14 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
         "type": "instance"
       },
       "condition": [],
-      "keywordLocation": "/allOf/1/type",
+      "relativeSchemaLocation": "/allOf/1/type",
       "absoluteKeywordLocation": "#/allOf/1/type",
       "children": [
         {
           "category": "assertion",
           "type": "type",
           "condition": [],
-          "keywordLocation": "/allOf/1/type",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#/allOf/1/type",
           "target": {
             "category": "target",
@@ -69,7 +69,7 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
         {
           "category": "assertion",
           "condition": [],
-          "keywordLocation": "/allOf/1/type",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#/allOf/1/type",
           "target": {
             "category": "target",
@@ -114,7 +114,7 @@ TEST(JSONSchema_compile_template_draft4, allof_type_with_id) {
       "category": "assertion",
       "type": "type",
       "condition": [],
-      "keywordLocation": "/allOf/0/type",
+      "relativeSchemaLocation": "/allOf/0/type",
       "absoluteKeywordLocation": "https://www.example.com/nested#/type",
       "target": {
         "category": "target",
@@ -180,14 +180,14 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
         "location": "",
         "type": "instance"
       },
-      "keywordLocation": "/properties",
+      "relativeSchemaLocation": "/properties",
       "absoluteKeywordLocation": "#/properties",
       "condition": [
         {
           "category": "assertion",
           "type": "type",
           "condition": [],
-          "keywordLocation": "/properties",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#/properties",
           "target": {
             "category": "target",
@@ -210,14 +210,14 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
             "location": "",
             "type": "instance"
           },
-          "keywordLocation": "/properties",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#/properties",
           "children": [
             {
               "category": "assertion",
               "type": "type",
               "condition": [],
-              "keywordLocation": "/properties/foo/type",
+              "relativeSchemaLocation": "/foo/type",
               "absoluteKeywordLocation": "#/properties/foo/type",
               "target": {
                 "category": "target",
@@ -234,7 +234,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
               "category": "annotation",
               "type": "private",
               "condition": [],
-              "keywordLocation": "/properties",
+              "relativeSchemaLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -253,7 +253,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
               "category": "assertion",
               "type": "defines",
               "condition": [],
-              "keywordLocation": "/properties",
+              "relativeSchemaLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -303,14 +303,14 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
         "location": "",
         "type": "instance"
       },
-      "keywordLocation": "/properties",
+      "relativeSchemaLocation": "/properties",
       "absoluteKeywordLocation": "#/properties",
       "condition": [
         {
           "category": "assertion",
           "type": "type",
           "condition": [],
-          "keywordLocation": "/properties",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#/properties",
           "target": {
             "category": "target",
@@ -333,14 +333,14 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
             "location": "",
             "type": "instance"
           },
-          "keywordLocation": "/properties",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#/properties",
           "children": [
             {
               "category": "assertion",
               "type": "type",
               "condition": [],
-              "keywordLocation": "/properties/bar/type",
+              "relativeSchemaLocation": "/bar/type",
               "absoluteKeywordLocation": "#/properties/bar/type",
               "target": {
                 "category": "target",
@@ -357,7 +357,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "category": "annotation",
               "type": "private",
               "condition": [],
-              "keywordLocation": "/properties",
+              "relativeSchemaLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -376,7 +376,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "category": "assertion",
               "type": "defines",
               "condition": [],
-              "keywordLocation": "/properties",
+              "relativeSchemaLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -399,14 +399,14 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
             "location": "",
             "type": "instance"
           },
-          "keywordLocation": "/properties",
+          "relativeSchemaLocation": "",
           "absoluteKeywordLocation": "#/properties",
           "children": [
             {
               "category": "assertion",
               "type": "type",
               "condition": [],
-              "keywordLocation": "/properties/foo/type",
+              "relativeSchemaLocation": "/foo/type",
               "absoluteKeywordLocation": "#/properties/foo/type",
               "target": {
                 "category": "target",
@@ -423,7 +423,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "category": "annotation",
               "type": "private",
               "condition": [],
-              "keywordLocation": "/properties",
+              "relativeSchemaLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -442,7 +442,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "category": "assertion",
               "type": "defines",
               "condition": [],
-              "keywordLocation": "/properties",
+              "relativeSchemaLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
