@@ -139,3 +139,23 @@ TEST(JSONPointer_pointer, ordering_less_than) {
   EXPECT_TRUE(pointer_3 < pointer_1);
   EXPECT_TRUE(pointer_3 < pointer_2);
 }
+
+TEST(JSONPointer_pointer, pop_back_zero_empty) {
+  sourcemeta::jsontoolkit::Pointer pointer{};
+  pointer.pop_back(0);
+  EXPECT_EQ(pointer.size(), 0);
+}
+
+TEST(JSONPointer_pointer, pop_back_many_subset) {
+  sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  pointer.pop_back(2);
+  EXPECT_EQ(pointer.size(), 1);
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_EQ(pointer.at(0).to_property(), "foo");
+}
+
+TEST(JSONPointer_pointer, pop_back_many_all) {
+  sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  pointer.pop_back(3);
+  EXPECT_EQ(pointer.size(), 0);
+}
