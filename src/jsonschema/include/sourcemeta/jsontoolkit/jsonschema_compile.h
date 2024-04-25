@@ -27,8 +27,29 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
+/// Represents a type of compiler step target
+enum class SchemaCompilerTargetType {
+  /// An static instance literal
+  Instance,
+
+  /// A pointer to the property name of an instance location
+  TemplateProperty,
+
+  /// A pointer to an instance
+  TemplateInstance
+};
+
+/// @ingroup jsonschema
+/// Represents a generic compiler step target
+using SchemaCompilerTarget = std::pair<SchemaCompilerTargetType, Pointer>;
+
+/// @ingroup jsonschema
 /// Represents a compiler step empty value
 struct SchemaCompilerValueNone {};
+
+/// @ingroup jsonschema
+/// Represents a compiler step JSON value
+using SchemaCompilerValueJSON = JSON;
 
 /// @ingroup jsonschema
 /// Represents a compiler step string value
@@ -46,21 +67,9 @@ using SchemaCompilerValueType = JSON::Type;
 using SchemaCompilerValueRegex = std::pair<std::regex, std::string>;
 
 /// @ingroup jsonschema
-/// Represents a type of compiler step target
-enum class SchemaCompilerTargetType {
-  /// An static instance literal
-  Instance,
-
-  /// A pointer to the property name of an instance location
-  TemplateProperty,
-
-  /// A pointer to an instance
-  TemplateInstance
-};
-
-/// @ingroup jsonschema
-/// Represents a generic compiler step target
-using SchemaCompilerTarget = std::pair<SchemaCompilerTargetType, Pointer>;
+/// Represents a value in a compiler step
+template <typename T>
+using SchemaCompilerValue = std::variant<T, SchemaCompilerTarget>;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that always fails
@@ -82,18 +91,6 @@ struct SchemaCompilerAssertionType;
 struct SchemaCompilerAssertionRegex;
 
 /// @ingroup jsonschema
-/// Represents a compiler logical step that represents a disjunction
-struct SchemaCompilerLogicalOr;
-
-/// @ingroup jsonschema
-/// Represents a compiler logical step that represents a conjunction
-struct SchemaCompilerLogicalAnd;
-
-/// @ingroup jsonschema
-/// Represents a compiler step that consists of a mark to jump to
-struct SchemaCompilerControlLabel;
-
-/// @ingroup jsonschema
 /// Represents a compiler step that emits a public annotation
 struct SchemaCompilerAnnotationPublic;
 
@@ -102,30 +99,43 @@ struct SchemaCompilerAnnotationPublic;
 struct SchemaCompilerAnnotationPrivate;
 
 /// @ingroup jsonschema
+/// Represents a compiler logical step that represents a disjunction
+struct SchemaCompilerLogicalOr;
+
+/// @ingroup jsonschema
+/// Represents a compiler logical step that represents a conjunction
+struct SchemaCompilerLogicalAnd;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that loops over object properties
 struct SchemaCompilerLoopProperties;
+
+/// @ingroup jsonschema
+/// Represents a compiler step that consists of a mark to jump to
+struct SchemaCompilerControlLabel;
 
 /// @ingroup jsonschema
 /// Represents a schema compilation result that can be evaluated
 using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
     SchemaCompilerAssertionType, SchemaCompilerAssertionRegex,
+    SchemaCompilerAnnotationPublic, SchemaCompilerAnnotationPrivate,
     SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd,
-    SchemaCompilerControlLabel, SchemaCompilerAnnotationPublic,
-    SchemaCompilerAnnotationPrivate, SchemaCompilerLoopProperties>>;
+    SchemaCompilerLoopProperties, SchemaCompilerControlLabel>>;
 
 #if !defined(DOXYGEN)
-#define DEFINE_ASSERTION(name, type)                                           \
-  struct SchemaCompilerAssertion##name {                                       \
+#define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
+  struct SchemaCompiler##category##name {                                      \
     const SchemaCompilerTarget target;                                         \
     const Pointer evaluation_path;                                             \
     const std::string keyword_location;                                        \
-    const std::variant<type> value;                                            \
+    const SchemaCompilerValue<type> value;                                     \
     const SchemaCompilerTemplate condition;                                    \
   };
 
-#define DEFINE_LOGICAL(name)                                                   \
-  struct SchemaCompilerLogical##name {                                         \
+#define DEFINE_STEP_APPLICATOR(category, name)                                 \
+  struct SchemaCompiler##category##name {                                      \
+    const SchemaCompilerTarget target;                                         \
     const Pointer evaluation_path;                                             \
     const std::string keyword_location;                                        \
     const SchemaCompilerTemplate children;                                     \
@@ -138,39 +148,20 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const SchemaCompilerTemplate children;                                     \
   };
 
-#define DEFINE_ANNOTATION(name)                                                \
-  struct SchemaCompilerAnnotation##name {                                      \
-    const SchemaCompilerTarget target;                                         \
-    const Pointer evaluation_path;                                             \
-    const std::string keyword_location;                                        \
-    const JSON value;                                                          \
-    const SchemaCompilerTemplate condition;                                    \
-  };
-
-#define DEFINE_LOOP(name)                                                      \
-  struct SchemaCompilerLoop##name {                                            \
-    const SchemaCompilerTarget target;                                         \
-    const Pointer evaluation_path;                                             \
-    const SchemaCompilerTemplate children;                                     \
-    const SchemaCompilerTemplate condition;                                    \
-  };
-
-DEFINE_ASSERTION(Fail, SchemaCompilerValueNone)
-DEFINE_ASSERTION(Defines, SchemaCompilerValueString)
-DEFINE_ASSERTION(Type, SchemaCompilerValueType)
-DEFINE_ASSERTION(Regex, SchemaCompilerValueRegex)
-DEFINE_LOGICAL(Or)
-DEFINE_LOGICAL(And)
+DEFINE_STEP_WITH_VALUE(Assertion, Fail, SchemaCompilerValueNone)
+DEFINE_STEP_WITH_VALUE(Assertion, Defines, SchemaCompilerValueString)
+DEFINE_STEP_WITH_VALUE(Assertion, Type, SchemaCompilerValueType)
+DEFINE_STEP_WITH_VALUE(Assertion, Regex, SchemaCompilerValueRegex)
+DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
+DEFINE_STEP_WITH_VALUE(Annotation, Private, SchemaCompilerValueJSON)
+DEFINE_STEP_APPLICATOR(Logical, Or)
+DEFINE_STEP_APPLICATOR(Logical, And)
+DEFINE_STEP_APPLICATOR(Loop, Properties)
 DEFINE_CONTROL(Label)
-DEFINE_ANNOTATION(Public)
-DEFINE_ANNOTATION(Private)
-DEFINE_LOOP(Properties)
 
-#undef DEFINE_ASSERTION
-#undef DEFINE_LOGICAL
+#undef DEFINE_STEP_WITH_VALUE
+#undef DEFINE_STEP_APPLICATOR
 #undef DEFINE_CONTROL
-#undef DEFINE_ANNOTATION
-#undef DEFINE_LOOP
 #endif
 
 #if !defined(DOXYGEN)
@@ -223,7 +214,7 @@ struct SchemaCompilerContext {
 // TODO: Give these functions better names
 
 /// @ingroup jsonschema
-/// Helper function to instantiate an assertion step
+/// Helper function to instantiate a value-oriented step
 template <typename Step, typename ValueType>
 auto make(const SchemaCompilerContext &context, ValueType &&type,
           SchemaCompilerTemplate &&condition,
@@ -239,14 +230,16 @@ auto make(const SchemaCompilerContext &context, ValueType &&type,
 }
 
 /// @ingroup jsonschema
-/// Helper function to instantiate a logical step
+/// Helper function to instantiate an applicator step
 template <typename Step>
 auto make(const SchemaCompilerContext &context,
           SchemaCompilerTemplate &&children,
           SchemaCompilerTemplate &&condition) -> Step {
-  return {context.evaluation_path,
+  return {{SchemaCompilerTargetType::Instance, context.instance_location},
+          context.evaluation_path,
           to_uri(context.relative_pointer, context.base).recompose(),
-          std::move(children), std::move(condition)};
+          std::move(children),
+          std::move(condition)};
 }
 
 /// @ingroup jsonschema
@@ -269,11 +262,12 @@ enum class SchemaCompilerEvaluationMode {
 
 /// @ingroup jsonschema
 /// A callback of this type is invoked after evaluating any keyword. The first
-/// argument is whether the evaluation was successful or not and the second
-/// argument is the actual step that was evaluated. A callback can be used to
+/// argument is whether the evaluation was successful or not, the second
+/// argument is the actual step that was evaluated, and the third one is the
+/// annotation result, if any (otherwise null). A callback can be used to
 /// implement arbitrary output formats
-using SchemaCompilerEvaluationCallback =
-    std::function<void(bool, const SchemaCompilerTemplate::value_type &)>;
+using SchemaCompilerEvaluationCallback = std::function<void(
+    bool, const SchemaCompilerTemplate::value_type &, const JSON &)>;
 
 // TODO: Support standard output formats. Maybe through pre-made evaluation
 // callbacks?

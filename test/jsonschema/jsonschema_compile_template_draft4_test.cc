@@ -40,6 +40,11 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
     {
       "category": "logical",
       "type": "or",
+      "target": {
+        "category": "target",
+        "location": "",
+        "type": "instance"
+      },
       "condition": [],
       "keywordLocation": "/allOf/1/type",
       "absoluteKeywordLocation": "#/allOf/1/type",
@@ -170,6 +175,11 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
     {
       "category": "logical",
       "type": "and",
+      "target": {
+        "category": "target",
+        "location": "",
+        "type": "instance"
+      },
       "keywordLocation": "/properties",
       "absoluteKeywordLocation": "#/properties",
       "condition": [
@@ -195,6 +205,11 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
         {
           "category": "logical",
           "type": "and",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
           "keywordLocation": "/properties",
           "absoluteKeywordLocation": "#/properties",
           "children": [
@@ -226,7 +241,11 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
                 "location": "",
                 "type": "instance"
               },
-              "value": "foo"
+              "value": {
+                "category": "value",
+                "type": "json",
+                "value": "foo"
+              }
             }
           ],
           "condition": [
@@ -279,6 +298,11 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
     {
       "category": "logical",
       "type": "and",
+      "target": {
+        "category": "target",
+        "location": "",
+        "type": "instance"
+      },
       "keywordLocation": "/properties",
       "absoluteKeywordLocation": "#/properties",
       "condition": [
@@ -304,6 +328,11 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
         {
           "category": "logical",
           "type": "and",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
           "keywordLocation": "/properties",
           "absoluteKeywordLocation": "#/properties",
           "children": [
@@ -335,7 +364,11 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
                 "location": "",
                 "type": "instance"
               },
-              "value": "bar"
+              "value": {
+                "category": "value",
+                "type": "json",
+                "value": "bar"
+              }
             }
           ],
           "condition": [
@@ -361,6 +394,11 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
         {
           "category": "logical",
           "type": "and",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
           "keywordLocation": "/properties",
           "absoluteKeywordLocation": "#/properties",
           "children": [
@@ -392,7 +430,11 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
                 "location": "",
                 "type": "instance"
               },
-              "value": "foo"
+              "value": {
+                "category": "value",
+                "type": "json",
+                "value": "foo"
+              }
             }
           ],
           "condition": [
