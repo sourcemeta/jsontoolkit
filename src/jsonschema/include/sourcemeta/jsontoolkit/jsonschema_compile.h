@@ -262,11 +262,12 @@ enum class SchemaCompilerEvaluationMode {
 
 /// @ingroup jsonschema
 /// A callback of this type is invoked after evaluating any keyword. The first
-/// argument is whether the evaluation was successful or not and the second
-/// argument is the actual step that was evaluated. A callback can be used to
+/// argument is whether the evaluation was successful or not, the second
+/// argument is the actual step that was evaluated, and the third one is the
+/// annotation result, if any (otherwise null). A callback can be used to
 /// implement arbitrary output formats
-using SchemaCompilerEvaluationCallback =
-    std::function<void(bool, const SchemaCompilerTemplate::value_type &)>;
+using SchemaCompilerEvaluationCallback = std::function<void(
+    bool, const SchemaCompilerTemplate::value_type &, const JSON &)>;
 
 // TODO: Support standard output formats. Maybe through pre-made evaluation
 // callbacks?
