@@ -84,7 +84,7 @@ template <typename ValueType>
 auto step_with_value_to_json(
     const std::string_view category, const std::string_view type,
     const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
-    const sourcemeta::jsontoolkit::Pointer &evaluation_path,
+    const sourcemeta::jsontoolkit::Pointer &relative_schema_location,
     const std::string &keyword_location,
     const sourcemeta::jsontoolkit::SchemaCompilerValue<ValueType> &value,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
@@ -94,7 +94,8 @@ auto step_with_value_to_json(
   result.assign("category", JSON{category});
   result.assign("type", JSON{type});
   result.assign("target", target_to_json(target));
-  result.assign("keywordLocation", JSON{to_string(evaluation_path)});
+  result.assign("relativeSchemaLocation",
+                JSON{to_string(relative_schema_location)});
   result.assign("absoluteKeywordLocation", JSON{keyword_location});
   result.assign("value", value_to_json(value));
   result.assign("condition", JSON::make_array());
@@ -108,7 +109,7 @@ auto step_with_value_to_json(
 auto step_applicator_to_json(
     const std::string_view category, const std::string_view type,
     const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
-    const sourcemeta::jsontoolkit::Pointer &evaluation_path,
+    const sourcemeta::jsontoolkit::Pointer &relative_schema_location,
     const std::string &keyword_location,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &children,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
@@ -118,7 +119,8 @@ auto step_applicator_to_json(
   result.assign("category", JSON{category});
   result.assign("type", JSON{type});
   result.assign("target", target_to_json(target));
-  result.assign("keywordLocation", JSON{to_string(evaluation_path)});
+  result.assign("relativeSchemaLocation",
+                JSON{to_string(relative_schema_location)});
   result.assign("absoluteKeywordLocation", JSON{keyword_location});
   result.assign("condition", JSON::make_array());
   result.assign("children", JSON::make_array());
@@ -134,13 +136,18 @@ auto step_applicator_to_json(
   return result;
 }
 
-auto control_to_json(const std::string_view type, const std::size_t id,
-                     const sourcemeta::jsontoolkit::SchemaCompilerTemplate
-                         &children) -> sourcemeta::jsontoolkit::JSON {
+auto control_to_json(
+    const std::string_view type,
+    const sourcemeta::jsontoolkit::Pointer &relative_schema_location,
+    const std::size_t id,
+    const sourcemeta::jsontoolkit::SchemaCompilerTemplate &children)
+    -> sourcemeta::jsontoolkit::JSON {
   using namespace sourcemeta::jsontoolkit;
   JSON result{JSON::make_object()};
   result.assign("category", JSON{"control"});
   result.assign("type", JSON{type});
+  result.assign("relativeSchemaLocation",
+                JSON{to_string(relative_schema_location)});
   result.assign("id", JSON{id});
   result.assign("children", JSON::make_array());
   for (const auto &child : children) {
@@ -153,70 +160,77 @@ auto control_to_json(const std::string_view type, const std::size_t id,
 struct StepVisitor {
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionFail
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    return step_with_value_to_json(
-        "assertion", "fail", assertion.target, assertion.evaluation_path,
-        assertion.keyword_location, assertion.value, assertion.condition);
+    return step_with_value_to_json("assertion", "fail", assertion.target,
+                                   assertion.relative_schema_location,
+                                   assertion.keyword_location, assertion.value,
+                                   assertion.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionDefines
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    return step_with_value_to_json(
-        "assertion", "defines", assertion.target, assertion.evaluation_path,
-        assertion.keyword_location, assertion.value, assertion.condition);
+    return step_with_value_to_json("assertion", "defines", assertion.target,
+                                   assertion.relative_schema_location,
+                                   assertion.keyword_location, assertion.value,
+                                   assertion.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionType
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    return step_with_value_to_json(
-        "assertion", "type", assertion.target, assertion.evaluation_path,
-        assertion.keyword_location, assertion.value, assertion.condition);
+    return step_with_value_to_json("assertion", "type", assertion.target,
+                                   assertion.relative_schema_location,
+                                   assertion.keyword_location, assertion.value,
+                                   assertion.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionRegex
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    return step_with_value_to_json(
-        "assertion", "regex", assertion.target, assertion.evaluation_path,
-        assertion.keyword_location, assertion.value, assertion.condition);
+    return step_with_value_to_json("assertion", "regex", assertion.target,
+                                   assertion.relative_schema_location,
+                                   assertion.keyword_location, assertion.value,
+                                   assertion.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalOr
                       &logical) const -> sourcemeta::jsontoolkit::JSON {
     return step_applicator_to_json(
-        "logical", "or", logical.target, logical.evaluation_path,
+        "logical", "or", logical.target, logical.relative_schema_location,
         logical.keyword_location, logical.children, logical.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalAnd
                       &logical) const -> sourcemeta::jsontoolkit::JSON {
     return step_applicator_to_json(
-        "logical", "and", logical.target, logical.evaluation_path,
+        "logical", "and", logical.target, logical.relative_schema_location,
         logical.keyword_location, logical.children, logical.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerControlLabel
                       &control) const -> sourcemeta::jsontoolkit::JSON {
-    return control_to_json("label", control.id, control.children);
+    return control_to_json("label", control.relative_schema_location,
+                           control.id, control.children);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAnnotationPublic
                       &annotation) const -> sourcemeta::jsontoolkit::JSON {
-    return step_with_value_to_json(
-        "annotation", "public", annotation.target, annotation.evaluation_path,
-        annotation.keyword_location, annotation.value, annotation.condition);
+    return step_with_value_to_json("annotation", "public", annotation.target,
+                                   annotation.relative_schema_location,
+                                   annotation.keyword_location,
+                                   annotation.value, annotation.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAnnotationPrivate
                       &annotation) const -> sourcemeta::jsontoolkit::JSON {
-    return step_with_value_to_json(
-        "annotation", "private", annotation.target, annotation.evaluation_path,
-        annotation.keyword_location, annotation.value, annotation.condition);
+    return step_with_value_to_json("annotation", "private", annotation.target,
+                                   annotation.relative_schema_location,
+                                   annotation.keyword_location,
+                                   annotation.value, annotation.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLoopProperties
                       &loop) const -> sourcemeta::jsontoolkit::JSON {
-    return step_applicator_to_json("loop", "properties", loop.target,
-                                   loop.evaluation_path, loop.keyword_location,
-                                   loop.children, loop.condition);
+    return step_applicator_to_json(
+        "loop", "properties", loop.target, loop.relative_schema_location,
+        loop.keyword_location, loop.children, loop.condition);
   }
 };
 

@@ -26,10 +26,12 @@ auto type_string_to_assertion(
   } else if (type == "array") {
     return {make<SchemaCompilerAssertionType>(context, JSON::Type::Array, {})};
   } else if (type == "number") {
+    const auto subcontext{applicate(context)};
     return {make<SchemaCompilerLogicalOr>(
         context,
-        {make<SchemaCompilerAssertionType>(context, JSON::Type::Real, {}),
-         make<SchemaCompilerAssertionType>(context, JSON::Type::Integer, {})},
+        {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Real, {}),
+         make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Integer,
+                                           {})},
         {})};
   } else if (type == "integer") {
     return {
@@ -63,7 +65,7 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context)
   std::ostringstream label;
   label << current << "|" << reference.destination;
   return {make<SchemaCompilerControlLabel>(
-      std::hash<std::string>{}(label.str()),
+      context, std::hash<std::string>{}(label.str()),
       compile(context, empty_pointer, empty_pointer, reference.destination))};
 }
 
@@ -129,25 +131,22 @@ auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
     return {};
   }
 
+  const auto subcontext{applicate(context)};
   SchemaCompilerTemplate children;
   for (auto &[key, subschema] : context.value.as_object()) {
-    auto substeps{compile(context, {key}, {key})};
+    auto substeps{compile(subcontext, {key}, {key})};
     // Annotations as such don't exist in Draft 4,
     // so emit a private annotation instead
-    substeps.push_back(SchemaCompilerAnnotationPrivate{
-        {SchemaCompilerTargetType::Instance, context.instance_location},
-        context.evaluation_path,
-        to_uri(context.relative_pointer, context.base).recompose(),
-        JSON{key},
-        {}});
+    substeps.push_back(
+        make<SchemaCompilerAnnotationPrivate>(subcontext, JSON{key}, {}));
     children.push_back(make<SchemaCompilerLogicalAnd>(
-        context, std::move(substeps),
-        {make<SchemaCompilerAssertionDefines>(context, key, {})}));
+        subcontext, std::move(substeps),
+        {make<SchemaCompilerAssertionDefines>(subcontext, key, {})}));
   }
 
   return {make<SchemaCompilerLogicalAnd>(
       context, std::move(children),
-      {make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})})};
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {})})};
 }
 
 auto compiler_draft4_validation_pattern(const SchemaCompilerContext &context)

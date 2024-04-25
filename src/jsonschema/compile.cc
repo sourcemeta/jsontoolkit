@@ -29,14 +29,13 @@ auto compile_subschema(
                              context.default_dialect}) {
     assert(entry.pointer.back().is_property());
     const auto &keyword{entry.pointer.back().to_property()};
-    for (auto &&step :
-         context.compiler({keyword, context.schema, entry.vocabularies,
-                           entry.value, context.root, context.base,
-                           context.relative_pointer.concat({keyword}),
-                           context.evaluation_path.concat({keyword}),
-                           context.instance_location, context.frame,
-                           context.references, context.walker, context.resolver,
-                           context.compiler, context.default_dialect})) {
+    for (auto &&step : context.compiler(
+             {keyword, context.schema, entry.vocabularies, entry.value,
+              context.root, context.base,
+              context.relative_pointer.concat({keyword}),
+              context.base_schema_location, context.instance_location,
+              context.frame, context.references, context.walker,
+              context.resolver, context.compiler, context.default_dialect})) {
       steps.push_back(std::move(step));
     }
   }
@@ -47,6 +46,24 @@ auto compile_subschema(
 } // namespace
 
 namespace sourcemeta::jsontoolkit {
+
+auto applicate(const SchemaCompilerContext &context) -> SchemaCompilerContext {
+  return {"",
+          context.schema,
+          context.vocabularies,
+          context.value,
+          context.root,
+          context.base,
+          context.relative_pointer,
+          empty_pointer,
+          context.instance_location,
+          context.frame,
+          context.references,
+          context.walker,
+          context.resolver,
+          context.compiler,
+          context.default_dialect};
+}
 
 auto compile(const JSON &schema, const SchemaWalker &walker,
              const SchemaResolver &resolver, const SchemaCompiler &compiler,
@@ -107,7 +124,10 @@ auto compile(const SchemaCompilerContext &context, const Pointer &schema_suffix,
       {context.keyword, new_schema,
        vocabularies(new_schema, context.resolver, entry.dialect).get(),
        context.value, context.root, entry.base, entry.relative_pointer,
-       context.evaluation_path.concat(schema_suffix),
+       context.keyword.empty()
+           ? context.base_schema_location.concat(schema_suffix)
+           : context.base_schema_location.concat({context.keyword})
+                 .concat(schema_suffix),
        context.instance_location.concat(instance_suffix), context.frame,
        context.references, context.walker, context.resolver, context.compiler,
        entry.dialect});
