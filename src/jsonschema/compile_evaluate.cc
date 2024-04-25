@@ -20,14 +20,16 @@ public:
   std::set<JSON> properties;
 
   auto annotate(const Pointer &instance_location,
-                const Pointer &evaluation_path, const JSON &value) -> void {
+                const Pointer &evaluation_path, JSON &&value) -> const JSON & {
     // Will do nothing if the key already exists
     this->annotations.insert({instance_location, {}});
     assert(this->annotations.contains(instance_location));
     this->annotations[instance_location].insert({evaluation_path, {}});
     assert(this->annotations[instance_location].contains(evaluation_path));
     // Insert the actual value
-    this->annotations[instance_location][evaluation_path].insert(value);
+    return *(this->annotations[instance_location][evaluation_path]
+                 .insert(std::move(value))
+                 .first);
   }
 
 private:
@@ -80,8 +82,8 @@ auto target_value(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
 }
 
 auto callback_noop(
-    bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type
-              &) noexcept -> void {}
+    bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
+    const sourcemeta::jsontoolkit::JSON &) noexcept -> void {}
 
 template <typename T>
 auto resolve_value(const sourcemeta::jsontoolkit::SchemaCompilerValue<T> &value,
@@ -189,8 +191,11 @@ auto evaluate_step(
     const auto &annotation{std::get<SchemaCompilerAnnotationPublic>(step)};
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
     const auto &instance_location{target_location(annotation.target, context)};
-    const auto value{resolve_value(annotation.value, instance, context)};
-    context.annotate(instance_location, annotation.evaluation_path, value);
+    const auto &value{
+        context.annotate(instance_location, annotation.evaluation_path,
+                         resolve_value(annotation.value, instance, context))};
+    callback(result, step, value);
+    return result;
   } else if (std::holds_alternative<SchemaCompilerAnnotationPrivate>(step)) {
     const auto &annotation{std::get<SchemaCompilerAnnotationPrivate>(step)};
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
@@ -232,7 +237,8 @@ auto evaluate_step(
 
 #undef EVALUATE_CONDITION_GUARD
 
-  callback(result, step);
+  static JSON placeholder{nullptr};
+  callback(result, step, placeholder);
   return result;
 } // namespace
 
