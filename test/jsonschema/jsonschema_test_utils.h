@@ -87,6 +87,7 @@
 #define EVALUATE_WITH_TRACE(mode, schema_template, instance, count)            \
   std::vector<                                                                 \
       std::tuple<bool, sourcemeta::jsontoolkit::Pointer,                       \
+                 sourcemeta::jsontoolkit::Pointer,                             \
                  sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type>> \
       trace;                                                                   \
   const auto result{sourcemeta::jsontoolkit::evaluate(                         \
@@ -97,8 +98,9 @@
           const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type    \
               &step,                                                           \
           const sourcemeta::jsontoolkit::Pointer &evaluate_path,               \
+          const sourcemeta::jsontoolkit::Pointer &instance_location,           \
           const sourcemeta::jsontoolkit::JSON &) {                             \
-        trace.push_back({valid, evaluate_path, step});                         \
+        trace.push_back({valid, evaluate_path, instance_location, step});      \
       })};                                                                     \
   EXPECT_EQ(trace.size(), count);
 
@@ -116,9 +118,9 @@
   EXPECT_EQ(std::get<1>(trace.at(index)), TO_POINTER(evaluate_path));          \
   EXPECT_TRUE(std::holds_alternative<                                          \
               sourcemeta::jsontoolkit::SchemaCompiler##step_type>(             \
-      std::get<2>(trace.at(index))));                                          \
+      std::get<3>(trace.at(index))));                                          \
   EXPECT_EQ(std::get<sourcemeta::jsontoolkit::SchemaCompiler##step_type>(      \
-                std::get<2>(trace.at(index)))                                  \
+                std::get<3>(trace.at(index)))                                  \
                 .keyword_location,                                             \
             expected_keyword_location);
 

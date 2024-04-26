@@ -128,6 +128,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
   struct SchemaCompiler##category##name {                                      \
     const SchemaCompilerTarget target;                                         \
     const Pointer relative_schema_location;                                    \
+    const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
     const SchemaCompilerValue<type> value;                                     \
     const SchemaCompilerTemplate condition;                                    \
@@ -137,6 +138,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
   struct SchemaCompiler##category##name {                                      \
     const SchemaCompilerTarget target;                                         \
     const Pointer relative_schema_location;                                    \
+    const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
     const SchemaCompilerTemplate children;                                     \
     const SchemaCompilerTemplate condition;                                    \
@@ -145,6 +147,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 #define DEFINE_CONTROL(name)                                                   \
   struct SchemaCompilerControl##name {                                         \
     const Pointer relative_schema_location;                                    \
+    const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
     const std::size_t id;                                                      \
     const SchemaCompilerTemplate children;                                     \
@@ -197,8 +200,8 @@ struct SchemaCompilerContext {
   const Pointer relative_pointer;
   /// The schema base keyword path
   const Pointer base_schema_location;
-  /// The instance location that the keyword must be evaluated to
-  const Pointer instance_location;
+  /// The base instance location that the keyword must be evaluated to
+  const Pointer base_instance_location;
   /// The reference frame of the entire schema
   const ReferenceFrame &frame;
   /// The references of the entire schema
@@ -231,12 +234,13 @@ enum class SchemaCompilerEvaluationMode {
 /// - Whether the evaluation was successful or not
 /// - The step that was just evaluated
 /// - The evaluation path
+/// - The instance location
 /// - The annotation result, if any (otherwise null)
 ///
 /// You can use this callback mechanism to implement arbitrary output formats.
 using SchemaCompilerEvaluationCallback =
     std::function<void(bool, const SchemaCompilerTemplate::value_type &,
-                       const Pointer &, const JSON &)>;
+                       const Pointer &, const Pointer &, const JSON &)>;
 
 // TODO: Support standard output formats. Maybe through pre-made evaluation
 // callbacks?

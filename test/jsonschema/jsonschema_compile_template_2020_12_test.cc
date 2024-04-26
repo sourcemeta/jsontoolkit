@@ -24,6 +24,7 @@ TEST(JSONSchema_compile_template_2020_12, basic_type_string) {
       "category": "assertion",
       "type": "type",
       "relativeSchemaLocation": "/type",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/type",
       "target": {
         "category": "target",

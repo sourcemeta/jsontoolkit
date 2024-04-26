@@ -25,6 +25,7 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
       "type": "type",
       "condition": [],
       "relativeSchemaLocation": "/allOf/0/type",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/allOf/0/type",
       "target": {
         "category": "target",
@@ -47,6 +48,7 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
       },
       "condition": [],
       "relativeSchemaLocation": "/allOf/1/type",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/allOf/1/type",
       "children": [
         {
@@ -54,6 +56,7 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
           "type": "type",
           "condition": [],
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#/allOf/1/type",
           "target": {
             "category": "target",
@@ -70,6 +73,7 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
           "category": "assertion",
           "condition": [],
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#/allOf/1/type",
           "target": {
             "category": "target",
@@ -115,6 +119,7 @@ TEST(JSONSchema_compile_template_draft4, allof_type_with_id) {
       "type": "type",
       "condition": [],
       "relativeSchemaLocation": "/allOf/0/type",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "https://www.example.com/nested#/type",
       "target": {
         "category": "target",
@@ -181,6 +186,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
         "type": "instance"
       },
       "relativeSchemaLocation": "/properties",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/properties",
       "condition": [
         {
@@ -188,6 +194,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
           "type": "type",
           "condition": [],
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#/properties",
           "target": {
             "category": "target",
@@ -211,6 +218,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
             "type": "instance"
           },
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#/properties",
           "children": [
             {
@@ -218,6 +226,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
               "type": "type",
               "condition": [],
               "relativeSchemaLocation": "/foo/type",
+              "relativeInstanceLocation": "",
               "absoluteKeywordLocation": "#/properties/foo/type",
               "target": {
                 "category": "target",
@@ -235,6 +244,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
               "type": "private",
               "condition": [],
               "relativeSchemaLocation": "",
+              "relativeInstanceLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -254,6 +264,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
               "type": "defines",
               "condition": [],
               "relativeSchemaLocation": "",
+              "relativeInstanceLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -304,6 +315,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
         "type": "instance"
       },
       "relativeSchemaLocation": "/properties",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/properties",
       "condition": [
         {
@@ -311,6 +323,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
           "type": "type",
           "condition": [],
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#/properties",
           "target": {
             "category": "target",
@@ -334,6 +347,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
             "type": "instance"
           },
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#/properties",
           "children": [
             {
@@ -341,6 +355,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "type": "type",
               "condition": [],
               "relativeSchemaLocation": "/bar/type",
+              "relativeInstanceLocation": "",
               "absoluteKeywordLocation": "#/properties/bar/type",
               "target": {
                 "category": "target",
@@ -358,6 +373,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "type": "private",
               "condition": [],
               "relativeSchemaLocation": "",
+              "relativeInstanceLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -377,6 +393,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "type": "defines",
               "condition": [],
               "relativeSchemaLocation": "",
+              "relativeInstanceLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -400,6 +417,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
             "type": "instance"
           },
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#/properties",
           "children": [
             {
@@ -407,6 +425,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "type": "type",
               "condition": [],
               "relativeSchemaLocation": "/foo/type",
+              "relativeInstanceLocation": "",
               "absoluteKeywordLocation": "#/properties/foo/type",
               "target": {
                 "category": "target",
@@ -424,6 +443,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "type": "private",
               "condition": [],
               "relativeSchemaLocation": "",
+              "relativeInstanceLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -443,6 +463,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "type": "defines",
               "condition": [],
               "relativeSchemaLocation": "",
+              "relativeInstanceLocation": "",
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",

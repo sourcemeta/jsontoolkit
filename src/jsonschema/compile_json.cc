@@ -85,6 +85,7 @@ auto step_with_value_to_json(
     const std::string_view category, const std::string_view type,
     const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
     const sourcemeta::jsontoolkit::Pointer &relative_schema_location,
+    const sourcemeta::jsontoolkit::Pointer &relative_instance_location,
     const std::string &keyword_location,
     const sourcemeta::jsontoolkit::SchemaCompilerValue<ValueType> &value,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
@@ -96,6 +97,8 @@ auto step_with_value_to_json(
   result.assign("target", target_to_json(target));
   result.assign("relativeSchemaLocation",
                 JSON{to_string(relative_schema_location)});
+  result.assign("relativeInstanceLocation",
+                JSON{to_string(relative_instance_location)});
   result.assign("absoluteKeywordLocation", JSON{keyword_location});
   result.assign("value", value_to_json(value));
   result.assign("condition", JSON::make_array());
@@ -110,6 +113,7 @@ auto step_applicator_to_json(
     const std::string_view category, const std::string_view type,
     const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
     const sourcemeta::jsontoolkit::Pointer &relative_schema_location,
+    const sourcemeta::jsontoolkit::Pointer &relative_instance_location,
     const std::string &keyword_location,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &children,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
@@ -121,6 +125,8 @@ auto step_applicator_to_json(
   result.assign("target", target_to_json(target));
   result.assign("relativeSchemaLocation",
                 JSON{to_string(relative_schema_location)});
+  result.assign("relativeInstanceLocation",
+                JSON{to_string(relative_instance_location)});
   result.assign("absoluteKeywordLocation", JSON{keyword_location});
   result.assign("condition", JSON::make_array());
   result.assign("children", JSON::make_array());
@@ -139,6 +145,7 @@ auto step_applicator_to_json(
 auto control_to_json(
     const std::string_view type,
     const sourcemeta::jsontoolkit::Pointer &relative_schema_location,
+    const sourcemeta::jsontoolkit::Pointer &relative_instance_location,
     const std::string &keyword_location, const std::size_t id,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &children)
     -> sourcemeta::jsontoolkit::JSON {
@@ -148,6 +155,8 @@ auto control_to_json(
   result.assign("type", JSON{type});
   result.assign("relativeSchemaLocation",
                 JSON{to_string(relative_schema_location)});
+  result.assign("relativeInstanceLocation",
+                JSON{to_string(relative_instance_location)});
   result.assign("absoluteKeywordLocation", JSON{keyword_location});
   result.assign("id", JSON{id});
   result.assign("children", JSON::make_array());
@@ -163,6 +172,7 @@ struct StepVisitor {
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
     return step_with_value_to_json("assertion", "fail", assertion.target,
                                    assertion.relative_schema_location,
+                                   assertion.relative_instance_location,
                                    assertion.keyword_location, assertion.value,
                                    assertion.condition);
   }
@@ -171,6 +181,7 @@ struct StepVisitor {
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
     return step_with_value_to_json("assertion", "defines", assertion.target,
                                    assertion.relative_schema_location,
+                                   assertion.relative_instance_location,
                                    assertion.keyword_location, assertion.value,
                                    assertion.condition);
   }
@@ -179,6 +190,7 @@ struct StepVisitor {
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
     return step_with_value_to_json("assertion", "type", assertion.target,
                                    assertion.relative_schema_location,
+                                   assertion.relative_instance_location,
                                    assertion.keyword_location, assertion.value,
                                    assertion.condition);
   }
@@ -187,6 +199,7 @@ struct StepVisitor {
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
     return step_with_value_to_json("assertion", "regex", assertion.target,
                                    assertion.relative_schema_location,
+                                   assertion.relative_instance_location,
                                    assertion.keyword_location, assertion.value,
                                    assertion.condition);
   }
@@ -195,19 +208,22 @@ struct StepVisitor {
                       &logical) const -> sourcemeta::jsontoolkit::JSON {
     return step_applicator_to_json(
         "logical", "or", logical.target, logical.relative_schema_location,
-        logical.keyword_location, logical.children, logical.condition);
+        logical.relative_instance_location, logical.keyword_location,
+        logical.children, logical.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalAnd
                       &logical) const -> sourcemeta::jsontoolkit::JSON {
     return step_applicator_to_json(
         "logical", "and", logical.target, logical.relative_schema_location,
-        logical.keyword_location, logical.children, logical.condition);
+        logical.relative_instance_location, logical.keyword_location,
+        logical.children, logical.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerControlLabel
                       &control) const -> sourcemeta::jsontoolkit::JSON {
     return control_to_json("label", control.relative_schema_location,
+                           control.relative_instance_location,
                            control.keyword_location, control.id,
                            control.children);
   }
@@ -216,6 +232,7 @@ struct StepVisitor {
                       &annotation) const -> sourcemeta::jsontoolkit::JSON {
     return step_with_value_to_json("annotation", "public", annotation.target,
                                    annotation.relative_schema_location,
+                                   annotation.relative_instance_location,
                                    annotation.keyword_location,
                                    annotation.value, annotation.condition);
   }
@@ -224,6 +241,7 @@ struct StepVisitor {
                       &annotation) const -> sourcemeta::jsontoolkit::JSON {
     return step_with_value_to_json("annotation", "private", annotation.target,
                                    annotation.relative_schema_location,
+                                   annotation.relative_instance_location,
                                    annotation.keyword_location,
                                    annotation.value, annotation.condition);
   }
@@ -232,7 +250,8 @@ struct StepVisitor {
                       &loop) const -> sourcemeta::jsontoolkit::JSON {
     return step_applicator_to_json(
         "loop", "properties", loop.target, loop.relative_schema_location,
-        loop.keyword_location, loop.children, loop.condition);
+        loop.relative_instance_location, loop.keyword_location, loop.children,
+        loop.condition);
   }
 };
 

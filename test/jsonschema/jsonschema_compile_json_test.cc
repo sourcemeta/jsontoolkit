@@ -8,6 +8,7 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionDefines{{SchemaCompilerTargetType::Instance, {}},
                                      Pointer{},
+                                     Pointer{},
                                      "#",
                                      SchemaCompilerValueString{"foo"},
                                      {}}};
@@ -18,6 +19,7 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
       "category": "assertion",
       "type": "defines",
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -41,6 +43,7 @@ TEST(JSONSchema_compile_json, defines_basic_nested) {
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionDefines{
       {SchemaCompilerTargetType::Instance, {"xxx"}},
       Pointer{"foo", "bar"},
+      Pointer{},
       "#/foo/bar",
       SchemaCompilerValueString{"foo"},
       {}}};
@@ -51,6 +54,7 @@ TEST(JSONSchema_compile_json, defines_basic_nested) {
       "category": "assertion",
       "type": "defines",
       "relativeSchemaLocation": "/foo/bar",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/foo/bar",
       "target": {
         "category": "target",
@@ -75,12 +79,14 @@ TEST(JSONSchema_compile_json, defines_with_condition) {
   const SchemaCompilerTemplate condition{
       SchemaCompilerAssertionDefines{{SchemaCompilerTargetType::Instance, {}},
                                      Pointer{},
+                                     Pointer{},
                                      "#",
                                      SchemaCompilerValueString{"xxx"},
                                      {}}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionDefines{{SchemaCompilerTargetType::Instance, {}},
+                                     Pointer{},
                                      Pointer{},
                                      "#",
                                      SchemaCompilerValueString{"baz"},
@@ -92,6 +98,7 @@ TEST(JSONSchema_compile_json, defines_with_condition) {
       "category": "assertion",
       "type": "defines",
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -108,6 +115,7 @@ TEST(JSONSchema_compile_json, defines_with_condition) {
           "category": "assertion",
           "condition": [],
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -133,6 +141,7 @@ TEST(JSONSchema_compile_json, fail_basic_root) {
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionFail{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueNone{},
                                   {}}};
@@ -143,6 +152,7 @@ TEST(JSONSchema_compile_json, fail_basic_root) {
       "category": "assertion",
       "type": "fail",
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -162,6 +172,7 @@ TEST(JSONSchema_compile_json, type_basic_root) {
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}}};
@@ -172,6 +183,7 @@ TEST(JSONSchema_compile_json, type_basic_root) {
       "category": "assertion",
       "type": "type",
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -192,8 +204,13 @@ TEST(JSONSchema_compile_json, type_basic_root) {
 
 TEST(JSONSchema_compile_json, or_empty) {
   using namespace sourcemeta::jsontoolkit;
-  const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      {SchemaCompilerTargetType::Instance, {}}, Pointer{}, "#", {}, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalOr{{SchemaCompilerTargetType::Instance, {}},
+                              Pointer{},
+                              Pointer{},
+                              "#",
+                              {},
+                              {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -206,6 +223,7 @@ TEST(JSONSchema_compile_json, or_empty) {
         "type": "instance"
       },
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": []
@@ -221,12 +239,18 @@ TEST(JSONSchema_compile_json, or_single_child) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      {SchemaCompilerTargetType::Instance, {}}, Pointer{}, "#", children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalOr{{SchemaCompilerTargetType::Instance, {}},
+                              Pointer{},
+                              Pointer{},
+                              "#",
+                              children,
+                              {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -239,12 +263,14 @@ TEST(JSONSchema_compile_json, or_single_child) {
         "type": "instance"
       },
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [
         {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -272,17 +298,24 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}},
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::Array},
                                   {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      {SchemaCompilerTargetType::Instance, {}}, Pointer{}, "#", children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalOr{{SchemaCompilerTargetType::Instance, {}},
+                              Pointer{},
+                              Pointer{},
+                              "#",
+                              children,
+                              {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -295,12 +328,14 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
         "type": "instance"
       },
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [
         {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -318,6 +353,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -345,12 +381,18 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
   const SchemaCompilerTemplate condition{
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      {SchemaCompilerTargetType::Instance, {}}, Pointer{}, "#", {}, condition}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalOr{{SchemaCompilerTargetType::Instance, {}},
+                              Pointer{},
+                              Pointer{},
+                              "#",
+                              {},
+                              condition}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -363,6 +405,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
         "type": "instance"
       },
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": [
@@ -370,6 +413,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -392,8 +436,13 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
 
 TEST(JSONSchema_compile_json, and_empty) {
   using namespace sourcemeta::jsontoolkit;
-  const SchemaCompilerTemplate steps{SchemaCompilerLogicalAnd{
-      {SchemaCompilerTargetType::Instance, {}}, Pointer{}, "#", {}, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalAnd{{SchemaCompilerTargetType::Instance, {}},
+                               Pointer{},
+                               Pointer{},
+                               "#",
+                               {},
+                               {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -406,6 +455,7 @@ TEST(JSONSchema_compile_json, and_empty) {
         "type": "instance"
       },
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": []
@@ -421,12 +471,18 @@ TEST(JSONSchema_compile_json, and_single_child) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLogicalAnd{
-      {SchemaCompilerTargetType::Instance, {}}, Pointer{}, "#", children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalAnd{{SchemaCompilerTargetType::Instance, {}},
+                               Pointer{},
+                               Pointer{},
+                               "#",
+                               children,
+                               {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -439,12 +495,14 @@ TEST(JSONSchema_compile_json, and_single_child) {
         "type": "instance"
       },
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [
         {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -472,17 +530,24 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}},
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::Array},
                                   {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLogicalAnd{
-      {SchemaCompilerTargetType::Instance, {}}, Pointer{}, "#", children, {}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalAnd{{SchemaCompilerTargetType::Instance, {}},
+                               Pointer{},
+                               Pointer{},
+                               "#",
+                               children,
+                               {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -495,12 +560,14 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
         "type": "instance"
       },
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [
         {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -518,6 +585,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -545,12 +613,18 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
   const SchemaCompilerTemplate condition{
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::String},
                                   {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerLogicalAnd{
-      {SchemaCompilerTargetType::Instance, {}}, Pointer{}, "#", {}, condition}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalAnd{{SchemaCompilerTargetType::Instance, {}},
+                               Pointer{},
+                               Pointer{},
+                               "#",
+                               {},
+                               condition}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -563,6 +637,7 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
         "type": "instance"
       },
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": [
@@ -570,6 +645,7 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -596,6 +672,7 @@ TEST(JSONSchema_compile_json, public_annotation_without_condition) {
   const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPublic{
       {SchemaCompilerTargetType::Instance, {"foo"}},
       Pointer{"test"},
+      Pointer{},
       "#/test",
       JSON{5},
       {}}};
@@ -606,6 +683,7 @@ TEST(JSONSchema_compile_json, public_annotation_without_condition) {
       "category": "annotation",
       "type": "public",
       "relativeSchemaLocation": "/test",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/test",
       "target": {
         "category": "target",
@@ -630,6 +708,7 @@ TEST(JSONSchema_compile_json, private_annotation_without_condition) {
   const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPrivate{
       {SchemaCompilerTargetType::Instance, {"foo"}},
       Pointer{"test"},
+      Pointer{},
       "#/test",
       JSON{5},
       {}}};
@@ -640,6 +719,7 @@ TEST(JSONSchema_compile_json, private_annotation_without_condition) {
       "category": "annotation",
       "type": "private",
       "relativeSchemaLocation": "/test",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/test",
       "target": {
         "category": "target",
@@ -664,6 +744,7 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
   const SchemaCompilerTemplate condition{
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::Object},
                                   {}}};
@@ -671,6 +752,7 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
   const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPublic{
       {SchemaCompilerTargetType::Instance, {"foo"}},
       Pointer{"test"},
+      Pointer{},
       "#/test",
       JSON{5},
       condition}};
@@ -681,6 +763,7 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
       "category": "annotation",
       "type": "public",
       "relativeSchemaLocation": "/test",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/test",
       "target": {
         "category": "target",
@@ -697,6 +780,7 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -723,6 +807,7 @@ TEST(JSONSchema_compile_json, private_annotation_with_condition) {
   const SchemaCompilerTemplate condition{
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
                                   Pointer{},
+                                  Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::Object},
                                   {}}};
@@ -730,6 +815,7 @@ TEST(JSONSchema_compile_json, private_annotation_with_condition) {
   const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPrivate{
       {SchemaCompilerTargetType::Instance, {"foo"}},
       Pointer{"test"},
+      Pointer{},
       "#/test",
       JSON{5},
       condition}};
@@ -740,6 +826,7 @@ TEST(JSONSchema_compile_json, private_annotation_with_condition) {
       "category": "annotation",
       "type": "private",
       "relativeSchemaLocation": "/test",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/test",
       "target": {
         "category": "target",
@@ -756,6 +843,7 @@ TEST(JSONSchema_compile_json, private_annotation_with_condition) {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -781,6 +869,7 @@ TEST(JSONSchema_compile_json, target_instance_template) {
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionDefines{
       {SchemaCompilerTargetType::TemplateInstance, {"xxx"}},
       Pointer{},
+      Pointer{},
       "#",
       SchemaCompilerValueString{"foo"},
       {}}};
@@ -791,6 +880,7 @@ TEST(JSONSchema_compile_json, target_instance_template) {
       "category": "assertion",
       "type": "defines",
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -815,12 +905,14 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
   const SchemaCompilerTemplate children{SchemaCompilerAssertionType{
       {SchemaCompilerTargetType::TemplateInstance, {"loop"}},
       Pointer{},
+      Pointer{},
       "#",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
   const SchemaCompilerTemplate condition{
       SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
+                                  Pointer{},
                                   Pointer{},
                                   "#",
                                   SchemaCompilerValueType{JSON::Type::Object},
@@ -829,6 +921,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
                                    Pointer{"loop"},
+                                   Pointer{},
                                    "#/loop",
                                    children,
                                    condition}};
@@ -839,6 +932,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
       "category": "loop",
       "type": "properties",
       "relativeSchemaLocation": "/loop",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/loop",
       "target": {
         "category": "target",
@@ -850,6 +944,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -869,6 +964,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
           "category": "assertion",
           "type": "type",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -894,6 +990,7 @@ TEST(JSONSchema_compile_json, regex_basic) {
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionRegex{
       {SchemaCompilerTargetType::Instance, {}},
       Pointer{},
+      Pointer{},
       "#",
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
       {}}};
@@ -904,6 +1001,7 @@ TEST(JSONSchema_compile_json, regex_basic) {
       "category": "assertion",
       "type": "regex",
       "relativeSchemaLocation": "",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -928,6 +1026,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_property_template) {
   const SchemaCompilerTemplate children{SchemaCompilerAnnotationPublic{
       {SchemaCompilerTargetType::Instance, {}},
       Pointer{},
+      Pointer{},
       "#",
       SchemaCompilerTarget{SchemaCompilerTargetType::TemplateProperty,
                            {"loop"}},
@@ -936,6 +1035,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_property_template) {
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
                                    Pointer{"loop"},
+                                   Pointer{},
                                    "#/loop",
                                    children,
                                    {}}};
@@ -946,6 +1046,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_property_template) {
       "category": "loop",
       "type": "properties",
       "relativeSchemaLocation": "/loop",
+      "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/loop",
       "target": {
         "category": "target",
@@ -957,6 +1058,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_property_template) {
           "category": "annotation",
           "type": "public",
           "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",

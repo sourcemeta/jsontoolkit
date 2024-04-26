@@ -35,7 +35,7 @@ auto compile_subschema(
              {keyword, context.schema, entry.vocabularies, entry.value,
               context.root, context.base,
               context.relative_pointer.concat({keyword}),
-              context.base_schema_location, context.instance_location,
+              context.base_schema_location, context.base_instance_location,
               context.frame, context.references, context.walker,
               context.resolver, context.compiler, context.default_dialect})) {
       // Just a sanity check to ensure every keyword location is indeed valid
@@ -117,7 +117,7 @@ auto compile(const SchemaCompilerContext &context, const Pointer &schema_suffix,
            ? context.base_schema_location.concat(schema_suffix)
            : context.base_schema_location.concat({context.keyword})
                  .concat(schema_suffix),
-       context.instance_location.concat(instance_suffix), context.frame,
+       context.base_instance_location.concat(instance_suffix), context.frame,
        context.references, context.walker, context.resolver, context.compiler,
        entry.dialect});
 }
