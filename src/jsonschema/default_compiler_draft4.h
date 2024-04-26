@@ -66,7 +66,8 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context)
   label << current << "|" << reference.destination;
   return {make<SchemaCompilerControlLabel>(
       context, std::hash<std::string>{}(label.str()),
-      compile(context, empty_pointer, empty_pointer, reference.destination))};
+      compile(applicate(context), empty_pointer, empty_pointer,
+              reference.destination))};
 }
 
 auto compiler_draft4_validation_type(const SchemaCompilerContext &context)
