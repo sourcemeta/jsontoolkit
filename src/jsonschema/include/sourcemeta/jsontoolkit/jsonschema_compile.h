@@ -213,60 +213,6 @@ struct SchemaCompilerContext {
   const std::optional<std::string> &default_dialect;
 };
 
-// TODO: Hide this methods from the public interface altogether for now. They
-// are not great on their current form and we don't expect virtually any user to
-// implement new vocabularies yet
-
-/// @ingroup jsonschema
-/// Helper function to instantiate a value-oriented step
-template <typename Step, typename ValueType>
-auto make(const SchemaCompilerContext &context, ValueType &&type,
-          SchemaCompilerTemplate &&condition,
-          const SchemaCompilerTargetType target_type =
-              SchemaCompilerTargetType::Instance,
-          const std::optional<Pointer> &target_location = std::nullopt)
-    -> Step {
-  return {{target_type, target_location.value_or(context.instance_location)},
-          context.keyword.empty()
-              ? context.base_schema_location
-              : context.base_schema_location.concat({context.keyword}),
-          to_uri(context.relative_pointer, context.base).recompose(),
-          std::move(type),
-          std::move(condition)};
-}
-
-/// @ingroup jsonschema
-/// Helper function to instantiate an applicator step
-template <typename Step>
-auto make(const SchemaCompilerContext &context,
-          SchemaCompilerTemplate &&children,
-          SchemaCompilerTemplate &&condition) -> Step {
-  return {{SchemaCompilerTargetType::Instance, context.instance_location},
-          context.keyword.empty()
-              ? context.base_schema_location
-              : context.base_schema_location.concat({context.keyword}),
-          to_uri(context.relative_pointer, context.base).recompose(),
-          std::move(children),
-          std::move(condition)};
-}
-
-/// @ingroup jsonschema
-/// Helper function to instantiate a control step
-template <typename Step>
-auto make(const SchemaCompilerContext &context, const std::size_t id,
-          SchemaCompilerTemplate &&children) -> Step {
-  return {context.keyword.empty()
-              ? context.base_schema_location
-              : context.base_schema_location.concat({context.keyword}),
-          to_uri(context.relative_pointer, context.base).recompose(), id,
-          std::move(children)};
-}
-
-/// @ingroup jsonschema
-/// Helper function to prepare a context for an applicator
-auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-applicate(const SchemaCompilerContext &context) -> SchemaCompilerContext;
-
 /// @ingroup jsonschema
 /// Represents the mode of evalution
 enum class SchemaCompilerEvaluationMode {

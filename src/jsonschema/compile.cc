@@ -4,6 +4,8 @@
 #include <cassert> // assert
 #include <utility> // std::move
 
+#include "compile_helpers.h"
+
 namespace {
 
 auto compile_subschema(
@@ -51,24 +53,6 @@ auto compile_subschema(
 } // namespace
 
 namespace sourcemeta::jsontoolkit {
-
-auto applicate(const SchemaCompilerContext &context) -> SchemaCompilerContext {
-  return {"",
-          context.schema,
-          context.vocabularies,
-          context.value,
-          context.root,
-          context.base,
-          context.relative_pointer,
-          empty_pointer,
-          context.instance_location,
-          context.frame,
-          context.references,
-          context.walker,
-          context.resolver,
-          context.compiler,
-          context.default_dialect};
-}
 
 auto compile(const JSON &schema, const SchemaWalker &walker,
              const SchemaResolver &resolver, const SchemaCompiler &compiler,
