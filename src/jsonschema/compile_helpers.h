@@ -16,7 +16,7 @@ applicate(const SchemaCompilerContext &context) -> SchemaCompilerContext {
           context.base,
           context.relative_pointer,
           empty_pointer,
-          context.base_instance_location,
+          empty_pointer,
           context.frame,
           context.references,
           context.walker,
