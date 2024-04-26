@@ -36,6 +36,11 @@ auto compile_subschema(
               context.base_schema_location, context.instance_location,
               context.frame, context.references, context.walker,
               context.resolver, context.compiler, context.default_dialect})) {
+      // Just a sanity check to ensure every keyword location is indeed valid
+      assert(context.frame.contains(
+          {ReferenceType::Static,
+           std::visit([](const auto &value) { return value.keyword_location; },
+                      step)}));
       steps.push_back(std::move(step));
     }
   }
