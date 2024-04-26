@@ -14,9 +14,6 @@ public:
   using Pointer = sourcemeta::jsontoolkit::Pointer;
   using JSON = sourcemeta::jsontoolkit::JSON;
 
-  // TODO: Hide behind a proper interface
-  std::map<Pointer, Pointer> templates;
-
   auto property(const std::string &name) -> const JSON & {
     return *(this->properties.emplace(name).first);
   }
@@ -35,6 +32,15 @@ public:
     return *(this->annotations[current_instance_location][this->evaluate_path()]
                  .insert(std::move(value))
                  .first);
+  }
+
+  auto record(Pointer &&value) -> void {
+    this->templates.insert_or_assign(this->evaluate_path(), std::move(value));
+  }
+
+  auto unrecord() -> void {
+    this->templates.erase(this->evaluate_path());
+    assert(!this->templates.contains(this->evaluate_path()));
   }
 
   template <typename T> auto push(const T &step) -> void {
@@ -83,6 +89,7 @@ private:
   Pointer evaluate_path_;
   Pointer instance_location_;
   std::vector<std::pair<std::size_t, std::size_t>> frame_sizes;
+  std::map<Pointer, Pointer> templates;
   // For efficiency, as we likely reference the same instance property names
   // over and over again
   std::set<JSON> properties;
@@ -259,14 +266,11 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD(loop.condition, instance);
     const auto &target{target_value(loop.target, instance, context)};
     assert(target.is_object());
-    const auto &evaluate_path{context.evaluate_path()};
-    assert(!context.templates.contains(evaluate_path));
     const auto current_instance_location{
         context.instance_location(loop.target)};
     result = true;
     for (const auto &[key, value] : target.as_object()) {
-      context.templates.insert_or_assign(
-          evaluate_path, current_instance_location.concat({key}));
+      context.record(current_instance_location.concat({key}));
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, instance, mode, callback, context)) {
           result = false;
@@ -282,8 +286,7 @@ auto evaluate_step(
 
   loop_properties_end:
     // Clear the template registries for memory efficiency
-    context.templates.erase(evaluate_path);
-    assert(!context.templates.contains(evaluate_path));
+    context.unrecord();
   }
 
 #undef EVALUATE_CONDITION_GUARD
