@@ -76,10 +76,11 @@ auto compiler_draft4_validation_type(const SchemaCompilerContext &context)
   } else if (context.value.is_array()) {
     assert(!context.value.empty());
     SchemaCompilerTemplate disjunctors;
+    const auto subcontext{applicate(context)};
     for (const auto &type : context.value.as_array()) {
       assert(type.is_string());
       SchemaCompilerTemplate disjunctor{
-          type_string_to_assertion(context, type.to_string())};
+          type_string_to_assertion(subcontext, type.to_string())};
       assert(disjunctor.size() == 1);
       disjunctors.push_back(std::move(disjunctor).front());
     }
