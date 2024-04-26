@@ -97,17 +97,25 @@ auto compiler_draft4_validation_required(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_array());
   assert(!context.value.empty());
-  SchemaCompilerTemplate children;
+  SchemaCompilerTemplate condition{
+      make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})};
 
-  for (const auto &property : context.value.as_array()) {
-    assert(property.is_string());
-    children.push_back(make<SchemaCompilerAssertionDefines>(
-        context, property.to_string(), {}));
+  if (context.value.size() > 1) {
+    SchemaCompilerTemplate children;
+    const auto subcontext{applicate(context)};
+    for (const auto &property : context.value.as_array()) {
+      assert(property.is_string());
+      children.push_back(make<SchemaCompilerAssertionDefines>(
+          subcontext, property.to_string(), {}));
+    }
+
+    return {make<SchemaCompilerLogicalAnd>(context, std::move(children),
+                                           std::move(condition))};
+  } else {
+    assert(context.value.front().is_string());
+    return {make<SchemaCompilerAssertionDefines>(
+        context, context.value.front().to_string(), std::move(condition))};
   }
-
-  return {make<SchemaCompilerLogicalAnd>(
-      context, std::move(children),
-      {make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})})};
 }
 
 auto compiler_draft4_validation_allof(const SchemaCompilerContext &context)
