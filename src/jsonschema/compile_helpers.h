@@ -16,7 +16,7 @@ applicate(const SchemaCompilerContext &context) -> SchemaCompilerContext {
           context.base,
           context.relative_pointer,
           empty_pointer,
-          context.instance_location,
+          context.base_instance_location,
           context.frame,
           context.references,
           context.walker,
@@ -45,11 +45,14 @@ auto make(const SchemaCompilerContext &context, ValueType &&type,
               SchemaCompilerTargetType::Instance,
           const std::optional<Pointer> &target_location = std::nullopt)
     -> Step {
-  return {{target_type, target_location.value_or(context.instance_location)},
-          relative_schema_location(context),
-          keyword_location(context),
-          std::move(type),
-          std::move(condition)};
+  return {
+      {target_type, target_location.value_or(context.base_instance_location)},
+      relative_schema_location(context),
+      // TODO: Compute a correct relative instance location
+      empty_pointer,
+      keyword_location(context),
+      std::move(type),
+      std::move(condition)};
 }
 
 // Instantiate an applicator step
@@ -57,8 +60,10 @@ template <typename Step>
 auto make(const SchemaCompilerContext &context,
           SchemaCompilerTemplate &&children,
           SchemaCompilerTemplate &&condition) -> Step {
-  return {{SchemaCompilerTargetType::Instance, context.instance_location},
+  return {{SchemaCompilerTargetType::Instance, context.base_instance_location},
           relative_schema_location(context),
+          // TODO: Compute a correct relative instance location
+          empty_pointer,
           keyword_location(context),
           std::move(children),
           std::move(condition)};
@@ -68,8 +73,9 @@ auto make(const SchemaCompilerContext &context,
 template <typename Step>
 auto make(const SchemaCompilerContext &context, const std::size_t id,
           SchemaCompilerTemplate &&children) -> Step {
-  return {relative_schema_location(context), keyword_location(context), id,
-          std::move(children)};
+  return {relative_schema_location(context),
+          // TODO: Compute a correct relative instance location
+          empty_pointer, keyword_location(context), id, std::move(children)};
 }
 
 } // namespace sourcemeta::jsontoolkit
