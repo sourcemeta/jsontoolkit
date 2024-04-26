@@ -249,13 +249,17 @@ TEST(JSONSchema_compile_evaluate,
                               children,
                               {assertion_1}}};
 
-  std::vector<std::tuple<bool, SchemaCompilerTemplate::value_type, JSON>> trace;
+  std::vector<
+      std::tuple<bool, SchemaCompilerTemplate::value_type, Pointer, JSON>>
+      trace;
   const JSON instance{"foo bar"};
-  const auto result{evaluate(
-      steps, instance, SchemaCompilerEvaluationMode::Fast,
-      [&trace](
-          const bool subresult, const SchemaCompilerTemplate::value_type &step,
-          const JSON &value) { trace.push_back({subresult, step, value}); })};
+  const auto result{
+      evaluate(steps, instance, SchemaCompilerEvaluationMode::Fast,
+               [&trace](const bool subresult,
+                        const SchemaCompilerTemplate::value_type &step,
+                        const Pointer &evaluate_path, const JSON &value) {
+                 trace.push_back({subresult, step, evaluate_path, value});
+               })};
 
   EXPECT_TRUE(result);
   EXPECT_EQ(trace.size(), 2);
@@ -263,12 +267,14 @@ TEST(JSONSchema_compile_evaluate,
   EXPECT_TRUE(std::get<0>(trace.at(0)));
   EXPECT_TRUE(std::holds_alternative<SchemaCompilerAssertionType>(
       std::get<1>(trace.at(0))));
-  EXPECT_TRUE(std::get<2>(trace.at(0)).is_null());
+  EXPECT_TRUE(std::get<2>(trace.at(0)).empty());
+  EXPECT_TRUE(std::get<3>(trace.at(0)).is_null());
 
   EXPECT_TRUE(std::get<0>(trace.at(1)));
   EXPECT_TRUE(std::holds_alternative<SchemaCompilerLogicalOr>(
       std::get<1>(trace.at(1))));
-  EXPECT_TRUE(std::get<2>(trace.at(1)).is_null());
+  EXPECT_TRUE(std::get<2>(trace.at(1)).empty());
+  EXPECT_TRUE(std::get<3>(trace.at(1)).is_null());
 }
 
 TEST(JSONSchema_compile_evaluate,
@@ -297,13 +303,17 @@ TEST(JSONSchema_compile_evaluate,
                               children,
                               {assertion_1}}};
 
-  std::vector<std::tuple<bool, SchemaCompilerTemplate::value_type, JSON>> trace;
+  std::vector<
+      std::tuple<bool, SchemaCompilerTemplate::value_type, Pointer, JSON>>
+      trace;
   const JSON instance{"foo bar"};
-  const auto result{evaluate(
-      steps, instance, SchemaCompilerEvaluationMode::Exhaustive,
-      [&trace](
-          const bool subresult, const SchemaCompilerTemplate::value_type &step,
-          const JSON &value) { trace.push_back({subresult, step, value}); })};
+  const auto result{
+      evaluate(steps, instance, SchemaCompilerEvaluationMode::Exhaustive,
+               [&trace](const bool subresult,
+                        const SchemaCompilerTemplate::value_type &step,
+                        const Pointer &evaluate_path, const JSON &value) {
+                 trace.push_back({subresult, step, evaluate_path, value});
+               })};
 
   EXPECT_TRUE(result);
   EXPECT_EQ(trace.size(), 3);
@@ -311,17 +321,20 @@ TEST(JSONSchema_compile_evaluate,
   EXPECT_TRUE(std::get<0>(trace.at(0)));
   EXPECT_TRUE(std::holds_alternative<SchemaCompilerAssertionType>(
       std::get<1>(trace.at(0))));
-  EXPECT_TRUE(std::get<2>(trace.at(0)).is_null());
+  EXPECT_TRUE(std::get<2>(trace.at(0)).empty());
+  EXPECT_TRUE(std::get<3>(trace.at(0)).is_null());
 
   EXPECT_FALSE(std::get<0>(trace.at(1)));
   EXPECT_TRUE(std::holds_alternative<SchemaCompilerAssertionType>(
       std::get<1>(trace.at(1))));
-  EXPECT_TRUE(std::get<2>(trace.at(1)).is_null());
+  EXPECT_TRUE(std::get<2>(trace.at(1)).empty());
+  EXPECT_TRUE(std::get<3>(trace.at(1)).is_null());
 
   EXPECT_TRUE(std::get<0>(trace.at(2)));
   EXPECT_TRUE(std::holds_alternative<SchemaCompilerLogicalOr>(
       std::get<1>(trace.at(2))));
-  EXPECT_TRUE(std::get<2>(trace.at(2)).is_null());
+  EXPECT_TRUE(std::get<2>(trace.at(2)).empty());
+  EXPECT_TRUE(std::get<3>(trace.at(2)).is_null());
 }
 
 TEST(JSONSchema_compile_evaluate, fast_step_and_empty_no_condition) {
@@ -600,13 +613,17 @@ TEST(JSONSchema_compile_evaluate,
                                    children,
                                    {}}};
 
-  std::vector<std::tuple<bool, SchemaCompilerTemplate::value_type, JSON>> trace;
+  std::vector<
+      std::tuple<bool, SchemaCompilerTemplate::value_type, Pointer, JSON>>
+      trace;
   const JSON instance{parse("{ \"foo\": 1, \"bar\": 2 }")};
-  const auto result{evaluate(
-      steps, instance, SchemaCompilerEvaluationMode::Exhaustive,
-      [&trace](
-          const bool subresult, const SchemaCompilerTemplate::value_type &step,
-          const JSON &value) { trace.push_back({subresult, step, value}); })};
+  const auto result{
+      evaluate(steps, instance, SchemaCompilerEvaluationMode::Exhaustive,
+               [&trace](const bool subresult,
+                        const SchemaCompilerTemplate::value_type &step,
+                        const Pointer &evaluate_path, const JSON &value) {
+                 trace.push_back({subresult, step, evaluate_path, value});
+               })};
 
   EXPECT_TRUE(result);
   EXPECT_EQ(trace.size(), 3);
@@ -614,17 +631,20 @@ TEST(JSONSchema_compile_evaluate,
   EXPECT_TRUE(std::get<0>(trace.at(0)));
   EXPECT_TRUE(std::holds_alternative<SchemaCompilerAnnotationPublic>(
       std::get<1>(trace.at(0))));
-  EXPECT_TRUE(std::get<2>(trace.at(0)).is_string());
-  EXPECT_EQ(std::get<2>(trace.at(0)).to_string(), "bar");
+  EXPECT_EQ(std::get<2>(trace.at(0)), Pointer({"loop"}));
+  EXPECT_TRUE(std::get<3>(trace.at(0)).is_string());
+  EXPECT_EQ(std::get<3>(trace.at(0)).to_string(), "bar");
 
   EXPECT_TRUE(std::get<0>(trace.at(1)));
   EXPECT_TRUE(std::holds_alternative<SchemaCompilerAnnotationPublic>(
       std::get<1>(trace.at(1))));
-  EXPECT_TRUE(std::get<2>(trace.at(1)).is_string());
-  EXPECT_EQ(std::get<2>(trace.at(1)).to_string(), "foo");
+  EXPECT_EQ(std::get<2>(trace.at(1)), Pointer({"loop"}));
+  EXPECT_TRUE(std::get<3>(trace.at(1)).is_string());
+  EXPECT_EQ(std::get<3>(trace.at(1)).to_string(), "foo");
 
   EXPECT_TRUE(std::get<0>(trace.at(2)));
   EXPECT_TRUE(std::holds_alternative<SchemaCompilerLoopProperties>(
       std::get<1>(trace.at(2))));
-  EXPECT_TRUE(std::get<2>(trace.at(2)).is_null());
+  EXPECT_EQ(std::get<2>(trace.at(2)), Pointer({"loop"}));
+  EXPECT_TRUE(std::get<3>(trace.at(2)).is_null());
 }

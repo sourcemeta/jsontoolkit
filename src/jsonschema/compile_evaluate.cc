@@ -103,6 +103,7 @@ auto target_value(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
 
 auto callback_noop(
     bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
+    const sourcemeta::jsontoolkit::Pointer &,
     const sourcemeta::jsontoolkit::JSON &) noexcept -> void {}
 
 template <typename T>
@@ -222,7 +223,7 @@ auto evaluate_step(
     const auto &instance_location{target_location(annotation.target, context)};
     const auto &value{context.annotate(
         instance_location, resolve_value(annotation.value, instance, context))};
-    callback(result, step, value);
+    callback(result, step, context.path(), value);
     context.pop();
     return result;
   } else if (std::holds_alternative<SchemaCompilerAnnotationPrivate>(step)) {
@@ -230,12 +231,15 @@ auto evaluate_step(
     context.push(annotation.relative_schema_location);
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
     const auto &instance_location{target_location(annotation.target, context)};
-    context.annotate(instance_location,
-                     resolve_value(annotation.value, instance, context));
-
-    // Don't execute the step callback, as this is a private annotation
+    const auto &value{context.annotate(
+        instance_location, resolve_value(annotation.value, instance, context))};
+    // Annotations never fail
+    result = true;
+    // While this is a private annotation, we still emit it on the callback
+    // for implementing debugging-related tools, etc
+    callback(result, step, context.path(), value);
     context.pop();
-    return true;
+    return result;
   } else if (std::holds_alternative<SchemaCompilerLoopProperties>(step)) {
     const auto &loop{std::get<SchemaCompilerLoopProperties>(step)};
     context.push(loop.relative_schema_location);
@@ -271,7 +275,7 @@ auto evaluate_step(
 #undef EVALUATE_CONDITION_GUARD
 
   static JSON placeholder{nullptr};
-  callback(result, step, placeholder);
+  callback(result, step, context.path(), placeholder);
   context.pop();
   return result;
 } // namespace

@@ -3,6 +3,8 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
+#include "jsonschema_test_utils.h"
+
 TEST(JSONSchema_compile_2020_12, type_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -16,9 +18,8 @@ TEST(JSONSchema_compile_2020_12, type_1) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
-  const auto result{
-      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
-  EXPECT_TRUE(result);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type");
 }
 
 TEST(JSONSchema_compile_2020_12, type_2) {
@@ -34,9 +35,8 @@ TEST(JSONSchema_compile_2020_12, type_2) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  const auto result{
-      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
-  EXPECT_FALSE(result);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type");
 }
 
 TEST(JSONSchema_compile_2020_12, type_3) {
@@ -52,9 +52,10 @@ TEST(JSONSchema_compile_2020_12, type_3) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  const auto result{
-      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
-  EXPECT_TRUE(result);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_SUCCESS(2, LogicalOr, "/type", "#/type");
 }
 
 TEST(JSONSchema_compile_2020_12, type_4) {
@@ -70,9 +71,9 @@ TEST(JSONSchema_compile_2020_12, type_4) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{3.14};
-  const auto result{
-      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
-  EXPECT_TRUE(result);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_SUCCESS(1, LogicalOr, "/type", "#/type");
 }
 
 TEST(JSONSchema_compile_2020_12, type_5) {
@@ -88,9 +89,10 @@ TEST(JSONSchema_compile_2020_12, type_5) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{"3.14"};
-  const auto result{
-      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
-  EXPECT_FALSE(result);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_FAILURE(1, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_FAILURE(2, LogicalOr, "/type", "#/type");
 }
 
 TEST(JSONSchema_compile_2020_12, type_6) {
@@ -106,9 +108,9 @@ TEST(JSONSchema_compile_2020_12, type_6) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  const auto result{
-      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
-  EXPECT_TRUE(result);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_SUCCESS(1, LogicalOr, "/type", "#/type");
 }
 
 TEST(JSONSchema_compile_2020_12, type_7) {
@@ -124,9 +126,9 @@ TEST(JSONSchema_compile_2020_12, type_7) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  const auto result{
-      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
-  EXPECT_FALSE(result);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
+  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_FAILURE(1, LogicalOr, "/type", "#/type");
 }
 
 TEST(JSONSchema_compile_2020_12, type_8) {
@@ -142,9 +144,12 @@ TEST(JSONSchema_compile_2020_12, type_8) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{3};
-  const auto result{
-      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
-  EXPECT_TRUE(result);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_FAILURE(1, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_SUCCESS(3, LogicalOr, "/type", "#/type");
+  EVALUATE_TRACE_SUCCESS(4, LogicalOr, "/type", "#/type");
 }
 
 TEST(JSONSchema_compile_2020_12, type_9) {
@@ -160,7 +165,11 @@ TEST(JSONSchema_compile_2020_12, type_9) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{true};
-  const auto result{
-      sourcemeta::jsontoolkit::evaluate(compiled_schema, instance)};
-  EXPECT_FALSE(result);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 6);
+  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_FAILURE(1, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_FAILURE(2, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_FAILURE(3, LogicalOr, "/type", "#/type");
+  EVALUATE_TRACE_FAILURE(4, AssertionType, "/type", "#/type");
+  EVALUATE_TRACE_FAILURE(5, LogicalOr, "/type", "#/type");
 }

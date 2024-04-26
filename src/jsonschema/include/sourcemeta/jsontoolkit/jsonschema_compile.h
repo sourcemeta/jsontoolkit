@@ -145,6 +145,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 #define DEFINE_CONTROL(name)                                                   \
   struct SchemaCompilerControl##name {                                         \
     const Pointer relative_schema_location;                                    \
+    const std::string keyword_location;                                        \
     const std::size_t id;                                                      \
     const SchemaCompilerTemplate children;                                     \
   };
@@ -212,7 +213,9 @@ struct SchemaCompilerContext {
   const std::optional<std::string> &default_dialect;
 };
 
-// TODO: Improve and give these helper functions better names
+// TODO: Hide this methods from the public interface altogether for now. They
+// are not great on their current form and we don't expect virtually any user to
+// implement new vocabularies yet
 
 /// @ingroup jsonschema
 /// Helper function to instantiate a value-oriented step
@@ -255,7 +258,8 @@ auto make(const SchemaCompilerContext &context, const std::size_t id,
   return {context.keyword.empty()
               ? context.base_schema_location
               : context.base_schema_location.concat({context.keyword}),
-          id, std::move(children)};
+          to_uri(context.relative_pointer, context.base).recompose(), id,
+          std::move(children)};
 }
 
 /// @ingroup jsonschema
@@ -275,13 +279,18 @@ enum class SchemaCompilerEvaluationMode {
 };
 
 /// @ingroup jsonschema
-/// A callback of this type is invoked after evaluating any keyword. The first
-/// argument is whether the evaluation was successful or not, the second
-/// argument is the actual step that was evaluated, and the third one is the
-/// annotation result, if any (otherwise null). A callback can be used to
-/// implement arbitrary output formats
-using SchemaCompilerEvaluationCallback = std::function<void(
-    bool, const SchemaCompilerTemplate::value_type &, const JSON &)>;
+/// A callback of this type is invoked after evaluating any keyword. The
+/// arguments go as follows:
+///
+/// - Whether the evaluation was successful or not
+/// - The step that was just evaluated
+/// - The evaluation path
+/// - The annotation result, if any (otherwise null)
+///
+/// You can use this callback mechanism to implement arbitrary output formats.
+using SchemaCompilerEvaluationCallback =
+    std::function<void(bool, const SchemaCompilerTemplate::value_type &,
+                       const Pointer &, const JSON &)>;
 
 // TODO: Support standard output formats. Maybe through pre-made evaluation
 // callbacks?
