@@ -9,6 +9,8 @@
 #include <sstream> // std::ostringstream
 #include <utility> // std::move
 
+#include "compile_helpers.h"
+
 namespace {
 
 auto type_string_to_assertion(
@@ -54,8 +56,7 @@ using namespace sourcemeta::jsontoolkit;
 auto compiler_draft4_core_ref(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   const auto type{ReferenceType::Static};
-  const auto current{
-      to_uri(context.relative_pointer, context.base).recompose()};
+  const auto current{keyword_location(context)};
   assert(context.frame.contains({type, current}));
   const auto &entry{context.frame.at({type, current})};
   assert(context.references.contains({type, entry.pointer}));
