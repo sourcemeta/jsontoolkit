@@ -112,10 +112,11 @@
   EVALUATE_WITH_TRACE(Fast, schema_template, instance, count)                  \
   EXPECT_FALSE(result);
 
-// TODO: Test instance location too
 #define EVALUATE_TRACE(index, step_type, evaluate_path,                        \
-                       expected_keyword_location)                              \
+                       expected_keyword_location, expected_instance_location)  \
   EXPECT_EQ(std::get<1>(trace.at(index)), TO_POINTER(evaluate_path));          \
+  EXPECT_EQ(std::get<2>(trace.at(index)),                                      \
+            TO_POINTER(expected_instance_location));                           \
   EXPECT_TRUE(std::holds_alternative<                                          \
               sourcemeta::jsontoolkit::SchemaCompiler##step_type>(             \
       std::get<3>(trace.at(index))));                                          \
@@ -125,13 +126,15 @@
             expected_keyword_location);
 
 #define EVALUATE_TRACE_SUCCESS(index, step_type, evaluate_path,                \
-                               keyword_location)                               \
+                               keyword_location, instance_location)            \
   EXPECT_TRUE(std::get<0>(trace.at(index)));                                   \
-  EVALUATE_TRACE(index, step_type, evaluate_path, keyword_location);
+  EVALUATE_TRACE(index, step_type, evaluate_path, keyword_location,            \
+                 instance_location);
 
 #define EVALUATE_TRACE_FAILURE(index, step_type, evaluate_path,                \
-                               keyword_location)                               \
+                               keyword_location, instance_location)            \
   EXPECT_FALSE(std::get<0>(trace.at(index)));                                  \
-  EVALUATE_TRACE(index, step_type, evaluate_path, keyword_location);
+  EVALUATE_TRACE(index, step_type, evaluate_path, keyword_location,            \
+                 instance_location);
 
 #endif
