@@ -226,11 +226,11 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
               "type": "type",
               "condition": [],
               "relativeSchemaLocation": "/foo/type",
-              "relativeInstanceLocation": "",
+              "relativeInstanceLocation": "/foo",
               "absoluteKeywordLocation": "#/properties/foo/type",
               "target": {
                 "category": "target",
-                "location": "/foo",
+                "location": "",
                 "type": "instance"
               },
               "value": {
@@ -355,11 +355,11 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "type": "type",
               "condition": [],
               "relativeSchemaLocation": "/bar/type",
-              "relativeInstanceLocation": "",
+              "relativeInstanceLocation": "/bar",
               "absoluteKeywordLocation": "#/properties/bar/type",
               "target": {
                 "category": "target",
-                "location": "/bar",
+                "location": "",
                 "type": "instance"
               },
               "value": {
@@ -425,11 +425,11 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "type": "type",
               "condition": [],
               "relativeSchemaLocation": "/foo/type",
-              "relativeInstanceLocation": "",
+              "relativeInstanceLocation": "/foo",
               "absoluteKeywordLocation": "#/properties/foo/type",
               "target": {
                 "category": "target",
-                "location": "/foo",
+                "location": "",
                 "type": "instance"
               },
               "value": {
