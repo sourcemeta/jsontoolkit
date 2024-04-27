@@ -160,6 +160,52 @@ auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
       {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {})})};
 }
 
+auto compiler_draft4_validation_patternproperties(
+    const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
+  assert(context.value.is_object());
+  if (context.value.empty()) {
+    return {};
+  }
+
+  const auto subcontext{applicate(context)};
+  SchemaCompilerTemplate children;
+
+  // For each regular expression and corresponding subschema in the object
+  for (auto &entry : context.value.as_object()) {
+    auto substeps{compile(subcontext, {entry.first}, {})};
+
+    // Annotations as such don't exist in Draft 4, so emit a private annotation
+    // instead
+    // The evaluator will make sure the same annotation is not reported twice.
+    // For example, if the same property matches more than one subschema in
+    // `patternProperties`
+    substeps.push_back(make<SchemaCompilerAnnotationPrivate>(
+        subcontext,
+        SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                             empty_pointer},
+        {}, SchemaCompilerTargetType::InstanceParent));
+
+    // The instance property matches the schema property regex
+    SchemaCompilerTemplate loop_condition{make<SchemaCompilerAssertionRegex>(
+        subcontext,
+        SchemaCompilerValueRegex{
+            std::regex{entry.first, std::regex::ECMAScript}, entry.first},
+        {}, SchemaCompilerTargetType::InstanceBasename)};
+
+    // Loop over the instance properties
+    children.push_back(make<SchemaCompilerLoopProperties>(
+        subcontext,
+        {make<SchemaCompilerLogicalAnd>(subcontext, std::move(substeps),
+                                        std::move(loop_condition))},
+        {}));
+  }
+
+  // If the instance is an object...
+  return {make<SchemaCompilerLogicalAnd>(
+      context, std::move(children),
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {})})};
+}
+
 auto compiler_draft4_validation_pattern(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_string());
