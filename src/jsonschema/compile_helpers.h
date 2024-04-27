@@ -3,6 +3,8 @@
 
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
+#include <utility> // std::declval
+
 namespace sourcemeta::jsontoolkit {
 
 // Prepare a compiler context for applicator use
@@ -38,8 +40,10 @@ relative_schema_location(const SchemaCompilerContext &context) -> Pointer {
 }
 
 // Instantiate a value-oriented step
-template <typename Step, typename ValueType>
-auto make(const SchemaCompilerContext &context, ValueType &&type,
+template <typename Step>
+auto make(const SchemaCompilerContext &context,
+          // Take the value type from the "type" property of the step struct
+          decltype(std::declval<Step>().value) &&value,
           SchemaCompilerTemplate &&condition,
           const SchemaCompilerTargetType target_type =
               SchemaCompilerTargetType::Instance,
@@ -49,7 +53,7 @@ auto make(const SchemaCompilerContext &context, ValueType &&type,
           relative_schema_location(context),
           context.base_instance_location,
           keyword_location(context),
-          std::move(type),
+          std::move(value),
           std::move(condition)};
 }
 
