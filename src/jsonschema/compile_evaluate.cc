@@ -86,12 +86,13 @@ auto target_value(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
                   EvaluationContext &context)
     -> const sourcemeta::jsontoolkit::JSON & {
   using namespace sourcemeta::jsontoolkit;
-  const auto location{context.instance_location(target)};
   switch (target.first) {
     case SchemaCompilerTargetType::Instance:
-      return get(instance, location);
+      return get(instance, context.instance_location(target));
     case SchemaCompilerTargetType::InstanceBasename:
-      return context.value(location.back().to_json());
+      return context.value(context.instance_location(target).back().to_json());
+    case SchemaCompilerTargetType::SchemaBasename:
+      return context.value(context.evaluate_path().back().to_json());
     default:
       // We should never get here
       assert(false);
