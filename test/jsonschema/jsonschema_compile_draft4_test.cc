@@ -376,8 +376,8 @@ TEST(JSONSchema_compile_draft4, properties_1) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 6);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/properties/bar/type",
                          "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_SUCCESS(1, AnnotationPrivate, "/properties", "#/properties",
-                         "");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
+                                    "bar");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_FAILURE(3, AssertionType, "/properties/foo/type",
                          "#/properties/foo/type", "/foo");
@@ -406,13 +406,13 @@ TEST(JSONSchema_compile_draft4, properties_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/properties/bar/type",
                          "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_SUCCESS(1, AnnotationPrivate, "/properties", "#/properties",
-                         "");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
+                                    "bar");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_SUCCESS(3, AssertionType, "/properties/foo/type",
                          "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_SUCCESS(4, AnnotationPrivate, "/properties", "#/properties",
-                         "");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "",
+                                    "foo");
   EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties", "#/properties", "");
 }
@@ -466,14 +466,15 @@ TEST(JSONSchema_compile_draft4, properties_4) {
   EVALUATE_TRACE_SUCCESS(0, AssertionType,
                          "/properties/foo/properties/bar/type",
                          "#/properties/foo/properties/bar/type", "/foo/bar");
-  EVALUATE_TRACE_SUCCESS(1, AnnotationPrivate, "/properties/foo/properties",
-                         "#/properties/foo/properties", "/foo");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties/foo/properties",
+                                    "#/properties/foo/properties", "/foo",
+                                    "bar");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties/foo/properties",
                          "#/properties/foo/properties", "/foo");
   EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/properties/foo/properties",
                          "#/properties/foo/properties", "/foo");
-  EVALUATE_TRACE_SUCCESS(4, AnnotationPrivate, "/properties", "#/properties",
-                         "");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "",
+                                    "foo");
   EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties", "#/properties", "");
 }
