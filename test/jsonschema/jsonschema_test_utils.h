@@ -88,7 +88,8 @@
   std::vector<                                                                 \
       std::tuple<bool, sourcemeta::jsontoolkit::Pointer,                       \
                  sourcemeta::jsontoolkit::Pointer,                             \
-                 sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type>> \
+                 sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type,  \
+                 sourcemeta::jsontoolkit::JSON>>                               \
       trace;                                                                   \
   const auto result{sourcemeta::jsontoolkit::evaluate(                         \
       schema_template, instance,                                               \
@@ -99,8 +100,9 @@
               &step,                                                           \
           const sourcemeta::jsontoolkit::Pointer &evaluate_path,               \
           const sourcemeta::jsontoolkit::Pointer &instance_location,           \
-          const sourcemeta::jsontoolkit::JSON &) {                             \
-        trace.push_back({valid, evaluate_path, instance_location, step});      \
+          const sourcemeta::jsontoolkit::JSON &annotation) {                   \
+        trace.push_back(                                                       \
+            {valid, evaluate_path, instance_location, step, annotation});      \
       })};                                                                     \
   EXPECT_EQ(trace.size(), count);
 
@@ -129,12 +131,23 @@
                                keyword_location, instance_location)            \
   EXPECT_TRUE(std::get<0>(trace.at(index)));                                   \
   EVALUATE_TRACE(index, step_type, evaluate_path, keyword_location,            \
-                 instance_location);
+                 instance_location);                                           \
+  EXPECT_TRUE(std::get<4>(trace.at(index)).is_null());
+
+#define EVALUATE_TRACE_ANNOTATION_PRIVATE(index, evaluate_path,                \
+                                          keyword_location, instance_location, \
+                                          expected_annotation)                 \
+  EXPECT_TRUE(std::get<0>(trace.at(index)));                                   \
+  EVALUATE_TRACE(index, AnnotationPrivate, evaluate_path, keyword_location,    \
+                 instance_location);                                           \
+  EXPECT_EQ(std::get<4>(trace.at(index)),                                      \
+            sourcemeta::jsontoolkit::JSON(expected_annotation));
 
 #define EVALUATE_TRACE_FAILURE(index, step_type, evaluate_path,                \
                                keyword_location, instance_location)            \
   EXPECT_FALSE(std::get<0>(trace.at(index)));                                  \
   EVALUATE_TRACE(index, step_type, evaluate_path, keyword_location,            \
-                 instance_location);
+                 instance_location);                                           \
+  EXPECT_TRUE(std::get<4>(trace.at(index)).is_null());
 
 #endif
