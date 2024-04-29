@@ -985,7 +985,7 @@ TEST(JSONSchema_compile_json, regex_basic) {
   EXPECT_EQ(result, expected);
 }
 
-TEST(JSONSchema_compile_json, loop_properties_annotation_property) {
+TEST(JSONSchema_compile_json, loop_properties_annotation_instance_property) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAnnotationPublic{
@@ -993,7 +993,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_property) {
       Pointer{},
       Pointer{},
       "#",
-      SchemaCompilerTarget{SchemaCompilerTargetType::Basename, {}},
+      SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename, {}},
       {}}};
 
   const SchemaCompilerTemplate steps{
@@ -1031,7 +1031,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_property) {
           },
           "value": {
             "category": "target",
-            "type": "basename",
+            "type": "instance-basename",
             "location": ""
           },
           "condition": []

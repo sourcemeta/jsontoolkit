@@ -596,11 +596,11 @@ TEST(JSONSchema_compile_evaluate, fast_regex_false) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_regex_basename_empty) {
+TEST(JSONSchema_compile_evaluate, fast_loop_regex_instance_basename_empty) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionRegex{
-      {SchemaCompilerTargetType::Basename, {}},
+      {SchemaCompilerTargetType::InstanceBasename, {}},
       Pointer{"loop", "regex"},
       Pointer{},
       "#/loop/regex",
@@ -620,11 +620,12 @@ TEST(JSONSchema_compile_evaluate, fast_loop_regex_basename_empty) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_regex_basename_multi_true) {
+TEST(JSONSchema_compile_evaluate,
+     fast_loop_regex_instance_basename_multi_true) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionRegex{
-      {SchemaCompilerTargetType::Basename, {}},
+      {SchemaCompilerTargetType::InstanceBasename, {}},
       Pointer{"loop", "regex"},
       Pointer{},
       "#/loop/regex",
@@ -644,11 +645,12 @@ TEST(JSONSchema_compile_evaluate, fast_loop_regex_basename_multi_true) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_regex_basename_multi_false) {
+TEST(JSONSchema_compile_evaluate,
+     fast_loop_regex_instance_basename_multi_false) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionRegex{
-      {SchemaCompilerTargetType::Basename, {}},
+      {SchemaCompilerTargetType::InstanceBasename, {}},
       Pointer{"loop", "regex"},
       Pointer{},
       "#/loop/regex",
