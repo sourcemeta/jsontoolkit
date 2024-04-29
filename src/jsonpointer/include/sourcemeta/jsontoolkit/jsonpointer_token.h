@@ -183,6 +183,30 @@ public:
     return std::get<Index>(this->data);
   }
 
+  /// Convert a JSON Pointer token into a JSON document, whether it represents a
+  /// property or an index. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::Pointer::Token index{1};
+  /// const sourcemeta::jsontoolkit::Pointer::Token property{"foo"};
+  ///
+  /// const sourcemeta::jsontoolkit::JSON json_index{index.to_json()};
+  /// const sourcemeta::jsontoolkit::JSON json_property{property.to_json()};
+  ///
+  /// assert(json_index.is_integer());
+  /// assert(json_property.is_string());
+  /// ```
+  [[nodiscard]] auto to_json() const -> GenericValue<CharT, Traits, Allocator> {
+    if (this->is_property()) {
+      return GenericValue<CharT, Traits, Allocator>{this->to_property()};
+    } else {
+      return GenericValue<CharT, Traits, Allocator>{this->to_index()};
+    }
+  }
+
   /// Compare JSON Pointer tokens
   auto operator==(const GenericToken<CharT, Traits, Allocator> &other)
       const noexcept -> bool {
