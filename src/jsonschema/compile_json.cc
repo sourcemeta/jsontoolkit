@@ -18,9 +18,9 @@ auto target_to_json(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target)
       result.assign("type", JSON{"instance"});
       result.assign("location", JSON{to_string(target.second)});
       return result;
-    case SchemaCompilerTargetType::Basename:
+    case SchemaCompilerTargetType::InstanceBasename:
       result.assign("category", JSON{"target"});
-      result.assign("type", JSON{"basename"});
+      result.assign("type", JSON{"instance-basename"});
       result.assign("location", JSON{to_string(target.second)});
       return result;
     default:

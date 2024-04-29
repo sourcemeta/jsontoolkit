@@ -90,7 +90,7 @@ auto target_value(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
   switch (target.first) {
     case SchemaCompilerTargetType::Instance:
       return get(instance, location);
-    case SchemaCompilerTargetType::Basename:
+    case SchemaCompilerTargetType::InstanceBasename:
       return context.value(location.back().to_json());
     default:
       // We should never get here

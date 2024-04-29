@@ -33,7 +33,7 @@ enum class SchemaCompilerTargetType {
   Instance,
 
   /// The last path (i.e. property or index) of the instance location
-  Basename
+  InstanceBasename
 };
 
 /// @ingroup jsonschema
