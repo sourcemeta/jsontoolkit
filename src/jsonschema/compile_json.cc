@@ -18,14 +18,9 @@ auto target_to_json(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target)
       result.assign("type", JSON{"instance"});
       result.assign("location", JSON{to_string(target.second)});
       return result;
-    case SchemaCompilerTargetType::TemplateInstance:
+    case SchemaCompilerTargetType::Basename:
       result.assign("category", JSON{"target"});
-      result.assign("type", JSON{"template-instance"});
-      result.assign("location", JSON{to_string(target.second)});
-      return result;
-    case SchemaCompilerTargetType::TemplateProperty:
-      result.assign("category", JSON{"target"});
-      result.assign("type", JSON{"template-property"});
+      result.assign("type", JSON{"basename"});
       result.assign("location", JSON{to_string(target.second)});
       return result;
     default:

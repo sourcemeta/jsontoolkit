@@ -14,8 +14,8 @@ public:
   using Pointer = sourcemeta::jsontoolkit::Pointer;
   using JSON = sourcemeta::jsontoolkit::JSON;
 
-  auto property(const std::string &name) -> const JSON & {
-    return *(this->properties.emplace(name).first);
+  template <typename T> auto value(T &&document) -> const JSON & {
+    return *(this->values.emplace(std::forward<T>(document)).first);
   }
 
   auto annotate(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
@@ -34,20 +34,16 @@ public:
                  .first);
   }
 
-  auto record(Pointer &&value) -> void {
-    this->templates.insert_or_assign(this->evaluate_path(), std::move(value));
-  }
-
-  auto unrecord() -> void {
-    this->templates.erase(this->evaluate_path());
-    assert(!this->templates.contains(this->evaluate_path()));
+  auto push(const Pointer &relative_evaluate_path,
+            const Pointer &relative_instance_location) -> void {
+    this->frame_sizes.emplace_back(relative_evaluate_path.size(),
+                                   relative_instance_location.size());
+    this->evaluate_path_.push_back(relative_evaluate_path);
+    this->instance_location_.push_back(relative_instance_location);
   }
 
   template <typename T> auto push(const T &step) -> void {
-    this->frame_sizes.emplace_back(step.relative_schema_location.size(),
-                                   step.relative_instance_location.size());
-    this->evaluate_path_.push_back(step.relative_schema_location);
-    this->instance_location_.push_back(step.relative_instance_location);
+    this->push(step.relative_schema_location, step.relative_instance_location);
   }
 
   auto pop() -> void {
@@ -64,35 +60,18 @@ public:
     return this->instance_location_;
   }
 
-  auto instance_location(const sourcemeta::jsontoolkit::SchemaCompilerTarget
-                             &target) const -> Pointer {
-    using namespace sourcemeta::jsontoolkit;
-    switch (target.first) {
-      case SchemaCompilerTargetType::Instance:
-        return this->instance_location().concat(target.second);
-      case SchemaCompilerTargetType::TemplateProperty:
-        assert(this->templates.contains(target.second));
-        return this->instance_location().concat(
-            this->templates.at(target.second));
-      case SchemaCompilerTargetType::TemplateInstance:
-        assert(this->templates.contains(target.second));
-        return this->instance_location().concat(
-            this->templates.at(target.second));
-      default:
-        // We should never get here
-        assert(false);
-        return this->instance_location();
-    }
+  template <typename T>
+  auto instance_location(const T &target) const -> Pointer {
+    return this->instance_location().concat(target.second);
   }
 
 private:
   Pointer evaluate_path_;
   Pointer instance_location_;
   std::vector<std::pair<std::size_t, std::size_t>> frame_sizes;
-  std::map<Pointer, Pointer> templates;
-  // For efficiency, as we likely reference the same instance property names
+  // For efficiency, as we likely reference the same JSON values
   // over and over again
-  std::set<JSON> properties;
+  std::set<JSON> values;
   // Maps the instance location + evaluation path to an annotation value
   // We need to use the evaluation path pointer instead of the keyword
   // location URI as we need to quickly determine the keyword name that
@@ -109,14 +88,14 @@ auto target_value(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
   using namespace sourcemeta::jsontoolkit;
   const auto location{context.instance_location(target)};
   switch (target.first) {
-    // For properties, we need to just get that
-    case SchemaCompilerTargetType::TemplateProperty:
-      // Otherwise we are not operating on an object
-      assert(location.back().is_property());
-      return context.property(location.back().to_property());
-    default:
-      // Follow the actual target location on the instance
+    case SchemaCompilerTargetType::Instance:
       return get(instance, location);
+    case SchemaCompilerTargetType::Basename:
+      return context.value(location.back().to_json());
+    default:
+      // We should never get here
+      assert(false);
+      return context.value(nullptr);
   }
 }
 
@@ -266,34 +245,30 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD(loop.condition, instance);
     const auto &target{target_value(loop.target, instance, context)};
     assert(target.is_object());
-    const auto current_instance_location{
-        context.instance_location(loop.target)};
     result = true;
     for (const auto &[key, value] : target.as_object()) {
-      context.record(current_instance_location.concat({key}));
+      context.push({key}, {key});
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, instance, mode, callback, context)) {
           result = false;
           if (mode == SchemaCompilerEvaluationMode::Fast) {
+            context.pop();
             // For efficiently breaking from the outer loop too
-            goto loop_properties_end;
+            goto evaluate_step_end;
           } else {
             break;
           }
         }
       }
-    }
 
-  loop_properties_end:
-    // Clear the template registries for memory efficiency
-    context.unrecord();
+      context.pop();
+    }
   }
 
 #undef EVALUATE_CONDITION_GUARD
-
-  static JSON placeholder{nullptr};
+evaluate_step_end:
   callback(result, step, context.evaluate_path(), context.instance_location(),
-           placeholder);
+           context.value(nullptr));
   context.pop();
   return result;
 } // namespace

@@ -32,11 +32,8 @@ enum class SchemaCompilerTargetType {
   /// An static instance literal
   Instance,
 
-  /// A pointer to the property name of an instance location
-  TemplateProperty,
-
-  /// A pointer to an instance
-  TemplateInstance
+  /// The last path (i.e. property or index) of the instance location
+  Basename
 };
 
 /// @ingroup jsonschema
