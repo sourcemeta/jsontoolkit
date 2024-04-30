@@ -51,7 +51,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // items
   // - Complex
   // additionalProperties
-  // patternProperties
   // additionalItems
 
   COMPILE("http://json-schema.org/draft-04/schema#", "$ref",
@@ -66,6 +65,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_allof);
   COMPILE("http://json-schema.org/draft-04/schema#", "properties",
           compiler_draft4_validation_properties);
+  COMPILE("http://json-schema.org/draft-04/schema#", "patternProperties",
+          compiler_draft4_validation_patternproperties);
   COMPILE("http://json-schema.org/draft-04/schema#", "pattern",
           compiler_draft4_validation_pattern);
 
