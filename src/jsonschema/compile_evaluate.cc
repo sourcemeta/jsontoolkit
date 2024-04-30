@@ -2,6 +2,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
 #include <cassert>     // assert
+#include <functional>  // std::reference_wrapper
 #include <map>         // std::map
 #include <set>         // std::set
 #include <type_traits> // std::is_same_v
@@ -18,8 +19,8 @@ public:
     return *(this->values.emplace(std::forward<T>(document)).first);
   }
 
-  auto annotate(const Pointer &current_instance_location,
-                JSON &&value) -> const JSON & {
+  auto annotate(const Pointer &current_instance_location, JSON &&value)
+      -> std::pair<std::reference_wrapper<const JSON>, bool> {
     // Will do nothing if the key already exists
     this->annotations.insert({current_instance_location, {}});
     assert(this->annotations.contains(current_instance_location));
@@ -28,9 +29,10 @@ public:
     assert(this->annotations[current_instance_location].contains(
         this->evaluate_path()));
     // Insert the actual value
-    return *(this->annotations[current_instance_location][this->evaluate_path()]
-                 .insert(std::move(value))
-                 .first);
+    const auto result{
+        this->annotations[current_instance_location][this->evaluate_path()]
+            .insert(std::move(value))};
+    return {*(result.first), result.second};
   }
 
   auto push(const Pointer &relative_evaluate_path,
@@ -230,11 +232,17 @@ auto evaluate_step(
     context.push(annotation);
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
     const auto current_instance_location{context.instance_location(annotation)};
-    const auto &value{
+    const auto value{
         context.annotate(current_instance_location,
                          resolve_value(annotation.value, instance, context))};
-    callback(result, step, context.evaluate_path(), current_instance_location,
-             value);
+
+    // As a safety guard, only emit the annotation if it didn't exist already.
+    // Otherwise we risk confusing consumers
+    if (value.second) {
+      callback(result, step, context.evaluate_path(), current_instance_location,
+               value.first);
+    }
+
     context.pop();
     return result;
   } else if (std::holds_alternative<SchemaCompilerAnnotationPrivate>(step)) {
@@ -242,15 +250,21 @@ auto evaluate_step(
     context.push(annotation);
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
     const auto current_instance_location{context.instance_location(annotation)};
-    const auto &value{
+    const auto value{
         context.annotate(current_instance_location,
                          resolve_value(annotation.value, instance, context))};
     // Annotations never fail
     result = true;
-    // While this is a private annotation, we still emit it on the callback
-    // for implementing debugging-related tools, etc
-    callback(result, step, context.evaluate_path(), current_instance_location,
-             value);
+
+    // As a safety guard, only emit the annotation if it didn't exist already.
+    // Otherwise we risk confusing consumers
+    if (value.second) {
+      // While this is a private annotation, we still emit it on the callback
+      // for implementing debugging-related tools, etc
+      callback(result, step, context.evaluate_path(), current_instance_location,
+               value.first);
+    }
+
     context.pop();
     return result;
   } else if (std::holds_alternative<SchemaCompilerLoopProperties>(step)) {
