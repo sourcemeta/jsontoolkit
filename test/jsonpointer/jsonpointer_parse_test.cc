@@ -548,3 +548,15 @@ TEST(JSONPointer_parse, unicode_slashes) {
   EXPECT_TRUE(pointer.at(1).is_property());
   EXPECT_EQ(pointer.at(1).to_property(), "bar");
 }
+
+TEST(JSONPointer_parse, regex_caret) {
+  const sourcemeta::jsontoolkit::Pointer pointer =
+      sourcemeta::jsontoolkit::to_pointer("/patternProperties/^v/foo");
+  EXPECT_EQ(pointer.size(), 3);
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_EQ(pointer.at(0).to_property(), "patternProperties");
+  EXPECT_TRUE(pointer.at(1).is_property());
+  EXPECT_EQ(pointer.at(1).to_property(), "^v");
+  EXPECT_TRUE(pointer.at(2).is_property());
+  EXPECT_EQ(pointer.at(2).to_property(), "foo");
+}
