@@ -28,11 +28,6 @@ auto target_to_json(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target)
       result.assign("type", JSON{"instance-parent"});
       result.assign("location", JSON{to_string(target.second)});
       return result;
-    case SchemaCompilerTargetType::SchemaBasename:
-      result.assign("category", JSON{"target"});
-      result.assign("type", JSON{"schema-basename"});
-      result.assign("location", JSON{to_string(target.second)});
-      return result;
     default:
       // We should never get here
       assert(false);
