@@ -65,6 +65,42 @@ public:
     return this->instance_location(step.target);
   }
 
+  template <typename T>
+  auto
+  resolve_target(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
+                 const JSON &instance) -> const T & {
+    using namespace sourcemeta::jsontoolkit;
+    static_assert(std::is_same_v<JSON, T>);
+    switch (target.first) {
+      case SchemaCompilerTargetType::Instance:
+      case SchemaCompilerTargetType::InstanceParent:
+        return get(instance, this->instance_location(target));
+      case SchemaCompilerTargetType::InstanceBasename:
+        return this->value(this->instance_location(target).back().to_json());
+      default:
+        // We should never get here
+        assert(false);
+        return this->value(nullptr);
+    }
+  }
+
+  template <typename T>
+  auto
+  resolve_value(const sourcemeta::jsontoolkit::SchemaCompilerValue<T> &value,
+                const JSON &instance) -> T {
+    using namespace sourcemeta::jsontoolkit;
+    // We only define target resolution for JSON documents, at least for now
+    if constexpr (std::is_same_v<SchemaCompilerValueJSON, T>) {
+      if (std::holds_alternative<SchemaCompilerTarget>(value)) {
+        const auto &target{std::get<SchemaCompilerTarget>(value)};
+        return this->resolve_target<JSON>(target, instance);
+      }
+    }
+
+    assert(std::holds_alternative<T>(value));
+    return std::get<T>(value);
+  }
+
 private:
   Pointer evaluate_path_;
   Pointer instance_location_;
@@ -74,49 +110,16 @@ private:
   std::set<JSON> values;
   // We don't use a pair for holding the two pointers for runtime
   // efficiency when resolving keywords like `unevaluatedProperties`
+  // TODO: Do we REALLY need to store annotations as a JSON array
+  // vs a std::set. The latter would be a lot more efficient
   std::map<Pointer, std::map<Pointer, JSON>> annotations;
 };
-
-auto target_value(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
-                  const sourcemeta::jsontoolkit::JSON &instance,
-                  EvaluationContext &context)
-    -> const sourcemeta::jsontoolkit::JSON & {
-  using namespace sourcemeta::jsontoolkit;
-  switch (target.first) {
-    case SchemaCompilerTargetType::Instance:
-    case SchemaCompilerTargetType::InstanceParent:
-      return get(instance, context.instance_location(target));
-    case SchemaCompilerTargetType::InstanceBasename:
-      return context.value(context.instance_location(target).back().to_json());
-    default:
-      // We should never get here
-      assert(false);
-      return context.value(nullptr);
-  }
-}
 
 auto callback_noop(
     bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
     const sourcemeta::jsontoolkit::Pointer &,
     const sourcemeta::jsontoolkit::Pointer &,
     const sourcemeta::jsontoolkit::JSON &) noexcept -> void {}
-
-template <typename T>
-auto resolve_value(const sourcemeta::jsontoolkit::SchemaCompilerValue<T> &value,
-                   const sourcemeta::jsontoolkit::JSON &instance,
-                   EvaluationContext &context) -> T {
-  using namespace sourcemeta::jsontoolkit;
-  // We only define target resolution for JSON documents, at least for now
-  if constexpr (std::is_same_v<SchemaCompilerValueJSON, T>) {
-    if (std::holds_alternative<SchemaCompilerTarget>(value)) {
-      const auto &target{std::get<SchemaCompilerTarget>(value)};
-      return target_value(target, instance, context);
-    }
-  }
-
-  assert(std::holds_alternative<T>(value));
-  return std::get<T>(value);
-}
 
 auto evaluate_step(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step,
@@ -144,24 +147,27 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerAssertionDefines>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionDefines>(step)};
     context.push(assertion);
-    const auto &value{resolve_value(assertion.value, instance, context)};
+    const auto &value{context.resolve_value(assertion.value, instance)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
-    const auto &target{target_value(assertion.target, instance, context)};
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
     assert(target.is_object());
     result = target.defines(value);
   } else if (std::holds_alternative<SchemaCompilerAssertionType>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionType>(step)};
     context.push(assertion);
-    const auto &value{resolve_value(assertion.value, instance, context)};
+    const auto &value{context.resolve_value(assertion.value, instance)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
-    const auto &target{target_value(assertion.target, instance, context)};
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
     result = target.type() == value;
   } else if (std::holds_alternative<SchemaCompilerAssertionRegex>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionRegex>(step)};
     context.push(assertion);
-    const auto &value{resolve_value(assertion.value, instance, context)};
+    const auto &value{context.resolve_value(assertion.value, instance)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
-    const auto &target{target_value(assertion.target, instance, context)};
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
     assert(target.is_string());
     result = std::regex_search(target.to_string(), value.first);
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
@@ -218,7 +224,7 @@ auto evaluate_step(
     const auto current_instance_location{context.instance_location(annotation)};
     const auto value{
         context.annotate(current_instance_location,
-                         resolve_value(annotation.value, instance, context))};
+                         context.resolve_value(annotation.value, instance))};
 
     // As a safety guard, only emit the annotation if it didn't exist already.
     // Otherwise we risk confusing consumers
@@ -236,7 +242,7 @@ auto evaluate_step(
     const auto current_instance_location{context.instance_location(annotation)};
     const auto value{
         context.annotate(current_instance_location,
-                         resolve_value(annotation.value, instance, context))};
+                         context.resolve_value(annotation.value, instance))};
     // Annotations never fail
     result = true;
 
@@ -255,7 +261,7 @@ auto evaluate_step(
     const auto &loop{std::get<SchemaCompilerLoopProperties>(step)};
     context.push(loop);
     EVALUATE_CONDITION_GUARD(loop.condition, instance);
-    const auto &target{target_value(loop.target, instance, context)};
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
     assert(target.is_object());
     result = true;
     for (const auto &[key, value] : target.as_object()) {
