@@ -18,9 +18,8 @@ public:
     return *(this->values.emplace(std::forward<T>(document)).first);
   }
 
-  auto annotate(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
+  auto annotate(const Pointer &current_instance_location,
                 JSON &&value) -> const JSON & {
-    const auto current_instance_location{this->instance_location(target)};
     // Will do nothing if the key already exists
     this->annotations.insert({current_instance_location, {}});
     assert(this->annotations.contains(current_instance_location));
@@ -60,9 +59,13 @@ public:
     return this->instance_location_;
   }
 
-  template <typename T>
-  auto instance_location(const T &target) const -> Pointer {
+  auto instance_location(const sourcemeta::jsontoolkit::SchemaCompilerTarget
+                             &target) const -> Pointer {
     return this->instance_location().concat(target.second);
+  }
+
+  template <typename T> auto instance_location(const T &step) const -> Pointer {
+    return this->instance_location(step.target);
   }
 
 private:
@@ -220,9 +223,11 @@ auto evaluate_step(
     const auto &annotation{std::get<SchemaCompilerAnnotationPublic>(step)};
     context.push(annotation);
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
-    const auto &value{context.annotate(
-        annotation.target, resolve_value(annotation.value, instance, context))};
-    callback(result, step, context.evaluate_path(), context.instance_location(),
+    const auto current_instance_location{context.instance_location(annotation)};
+    const auto &value{
+        context.annotate(current_instance_location,
+                         resolve_value(annotation.value, instance, context))};
+    callback(result, step, context.evaluate_path(), current_instance_location,
              value);
     context.pop();
     return result;
@@ -230,13 +235,15 @@ auto evaluate_step(
     const auto &annotation{std::get<SchemaCompilerAnnotationPrivate>(step)};
     context.push(annotation);
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
-    const auto &value{context.annotate(
-        annotation.target, resolve_value(annotation.value, instance, context))};
+    const auto current_instance_location{context.instance_location(annotation)};
+    const auto &value{
+        context.annotate(current_instance_location,
+                         resolve_value(annotation.value, instance, context))};
     // Annotations never fail
     result = true;
     // While this is a private annotation, we still emit it on the callback
     // for implementing debugging-related tools, etc
-    callback(result, step, context.evaluate_path(), context.instance_location(),
+    callback(result, step, context.evaluate_path(), current_instance_location,
              value);
     context.pop();
     return result;
