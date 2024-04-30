@@ -1,9 +1,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
-#include <algorithm>   // std::find
 #include <cassert>     // assert
-#include <functional>  // std::reference_wrapper
 #include <map>         // std::map
 #include <set>         // std::set
 #include <type_traits> // std::is_same_v
@@ -20,28 +18,11 @@ public:
     return *(this->values.emplace(std::forward<T>(document)).first);
   }
 
-  auto annotate(const Pointer &current_instance_location, JSON &&value)
-      -> std::pair<std::reference_wrapper<const JSON>, bool> {
-    // These will do nothing if the key already exists
-    this->annotations.insert({current_instance_location, {}});
-    this->annotations[current_instance_location].insert(
-        {this->evaluate_path(), JSON::make_array()});
-
-    auto &output{this->annotations.at(current_instance_location)
-                     .at(this->evaluate_path())};
-    assert(output.is_array());
-
-    // TODO: Implement an insert_or_get() helper at JSON or something like that
-    // to simplify this
-    const auto &output_array{output.as_array()};
-    const auto match{
-        std::find(output_array.cbegin(), output_array.cend(), value)};
-    if (match == output_array.cend()) {
-      output.push_back(std::move(value));
-      return {output.back(), true};
-    } else {
-      return {*match, false};
-    }
+  auto annotate(const Pointer &current_instance_location,
+                JSON &&value) -> decltype(auto) {
+    return this->annotations.insert({current_instance_location, {}})
+        .first->second.insert({this->evaluate_path(), JSON::make_array()})
+        .first->second.push_back_if_unique(std::move(value));
   }
 
   auto push(const Pointer &relative_evaluate_path,

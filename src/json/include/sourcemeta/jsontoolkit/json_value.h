@@ -8,7 +8,7 @@
 #include <cassert>          // assert
 #include <cmath>            // std::isinf, std::isnan
 #include <cstdint>          // std::int64_t, std::uint8_t
-#include <functional>       // std::less
+#include <functional>       // std::less, std::reference_wrapper
 #include <initializer_list> // std::initializer_list
 #include <numeric>          // std::transform
 #include <set>              // std::set
@@ -1103,6 +1103,65 @@ public:
   auto push_back(GenericValue &&value) -> void {
     assert(this->is_array());
     return std::get<Array>(this->data).data.push_back(std::move(value));
+  }
+
+  /// This method inserts a new element to the end of the given array if an
+  /// equal element is not already present in the array. The return value is a
+  /// pair consisting of a reference to the element in question and whether the
+  /// element was inserted or not. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  /// const sourcemeta::jsontoolkit::JSON new_element{3};
+  /// const auto result{document.push_back_if_unique(new_element)};
+  /// assert(result.first.get().to_integer() == 3);
+  /// assert(!result.second);
+  /// ```
+  auto push_back_if_unique(const GenericValue &value)
+      -> std::pair<std::reference_wrapper<const GenericValue>, bool> {
+    assert(this->is_array());
+    auto &array_data{this->as_array().data};
+    const auto match{std::find(array_data.cbegin(), array_data.cend(), value)};
+    if (match == array_data.cend()) {
+      array_data.push_back(value);
+      return {array_data.back(), true};
+    } else {
+      return {*match, false};
+    }
+  }
+
+  /// This method inserts a new element to the end of the given array if an
+  /// equal element is not already present in the array. The return value is a
+  /// pair consisting of a reference to the element in question and whether the
+  /// element was inserted or not. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  /// #include <utility>
+  ///
+  /// sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  /// sourcemeta::jsontoolkit::JSON new_element{3};
+  /// const auto result{document.push_back_if_unique(std::move(new_element)};
+  /// assert(result.first.get().to_integer() == 3);
+  /// assert(!result.second);
+  /// ```
+  auto push_back_if_unique(GenericValue &&value)
+      -> std::pair<std::reference_wrapper<const GenericValue>, bool> {
+    assert(this->is_array());
+    auto &array_data{this->as_array().data};
+    const auto match{std::find(array_data.cbegin(), array_data.cend(), value)};
+    if (match == array_data.cend()) {
+      array_data.push_back(std::move(value));
+      return {array_data.back(), true};
+    } else {
+      return {*match, false};
+    }
   }
 
   /// This method sets or updates an object key. For example, an object can be
