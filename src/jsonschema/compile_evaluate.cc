@@ -102,8 +102,6 @@ auto target_value(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
       return get(instance, context.instance_location(target));
     case SchemaCompilerTargetType::InstanceBasename:
       return context.value(context.instance_location(target).back().to_json());
-    case SchemaCompilerTargetType::SchemaBasename:
-      return context.value(context.evaluate_path().back().to_json());
     default:
       // We should never get here
       assert(false);
