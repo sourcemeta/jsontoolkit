@@ -268,6 +268,29 @@ public:
     }
   }
 
+  /// Get a copy of the JSON Pointer including every token except the last. This
+  /// method is undefined if the JSON Pointer is empty. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  /// const sourcemeta::jsontoolkit::Pointer result{pointer.initial()};
+  /// assert(pointer.size() == 2);
+  /// assert(pointer.at(0).is_property());
+  /// assert(pointer.at(0).to_property() == "foo");
+  /// assert(pointer.at(1).is_property());
+  /// assert(pointer.at(1).to_property() == "bar");
+  /// ```
+  [[nodiscard]] auto
+  initial() const -> GenericPointer<CharT, Traits, Allocator> {
+    assert(!this->empty());
+    GenericPointer<CharT, Traits, Allocator> result{*this};
+    result.pop_back();
+    return result;
+  }
+
   /// Concatenate a JSON Pointer with another JSON Pointer, getting a new
   /// pointer as a result. For example:
   ///

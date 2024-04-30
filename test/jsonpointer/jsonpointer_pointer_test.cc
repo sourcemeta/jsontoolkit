@@ -189,3 +189,27 @@ TEST(JSONPointer_pointer, push_back_pointer_move) {
   EXPECT_TRUE(pointer.at(3).is_property());
   EXPECT_EQ(pointer.at(3).to_property(), "qux");
 }
+
+TEST(JSONPointer_pointer, initial_with_one_token) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+  const sourcemeta::jsontoolkit::Pointer result{pointer.initial()};
+  EXPECT_EQ(result.size(), 0);
+}
+
+TEST(JSONPointer_pointer, initial_with_two_tokens) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar"};
+  const sourcemeta::jsontoolkit::Pointer result{pointer.initial()};
+  EXPECT_EQ(result.size(), 1);
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_EQ(pointer.at(0).to_property(), "foo");
+}
+
+TEST(JSONPointer_pointer, initial_with_three_tokens) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  const sourcemeta::jsontoolkit::Pointer result{pointer.initial()};
+  EXPECT_EQ(result.size(), 2);
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_EQ(pointer.at(0).to_property(), "foo");
+  EXPECT_TRUE(pointer.at(1).is_property());
+  EXPECT_EQ(pointer.at(1).to_property(), "bar");
+}
