@@ -61,7 +61,12 @@ public:
 
   auto instance_location(const sourcemeta::jsontoolkit::SchemaCompilerTarget
                              &target) const -> Pointer {
-    return this->instance_location().concat(target.second);
+    switch (target.first) {
+      case sourcemeta::jsontoolkit::SchemaCompilerTargetType::InstanceParent:
+        return this->instance_location().concat(target.second).initial();
+      default:
+        return this->instance_location().concat(target.second);
+    }
   }
 
   template <typename T> auto instance_location(const T &step) const -> Pointer {
@@ -91,6 +96,7 @@ auto target_value(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
   using namespace sourcemeta::jsontoolkit;
   switch (target.first) {
     case SchemaCompilerTargetType::Instance:
+    case SchemaCompilerTargetType::InstanceParent:
       return get(instance, context.instance_location(target));
     case SchemaCompilerTargetType::InstanceBasename:
       return context.value(context.instance_location(target).back().to_json());

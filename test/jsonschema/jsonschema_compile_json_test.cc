@@ -985,7 +985,7 @@ TEST(JSONSchema_compile_json, regex_basic) {
   EXPECT_EQ(result, expected);
 }
 
-TEST(JSONSchema_compile_json, loop_properties_annotation_instance_property) {
+TEST(JSONSchema_compile_json, loop_properties_annotation_instance_basename) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAnnotationPublic{
@@ -1032,6 +1032,65 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_property) {
           "value": {
             "category": "target",
             "type": "instance-basename",
+            "location": ""
+          },
+          "condition": []
+        }
+      ],
+      "condition": []
+    }
+  ])EOF")};
+
+  EXPECT_EQ(result, expected);
+}
+
+TEST(JSONSchema_compile_json, loop_properties_annotation_instance_parent) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{SchemaCompilerAnnotationPublic{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerTarget{SchemaCompilerTargetType::InstanceParent, {}},
+      {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
+                                   Pointer{"loop"},
+                                   Pointer{},
+                                   "#/loop",
+                                   children,
+                                   {}}};
+
+  const JSON result{to_json(steps)};
+  const JSON expected{parse(R"EOF([
+    {
+      "category": "loop",
+      "type": "properties",
+      "relativeSchemaLocation": "/loop",
+      "relativeInstanceLocation": "",
+      "absoluteKeywordLocation": "#/loop",
+      "target": {
+        "category": "target",
+        "type": "instance",
+        "location": ""
+      },
+      "children": [
+        {
+          "category": "annotation",
+          "type": "public",
+          "relativeSchemaLocation": "",
+          "relativeInstanceLocation": "",
+          "absoluteKeywordLocation": "#",
+          "target": {
+            "category": "target",
+            "location": "",
+            "type": "instance"
+          },
+          "value": {
+            "category": "target",
+            "type": "instance-parent",
             "location": ""
           },
           "condition": []
