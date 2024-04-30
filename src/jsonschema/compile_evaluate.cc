@@ -248,7 +248,7 @@ auto evaluate_step(
     assert(target.is_object());
     result = true;
     for (const auto &[key, value] : target.as_object()) {
-      context.push({key}, {key});
+      context.push(empty_pointer, {key});
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, instance, mode, callback, context)) {
           result = false;
