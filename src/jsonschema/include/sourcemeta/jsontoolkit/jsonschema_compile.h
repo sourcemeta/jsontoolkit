@@ -35,6 +35,9 @@ enum class SchemaCompilerTargetType {
   /// The last path (i.e. property or index) of the instance location
   InstanceBasename,
 
+  /// The penultimate path (i.e. property or index) of the instance location
+  InstanceParent,
+
   /// The last path (i.e. property or index) of the evaluation path
   SchemaBasename
 };
