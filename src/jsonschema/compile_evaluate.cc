@@ -1,6 +1,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
+#include <algorithm>   // std::find
 #include <cassert>     // assert
 #include <functional>  // std::reference_wrapper
 #include <map>         // std::map
@@ -21,18 +22,26 @@ public:
 
   auto annotate(const Pointer &current_instance_location, JSON &&value)
       -> std::pair<std::reference_wrapper<const JSON>, bool> {
-    // Will do nothing if the key already exists
+    // These will do nothing if the key already exists
     this->annotations.insert({current_instance_location, {}});
-    assert(this->annotations.contains(current_instance_location));
     this->annotations[current_instance_location].insert(
-        {this->evaluate_path(), {}});
-    assert(this->annotations[current_instance_location].contains(
-        this->evaluate_path()));
-    // Insert the actual value
-    const auto result{
-        this->annotations[current_instance_location][this->evaluate_path()]
-            .insert(std::move(value))};
-    return {*(result.first), result.second};
+        {this->evaluate_path(), JSON::make_array()});
+
+    auto &output{this->annotations.at(current_instance_location)
+                     .at(this->evaluate_path())};
+    assert(output.is_array());
+
+    // TODO: Implement an insert_or_get() helper at JSON or something like that
+    // to simplify this
+    const auto &output_array{output.as_array()};
+    const auto match{
+        std::find(output_array.cbegin(), output_array.cend(), value)};
+    if (match == output_array.cend()) {
+      output.push_back(std::move(value));
+      return {output.back(), true};
+    } else {
+      return {*match, false};
+    }
   }
 
   auto push(const Pointer &relative_evaluate_path,
@@ -82,13 +91,9 @@ private:
   // For efficiency, as we likely reference the same JSON values
   // over and over again
   std::set<JSON> values;
-  // Maps the instance location + evaluation path to an annotation value
-  // We need to use the evaluation path pointer instead of the keyword
-  // location URI as we need to quickly determine the keyword name that
-  // produced the annotation.
-  // We also don't use a pair for holding the two pointers for runtime
+  // We don't use a pair for holding the two pointers for runtime
   // efficiency when resolving keywords like `unevaluatedProperties`
-  std::map<Pointer, std::map<Pointer, std::set<JSON>>> annotations;
+  std::map<Pointer, std::map<Pointer, JSON>> annotations;
 };
 
 auto target_value(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
