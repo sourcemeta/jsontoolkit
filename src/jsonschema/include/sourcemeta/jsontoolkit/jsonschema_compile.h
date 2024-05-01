@@ -95,6 +95,11 @@ struct SchemaCompilerAssertionType;
 struct SchemaCompilerAssertionRegex;
 
 /// @ingroup jsonschema
+/// Represents a compiler assertion step that checks a given set does not
+/// contain a JSON value
+struct SchemaCompilerAssertionNotContains;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that emits a public annotation
 struct SchemaCompilerAnnotationPublic;
 
@@ -123,9 +128,10 @@ struct SchemaCompilerControlLabel;
 using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
     SchemaCompilerAssertionType, SchemaCompilerAssertionRegex,
-    SchemaCompilerAnnotationPublic, SchemaCompilerAnnotationPrivate,
-    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd,
-    SchemaCompilerLoopProperties, SchemaCompilerControlLabel>>;
+    SchemaCompilerAssertionNotContains, SchemaCompilerAnnotationPublic,
+    SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
+    SchemaCompilerLogicalAnd, SchemaCompilerLoopProperties,
+    SchemaCompilerControlLabel>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -161,6 +167,7 @@ DEFINE_STEP_WITH_VALUE(Assertion, Fail, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Assertion, Defines, SchemaCompilerValueString)
 DEFINE_STEP_WITH_VALUE(Assertion, Type, SchemaCompilerValueType)
 DEFINE_STEP_WITH_VALUE(Assertion, Regex, SchemaCompilerValueRegex)
+DEFINE_STEP_WITH_VALUE(Assertion, NotContains, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, Private, SchemaCompilerValueJSON)
 DEFINE_STEP_APPLICATOR(Logical, Or)
