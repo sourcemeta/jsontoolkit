@@ -147,8 +147,8 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerAssertionDefines>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionDefines>(step)};
     context.push(assertion);
-    const auto &value{context.resolve_value(assertion.value, instance)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     assert(target.is_object());
@@ -156,16 +156,16 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerAssertionType>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionType>(step)};
     context.push(assertion);
-    const auto &value{context.resolve_value(assertion.value, instance)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     result = target.type() == value;
   } else if (std::holds_alternative<SchemaCompilerAssertionRegex>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionRegex>(step)};
     context.push(assertion);
-    const auto &value{context.resolve_value(assertion.value, instance)};
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     assert(target.is_string());
