@@ -98,6 +98,9 @@ auto compiler_draft4_validation_required(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_array());
   assert(!context.value.empty());
+
+  // TODO: As an optimization, avoid this condition if the subschema declares
+  // `type` to `object` already
   SchemaCompilerTemplate condition{
       make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})};
 
@@ -146,17 +149,23 @@ auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
   SchemaCompilerTemplate children;
   for (auto &[key, subschema] : context.value.as_object()) {
     auto substeps{compile(subcontext, {key}, {key})};
-    // Annotations as such don't exist in Draft 4,
-    // so emit a private annotation instead
+    // TODO: As an optimization, only emit an annotation if
+    // `additionalProperties` is also declared in the same subschema Annotations
+    // as such don't exist in Draft 4, so emit a private annotation instead
     substeps.push_back(
         make<SchemaCompilerAnnotationPrivate>(subcontext, JSON{key}, {}));
     children.push_back(make<SchemaCompilerLogicalAnd>(
         subcontext, std::move(substeps),
+        // TODO: As an optimization, avoid this condition if the subschema
+        // declares `required` and includes the given key
         {make<SchemaCompilerAssertionDefines>(subcontext, key, {})}));
   }
 
   return {make<SchemaCompilerLogicalAnd>(
       context, std::move(children),
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `object` already
       {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {})})};
 }
 
@@ -174,10 +183,11 @@ auto compiler_draft4_validation_patternproperties(
   for (auto &entry : context.value.as_object()) {
     auto substeps{compile(subcontext, {entry.first}, {})};
 
-    // Annotations as such don't exist in Draft 4, so emit a private annotation
-    // instead
-    // The evaluator will make sure the same annotation is not reported twice.
-    // For example, if the same property matches more than one subschema in
+    // TODO: As an optimization, only emit an annotation if
+    // `additionalProperties` is also declared in the same subschema Annotations
+    // as such don't exist in Draft 4, so emit a private annotation instead The
+    // evaluator will make sure the same annotation is not reported twice. For
+    // example, if the same property matches more than one subschema in
     // `patternProperties`
     substeps.push_back(make<SchemaCompilerAnnotationPrivate>(
         subcontext,
@@ -203,6 +213,9 @@ auto compiler_draft4_validation_patternproperties(
   // If the instance is an object...
   return {make<SchemaCompilerLogicalAnd>(
       context, std::move(children),
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `object` already
       {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {})})};
 }
 
@@ -214,12 +227,18 @@ auto compiler_draft4_validation_additionalproperties(
   // was NOT collected as an annotation on either "properties" or
   // "patternProperties"
   SchemaCompilerTemplate conjunctions{
+
+      // TODO: As an optimization, avoid this condition if the subschema does
+      // not declare `properties`
       make<SchemaCompilerAssertionNotContains>(
           subcontext,
           SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
                                empty_pointer},
           {}, SchemaCompilerTargetType::ParentAdjacentAnnotations,
           Pointer{"properties"}),
+
+      // TODO: As an optimization, avoid this condition if the subschema does
+      // not declare `patternProperties`
       make<SchemaCompilerAssertionNotContains>(
           subcontext,
           SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
@@ -235,6 +254,9 @@ auto compiler_draft4_validation_additionalproperties(
 
   return {make<SchemaCompilerLoopProperties>(
       context, {std::move(wrapper)},
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `object` already
       {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {})})};
 }
 
@@ -246,6 +268,9 @@ auto compiler_draft4_validation_pattern(const SchemaCompilerContext &context)
       context,
       SchemaCompilerValueRegex{std::regex{regex_string, std::regex::ECMAScript},
                                regex_string},
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `string` already
       {make<SchemaCompilerAssertionType>(context, JSON::Type::String, {})})};
 }
 
