@@ -741,3 +741,160 @@ TEST(JSONSchema_compile_draft4, patternProperties_7) {
   EVALUATE_TRACE_SUCCESS(8, LogicalAnd, "/patternProperties",
                          "#/patternProperties", "");
 }
+
+TEST(JSONSchema_compile_draft4, additionalProperties_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": {
+      "type": "integer"
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/additionalProperties/type",
+                         "#/additionalProperties/type", "/bar");
+  EVALUATE_TRACE_SUCCESS(1, LogicalAnd, "/additionalProperties",
+                         "#/additionalProperties", "/bar");
+  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/additionalProperties/type",
+                         "#/additionalProperties/type", "/foo");
+  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/additionalProperties",
+                         "#/additionalProperties", "/foo");
+  EVALUATE_TRACE_SUCCESS(4, LoopProperties, "/additionalProperties",
+                         "#/additionalProperties", "");
+}
+
+TEST(JSONSchema_compile_draft4, additionalProperties_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "foo": {
+        "type": "boolean"
+      }
+    },
+    "additionalProperties": {
+      "type": "integer"
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": 2 }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/properties/foo/type",
+                         "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
+                                    "foo");
+  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_SUCCESS(4, AssertionType, "/additionalProperties/type",
+                         "#/additionalProperties/type", "/bar");
+  EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/additionalProperties",
+                         "#/additionalProperties", "/bar");
+  EVALUATE_TRACE_SUCCESS(6, LoopProperties, "/additionalProperties",
+                         "#/additionalProperties", "");
+}
+
+TEST(JSONSchema_compile_draft4, additionalProperties_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "baz": {
+        "type": "integer"
+      }
+    },
+    "additionalProperties": {
+      "type": "integer"
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
+  EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/additionalProperties/type",
+                         "#/additionalProperties/type", "/bar");
+  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/additionalProperties",
+                         "#/additionalProperties", "/bar");
+  EVALUATE_TRACE_SUCCESS(3, AssertionType, "/additionalProperties/type",
+                         "#/additionalProperties/type", "/foo");
+  EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/additionalProperties",
+                         "#/additionalProperties", "/foo");
+  EVALUATE_TRACE_SUCCESS(5, LoopProperties, "/additionalProperties",
+                         "#/additionalProperties", "");
+}
+
+TEST(JSONSchema_compile_draft4, additionalProperties_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "foo": { "type": "boolean" }
+    },
+    "patternProperties": {
+      "^bar$": { "type": "integer" }
+    },
+    "additionalProperties": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{sourcemeta::jsontoolkit::parse(
+      "{ \"foo\": true, \"bar\": 2, \"baz\": \"qux\" }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 12);
+
+  // `patternProperties`
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/patternProperties/^bar$/type",
+                         // Note that the caret needs to be URI escaped
+                         "#/patternProperties/%5Ebar$/type", "/bar");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/patternProperties",
+                                    "#/patternProperties", "", "bar");
+  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/patternProperties",
+                         "#/patternProperties", "/bar");
+  EVALUATE_TRACE_SUCCESS(3, LoopProperties, "/patternProperties",
+                         "#/patternProperties", "");
+  EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/patternProperties",
+                         "#/patternProperties", "");
+
+  // `properties`
+  EVALUATE_TRACE_SUCCESS(5, AssertionType, "/properties/foo/type",
+                         "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(6, "/properties", "#/properties", "",
+                                    "foo");
+  EVALUATE_TRACE_SUCCESS(7, LogicalAnd, "/properties", "#/properties", "");
+
+  EVALUATE_TRACE_SUCCESS(8, LogicalAnd, "/properties", "#/properties", "");
+
+  // `additionalProperties`
+  EVALUATE_TRACE_SUCCESS(9, AssertionType, "/additionalProperties/type",
+                         "#/additionalProperties/type", "/baz");
+  EVALUATE_TRACE_SUCCESS(10, LogicalAnd, "/additionalProperties",
+                         "#/additionalProperties", "/baz");
+  EVALUATE_TRACE_SUCCESS(11, LoopProperties, "/additionalProperties",
+                         "#/additionalProperties", "");
+}

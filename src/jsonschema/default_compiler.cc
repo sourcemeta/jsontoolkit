@@ -50,7 +50,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // dependencies
   // items
   // - Complex
-  // additionalProperties
   // additionalItems
 
   COMPILE("http://json-schema.org/draft-04/schema#", "$ref",
@@ -67,11 +66,14 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_properties);
   COMPILE("http://json-schema.org/draft-04/schema#", "patternProperties",
           compiler_draft4_validation_patternproperties);
+  COMPILE("http://json-schema.org/draft-04/schema#", "additionalProperties",
+          compiler_draft4_validation_additionalproperties);
   COMPILE("http://json-schema.org/draft-04/schema#", "pattern",
           compiler_draft4_validation_pattern);
 
 #undef COMPILE
 #undef STOP_IF_SIBLING_KEYWORD
 
+  // TODO: Collect unknown keywords as annotations starting in 2019-09
   return {};
 }

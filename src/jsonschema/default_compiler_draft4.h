@@ -206,6 +206,38 @@ auto compiler_draft4_validation_patternproperties(
       {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {})})};
 }
 
+auto compiler_draft4_validation_additionalproperties(
+    const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
+  const auto subcontext{applicate(context)};
+
+  // Evaluate the subschema against the current property if it
+  // was NOT collected as an annotation on either "properties" or
+  // "patternProperties"
+  SchemaCompilerTemplate conjunctions{
+      make<SchemaCompilerAssertionNotContains>(
+          subcontext,
+          SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                               empty_pointer},
+          {}, SchemaCompilerTargetType::ParentAdjacentAnnotations,
+          Pointer{"properties"}),
+      make<SchemaCompilerAssertionNotContains>(
+          subcontext,
+          SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                               empty_pointer},
+          {}, SchemaCompilerTargetType::ParentAdjacentAnnotations,
+          Pointer{"patternProperties"}),
+  };
+
+  SchemaCompilerTemplate wrapper{make<SchemaCompilerLogicalAnd>(
+      subcontext, compile(subcontext, empty_pointer, empty_pointer),
+      {make<SchemaCompilerLogicalAnd>(subcontext, std::move(conjunctions),
+                                      {})})};
+
+  return {make<SchemaCompilerLoopProperties>(
+      context, {std::move(wrapper)},
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {})})};
+}
+
 auto compiler_draft4_validation_pattern(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_string());
