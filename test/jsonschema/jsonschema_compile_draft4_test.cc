@@ -355,6 +355,180 @@ TEST(JSONSchema_compile_draft4, ref_2) {
                          "");
 }
 
+TEST(JSONSchema_compile_draft4, ref_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "id": "https://example.com",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "foo": {
+        "$ref": "https://example.com"
+      }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
+  EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties/foo/$ref/properties",
+                         "https://example.com#/properties", "/foo");
+  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
+                         "https://example.com#/type", "/foo");
+  EVALUATE_TRACE_SUCCESS(2, ControlLabel, "/properties/foo/$ref",
+                         "https://example.com#/properties/foo/$ref", "/foo");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(
+      3, "/properties", "https://example.com#/properties", "", "foo");
+  EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/properties",
+                         "https://example.com#/properties", "");
+  EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties",
+                         "https://example.com#/properties", "");
+  EVALUATE_TRACE_SUCCESS(6, AssertionType, "/type", "https://example.com#/type",
+                         "");
+}
+
+TEST(JSONSchema_compile_draft4, ref_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "id": "https://example.com",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "foo": {
+        "$ref": "https://example.com"
+      }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": { \"foo\": {} } }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 12);
+
+  // Nested `foo`
+  EVALUATE_TRACE_SUCCESS(0, LogicalAnd,
+                         "/properties/foo/$ref/properties/foo/$ref/properties",
+                         "https://example.com#/properties", "/foo/foo");
+  EVALUATE_TRACE_SUCCESS(1, AssertionType,
+                         "/properties/foo/$ref/properties/foo/$ref/type",
+                         "https://example.com#/type", "/foo/foo");
+  EVALUATE_TRACE_SUCCESS(
+      2, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
+      "https://example.com#/properties/foo/$ref", "/foo/foo");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(3, "/properties/foo/$ref/properties",
+                                    "https://example.com#/properties", "/foo",
+                                    "foo");
+  EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/properties/foo/$ref/properties",
+                         "https://example.com#/properties", "/foo");
+  EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties/foo/$ref/properties",
+                         "https://example.com#/properties", "/foo");
+
+  // Top level `foo`
+  EVALUATE_TRACE_SUCCESS(6, AssertionType, "/properties/foo/$ref/type",
+                         "https://example.com#/type", "/foo");
+  EVALUATE_TRACE_SUCCESS(7, ControlLabel, "/properties/foo/$ref",
+                         "https://example.com#/properties/foo/$ref", "/foo");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(
+      8, "/properties", "https://example.com#/properties", "", "foo");
+  EVALUATE_TRACE_SUCCESS(9, LogicalAnd, "/properties",
+                         "https://example.com#/properties", "");
+  EVALUATE_TRACE_SUCCESS(10, LogicalAnd, "/properties",
+                         "https://example.com#/properties", "");
+
+  // Top level object
+  EVALUATE_TRACE_SUCCESS(11, AssertionType, "/type",
+                         "https://example.com#/type", "");
+}
+
+TEST(JSONSchema_compile_draft4, ref_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "id": "https://example.com",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "foo": {
+        "$ref": "https://example.com"
+      }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": { \"foo\": 1 } }")};
+
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 7);
+
+  // Nested `foo`
+  EVALUATE_TRACE_FAILURE(0, AssertionType,
+                         "/properties/foo/$ref/properties/foo/$ref/type",
+                         "https://example.com#/type", "/foo/foo");
+  EVALUATE_TRACE_FAILURE(
+      1, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
+      "https://example.com#/properties/foo/$ref", "/foo/foo");
+  EVALUATE_TRACE_FAILURE(2, LogicalAnd, "/properties/foo/$ref/properties",
+                         "https://example.com#/properties", "/foo");
+  EVALUATE_TRACE_FAILURE(3, LogicalAnd, "/properties/foo/$ref/properties",
+                         "https://example.com#/properties", "/foo");
+
+  // Top level `foo`
+  EVALUATE_TRACE_FAILURE(4, ControlLabel, "/properties/foo/$ref",
+                         "https://example.com#/properties/foo/$ref", "/foo");
+  EVALUATE_TRACE_FAILURE(5, LogicalAnd, "/properties",
+                         "https://example.com#/properties", "");
+  EVALUATE_TRACE_FAILURE(6, LogicalAnd, "/properties",
+                         "https://example.com#/properties", "");
+}
+
+TEST(JSONSchema_compile_draft4, ref_6) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "foo": {
+        "$ref": "#"
+      }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
+  EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties/foo/$ref/properties",
+                         "#/properties", "/foo");
+  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
+                         "#/type", "/foo");
+  EVALUATE_TRACE_SUCCESS(2, ControlLabel, "/properties/foo/$ref",
+                         "#/properties/foo/$ref", "/foo");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(3, "/properties", "#/properties", "",
+                                    "foo");
+  EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_SUCCESS(6, AssertionType, "/type", "#/type", "");
+}
+
 TEST(JSONSchema_compile_draft4, properties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
