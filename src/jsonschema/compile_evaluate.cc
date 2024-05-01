@@ -2,6 +2,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
 #include <cassert>     // assert
+#include <functional>  // std::reference_wrapper
 #include <map>         // std::map
 #include <set>         // std::set
 #include <type_traits> // std::is_same_v
@@ -18,11 +19,12 @@ public:
     return *(this->values.emplace(std::forward<T>(document)).first);
   }
 
-  auto annotate(const Pointer &current_instance_location,
-                JSON &&value) -> decltype(auto) {
-    return this->annotations.insert({current_instance_location, {}})
-        .first->second.insert({this->evaluate_path(), JSON::make_array()})
-        .first->second.push_back_if_unique(std::move(value));
+  auto annotate(const Pointer &current_instance_location, JSON &&value)
+      -> std::pair<std::reference_wrapper<const JSON>, bool> {
+    const auto result{this->annotations.insert({current_instance_location, {}})
+                          .first->second.insert({this->evaluate_path(), {}})
+                          .first->second.insert(std::move(value))};
+    return {*(result.first), result.second};
   }
 
   auto push(const Pointer &relative_evaluate_path,
@@ -110,9 +112,7 @@ private:
   std::set<JSON> values;
   // We don't use a pair for holding the two pointers for runtime
   // efficiency when resolving keywords like `unevaluatedProperties`
-  // TODO: Do we REALLY need to store annotations as a JSON array
-  // vs a std::set. The latter would be a lot more efficient
-  std::map<Pointer, std::map<Pointer, JSON>> annotations;
+  std::map<Pointer, std::map<Pointer, std::set<JSON>>> annotations;
 };
 
 auto callback_noop(
