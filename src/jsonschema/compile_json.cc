@@ -209,6 +209,16 @@ struct StepVisitor {
                                    assertion.condition);
   }
 
+  auto
+  operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionNotContains
+                 &assertion) const -> sourcemeta::jsontoolkit::JSON {
+    return step_with_value_to_json(
+        "assertion", "not-contains", assertion.target,
+        assertion.relative_schema_location,
+        assertion.relative_instance_location, assertion.keyword_location,
+        assertion.value, assertion.condition);
+  }
+
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalOr
                       &logical) const -> sourcemeta::jsontoolkit::JSON {
     return step_applicator_to_json(

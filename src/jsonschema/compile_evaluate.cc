@@ -14,6 +14,7 @@ class EvaluationContext {
 public:
   using Pointer = sourcemeta::jsontoolkit::Pointer;
   using JSON = sourcemeta::jsontoolkit::JSON;
+  using Annotations = std::set<JSON>;
 
   template <typename T> auto value(T &&document) -> const JSON & {
     return *(this->values.emplace(std::forward<T>(document)).first);
@@ -21,10 +22,31 @@ public:
 
   auto annotate(const Pointer &current_instance_location, JSON &&value)
       -> std::pair<std::reference_wrapper<const JSON>, bool> {
-    const auto result{this->annotations.insert({current_instance_location, {}})
+    const auto result{this->annotations_.insert({current_instance_location, {}})
                           .first->second.insert({this->evaluate_path(), {}})
                           .first->second.insert(std::move(value))};
     return {*(result.first), result.second};
+  }
+
+  auto
+  annotations(const Pointer &current_instance_location,
+              const Pointer &schema_location) const -> const Annotations & {
+    static const Annotations placeholder;
+    // Use `.find()` instead of `.contains()` and `.at()` for performance
+    // reasons
+    const auto instance_location_result{
+        this->annotations_.find(current_instance_location)};
+    if (instance_location_result == this->annotations_.end()) {
+      return placeholder;
+    }
+
+    const auto schema_location_result{
+        instance_location_result->second.find(schema_location)};
+    if (schema_location_result == instance_location_result->second.end()) {
+      return placeholder;
+    }
+
+    return schema_location_result->second;
   }
 
   auto push(const Pointer &relative_evaluate_path,
@@ -72,17 +94,28 @@ public:
   resolve_target(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
                  const JSON &instance) -> const T & {
     using namespace sourcemeta::jsontoolkit;
-    static_assert(std::is_same_v<JSON, T>);
-    switch (target.first) {
-      case SchemaCompilerTargetType::Instance:
-      case SchemaCompilerTargetType::InstanceParent:
-        return get(instance, this->instance_location(target));
-      case SchemaCompilerTargetType::InstanceBasename:
-        return this->value(this->instance_location(target).back().to_json());
-      default:
-        // We should never get here
-        assert(false);
-        return this->value(nullptr);
+
+    // An optimization for efficiently accessing annotations
+    if constexpr (std::is_same_v<Annotations, T>) {
+      assert(target.first ==
+             SchemaCompilerTargetType::ParentAdjacentAnnotations);
+      const auto schema_location{
+          this->evaluate_path().initial().concat(target.second)};
+      return this->annotations(this->instance_location().initial(),
+                               schema_location);
+    } else {
+      static_assert(std::is_same_v<JSON, T>);
+      switch (target.first) {
+        case SchemaCompilerTargetType::Instance:
+        case SchemaCompilerTargetType::InstanceParent:
+          return get(instance, this->instance_location(target));
+        case SchemaCompilerTargetType::InstanceBasename:
+          return this->value(this->instance_location(target).back().to_json());
+        default:
+          // We should never get here
+          assert(false);
+          return this->value(nullptr);
+      }
     }
   }
 
@@ -112,7 +145,7 @@ private:
   std::set<JSON> values;
   // We don't use a pair for holding the two pointers for runtime
   // efficiency when resolving keywords like `unevaluatedProperties`
-  std::map<Pointer, std::map<Pointer, std::set<JSON>>> annotations;
+  std::map<Pointer, std::map<Pointer, Annotations>> annotations_;
 };
 
 auto callback_noop(
@@ -170,6 +203,14 @@ auto evaluate_step(
         context.resolve_target<JSON>(assertion.target, instance)};
     assert(target.is_string());
     result = std::regex_search(target.to_string(), value.first);
+  } else if (std::holds_alternative<SchemaCompilerAssertionNotContains>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionNotContains>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<std::set<JSON>>(assertion.target, instance)};
+    result = !target.contains(value);
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
     context.push(logical);
