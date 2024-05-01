@@ -36,7 +36,11 @@ enum class SchemaCompilerTargetType {
   InstanceBasename,
 
   /// The penultimate path (i.e. property or index) of the instance location
-  InstanceParent
+  InstanceParent,
+
+  /// The annotations produced at the same base evaluation path for the parent
+  /// of the current instance location
+  ParentAdjacentAnnotations
 };
 
 /// @ingroup jsonschema
