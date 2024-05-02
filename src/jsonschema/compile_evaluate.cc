@@ -15,6 +15,7 @@ public:
   using Pointer = sourcemeta::jsontoolkit::Pointer;
   using JSON = sourcemeta::jsontoolkit::JSON;
   using Annotations = std::set<JSON>;
+  using Template = sourcemeta::jsontoolkit::SchemaCompilerTemplate;
 
   template <typename T> auto value(T &&document) -> const JSON & {
     return *(this->values.emplace(std::forward<T>(document)).first);
@@ -136,6 +137,11 @@ public:
     return std::get<T>(value);
   }
 
+  auto mark(const std::size_t id, const Template &children) -> void {
+    assert(!this->labels.contains(id));
+    this->labels.emplace(id, children);
+  }
+
 private:
   Pointer evaluate_path_;
   Pointer instance_location_;
@@ -146,6 +152,7 @@ private:
   // We don't use a pair for holding the two pointers for runtime
   // efficiency when resolving keywords like `unevaluatedProperties`
   std::map<Pointer, std::map<Pointer, Annotations>> annotations_;
+  std::map<std::size_t, const std::reference_wrapper<const Template>> labels;
 };
 
 auto callback_noop(
@@ -239,8 +246,8 @@ auto evaluate_step(
     }
   } else if (std::holds_alternative<SchemaCompilerControlLabel>(step)) {
     const auto &control{std::get<SchemaCompilerControlLabel>(step)};
+    context.mark(control.id, control.children);
     context.push(control);
-    // TODO: Store the label position in an internal cache for future jumping
     result = true;
     for (const auto &child : control.children) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
