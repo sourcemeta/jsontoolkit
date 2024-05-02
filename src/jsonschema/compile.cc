@@ -100,9 +100,12 @@ auto compile(const SchemaCompilerContext &context, const Pointer &schema_suffix,
              const Pointer &instance_suffix,
              const std::optional<std::string> &uri) -> SchemaCompilerTemplate {
   // Determine URI of the destination after recursion
-  const std::string destination{uri.value_or(
-      to_uri(context.relative_pointer.concat(schema_suffix), context.base)
-          .recompose())};
+  const std::string destination{
+      uri.has_value()
+          ? URI{uri.value()}.canonicalize().recompose()
+          : to_uri(context.relative_pointer.concat(schema_suffix), context.base)
+                .canonicalize()
+                .recompose()};
 
   // Otherwise the recursion attempt is non-sense
   assert(context.frame.contains({ReferenceType::Static, destination}));
