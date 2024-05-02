@@ -125,6 +125,10 @@ struct SchemaCompilerLogicalNot;
 struct SchemaCompilerLoopProperties;
 
 /// @ingroup jsonschema
+/// Represents a compiler step that loops over array items
+struct SchemaCompilerLoopItems;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that consists of a mark to jump to
 struct SchemaCompilerControlLabel;
 
@@ -141,8 +145,8 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionNotContains, SchemaCompilerAnnotationPublic,
     SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
     SchemaCompilerLogicalAnd, SchemaCompilerLogicalNot,
-    SchemaCompilerLoopProperties, SchemaCompilerControlLabel,
-    SchemaCompilerControlJump>>;
+    SchemaCompilerLoopProperties, SchemaCompilerLoopItems,
+    SchemaCompilerControlLabel, SchemaCompilerControlJump>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -185,6 +189,7 @@ DEFINE_STEP_APPLICATOR(Logical, Or)
 DEFINE_STEP_APPLICATOR(Logical, And)
 DEFINE_STEP_APPLICATOR(Logical, Not)
 DEFINE_STEP_APPLICATOR(Loop, Properties)
+DEFINE_STEP_APPLICATOR(Loop, Items)
 DEFINE_CONTROL(Label)
 DEFINE_CONTROL(Jump)
 

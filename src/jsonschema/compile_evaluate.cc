@@ -3,6 +3,7 @@
 
 #include <cassert>     // assert
 #include <functional>  // std::reference_wrapper
+#include <iterator>    // std::distance
 #include <map>         // std::map
 #include <set>         // std::set
 #include <type_traits> // std::is_same_v
@@ -360,6 +361,32 @@ auto evaluate_step(
 
       context.pop();
     }
+  } else if (std::holds_alternative<SchemaCompilerLoopItems>(step)) {
+    const auto &loop{std::get<SchemaCompilerLoopItems>(step)};
+    context.push(loop);
+    EVALUATE_CONDITION_GUARD(loop.condition, instance);
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    assert(target.is_array());
+    const auto &array{target.as_array()};
+    result = true;
+    for (auto iterator{array.cbegin()}; iterator != array.cend(); ++iterator) {
+      const auto index{std::distance(array.cbegin(), iterator)};
+      context.push(empty_pointer, {static_cast<Pointer::Token::Index>(index)});
+      for (const auto &child : loop.children) {
+        if (!evaluate_step(child, instance, mode, callback, context)) {
+          result = false;
+          if (mode == SchemaCompilerEvaluationMode::Fast) {
+            context.pop();
+            // For efficiently breaking from the outer loop too
+            goto evaluate_step_end;
+          } else {
+            break;
+          }
+        }
+
+        context.pop();
+      }
+    }
   }
 
 #undef EVALUATE_CONDITION_GUARD
@@ -368,7 +395,7 @@ evaluate_step_end:
            context.value(nullptr));
   context.pop();
   return result;
-} // namespace
+}
 
 } // namespace
 
