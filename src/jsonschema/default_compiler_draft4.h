@@ -50,25 +50,39 @@ auto type_string_to_assertion(
 namespace internal {
 using namespace sourcemeta::jsontoolkit;
 
-// TODO: Handle recursive references by detecting if the corresponding
-// label was registered already or not. If it was, jump to it with a step
-// instruction rather than compiling the destination.
 auto compiler_draft4_core_ref(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
+  // Determine the label
   const auto type{ReferenceType::Static};
   const auto current{keyword_location(context)};
   assert(context.frame.contains({type, current}));
   const auto &entry{context.frame.at({type, current})};
   assert(context.references.contains({type, entry.pointer}));
   const auto &reference{context.references.at({type, entry.pointer})};
+  std::ostringstream label_key;
+  label_key << current << "|" << reference.destination;
+  const auto label{std::hash<std::string>{}(label_key.str())};
 
-  // The label captures the origin and the destination
-  std::ostringstream label;
-  label << current << "|" << reference.destination;
-  return {make<SchemaCompilerControlLabel>(
-      context, std::hash<std::string>{}(label.str()),
-      compile(applicate(context), empty_pointer, empty_pointer,
-              reference.destination))};
+  // The label is already registered, so just jump to it
+  if (context.labels.contains(label)) {
+    return {make<SchemaCompilerControlJump>(context, label, {})};
+  }
+
+  // TODO: Only create a wrapper "label" step if there is indeed recursion
+  // going on, which we can probably confirm through the framing results.
+  // Otherwise, if no recursion would actually happen, then fully unrolling
+  // the references would be more efficient.
+
+  // The idea to handle recursion is to expand the reference once, and when
+  // doing so, create a "checkpoint" that we can jump back to in a subsequent
+  // recursive reference. While unrolling the reference once may initially
+  // feel weird, we do it so we can handle references purely in this keyword
+  // handler, without having to add logic to every single keyword to check
+  // whether something points to them and add the "checkpoint" themselves.
+  return {make<SchemaCompilerControlLabel>(context, label,
+                                           compile(applicate(context, label),
+                                                   empty_pointer, empty_pointer,
+                                                   reference.destination))};
 }
 
 auto compiler_draft4_validation_type(const SchemaCompilerContext &context)
