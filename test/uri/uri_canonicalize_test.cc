@@ -99,3 +99,9 @@ TEST(URI_canonicalize, example_15) {
   uri.canonicalize();
   EXPECT_EQ(uri.recompose(), "http://example.com/unreserved/~foo");
 }
+
+TEST(URI_canonicalize, empty_fragment) {
+  sourcemeta::jsontoolkit::URI uri{"#"};
+  uri.canonicalize();
+  EXPECT_EQ(uri.recompose(), "");
+}
