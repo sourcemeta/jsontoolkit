@@ -284,6 +284,14 @@ struct StepVisitor {
         loop.relative_instance_location, loop.keyword_location, loop.children,
         loop.condition);
   }
+
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLoopItems &loop)
+      const -> sourcemeta::jsontoolkit::JSON {
+    return step_applicator_to_json(
+        "loop", "items", loop.target, loop.relative_schema_location,
+        loop.relative_instance_location, loop.keyword_location, loop.children,
+        loop.condition);
+  }
 };
 
 auto step_to_json(
