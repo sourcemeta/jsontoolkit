@@ -288,5 +288,11 @@ auto compiler_draft4_validation_pattern(const SchemaCompilerContext &context)
       {make<SchemaCompilerAssertionType>(context, JSON::Type::String, {})})};
 }
 
+auto compiler_draft4_validation_not(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  return {make<SchemaCompilerLogicalNot>(
+      context, compile(applicate(context), empty_pointer, empty_pointer), {})};
+}
+
 } // namespace internal
 #endif

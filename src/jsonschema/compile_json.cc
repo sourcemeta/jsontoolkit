@@ -235,6 +235,14 @@ struct StepVisitor {
         logical.children, logical.condition);
   }
 
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalNot
+                      &logical) const -> sourcemeta::jsontoolkit::JSON {
+    return step_applicator_to_json(
+        "logical", "not", logical.target, logical.relative_schema_location,
+        logical.relative_instance_location, logical.keyword_location,
+        logical.children, logical.condition);
+  }
+
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerControlLabel
                       &control) const -> sourcemeta::jsontoolkit::JSON {
     return control_to_json("label", control.relative_schema_location,

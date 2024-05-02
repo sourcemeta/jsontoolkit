@@ -1072,3 +1072,85 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
   EVALUATE_TRACE_SUCCESS(11, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
 }
+
+TEST(JSONSchema_compile_draft4, not_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "not": {
+      "type": "string"
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_TRACE_FAILURE(0, AssertionType, "/not/type", "#/not/type", "");
+  EVALUATE_TRACE_SUCCESS(1, LogicalNot, "/not", "#/not", "");
+}
+
+TEST(JSONSchema_compile_draft4, not_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "not": {
+      "type": "string"
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/not/type", "#/not/type", "");
+  EVALUATE_TRACE_FAILURE(1, LogicalNot, "/not", "#/not", "");
+}
+
+TEST(JSONSchema_compile_draft4, not_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "not": {
+      "properties": {
+        "foo": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": {
+        "type": "integer"
+      }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": false }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 8);
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/not/properties/foo/type",
+                         "#/not/properties/foo/type", "/foo");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/not/properties", "#/not/properties",
+                                    "", "foo");
+  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/not/properties", "#/not/properties",
+                         "");
+  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/not/properties", "#/not/properties",
+                         "");
+  EVALUATE_TRACE_FAILURE(4, AssertionType, "/not/additionalProperties/type",
+                         "#/not/additionalProperties/type", "/bar");
+  EVALUATE_TRACE_FAILURE(5, LogicalAnd, "/not/additionalProperties",
+                         "#/not/additionalProperties", "/bar");
+  EVALUATE_TRACE_FAILURE(6, LoopProperties, "/not/additionalProperties",
+                         "#/not/additionalProperties", "");
+  EVALUATE_TRACE_SUCCESS(7, LogicalNot, "/not", "#/not", "");
+}

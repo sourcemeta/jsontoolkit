@@ -669,3 +669,49 @@ TEST(JSONSchema_compile_evaluate,
   const auto result{evaluate(steps, instance)};
   EXPECT_FALSE(result);
 }
+
+TEST(JSONSchema_compile_evaluate, fast_step_not_type_true) {
+  using namespace sourcemeta::jsontoolkit;
+  SchemaCompilerTemplate children{
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
+                                  Pointer{},
+                                  Pointer{},
+                                  "#",
+                                  SchemaCompilerValueType{JSON::Type::Integer},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalNot{{SchemaCompilerTargetType::Instance, {}},
+                               Pointer{},
+                               Pointer{},
+                               "#",
+                               std::move(children),
+                               {}}};
+
+  const JSON instance{"foo"};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_step_not_type_false) {
+  using namespace sourcemeta::jsontoolkit;
+  SchemaCompilerTemplate children{
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
+                                  Pointer{},
+                                  Pointer{},
+                                  "#",
+                                  SchemaCompilerValueType{JSON::Type::Integer},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLogicalNot{{SchemaCompilerTargetType::Instance, {}},
+                               Pointer{},
+                               Pointer{},
+                               "#",
+                               std::move(children),
+                               {}}};
+
+  const JSON instance{5};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_FALSE(result);
+}
