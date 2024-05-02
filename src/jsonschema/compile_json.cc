@@ -243,6 +243,14 @@ struct StepVisitor {
                            control.children);
   }
 
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerControlJump
+                      &control) const -> sourcemeta::jsontoolkit::JSON {
+    return control_to_json("jump", control.relative_schema_location,
+                           control.relative_instance_location,
+                           control.keyword_location, control.id,
+                           control.children);
+  }
+
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAnnotationPublic
                       &annotation) const -> sourcemeta::jsontoolkit::JSON {
     return step_with_value_to_json("annotation", "public", annotation.target,

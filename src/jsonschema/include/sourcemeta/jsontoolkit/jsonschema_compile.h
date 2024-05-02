@@ -125,6 +125,11 @@ struct SchemaCompilerLoopProperties;
 struct SchemaCompilerControlLabel;
 
 /// @ingroup jsonschema
+/// Represents a compiler step that consists of jumping into a pre-registered
+/// label
+struct SchemaCompilerControlJump;
+
+/// @ingroup jsonschema
 /// Represents a schema compilation result that can be evaluated
 using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
@@ -132,7 +137,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionNotContains, SchemaCompilerAnnotationPublic,
     SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
     SchemaCompilerLogicalAnd, SchemaCompilerLoopProperties,
-    SchemaCompilerControlLabel>>;
+    SchemaCompilerControlLabel, SchemaCompilerControlJump>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -175,6 +180,7 @@ DEFINE_STEP_APPLICATOR(Logical, Or)
 DEFINE_STEP_APPLICATOR(Logical, And)
 DEFINE_STEP_APPLICATOR(Loop, Properties)
 DEFINE_CONTROL(Label)
+DEFINE_CONTROL(Jump)
 
 #undef DEFINE_STEP_WITH_VALUE
 #undef DEFINE_STEP_APPLICATOR
