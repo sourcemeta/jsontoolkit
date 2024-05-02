@@ -44,7 +44,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // enum
   // format
   // - Semi Complex
-  // not
   // anyOf
   // oneOf
   // dependencies
@@ -70,6 +69,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_additionalproperties);
   COMPILE("http://json-schema.org/draft-04/schema#", "pattern",
           compiler_draft4_validation_pattern);
+  COMPILE("http://json-schema.org/draft-04/schema#", "not",
+          compiler_draft4_validation_not);
 
 #undef COMPILE
 #undef STOP_IF_SIBLING_KEYWORD

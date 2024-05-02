@@ -117,6 +117,10 @@ struct SchemaCompilerLogicalOr;
 struct SchemaCompilerLogicalAnd;
 
 /// @ingroup jsonschema
+/// Represents a compiler logical step that represents a negation
+struct SchemaCompilerLogicalNot;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that loops over object properties
 struct SchemaCompilerLoopProperties;
 
@@ -136,8 +140,9 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionType, SchemaCompilerAssertionRegex,
     SchemaCompilerAssertionNotContains, SchemaCompilerAnnotationPublic,
     SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
-    SchemaCompilerLogicalAnd, SchemaCompilerLoopProperties,
-    SchemaCompilerControlLabel, SchemaCompilerControlJump>>;
+    SchemaCompilerLogicalAnd, SchemaCompilerLogicalNot,
+    SchemaCompilerLoopProperties, SchemaCompilerControlLabel,
+    SchemaCompilerControlJump>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -178,6 +183,7 @@ DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, Private, SchemaCompilerValueJSON)
 DEFINE_STEP_APPLICATOR(Logical, Or)
 DEFINE_STEP_APPLICATOR(Logical, And)
+DEFINE_STEP_APPLICATOR(Logical, Not)
 DEFINE_STEP_APPLICATOR(Loop, Properties)
 DEFINE_CONTROL(Label)
 DEFINE_CONTROL(Jump)

@@ -249,6 +249,19 @@ auto evaluate_step(
         }
       }
     }
+  } else if (std::holds_alternative<SchemaCompilerLogicalNot>(step)) {
+    const auto &logical{std::get<SchemaCompilerLogicalNot>(step)};
+    context.push(logical);
+    EVALUATE_CONDITION_GUARD(logical.condition, instance);
+    result = false;
+    for (const auto &child : logical.children) {
+      if (!evaluate_step(child, instance, mode, callback, context)) {
+        result = true;
+        if (mode == SchemaCompilerEvaluationMode::Fast) {
+          break;
+        }
+      }
+    }
   } else if (std::holds_alternative<SchemaCompilerControlLabel>(step)) {
     const auto &control{std::get<SchemaCompilerControlLabel>(step)};
     context.mark(control.id, control.children);
