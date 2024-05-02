@@ -30,3 +30,8 @@ TEST(URI_recompose, no_scheme) {
   const sourcemeta::jsontoolkit::URI uri{"example.com/foo"};
   EXPECT_EQ(uri.recompose(), "example.com/foo");
 }
+
+TEST(URI_recompose, empty_fragment) {
+  const sourcemeta::jsontoolkit::URI uri{"#"};
+  EXPECT_EQ(uri.recompose(), "#");
+}
