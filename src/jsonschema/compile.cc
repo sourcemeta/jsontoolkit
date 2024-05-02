@@ -36,7 +36,7 @@ auto compile_subschema(
               context.root, context.base,
               context.relative_pointer.concat({keyword}),
               context.base_schema_location, context.base_instance_location,
-              context.frame, context.references, context.walker,
+              context.labels, context.frame, context.references, context.walker,
               context.resolver, context.compiler, context.default_dialect})) {
       // Just a sanity check to ensure every keyword location is indeed valid
       assert(context.frame.contains(
@@ -88,6 +88,7 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
        {},
        {},
        {},
+       {},
        frame,
        references,
        walker,
@@ -120,9 +121,9 @@ auto compile(const SchemaCompilerContext &context, const Pointer &schema_suffix,
            ? context.base_schema_location.concat(schema_suffix)
            : context.base_schema_location.concat({context.keyword})
                  .concat(schema_suffix),
-       context.base_instance_location.concat(instance_suffix), context.frame,
-       context.references, context.walker, context.resolver, context.compiler,
-       entry.dialect});
+       context.base_instance_location.concat(instance_suffix), context.labels,
+       context.frame, context.references, context.walker, context.resolver,
+       context.compiler, entry.dialect});
 }
 
 } // namespace sourcemeta::jsontoolkit

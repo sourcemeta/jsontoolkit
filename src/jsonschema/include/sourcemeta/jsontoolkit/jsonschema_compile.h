@@ -19,6 +19,7 @@
 #include <map>        // std::map
 #include <optional>   // std::optional, std::nullopt
 #include <regex>      // std::regex
+#include <set>        // std::set
 #include <string>     // std::string
 #include <utility>    // std::move, std::pair
 #include <variant>    // std::variant
@@ -213,6 +214,8 @@ struct SchemaCompilerContext {
   const Pointer base_schema_location;
   /// The base instance location that the keyword must be evaluated to
   const Pointer base_instance_location;
+  /// The set of labels registered so far
+  const std::set<std::size_t> labels;
   /// The reference frame of the entire schema
   const ReferenceFrame &frame;
   /// The references of the entire schema
