@@ -3,13 +3,24 @@
 
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
-#include <utility> // std::declval
+#include <utility> // std::declval, std::move
+
+namespace {
+
+template <typename T>
+auto concat_set(const std::set<T> &current, const T value) -> std::set<T> {
+  auto result{current};
+  result.insert(value);
+  return result;
+}
+
+} // namespace
 
 namespace sourcemeta::jsontoolkit {
 
-// Prepare a compiler context for applicator use
-inline auto
-applicate(const SchemaCompilerContext &context) -> SchemaCompilerContext {
+inline auto applicate(const SchemaCompilerContext &context,
+                      const std::optional<std::size_t> &label = std::nullopt)
+    -> SchemaCompilerContext {
   return {"",
           context.schema,
           context.vocabularies,
@@ -19,6 +30,8 @@ applicate(const SchemaCompilerContext &context) -> SchemaCompilerContext {
           context.relative_pointer,
           empty_pointer,
           empty_pointer,
+          label.has_value() ? concat_set(context.labels, label.value())
+                            : context.labels,
           context.frame,
           context.references,
           context.walker,
