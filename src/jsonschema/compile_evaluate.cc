@@ -142,6 +142,11 @@ public:
     this->labels.emplace(id, children);
   }
 
+  auto jump(const std::size_t id) const -> const Template & {
+    assert(this->labels.contains(id));
+    return this->labels.at(id).get();
+  }
+
 private:
   Pointer evaluate_path_;
   Pointer instance_location_;
@@ -250,6 +255,19 @@ auto evaluate_step(
     context.push(control);
     result = true;
     for (const auto &child : control.children) {
+      if (!evaluate_step(child, instance, mode, callback, context)) {
+        result = false;
+        if (mode == SchemaCompilerEvaluationMode::Fast) {
+          break;
+        }
+      }
+    }
+  } else if (std::holds_alternative<SchemaCompilerControlJump>(step)) {
+    const auto &control{std::get<SchemaCompilerControlJump>(step)};
+    context.push(control);
+    assert(control.children.empty());
+    result = true;
+    for (const auto &child : context.jump(control.id)) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
         result = false;
         if (mode == SchemaCompilerEvaluationMode::Fast) {
