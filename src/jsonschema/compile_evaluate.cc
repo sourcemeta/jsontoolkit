@@ -224,6 +224,15 @@ auto evaluate_step(
     const auto &target{
         context.resolve_target<std::set<JSON>>(assertion.target, instance)};
     result = !target.contains(value);
+  } else if (std::holds_alternative<SchemaCompilerAssertionSizeGreater>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionSizeGreater>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
+    assert(target.is_array());
+    result = target.size() > value;
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
     context.push(logical);
