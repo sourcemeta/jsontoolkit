@@ -294,5 +294,22 @@ auto compiler_draft4_validation_not(const SchemaCompilerContext &context)
       context, compile(applicate(context), empty_pointer, empty_pointer), {})};
 }
 
+auto compiler_draft4_validation_items(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  const auto subcontext{applicate(context)};
+  if (context.value.is_object()) {
+    return {make<SchemaCompilerLoopItems>(
+        context, compile(subcontext, empty_pointer, empty_pointer),
+
+        // TODO: As an optimization, avoid this condition if the subschema
+        // declares `type` to `array` already
+        {make<SchemaCompilerAssertionType>(context, JSON::Type::Array, {})})};
+  }
+
+  // TODO: Handle the array prefix form
+  assert(context.value.is_array());
+  return {};
+}
+
 } // namespace internal
 #endif
