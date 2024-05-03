@@ -129,6 +129,7 @@
 
 #define EVALUATE_TRACE_SUCCESS(index, step_type, evaluate_path,                \
                                keyword_location, instance_location)            \
+  EXPECT_TRUE(index < trace.size());                                           \
   EXPECT_TRUE(std::get<0>(trace.at(index)));                                   \
   EVALUATE_TRACE(index, step_type, evaluate_path, keyword_location,            \
                  instance_location);                                           \
@@ -137,6 +138,7 @@
 #define EVALUATE_TRACE_ANNOTATION_PRIVATE(index, evaluate_path,                \
                                           keyword_location, instance_location, \
                                           expected_annotation)                 \
+  EXPECT_TRUE(index < trace.size());                                           \
   EXPECT_TRUE(std::get<0>(trace.at(index)));                                   \
   EVALUATE_TRACE(index, AnnotationPrivate, evaluate_path, keyword_location,    \
                  instance_location);                                           \
@@ -145,6 +147,7 @@
 
 #define EVALUATE_TRACE_FAILURE(index, step_type, evaluate_path,                \
                                keyword_location, instance_location)            \
+  EXPECT_TRUE(index < trace.size());                                           \
   EXPECT_FALSE(std::get<0>(trace.at(index)));                                  \
   EVALUATE_TRACE(index, step_type, evaluate_path, keyword_location,            \
                  instance_location);                                           \
