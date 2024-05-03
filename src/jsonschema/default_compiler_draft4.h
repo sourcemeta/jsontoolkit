@@ -306,9 +306,28 @@ auto compiler_draft4_validation_items(const SchemaCompilerContext &context)
         {make<SchemaCompilerAssertionType>(context, JSON::Type::Array, {})})};
   }
 
-  // TODO: Handle the array prefix form
   assert(context.value.is_array());
-  return {};
+  const auto &array{context.value.as_array()};
+
+  SchemaCompilerTemplate children;
+  for (auto iterator{array.cbegin()}; iterator != array.cend(); ++iterator) {
+    const auto index{
+        static_cast<std::size_t>(std::distance(array.cbegin(), iterator))};
+    children.push_back(make<SchemaCompilerLogicalAnd>(
+        subcontext, compile(subcontext, {index}, {index}),
+
+        // TODO: As an optimization, avoid this condition if the subschema
+        // declares a corresponding `minItems`
+        {make<SchemaCompilerAssertionSizeGreater>(
+            subcontext, index, {}, SchemaCompilerTargetType::Instance)}));
+  }
+
+  return {make<SchemaCompilerLogicalAnd>(
+      context, std::move(children),
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `array` already
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Array, {})})};
 }
 
 } // namespace internal
