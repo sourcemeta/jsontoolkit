@@ -835,3 +835,33 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_false) {
   const auto result{evaluate(steps, instance)};
   EXPECT_FALSE(result);
 }
+
+TEST(JSONSchema_compile_evaluate, fast_step_size_greater_array_true) {
+  using namespace sourcemeta::jsontoolkit;
+  const SchemaCompilerTemplate steps{SchemaCompilerAssertionSizeGreater{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerValueUnsignedInteger{2},
+      {}}};
+
+  const JSON instance{parse("[ 1, 2, 3 ]")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_step_size_greater_array_false) {
+  using namespace sourcemeta::jsontoolkit;
+  const SchemaCompilerTemplate steps{SchemaCompilerAssertionSizeGreater{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerValueUnsignedInteger{3},
+      {}}};
+
+  const JSON instance{parse("[ 1, 2, 3 ]")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_FALSE(result);
+}

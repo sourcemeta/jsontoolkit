@@ -79,6 +79,12 @@ auto value_to_json(const sourcemeta::jsontoolkit::SchemaCompilerValue<T> &value)
     result.assign("type", JSON{"string"});
     result.assign("value", JSON{std::get<T>(value)});
     return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueUnsignedInteger, T>) {
+    JSON result{JSON::make_object()};
+    result.assign("category", JSON{"value"});
+    result.assign("type", JSON{"unsigned-integer"});
+    result.assign("value", JSON{std::get<T>(value)});
+    return result;
   } else {
     static_assert(std::is_same_v<SchemaCompilerValueNone, T>);
     return JSON{nullptr};
@@ -172,6 +178,7 @@ auto control_to_json(
   return result;
 }
 
+// TODO: Simplify this class, which is already getting quite repetitive
 struct StepVisitor {
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionFail
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
@@ -214,6 +221,16 @@ struct StepVisitor {
                  &assertion) const -> sourcemeta::jsontoolkit::JSON {
     return step_with_value_to_json(
         "assertion", "not-contains", assertion.target,
+        assertion.relative_schema_location,
+        assertion.relative_instance_location, assertion.keyword_location,
+        assertion.value, assertion.condition);
+  }
+
+  auto
+  operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionSizeGreater
+                 &assertion) const -> sourcemeta::jsontoolkit::JSON {
+    return step_with_value_to_json(
+        "assertion", "size-greater", assertion.target,
         assertion.relative_schema_location,
         assertion.relative_instance_location, assertion.keyword_location,
         assertion.value, assertion.condition);

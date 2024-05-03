@@ -72,6 +72,10 @@ using SchemaCompilerValueType = JSON::Type;
 using SchemaCompilerValueRegex = std::pair<std::regex, std::string>;
 
 /// @ingroup jsonschema
+/// Represents a compiler step JSON type value
+using SchemaCompilerValueUnsignedInteger = std::size_t;
+
+/// @ingroup jsonschema
 /// Represents a value in a compiler step
 template <typename T>
 using SchemaCompilerValue = std::variant<T, SchemaCompilerTarget>;
@@ -99,6 +103,12 @@ struct SchemaCompilerAssertionRegex;
 /// Represents a compiler assertion step that checks a given set does not
 /// contain a JSON value
 struct SchemaCompilerAssertionNotContains;
+
+/// @ingroup jsonschema
+/// Represents a compiler assertion step that checks a given array, object, or
+/// string has at least a certain number of items, properties, or characters,
+/// respectively
+struct SchemaCompilerAssertionSizeGreater;
 
 /// @ingroup jsonschema
 /// Represents a compiler step that emits a public annotation
@@ -142,9 +152,9 @@ struct SchemaCompilerControlJump;
 using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
     SchemaCompilerAssertionType, SchemaCompilerAssertionRegex,
-    SchemaCompilerAssertionNotContains, SchemaCompilerAnnotationPublic,
-    SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
-    SchemaCompilerLogicalAnd, SchemaCompilerLogicalNot,
+    SchemaCompilerAssertionNotContains, SchemaCompilerAssertionSizeGreater,
+    SchemaCompilerAnnotationPublic, SchemaCompilerAnnotationPrivate,
+    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalNot,
     SchemaCompilerLoopProperties, SchemaCompilerLoopItems,
     SchemaCompilerControlLabel, SchemaCompilerControlJump>>;
 
@@ -183,6 +193,8 @@ DEFINE_STEP_WITH_VALUE(Assertion, Defines, SchemaCompilerValueString)
 DEFINE_STEP_WITH_VALUE(Assertion, Type, SchemaCompilerValueType)
 DEFINE_STEP_WITH_VALUE(Assertion, Regex, SchemaCompilerValueRegex)
 DEFINE_STEP_WITH_VALUE(Assertion, NotContains, SchemaCompilerValueJSON)
+DEFINE_STEP_WITH_VALUE(Assertion, SizeGreater,
+                       SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, Private, SchemaCompilerValueJSON)
 DEFINE_STEP_APPLICATOR(Logical, Or)
