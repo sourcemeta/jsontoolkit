@@ -41,6 +41,7 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
     {
       "category": "logical",
       "type": "or",
+      "value": null,
       "target": {
         "category": "target",
         "location": "",
@@ -180,6 +181,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
     {
       "category": "logical",
       "type": "and",
+      "value": null,
       "target": {
         "category": "target",
         "location": "",
@@ -212,6 +214,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
         {
           "category": "logical",
           "type": "and",
+          "value": null,
           "target": {
             "category": "target",
             "location": "",
@@ -309,6 +312,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
     {
       "category": "logical",
       "type": "and",
+      "value": null,
       "target": {
         "category": "target",
         "location": "",
@@ -341,6 +345,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
         {
           "category": "logical",
           "type": "and",
+          "value": null,
           "target": {
             "category": "target",
             "location": "",
@@ -411,6 +416,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
         {
           "category": "logical",
           "type": "and",
+          "value": null,
           "target": {
             "category": "target",
             "location": "",

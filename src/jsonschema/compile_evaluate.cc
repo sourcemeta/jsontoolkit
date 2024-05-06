@@ -235,6 +235,7 @@ auto evaluate_step(
     result = target.size() > value;
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
+    assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical.condition, instance);
     result = logical.children.empty();
@@ -248,6 +249,7 @@ auto evaluate_step(
     }
   } else if (std::holds_alternative<SchemaCompilerLogicalAnd>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalAnd>(step)};
+    assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical.condition, instance);
     result = true;
@@ -261,6 +263,7 @@ auto evaluate_step(
     }
   } else if (std::holds_alternative<SchemaCompilerLogicalNot>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalNot>(step)};
+    assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical.condition, instance);
     result = false;
@@ -348,6 +351,7 @@ auto evaluate_step(
     return result;
   } else if (std::holds_alternative<SchemaCompilerLoopProperties>(step)) {
     const auto &loop{std::get<SchemaCompilerLoopProperties>(step)};
+    assert(std::holds_alternative<SchemaCompilerValueNone>(loop.value));
     context.push(loop);
     EVALUATE_CONDITION_GUARD(loop.condition, instance);
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
@@ -372,6 +376,7 @@ auto evaluate_step(
     }
   } else if (std::holds_alternative<SchemaCompilerLoopItems>(step)) {
     const auto &loop{std::get<SchemaCompilerLoopItems>(step)};
+    assert(std::holds_alternative<SchemaCompilerValueNone>(loop.value));
     context.push(loop);
     EVALUATE_CONDITION_GUARD(loop.condition, instance);
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};

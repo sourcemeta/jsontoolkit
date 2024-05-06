@@ -169,12 +169,13 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const SchemaCompilerTemplate condition;                                    \
   };
 
-#define DEFINE_STEP_APPLICATOR(category, name)                                 \
+#define DEFINE_STEP_APPLICATOR(category, name, type)                           \
   struct SchemaCompiler##category##name {                                      \
     const SchemaCompilerTarget target;                                         \
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
+    const SchemaCompilerValue<type> value;                                     \
     const SchemaCompilerTemplate children;                                     \
     const SchemaCompilerTemplate condition;                                    \
   };
@@ -197,11 +198,11 @@ DEFINE_STEP_WITH_VALUE(Assertion, SizeGreater,
                        SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, Private, SchemaCompilerValueJSON)
-DEFINE_STEP_APPLICATOR(Logical, Or)
-DEFINE_STEP_APPLICATOR(Logical, And)
-DEFINE_STEP_APPLICATOR(Logical, Not)
-DEFINE_STEP_APPLICATOR(Loop, Properties)
-DEFINE_STEP_APPLICATOR(Loop, Items)
+DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueNone)
 DEFINE_CONTROL(Label)
 DEFINE_CONTROL(Jump)
 
