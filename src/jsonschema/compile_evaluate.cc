@@ -262,6 +262,39 @@ auto evaluate_step(
         }
       }
     }
+  } else if (std::holds_alternative<SchemaCompilerLogicalXor>(step)) {
+    const auto &logical{std::get<SchemaCompilerLogicalXor>(step)};
+    assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
+    context.push(logical);
+    EVALUATE_CONDITION_GUARD(logical.condition, instance);
+    result = true;
+    for (auto iterator{logical.children.cbegin()};
+         iterator != logical.children.cend(); ++iterator) {
+      if (!evaluate_step(*iterator, instance, mode, callback, context)) {
+        continue;
+      }
+
+      for (auto subiterator{logical.children.cbegin()};
+           subiterator != logical.children.cend(); subiterator++) {
+        // Don't compare the element against itself
+        if (std::distance(logical.children.cbegin(), iterator) ==
+            std::distance(logical.children.cbegin(), subiterator)) {
+          continue;
+        }
+
+        // We don't need to report traces that part of the exhaustive
+        // XOR search. We can treat those as internal
+        if (evaluate_step(*subiterator, instance, mode, callback_noop,
+                          context)) {
+          result = false;
+          break;
+        }
+      }
+
+      if (result && mode == SchemaCompilerEvaluationMode::Fast) {
+        break;
+      }
+    }
   } else if (std::holds_alternative<SchemaCompilerLogicalNot>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalNot>(step)};
     assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
