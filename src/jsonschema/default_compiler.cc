@@ -44,7 +44,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // enum
   // format
   // - Semi Complex
-  // anyOf
   // oneOf
   // dependencies
 
@@ -58,6 +57,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_required);
   COMPILE("http://json-schema.org/draft-04/schema#", "allOf",
           compiler_draft4_validation_allof);
+  COMPILE("http://json-schema.org/draft-04/schema#", "anyOf",
+          compiler_draft4_validation_anyof);
   COMPILE("http://json-schema.org/draft-04/schema#", "properties",
           compiler_draft4_validation_properties);
   COMPILE("http://json-schema.org/draft-04/schema#", "patternProperties",

@@ -1468,3 +1468,65 @@ TEST(JSONSchema_compile_draft4, additionalItems_5) {
   EVALUATE_TRACE_FAILURE(6, LoopItems, "/additionalItems", "#/additionalItems",
                          "");
 }
+
+TEST(JSONSchema_compile_draft4, anyOf_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "anyOf": [
+      { "type": "string" },
+      { "type": "integer" },
+      { "type": "number" }
+    ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{1};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+
+  EVALUATE_TRACE_FAILURE(0, AssertionType, "/anyOf/0/type", "#/anyOf/0/type",
+                         "");
+  EVALUATE_TRACE_FAILURE(1, LogicalAnd, "/anyOf", "#/anyOf", "");
+  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/anyOf/1/type", "#/anyOf/1/type",
+                         "");
+  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/anyOf", "#/anyOf", "");
+  EVALUATE_TRACE_SUCCESS(4, LogicalOr, "/anyOf", "#/anyOf", "");
+}
+
+TEST(JSONSchema_compile_draft4, anyOf_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "anyOf": [
+      { "type": "string" },
+      { "type": "integer" },
+      { "type": "number" }
+    ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{true};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 9);
+
+  EVALUATE_TRACE_FAILURE(0, AssertionType, "/anyOf/0/type", "#/anyOf/0/type",
+                         "");
+  EVALUATE_TRACE_FAILURE(1, LogicalAnd, "/anyOf", "#/anyOf", "");
+  EVALUATE_TRACE_FAILURE(2, AssertionType, "/anyOf/1/type", "#/anyOf/1/type",
+                         "");
+  EVALUATE_TRACE_FAILURE(3, LogicalAnd, "/anyOf", "#/anyOf", "");
+  EVALUATE_TRACE_FAILURE(4, AssertionType, "/anyOf/2/type", "#/anyOf/2/type",
+                         "");
+  EVALUATE_TRACE_FAILURE(5, AssertionType, "/anyOf/2/type", "#/anyOf/2/type",
+                         "");
+  EVALUATE_TRACE_FAILURE(6, LogicalOr, "/anyOf/2/type", "#/anyOf/2/type", "");
+  EVALUATE_TRACE_FAILURE(7, LogicalAnd, "/anyOf", "#/anyOf", "");
+  EVALUATE_TRACE_FAILURE(8, LogicalOr, "/anyOf", "#/anyOf", "");
+}

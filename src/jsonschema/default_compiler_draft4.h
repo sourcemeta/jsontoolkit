@@ -162,6 +162,25 @@ auto compiler_draft4_validation_allof(const SchemaCompilerContext &context)
   return result;
 }
 
+auto compiler_draft4_validation_anyof(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  assert(context.value.is_array());
+  assert(!context.value.empty());
+
+  const auto subcontext{applicate(context)};
+  SchemaCompilerTemplate disjunctors;
+  for (std::uint64_t index = 0; index < context.value.size(); index++) {
+    disjunctors.push_back(make<SchemaCompilerLogicalAnd>(
+        subcontext, SchemaCompilerValueNone{},
+        compile(subcontext, {static_cast<Pointer::Token::Index>(index)}),
+        SchemaCompilerTemplate{}));
+  }
+
+  return {make<SchemaCompilerLogicalOr>(context, SchemaCompilerValueNone{},
+                                        std::move(disjunctors),
+                                        SchemaCompilerTemplate{})};
+}
+
 auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_object());
