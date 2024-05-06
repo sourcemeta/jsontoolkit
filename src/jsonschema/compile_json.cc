@@ -120,12 +120,14 @@ auto step_with_value_to_json(
   return result;
 }
 
+template <typename ValueType>
 auto step_applicator_to_json(
     const std::string_view category, const std::string_view type,
     const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
     const sourcemeta::jsontoolkit::Pointer &relative_schema_location,
     const sourcemeta::jsontoolkit::Pointer &relative_instance_location,
     const std::string &keyword_location,
+    const sourcemeta::jsontoolkit::SchemaCompilerValue<ValueType> &value,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &children,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
     -> sourcemeta::jsontoolkit::JSON {
@@ -139,6 +141,7 @@ auto step_applicator_to_json(
   result.assign("relativeInstanceLocation",
                 JSON{to_string(relative_instance_location)});
   result.assign("absoluteKeywordLocation", JSON{keyword_location});
+  result.assign("value", value_to_json(value));
   result.assign("condition", JSON::make_array());
   result.assign("children", JSON::make_array());
 
@@ -241,7 +244,7 @@ struct StepVisitor {
     return step_applicator_to_json(
         "logical", "or", logical.target, logical.relative_schema_location,
         logical.relative_instance_location, logical.keyword_location,
-        logical.children, logical.condition);
+        logical.value, logical.children, logical.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalAnd
@@ -249,7 +252,7 @@ struct StepVisitor {
     return step_applicator_to_json(
         "logical", "and", logical.target, logical.relative_schema_location,
         logical.relative_instance_location, logical.keyword_location,
-        logical.children, logical.condition);
+        logical.value, logical.children, logical.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalNot
@@ -257,7 +260,7 @@ struct StepVisitor {
     return step_applicator_to_json(
         "logical", "not", logical.target, logical.relative_schema_location,
         logical.relative_instance_location, logical.keyword_location,
-        logical.children, logical.condition);
+        logical.value, logical.children, logical.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerControlLabel
@@ -298,16 +301,16 @@ struct StepVisitor {
                       &loop) const -> sourcemeta::jsontoolkit::JSON {
     return step_applicator_to_json(
         "loop", "properties", loop.target, loop.relative_schema_location,
-        loop.relative_instance_location, loop.keyword_location, loop.children,
-        loop.condition);
+        loop.relative_instance_location, loop.keyword_location, loop.value,
+        loop.children, loop.condition);
   }
 
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLoopItems &loop)
       const -> sourcemeta::jsontoolkit::JSON {
     return step_applicator_to_json(
         "loop", "items", loop.target, loop.relative_schema_location,
-        loop.relative_instance_location, loop.keyword_location, loop.children,
-        loop.condition);
+        loop.relative_instance_location, loop.keyword_location, loop.value,
+        loop.children, loop.condition);
   }
 };
 

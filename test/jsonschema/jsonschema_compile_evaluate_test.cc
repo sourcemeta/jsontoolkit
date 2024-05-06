@@ -187,6 +187,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_empty_no_condition) {
                               Pointer{},
                               Pointer{},
                               "#",
+                              SchemaCompilerValueNone{},
                               {},
                               {}}};
 
@@ -217,6 +218,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_true) {
                               Pointer{},
                               Pointer{},
                               "#",
+                              SchemaCompilerValueNone{},
                               children,
                               {}}};
 
@@ -247,6 +249,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_false) {
                               Pointer{},
                               Pointer{},
                               "#",
+                              SchemaCompilerValueNone{},
                               children,
                               {}}};
 
@@ -281,6 +284,7 @@ TEST(JSONSchema_compile_evaluate,
                               Pointer{},
                               Pointer{},
                               "#",
+                              SchemaCompilerValueNone{},
                               children,
                               {assertion_1}}};
 
@@ -338,6 +342,7 @@ TEST(JSONSchema_compile_evaluate,
                               Pointer{},
                               Pointer{},
                               "#",
+                              SchemaCompilerValueNone{},
                               children,
                               {assertion_1}}};
 
@@ -382,6 +387,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_empty_no_condition) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               SchemaCompilerValueNone{},
                                {},
                                {}}};
 
@@ -406,6 +412,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_true) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               SchemaCompilerValueNone{},
                                children,
                                {}}};
 
@@ -436,6 +443,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_false) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               SchemaCompilerValueNone{},
                                children,
                                {}}};
 
@@ -460,6 +468,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_empty) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -484,6 +493,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_true) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -508,6 +518,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_false) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -532,6 +543,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_true) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -556,6 +568,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_false) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -612,6 +625,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_regex_instance_basename_empty) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -637,6 +651,7 @@ TEST(JSONSchema_compile_evaluate,
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -662,6 +677,7 @@ TEST(JSONSchema_compile_evaluate,
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -685,6 +701,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_not_type_true) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               SchemaCompilerValueNone{},
                                std::move(children),
                                {}}};
 
@@ -708,6 +725,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_not_type_false) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               SchemaCompilerValueNone{},
                                std::move(children),
                                {}}};
 
@@ -732,6 +750,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_empty) {
                               {"loop"},
                               {},
                               "#/loop",
+                              SchemaCompilerValueNone{},
                               children,
                               {}}};
 
@@ -756,6 +775,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_true) {
                               {"loop"},
                               {},
                               "#/loop",
+                              SchemaCompilerValueNone{},
                               children,
                               {}}};
 
@@ -780,6 +800,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_false) {
                               {"loop"},
                               {},
                               "#/loop",
+                              SchemaCompilerValueNone{},
                               children,
                               {}}};
 
@@ -804,6 +825,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_true) {
                               {"loop"},
                               {},
                               "#/loop",
+                              SchemaCompilerValueNone{},
                               children,
                               {}}};
 
@@ -828,6 +850,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_false) {
                               {"loop"},
                               {},
                               "#/loop",
+                              SchemaCompilerValueNone{},
                               children,
                               {}}};
 

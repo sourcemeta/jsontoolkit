@@ -209,6 +209,7 @@ TEST(JSONSchema_compile_json, or_empty) {
                               Pointer{},
                               Pointer{},
                               "#",
+                              SchemaCompilerValueNone{},
                               {},
                               {}}};
 
@@ -217,6 +218,7 @@ TEST(JSONSchema_compile_json, or_empty) {
     {
       "category": "logical",
       "type": "or",
+      "value": null,
       "target": {
         "category": "target",
         "location": "",
@@ -249,6 +251,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
                               Pointer{},
                               Pointer{},
                               "#",
+                              SchemaCompilerValueNone{},
                               children,
                               {}}};
 
@@ -257,6 +260,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
     {
       "category": "logical",
       "type": "or",
+      "value": null,
       "target": {
         "category": "target",
         "location": "",
@@ -314,6 +318,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
                               Pointer{},
                               Pointer{},
                               "#",
+                              SchemaCompilerValueNone{},
                               children,
                               {}}};
 
@@ -322,6 +327,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
     {
       "category": "logical",
       "type": "or",
+      "value": null,
       "target": {
         "category": "target",
         "location": "",
@@ -391,6 +397,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
                               Pointer{},
                               Pointer{},
                               "#",
+                              SchemaCompilerValueNone{},
                               {},
                               condition}};
 
@@ -399,6 +406,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
     {
       "category": "logical",
       "type": "or",
+      "value": null,
       "target": {
         "category": "target",
         "location": "",
@@ -441,6 +449,7 @@ TEST(JSONSchema_compile_json, and_empty) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               SchemaCompilerValueNone{},
                                {},
                                {}}};
 
@@ -449,6 +458,7 @@ TEST(JSONSchema_compile_json, and_empty) {
     {
       "category": "logical",
       "type": "and",
+      "value": null,
       "target": {
         "category": "target",
         "location": "",
@@ -481,6 +491,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               SchemaCompilerValueNone{},
                                children,
                                {}}};
 
@@ -489,6 +500,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
     {
       "category": "logical",
       "type": "and",
+      "value": null,
       "target": {
         "category": "target",
         "location": "",
@@ -546,6 +558,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               SchemaCompilerValueNone{},
                                children,
                                {}}};
 
@@ -554,6 +567,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
     {
       "category": "logical",
       "type": "and",
+      "value": null,
       "target": {
         "category": "target",
         "location": "",
@@ -623,6 +637,7 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               SchemaCompilerValueNone{},
                                {},
                                condition}};
 
@@ -631,6 +646,7 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
     {
       "category": "logical",
       "type": "and",
+      "value": null,
       "target": {
         "category": "target",
         "location": "",
@@ -888,6 +904,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
                                    Pointer{"loop"},
                                    Pointer{},
                                    "#/loop",
+                                   SchemaCompilerValueNone{},
                                    children,
                                    condition}};
 
@@ -896,6 +913,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
     {
       "category": "loop",
       "type": "properties",
+      "value": null,
       "relativeSchemaLocation": "/loop",
       "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/loop",
@@ -1001,6 +1019,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_basename) {
                                    Pointer{"loop"},
                                    Pointer{},
                                    "#/loop",
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -1009,6 +1028,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_basename) {
     {
       "category": "loop",
       "type": "properties",
+      "value": null,
       "relativeSchemaLocation": "/loop",
       "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/loop",
@@ -1060,6 +1080,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_parent) {
                                    Pointer{"loop"},
                                    Pointer{},
                                    "#/loop",
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -1068,6 +1089,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_parent) {
     {
       "category": "loop",
       "type": "properties",
+      "value": null,
       "relativeSchemaLocation": "/loop",
       "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/loop",

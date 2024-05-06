@@ -79,6 +79,7 @@ auto make(const SchemaCompilerContext &context,
           relative_schema_location(context),
           context.base_instance_location,
           keyword_location(context),
+          SchemaCompilerValueNone{},
           std::move(children),
           std::move(condition)};
 }
