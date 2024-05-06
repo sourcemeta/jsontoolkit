@@ -47,8 +47,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // anyOf
   // oneOf
   // dependencies
-  // - Complex
-  // additionalItems
 
   COMPILE("http://json-schema.org/draft-04/schema#", "$ref",
           compiler_draft4_core_ref);
@@ -72,6 +70,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_not);
   COMPILE("http://json-schema.org/draft-04/schema#", "items",
           compiler_draft4_validation_items);
+  COMPILE("http://json-schema.org/draft-04/schema#", "additionalItems",
+          compiler_draft4_validation_additionalitems);
 
 #undef COMPILE
 #undef STOP_IF_SIBLING_KEYWORD
