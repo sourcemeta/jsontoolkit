@@ -750,7 +750,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_empty) {
                               {"loop"},
                               {},
                               "#/loop",
-                              SchemaCompilerValueNone{},
+                              SchemaCompilerValueUnsignedInteger{0},
                               children,
                               {}}};
 
@@ -775,7 +775,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_true) {
                               {"loop"},
                               {},
                               "#/loop",
-                              SchemaCompilerValueNone{},
+                              SchemaCompilerValueUnsignedInteger{0},
                               children,
                               {}}};
 
@@ -800,7 +800,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_false) {
                               {"loop"},
                               {},
                               "#/loop",
-                              SchemaCompilerValueNone{},
+                              SchemaCompilerValueUnsignedInteger{0},
                               children,
                               {}}};
 
@@ -825,7 +825,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_true) {
                               {"loop"},
                               {},
                               "#/loop",
-                              SchemaCompilerValueNone{},
+                              SchemaCompilerValueUnsignedInteger{0},
                               children,
                               {}}};
 
@@ -850,7 +850,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_false) {
                               {"loop"},
                               {},
                               "#/loop",
-                              SchemaCompilerValueNone{},
+                              SchemaCompilerValueUnsignedInteger{0},
                               children,
                               {}}};
 
@@ -885,6 +885,106 @@ TEST(JSONSchema_compile_evaluate, fast_step_size_greater_array_false) {
       {}}};
 
   const JSON instance{parse("[ 1, 2, 3 ]")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_FALSE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_empty) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
+                                  Pointer{},
+                                  Pointer{},
+                                  "#/loop/type",
+                                  SchemaCompilerValueType{JSON::Type::String},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopItems{{SchemaCompilerTargetType::Instance, {}},
+                              {"loop"},
+                              {},
+                              "#/loop",
+                              SchemaCompilerValueUnsignedInteger{2},
+                              children,
+                              {}}};
+
+  const JSON instance{parse("[]")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_less) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
+                                  Pointer{},
+                                  Pointer{},
+                                  "#/loop/type",
+                                  SchemaCompilerValueType{JSON::Type::String},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopItems{{SchemaCompilerTargetType::Instance, {}},
+                              {"loop"},
+                              {},
+                              "#/loop",
+                              SchemaCompilerValueUnsignedInteger{2},
+                              children,
+                              {}}};
+
+  const JSON instance{parse("[ 1, 2 ]")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_match) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
+                                  Pointer{},
+                                  Pointer{},
+                                  "#/loop/type",
+                                  SchemaCompilerValueType{JSON::Type::String},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopItems{{SchemaCompilerTargetType::Instance, {}},
+                              {"loop"},
+                              {},
+                              "#/loop",
+                              SchemaCompilerValueUnsignedInteger{2},
+                              children,
+                              {}}};
+
+  const JSON instance{parse("[ 1, 2, \"foo\", \"bar\" ]")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_no_match) {
+  using namespace sourcemeta::jsontoolkit;
+
+  const SchemaCompilerTemplate children{
+      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
+                                  Pointer{},
+                                  Pointer{},
+                                  "#/loop/type",
+                                  SchemaCompilerValueType{JSON::Type::String},
+                                  {}}};
+
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerLoopItems{{SchemaCompilerTargetType::Instance, {}},
+                              {"loop"},
+                              {},
+                              "#/loop",
+                              SchemaCompilerValueUnsignedInteger{2},
+                              children,
+                              {}}};
+
+  const JSON instance{parse("[ 1, 2, 3, \"foo\" ]")};
   const auto result{evaluate(steps, instance)};
   EXPECT_FALSE(result);
 }

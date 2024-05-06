@@ -135,7 +135,8 @@ struct SchemaCompilerLogicalNot;
 struct SchemaCompilerLoopProperties;
 
 /// @ingroup jsonschema
-/// Represents a compiler step that loops over array items
+/// Represents a compiler step that loops over array items starting from a given
+/// index
 struct SchemaCompilerLoopItems;
 
 /// @ingroup jsonschema
@@ -202,7 +203,7 @@ DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueNone)
-DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueUnsignedInteger)
 DEFINE_CONTROL(Label)
 DEFINE_CONTROL(Jump)
 

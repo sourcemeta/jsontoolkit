@@ -19,27 +19,32 @@ auto type_string_to_assertion(
     -> sourcemeta::jsontoolkit::SchemaCompilerTemplate {
   using namespace sourcemeta::jsontoolkit;
   if (type == "null") {
-    return {make<SchemaCompilerAssertionType>(context, JSON::Type::Null, {})};
+    return {make<SchemaCompilerAssertionType>(
+        context, JSON::Type::Null, {}, SchemaCompilerTargetType::Instance)};
   } else if (type == "boolean") {
-    return {
-        make<SchemaCompilerAssertionType>(context, JSON::Type::Boolean, {})};
+    return {make<SchemaCompilerAssertionType>(
+        context, JSON::Type::Boolean, {}, SchemaCompilerTargetType::Instance)};
   } else if (type == "object") {
-    return {make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})};
+    return {make<SchemaCompilerAssertionType>(
+        context, JSON::Type::Object, {}, SchemaCompilerTargetType::Instance)};
   } else if (type == "array") {
-    return {make<SchemaCompilerAssertionType>(context, JSON::Type::Array, {})};
+    return {make<SchemaCompilerAssertionType>(
+        context, JSON::Type::Array, {}, SchemaCompilerTargetType::Instance)};
   } else if (type == "number") {
     const auto subcontext{applicate(context)};
     return {make<SchemaCompilerLogicalOr>(
-        context,
-        {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Real, {}),
-         make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Integer,
-                                           {})},
-        {})};
+        context, SchemaCompilerValueNone{},
+        {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Real, {},
+                                           SchemaCompilerTargetType::Instance),
+         make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Integer, {},
+                                           SchemaCompilerTargetType::Instance)},
+        SchemaCompilerTemplate{})};
   } else if (type == "integer") {
-    return {
-        make<SchemaCompilerAssertionType>(context, JSON::Type::Integer, {})};
+    return {make<SchemaCompilerAssertionType>(
+        context, JSON::Type::Integer, {}, SchemaCompilerTargetType::Instance)};
   } else if (type == "string") {
-    return {make<SchemaCompilerAssertionType>(context, JSON::Type::String, {})};
+    return {make<SchemaCompilerAssertionType>(
+        context, JSON::Type::String, {}, SchemaCompilerTargetType::Instance)};
   } else {
     return {};
   }
@@ -102,7 +107,9 @@ auto compiler_draft4_validation_type(const SchemaCompilerContext &context)
     }
 
     assert(disjunctors.size() == context.value.size());
-    return {make<SchemaCompilerLogicalOr>(context, std::move(disjunctors), {})};
+    return {make<SchemaCompilerLogicalOr>(context, SchemaCompilerValueNone{},
+                                          std::move(disjunctors),
+                                          SchemaCompilerTemplate{})};
   }
 
   return {};
@@ -115,8 +122,8 @@ auto compiler_draft4_validation_required(const SchemaCompilerContext &context)
 
   // TODO: As an optimization, avoid this condition if the subschema declares
   // `type` to `object` already
-  SchemaCompilerTemplate condition{
-      make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {})};
+  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionType>(
+      context, JSON::Type::Object, {}, SchemaCompilerTargetType::Instance)};
 
   if (context.value.size() > 1) {
     SchemaCompilerTemplate children;
@@ -124,15 +131,18 @@ auto compiler_draft4_validation_required(const SchemaCompilerContext &context)
     for (const auto &property : context.value.as_array()) {
       assert(property.is_string());
       children.push_back(make<SchemaCompilerAssertionDefines>(
-          subcontext, property.to_string(), {}));
+          subcontext, property.to_string(), {},
+          SchemaCompilerTargetType::Instance));
     }
 
-    return {make<SchemaCompilerLogicalAnd>(context, std::move(children),
+    return {make<SchemaCompilerLogicalAnd>(context, SchemaCompilerValueNone{},
+                                           std::move(children),
                                            std::move(condition))};
   } else {
     assert(context.value.front().is_string());
     return {make<SchemaCompilerAssertionDefines>(
-        context, context.value.front().to_string(), std::move(condition))};
+        context, context.value.front().to_string(), std::move(condition),
+        SchemaCompilerTargetType::Instance)};
   }
 }
 
@@ -166,21 +176,23 @@ auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
     // TODO: As an optimization, only emit an annotation if
     // `additionalProperties` is also declared in the same subschema Annotations
     // as such don't exist in Draft 4, so emit a private annotation instead
-    substeps.push_back(
-        make<SchemaCompilerAnnotationPrivate>(subcontext, JSON{key}, {}));
+    substeps.push_back(make<SchemaCompilerAnnotationPrivate>(
+        subcontext, JSON{key}, {}, SchemaCompilerTargetType::Instance));
     children.push_back(make<SchemaCompilerLogicalAnd>(
-        subcontext, std::move(substeps),
+        subcontext, SchemaCompilerValueNone{}, std::move(substeps),
         // TODO: As an optimization, avoid this condition if the subschema
         // declares `required` and includes the given key
-        {make<SchemaCompilerAssertionDefines>(subcontext, key, {})}));
+        {make<SchemaCompilerAssertionDefines>(
+            subcontext, key, {}, SchemaCompilerTargetType::Instance)}));
   }
 
   return {make<SchemaCompilerLogicalAnd>(
-      context, std::move(children),
+      context, SchemaCompilerValueNone{}, std::move(children),
 
       // TODO: As an optimization, avoid this condition if the subschema
       // declares `type` to `object` already
-      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {})})};
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {},
+                                         SchemaCompilerTargetType::Instance)})};
 }
 
 auto compiler_draft4_validation_patternproperties(
@@ -218,19 +230,21 @@ auto compiler_draft4_validation_patternproperties(
 
     // Loop over the instance properties
     children.push_back(make<SchemaCompilerLoopProperties>(
-        subcontext,
-        {make<SchemaCompilerLogicalAnd>(subcontext, std::move(substeps),
+        subcontext, SchemaCompilerValueNone{},
+        {make<SchemaCompilerLogicalAnd>(subcontext, SchemaCompilerValueNone{},
+                                        std::move(substeps),
                                         std::move(loop_condition))},
-        {}));
+        SchemaCompilerTemplate{}));
   }
 
   // If the instance is an object...
   return {make<SchemaCompilerLogicalAnd>(
-      context, std::move(children),
+      context, SchemaCompilerValueNone{}, std::move(children),
 
       // TODO: As an optimization, avoid this condition if the subschema
       // declares `type` to `object` already
-      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {})})};
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {},
+                                         SchemaCompilerTargetType::Instance)})};
 }
 
 auto compiler_draft4_validation_additionalproperties(
@@ -262,16 +276,19 @@ auto compiler_draft4_validation_additionalproperties(
   };
 
   SchemaCompilerTemplate wrapper{make<SchemaCompilerLogicalAnd>(
-      subcontext, compile(subcontext, empty_pointer, empty_pointer),
-      {make<SchemaCompilerLogicalAnd>(subcontext, std::move(conjunctions),
-                                      {})})};
+      subcontext, SchemaCompilerValueNone{},
+      compile(subcontext, empty_pointer, empty_pointer),
+      {make<SchemaCompilerLogicalAnd>(subcontext, SchemaCompilerValueNone{},
+                                      std::move(conjunctions),
+                                      SchemaCompilerTemplate{})})};
 
   return {make<SchemaCompilerLoopProperties>(
-      context, {std::move(wrapper)},
+      context, SchemaCompilerValueNone{}, {std::move(wrapper)},
 
       // TODO: As an optimization, avoid this condition if the subschema
       // declares `type` to `object` already
-      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {})})};
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {},
+                                         SchemaCompilerTargetType::Instance)})};
 }
 
 auto compiler_draft4_validation_pattern(const SchemaCompilerContext &context)
@@ -285,13 +302,17 @@ auto compiler_draft4_validation_pattern(const SchemaCompilerContext &context)
 
       // TODO: As an optimization, avoid this condition if the subschema
       // declares `type` to `string` already
-      {make<SchemaCompilerAssertionType>(context, JSON::Type::String, {})})};
+      {make<SchemaCompilerAssertionType>(context, JSON::Type::String, {},
+                                         SchemaCompilerTargetType::Instance)},
+      SchemaCompilerTargetType::Instance)};
 }
 
 auto compiler_draft4_validation_not(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   return {make<SchemaCompilerLogicalNot>(
-      context, compile(applicate(context), empty_pointer, empty_pointer), {})};
+      context, SchemaCompilerValueNone{},
+      compile(applicate(context), empty_pointer, empty_pointer),
+      SchemaCompilerTemplate{})};
 }
 
 auto compiler_draft4_validation_items(const SchemaCompilerContext &context)
@@ -299,11 +320,14 @@ auto compiler_draft4_validation_items(const SchemaCompilerContext &context)
   const auto subcontext{applicate(context)};
   if (context.value.is_object()) {
     return {make<SchemaCompilerLoopItems>(
-        context, compile(subcontext, empty_pointer, empty_pointer),
+        context, SchemaCompilerValueUnsignedInteger{0},
+        compile(subcontext, empty_pointer, empty_pointer),
 
         // TODO: As an optimization, avoid this condition if the subschema
         // declares `type` to `array` already
-        {make<SchemaCompilerAssertionType>(context, JSON::Type::Array, {})})};
+        {make<SchemaCompilerAssertionType>(
+            context, JSON::Type::Array, {},
+            SchemaCompilerTargetType::Instance)})};
   }
 
   assert(context.value.is_array());
@@ -314,7 +338,8 @@ auto compiler_draft4_validation_items(const SchemaCompilerContext &context)
     const auto index{
         static_cast<std::size_t>(std::distance(array.cbegin(), iterator))};
     children.push_back(make<SchemaCompilerLogicalAnd>(
-        subcontext, compile(subcontext, {index}, {index}),
+        subcontext, SchemaCompilerValueNone{},
+        compile(subcontext, {index}, {index}),
 
         // TODO: As an optimization, avoid this condition if the subschema
         // declares a corresponding `minItems`
@@ -323,11 +348,12 @@ auto compiler_draft4_validation_items(const SchemaCompilerContext &context)
   }
 
   return {make<SchemaCompilerLogicalAnd>(
-      context, std::move(children),
+      context, SchemaCompilerValueNone{}, std::move(children),
 
       // TODO: As an optimization, avoid this condition if the subschema
       // declares `type` to `array` already
-      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Array, {})})};
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Array, {},
+                                         SchemaCompilerTargetType::Instance)})};
 }
 
 } // namespace internal
