@@ -58,8 +58,7 @@ auto make(const SchemaCompilerContext &context,
           // Take the value type from the "type" property of the step struct
           decltype(std::declval<Step>().value) &&value,
           SchemaCompilerTemplate &&condition,
-          const SchemaCompilerTargetType target_type =
-              SchemaCompilerTargetType::Instance,
+          const SchemaCompilerTargetType target_type,
           const std::optional<Pointer> &target_location = std::nullopt)
     -> Step {
   return {{target_type, target_location.value_or(empty_pointer)},
@@ -73,13 +72,15 @@ auto make(const SchemaCompilerContext &context,
 // Instantiate an applicator step
 template <typename Step>
 auto make(const SchemaCompilerContext &context,
+          // Take the value type from the "type" property of the step struct
+          decltype(std::declval<Step>().value) &&value,
           SchemaCompilerTemplate &&children,
           SchemaCompilerTemplate &&condition) -> Step {
   return {{SchemaCompilerTargetType::Instance, empty_pointer},
           relative_schema_location(context),
           context.base_instance_location,
           keyword_location(context),
-          SchemaCompilerValueNone{},
+          std::move(value),
           std::move(children),
           std::move(condition)};
 }

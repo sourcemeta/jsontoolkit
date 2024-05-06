@@ -20,8 +20,9 @@ auto compile_subschema(
     if (context.schema.to_boolean()) {
       return {};
     } else {
-      return {make<SchemaCompilerAssertionFail>(context,
-                                                SchemaCompilerValueNone{}, {})};
+      return {make<SchemaCompilerAssertionFail>(
+          context, SchemaCompilerValueNone{}, {},
+          SchemaCompilerTargetType::Instance)};
     }
   }
 

@@ -1,9 +1,10 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
+#include <algorithm>   // std::min
 #include <cassert>     // assert
 #include <functional>  // std::reference_wrapper
-#include <iterator>    // std::distance
+#include <iterator>    // std::distance, std::advance
 #include <map>         // std::map
 #include <set>         // std::set
 #include <type_traits> // std::is_same_v
@@ -376,14 +377,23 @@ auto evaluate_step(
     }
   } else if (std::holds_alternative<SchemaCompilerLoopItems>(step)) {
     const auto &loop{std::get<SchemaCompilerLoopItems>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueNone>(loop.value));
     context.push(loop);
     EVALUATE_CONDITION_GUARD(loop.condition, instance);
+    const auto value{context.resolve_value(loop.value, instance)};
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
     assert(target.is_array());
     const auto &array{target.as_array()};
     result = true;
-    for (auto iterator{array.cbegin()}; iterator != array.cend(); ++iterator) {
+    auto iterator{array.cbegin()};
+
+    // We need this check, as advancing an iterator past its bounds
+    // is considered undefined behavior
+    // See https://en.cppreference.com/w/cpp/iterator/advance
+    std::advance(iterator,
+                 std::min(static_cast<std::ptrdiff_t>(value),
+                          static_cast<std::ptrdiff_t>(target.size())));
+
+    for (; iterator != array.cend(); ++iterator) {
       const auto index{std::distance(array.cbegin(), iterator)};
       context.push(empty_pointer, {static_cast<Pointer::Token::Index>(index)});
       for (const auto &child : loop.children) {
