@@ -1530,3 +1530,99 @@ TEST(JSONSchema_compile_draft4, anyOf_2) {
   EVALUATE_TRACE_FAILURE(7, LogicalAnd, "/anyOf", "#/anyOf", "");
   EVALUATE_TRACE_FAILURE(8, LogicalOr, "/anyOf", "#/anyOf", "");
 }
+
+TEST(JSONSchema_compile_draft4, oneOf_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "oneOf": [
+      { "type": "string" },
+      { "type": "integer" },
+      { "type": "number" },
+      { "type": "boolean" }
+    ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/oneOf/0/type", "#/oneOf/0/type",
+                         "");
+  EVALUATE_TRACE_SUCCESS(1, LogicalAnd, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_SUCCESS(2, LogicalXor, "/oneOf", "#/oneOf", "");
+}
+
+TEST(JSONSchema_compile_draft4, oneOf_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "oneOf": [
+      { "type": "string" },
+      { "type": "integer" },
+      { "type": "number" },
+      { "type": "boolean" }
+    ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{3.14};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 8);
+
+  EVALUATE_TRACE_FAILURE(0, AssertionType, "/oneOf/0/type", "#/oneOf/0/type",
+                         "");
+  EVALUATE_TRACE_FAILURE(1, LogicalAnd, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_FAILURE(2, AssertionType, "/oneOf/1/type", "#/oneOf/1/type",
+                         "");
+  EVALUATE_TRACE_FAILURE(3, LogicalAnd, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_SUCCESS(4, AssertionType, "/oneOf/2/type", "#/oneOf/2/type",
+                         "");
+  EVALUATE_TRACE_SUCCESS(5, LogicalOr, "/oneOf/2/type", "#/oneOf/2/type", "");
+  EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_SUCCESS(7, LogicalXor, "/oneOf", "#/oneOf", "");
+}
+
+TEST(JSONSchema_compile_draft4, oneOf_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "oneOf": [
+      { "type": "string" },
+      { "type": "integer" },
+      { "type": "number" },
+      { "type": "boolean" }
+    ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 11);
+
+  EVALUATE_TRACE_FAILURE(0, AssertionType, "/oneOf/0/type", "#/oneOf/0/type",
+                         "");
+  EVALUATE_TRACE_FAILURE(1, LogicalAnd, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/oneOf/1/type", "#/oneOf/1/type",
+                         "");
+  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_FAILURE(4, AssertionType, "/oneOf/2/type", "#/oneOf/2/type",
+                         "");
+  EVALUATE_TRACE_SUCCESS(5, AssertionType, "/oneOf/2/type", "#/oneOf/2/type",
+                         "");
+  EVALUATE_TRACE_SUCCESS(6, LogicalOr, "/oneOf/2/type", "#/oneOf/2/type", "");
+  EVALUATE_TRACE_SUCCESS(7, LogicalAnd, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_FAILURE(8, AssertionType, "/oneOf/3/type", "#/oneOf/3/type",
+                         "");
+  EVALUATE_TRACE_FAILURE(9, LogicalAnd, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_FAILURE(10, LogicalXor, "/oneOf", "#/oneOf", "");
+}
