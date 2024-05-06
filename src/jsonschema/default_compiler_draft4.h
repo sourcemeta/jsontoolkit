@@ -356,5 +356,30 @@ auto compiler_draft4_validation_items(const SchemaCompilerContext &context)
                                          SchemaCompilerTargetType::Instance)})};
 }
 
+auto compiler_draft4_validation_additionalitems(
+    const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
+  assert(context.schema.is_object());
+
+  // Nothing to do here as the `items` keyword covers the entire array
+  if (context.schema.defines("items") &&
+      context.schema.at("items").is_object()) {
+    return {};
+  }
+
+  const auto cursor{
+      (context.schema.defines("items") && context.schema.at("items").is_array())
+          ? context.schema.at("items").size()
+          : 0};
+
+  return {make<SchemaCompilerLoopItems>(
+      context, SchemaCompilerValueUnsignedInteger{cursor},
+      compile(applicate(context), empty_pointer, empty_pointer),
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `array` already
+      {make<SchemaCompilerAssertionType>(context, JSON::Type::Array, {},
+                                         SchemaCompilerTargetType::Instance)})};
+}
+
 } // namespace internal
 #endif
