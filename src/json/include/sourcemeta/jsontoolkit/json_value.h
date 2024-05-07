@@ -4,7 +4,7 @@
 #include <sourcemeta/jsontoolkit/json_array.h>
 #include <sourcemeta/jsontoolkit/json_object.h>
 
-#include <algorithm>        // std::find, std::any_of
+#include <algorithm>        // std::find, std::any_of, std::sort, std::unique
 #include <cassert>          // assert
 #include <cmath>            // std::isinf, std::isnan
 #include <cstdint>          // std::int64_t, std::uint8_t
@@ -1062,6 +1062,25 @@ public:
     assert(this->is_array());
     return std::find(this->as_array().cbegin(), this->as_array().cend(),
                      element) != this->as_array().cend();
+  }
+
+  /// This method checks if an JSON array does not contain duplicated items. For
+  /// example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  /// assert(document.is_unique());
+  /// ```
+  [[nodiscard]] auto is_unique() const -> bool {
+    assert(this->is_array());
+    // TODO: Can we do efficiently do this without copying?
+    auto copy{std::get<Array>(this->data).data};
+    std::sort(copy.begin(), copy.end());
+    return std::unique(copy.begin(), copy.end()) == copy.end();
   }
 
   /*
