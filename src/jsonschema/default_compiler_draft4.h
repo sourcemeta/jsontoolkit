@@ -465,5 +465,20 @@ auto compiler_draft4_validation_dependencies(
                                          SchemaCompilerTargetType::Instance)})};
 }
 
+auto compiler_draft4_validation_enum(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  assert(context.value.is_array());
+  SchemaCompilerTemplate children;
+  const auto subcontext{applicate(context)};
+  for (const auto &choice : context.value.as_array()) {
+    children.push_back(make<SchemaCompilerAssertionEqual>(
+        subcontext, choice, {}, SchemaCompilerTargetType::Instance));
+  }
+
+  return {make<SchemaCompilerLogicalOr>(context, SchemaCompilerValueNone{},
+                                        std::move(children),
+                                        SchemaCompilerTemplate{})};
+}
+
 } // namespace internal
 #endif

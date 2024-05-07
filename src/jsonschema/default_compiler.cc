@@ -40,7 +40,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // uniqueItems
   // maxProperties
   // minProperties
-  // enum
   // format
 
   COMPILE("http://json-schema.org/draft-04/schema#", "$ref",
@@ -73,6 +72,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_additionalitems);
   COMPILE("http://json-schema.org/draft-04/schema#", "dependencies",
           compiler_draft4_validation_dependencies);
+  COMPILE("http://json-schema.org/draft-04/schema#", "enum",
+          compiler_draft4_validation_enum);
 
 #undef COMPILE
 #undef STOP_IF_SIBLING_KEYWORD
