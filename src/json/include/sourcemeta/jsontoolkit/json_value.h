@@ -297,7 +297,7 @@ public:
 
   auto operator>(const GenericValue<CharT, Traits, Allocator> &other)
       const noexcept -> bool {
-    return !(*this < other);
+    return !(*this < other) && *this != other;
   }
 
   auto operator>=(const GenericValue<CharT, Traits, Allocator> &other)
