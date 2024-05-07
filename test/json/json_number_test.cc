@@ -72,6 +72,70 @@ TEST(JSON_number, is_positive_positive_real) {
 }
 
 TEST(JSON_number, add_integer_integer) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{3};
+  const sourcemeta::jsontoolkit::JSON document{left + right};
+  EXPECT_TRUE(document.is_integer());
+  EXPECT_EQ(document.to_integer(), 8);
+}
+
+TEST(JSON_number, add_integer_real) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{3.2};
+  const sourcemeta::jsontoolkit::JSON document{left + right};
+  EXPECT_TRUE(document.is_real());
+  EXPECT_EQ(document.to_real(), 8.2);
+}
+
+TEST(JSON_number, add_real_integer) {
+  const sourcemeta::jsontoolkit::JSON left{3.2};
+  const sourcemeta::jsontoolkit::JSON right{2};
+  const sourcemeta::jsontoolkit::JSON document{left + right};
+  EXPECT_TRUE(document.is_real());
+  EXPECT_EQ(document.to_real(), 5.2);
+}
+
+TEST(JSON_number, add_real_real) {
+  const sourcemeta::jsontoolkit::JSON left{3.2};
+  const sourcemeta::jsontoolkit::JSON right{2.0};
+  const sourcemeta::jsontoolkit::JSON document{left + right};
+  EXPECT_TRUE(document.is_real());
+  EXPECT_EQ(document.to_real(), 5.2);
+}
+
+TEST(JSON_number, substract_integer_integer) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{3};
+  const sourcemeta::jsontoolkit::JSON document{left - right};
+  EXPECT_TRUE(document.is_integer());
+  EXPECT_EQ(document.to_integer(), 2);
+}
+
+TEST(JSON_number, substract_integer_real) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{3.2};
+  const sourcemeta::jsontoolkit::JSON document{left - right};
+  EXPECT_TRUE(document.is_real());
+  EXPECT_DOUBLE_EQ(document.to_real(), 1.8);
+}
+
+TEST(JSON_number, substract_real_integer) {
+  const sourcemeta::jsontoolkit::JSON left{3.2};
+  const sourcemeta::jsontoolkit::JSON right{2};
+  const sourcemeta::jsontoolkit::JSON document{left - right};
+  EXPECT_TRUE(document.is_real());
+  EXPECT_DOUBLE_EQ(document.to_real(), 1.2);
+}
+
+TEST(JSON_number, substract_real_real) {
+  const sourcemeta::jsontoolkit::JSON left{3.2};
+  const sourcemeta::jsontoolkit::JSON right{2.0};
+  const sourcemeta::jsontoolkit::JSON document{left - right};
+  EXPECT_TRUE(document.is_real());
+  EXPECT_DOUBLE_EQ(document.to_real(), 1.2);
+}
+
+TEST(JSON_number, increment_integer_integer) {
   sourcemeta::jsontoolkit::JSON document{5};
   const sourcemeta::jsontoolkit::JSON value{3};
   document += value;
@@ -79,7 +143,7 @@ TEST(JSON_number, add_integer_integer) {
   EXPECT_EQ(document.to_integer(), 8);
 }
 
-TEST(JSON_number, add_integer_real) {
+TEST(JSON_number, increment_integer_real) {
   sourcemeta::jsontoolkit::JSON document{5};
   const sourcemeta::jsontoolkit::JSON value{3.2};
   document += value;
@@ -87,7 +151,7 @@ TEST(JSON_number, add_integer_real) {
   EXPECT_EQ(document.to_real(), 8.2);
 }
 
-TEST(JSON_number, add_real_integer) {
+TEST(JSON_number, increment_real_integer) {
   sourcemeta::jsontoolkit::JSON document{3.2};
   const sourcemeta::jsontoolkit::JSON value{2};
   document += value;
@@ -95,12 +159,44 @@ TEST(JSON_number, add_real_integer) {
   EXPECT_EQ(document.to_real(), 5.2);
 }
 
-TEST(JSON_number, add_real_real) {
+TEST(JSON_number, increment_real_real) {
   sourcemeta::jsontoolkit::JSON document{3.2};
   const sourcemeta::jsontoolkit::JSON value{2.0};
   document += value;
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 5.2);
+}
+
+TEST(JSON_number, decrement_integer_integer) {
+  sourcemeta::jsontoolkit::JSON document{5};
+  const sourcemeta::jsontoolkit::JSON value{3};
+  document -= value;
+  EXPECT_TRUE(document.is_integer());
+  EXPECT_EQ(document.to_integer(), 2);
+}
+
+TEST(JSON_number, decrement_integer_real) {
+  sourcemeta::jsontoolkit::JSON document{5};
+  const sourcemeta::jsontoolkit::JSON value{3.2};
+  document -= value;
+  EXPECT_TRUE(document.is_real());
+  EXPECT_DOUBLE_EQ(document.to_real(), 1.8);
+}
+
+TEST(JSON_number, decrement_real_integer) {
+  sourcemeta::jsontoolkit::JSON document{3.2};
+  const sourcemeta::jsontoolkit::JSON value{2};
+  document -= value;
+  EXPECT_TRUE(document.is_real());
+  EXPECT_DOUBLE_EQ(document.to_real(), 1.2);
+}
+
+TEST(JSON_number, decrement_real_real) {
+  sourcemeta::jsontoolkit::JSON document{3.2};
+  const sourcemeta::jsontoolkit::JSON value{2.0};
+  document -= value;
+  EXPECT_TRUE(document.is_real());
+  EXPECT_DOUBLE_EQ(document.to_real(), 1.2);
 }
 
 TEST(JSON_number, add_integer_integer_within_object) {
