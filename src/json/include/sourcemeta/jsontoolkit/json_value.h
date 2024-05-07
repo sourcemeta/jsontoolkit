@@ -31,6 +31,10 @@ public:
   using CharTraits = Traits;
   /// The character type used by the JSON document.
   using Char = typename CharTraits::char_type;
+  /// The integer type used by the JSON document.
+  using Integer = std::int64_t;
+  /// The real type used by the JSON document.
+  using Real = double;
   /// The string type used by the JSON document.
   using String = std::basic_string<CharT, Traits, Allocator<CharT>>;
   /// The array type used by the JSON document.
@@ -53,7 +57,7 @@ public:
   /// const sourcemeta::jsontoolkit::JSON my_integer{4};
   /// ```
   explicit GenericValue(const std::int64_t value)
-      : data{std::in_place_type<std::int64_t>, value} {}
+      : data{std::in_place_type<Integer>, value} {}
 
   /// This constructor creates a JSON document from an integer type. For
   /// example:
@@ -64,7 +68,7 @@ public:
   /// const sourcemeta::jsontoolkit::JSON my_integer{4};
   /// ```
   explicit GenericValue(const std::size_t value)
-      : data{std::in_place_type<std::int64_t>, value} {}
+      : data{std::in_place_type<Integer>, value} {}
 
   /// This constructor creates a JSON document from an integer type. For
   /// example:
@@ -75,13 +79,13 @@ public:
   /// const sourcemeta::jsontoolkit::JSON my_integer{4};
   /// ```
   explicit GenericValue(const int value)
-      : data{std::in_place_type<std::int64_t>, value} {}
+      : data{std::in_place_type<Integer>, value} {}
 
   // On some systems, `std::int64_t` might be equal to `long`
   template <typename T = std::int64_t,
             typename = std::enable_if_t<!std::is_same_v<T, std::int64_t>>>
   explicit GenericValue(const long value)
-      : data{std::in_place_type<std::int64_t>, value} {}
+      : data{std::in_place_type<Integer>, value} {}
 
   /// This constructor creates a JSON document from an real number type. For
   /// example:
@@ -92,7 +96,7 @@ public:
   /// const sourcemeta::jsontoolkit::JSON my_real{3.14};
   /// ```
   explicit GenericValue(const double value)
-      : data{std::in_place_type<double>, value} {
+      : data{std::in_place_type<Real>, value} {
     // Numeric values that cannot be represented as sequences of digits (such as
     // Infinity and NaN) are not permitted. See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
@@ -110,7 +114,7 @@ public:
   /// const sourcemeta::jsontoolkit::JSON my_real{3.14};
   /// ```
   explicit GenericValue(const float value)
-      : GenericValue(static_cast<double>(value)) {}
+      : GenericValue(static_cast<Real>(value)) {}
 
   /// This constructor creates a JSON document from a boolean type. For example:
   ///
@@ -259,9 +263,9 @@ public:
   auto operator<(const GenericValue<CharT, Traits, Allocator> &other)
       const noexcept -> bool {
     if (this->type() == Type::Integer && other.type() == Type::Real) {
-      return static_cast<double>(this->to_integer()) < other.to_real();
+      return static_cast<Real>(this->to_integer()) < other.to_real();
     } else if (this->type() == Type::Real && other.type() == Type::Integer) {
-      return this->to_real() < static_cast<double>(other.to_integer());
+      return this->to_real() < static_cast<Real>(other.to_integer());
     }
 
     if (this->type() != other.type()) {
@@ -313,16 +317,16 @@ public:
     assert(this->is_number());
     assert(additive.is_number());
     if (this->is_integer() && additive.is_integer()) {
-      this->data.template emplace<std::int64_t>(this->to_integer() +
-                                                additive.to_integer());
+      this->data.template emplace<Integer>(this->to_integer() +
+                                           additive.to_integer());
     } else if (this->is_integer() && additive.is_real()) {
-      this->data.template emplace<double>(
-          static_cast<double>(this->to_integer()) + additive.to_real());
+      this->data.template emplace<Real>(static_cast<Real>(this->to_integer()) +
+                                        additive.to_real());
     } else if (this->is_real() && additive.is_integer()) {
-      this->data.template emplace<double>(
-          this->to_real() + static_cast<double>(additive.to_integer()));
+      this->data.template emplace<Real>(
+          this->to_real() + static_cast<Real>(additive.to_integer()));
     } else {
-      this->data.template emplace<double>(this->to_real() + additive.to_real());
+      this->data.template emplace<Real>(this->to_real() + additive.to_real());
     }
 
     return *this;
@@ -368,7 +372,7 @@ public:
   /// assert(document.is_integer());
   /// ```
   [[nodiscard]] auto is_integer() const noexcept -> bool {
-    return std::holds_alternative<std::int64_t>(this->data);
+    return std::holds_alternative<Integer>(this->data);
   }
 
   /// Check if the input JSON document is a real type. For example:
@@ -381,7 +385,7 @@ public:
   /// assert(document.is_real());
   /// ```
   [[nodiscard]] auto is_real() const noexcept -> bool {
-    return std::holds_alternative<double>(this->data);
+    return std::holds_alternative<Real>(this->data);
   }
 
   /// Check if the input JSON document is either an integer or a real type. For
@@ -417,7 +421,7 @@ public:
       case Type::Integer:
         return this->to_integer() >= 0;
       case Type::Real:
-        return this->to_real() >= static_cast<double>(0.0);
+        return this->to_real() >= static_cast<Real>(0.0);
       default:
         return false;
     }
@@ -521,9 +525,9 @@ public:
   /// assert(document.is_integer());
   /// assert(document.to_integer() == 5);
   /// ```
-  [[nodiscard]] auto to_integer() const noexcept -> std::int64_t {
+  [[nodiscard]] auto to_integer() const noexcept -> Integer {
     assert(this->is_integer());
-    return std::get<std::int64_t>(this->data);
+    return std::get<Integer>(this->data);
   }
 
   /// Convert a JSON instance into an IEEE 64-bit floating-point value. The
@@ -538,9 +542,9 @@ public:
   /// assert(document.is_real());
   /// assert(document.to_real() == 3.14);
   /// ```
-  [[nodiscard]] auto to_real() const noexcept -> double {
+  [[nodiscard]] auto to_real() const noexcept -> Real {
     assert(this->is_real());
-    return std::get<double>(this->data);
+    return std::get<Real>(this->data);
   }
 
   /// Convert a JSON instance into a standard string value. The result of this
@@ -934,9 +938,9 @@ public:
       // space than what it is actually used by the string
       return this->to_string().size() * sizeof(CharT);
     } else if (this->is_integer()) {
-      return sizeof(std::int64_t);
+      return sizeof(Integer);
     } else if (this->is_real()) {
-      return sizeof(double);
+      return sizeof(Real);
     } else if (this->is_boolean()) {
       return sizeof(bool);
     } else {
@@ -1542,9 +1546,7 @@ private:
 #if defined(_MSC_VER)
 #pragma warning(disable : 4251)
 #endif
-  std::variant<std::nullptr_t, bool, std::int64_t, double, String, Array,
-               Object>
-      data;
+  std::variant<std::nullptr_t, bool, Integer, Real, String, Array, Object> data;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251)
 #endif
