@@ -132,6 +132,16 @@ struct SchemaCompilerAssertionGreaterEqual;
 struct SchemaCompilerAssertionLessEqual;
 
 /// @ingroup jsonschema
+/// Represents a compiler assertion step that checks a JSON document is greater
+/// than another JSON document
+struct SchemaCompilerAssertionGreater;
+
+/// @ingroup jsonschema
+/// Represents a compiler assertion step that checks a JSON document is less
+/// than another JSON document
+struct SchemaCompilerAssertionLess;
+
+/// @ingroup jsonschema
 /// Represents a compiler assertion step that checks a given JSON array does not
 /// contain duplicate items
 struct SchemaCompilerAssertionUnique;
@@ -186,6 +196,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionNotContains, SchemaCompilerAssertionSizeGreater,
     SchemaCompilerAssertionSizeLess, SchemaCompilerAssertionEqual,
     SchemaCompilerAssertionGreaterEqual, SchemaCompilerAssertionLessEqual,
+    SchemaCompilerAssertionGreater, SchemaCompilerAssertionLess,
     SchemaCompilerAssertionUnique, SchemaCompilerAnnotationPublic,
     SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
     SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
@@ -235,6 +246,8 @@ DEFINE_STEP_WITH_VALUE(Assertion, SizeLess, SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_WITH_VALUE(Assertion, Equal, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, GreaterEqual, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, LessEqual, SchemaCompilerValueJSON)
+DEFINE_STEP_WITH_VALUE(Assertion, Greater, SchemaCompilerValueJSON)
+DEFINE_STEP_WITH_VALUE(Assertion, Less, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, Unique, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, Private, SchemaCompilerValueJSON)
