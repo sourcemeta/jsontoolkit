@@ -11,18 +11,38 @@ namespace sourcemeta::jsontoolkit {
 template <typename Key, typename Value, typename Allocator>
 class GenericObject {
 public:
-  // Constructors & operators
+  // Constructors
   using Container = std::map<Key, Value, std::less<Key>, Allocator>;
   GenericObject() : data{} {}
   GenericObject(std::initializer_list<typename Container::value_type> values)
       : data{values} {}
+
+  // Operators
+  // We cannot default given that this class references
+  // a JSON "value" as an incomplete type
   auto operator<(const GenericObject<Key, Value, Allocator> &other)
       const noexcept -> bool {
     return this->data < other.data;
   }
+  auto operator<=(const GenericObject<Key, Value, Allocator> &other)
+      const noexcept -> bool {
+    return this->data <= other.data;
+  }
+  auto operator>(const GenericObject<Key, Value, Allocator> &other)
+      const noexcept -> bool {
+    return this->data > other.data;
+  }
+  auto operator>=(const GenericObject<Key, Value, Allocator> &other)
+      const noexcept -> bool {
+    return this->data >= other.data;
+  }
   auto operator==(const GenericObject<Key, Value, Allocator> &other)
       const noexcept -> bool {
     return this->data == other.data;
+  }
+  auto operator!=(const GenericObject<Key, Value, Allocator> &other)
+      const noexcept -> bool {
+    return this->data != other.data;
   }
 
   // Member types

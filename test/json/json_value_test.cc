@@ -225,6 +225,33 @@ TEST(JSON_value, compare_object_object_different) {
   EXPECT_TRUE(right < left);
 }
 
+TEST(JSON_value, compare_int_operator_less_than_or_equal_int) {
+  const sourcemeta::jsontoolkit::JSON left{3};
+  const sourcemeta::jsontoolkit::JSON right{4};
+  EXPECT_TRUE(left <= right);
+  EXPECT_FALSE(right <= left);
+}
+
+TEST(JSON_value, compare_int_operator_greater_than_int) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{4};
+  EXPECT_TRUE(left > right);
+  EXPECT_FALSE(right > left);
+}
+
+TEST(JSON_value, compare_int_operator_greater_than_or_equal_int) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{4};
+  EXPECT_TRUE(left >= right);
+  EXPECT_FALSE(right >= left);
+}
+
+TEST(JSON_value, compare_int_operator_not_equal_int) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{4};
+  EXPECT_TRUE(left != right);
+}
+
 TEST(JSON_value, set_null) {
   sourcemeta::jsontoolkit::JSON document{true};
   EXPECT_FALSE(document.is_null());

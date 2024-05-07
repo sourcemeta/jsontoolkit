@@ -258,8 +258,6 @@ public:
    * Operators
    */
 
-  /// Overload to support ordering of JSON documents. Typically for sorting
-  /// reasons.
   auto operator<(const GenericValue<CharT, Traits, Allocator> &other)
       const noexcept -> bool {
     if (this->type() == Type::Integer && other.type() == Type::Real) {
@@ -292,16 +290,30 @@ public:
     }
   }
 
-  /// Overload to support deep equality of JSON documents.
-  auto operator==(const GenericValue<CharT, Traits, Allocator> &other)
+  auto operator<=(const GenericValue<CharT, Traits, Allocator> &other)
       const noexcept -> bool {
-    return this->data == other.data;
+    return *this < other || *this == other;
   }
+
+  auto operator>(const GenericValue<CharT, Traits, Allocator> &other)
+      const noexcept -> bool {
+    return !(*this < other);
+  }
+
+  auto operator>=(const GenericValue<CharT, Traits, Allocator> &other)
+      const noexcept -> bool {
+    return *this > other || *this == other;
+  }
+
+  auto operator==(const GenericValue<CharT, Traits, Allocator> &) const noexcept
+      -> bool = default;
+  auto operator!=(const GenericValue<CharT, Traits, Allocator> &) const noexcept
+      -> bool = default;
 
   // TODO: Support passing integer and real literals too.
   /// This overload adds a numeric JSON instance to another numeric JSON
   /// instance. For example, a numeric JSON instance 3.2 can be added to a
-  /// numeric JSON instance 5 as follows::
+  /// numeric JSON instance 5 as follows:
   ///
   /// ```cpp
   /// #include <sourcemeta/jsontoolkit/json.h>
