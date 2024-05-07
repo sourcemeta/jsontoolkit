@@ -1747,3 +1747,44 @@ TEST(JSONSchema_compile_draft4, dependencies_5) {
   EVALUATE_TRACE_FAILURE(1, LogicalAnd, "/dependencies", "#/dependencies", "");
   EVALUATE_TRACE_FAILURE(2, LogicalAnd, "/dependencies", "#/dependencies", "");
 }
+
+TEST(JSONSchema_compile_draft4, enum_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [ 1, {}, "foo" ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{}")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+  EVALUATE_TRACE_FAILURE(0, AssertionEqual, "/enum", "#/enum", "");
+  EVALUATE_TRACE_SUCCESS(1, AssertionEqual, "/enum", "#/enum", "");
+  EVALUATE_TRACE_SUCCESS(2, LogicalOr, "/enum", "#/enum", "");
+}
+
+TEST(JSONSchema_compile_draft4, enum_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [ 1, {}, "foo" ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
+  EVALUATE_TRACE_FAILURE(0, AssertionEqual, "/enum", "#/enum", "");
+  EVALUATE_TRACE_FAILURE(1, AssertionEqual, "/enum", "#/enum", "");
+  EVALUATE_TRACE_FAILURE(2, AssertionEqual, "/enum", "#/enum", "");
+  EVALUATE_TRACE_FAILURE(3, LogicalOr, "/enum", "#/enum", "");
+}
