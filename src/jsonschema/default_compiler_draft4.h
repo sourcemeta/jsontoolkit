@@ -540,5 +540,47 @@ auto compiler_draft4_validation_minlength(const SchemaCompilerContext &context)
       SchemaCompilerTargetType::Instance)};
 }
 
+auto compiler_draft4_validation_maxitems(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  assert(context.value.is_integer());
+  assert(context.value.is_positive());
+
+  // TODO: As an optimization, if `minItems` is set to the same number, do
+  // a single size equality assertion
+  return {make<SchemaCompilerAssertionSizeLess>(
+      context,
+      SchemaCompilerValueUnsignedInteger{
+          static_cast<unsigned long>(context.value.to_integer()) + 1},
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `array` already
+      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::Array,
+                                         {},
+                                         SchemaCompilerTargetType::Instance)},
+
+      SchemaCompilerTargetType::Instance)};
+}
+
+auto compiler_draft4_validation_minitems(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  assert(context.value.is_integer());
+  assert(context.value.is_positive());
+
+  // TODO: As an optimization, if `maxItems` is set to the same number, do
+  // a single size equality assertion
+  return {make<SchemaCompilerAssertionSizeGreater>(
+      context,
+      SchemaCompilerValueUnsignedInteger{
+          static_cast<unsigned long>(context.value.to_integer()) - 1},
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `array` already
+      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::Array,
+                                         {},
+                                         SchemaCompilerTargetType::Instance)},
+
+      SchemaCompilerTargetType::Instance)};
+}
+
 } // namespace internal
 #endif
