@@ -239,6 +239,15 @@ struct StepVisitor {
         assertion.value, assertion.condition);
   }
 
+  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionSizeLess
+                      &assertion) const -> sourcemeta::jsontoolkit::JSON {
+    return step_with_value_to_json("assertion", "size-less", assertion.target,
+                                   assertion.relative_schema_location,
+                                   assertion.relative_instance_location,
+                                   assertion.keyword_location, assertion.value,
+                                   assertion.condition);
+  }
+
   auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionEqual
                       &assertion) const -> sourcemeta::jsontoolkit::JSON {
     return step_with_value_to_json("assertion", "equal", assertion.target,
