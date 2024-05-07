@@ -29,14 +29,13 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
 
   // TODO: Draft 4
   // multipleOf
-  // exclusiveMaximum
-  // exclusiveMinimum
   // format
 
   COMPILE("http://json-schema.org/draft-04/schema#", "$ref",
           compiler_draft4_core_ref);
   STOP_IF_SIBLING_KEYWORD("http://json-schema.org/draft-04/schema#", "$ref");
 
+  // Re-organize keywords by type/instance
   COMPILE("http://json-schema.org/draft-04/schema#", "type",
           compiler_draft4_validation_type);
   COMPILE("http://json-schema.org/draft-04/schema#", "required",
