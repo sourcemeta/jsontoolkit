@@ -483,3 +483,21 @@ TEST(JSON_array, push_back_if_unique_move_not_exist) {
   EXPECT_EQ(document.at(2).to_integer(), 3);
   EXPECT_EQ(document.at(3).to_integer(), 4);
 }
+
+TEST(JSON_array, unique_empty) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[]");
+  EXPECT_TRUE(document.is_unique());
+}
+
+TEST(JSON_array, unique_true) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[ 1, 2, {} ]");
+  EXPECT_TRUE(document.is_unique());
+}
+
+TEST(JSON_array, unique_false) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[ [2], 1, [2] ]");
+  EXPECT_FALSE(document.is_unique());
+}
