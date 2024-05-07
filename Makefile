@@ -13,7 +13,6 @@ configure: .always
 	$(CMAKE) -S . -B ./build \
 		-DCMAKE_BUILD_TYPE:STRING=$(PRESET) \
 		-DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON \
-		-DJSONTOOLKIT_CONTRIB:BOOL=ON \
 		-DJSONTOOLKIT_TESTS:BOOL=ON \
 		-DJSONTOOLKIT_DOCS:BOOL=ON \
 		-DBUILD_SHARED_LIBS:BOOL=$(SHARED)
@@ -25,8 +24,6 @@ compile: .always
 		--component sourcemeta_jsontoolkit
 	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
 		--component sourcemeta_jsontoolkit_dev
-	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
-		--component sourcemeta_jsontoolkit_contrib
 
 lint: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target clang_tidy

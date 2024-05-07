@@ -3,7 +3,6 @@ doxygen
 assets
 Makefile
 README.markdown
-contrib
 test
 patches
 unikraft

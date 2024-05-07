@@ -98,7 +98,6 @@ jobs:
         run: >
           cmake -S . -B ./build
           -DCMAKE_BUILD_TYPE:STRING=Release
-          -DJSONTOOLKIT_CONTRIB:BOOL=ON
           -DJSONTOOLKIT_TESTS:BOOL=ON
           -DJSONTOOLKIT_DOCS:BOOL=OFF
           -DBUILD_SHARED_LIBS:BOOL=OFF
@@ -109,7 +108,6 @@ jobs:
         run: >
           cmake -S . -B ./build
           -DCMAKE_BUILD_TYPE:STRING=Release
-          -DJSONTOOLKIT_CONTRIB:BOOL=ON
           -DJSONTOOLKIT_TESTS:BOOL=ON
           -DJSONTOOLKIT_DOCS:BOOL=OFF
           -DBUILD_SHARED_LIBS:BOOL=ON
