@@ -239,6 +239,12 @@ TEST(JSON_value, compare_int_operator_greater_than_int) {
   EXPECT_FALSE(right > left);
 }
 
+TEST(JSON_value, compare_int_operator_greater_than_int_equal) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{5};
+  EXPECT_FALSE(left > right);
+}
+
 TEST(JSON_value, compare_int_operator_greater_than_or_equal_int) {
   const sourcemeta::jsontoolkit::JSON left{5};
   const sourcemeta::jsontoolkit::JSON right{4};
