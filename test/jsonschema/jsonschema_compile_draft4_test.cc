@@ -1879,3 +1879,105 @@ TEST(JSONSchema_compile_draft4, uniqueItems_5) {
       sourcemeta::jsontoolkit::parse("[ 2, 1, 2 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
+
+TEST(JSONSchema_compile_draft4, minLength_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "minLength": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
+TEST(JSONSchema_compile_draft4, minLength_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "minLength": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"xx"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_SUCCESS(0, AssertionSizeGreater, "/minLength", "#/minLength",
+                         "");
+}
+
+TEST(JSONSchema_compile_draft4, minLength_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "minLength": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"x"};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_FAILURE(0, AssertionSizeGreater, "/minLength", "#/minLength",
+                         "");
+}
+
+TEST(JSONSchema_compile_draft4, maxLength_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "maxLength": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
+TEST(JSONSchema_compile_draft4, maxLength_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "maxLength": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"xx"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_SUCCESS(0, AssertionSizeLess, "/maxLength", "#/maxLength", "");
+}
+
+TEST(JSONSchema_compile_draft4, maxLength_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "maxLength": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"xxx"};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_FAILURE(0, AssertionSizeLess, "/maxLength", "#/maxLength", "");
+}
