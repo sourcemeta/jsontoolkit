@@ -251,22 +251,23 @@ auto evaluate_step(
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     result = (target == value);
-  } else if (std::holds_alternative<SchemaCompilerAssertionGreater>(step)) {
-    const auto &assertion{std::get<SchemaCompilerAssertionGreater>(step)};
+  } else if (std::holds_alternative<SchemaCompilerAssertionGreaterEqual>(
+                 step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionGreaterEqual>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
-    result = target > value;
-  } else if (std::holds_alternative<SchemaCompilerAssertionLess>(step)) {
-    const auto &assertion{std::get<SchemaCompilerAssertionLess>(step)};
+    result = target >= value;
+  } else if (std::holds_alternative<SchemaCompilerAssertionLessEqual>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionLessEqual>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
-    result = target < value;
+    result = target <= value;
   } else if (std::holds_alternative<SchemaCompilerAssertionUnique>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionUnique>(step)};
     assert(std::holds_alternative<SchemaCompilerValueNone>(assertion.value));

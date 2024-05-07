@@ -257,18 +257,20 @@ struct StepVisitor {
                                    assertion.condition);
   }
 
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionGreater
-                      &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    return step_with_value_to_json("assertion", "greater", assertion.target,
-                                   assertion.relative_schema_location,
-                                   assertion.relative_instance_location,
-                                   assertion.keyword_location, assertion.value,
-                                   assertion.condition);
+  auto
+  operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionGreaterEqual
+                 &assertion) const -> sourcemeta::jsontoolkit::JSON {
+    return step_with_value_to_json(
+        "assertion", "greater-equal", assertion.target,
+        assertion.relative_schema_location,
+        assertion.relative_instance_location, assertion.keyword_location,
+        assertion.value, assertion.condition);
   }
 
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionLess
-                      &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    return step_with_value_to_json("assertion", "less", assertion.target,
+  auto
+  operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionLessEqual
+                 &assertion) const -> sourcemeta::jsontoolkit::JSON {
+    return step_with_value_to_json("assertion", "less-equal", assertion.target,
                                    assertion.relative_schema_location,
                                    assertion.relative_instance_location,
                                    assertion.keyword_location, assertion.value,
