@@ -260,10 +260,9 @@ public:
 
   auto operator<(const GenericValue<CharT, Traits, Allocator> &other)
       const noexcept -> bool {
-    if (this->type() == Type::Integer && other.type() == Type::Real) {
-      return static_cast<Real>(this->to_integer()) < other.to_real();
-    } else if (this->type() == Type::Real && other.type() == Type::Integer) {
-      return this->to_real() < static_cast<Real>(other.to_integer());
+    if ((this->type() == Type::Integer && other.type() == Type::Real) ||
+        (this->type() == Type::Real && other.type() == Type::Integer)) {
+      return this->as_real() < other.as_real();
     }
 
     if (this->type() != other.type()) {
@@ -330,11 +329,9 @@ public:
     if (this->is_integer() && other.is_integer()) {
       return GenericValue{this->to_integer() + other.to_integer()};
     } else if (this->is_integer() && other.is_real()) {
-      return GenericValue{static_cast<Real>(this->to_integer()) +
-                          other.to_real()};
+      return GenericValue{this->as_real() + other.to_real()};
     } else if (this->is_real() && other.is_integer()) {
-      return GenericValue{this->to_real() +
-                          static_cast<Real>(other.to_integer())};
+      return GenericValue{this->to_real() + other.as_real()};
     } else {
       return GenericValue{this->to_real() + other.to_real()};
     }
@@ -360,11 +357,9 @@ public:
     if (this->is_integer() && other.is_integer()) {
       return GenericValue{this->to_integer() - other.to_integer()};
     } else if (this->is_integer() && other.is_real()) {
-      return GenericValue{static_cast<Real>(this->to_integer()) -
-                          other.to_real()};
+      return GenericValue{this->as_real() - other.to_real()};
     } else if (this->is_real() && other.is_integer()) {
-      return GenericValue{this->to_real() -
-                          static_cast<Real>(other.to_integer())};
+      return GenericValue{this->to_real() - other.as_real()};
     } else {
       return GenericValue{this->to_real() - other.to_real()};
     }
@@ -764,6 +759,22 @@ public:
     return std::get<Object>(this->data);
   }
 
+  /// Get the JSON numeric document as a real number if it is not one already.
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON document{5};
+  /// assert(document.as_real() == 5.0);
+  /// ```
+  [[nodiscard]] auto as_real() const noexcept -> Real {
+    assert(this->is_number());
+    return this->is_real() ? this->to_real()
+                           : static_cast<Real>(this->to_integer());
+  }
+
   /*
    * Getters
    */
@@ -1042,13 +1053,7 @@ public:
       return this->to_integer() % divisor.to_integer() == 0;
     }
 
-    const Real dividend{this->is_integer()
-                            ? static_cast<Real>(this->to_integer())
-                            : this->to_real()};
-    const Real real_divisor{divisor.is_integer()
-                                ? static_cast<Real>(divisor.to_integer())
-                                : divisor.to_real()};
-    return std::fmod(dividend, real_divisor) == 0.0;
+    return std::fmod(this->as_real(), divisor.as_real()) == 0.0;
   }
 
   /// A convenience method to check whether the input JSON document is an empty

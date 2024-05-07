@@ -286,3 +286,13 @@ TEST(JSON_number, divisible_by_real_real_false) {
   const sourcemeta::jsontoolkit::JSON divisor{1.5};
   EXPECT_FALSE(dividend.divisible_by(divisor));
 }
+
+TEST(JSON_number, as_real_real) {
+  const sourcemeta::jsontoolkit::JSON document{4.7};
+  EXPECT_DOUBLE_EQ(document.as_real(), 4.7);
+}
+
+TEST(JSON_number, as_real_integer) {
+  const sourcemeta::jsontoolkit::JSON document{4};
+  EXPECT_DOUBLE_EQ(document.as_real(), 4.0);
+}
