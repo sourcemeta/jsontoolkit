@@ -310,8 +310,67 @@ public:
   auto operator!=(const GenericValue<CharT, Traits, Allocator> &) const noexcept
       -> bool = default;
 
-  // TODO: Support passing integer and real literals too.
-  /// This overload adds a numeric JSON instance to another numeric JSON
+  /// Add two numeric JSON instances and get a new instance with the result. For
+  /// example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON left{5};
+  /// const sourcemeta::jsontoolkit::JSON right{3};
+  /// const sourcemeta::jsontoolkit::JSON result{left + right};
+  /// assert(result.is_integer());
+  /// assert(document.to_integer() == 8);
+  /// ```
+  auto operator+(const GenericValue &other) const -> GenericValue {
+    assert(this->is_number());
+    assert(other.is_number());
+
+    if (this->is_integer() && other.is_integer()) {
+      return GenericValue{this->to_integer() + other.to_integer()};
+    } else if (this->is_integer() && other.is_real()) {
+      return GenericValue{static_cast<Real>(this->to_integer()) +
+                          other.to_real()};
+    } else if (this->is_real() && other.is_integer()) {
+      return GenericValue{this->to_real() +
+                          static_cast<Real>(other.to_integer())};
+    } else {
+      return GenericValue{this->to_real() + other.to_real()};
+    }
+  }
+
+  /// Substract two numeric JSON instances and get a new instance with the
+  /// result. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON left{5};
+  /// const sourcemeta::jsontoolkit::JSON right{3};
+  /// const sourcemeta::jsontoolkit::JSON result{left - right};
+  /// assert(result.is_integer());
+  /// assert(document.to_integer() == 2);
+  /// ```
+  auto operator-(const GenericValue &other) const -> GenericValue {
+    assert(this->is_number());
+    assert(other.is_number());
+
+    if (this->is_integer() && other.is_integer()) {
+      return GenericValue{this->to_integer() - other.to_integer()};
+    } else if (this->is_integer() && other.is_real()) {
+      return GenericValue{static_cast<Real>(this->to_integer()) -
+                          other.to_real()};
+    } else if (this->is_real() && other.is_integer()) {
+      return GenericValue{this->to_real() -
+                          static_cast<Real>(other.to_integer())};
+    } else {
+      return GenericValue{this->to_real() - other.to_real()};
+    }
+  }
+
+  /// This operator adds a numeric JSON instance to another numeric JSON
   /// instance. For example, a numeric JSON instance 3.2 can be added to a
   /// numeric JSON instance 5 as follows:
   ///
@@ -326,22 +385,25 @@ public:
   /// assert(document.to_real() == 8.2);
   /// ```
   auto operator+=(const GenericValue &additive) -> GenericValue & {
-    assert(this->is_number());
-    assert(additive.is_number());
-    if (this->is_integer() && additive.is_integer()) {
-      this->data.template emplace<Integer>(this->to_integer() +
-                                           additive.to_integer());
-    } else if (this->is_integer() && additive.is_real()) {
-      this->data.template emplace<Real>(static_cast<Real>(this->to_integer()) +
-                                        additive.to_real());
-    } else if (this->is_real() && additive.is_integer()) {
-      this->data.template emplace<Real>(
-          this->to_real() + static_cast<Real>(additive.to_integer()));
-    } else {
-      this->data.template emplace<Real>(this->to_real() + additive.to_real());
-    }
+    return *this = *this + additive;
+  }
 
-    return *this;
+  /// This operator substracts a numeric JSON instance from another numeric JSON
+  /// instance. For example, a numeric JSON instance 3.2 can be substracted from
+  /// a numeric JSON instance 5 as follows:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::JSON document{5};
+  /// const sourcemeta::jsontoolkit::JSON substractive{3.2};
+  /// document -= substractive;
+  /// assert(document.is_real());
+  /// assert(document.to_real() == 1.8);
+  /// ```
+  auto operator-=(const GenericValue &substractive) -> GenericValue & {
+    return *this = *this - substractive;
   }
 
   /*
