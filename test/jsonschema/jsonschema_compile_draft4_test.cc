@@ -1626,3 +1626,124 @@ TEST(JSONSchema_compile_draft4, oneOf_3) {
   EVALUATE_TRACE_FAILURE(9, LogicalAnd, "/oneOf", "#/oneOf", "");
   EVALUATE_TRACE_FAILURE(10, LogicalXor, "/oneOf", "#/oneOf", "");
 }
+
+TEST(JSONSchema_compile_draft4, dependencies_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "dependencies": {
+      "foo": [ "bar", "baz" ],
+      "qux": { "required": [ "extra" ] }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
+TEST(JSONSchema_compile_draft4, dependencies_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "dependencies": {
+      "foo": [ "bar", "baz" ],
+      "qux": { "required": [ "extra" ] }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_SUCCESS(0, AssertionDefines, "/dependencies", "#/dependencies",
+                         "");
+  EVALUATE_TRACE_SUCCESS(1, AssertionDefines, "/dependencies", "#/dependencies",
+                         "");
+  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/dependencies", "#/dependencies", "");
+  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/dependencies", "#/dependencies", "");
+}
+
+TEST(JSONSchema_compile_draft4, dependencies_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "dependencies": {
+      "foo": [ "bar", "baz" ],
+      "qux": { "required": [ "extra" ] }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"baz\": 3 }")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_FAILURE(0, AssertionDefines, "/dependencies", "#/dependencies",
+                         "");
+  EVALUATE_TRACE_FAILURE(1, LogicalAnd, "/dependencies", "#/dependencies", "");
+  EVALUATE_TRACE_FAILURE(2, LogicalAnd, "/dependencies", "#/dependencies", "");
+}
+
+TEST(JSONSchema_compile_draft4, dependencies_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "dependencies": {
+      "foo": [ "bar", "baz" ],
+      "qux": { "required": [ "extra" ] }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"qux\": 1, \"extra\": 2 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_SUCCESS(0, AssertionDefines, "/dependencies/qux/required",
+                         "#/dependencies/qux/required", "");
+  EVALUATE_TRACE_SUCCESS(1, LogicalAnd, "/dependencies", "#/dependencies", "");
+  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/dependencies", "#/dependencies", "");
+}
+
+TEST(JSONSchema_compile_draft4, dependencies_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "dependencies": {
+      "foo": [ "bar", "baz" ],
+      "qux": { "required": [ "extra" ] }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"qux\": 1 }")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_FAILURE(0, AssertionDefines, "/dependencies/qux/required",
+                         "#/dependencies/qux/required", "");
+  EVALUATE_TRACE_FAILURE(1, LogicalAnd, "/dependencies", "#/dependencies", "");
+  EVALUATE_TRACE_FAILURE(2, LogicalAnd, "/dependencies", "#/dependencies", "");
+}

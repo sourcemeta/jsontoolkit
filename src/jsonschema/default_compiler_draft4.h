@@ -419,5 +419,51 @@ auto compiler_draft4_validation_additionalitems(
                                          SchemaCompilerTargetType::Instance)})};
 }
 
+auto compiler_draft4_validation_dependencies(
+    const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
+  assert(context.value.is_object());
+  SchemaCompilerTemplate children;
+  const auto subcontext{applicate(context)};
+
+  for (const auto &entry : context.value.as_object()) {
+    if (entry.second.is_object()) {
+      children.push_back(make<SchemaCompilerLogicalAnd>(
+          subcontext, SchemaCompilerValueNone{},
+          compile(subcontext, {entry.first}, empty_pointer),
+
+          // TODO: As an optimization, avoid this condition if the subschema
+          // declares `required` and includes the given key
+          {make<SchemaCompilerAssertionDefines>(
+              subcontext, entry.first, {},
+              SchemaCompilerTargetType::Instance)}));
+    } else if (entry.second.is_array()) {
+      SchemaCompilerTemplate substeps;
+      for (const auto &key : entry.second.as_array()) {
+        assert(key.is_string());
+        substeps.push_back(make<SchemaCompilerAssertionDefines>(
+            subcontext, key.to_string(), {},
+            SchemaCompilerTargetType::Instance));
+      }
+
+      children.push_back(make<SchemaCompilerLogicalAnd>(
+          subcontext, SchemaCompilerValueNone{}, std::move(substeps),
+
+          // TODO: As an optimization, avoid this condition if the subschema
+          // declares `required` and includes the given key
+          {make<SchemaCompilerAssertionDefines>(
+              subcontext, entry.first, {},
+              SchemaCompilerTargetType::Instance)}));
+    }
+  }
+
+  return {make<SchemaCompilerLogicalAnd>(
+      context, SchemaCompilerValueNone{}, std::move(children),
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `object` already
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {},
+                                         SchemaCompilerTargetType::Instance)})};
+}
+
 } // namespace internal
 #endif
