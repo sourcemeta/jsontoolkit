@@ -627,49 +627,65 @@ auto compiler_draft4_validation_minproperties(
 auto compiler_draft4_validation_maximum(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_number());
+  const auto subcontext{applicate(context)};
+
+  // TODO: As an optimization, avoid this condition if the subschema
+  // declares `type` to `number` or `integer` already
+  SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
+      subcontext, SchemaCompilerValueNone{},
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Real, {},
+                                         SchemaCompilerTargetType::Instance),
+       make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Integer, {},
+                                         SchemaCompilerTargetType::Instance)},
+      SchemaCompilerTemplate{})};
 
   // TODO: As an optimization, if `minimum` is set to the same number, do
   // a single equality assertion
-  const auto subcontext{applicate(context)};
-  return {make<SchemaCompilerAssertionLessEqual>(
-      context, context.value,
 
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `number` or `integer` already
-      {make<SchemaCompilerLogicalOr>(subcontext, SchemaCompilerValueNone{},
-                                     {make<SchemaCompilerAssertionType>(
-                                          subcontext, JSON::Type::Real, {},
-                                          SchemaCompilerTargetType::Instance),
-                                      make<SchemaCompilerAssertionType>(
-                                          subcontext, JSON::Type::Integer, {},
-                                          SchemaCompilerTargetType::Instance)},
-                                     SchemaCompilerTemplate{})},
-
-      SchemaCompilerTargetType::Instance)};
+  assert(context.schema.is_object());
+  if (context.schema.defines("exclusiveMaximum") &&
+      context.schema.at("exclusiveMaximum").is_boolean() &&
+      context.schema.at("exclusiveMaximum").to_boolean()) {
+    return {make<SchemaCompilerAssertionLess>(
+        context, context.value, std::move(condition),
+        SchemaCompilerTargetType::Instance)};
+  } else {
+    return {make<SchemaCompilerAssertionLessEqual>(
+        context, context.value, std::move(condition),
+        SchemaCompilerTargetType::Instance)};
+  }
 }
 
 auto compiler_draft4_validation_minimum(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_number());
+  const auto subcontext{applicate(context)};
+
+  // TODO: As an optimization, avoid this condition if the subschema
+  // declares `type` to `number` or `integer` already
+  SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
+      subcontext, SchemaCompilerValueNone{},
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Real, {},
+                                         SchemaCompilerTargetType::Instance),
+       make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Integer, {},
+                                         SchemaCompilerTargetType::Instance)},
+      SchemaCompilerTemplate{})};
 
   // TODO: As an optimization, if `maximum` is set to the same number, do
   // a single equality assertion
-  const auto subcontext{applicate(context)};
-  return {make<SchemaCompilerAssertionGreaterEqual>(
-      context, context.value,
 
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `number` or `integer` already
-      {make<SchemaCompilerLogicalOr>(subcontext, SchemaCompilerValueNone{},
-                                     {make<SchemaCompilerAssertionType>(
-                                          subcontext, JSON::Type::Real, {},
-                                          SchemaCompilerTargetType::Instance),
-                                      make<SchemaCompilerAssertionType>(
-                                          subcontext, JSON::Type::Integer, {},
-                                          SchemaCompilerTargetType::Instance)},
-                                     SchemaCompilerTemplate{})},
-
-      SchemaCompilerTargetType::Instance)};
+  assert(context.schema.is_object());
+  if (context.schema.defines("exclusiveMinimum") &&
+      context.schema.at("exclusiveMinimum").is_boolean() &&
+      context.schema.at("exclusiveMinimum").to_boolean()) {
+    return {make<SchemaCompilerAssertionGreater>(
+        context, context.value, std::move(condition),
+        SchemaCompilerTargetType::Instance)};
+  } else {
+    return {make<SchemaCompilerAssertionGreaterEqual>(
+        context, context.value, std::move(condition),
+        SchemaCompilerTargetType::Instance)};
+  }
 }
 
 } // namespace internal
