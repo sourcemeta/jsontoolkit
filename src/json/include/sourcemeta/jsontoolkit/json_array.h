@@ -9,17 +9,37 @@ namespace sourcemeta::jsontoolkit {
 /// @ingroup json
 template <typename Value, typename Allocator> class GenericArray {
 public:
+  // Constructors
   using Container = std::vector<Value, Allocator>;
   GenericArray() : data{} {}
   GenericArray(std::initializer_list<Value> values) : data{values} {}
+
+  // Operators
+  // We cannot default given that this class references
+  // a JSON "value" as an incomplete type
   auto operator<(const GenericArray<Value, Allocator> &other) const noexcept
       -> bool {
     return this->data < other.data;
   }
-  /// Compare array instances
+  auto operator<=(const GenericArray<Value, Allocator> &other) const noexcept
+      -> bool {
+    return this->data <= other.data;
+  }
+  auto operator>(const GenericArray<Value, Allocator> &other) const noexcept
+      -> bool {
+    return this->data > other.data;
+  }
+  auto operator>=(const GenericArray<Value, Allocator> &other) const noexcept
+      -> bool {
+    return this->data >= other.data;
+  }
   auto operator==(const GenericArray<Value, Allocator> &other) const noexcept
       -> bool {
     return this->data == other.data;
+  }
+  auto operator!=(const GenericArray<Value, Allocator> &other) const noexcept
+      -> bool {
+    return this->data != other.data;
   }
 
   // Member types
