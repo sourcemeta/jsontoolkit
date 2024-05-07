@@ -498,5 +498,47 @@ auto compiler_draft4_validation_uniqueitems(
       SchemaCompilerTargetType::Instance)};
 }
 
+auto compiler_draft4_validation_maxlength(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  assert(context.value.is_integer());
+  assert(context.value.is_positive());
+
+  // TODO: As an optimization, if `minLength` is set to the same number, do
+  // a single size equality assertion
+  return {make<SchemaCompilerAssertionSizeLess>(
+      context,
+      SchemaCompilerValueUnsignedInteger{
+          static_cast<unsigned long>(context.value.to_integer()) + 1},
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `string` already
+      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::String,
+                                         {},
+                                         SchemaCompilerTargetType::Instance)},
+
+      SchemaCompilerTargetType::Instance)};
+}
+
+auto compiler_draft4_validation_minlength(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  assert(context.value.is_integer());
+  assert(context.value.is_positive());
+
+  // TODO: As an optimization, if `maxLength` is set to the same number, do
+  // a single size equality assertion
+  return {make<SchemaCompilerAssertionSizeGreater>(
+      context,
+      SchemaCompilerValueUnsignedInteger{
+          static_cast<unsigned long>(context.value.to_integer()) - 1},
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `string` already
+      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::String,
+                                         {},
+                                         SchemaCompilerTargetType::Instance)},
+
+      SchemaCompilerTargetType::Instance)};
+}
+
 } // namespace internal
 #endif

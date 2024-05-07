@@ -33,8 +33,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // exclusiveMaximum
   // minimum
   // exclusiveMinimum
-  // maxLength
-  // minLength
   // maxItems
   // minItems
   // maxProperties
@@ -75,6 +73,10 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_enum);
   COMPILE("http://json-schema.org/draft-04/schema#", "uniqueItems",
           compiler_draft4_validation_uniqueitems);
+  COMPILE("http://json-schema.org/draft-04/schema#", "maxLength",
+          compiler_draft4_validation_maxlength);
+  COMPILE("http://json-schema.org/draft-04/schema#", "minLength",
+          compiler_draft4_validation_minlength);
 
 #undef COMPILE
 #undef STOP_IF_SIBLING_KEYWORD
