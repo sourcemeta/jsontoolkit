@@ -688,5 +688,26 @@ auto compiler_draft4_validation_minimum(const SchemaCompilerContext &context)
   }
 }
 
+auto compiler_draft4_validation_multipleof(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  assert(context.value.is_number());
+  assert(context.value.is_positive());
+
+  // TODO: As an optimization, avoid this condition if the subschema
+  // declares `type` to `number` or `integer` already
+  const auto subcontext{applicate(context)};
+  SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
+      subcontext, SchemaCompilerValueNone{},
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Real, {},
+                                         SchemaCompilerTargetType::Instance),
+       make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Integer, {},
+                                         SchemaCompilerTargetType::Instance)},
+      SchemaCompilerTemplate{})};
+
+  return {make<SchemaCompilerAssertionDivisible>(
+      context, context.value, std::move(condition),
+      SchemaCompilerTargetType::Instance)};
+}
+
 } // namespace internal
 #endif

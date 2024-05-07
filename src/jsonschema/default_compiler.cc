@@ -27,9 +27,7 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   COMPILE("https://json-schema.org/draft/2020-12/vocab/validation", "type",
           compiler_2020_12_validation_type);
 
-  // TODO: Draft 4
-  // multipleOf
-  // format
+  // TODO: Implement "format" for Draft 4
 
   COMPILE("http://json-schema.org/draft-04/schema#", "$ref",
           compiler_draft4_core_ref);
@@ -82,6 +80,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_maximum);
   COMPILE("http://json-schema.org/draft-04/schema#", "minimum",
           compiler_draft4_validation_minimum);
+  COMPILE("http://json-schema.org/draft-04/schema#", "multipleOf",
+          compiler_draft4_validation_multipleof);
 
 #undef COMPILE
 #undef STOP_IF_SIBLING_KEYWORD
