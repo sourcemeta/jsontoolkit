@@ -1073,9 +1073,9 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::JSON document =
   ///   sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
-  /// assert(document.is_unique());
+  /// assert(document.unique());
   /// ```
-  [[nodiscard]] auto is_unique() const -> bool {
+  [[nodiscard]] auto unique() const -> bool {
     assert(this->is_array());
     // TODO: Can we do efficiently do this without copying?
     auto copy{std::get<Array>(this->data).data};

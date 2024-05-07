@@ -242,6 +242,15 @@ auto evaluate_step(
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     result = (target == value);
+  } else if (std::holds_alternative<SchemaCompilerAssertionUnique>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionUnique>(step)};
+    assert(std::holds_alternative<SchemaCompilerValueNone>(assertion.value));
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
+    assert(target.is_array());
+    result = target.unique();
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
     assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
