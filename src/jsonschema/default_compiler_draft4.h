@@ -146,7 +146,7 @@ auto compiler_draft4_validation_required(const SchemaCompilerContext &context)
   }
 }
 
-auto compiler_draft4_validation_allof(const SchemaCompilerContext &context)
+auto compiler_draft4_applicator_allof(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_array());
   assert(!context.value.empty());
@@ -162,7 +162,7 @@ auto compiler_draft4_validation_allof(const SchemaCompilerContext &context)
   return result;
 }
 
-auto compiler_draft4_validation_anyof(const SchemaCompilerContext &context)
+auto compiler_draft4_applicator_anyof(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_array());
   assert(!context.value.empty());
@@ -181,7 +181,7 @@ auto compiler_draft4_validation_anyof(const SchemaCompilerContext &context)
                                         SchemaCompilerTemplate{})};
 }
 
-auto compiler_draft4_validation_oneof(const SchemaCompilerContext &context)
+auto compiler_draft4_applicator_oneof(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_array());
   assert(!context.value.empty());
@@ -200,7 +200,7 @@ auto compiler_draft4_validation_oneof(const SchemaCompilerContext &context)
                                          SchemaCompilerTemplate{})};
 }
 
-auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
+auto compiler_draft4_applicator_properties(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_object());
   if (context.value.empty()) {
@@ -233,7 +233,7 @@ auto compiler_draft4_validation_properties(const SchemaCompilerContext &context)
                                          SchemaCompilerTargetType::Instance)})};
 }
 
-auto compiler_draft4_validation_patternproperties(
+auto compiler_draft4_applicator_patternproperties(
     const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
   assert(context.value.is_object());
   if (context.value.empty()) {
@@ -285,7 +285,7 @@ auto compiler_draft4_validation_patternproperties(
                                          SchemaCompilerTargetType::Instance)})};
 }
 
-auto compiler_draft4_validation_additionalproperties(
+auto compiler_draft4_applicator_additionalproperties(
     const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
   const auto subcontext{applicate(context)};
 
@@ -345,7 +345,7 @@ auto compiler_draft4_validation_pattern(const SchemaCompilerContext &context)
       SchemaCompilerTargetType::Instance)};
 }
 
-auto compiler_draft4_validation_not(const SchemaCompilerContext &context)
+auto compiler_draft4_applicator_not(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   return {make<SchemaCompilerLogicalNot>(
       context, SchemaCompilerValueNone{},
@@ -353,7 +353,7 @@ auto compiler_draft4_validation_not(const SchemaCompilerContext &context)
       SchemaCompilerTemplate{})};
 }
 
-auto compiler_draft4_validation_items(const SchemaCompilerContext &context)
+auto compiler_draft4_applicator_items(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   const auto subcontext{applicate(context)};
   if (context.value.is_object()) {
@@ -394,7 +394,7 @@ auto compiler_draft4_validation_items(const SchemaCompilerContext &context)
                                          SchemaCompilerTargetType::Instance)})};
 }
 
-auto compiler_draft4_validation_additionalitems(
+auto compiler_draft4_applicator_additionalitems(
     const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
   assert(context.schema.is_object());
 
@@ -419,7 +419,7 @@ auto compiler_draft4_validation_additionalitems(
                                          SchemaCompilerTargetType::Instance)})};
 }
 
-auto compiler_draft4_validation_dependencies(
+auto compiler_draft4_applicator_dependencies(
     const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
   assert(context.value.is_object());
   SchemaCompilerTemplate children;
