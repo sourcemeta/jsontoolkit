@@ -487,17 +487,17 @@ TEST(JSON_array, push_back_if_unique_move_not_exist) {
 TEST(JSON_array, unique_empty) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("[]");
-  EXPECT_TRUE(document.is_unique());
+  EXPECT_TRUE(document.unique());
 }
 
 TEST(JSON_array, unique_true) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("[ 1, 2, {} ]");
-  EXPECT_TRUE(document.is_unique());
+  EXPECT_TRUE(document.unique());
 }
 
 TEST(JSON_array, unique_false) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("[ [2], 1, [2] ]");
-  EXPECT_FALSE(document.is_unique());
+  EXPECT_FALSE(document.unique());
 }
