@@ -6,7 +6,7 @@
 
 #include <algorithm>        // std::find, std::any_of, std::sort, std::unique
 #include <cassert>          // assert
-#include <cmath>            // std::isinf, std::isnan
+#include <cmath>            // std::isinf, std::isnan, std::fmod
 #include <cstdint>          // std::int64_t, std::uint8_t
 #include <functional>       // std::less, std::reference_wrapper
 #include <initializer_list> // std::initializer_list
@@ -1020,6 +1020,35 @@ public:
     } else {
       return sizeof(std::nullptr_t);
     }
+  }
+
+  /// Check whether a numeric instance is divisible by another numeric instance.
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON dividend{6};
+  /// const sourcemeta::jsontoolkit::JSON divisor{1.5};
+  ///
+  /// assert(dividend.divisible_by(divisor));
+  /// ```
+  [[nodiscard]] auto divisible_by(const GenericValue &divisor) const -> bool {
+    assert(this->is_number());
+    assert(divisor.is_number());
+
+    if (this->is_integer() && divisor.is_integer()) {
+      return this->to_integer() % divisor.to_integer() == 0;
+    }
+
+    const Real dividend{this->is_integer()
+                            ? static_cast<Real>(this->to_integer())
+                            : this->to_real()};
+    const Real real_divisor{divisor.is_integer()
+                                ? static_cast<Real>(divisor.to_integer())
+                                : divisor.to_real()};
+    return std::fmod(dividend, real_divisor) == 0.0;
   }
 
   /// A convenience method to check whether the input JSON document is an empty
