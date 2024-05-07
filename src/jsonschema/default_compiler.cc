@@ -33,8 +33,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // exclusiveMaximum
   // minimum
   // exclusiveMinimum
-  // maxProperties
-  // minProperties
   // format
 
   COMPILE("http://json-schema.org/draft-04/schema#", "$ref",
@@ -79,6 +77,10 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_maxitems);
   COMPILE("http://json-schema.org/draft-04/schema#", "minItems",
           compiler_draft4_validation_minitems);
+  COMPILE("http://json-schema.org/draft-04/schema#", "maxProperties",
+          compiler_draft4_validation_maxproperties);
+  COMPILE("http://json-schema.org/draft-04/schema#", "minProperties",
+          compiler_draft4_validation_minproperties);
 
 #undef COMPILE
 #undef STOP_IF_SIBLING_KEYWORD
