@@ -111,6 +111,12 @@ struct SchemaCompilerAssertionNotContains;
 struct SchemaCompilerAssertionSizeGreater;
 
 /// @ingroup jsonschema
+/// Represents a compiler assertion step that checks a given array, object, or
+/// string has less than a certain number of items, properties, or characters,
+/// respectively
+struct SchemaCompilerAssertionSizeLess;
+
+/// @ingroup jsonschema
 /// Represents a compiler assertion step that checks the instance equals a given
 /// JSON document
 struct SchemaCompilerAssertionEqual;
@@ -168,9 +174,10 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
     SchemaCompilerAssertionType, SchemaCompilerAssertionRegex,
     SchemaCompilerAssertionNotContains, SchemaCompilerAssertionSizeGreater,
-    SchemaCompilerAssertionEqual, SchemaCompilerAssertionUnique,
-    SchemaCompilerAnnotationPublic, SchemaCompilerAnnotationPrivate,
-    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerAssertionSizeLess, SchemaCompilerAssertionEqual,
+    SchemaCompilerAssertionUnique, SchemaCompilerAnnotationPublic,
+    SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
+    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalNot, SchemaCompilerLoopProperties,
     SchemaCompilerLoopItems, SchemaCompilerControlLabel,
     SchemaCompilerControlJump>>;
@@ -213,6 +220,7 @@ DEFINE_STEP_WITH_VALUE(Assertion, Regex, SchemaCompilerValueRegex)
 DEFINE_STEP_WITH_VALUE(Assertion, NotContains, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, SizeGreater,
                        SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_WITH_VALUE(Assertion, SizeLess, SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_WITH_VALUE(Assertion, Equal, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, Unique, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
