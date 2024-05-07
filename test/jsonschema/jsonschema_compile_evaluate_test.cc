@@ -988,3 +988,33 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_no_match) {
   const auto result{evaluate(steps, instance)};
   EXPECT_FALSE(result);
 }
+
+TEST(JSONSchema_compile_evaluate, fast_step_contains_true_no_condition) {
+  using namespace sourcemeta::jsontoolkit;
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerAssertionContains{{SchemaCompilerTargetType::Instance, {}},
+                                      Pointer{},
+                                      Pointer{},
+                                      "#",
+                                      SchemaCompilerValueJSON{"foo"},
+                                      {}}};
+
+  const JSON instance{parse("[ \"foo\", 1, true ]")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_TRUE(result);
+}
+
+TEST(JSONSchema_compile_evaluate, fast_step_contains_false_no_condition) {
+  using namespace sourcemeta::jsontoolkit;
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerAssertionContains{{SchemaCompilerTargetType::Instance, {}},
+                                      Pointer{},
+                                      Pointer{},
+                                      "#",
+                                      SchemaCompilerValueJSON{2},
+                                      {}}};
+
+  const JSON instance{parse("[ \"foo\", 1, true ]")};
+  const auto result{evaluate(steps, instance)};
+  EXPECT_FALSE(result);
+}

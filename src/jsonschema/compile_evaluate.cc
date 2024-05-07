@@ -222,6 +222,8 @@ auto evaluate_step(
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
     const auto &value{context.resolve_value(assertion.value, instance)};
+    // TODO: If this step only operates on `std::set`, then change its name
+    // to `SchemaCompilerAssertionAnnotationNotContains`?
     const auto &target{
         context.resolve_target<std::set<JSON>>(assertion.target, instance)};
     result = !target.contains(value);
@@ -234,6 +236,15 @@ auto evaluate_step(
         context.resolve_target<JSON>(assertion.target, instance)};
     assert(target.is_array());
     result = target.size() > value;
+  } else if (std::holds_alternative<SchemaCompilerAssertionContains>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionContains>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
+    assert(target.is_array());
+    result = target.contains(value);
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
     assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
