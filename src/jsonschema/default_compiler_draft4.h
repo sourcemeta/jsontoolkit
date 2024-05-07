@@ -624,5 +624,53 @@ auto compiler_draft4_validation_minproperties(
       SchemaCompilerTargetType::Instance)};
 }
 
+auto compiler_draft4_validation_maximum(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  assert(context.value.is_number());
+
+  // TODO: As an optimization, if `minimum` is set to the same number, do
+  // a single equality assertion
+  const auto subcontext{applicate(context)};
+  return {make<SchemaCompilerAssertionLessEqual>(
+      context, context.value,
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `number` or `integer` already
+      {make<SchemaCompilerLogicalOr>(subcontext, SchemaCompilerValueNone{},
+                                     {make<SchemaCompilerAssertionType>(
+                                          subcontext, JSON::Type::Real, {},
+                                          SchemaCompilerTargetType::Instance),
+                                      make<SchemaCompilerAssertionType>(
+                                          subcontext, JSON::Type::Integer, {},
+                                          SchemaCompilerTargetType::Instance)},
+                                     SchemaCompilerTemplate{})},
+
+      SchemaCompilerTargetType::Instance)};
+}
+
+auto compiler_draft4_validation_minimum(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  assert(context.value.is_number());
+
+  // TODO: As an optimization, if `maximum` is set to the same number, do
+  // a single equality assertion
+  const auto subcontext{applicate(context)};
+  return {make<SchemaCompilerAssertionGreaterEqual>(
+      context, context.value,
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `number` or `integer` already
+      {make<SchemaCompilerLogicalOr>(subcontext, SchemaCompilerValueNone{},
+                                     {make<SchemaCompilerAssertionType>(
+                                          subcontext, JSON::Type::Real, {},
+                                          SchemaCompilerTargetType::Instance),
+                                      make<SchemaCompilerAssertionType>(
+                                          subcontext, JSON::Type::Integer, {},
+                                          SchemaCompilerTargetType::Instance)},
+                                     SchemaCompilerTemplate{})},
+
+      SchemaCompilerTargetType::Instance)};
+}
+
 } // namespace internal
 #endif
