@@ -304,8 +304,16 @@ public:
     return *this > other || *this == other;
   }
 
-  auto operator==(const GenericValue<CharT, Traits, Allocator> &) const noexcept
-      -> bool = default;
+  auto operator==(const GenericValue<CharT, Traits, Allocator> &other)
+      const noexcept -> bool {
+    if ((this->type() == Type::Integer && other.type() == Type::Real) ||
+        (this->type() == Type::Real && other.type() == Type::Integer)) {
+      return this->as_real() == other.as_real();
+    }
+
+    return this->data == other.data;
+  }
+
   auto operator!=(const GenericValue<CharT, Traits, Allocator> &) const noexcept
       -> bool = default;
 

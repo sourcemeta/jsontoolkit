@@ -138,8 +138,8 @@ int main(int argc, char **argv) {
   register_tests("draft4", "JSONSchemaOfficialSuite_Draft4",
                  "http://json-schema.org/draft-04/schema#",
                  // TODO: Enable all tests
-                 {"refRemote", "maxLength", "maximum", "multipleOf", "allOf",
-                  "ref", "items", "definitions", "minLength", "oneOf", "enum"});
+                 {"refRemote", "maxLength", "multipleOf", "allOf", "ref",
+                  "items", "definitions", "minLength", "oneOf"});
 
   return RUN_ALL_TESTS();
 }
