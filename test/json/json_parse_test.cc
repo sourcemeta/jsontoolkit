@@ -1211,6 +1211,15 @@ TEST(JSON_parse, string_unicode_code_points) {
   EXPECT_EQ(document.to_string(), "\u002F");
 }
 
+TEST(JSON_parse, string_unicode_length) {
+  std::istringstream input{"\"\\uD83D\\uDCA9\""};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
+  EXPECT_TRUE(document.is_string());
+  EXPECT_EQ(document.size(), 1);
+  EXPECT_EQ(document.byte_size(), 2);
+}
+
 TEST(JSON_parse, string_unicode_code_point_equality) {
   std::istringstream input_1{"\"\\u002F\""};
   std::istringstream input_2{"\"\\u002f\""};
