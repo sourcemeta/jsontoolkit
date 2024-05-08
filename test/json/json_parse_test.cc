@@ -1217,6 +1217,7 @@ TEST(JSON_parse, string_unicode_length) {
       sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 1);
+  EXPECT_EQ(document.byte_size(), 2);
 }
 
 TEST(JSON_parse, string_unicode_code_point_equality) {

@@ -963,7 +963,7 @@ public:
 
   /// If the input JSON instance is an object, return its number of pairs. If
   /// the input JSON instance is an array, return its number of elements. If the
-  /// input JSON instance is a string, return its length.
+  /// input JSON instance is a string, return its logical length.
   ///
   /// For example:
   ///
@@ -987,26 +987,39 @@ public:
     } else if (this->is_array()) {
       return std::get<Array>(this->data).data.size();
     } else {
-      // We want to count the number of logical characters,
-      // not the number of bytes
-      const auto &string_data{std::get<String>(this->data)};
+      assert(this->is_string());
       std::size_t result{0};
 
-      // TODO: Loop on string characters instead
-      for (std::size_t cursor{0}; cursor < string_data.size(); cursor++) {
+      // We want to count the number of logical characters,
+      // not the number of bytes
+      for (const auto character : std::get<String>(this->data)) {
         // In UTF-8, continuation bytes (i.e. not the first) are
         // encoded as `10xxxxxx`, so this means we are at the start
         // of a code-point
         // See https://en.wikipedia.org/wiki/UTF-8#Encoding
-        if ((string_data[cursor] & 0b11000000) != 0b10000000) {
+        if ((character & 0b11000000) != 0b10000000) {
           result += 1;
         }
       }
 
-      // Otherwise we messed up
-      assert(result <= string_data.size());
       return result;
     }
+  }
+
+  /// If the input JSON instance is string, input JSON instance is a string,
+  /// return its number of bytes. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON my_string{
+  ///   sourcemeta::jsontoolkit::parse("\"\\uD83D\\uDCA9\"")};
+  /// assert(my_string.size() == 2);
+  /// ```
+  [[nodiscard]] auto byte_size() const -> std::size_t {
+    assert(this->is_string());
+    return std::get<String>(this->data).size();
   }
 
   /// Estimate the byte size occupied by the given parsed JSON instance (not its
@@ -1047,7 +1060,7 @@ public:
     } else if (this->is_string()) {
       // Keep in mind that standard strings might reserve more
       // space than what it is actually used by the string
-      return this->to_string().size() * sizeof(CharT);
+      return this->byte_size() * sizeof(CharT);
     } else if (this->is_integer()) {
       return sizeof(Integer);
     } else if (this->is_real()) {
