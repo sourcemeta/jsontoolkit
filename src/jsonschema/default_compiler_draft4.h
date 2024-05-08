@@ -364,7 +364,7 @@ auto compiler_draft4_applicator_items(const SchemaCompilerContext &context)
         // TODO: As an optimization, avoid this condition if the subschema
         // declares `type` to `array` already
         {make<SchemaCompilerAssertionType>(
-            context, JSON::Type::Array, {},
+            subcontext, JSON::Type::Array, {},
             SchemaCompilerTargetType::Instance)})};
   }
 
@@ -398,8 +398,8 @@ auto compiler_draft4_applicator_additionalitems(
     const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
   assert(context.schema.is_object());
 
-  // Nothing to do here as the `items` keyword covers the entire array
-  if (context.schema.defines("items") &&
+  // Nothing to do here
+  if (!context.schema.defines("items") ||
       context.schema.at("items").is_object()) {
     return {};
   }
