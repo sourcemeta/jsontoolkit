@@ -24,9 +24,7 @@ public:
       sourcemeta::jsontoolkit::SchemaCompilerTemplate test_schema,
       sourcemeta::jsontoolkit::JSON test_instance)
       : valid{test_valid}, mode{test_mode}, schema{std::move(test_schema)},
-
-        // TODO: Why cannot we use {} initializers here without confusing MSVC?
-        instance(std::move(test_instance)) {}
+        instance{std::move(test_instance)} {}
 
   auto TestBody() -> void override {
     const auto result{sourcemeta::jsontoolkit::evaluate(

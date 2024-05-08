@@ -32,7 +32,7 @@ public:
                            std::string default_dialect)
       // Ubuntu's ClangFormat gets a bit lost on this one
       // clang-format off
-    : suite(std::move(test_suite)), test(std::move(test_document)),
+    : suite{std::move(test_suite)}, test{std::move(test_document)},
       dialect{std::move(default_dialect)} {}
   // clang-format on
 
