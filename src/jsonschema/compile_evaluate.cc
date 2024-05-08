@@ -335,15 +335,20 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical.condition, instance);
-    result = true;
+    result = false;
+
+    // TODO: Cache results of a given branch so we can avoid
+    // computing it multiple times
     for (auto iterator{logical.children.cbegin()};
          iterator != logical.children.cend(); ++iterator) {
       if (!evaluate_step(*iterator, instance, mode, callback, context)) {
         continue;
       }
 
+      // Check if another one matches
+      bool subresult{true};
       for (auto subiterator{logical.children.cbegin()};
-           subiterator != logical.children.cend(); subiterator++) {
+           subiterator != logical.children.cend(); ++subiterator) {
         // Don't compare the element against itself
         if (std::distance(logical.children.cbegin(), iterator) ==
             std::distance(logical.children.cbegin(), subiterator)) {
@@ -354,11 +359,12 @@ auto evaluate_step(
         // XOR search. We can treat those as internal
         if (evaluate_step(*subiterator, instance, mode, callback_noop,
                           context)) {
-          result = false;
+          subresult = false;
           break;
         }
       }
 
+      result = result || subresult;
       if (result && mode == SchemaCompilerEvaluationMode::Fast) {
         break;
       }
