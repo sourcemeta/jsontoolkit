@@ -1337,15 +1337,7 @@ TEST(JSONSchema_compile_draft4, additionalItems_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/additionalItems/type",
-                         "#/additionalItems/type", "/0");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/additionalItems/type",
-                         "#/additionalItems/type", "/1");
-  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/additionalItems/type",
-                         "#/additionalItems/type", "/2");
-  EVALUATE_TRACE_SUCCESS(3, LoopItems, "/additionalItems", "#/additionalItems",
-                         "");
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
 TEST(JSONSchema_compile_draft4, additionalItems_2) {
