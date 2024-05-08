@@ -140,8 +140,7 @@ public:
   }
 
   auto mark(const std::size_t id, const Template &children) -> void {
-    assert(!this->labels.contains(id));
-    this->labels.emplace(id, children);
+    this->labels.try_emplace(id, children);
   }
 
   auto jump(const std::size_t id) const -> const Template & {
