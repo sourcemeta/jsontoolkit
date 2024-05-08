@@ -140,9 +140,9 @@ int main(int argc, char **argv) {
                  // TODO: Enable all tests
                  {"refRemote", "not", "maxLength", "maximum", "multipleOf",
                   "additionalProperties", "allOf", "additionalItems",
-                  "uniqueItems", "properties", "ref", "items",
-                  "infinite-loop-detection", "definitions", "minLength",
-                  "oneOf", "dependencies", "enum", "anyOf"});
+                  "properties", "ref", "items", "infinite-loop-detection",
+                  "definitions", "minLength", "oneOf", "dependencies", "enum",
+                  "anyOf"});
 
   return RUN_ALL_TESTS();
 }

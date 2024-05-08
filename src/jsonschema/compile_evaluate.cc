@@ -506,6 +506,7 @@ auto evaluate_step(
             // For efficiently breaking from the outer loop too
             goto evaluate_step_end;
           } else {
+            context.pop();
             break;
           }
         }
