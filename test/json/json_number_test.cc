@@ -296,3 +296,14 @@ TEST(JSON_number, as_real_integer) {
   const sourcemeta::jsontoolkit::JSON document{4};
   EXPECT_DOUBLE_EQ(document.as_real(), 4.0);
 }
+
+TEST(JSON_value, compare_int_real_equal) {
+  const sourcemeta::jsontoolkit::JSON left{300};
+  const sourcemeta::jsontoolkit::JSON right{300.0};
+  EXPECT_TRUE(left.is_integer());
+  EXPECT_TRUE(right.is_real());
+  EXPECT_TRUE(left <= right);
+  EXPECT_TRUE(right <= left);
+  EXPECT_TRUE(left >= right);
+  EXPECT_TRUE(right >= left);
+}

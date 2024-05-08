@@ -1117,15 +1117,17 @@ TEST(JSON_parse, real_equality) {
   EXPECT_FALSE(document_2 == document_3);
 }
 
-TEST(JSON_parse, integer_real_not_equal) {
+TEST(JSON_parse, integer_real_equal) {
   std::istringstream left{"1"};
   std::istringstream right{"1.0"};
   const sourcemeta::jsontoolkit::JSON document_1 =
       sourcemeta::jsontoolkit::parse(left);
   const sourcemeta::jsontoolkit::JSON document_2 =
       sourcemeta::jsontoolkit::parse(right);
-  EXPECT_FALSE(document_1 == document_2);
-  EXPECT_FALSE(document_2 == document_1);
+  EXPECT_TRUE(document_1 == document_2);
+  EXPECT_TRUE(document_2 == document_1);
+  EXPECT_FALSE(document_1 != document_2);
+  EXPECT_FALSE(document_2 != document_1);
 }
 
 TEST(JSON_parse, string_escaped_quotes) {
