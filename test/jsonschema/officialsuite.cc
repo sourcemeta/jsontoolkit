@@ -10,21 +10,27 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
+auto callback_noop(
+    bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
+    const sourcemeta::jsontoolkit::Pointer &,
+    const sourcemeta::jsontoolkit::Pointer &,
+    const sourcemeta::jsontoolkit::JSON &) noexcept -> void {}
+
 class OfficialTest : public testing::Test {
 public:
   explicit OfficialTest(
       bool test_valid,
+      sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode test_mode,
       sourcemeta::jsontoolkit::SchemaCompilerTemplate test_schema,
       sourcemeta::jsontoolkit::JSON test_instance)
-      : valid{test_valid}, schema{std::move(test_schema)},
+      : valid{test_valid}, mode{test_mode}, schema{std::move(test_schema)},
 
-        // TODO: We cannot we use {} initializers here without confusing MSVC?
+        // TODO: Why cannot we use {} initializers here without confusing MSVC?
         instance(std::move(test_instance)) {}
 
   auto TestBody() -> void override {
-    // TODO: Make sure of the mode
-    const auto result{
-        sourcemeta::jsontoolkit::evaluate(this->schema, this->instance)};
+    const auto result{sourcemeta::jsontoolkit::evaluate(
+        this->schema, this->instance, this->mode, callback_noop)};
     if (this->valid) {
       EXPECT_TRUE(result);
     } else {
@@ -34,6 +40,7 @@ public:
 
 private:
   const bool valid;
+  const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode;
   const sourcemeta::jsontoolkit::SchemaCompilerTemplate schema;
   const sourcemeta::jsontoolkit::JSON instance;
 };
@@ -113,7 +120,7 @@ static auto register_tests(const std::filesystem::path &subdirectory,
           testing::RegisterTest(
               suite_name.c_str(), title.str().c_str(), nullptr, nullptr,
               __FILE__, __LINE__, [=]() -> OfficialTest * {
-                return new OfficialTest(valid, schema, instance);
+                return new OfficialTest(valid, mode, schema, instance);
               });
         }
       }
@@ -131,9 +138,9 @@ int main(int argc, char **argv) {
                  // TODO: Enable all tests
                  {"refRemote", "not", "maxLength", "maximum", "multipleOf",
                   "additionalProperties", "allOf", "additionalItems",
-                  "properties", "ref", "items", "infinite-loop-detection",
-                  "definitions", "minLength", "oneOf", "dependencies", "enum",
-                  "anyOf"});
+                  "uniqueItems", "properties", "ref", "items",
+                  "infinite-loop-detection", "definitions", "minLength",
+                  "oneOf", "dependencies", "enum", "anyOf"});
 
   return RUN_ALL_TESTS();
 }
