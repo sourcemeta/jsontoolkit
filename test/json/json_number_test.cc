@@ -287,6 +287,42 @@ TEST(JSON_number, divisible_by_real_real_false) {
   EXPECT_FALSE(dividend.divisible_by(divisor));
 }
 
+TEST(JSON_number, divisible_by_infinity) {
+  const sourcemeta::jsontoolkit::JSON dividend{1e308};
+  const sourcemeta::jsontoolkit::JSON divisor{0.123456789};
+  EXPECT_FALSE(dividend.divisible_by(divisor));
+}
+
+TEST(JSON_number, divisible_by_tiny_true) {
+  const sourcemeta::jsontoolkit::JSON dividend{0.0075};
+  const sourcemeta::jsontoolkit::JSON divisor{0.0001};
+  EXPECT_TRUE(dividend.divisible_by(divisor));
+}
+
+TEST(JSON_number, divisible_by_tiny_false) {
+  const sourcemeta::jsontoolkit::JSON dividend{0.00751};
+  const sourcemeta::jsontoolkit::JSON divisor{0.0001};
+  EXPECT_FALSE(dividend.divisible_by(divisor));
+}
+
+TEST(JSON_number, divisible_by_real_zero) {
+  const sourcemeta::jsontoolkit::JSON dividend{0.00751};
+  const sourcemeta::jsontoolkit::JSON divisor{0};
+  EXPECT_FALSE(dividend.divisible_by(divisor));
+}
+
+TEST(JSON_number, divisible_by_integer_zero) {
+  const sourcemeta::jsontoolkit::JSON dividend{5};
+  const sourcemeta::jsontoolkit::JSON divisor{0};
+  EXPECT_FALSE(dividend.divisible_by(divisor));
+}
+
+TEST(JSON_number, divisible_by_zero_zero) {
+  const sourcemeta::jsontoolkit::JSON dividend{0};
+  const sourcemeta::jsontoolkit::JSON divisor{0};
+  EXPECT_FALSE(dividend.divisible_by(divisor));
+}
+
 TEST(JSON_number, as_real_real) {
   const sourcemeta::jsontoolkit::JSON document{4.7};
   EXPECT_DOUBLE_EQ(document.as_real(), 4.7);

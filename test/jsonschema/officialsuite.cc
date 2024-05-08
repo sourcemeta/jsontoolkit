@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
   register_tests("draft4", "JSONSchemaOfficialSuite_Draft4",
                  "http://json-schema.org/draft-04/schema#",
                  // TODO: Enable all tests
-                 {"refRemote", "multipleOf", "ref", "definitions"});
+                 {"refRemote", "ref", "definitions"});
 
   return RUN_ALL_TESTS();
 }
