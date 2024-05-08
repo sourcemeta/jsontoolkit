@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
                  "http://json-schema.org/draft-04/schema#",
                  // TODO: Enable all tests
                  {"refRemote", "maxLength", "multipleOf", "allOf", "ref",
-                  "items", "definitions", "minLength", "oneOf"});
+                  "definitions", "minLength", "oneOf"});
 
   return RUN_ALL_TESTS();
 }
