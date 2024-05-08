@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cctype>
 #include <filesystem>
+#include <iostream>
 #include <ostream>
 #include <set>
 #include <sstream>
@@ -68,6 +69,7 @@ static auto register_tests(const std::filesystem::path &subdirectory,
       continue;
     }
 
+    std::cerr << "-- Parsing: " << entry.path().string() << "\n";
     const sourcemeta::jsontoolkit::JSON suite{
         sourcemeta::jsontoolkit::from_file(entry.path())};
     assert(suite.is_array());

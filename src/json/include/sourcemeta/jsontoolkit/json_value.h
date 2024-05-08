@@ -1093,8 +1093,13 @@ public:
       return divisor_value != 0 && this->to_integer() % divisor_value == 0;
     }
 
-    const auto division{this->as_real() / divisor.as_real()};
-    double integral;
+    const auto divisor_value(divisor.as_real());
+    if (divisor_value == 0.0) {
+      return false;
+    }
+
+    const auto division{this->as_real() / divisor_value};
+    Real integral;
     return !std::isinf(division) && !std::isnan(division) &&
            std::modf(division, &integral) == 0.0;
   }

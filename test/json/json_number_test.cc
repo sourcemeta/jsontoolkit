@@ -323,6 +323,18 @@ TEST(JSON_number, divisible_by_zero_zero) {
   EXPECT_FALSE(dividend.divisible_by(divisor));
 }
 
+TEST(JSON_number, divisible_by_zero_interger) {
+  const sourcemeta::jsontoolkit::JSON dividend{0};
+  const sourcemeta::jsontoolkit::JSON divisor{5};
+  EXPECT_TRUE(dividend.divisible_by(divisor));
+}
+
+TEST(JSON_number, divisible_by_zero_real_zero_real) {
+  const sourcemeta::jsontoolkit::JSON dividend{0.0};
+  const sourcemeta::jsontoolkit::JSON divisor{0.0};
+  EXPECT_FALSE(dividend.divisible_by(divisor));
+}
+
 TEST(JSON_number, as_real_real) {
   const sourcemeta::jsontoolkit::JSON document{4.7};
   EXPECT_DOUBLE_EQ(document.as_real(), 4.7);
