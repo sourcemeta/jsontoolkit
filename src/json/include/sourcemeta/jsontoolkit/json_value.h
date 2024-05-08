@@ -987,7 +987,25 @@ public:
     } else if (this->is_array()) {
       return std::get<Array>(this->data).data.size();
     } else {
-      return std::get<String>(this->data).size();
+      // We want to count the number of logical characters,
+      // not the number of bytes
+      const auto &string_data{std::get<String>(this->data)};
+      std::size_t result{0};
+
+      // TODO: Loop on string characters instead
+      for (std::size_t cursor{0}; cursor < string_data.size(); cursor++) {
+        // In UTF-8, continuation bytes (i.e. not the first) are
+        // encoded as `10xxxxxx`, so this means we are at the start
+        // of a code-point
+        // See https://en.wikipedia.org/wiki/UTF-8#Encoding
+        if ((string_data[cursor] & 0b11000000) != 0b10000000) {
+          result += 1;
+        }
+      }
+
+      // Otherwise we messed up
+      assert(result <= string_data.size());
+      return result;
     }
   }
 
