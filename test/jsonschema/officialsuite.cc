@@ -49,6 +49,10 @@ static auto register_tests(const std::filesystem::path &subdirectory,
        std::filesystem::directory_iterator(
            std::filesystem::path{OFFICIAL_SUITE_PATH} / "tests" /
            subdirectory)) {
+    if (!entry.is_regular_file()) {
+      continue;
+    }
+
     const std::string name{entry.path().stem().string()};
     if (blacklist.contains(name)) {
       continue;
@@ -124,33 +128,10 @@ int main(int argc, char **argv) {
   register_tests("draft4", "JSONSchemaOfficialSuite_Draft4",
                  "http://json-schema.org/draft-04/schema#",
                  // TODO: Enable all tests
-                 {"refRemote",
-                  "not",
-                  "maxLength",
-                  "maximum",
-                  "minimum",
-                  "multipleOf",
-                  "type",
-                  "additionalProperties",
-                  "allOf",
-                  "additionalItems",
-                  "properties",
-                  "ref",
-                  "items",
-                  "uniqueItems",
-                  "infinite-loop-detection",
-                  "definitions",
-                  "minLength",
-                  "oneOf",
-                  "maxProperties",
-                  "format",
-                  "dependencies",
-                  "minProperties",
-                  "optional",
-                  "enum",
-                  "required",
-                  "default",
-                  "patternProperties",
+                 {"refRemote", "not", "maxLength", "maximum", "multipleOf",
+                  "additionalProperties", "allOf", "additionalItems",
+                  "properties", "ref", "items", "infinite-loop-detection",
+                  "definitions", "minLength", "oneOf", "dependencies", "enum",
                   "anyOf"});
 
   return RUN_ALL_TESTS();
