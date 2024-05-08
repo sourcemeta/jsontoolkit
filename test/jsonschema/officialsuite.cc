@@ -125,7 +125,6 @@ int main(int argc, char **argv) {
                  "http://json-schema.org/draft-04/schema#",
                  // TODO: Enable all tests
                  {"refRemote",
-                  "maxItems",
                   "not",
                   "maxLength",
                   "maximum",
@@ -145,7 +144,6 @@ int main(int argc, char **argv) {
                   "oneOf",
                   "maxProperties",
                   "format",
-                  "minItems",
                   "dependencies",
                   "minProperties",
                   "optional",
