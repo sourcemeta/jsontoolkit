@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 
 #include <cassert>
+#include <cctype>
 #include <filesystem>
+#include <ostream>
 #include <set>
 #include <sstream>
 #include <string>
@@ -10,11 +12,17 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-auto callback_noop(
+static auto callback_noop(
     bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
     const sourcemeta::jsontoolkit::Pointer &,
     const sourcemeta::jsontoolkit::Pointer &,
     const sourcemeta::jsontoolkit::JSON &) noexcept -> void {}
+
+static auto slugify(const std::string &input, std::ostream &output) -> void {
+  for (const auto character : input) {
+    output << (std::isalnum(character) ? character : '_');
+  }
+}
 
 class OfficialTest : public testing::Test {
 public:
@@ -109,13 +117,9 @@ static auto register_tests(const std::filesystem::path &subdirectory,
           }
 
           title << "_";
-          for (const auto character : test.at("description").to_string()) {
-            title << (character == ' ' ? '_' : character);
-          }
+          slugify(test.at("description").to_string(), title);
           title << "__";
-          for (const auto character : test_case.at("description").to_string()) {
-            title << (character == ' ' ? '_' : character);
-          }
+          slugify(test_case.at("description").to_string(), title);
 
           testing::RegisterTest(
               suite_name.c_str(), title.str().c_str(), nullptr, nullptr,
