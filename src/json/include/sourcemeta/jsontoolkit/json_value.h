@@ -183,13 +183,13 @@ public:
   explicit GenericValue(std::initializer_list<GenericValue> values)
       : data{std::in_place_type<Array>, values} {
 // For some reason, if we construct a GenericValue by passing a single
-// GenericValue as argument, GCC (and only GCC from what we can tell) will
+// GenericValue as argument, GCC and MSVC, in some circumstances will
 // prefer this initializer list constructor over the default copy constructor,
 // effectively creating an array of a single element. We couldn't find a nicer
-// way to force GCC to pick the correct constructor. This is a hacky (and
+// way to force them to pick the correct constructor. This is a hacky (and
 // potentially inefficient?) way to "fix it up" to get consistent behavior
 // across compilers.
-#if defined(__GNUC__)
+#if defined(__GNUC__) || defined(_MSC_VER)
     if (values.size() == 1) {
       this->data = values.begin()->data;
     }
