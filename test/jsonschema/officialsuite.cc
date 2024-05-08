@@ -10,23 +10,27 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
+auto callback_noop(
+    bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
+    const sourcemeta::jsontoolkit::Pointer &,
+    const sourcemeta::jsontoolkit::Pointer &,
+    const sourcemeta::jsontoolkit::JSON &) noexcept -> void {}
+
 class OfficialTest : public testing::Test {
 public:
-  explicit OfficialTest(bool test_valid,
-                        sourcemeta::jsontoolkit::JSON test_schema,
-                        sourcemeta::jsontoolkit::JSON test_instance,
-                        std::string default_dialect)
-      : valid{test_valid}, schema(std::move(test_schema)),
-        instance(std::move(test_instance)),
-        dialect{std::move(default_dialect)} {}
+  explicit OfficialTest(
+      bool test_valid,
+      sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode test_mode,
+      sourcemeta::jsontoolkit::SchemaCompilerTemplate test_schema,
+      sourcemeta::jsontoolkit::JSON test_instance)
+      : valid{test_valid}, mode{test_mode}, schema{std::move(test_schema)},
+
+        // TODO: Why cannot we use {} initializers here without confusing MSVC?
+        instance(std::move(test_instance)) {}
 
   auto TestBody() -> void override {
-    const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-        this->schema, sourcemeta::jsontoolkit::default_schema_walker,
-        sourcemeta::jsontoolkit::official_resolver,
-        sourcemeta::jsontoolkit::default_schema_compiler, this->dialect)};
-    const auto result{
-        sourcemeta::jsontoolkit::evaluate(compiled_schema, this->instance)};
+    const auto result{sourcemeta::jsontoolkit::evaluate(
+        this->schema, this->instance, this->mode, callback_noop)};
     if (this->valid) {
       EXPECT_TRUE(result);
     } else {
@@ -36,9 +40,9 @@ public:
 
 private:
   const bool valid;
-  const sourcemeta::jsontoolkit::JSON schema;
+  const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode;
+  const sourcemeta::jsontoolkit::SchemaCompilerTemplate schema;
   const sourcemeta::jsontoolkit::JSON instance;
-  const std::string dialect;
 };
 
 static auto register_tests(const std::filesystem::path &subdirectory,
@@ -69,6 +73,12 @@ static auto register_tests(const std::filesystem::path &subdirectory,
       assert(test.at("description").is_string());
       assert(sourcemeta::jsontoolkit::is_schema(test.at("schema")));
       assert(test.at("tests").is_array());
+
+      const auto schema{sourcemeta::jsontoolkit::compile(
+          test.at("schema"), sourcemeta::jsontoolkit::default_schema_walker,
+          sourcemeta::jsontoolkit::official_resolver,
+          sourcemeta::jsontoolkit::default_schema_compiler, default_dialect)};
+
       for (const auto &test_case : test.at("tests").as_array()) {
         assert(test_case.is_object());
         assert(test_case.defines("data"));
@@ -77,7 +87,6 @@ static auto register_tests(const std::filesystem::path &subdirectory,
         assert(test_case.at("description").is_string());
         assert(test_case.at("valid").is_boolean());
 
-        const auto &schema{test.at("schema")};
         const auto &instance{test_case.at("data")};
         const bool valid{test_case.at("valid").to_boolean()};
 
@@ -108,12 +117,11 @@ static auto register_tests(const std::filesystem::path &subdirectory,
             title << (character == ' ' ? '_' : character);
           }
 
-          testing::RegisterTest(suite_name.c_str(), title.str().c_str(),
-                                nullptr, nullptr, __FILE__, __LINE__,
-                                [=]() -> OfficialTest * {
-                                  return new OfficialTest(
-                                      valid, schema, instance, default_dialect);
-                                });
+          testing::RegisterTest(
+              suite_name.c_str(), title.str().c_str(), nullptr, nullptr,
+              __FILE__, __LINE__, [=]() -> OfficialTest * {
+                return new OfficialTest(valid, mode, schema, instance);
+              });
         }
       }
     }
@@ -130,9 +138,9 @@ int main(int argc, char **argv) {
                  // TODO: Enable all tests
                  {"refRemote", "not", "maxLength", "maximum", "multipleOf",
                   "additionalProperties", "allOf", "additionalItems",
-                  "properties", "ref", "items", "infinite-loop-detection",
-                  "definitions", "minLength", "oneOf", "dependencies", "enum",
-                  "anyOf"});
+                  "uniqueItems", "properties", "ref", "items",
+                  "infinite-loop-detection", "definitions", "minLength",
+                  "oneOf", "dependencies", "enum", "anyOf"});
 
   return RUN_ALL_TESTS();
 }
