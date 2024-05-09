@@ -775,6 +775,14 @@ TEST(JSON_parse, positive_multi_digit_negative_integer) {
   EXPECT_EQ(document.to_integer(), -1234);
 }
 
+TEST(JSON_parse, positive_large_integer) {
+  std::istringstream input{"12391239123"};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
+  EXPECT_TRUE(document.is_integer());
+  EXPECT_EQ(document.to_integer(), 12391239123);
+}
+
 TEST(JSON_parse, positive_real_trailing_zeroes) {
   std::istringstream input{"1.50000"};
   const sourcemeta::jsontoolkit::JSON document =
