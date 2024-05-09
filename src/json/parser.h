@@ -226,7 +226,7 @@ auto parse_number_integer(const std::uint64_t line, const std::uint64_t column,
                           const std::basic_string<CharT, Traits> &string)
     -> std::int64_t {
   try {
-    return std::stol(string);
+    return std::stoll(string);
   } catch (const std::out_of_range &) {
     throw ParseError(line, column);
   }
