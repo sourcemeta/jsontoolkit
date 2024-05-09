@@ -6,6 +6,7 @@ function(sourcemeta_jsontoolkit_add_compile_options target)
       /permissive-
       /W4
       /WL
+      /MP
       /sdl)
   else()
     target_compile_options("${target}" PRIVATE
