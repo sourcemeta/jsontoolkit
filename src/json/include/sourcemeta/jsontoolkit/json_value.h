@@ -6,7 +6,7 @@
 
 #include <algorithm>        // std::find, std::any_of, std::sort, std::unique
 #include <cassert>          // assert
-#include <cmath>            // std::isinf, std::isnan, std::fmod
+#include <cmath>            // std::isinf, std::isnan, std::modf
 #include <cstdint>          // std::int64_t, std::uint8_t
 #include <functional>       // std::less, std::reference_wrapper
 #include <initializer_list> // std::initializer_list
@@ -1089,10 +1089,19 @@ public:
     assert(divisor.is_number());
 
     if (this->is_integer() && divisor.is_integer()) {
-      return this->to_integer() % divisor.to_integer() == 0;
+      const auto divisor_value{divisor.to_integer()};
+      return divisor_value != 0 && this->to_integer() % divisor_value == 0;
     }
 
-    return std::fmod(this->as_real(), divisor.as_real()) == 0.0;
+    const auto divisor_value(divisor.as_real());
+    if (divisor_value == 0.0) {
+      return false;
+    }
+
+    const auto division{this->as_real() / divisor_value};
+    Real integral;
+    return !std::isinf(division) && !std::isnan(division) &&
+           std::modf(division, &integral) == 0.0;
   }
 
   /// A convenience method to check whether the input JSON document is an empty
