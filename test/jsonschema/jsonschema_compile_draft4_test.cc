@@ -529,6 +529,32 @@ TEST(JSONSchema_compile_draft4, ref_6) {
   EVALUATE_TRACE_SUCCESS(6, AssertionType, "/type", "#/type", "");
 }
 
+TEST(JSONSchema_compile_draft4, ref_7) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "a": { "$ref": "#" },
+      "b": { "$ref": "#" },
+      "c": { "$ref": "#" },
+      "d": { "$ref": "#" },
+      "e": { "$ref": "#" },
+      "f": { "$ref": "#" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
+}
+
 TEST(JSONSchema_compile_draft4, properties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
