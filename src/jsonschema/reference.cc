@@ -70,6 +70,15 @@ ref_overrides_adjacent_keywords(const std::string &base_dialect) -> bool {
          base_dialect == "http://json-schema.org/draft-00/hyper-schema#";
 }
 
+static auto supports_id_anchors(const std::string &base_dialect) -> bool {
+  return base_dialect == "http://json-schema.org/draft-07/schema#" ||
+         base_dialect == "http://json-schema.org/draft-07/hyper-schema#" ||
+         base_dialect == "http://json-schema.org/draft-06/schema#" ||
+         base_dialect == "http://json-schema.org/draft-06/hyper-schema#" ||
+         base_dialect == "http://json-schema.org/draft-04/schema#" ||
+         base_dialect == "http://json-schema.org/draft-04/hyper-schema#";
+}
+
 static auto fragment_string(const sourcemeta::jsontoolkit::URI uri)
     -> std::optional<std::string> {
   const auto fragment{uri.fragment()};
@@ -171,7 +180,16 @@ auto sourcemeta::jsontoolkit::frame(
     if (entry.id.has_value()) {
       const bool ref_overrides =
           ref_overrides_adjacent_keywords(entry.common.base_dialect.value());
-      if (!entry.common.value.defines("$ref") || !ref_overrides) {
+      const bool is_pre_2019_09_location_independent_identifier =
+          supports_id_anchors(entry.common.base_dialect.value()) &&
+          sourcemeta::jsontoolkit::URI{entry.id.value()}.is_fragment_only();
+
+      if ((!entry.common.value.defines("$ref") || !ref_overrides) &&
+          // If we are dealing with a pre-2019-09 location independent
+          // identifier, we ignore it as a traditional identifier and take care
+          // of it as an anchor
+          // TODO: Cover this case on framing tests for Draft 4, 6, and 7
+          !is_pre_2019_09_location_independent_identifier) {
         const auto bases{
             find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
         for (const auto &base_string : bases.first) {
