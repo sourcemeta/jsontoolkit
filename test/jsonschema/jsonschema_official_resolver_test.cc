@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/jsontoolkit/uri.h>
 
 #define EXPECT_SCHEMA(identifier)                                              \
   {                                                                            \
@@ -14,7 +15,9 @@
             document, sourcemeta::jsontoolkit::official_resolver)              \
             .get()};                                                           \
     EXPECT_TRUE(id.has_value());                                               \
-    EXPECT_EQ(id.value(), identifier);                                         \
+    EXPECT_EQ(                                                                 \
+        sourcemeta::jsontoolkit::URI{id.value()}.canonicalize().recompose(),   \
+        sourcemeta::jsontoolkit::URI{identifier}.canonicalize().recompose());  \
   }
 
 TEST(JSONSchema_official_resolver, jsonschema_2020_12) {
@@ -51,18 +54,33 @@ TEST(JSONSchema_official_resolver, jsonschema_draft7) {
   EXPECT_SCHEMA("http://json-schema.org/draft-07/hyper-schema#");
   EXPECT_SCHEMA("http://json-schema.org/draft-07/links#");
   EXPECT_SCHEMA("http://json-schema.org/draft-07/hyper-schema-output");
+
+  // Take canonicalized versions too
+  EXPECT_SCHEMA("http://json-schema.org/draft-07/schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-07/hyper-schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-07/links");
 }
 
 TEST(JSONSchema_official_resolver, jsonschema_draft6) {
   EXPECT_SCHEMA("http://json-schema.org/draft-06/schema#");
   EXPECT_SCHEMA("http://json-schema.org/draft-06/hyper-schema#");
   EXPECT_SCHEMA("http://json-schema.org/draft-06/links#");
+
+  // Take canonicalized versions too
+  EXPECT_SCHEMA("http://json-schema.org/draft-06/schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-06/hyper-schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-06/links");
 }
 
 TEST(JSONSchema_official_resolver, jsonschema_draft4) {
   EXPECT_SCHEMA("http://json-schema.org/draft-04/schema#");
   EXPECT_SCHEMA("http://json-schema.org/draft-04/hyper-schema#");
   EXPECT_SCHEMA("http://json-schema.org/draft-04/links#");
+
+  // Take canonicalized versions too
+  EXPECT_SCHEMA("http://json-schema.org/draft-04/schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-04/hyper-schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-04/links");
 }
 
 TEST(JSONSchema_official_resolver, jsonschema_draft3) {
@@ -70,6 +88,12 @@ TEST(JSONSchema_official_resolver, jsonschema_draft3) {
   EXPECT_SCHEMA("http://json-schema.org/draft-03/hyper-schema#");
   EXPECT_SCHEMA("http://json-schema.org/draft-03/links#");
   EXPECT_SCHEMA("http://json-schema.org/draft-03/json-ref#");
+
+  // Take canonicalized versions too
+  EXPECT_SCHEMA("http://json-schema.org/draft-03/schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-03/hyper-schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-03/links");
+  EXPECT_SCHEMA("http://json-schema.org/draft-03/json-ref");
 }
 
 TEST(JSONSchema_official_resolver, jsonschema_draft2) {
@@ -77,6 +101,12 @@ TEST(JSONSchema_official_resolver, jsonschema_draft2) {
   EXPECT_SCHEMA("http://json-schema.org/draft-02/hyper-schema#");
   EXPECT_SCHEMA("http://json-schema.org/draft-02/links#");
   EXPECT_SCHEMA("http://json-schema.org/draft-02/json-ref#");
+
+  // Take canonicalized versions too
+  EXPECT_SCHEMA("http://json-schema.org/draft-02/schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-02/hyper-schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-02/links");
+  EXPECT_SCHEMA("http://json-schema.org/draft-02/json-ref");
 }
 
 TEST(JSONSchema_official_resolver, jsonschema_draft1) {
@@ -84,6 +114,12 @@ TEST(JSONSchema_official_resolver, jsonschema_draft1) {
   EXPECT_SCHEMA("http://json-schema.org/draft-01/hyper-schema#");
   EXPECT_SCHEMA("http://json-schema.org/draft-01/links#");
   EXPECT_SCHEMA("http://json-schema.org/draft-01/json-ref#");
+
+  // Take canonicalized versions too
+  EXPECT_SCHEMA("http://json-schema.org/draft-01/schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-01/hyper-schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-01/links");
+  EXPECT_SCHEMA("http://json-schema.org/draft-01/json-ref");
 }
 
 TEST(JSONSchema_official_resolver, jsonschema_draft0) {
@@ -91,6 +127,12 @@ TEST(JSONSchema_official_resolver, jsonschema_draft0) {
   EXPECT_SCHEMA("http://json-schema.org/draft-00/hyper-schema#");
   EXPECT_SCHEMA("http://json-schema.org/draft-00/links#");
   EXPECT_SCHEMA("http://json-schema.org/draft-00/json-ref#");
+
+  // Take canonicalized versions too
+  EXPECT_SCHEMA("http://json-schema.org/draft-00/schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-00/hyper-schema");
+  EXPECT_SCHEMA("http://json-schema.org/draft-00/links");
+  EXPECT_SCHEMA("http://json-schema.org/draft-00/json-ref");
 }
 
 TEST(JSONSchema_official_resolver, idempotency) {
