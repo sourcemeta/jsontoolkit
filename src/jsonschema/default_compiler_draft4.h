@@ -6,7 +6,6 @@
 
 #include <cassert> // assert
 #include <regex>   // std::regex
-#include <sstream> // std::ostringstream
 #include <utility> // std::move
 
 #include "compile_helpers.h"
@@ -64,9 +63,7 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context)
   const auto &entry{context.frame.at({type, current})};
   assert(context.references.contains({type, entry.pointer}));
   const auto &reference{context.references.at({type, entry.pointer})};
-  std::ostringstream label_key;
-  label_key << current << "|" << reference.destination;
-  const auto label{std::hash<std::string>{}(label_key.str())};
+  const auto label{std::hash<std::string>{}(reference.destination)};
 
   // The label is already registered, so just jump to it
   if (context.labels.contains(label)) {
