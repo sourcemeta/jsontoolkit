@@ -57,6 +57,10 @@ static auto test_resolver(std::string_view identifier)
         "foo": { "$ref": "#" }
       }
     })JSON"));
+  } else if (identifier == "https://www.sourcemeta.com/anonymous") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "type": "integer"
+    })JSON"));
   } else {
     promise.set_value(
         sourcemeta::jsontoolkit::official_resolver(identifier).get());
@@ -435,10 +439,35 @@ TEST(JSONSchema_bundle_2020_12, recursive_empty_fragment) {
     "$defs": {
       "https://www.sourcemeta.com/recursive-empty-fragment": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://www.sourcemeta.com/recursive-empty-fragment#",
+        "$id": "https://www.sourcemeta.com/recursive-empty-fragment",
         "properties": {
           "foo": { "$ref": "#" }
         }
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2020_12, anonymous_no_dialect) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$ref": "https://www.sourcemeta.com/anonymous"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      "https://json-schema.org/draft/2020-12/schema")
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$ref": "https://www.sourcemeta.com/anonymous",
+    "$defs": {
+      "https://www.sourcemeta.com/anonymous": {
+        "$id": "https://www.sourcemeta.com/anonymous",
+        "type": "integer"
       }
     }
   })JSON");
