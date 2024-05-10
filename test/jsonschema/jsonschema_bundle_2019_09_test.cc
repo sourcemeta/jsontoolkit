@@ -40,6 +40,23 @@ static auto test_resolver(std::string_view identifier)
       "$id": "https://www.sourcemeta.com/test-4",
       "type": "boolean"
     })JSON"));
+  } else if (identifier == "https://www.sourcemeta.com/recursive") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://json-schema.org/draft/2019-09/schema",
+      "$id": "https://www.sourcemeta.com/recursive",
+      "properties": {
+        "foo": { "$ref": "#" }
+      }
+    })JSON"));
+  } else if (identifier ==
+             "https://www.sourcemeta.com/recursive-empty-fragment") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://json-schema.org/draft/2019-09/schema",
+      "$id": "https://www.sourcemeta.com/recursive-empty-fragment#",
+      "properties": {
+        "foo": { "$ref": "#" }
+      }
+    })JSON"));
   } else {
     promise.set_value(
         sourcemeta::jsontoolkit::official_resolver(identifier).get());
@@ -350,6 +367,64 @@ TEST(JSONSchema_bundle_2019_09, taken_definitions_entry) {
         "$schema": "https://json-schema.org/draft/2019-09/schema",
         "$id": "https://www.sourcemeta.com/test-4",
         "type": "boolean"
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2019_09, recursive) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$ref": "https://www.sourcemeta.com/recursive"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$ref": "https://www.sourcemeta.com/recursive",
+    "$defs": {
+      "https://www.sourcemeta.com/recursive": {
+        "$schema": "https://json-schema.org/draft/2019-09/schema",
+        "$id": "https://www.sourcemeta.com/recursive",
+        "properties": {
+          "foo": { "$ref": "#" }
+        }
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2019_09, recursive_empty_fragment) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$ref": "https://www.sourcemeta.com/recursive-empty-fragment#"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$ref": "https://www.sourcemeta.com/recursive-empty-fragment#",
+    "$defs": {
+      "https://www.sourcemeta.com/recursive-empty-fragment": {
+        "$schema": "https://json-schema.org/draft/2019-09/schema",
+        "$id": "https://www.sourcemeta.com/recursive-empty-fragment#",
+        "properties": {
+          "foo": { "$ref": "#" }
+        }
       }
     }
   })JSON");

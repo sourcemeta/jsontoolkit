@@ -54,10 +54,16 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
       .wait();
 
   for (const auto &[key, reference] : references) {
+    // TODO: Canonicalize destinations directly during framing instead
+    const auto canonical_destination{
+        sourcemeta::jsontoolkit::URI{reference.destination}
+            .canonicalize()
+            .recompose()};
+
     if (frame.contains({sourcemeta::jsontoolkit::ReferenceType::Static,
-                        reference.destination}) ||
+                        canonical_destination}) ||
         frame.contains({sourcemeta::jsontoolkit::ReferenceType::Dynamic,
-                        reference.destination}) ||
+                        canonical_destination}) ||
         !reference.base.has_value()) {
       continue;
     }
