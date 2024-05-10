@@ -96,6 +96,12 @@ auto URI::is_tag() const -> bool {
   return scheme.has_value() && scheme.value() == "tag";
 }
 
+auto URI::is_fragment_only() const -> bool {
+  return !this->scheme().has_value() && !this->host().has_value() &&
+         !this->port().has_value() && !this->path().has_value() &&
+         this->fragment().has_value() && !this->query().has_value();
+}
+
 auto URI::scheme() const -> std::optional<std::string_view> {
   return uri_text_range(&this->internal->uri.scheme);
 }

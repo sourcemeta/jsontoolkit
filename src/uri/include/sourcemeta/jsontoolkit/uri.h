@@ -84,6 +84,17 @@ public:
   /// ```
   auto is_tag() const -> bool;
 
+  /// Check if the URI only consists of a fragment. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"#foo"};
+  /// assert(uri.is_fragment_only());
+  /// ```
+  auto is_fragment_only() const -> bool;
+
   /// Get the scheme part of the URI, if any. For example:
   ///
   /// ```cpp
