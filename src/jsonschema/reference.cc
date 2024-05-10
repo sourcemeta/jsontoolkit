@@ -3,6 +3,8 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/uri.h>
 
+#include <iostream> // TODO DEBUG
+
 #include <cassert>  // assert
 #include <map>      // std::map
 #include <optional> // std::optional
@@ -90,6 +92,9 @@ static auto store(sourcemeta::jsontoolkit::ReferenceFrame &frame,
                   const std::string &dialect) -> void {
   const auto canonical{
       sourcemeta::jsontoolkit::URI{uri}.canonicalize().recompose()};
+
+  std::cout << "STORING FRAME: " << canonical << "\n";
+
   if (!frame
            .insert({{type, canonical},
                     {root_id, base_id, pointer_from_root, pointer_from_base,
@@ -178,7 +183,7 @@ auto sourcemeta::jsontoolkit::frame(
           const sourcemeta::jsontoolkit::URI base{base_string};
           sourcemeta::jsontoolkit::URI maybe_relative{entry.id.value()};
           const bool maybe_relative_is_absolute{maybe_relative.is_absolute()};
-          maybe_relative.resolve_from(base);
+          maybe_relative.resolve_from_if_absolute(base);
           const std::string new_id{maybe_relative.recompose()};
 
           if (!maybe_relative_is_absolute ||
@@ -271,7 +276,7 @@ auto sourcemeta::jsontoolkit::frame(
       auto relative_pointer_uri{
           sourcemeta::jsontoolkit::to_uri(pointer.resolve_from(base.second))};
       if (!base.first.empty()) {
-        relative_pointer_uri.resolve_from({base.first});
+        relative_pointer_uri.resolve_from_if_absolute({base.first});
       }
 
       relative_pointer_uri.canonicalize();

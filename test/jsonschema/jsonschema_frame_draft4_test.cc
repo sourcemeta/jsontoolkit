@@ -390,3 +390,51 @@ TEST(JSONSchema_frame_draft4, ref_metaschema) {
       references, "/$ref", "http://json-schema.org/draft-04/schema",
       "http://json-schema.org/draft-04/schema", std::nullopt);
 }
+
+TEST(JSONSchema_frame_draft4, location_independent_identifier_anonymous) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+      "foo": {
+        "id": "#foo"
+      },
+      "bar": {
+        "$ref": "#foo"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 7);
+
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "", "",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/$schema", "/$schema",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/definitions", "/definitions",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#foo", "/definitions/foo",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/definitions/bar", "/definitions/bar",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/definitions/bar/$ref",
+                                "/definitions/bar/$ref",
+                                "http://json-schema.org/draft-04/schema#");
+
+  // TODO: #/id should not be getting registered!
+  // TODO: We should have gotten /definitions/foo and definitions/foo/id too
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(references, "/definitions/bar/$ref", "#foo",
+                          std::nullopt, "foo");
+}
