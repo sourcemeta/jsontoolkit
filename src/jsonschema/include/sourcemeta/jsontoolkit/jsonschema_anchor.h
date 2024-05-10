@@ -23,7 +23,8 @@ enum class AnchorType { Static, Dynamic, All };
 
 /// @ingroup jsonschema
 ///
-/// This function returns the anchors of the given schema, if any. A given
+/// This function returns the anchors of the given schema, if any. This function
+/// also supports the old pre 2019-09 `id` and `$id` anchor form. A given
 /// subschema might have more than two anchors if, for example, declares both
 /// `$anchor` and `$dynamicAnchor` (in 2020-12). For example:
 ///
