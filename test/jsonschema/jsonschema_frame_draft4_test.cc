@@ -386,7 +386,7 @@ TEST(JSONSchema_frame_draft4, ref_metaschema) {
 
   EXPECT_EQ(references.size(), 1);
 
-  EXPECT_STATIC_REFERENCE(references, "/$ref",
-                          "http://json-schema.org/draft-04/schema#",
-                          "http://json-schema.org/draft-04/schema", "");
+  EXPECT_STATIC_REFERENCE(
+      references, "/$ref", "http://json-schema.org/draft-04/schema",
+      "http://json-schema.org/draft-04/schema", std::nullopt);
 }

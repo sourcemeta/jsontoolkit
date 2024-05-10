@@ -466,15 +466,15 @@ TEST(JSONSchema_frame, refs_with_id) {
 
   EXPECT_EQ(references.size(), 4);
   EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref",
-                          "https://www.sourcemeta.com/schema#",
-                          "https://www.sourcemeta.com/schema", "");
+                          "https://www.sourcemeta.com/schema",
+                          "https://www.sourcemeta.com/schema", std::nullopt);
   EXPECT_STATIC_REFERENCE(references, "/properties/bar/$ref",
                           "https://www.sourcemeta.com/schema#/properties/baz",
                           "https://www.sourcemeta.com/schema",
                           "/properties/baz");
   EXPECT_STATIC_REFERENCE(references, "/properties/qux/$ref",
-                          "https://www.sourcemeta.com/test#",
-                          "https://www.sourcemeta.com/test", "");
+                          "https://www.sourcemeta.com/test",
+                          "https://www.sourcemeta.com/test", std::nullopt);
   EXPECT_STATIC_REFERENCE(references, "/properties/anchor/$ref",
                           "https://www.sourcemeta.com/schema#baz",
                           "https://www.sourcemeta.com/schema", "baz");
@@ -509,13 +509,13 @@ TEST(JSONSchema_frame, refs_with_no_id) {
       .wait();
 
   EXPECT_EQ(references.size(), 4);
-  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref", "#", std::nullopt,
-                          "");
+  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref", "", std::nullopt,
+                          std::nullopt);
   EXPECT_STATIC_REFERENCE(references, "/properties/bar/$ref",
                           "#/properties/baz", std::nullopt, "/properties/baz");
   EXPECT_STATIC_REFERENCE(references, "/properties/qux/$ref",
-                          "https://www.example.com#", "https://www.example.com",
-                          "");
+                          "https://www.example.com", "https://www.example.com",
+                          std::nullopt);
   EXPECT_STATIC_REFERENCE(references, "/properties/anchor/$ref", "#baz",
                           std::nullopt, "baz");
 }

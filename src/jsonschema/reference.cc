@@ -305,6 +305,7 @@ auto sourcemeta::jsontoolkit::frame(
           ref.resolve_from(nearest_bases.first.front());
         }
 
+        ref.canonicalize();
         references.insert(
             {{ReferenceType::Static, entry.common.pointer.concat({"$ref"})},
              {ref.recompose(), ref.recompose_without_fragment(),
@@ -321,6 +322,7 @@ auto sourcemeta::jsontoolkit::frame(
           ref.resolve_from(nearest_bases.first.front());
         }
 
+        ref.canonicalize();
         // TODO: Check bookending requirement
         const auto destination{ref.recompose()};
         // TODO: We shouldn't need to reparse if the URI handled mutations

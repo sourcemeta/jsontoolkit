@@ -698,15 +698,15 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_id) {
 
   EXPECT_EQ(references.size(), 4);
   EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef",
-                           "https://www.sourcemeta.com/schema#",
-                           "https://www.sourcemeta.com/schema", "");
+                           "https://www.sourcemeta.com/schema",
+                           "https://www.sourcemeta.com/schema", std::nullopt);
   EXPECT_DYNAMIC_REFERENCE(references, "/properties/bar/$dynamicRef",
                            "https://www.sourcemeta.com/schema#/properties/baz",
                            "https://www.sourcemeta.com/schema",
                            "/properties/baz");
   EXPECT_DYNAMIC_REFERENCE(references, "/properties/qux/$dynamicRef",
-                           "https://www.sourcemeta.com/test#",
-                           "https://www.sourcemeta.com/test", "");
+                           "https://www.sourcemeta.com/test",
+                           "https://www.sourcemeta.com/test", std::nullopt);
   EXPECT_DYNAMIC_REFERENCE(references, "/properties/anchor/$dynamicRef",
                            "https://www.sourcemeta.com/schema#baz",
                            "https://www.sourcemeta.com/schema", "baz");
@@ -741,13 +741,13 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
       .wait();
 
   EXPECT_EQ(references.size(), 4);
-  EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef", "#",
-                           std::nullopt, "");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef", "",
+                           std::nullopt, std::nullopt);
   EXPECT_DYNAMIC_REFERENCE(references, "/properties/bar/$dynamicRef",
                            "#/properties/baz", std::nullopt, "/properties/baz");
   EXPECT_DYNAMIC_REFERENCE(references, "/properties/qux/$dynamicRef",
-                           "https://www.example.com#",
-                           "https://www.example.com", "");
+                           "https://www.example.com", "https://www.example.com",
+                           std::nullopt);
   EXPECT_DYNAMIC_REFERENCE(references, "/properties/anchor/$dynamicRef", "#baz",
                            std::nullopt, "baz");
 }
@@ -781,8 +781,8 @@ TEST(JSONSchema_frame_2020_12, different_dynamic_and_refs_in_same_object) {
                           "https://www.sourcemeta.com/schema",
                           "/properties/bar");
   EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef",
-                           "https://www.sourcemeta.com/schema#",
-                           "https://www.sourcemeta.com/schema", "");
+                           "https://www.sourcemeta.com/schema",
+                           "https://www.sourcemeta.com/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_2020_12, same_dynamic_and_refs_in_same_object) {
@@ -1038,8 +1038,8 @@ TEST(JSONSchema_frame_2020_12, no_id_recursive_empty_pointer) {
 
   EXPECT_EQ(references.size(), 1);
 
-  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref", "#", std::nullopt,
-                          "");
+  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref", "", std::nullopt,
+                          std::nullopt);
 }
 
 TEST(JSONSchema_frame_2020_12, ref_metaschema) {
