@@ -359,3 +359,35 @@ TEST(JSONSchema_frame_draft7, explicit_argument_id_different) {
 
   EXPECT_TRUE(references.empty());
 }
+
+TEST(JSONSchema_frame_draft7, ref_metaschema) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$ref": "http://json-schema.org/draft-07/schema#"
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 3);
+
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "", "",
+                                "http://json-schema.org/draft-07/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/$schema", "/$schema",
+                                "http://json-schema.org/draft-07/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/$ref", "/$ref",
+                                "http://json-schema.org/draft-07/schema#");
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(references, "/$ref",
+                          "http://json-schema.org/draft-07/schema#",
+                          "http://json-schema.org/draft-07/schema", "");
+}

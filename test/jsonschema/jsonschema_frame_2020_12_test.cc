@@ -1041,3 +1041,35 @@ TEST(JSONSchema_frame_2020_12, no_id_recursive_empty_pointer) {
   EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref", "#", std::nullopt,
                           "");
 }
+
+TEST(JSONSchema_frame_2020_12, ref_metaschema) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "https://json-schema.org/draft/2020-12/schema"
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 3);
+
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "", "",
+                                "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/$schema", "/$schema",
+                                "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/$ref", "/$ref",
+                                "https://json-schema.org/draft/2020-12/schema");
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$ref", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
+}
