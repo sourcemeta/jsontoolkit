@@ -4,14 +4,53 @@
 #include <cctype>
 #include <filesystem>
 #include <iostream>
+#include <optional>
 #include <ostream>
 #include <set>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <utility>
 
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
+
+static auto test_resolver(std::string_view identifier)
+    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
+  const std::filesystem::path remotes_path{
+      std::filesystem::path{OFFICIAL_SUITE_PATH} / "remotes"};
+
+#define READ_SCHEMA_FILE(uri, relative_path)                                   \
+  if (identifier == (uri)) {                                                   \
+    std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;        \
+    promise.set_value(                                                         \
+        sourcemeta::jsontoolkit::from_file(remotes_path / (relative_path)));   \
+    return promise.get_future();                                               \
+  }
+
+  // We keep an explicit list instead of dynamically reading into the directory
+  // to make sure we are only pulling in the right files
+  READ_SCHEMA_FILE("http://localhost:1234/integer.json", "integer.json")
+  READ_SCHEMA_FILE("http://localhost:1234/subSchemas.json", "subSchemas.json")
+  READ_SCHEMA_FILE("http://localhost:1234/baseUriChange/folderInteger.json",
+                   std::filesystem::path{"baseUriChange"} /
+                       "folderInteger.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/baseUriChangeFolder/folderInteger.json",
+      std::filesystem::path{"baseUriChangeFolder"} / "folderInteger.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/baseUriChangeFolderInSubschema/folderInteger.json",
+      std::filesystem::path{"baseUriChangeFolderInSubschema"} /
+          "folderInteger.json")
+  READ_SCHEMA_FILE("http://localhost:1234/name.json", "name.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/locationIndependentIdentifierDraft4.json",
+      "locationIndependentIdentifierDraft4.json")
+
+#undef READ_SCHEMA_FILE
+
+  return sourcemeta::jsontoolkit::official_resolver(identifier);
+}
 
 static auto callback_noop(
     bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
@@ -84,8 +123,8 @@ static auto register_tests(const std::filesystem::path &subdirectory,
 
       const auto schema{sourcemeta::jsontoolkit::compile(
           test.at("schema"), sourcemeta::jsontoolkit::default_schema_walker,
-          sourcemeta::jsontoolkit::official_resolver,
-          sourcemeta::jsontoolkit::default_schema_compiler, default_dialect)};
+          test_resolver, sourcemeta::jsontoolkit::default_schema_compiler,
+          default_dialect)};
 
       for (const auto &test_case : test.at("tests").as_array()) {
         assert(test_case.is_object());
@@ -140,7 +179,7 @@ int main(int argc, char **argv) {
   register_tests("draft4", "JSONSchemaOfficialSuite_Draft4",
                  "http://json-schema.org/draft-04/schema#",
                  // TODO: Enable all tests
-                 {"refRemote", "ref"});
+                 {"ref"});
 
   return RUN_ALL_TESTS();
 }
