@@ -377,20 +377,20 @@ TEST(JSONSchema_compile_draft4, ref_3) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
-  EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties/foo/$ref/properties",
-                         "https://example.com#/properties", "/foo");
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
+                         "");
   EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo");
-  EVALUATE_TRACE_SUCCESS(2, ControlLabel, "/properties/foo/$ref",
+  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties/foo/$ref/properties",
+                         "https://example.com#/properties", "/foo");
+  EVALUATE_TRACE_SUCCESS(3, ControlLabel, "/properties/foo/$ref",
                          "https://example.com#/properties/foo/$ref", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(
-      3, "/properties", "https://example.com#/properties", "", "foo");
-  EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/properties",
-                         "https://example.com#/properties", "");
+      4, "/properties", "https://example.com#/properties", "", "foo");
   EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties",
                          "https://example.com#/properties", "");
-  EVALUATE_TRACE_SUCCESS(6, AssertionType, "/type", "https://example.com#/type",
-                         "");
+  EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties",
+                         "https://example.com#/properties", "");
 }
 
 TEST(JSONSchema_compile_draft4, ref_4) {
@@ -416,39 +416,34 @@ TEST(JSONSchema_compile_draft4, ref_4) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 12);
 
-  // Nested `foo`
-  EVALUATE_TRACE_SUCCESS(0, LogicalAnd,
-                         "/properties/foo/$ref/properties/foo/$ref/properties",
-                         "https://example.com#/properties", "/foo/foo");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType,
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
+                         "");
+  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
+                         "https://example.com#/type", "/foo");
+  EVALUATE_TRACE_SUCCESS(2, AssertionType,
                          "/properties/foo/$ref/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo/foo");
+  EVALUATE_TRACE_SUCCESS(3, LogicalAnd,
+                         "/properties/foo/$ref/properties/foo/$ref/properties",
+                         "https://example.com#/properties", "/foo/foo");
   EVALUATE_TRACE_SUCCESS(
-      2, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
+      4, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
       "https://example.com#/properties/foo/$ref", "/foo/foo");
-  EVALUATE_TRACE_ANNOTATION_PRIVATE(3, "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(5, "/properties/foo/$ref/properties",
                                     "https://example.com#/properties", "/foo",
                                     "foo");
-  EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties/foo/$ref/properties",
                          "https://example.com#/properties", "/foo");
-  EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_SUCCESS(7, LogicalAnd, "/properties/foo/$ref/properties",
                          "https://example.com#/properties", "/foo");
-
-  // Top level `foo`
-  EVALUATE_TRACE_SUCCESS(6, AssertionType, "/properties/foo/$ref/type",
-                         "https://example.com#/type", "/foo");
-  EVALUATE_TRACE_SUCCESS(7, ControlLabel, "/properties/foo/$ref",
+  EVALUATE_TRACE_SUCCESS(8, ControlLabel, "/properties/foo/$ref",
                          "https://example.com#/properties/foo/$ref", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(
-      8, "/properties", "https://example.com#/properties", "", "foo");
-  EVALUATE_TRACE_SUCCESS(9, LogicalAnd, "/properties",
-                         "https://example.com#/properties", "");
+      9, "/properties", "https://example.com#/properties", "", "foo");
   EVALUATE_TRACE_SUCCESS(10, LogicalAnd, "/properties",
                          "https://example.com#/properties", "");
-
-  // Top level object
-  EVALUATE_TRACE_SUCCESS(11, AssertionType, "/type",
-                         "https://example.com#/type", "");
+  EVALUATE_TRACE_SUCCESS(11, LogicalAnd, "/properties",
+                         "https://example.com#/properties", "");
 }
 
 TEST(JSONSchema_compile_draft4, ref_5) {
@@ -472,26 +467,27 @@ TEST(JSONSchema_compile_draft4, ref_5) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"foo\": 1 } }")};
 
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 7);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 9);
 
-  // Nested `foo`
-  EVALUATE_TRACE_FAILURE(0, AssertionType,
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
+                         "");
+  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
+                         "https://example.com#/type", "/foo");
+  EVALUATE_TRACE_FAILURE(2, AssertionType,
                          "/properties/foo/$ref/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo/foo");
   EVALUATE_TRACE_FAILURE(
-      1, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
+      3, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
       "https://example.com#/properties/foo/$ref", "/foo/foo");
-  EVALUATE_TRACE_FAILURE(2, LogicalAnd, "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_FAILURE(4, LogicalAnd, "/properties/foo/$ref/properties",
                          "https://example.com#/properties", "/foo");
-  EVALUATE_TRACE_FAILURE(3, LogicalAnd, "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_FAILURE(5, LogicalAnd, "/properties/foo/$ref/properties",
                          "https://example.com#/properties", "/foo");
-
-  // Top level `foo`
-  EVALUATE_TRACE_FAILURE(4, ControlLabel, "/properties/foo/$ref",
+  EVALUATE_TRACE_FAILURE(6, ControlLabel, "/properties/foo/$ref",
                          "https://example.com#/properties/foo/$ref", "/foo");
-  EVALUATE_TRACE_FAILURE(5, LogicalAnd, "/properties",
+  EVALUATE_TRACE_FAILURE(7, LogicalAnd, "/properties",
                          "https://example.com#/properties", "");
-  EVALUATE_TRACE_FAILURE(6, LogicalAnd, "/properties",
+  EVALUATE_TRACE_FAILURE(8, LogicalAnd, "/properties",
                          "https://example.com#/properties", "");
 }
 
@@ -516,17 +512,17 @@ TEST(JSONSchema_compile_draft4, ref_6) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
-  EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties/foo/$ref/properties",
-                         "#/properties", "/foo");
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
   EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
                          "#/type", "/foo");
-  EVALUATE_TRACE_SUCCESS(2, ControlLabel, "/properties/foo/$ref",
+  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties/foo/$ref/properties",
+                         "#/properties", "/foo");
+  EVALUATE_TRACE_SUCCESS(3, ControlLabel, "/properties/foo/$ref",
                          "#/properties/foo/$ref", "/foo");
-  EVALUATE_TRACE_ANNOTATION_PRIVATE(3, "/properties", "#/properties", "",
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "",
                                     "foo");
-  EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_SUCCESS(6, AssertionType, "/type", "#/type", "");
+  EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties", "#/properties", "");
 }
 
 TEST(JSONSchema_compile_draft4, ref_7) {
