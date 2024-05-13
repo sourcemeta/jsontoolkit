@@ -21,6 +21,7 @@ remotes/draft7
 remotes/draft6
 remotes/nested
 remotes/locationIndependentIdentifier.json
+remotes/locationIndependentIdentifierPre2019.json
 remotes/different-id-ref-string.json
 remotes/name-defs.json
 remotes/ref-and-defs.json
