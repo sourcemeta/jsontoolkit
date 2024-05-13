@@ -337,9 +337,46 @@ auto compiler_draft4_validation_pattern(const SchemaCompilerContext &context)
 
       // TODO: As an optimization, avoid this condition if the subschema
       // declares `type` to `string` already
-      {make<SchemaCompilerAssertionType>(context, JSON::Type::String, {},
+      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::String,
+                                         {},
                                          SchemaCompilerTargetType::Instance)},
       SchemaCompilerTargetType::Instance)};
+}
+
+auto compiler_draft4_validation_format(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  if (!context.value.is_string()) {
+    return {};
+  }
+
+  // Regular expressions
+
+  static const std::string FORMAT_REGEX_IPV4{
+      "^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\\.(25[0-5]|2[0-4][0-"
+      "9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-"
+      "9][0-9]|[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$"};
+
+  const auto &format{context.value.to_string()};
+// TODO: As an optimization, avoid the condition if the subschema
+// declares `type` to `string` already
+#define COMPILE_FORMAT(name, regular_expression)                               \
+  if (format == (name)) {                                                      \
+    return {make<SchemaCompilerAssertionRegex>(                                \
+        context,                                                               \
+        SchemaCompilerValueRegex{                                              \
+            std::regex{(regular_expression), std::regex::ECMAScript},          \
+            (regular_expression)},                                             \
+        {make<SchemaCompilerAssertionType>(                                    \
+            applicate(context), JSON::Type::String, {},                        \
+            SchemaCompilerTargetType::Instance)},                              \
+        SchemaCompilerTargetType::Instance)};                                  \
+  }
+
+  COMPILE_FORMAT("ipv4", FORMAT_REGEX_IPV4)
+
+#undef COMPILE_FORMAT
+
+  return {};
 }
 
 auto compiler_draft4_applicator_not(const SchemaCompilerContext &context)

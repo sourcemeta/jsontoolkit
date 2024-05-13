@@ -84,6 +84,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_maxlength);
   COMPILE("http://json-schema.org/draft-04/schema#", "minLength",
           compiler_draft4_validation_minlength);
+  COMPILE("http://json-schema.org/draft-04/schema#", "format",
+          compiler_draft4_validation_format);
 
   // Number
   COMPILE("http://json-schema.org/draft-04/schema#", "maximum",
