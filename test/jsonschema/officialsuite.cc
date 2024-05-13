@@ -177,9 +177,7 @@ int main(int argc, char **argv) {
   // Draft4
   // TODO: Enable optional tests too
   register_tests("draft4", "JSONSchemaOfficialSuite_Draft4",
-                 "http://json-schema.org/draft-04/schema#",
-                 // TODO: Enable all tests
-                 {"ref"});
+                 "http://json-schema.org/draft-04/schema#", {});
 
   return RUN_ALL_TESTS();
 }

@@ -55,7 +55,14 @@ TEST(JSONPointer_to_uri, escape_uri_quote) {
   const sourcemeta::jsontoolkit::Pointer pointer{"foo", "quote\"field"};
   const sourcemeta::jsontoolkit::URI fragment{
       sourcemeta::jsontoolkit::to_uri(pointer)};
-  EXPECT_EQ(fragment.recompose(), "#/foo/quote%5C%22field");
+  EXPECT_EQ(fragment.recompose(), "#/foo/quote%22field");
+}
+
+TEST(JSONPointer_to_uri, escape_uri_backslash) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar\\baz"};
+  const sourcemeta::jsontoolkit::URI fragment{
+      sourcemeta::jsontoolkit::to_uri(pointer)};
+  EXPECT_EQ(fragment.recompose(), "#/foo/bar%5Cbaz");
 }
 
 TEST(JSONPointer_to_uri, escape_uri_dollar_sign) {
