@@ -290,8 +290,7 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
-    assert(target.is_array());
-    result = target.unique();
+    result = target.is_array() && target.unique();
   } else if (std::holds_alternative<SchemaCompilerAssertionDivisible>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionDivisible>(step)};
     context.push(assertion);
