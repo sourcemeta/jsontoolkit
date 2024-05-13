@@ -117,11 +117,6 @@ auto compiler_draft4_validation_required(const SchemaCompilerContext &context)
   assert(context.value.is_array());
   assert(!context.value.empty());
 
-  // TODO: As an optimization, avoid this condition if the subschema declares
-  // `type` to `object` already
-  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionType>(
-      context, JSON::Type::Object, {}, SchemaCompilerTargetType::Instance)};
-
   if (context.value.size() > 1) {
     SchemaCompilerTemplate children;
     const auto subcontext{applicate(context)};
@@ -132,13 +127,14 @@ auto compiler_draft4_validation_required(const SchemaCompilerContext &context)
           SchemaCompilerTargetType::Instance));
     }
 
-    return {make<SchemaCompilerLogicalAnd>(context, SchemaCompilerValueNone{},
-                                           std::move(children),
-                                           std::move(condition))};
+    return {make<SchemaCompilerLogicalAnd>(
+        context, SchemaCompilerValueNone{}, std::move(children),
+        type_condition(context, JSON::Type::Object))};
   } else {
     assert(context.value.front().is_string());
     return {make<SchemaCompilerAssertionDefines>(
-        context, context.value.front().to_string(), std::move(condition),
+        context, context.value.front().to_string(),
+        type_condition(context, JSON::Type::Object),
         SchemaCompilerTargetType::Instance)};
   }
 }

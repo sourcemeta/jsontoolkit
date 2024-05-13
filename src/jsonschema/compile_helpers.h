@@ -93,6 +93,31 @@ auto make(const SchemaCompilerContext &context, const std::size_t id,
           keyword_location(context), id, std::move(children)};
 }
 
+inline auto type_condition(const SchemaCompilerContext &context,
+                           const JSON::Type type) -> SchemaCompilerTemplate {
+  // As an optimization
+  if (context.schema.is_object() && context.schema.defines("type") &&
+      context.schema.at("type").is_string()) {
+    const auto &type_string{context.schema.at("type").to_string()};
+    if (type == JSON::Type::Null && type_string == "null") {
+      return {};
+    } else if (type == JSON::Type::Boolean && type_string == "boolean") {
+      return {};
+    } else if (type == JSON::Type::Integer && type_string == "integer") {
+      return {};
+    } else if (type == JSON::Type::String && type_string == "string") {
+      return {};
+    } else if (type == JSON::Type::Array && type_string == "array") {
+      return {};
+    } else if (type == JSON::Type::Object && type_string == "object") {
+      return {};
+    }
+  }
+
+  return {make<SchemaCompilerAssertionType>(
+      applicate(context), type, {}, SchemaCompilerTargetType::Instance)};
+}
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif
