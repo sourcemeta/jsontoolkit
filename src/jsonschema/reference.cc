@@ -188,13 +188,23 @@ auto sourcemeta::jsontoolkit::frame(
           // If we are dealing with a pre-2019-09 location independent
           // identifier, we ignore it as a traditional identifier and take care
           // of it as an anchor
-          // TODO: Cover this case on framing tests for Draft 4, 6, and 7
           !is_pre_2019_09_location_independent_identifier) {
         const auto bases{
             find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
         for (const auto &base_string : bases.first) {
           const sourcemeta::jsontoolkit::URI base{base_string};
           sourcemeta::jsontoolkit::URI maybe_relative{entry.id.value()};
+          const auto maybe_fragment{maybe_relative.fragment()};
+
+          // See
+          // https://json-schema.org/draft/2019-09/draft-handrews-json-schema-02#rfc.section.8.2.2
+          // See
+          // https://json-schema.org/draft/2020-12/draft-bhutton-json-schema-01#section-8.2.1-5
+          if (maybe_fragment.has_value() && !maybe_fragment.value().empty()) {
+            throw SchemaError(
+                "Identifiers must not contain non-empty fragments");
+          }
+
           const bool maybe_relative_is_absolute{maybe_relative.is_absolute()};
           maybe_relative.resolve_from(base);
           const std::string new_id{maybe_relative.recompose()};
@@ -247,7 +257,7 @@ auto sourcemeta::jsontoolkit::frame(
         for (const auto &base_string : bases.first) {
           auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
           const sourcemeta::jsontoolkit::URI anchor_base{base_string};
-          anchor_uri.resolve_from(anchor_base);
+          anchor_uri.resolve_from_if_absolute(anchor_base);
           const auto absolute_anchor_uri{anchor_uri.recompose()};
 
           if (!is_first &&
