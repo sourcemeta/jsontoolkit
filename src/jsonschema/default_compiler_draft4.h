@@ -543,13 +543,7 @@ auto compiler_draft4_validation_maxlength(const SchemaCompilerContext &context)
       context,
       SchemaCompilerValueUnsignedInteger{
           static_cast<unsigned long>(context.value.to_integer()) + 1},
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `string` already
-      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::String,
-                                         {},
-                                         SchemaCompilerTargetType::Instance)},
-
+      type_condition(context, JSON::Type::String),
       SchemaCompilerTargetType::Instance)};
 }
 
@@ -564,13 +558,7 @@ auto compiler_draft4_validation_minlength(const SchemaCompilerContext &context)
       context,
       SchemaCompilerValueUnsignedInteger{
           static_cast<unsigned long>(context.value.to_integer()) - 1},
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `string` already
-      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::String,
-                                         {},
-                                         SchemaCompilerTargetType::Instance)},
-
+      type_condition(context, JSON::Type::String),
       SchemaCompilerTargetType::Instance)};
 }
 
@@ -585,13 +573,7 @@ auto compiler_draft4_validation_maxitems(const SchemaCompilerContext &context)
       context,
       SchemaCompilerValueUnsignedInteger{
           static_cast<unsigned long>(context.value.to_integer()) + 1},
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `array` already
-      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::Array,
-                                         {},
-                                         SchemaCompilerTargetType::Instance)},
-
+      type_condition(context, JSON::Type::Array),
       SchemaCompilerTargetType::Instance)};
 }
 
@@ -606,13 +588,7 @@ auto compiler_draft4_validation_minitems(const SchemaCompilerContext &context)
       context,
       SchemaCompilerValueUnsignedInteger{
           static_cast<unsigned long>(context.value.to_integer()) - 1},
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `array` already
-      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::Array,
-                                         {},
-                                         SchemaCompilerTargetType::Instance)},
-
+      type_condition(context, JSON::Type::Array),
       SchemaCompilerTargetType::Instance)};
 }
 
@@ -627,13 +603,7 @@ auto compiler_draft4_validation_maxproperties(
       context,
       SchemaCompilerValueUnsignedInteger{
           static_cast<unsigned long>(context.value.to_integer()) + 1},
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `array` already
-      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::Object,
-                                         {},
-                                         SchemaCompilerTargetType::Instance)},
-
+      type_condition(context, JSON::Type::Object),
       SchemaCompilerTargetType::Instance)};
 }
 
@@ -648,13 +618,7 @@ auto compiler_draft4_validation_minproperties(
       context,
       SchemaCompilerValueUnsignedInteger{
           static_cast<unsigned long>(context.value.to_integer()) - 1},
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `array` already
-      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::Object,
-                                         {},
-                                         SchemaCompilerTargetType::Instance)},
-
+      type_condition(context, JSON::Type::Object),
       SchemaCompilerTargetType::Instance)};
 }
 

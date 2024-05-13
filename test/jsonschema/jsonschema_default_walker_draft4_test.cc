@@ -183,7 +183,7 @@ TEST(JSONSchema_default_walker_draft4, maxLength) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("maxLength", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -191,7 +191,7 @@ TEST(JSONSchema_default_walker_draft4, minLength) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("minLength", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -207,7 +207,7 @@ TEST(JSONSchema_default_walker_draft4, maxItems) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("maxItems", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -215,7 +215,7 @@ TEST(JSONSchema_default_walker_draft4, minItems) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("minItems", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -232,7 +232,7 @@ TEST(JSONSchema_default_walker_draft4, maxProperties) {
   const auto result{
       default_schema_walker("maxProperties", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -241,7 +241,7 @@ TEST(JSONSchema_default_walker_draft4, minProperties) {
   const auto result{
       default_schema_walker("minProperties", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
