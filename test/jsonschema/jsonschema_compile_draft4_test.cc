@@ -244,10 +244,10 @@ TEST(JSONSchema_compile_draft4, required_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
-  EVALUATE_TRACE_SUCCESS(0, AssertionDefines, "/required", "#/required", "");
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
   EVALUATE_TRACE_SUCCESS(1, AssertionDefines, "/required", "#/required", "");
-  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/required", "#/required", "");
-  EVALUATE_TRACE_SUCCESS(3, AssertionType, "/type", "#/type", "");
+  EVALUATE_TRACE_SUCCESS(2, AssertionDefines, "/required", "#/required", "");
+  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/required", "#/required", "");
 }
 
 TEST(JSONSchema_compile_draft4, allOf_1) {

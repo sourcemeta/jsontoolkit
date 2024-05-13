@@ -164,6 +164,9 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-04/schema#", "oneOf", Elements, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "not", Value, "$ref")
 
+  // Only for the purpose of optimizations
+  WALK(HTTP_BASE "draft-04/schema#", "required", None, "$ref", "type")
+
   WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-04/hyper-schema#", "targetSchema",
                        Value, HTTP_BASE "draft-04/schema#", "$ref")
   WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-04/hyper-schema#", "schema", Value,
