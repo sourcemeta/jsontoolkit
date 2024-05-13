@@ -1073,3 +1073,28 @@ TEST(JSONSchema_frame_2020_12, ref_metaschema) {
       references, "/$ref", "https://json-schema.org/draft/2020-12/schema",
       "https://json-schema.org/draft/2020-12/schema", std::nullopt);
 }
+
+TEST(JSONSchema_frame_2020_12, location_independent_identifier_anonymous) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$defs": {
+      "foo": {
+        "$id": "#foo"
+      },
+      "bar": {
+        "$ref": "#foo"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::frame(
+                   document, frame, references,
+                   sourcemeta::jsontoolkit::default_schema_walker,
+                   sourcemeta::jsontoolkit::official_resolver)
+                   .wait(),
+               sourcemeta::jsontoolkit::SchemaError);
+}
