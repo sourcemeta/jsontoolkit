@@ -335,6 +335,24 @@ TEST(JSON_number, divisible_by_zero_real_zero_real) {
   EXPECT_FALSE(dividend.divisible_by(divisor));
 }
 
+TEST(JSON_number, divisible_by_float_overflow_integer_0_5) {
+  const sourcemeta::jsontoolkit::JSON document{1e308};
+  const sourcemeta::jsontoolkit::JSON divisor{0.5};
+  EXPECT_TRUE(document.divisible_by(divisor));
+}
+
+TEST(JSON_number, divisible_by_float_overflow_integer_1) {
+  const sourcemeta::jsontoolkit::JSON document{1e308};
+  const sourcemeta::jsontoolkit::JSON divisor{1};
+  EXPECT_TRUE(document.divisible_by(divisor));
+}
+
+TEST(JSON_number, divisible_by_float_overflow_integer_1_0) {
+  const sourcemeta::jsontoolkit::JSON document{1e308};
+  const sourcemeta::jsontoolkit::JSON divisor{1.0};
+  EXPECT_TRUE(document.divisible_by(divisor));
+}
+
 TEST(JSON_number, as_real_real) {
   const sourcemeta::jsontoolkit::JSON document{4.7};
   EXPECT_DOUBLE_EQ(document.as_real(), 4.7);
@@ -354,4 +372,12 @@ TEST(JSON_value, compare_int_real_equal) {
   EXPECT_TRUE(right <= left);
   EXPECT_TRUE(left >= right);
   EXPECT_TRUE(right >= left);
+}
+
+TEST(JSON_number, big_real) {
+  const sourcemeta::jsontoolkit::JSON document{1e308};
+  EXPECT_TRUE(document.is_number());
+  EXPECT_FALSE(document.is_integer());
+  EXPECT_TRUE(document.is_real());
+  EXPECT_EQ(document.to_real(), 1e308);
 }
