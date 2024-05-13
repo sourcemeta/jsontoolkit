@@ -528,13 +528,7 @@ auto compiler_draft4_validation_uniqueitems(
 
   return {make<SchemaCompilerAssertionUnique>(
       context, SchemaCompilerValueNone{},
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `array` already
-      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::Array,
-                                         {},
-                                         SchemaCompilerTargetType::Instance)},
-
+      type_condition(context, JSON::Type::Array),
       SchemaCompilerTargetType::Instance)};
 }
 
