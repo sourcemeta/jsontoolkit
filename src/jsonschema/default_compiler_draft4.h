@@ -357,9 +357,23 @@ auto compiler_draft4_validation_format(const SchemaCompilerContext &context)
       "9][0-9]|[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$"};
 
   const auto &format{context.value.to_string()};
+
+  if (format == "uri") {
+    return {make<SchemaCompilerAssertionStringType>(
+        context, SchemaCompilerValueStringType::URI,
+
+        // TODO: As an optimization, avoid the condition if the subschema
+        // declares `type` to `string` already
+        {make<SchemaCompilerAssertionType>(applicate(context),
+                                           JSON::Type::String, {},
+                                           SchemaCompilerTargetType::Instance)},
+
+        SchemaCompilerTargetType::Instance)};
+  }
+
 // TODO: As an optimization, avoid the condition if the subschema
 // declares `type` to `string` already
-#define COMPILE_FORMAT(name, regular_expression)                               \
+#define COMPILE_FORMAT_REGEX(name, regular_expression)                         \
   if (format == (name)) {                                                      \
     return {make<SchemaCompilerAssertionRegex>(                                \
         context,                                                               \
@@ -372,9 +386,9 @@ auto compiler_draft4_validation_format(const SchemaCompilerContext &context)
         SchemaCompilerTargetType::Instance)};                                  \
   }
 
-  COMPILE_FORMAT("ipv4", FORMAT_REGEX_IPV4)
+  COMPILE_FORMAT_REGEX("ipv4", FORMAT_REGEX_IPV4)
 
-#undef COMPILE_FORMAT
+#undef COMPILE_FORMAT_REGEX
 
   return {};
 }

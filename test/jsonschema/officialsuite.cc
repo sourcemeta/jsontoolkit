@@ -187,7 +187,7 @@ int main(int argc, char **argv) {
                  "JSONSchemaOfficialSuite_Draft4_Optional_Format",
                  "http://json-schema.org/draft-04/schema#",
                  // TODO: Enable all tests
-                 {"date-time", "email", "hostname", "ipv6", "uri"});
+                 {"date-time", "email", "hostname", "ipv6"});
 
   return RUN_ALL_TESTS();
 }

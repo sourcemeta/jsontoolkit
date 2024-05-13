@@ -1,5 +1,6 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
+#include <sourcemeta/jsontoolkit/uri.h>
 
 #include <algorithm>   // std::min
 #include <cassert>     // assert
@@ -302,6 +303,27 @@ auto evaluate_step(
     assert(value.is_number());
     assert(target.is_number());
     result = target.divisible_by(value);
+  } else if (std::holds_alternative<SchemaCompilerAssertionStringType>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionStringType>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
+    assert(target.is_string());
+    switch (value) {
+      case SchemaCompilerValueStringType::URI:
+        try {
+          result = URI{target.to_string()}.is_absolute();
+        } catch (const URIParseError &) {
+          result = false;
+        }
+
+        break;
+      default:
+        // We should never get here
+        assert(false);
+    }
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
     assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));

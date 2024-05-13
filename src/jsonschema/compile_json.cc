@@ -85,6 +85,21 @@ auto value_to_json(const sourcemeta::jsontoolkit::SchemaCompilerValue<T> &value)
     result.assign("type", JSON{"unsigned-integer"});
     result.assign("value", JSON{std::get<T>(value)});
     return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueStringType, T>) {
+    JSON result{JSON::make_object()};
+    result.assign("category", JSON{"value"});
+    result.assign("type", JSON{"string-type"});
+
+    switch (std::get<T>(value)) {
+      case SchemaCompilerValueStringType::URI:
+        result.assign("value", JSON{"uri"});
+        break;
+      default:
+        // We should never get here
+        assert(false);
+    }
+
+    return result;
   } else {
     static_assert(std::is_same_v<SchemaCompilerValueNone, T>);
     return JSON{nullptr};
@@ -308,6 +323,16 @@ struct StepVisitor {
   operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionDivisible
                  &assertion) const -> sourcemeta::jsontoolkit::JSON {
     return step_with_value_to_json("assertion", "divisible", assertion.target,
+                                   assertion.relative_schema_location,
+                                   assertion.relative_instance_location,
+                                   assertion.keyword_location, assertion.value,
+                                   assertion.condition);
+  }
+
+  auto
+  operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionStringType
+                 &assertion) const -> sourcemeta::jsontoolkit::JSON {
+    return step_with_value_to_json("assertion", "string-type", assertion.target,
                                    assertion.relative_schema_location,
                                    assertion.relative_instance_location,
                                    assertion.keyword_location, assertion.value,
