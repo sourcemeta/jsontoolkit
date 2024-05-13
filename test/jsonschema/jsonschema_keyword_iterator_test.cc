@@ -338,12 +338,12 @@ TEST(JSONSchema_keyword_iterator, draft4) {
   EXPECT_EQ(entries.at(2).value, sourcemeta::jsontoolkit::parse("{}"));
 
   EXPECT_EQ(entries.at(3).pointer,
-            sourcemeta::jsontoolkit::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(3).value, sourcemeta::jsontoolkit::parse("{}"));
+            sourcemeta::jsontoolkit::Pointer({"additionalItems"}));
+  EXPECT_EQ(entries.at(3).value, sourcemeta::jsontoolkit::JSON{true});
 
   EXPECT_EQ(entries.at(4).pointer,
-            sourcemeta::jsontoolkit::Pointer({"additionalItems"}));
-  EXPECT_EQ(entries.at(4).value, sourcemeta::jsontoolkit::JSON{true});
+            sourcemeta::jsontoolkit::Pointer({"properties"}));
+  EXPECT_EQ(entries.at(4).value, sourcemeta::jsontoolkit::parse("{}"));
 
   EXPECT_EQ(entries.at(5).pointer,
             sourcemeta::jsontoolkit::Pointer({"additionalProperties"}));

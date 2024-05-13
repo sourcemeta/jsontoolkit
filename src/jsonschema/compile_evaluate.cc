@@ -198,8 +198,7 @@ auto evaluate_step(
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
-    assert(target.is_object());
-    result = target.defines(value);
+    result = target.is_object() && target.defines(value);
   } else if (std::holds_alternative<SchemaCompilerAssertionType>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionType>(step)};
     context.push(assertion);

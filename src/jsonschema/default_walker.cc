@@ -157,7 +157,6 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-04/schema#", "definitions", Members, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "dependencies", Members, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "items", ValueOrElements, "$ref")
-  WALK(HTTP_BASE "draft-04/schema#", "properties", Members, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "patternProperties", Members, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "allOf", Elements, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "anyOf", Elements, "$ref")
@@ -166,6 +165,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
 
   // Only for the purpose of optimizations
   WALK(HTTP_BASE "draft-04/schema#", "required", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "properties", Members, "$ref", "type")
 
   WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-04/hyper-schema#", "targetSchema",
                        Value, HTTP_BASE "draft-04/schema#", "$ref")
