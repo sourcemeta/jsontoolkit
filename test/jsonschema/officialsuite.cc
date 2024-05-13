@@ -177,12 +177,11 @@ int main(int argc, char **argv) {
   // Draft4
   register_tests("draft4", "JSONSchemaOfficialSuite_Draft4",
                  "http://json-schema.org/draft-04/schema#", {});
-  register_tests(
-      std::filesystem::path{"draft4"} / "optional",
-      "JSONSchemaOfficialSuite_Draft4_Optional",
-      "http://json-schema.org/draft-04/schema#",
-      // TODO: Enable all tests
-      {"bignum", "ecmascript-regex", "float-overflow", "non-bmp-regex"});
+  register_tests(std::filesystem::path{"draft4"} / "optional",
+                 "JSONSchemaOfficialSuite_Draft4_Optional",
+                 "http://json-schema.org/draft-04/schema#",
+                 // TODO: Enable all tests
+                 {"bignum", "ecmascript-regex", "non-bmp-regex"});
   register_tests(std::filesystem::path{"draft4"} / "optional" / "format",
                  "JSONSchemaOfficialSuite_Draft4_Optional_Format",
                  "http://json-schema.org/draft-04/schema#",

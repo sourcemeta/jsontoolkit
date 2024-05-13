@@ -1098,7 +1098,16 @@ public:
       return false;
     }
 
-    const auto division{this->as_real() / divisor_value};
+    const auto dividend_value{this->as_real()};
+
+    // Every real number that represents an integral is divisible by 0.5.
+    Real dividend_integral;
+    if (std::modf(dividend_value, &dividend_integral) == 0.0 &&
+        divisor_value == 0.5) {
+      return true;
+    }
+
+    const auto division{dividend_value / divisor_value};
     Real integral;
     return !std::isinf(division) && !std::isnan(division) &&
            std::modf(division, &integral) == 0.0;
