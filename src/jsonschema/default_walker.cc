@@ -163,9 +163,15 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-04/schema#", "oneOf", Elements, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "not", Value, "$ref")
 
-  // Only for the purpose of optimizations
+  // These dependenciea are only for the purpose of compiler optimizations
   WALK(HTTP_BASE "draft-04/schema#", "required", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "uniqueItems", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "maxLength", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "minLength", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "maxItems", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "minItems", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "maxProperties", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "minProperties", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "properties", Members, "$ref", "type")
 
   WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-04/hyper-schema#", "targetSchema",
