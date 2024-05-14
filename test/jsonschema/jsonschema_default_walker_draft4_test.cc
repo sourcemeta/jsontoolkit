@@ -199,7 +199,7 @@ TEST(JSONSchema_default_walker_draft4, pattern) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("pattern", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -257,7 +257,7 @@ TEST(JSONSchema_default_walker_draft4, format) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("format", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
