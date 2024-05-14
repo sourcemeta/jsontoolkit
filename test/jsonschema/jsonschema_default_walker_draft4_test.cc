@@ -108,7 +108,7 @@ TEST(JSONSchema_default_walker_draft4, dependencies) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("dependencies", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 

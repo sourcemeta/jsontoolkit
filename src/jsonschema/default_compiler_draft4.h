@@ -483,11 +483,7 @@ auto compiler_draft4_applicator_dependencies(
 
   return {make<SchemaCompilerLogicalAnd>(
       context, SchemaCompilerValueNone{}, std::move(children),
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `object` already
-      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Object, {},
-                                         SchemaCompilerTargetType::Instance)})};
+      type_condition(context, JSON::Type::Object))};
 }
 
 auto compiler_draft4_validation_enum(const SchemaCompilerContext &context)

@@ -155,7 +155,6 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
 
   // Draft4
   WALK(HTTP_BASE "draft-04/schema#", "definitions", Members, "$ref")
-  WALK(HTTP_BASE "draft-04/schema#", "dependencies", Members, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "items", ValueOrElements, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "patternProperties", Members, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "allOf", Elements, "$ref")
@@ -163,7 +162,8 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-04/schema#", "oneOf", Elements, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "not", Value, "$ref")
 
-  // These dependenciea are only for the purpose of compiler optimizations
+  // These dependencies are only for the purpose of compiler optimizations
+  WALK(HTTP_BASE "draft-04/schema#", "dependencies", Members, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "required", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "uniqueItems", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "pattern", None, "$ref", "type")
