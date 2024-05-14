@@ -326,12 +326,7 @@ auto compiler_draft4_validation_pattern(const SchemaCompilerContext &context)
       context,
       SchemaCompilerValueRegex{std::regex{regex_string, std::regex::ECMAScript},
                                regex_string},
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `string` already
-      {make<SchemaCompilerAssertionType>(applicate(context), JSON::Type::String,
-                                         {},
-                                         SchemaCompilerTargetType::Instance)},
+      type_condition(context, JSON::Type::String),
       SchemaCompilerTargetType::Instance)};
 }
 
@@ -353,18 +348,10 @@ auto compiler_draft4_validation_format(const SchemaCompilerContext &context)
   if (format == "uri") {
     return {make<SchemaCompilerAssertionStringType>(
         context, SchemaCompilerValueStringType::URI,
-
-        // TODO: As an optimization, avoid the condition if the subschema
-        // declares `type` to `string` already
-        {make<SchemaCompilerAssertionType>(applicate(context),
-                                           JSON::Type::String, {},
-                                           SchemaCompilerTargetType::Instance)},
-
+        type_condition(context, JSON::Type::String),
         SchemaCompilerTargetType::Instance)};
   }
 
-// TODO: As an optimization, avoid the condition if the subschema
-// declares `type` to `string` already
 #define COMPILE_FORMAT_REGEX(name, regular_expression)                         \
   if (format == (name)) {                                                      \
     return {make<SchemaCompilerAssertionRegex>(                                \
@@ -372,9 +359,7 @@ auto compiler_draft4_validation_format(const SchemaCompilerContext &context)
         SchemaCompilerValueRegex{                                              \
             std::regex{(regular_expression), std::regex::ECMAScript},          \
             (regular_expression)},                                             \
-        {make<SchemaCompilerAssertionType>(                                    \
-            applicate(context), JSON::Type::String, {},                        \
-            SchemaCompilerTargetType::Instance)},                              \
+        type_condition(context, JSON::Type::String),                           \
         SchemaCompilerTargetType::Instance)};                                  \
   }
 

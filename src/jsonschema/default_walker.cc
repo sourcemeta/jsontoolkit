@@ -166,6 +166,8 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   // These dependenciea are only for the purpose of compiler optimizations
   WALK(HTTP_BASE "draft-04/schema#", "required", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "uniqueItems", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "pattern", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "format", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "maxLength", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "minLength", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "maxItems", None, "$ref", "type")
