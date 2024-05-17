@@ -165,6 +165,65 @@ auto prettify(const JSON &document,
               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream) -> void;
 
 /// @ingroup json
+/// A comparison function between object property keys.
+/// See https://en.cppreference.com/w/cpp/named_req/Compare
+using KeyComparison =
+    std::function<bool(const JSON::String &, const JSON::String &)>;
+
+/// @ingroup json
+///
+/// Stringify the input JSON document into a given C++ standard output stream in
+/// compact mode, sorting object properties on a specific criteria. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <iostream>
+/// #include <sstream>
+///
+/// auto key_compare(const JSON::String &left,
+///                  const JSON::String &right) -> bool {
+///   return left < right;
+/// }
+///
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }");
+/// std::ostringstream stream;
+/// sourcemeta::jsontoolkit::stringify(document, stream, key_compare);
+/// std::cout << stream.str() << std::endl;
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
+auto stringify(const JSON &document,
+               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
+               const KeyComparison &compare) -> void;
+
+/// @ingroup json
+///
+/// Stringify the input JSON document into a given C++ standard output stream in
+/// pretty mode, indenting the output using 4 spaces and sorting object
+/// properties on a specific criteria. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <iostream>
+/// #include <sstream>
+///
+/// auto key_compare(const JSON::String &left,
+///                  const JSON::String &right) -> bool {
+///   return left < right;
+/// }
+///
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }");
+/// std::ostringstream stream;
+/// sourcemeta::jsontoolkit::prettify(document, stream, key_compare);
+/// std::cout << stream.str() << std::endl;
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSON_EXPORT
+auto prettify(const JSON &document,
+              std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
+              const KeyComparison &compare) -> void;
+
+/// @ingroup json
 ///
 /// Encode the input JSON document into a given standard output stream.
 /// The JSON document is stringified or prettified depending on the
