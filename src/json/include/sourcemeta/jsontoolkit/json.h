@@ -180,8 +180,9 @@ using KeyComparison =
 /// #include <iostream>
 /// #include <sstream>
 ///
-/// auto key_compare(const JSON::String &left,
-///                  const JSON::String &right) -> bool {
+/// auto key_compare(const sourcemeta::jsontoolkit::JSON::String &left,
+///                  const sourcemeta::jsontoolkit::JSON::String &right)
+///   -> bool {
 ///   return left < right;
 /// }
 ///
@@ -207,8 +208,9 @@ auto stringify(const JSON &document,
 /// #include <iostream>
 /// #include <sstream>
 ///
-/// auto key_compare(const JSON::String &left,
-///                  const JSON::String &right) -> bool {
+/// auto key_compare(const sourcemeta::jsontoolkit::JSON::String &left,
+///                  const sourcemeta::jsontoolkit::JSON::String &right)
+///   -> bool {
 ///   return left < right;
 /// }
 ///
