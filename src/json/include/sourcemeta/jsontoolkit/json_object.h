@@ -8,40 +8,36 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup json
-template <typename Key, typename Value, typename Allocator>
-class GenericObject {
+template <typename Key, typename Value> class JSONObject {
 public:
   // Constructors
-  using Container = std::map<Key, Value, std::less<Key>, Allocator>;
-  GenericObject() : data{} {}
-  GenericObject(std::initializer_list<typename Container::value_type> values)
+  using Container =
+      std::map<Key, Value, std::less<Key>,
+               typename Value::template Allocator<
+                   std::pair<const typename Value::String, Value>>>;
+  JSONObject() : data{} {}
+  JSONObject(std::initializer_list<typename Container::value_type> values)
       : data{values} {}
 
   // Operators
   // We cannot default given that this class references
   // a JSON "value" as an incomplete type
-  auto operator<(const GenericObject<Key, Value, Allocator> &other)
-      const noexcept -> bool {
+  auto operator<(const JSONObject<Key, Value> &other) const noexcept -> bool {
     return this->data < other.data;
   }
-  auto operator<=(const GenericObject<Key, Value, Allocator> &other)
-      const noexcept -> bool {
+  auto operator<=(const JSONObject<Key, Value> &other) const noexcept -> bool {
     return this->data <= other.data;
   }
-  auto operator>(const GenericObject<Key, Value, Allocator> &other)
-      const noexcept -> bool {
+  auto operator>(const JSONObject<Key, Value> &other) const noexcept -> bool {
     return this->data > other.data;
   }
-  auto operator>=(const GenericObject<Key, Value, Allocator> &other)
-      const noexcept -> bool {
+  auto operator>=(const JSONObject<Key, Value> &other) const noexcept -> bool {
     return this->data >= other.data;
   }
-  auto operator==(const GenericObject<Key, Value, Allocator> &other)
-      const noexcept -> bool {
+  auto operator==(const JSONObject<Key, Value> &other) const noexcept -> bool {
     return this->data == other.data;
   }
-  auto operator!=(const GenericObject<Key, Value, Allocator> &other)
-      const noexcept -> bool {
+  auto operator!=(const JSONObject<Key, Value> &other) const noexcept -> bool {
     return this->data != other.data;
   }
 

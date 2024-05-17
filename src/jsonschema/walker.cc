@@ -2,8 +2,9 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
-#include <algorithm> // std::max, std::accumulate, std::sort
+#include <algorithm> // std::max, std::sort
 #include <cassert>   // assert
+#include <numeric>   // std::accumulate
 
 auto sourcemeta::jsontoolkit::keyword_priority(
     std::string_view keyword, const std::map<std::string, bool> &vocabularies,

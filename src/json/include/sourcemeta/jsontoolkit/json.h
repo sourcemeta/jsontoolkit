@@ -13,9 +13,8 @@
 #include <cstdint>    // std::uint64_t
 #include <filesystem> // std::filesystem
 #include <istream>    // std::basic_istream
-#include <memory>     // std::allocator
 #include <ostream>    // std::basic_ostream
-#include <string>     // std::char_traits, std::basic_string
+#include <string>     // std::basic_string
 
 /// @defgroup json JSON
 /// @brief A full-blown ECMA-404 implementation with read, write, and iterators
@@ -28,9 +27,6 @@
 /// ```
 
 namespace sourcemeta::jsontoolkit {
-
-/// @ingroup json
-using JSON = GenericValue<char, std::char_traits<char>, std::allocator>;
 
 /// @ingroup json
 /// Create a JSON document from a C++ standard input stream. For example, a JSON
