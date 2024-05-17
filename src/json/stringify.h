@@ -23,42 +23,47 @@ auto indent(std::basic_ostream<CharT, Traits> &stream,
 
 namespace sourcemeta::jsontoolkit {
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto stringify(const std::nullptr_t,
-               std::basic_ostream<CharT, Traits> &stream) -> void {
-  stream.write(internal::constant_null<CharT, Traits>.data(),
-               internal::constant_null<CharT, Traits>.size());
+               std::basic_ostream<typename GenericValue<Allocator>::Char,
+                                  typename GenericValue<Allocator>::CharTraits>
+                   &stream) -> void {
+  stream.write(internal::constant_null<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.data(),
+               internal::constant_null<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.size());
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto stringify(const bool value,
-               std::basic_ostream<CharT, Traits> &stream) -> void {
+               std::basic_ostream<typename GenericValue<Allocator>::Char,
+                                  typename GenericValue<Allocator>::CharTraits>
+                   &stream) -> void {
   if (value) {
-    stream.write(internal::constant_true<CharT, Traits>.data(),
-                 internal::constant_true<CharT, Traits>.size());
+    stream.write(internal::constant_true<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.data(),
+                 internal::constant_true<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.size());
   } else {
-    stream.write(internal::constant_false<CharT, Traits>.data(),
-                 internal::constant_false<CharT, Traits>.size());
+    stream.write(internal::constant_false<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.data(),
+                 internal::constant_false<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.size());
   }
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto stringify(const std::int64_t value,
-               std::basic_ostream<CharT, Traits> &stream) -> void {
+               std::basic_ostream<typename GenericValue<Allocator>::Char,
+                                  typename GenericValue<Allocator>::CharTraits>
+                   &stream) -> void {
   const auto string{std::to_string(value)};
-  stream.write(
-      string.c_str(),
-      static_cast<typename std::basic_ostream<CharT, Traits>::int_type>(
-          string.size()));
+  stream.write(string.c_str(),
+               static_cast<typename std::basic_ostream<
+                   typename GenericValue<Allocator>::Char,
+                   typename GenericValue<Allocator>::CharTraits>::int_type>(
+                   string.size()));
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto stringify(const double value,
-               std::basic_ostream<CharT, Traits> &stream) -> void {
+               std::basic_ostream<typename GenericValue<Allocator>::Char,
+                                  typename GenericValue<Allocator>::CharTraits>
+                   &stream) -> void {
   if (value == static_cast<double>(0.0)) {
     stream.write("0.0", 3);
   } else {
@@ -67,22 +72,26 @@ auto stringify(const double value,
   }
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto stringify(const GenericValue<CharT, Traits, Allocator> &document,
-               std::basic_ostream<CharT, Traits> &stream) -> void;
+template <template <typename T> typename Allocator>
+auto stringify(const GenericValue<Allocator> &document,
+               std::basic_ostream<typename GenericValue<Allocator>::Char,
+                                  typename GenericValue<Allocator>::CharTraits>
+                   &stream) -> void;
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto stringify(
-    const typename GenericValue<CharT, Traits, Allocator>::String &document,
-    std::basic_ostream<CharT, Traits> &stream) -> void {
-  stream.put(internal::token_string_quote<CharT>);
+template <template <typename T> typename Allocator>
+auto stringify(const typename GenericValue<Allocator>::String &document,
+               std::basic_ostream<typename GenericValue<Allocator>::Char,
+                                  typename GenericValue<Allocator>::CharTraits>
+                   &stream) -> void {
+  stream.put(
+      internal::token_string_quote<typename GenericValue<Allocator>::Char>);
   for (const auto character : document) {
     switch (character) {
-      case internal::token_string_escape<CharT>:
-      case internal::token_string_quote<CharT>:
-        stream.put(internal::token_string_escape<CharT>);
+      case internal::token_string_escape<
+          typename GenericValue<Allocator>::Char>:
+      case internal::token_string_quote<typename GenericValue<Allocator>::Char>:
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
         stream.put(character);
         break;
 
@@ -91,8 +100,10 @@ auto stringify(
 
       // Null
       case '\u0000':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('0');
@@ -100,8 +111,10 @@ auto stringify(
         break;
       // Start of heading
       case '\u0001':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('0');
@@ -109,8 +122,10 @@ auto stringify(
         break;
       // Start of text
       case '\u0002':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('0');
@@ -118,8 +133,10 @@ auto stringify(
         break;
       // End of text
       case '\u0003':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('0');
@@ -127,8 +144,10 @@ auto stringify(
         break;
       // End of transmission
       case '\u0004':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('0');
@@ -136,8 +155,10 @@ auto stringify(
         break;
       // Enquiry
       case '\u0005':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('0');
@@ -145,8 +166,10 @@ auto stringify(
         break;
       // Acknowledge
       case '\u0006':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('0');
@@ -154,8 +177,10 @@ auto stringify(
         break;
       // Bell
       case '\u0007':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('0');
@@ -163,23 +188,31 @@ auto stringify(
         break;
       // Backspace
       case '\b':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_backspace<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_backspace<
+                   typename GenericValue<Allocator>::Char>);
         break;
       // Horizontal tab
       case '\t':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_tabulation<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_tabulation<
+                   typename GenericValue<Allocator>::Char>);
         break;
       // Line feed
       case '\n':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_line_feed<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_line_feed<
+                   typename GenericValue<Allocator>::Char>);
         break;
       // Vertical tab
       case '\u000B':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('0');
@@ -187,18 +220,24 @@ auto stringify(
         break;
       // Form feed
       case '\f':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_form_feed<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_form_feed<
+                   typename GenericValue<Allocator>::Char>);
         break;
       // Carriage return
       case '\r':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_carriage_return<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_carriage_return<
+                   typename GenericValue<Allocator>::Char>);
         break;
       // Shift out
       case '\u000E':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('0');
@@ -206,8 +245,10 @@ auto stringify(
         break;
       // Shift in
       case '\u000F':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('0');
@@ -215,8 +256,10 @@ auto stringify(
         break;
       // Data link escape
       case '\u0010':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -224,8 +267,10 @@ auto stringify(
         break;
       // Device control 1
       case '\u0011':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -233,8 +278,10 @@ auto stringify(
         break;
       // Device control 2
       case '\u0012':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -242,8 +289,10 @@ auto stringify(
         break;
       // Device control 3
       case '\u0013':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -251,8 +300,10 @@ auto stringify(
         break;
       // Device control 4
       case '\u0014':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -260,8 +311,10 @@ auto stringify(
         break;
       // Negative acknowledge
       case '\u0015':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -269,8 +322,10 @@ auto stringify(
         break;
       // Synchronous idle
       case '\u0016':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -278,8 +333,10 @@ auto stringify(
         break;
       // End of transmission block
       case '\u0017':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -287,8 +344,10 @@ auto stringify(
         break;
       // Cancel
       case '\u0018':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -296,8 +355,10 @@ auto stringify(
         break;
       // End of medium
       case '\u0019':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -305,8 +366,10 @@ auto stringify(
         break;
       // Substitute
       case '\u001A':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -314,8 +377,10 @@ auto stringify(
         break;
       // Escape
       case '\u001B':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -323,8 +388,10 @@ auto stringify(
         break;
       // File separator
       case '\u001C':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -332,8 +399,10 @@ auto stringify(
         break;
       // Group separator
       case '\u001D':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -341,8 +410,10 @@ auto stringify(
         break;
       // Record separator
       case '\u001E':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -350,8 +421,10 @@ auto stringify(
         break;
       // Unit separator
       case '\u001F':
-        stream.put(internal::token_string_escape<CharT>);
-        stream.put(internal::token_string_escape_unicode<CharT>);
+        stream.put(internal::token_string_escape<
+                   typename GenericValue<Allocator>::Char>);
+        stream.put(internal::token_string_escape_unicode<
+                   typename GenericValue<Allocator>::Char>);
         stream.put('0');
         stream.put('0');
         stream.put('1');
@@ -362,67 +435,79 @@ auto stringify(
     }
   }
 
-  stream.put(internal::token_string_quote<CharT>);
+  stream.put(
+      internal::token_string_quote<typename GenericValue<Allocator>::Char>);
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto stringify(
-    const typename GenericValue<CharT, Traits, Allocator>::Array &document,
-    std::basic_ostream<CharT, Traits> &stream) -> void {
-  stream.put(internal::token_array_begin<CharT>);
+template <template <typename T> typename Allocator>
+auto stringify(const typename GenericValue<Allocator>::Array &document,
+               std::basic_ostream<typename GenericValue<Allocator>::Char,
+                                  typename GenericValue<Allocator>::CharTraits>
+                   &stream) -> void {
+  stream.put(
+      internal::token_array_begin<typename GenericValue<Allocator>::Char>);
   const auto end{std::cend(document)};
   for (auto iterator = std::cbegin(document); iterator != end; ++iterator) {
-    stringify<CharT, Traits, Allocator>(*iterator, stream);
+    stringify<Allocator>(*iterator, stream);
     if (std::next(iterator) != end) {
-      stream.put(internal::token_array_delimiter<CharT>);
+      stream.put(internal::token_array_delimiter<
+                 typename GenericValue<Allocator>::Char>);
     }
   }
 
-  stream.put(internal::token_array_end<CharT>);
+  stream.put(internal::token_array_end<typename GenericValue<Allocator>::Char>);
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto stringify(
-    const typename GenericValue<CharT, Traits, Allocator>::Object &document,
-    std::basic_ostream<CharT, Traits> &stream) -> void {
-  stream.put(internal::token_object_begin<CharT>);
+template <template <typename T> typename Allocator>
+auto stringify(const typename GenericValue<Allocator>::Object &document,
+               std::basic_ostream<typename GenericValue<Allocator>::Char,
+                                  typename GenericValue<Allocator>::CharTraits>
+                   &stream) -> void {
+  stream.put(
+      internal::token_object_begin<typename GenericValue<Allocator>::Char>);
   const auto end{std::cend(document)};
   for (auto iterator = std::cbegin(document); iterator != end; ++iterator) {
-    stringify<CharT, Traits, Allocator>(iterator->first, stream);
-    stream.put(internal::token_object_key_delimiter<CharT>);
-    stringify<CharT, Traits, Allocator>(iterator->second, stream);
+    stringify<Allocator>(iterator->first, stream);
+    stream.put(internal::token_object_key_delimiter<
+               typename GenericValue<Allocator>::Char>);
+    stringify<Allocator>(iterator->second, stream);
     if (std::next(iterator) != end) {
-      stream.put(internal::token_object_delimiter<CharT>);
+      stream.put(internal::token_object_delimiter<
+                 typename GenericValue<Allocator>::Char>);
     }
   }
 
-  stream.put(internal::token_object_end<CharT>);
+  stream.put(
+      internal::token_object_end<typename GenericValue<Allocator>::Char>);
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto prettify(
-    const typename GenericValue<CharT, Traits, Allocator>::Object &document,
-    std::basic_ostream<CharT, Traits> &stream, const std::size_t) -> void;
+    const typename GenericValue<Allocator>::Object &document,
+    std::basic_ostream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    const std::size_t) -> void;
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto prettify(
-    const typename GenericValue<CharT, Traits, Allocator>::Array &document,
-    std::basic_ostream<CharT, Traits> &stream,
+    const typename GenericValue<Allocator>::Array &document,
+    std::basic_ostream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
     const std::size_t indentation) -> void {
-  stream.put(internal::token_array_begin<CharT>);
+  stream.put(
+      internal::token_array_begin<typename GenericValue<Allocator>::Char>);
   const auto end{std::cend(document)};
   for (auto iterator = std::cbegin(document); iterator != end; ++iterator) {
-    stream.put(internal::token_whitespace_line_feed<CharT>);
+    stream.put(internal::token_whitespace_line_feed<
+               typename GenericValue<Allocator>::Char>);
     internal::indent(stream, indentation + 1);
-    prettify<CharT, Traits, Allocator>(*iterator, stream, indentation + 1);
+    prettify<Allocator>(*iterator, stream, indentation + 1);
     if (std::next(iterator) == end) {
-      stream.put(internal::token_whitespace_line_feed<CharT>);
+      stream.put(internal::token_whitespace_line_feed<
+                 typename GenericValue<Allocator>::Char>);
     } else {
-      stream.put(internal::token_array_delimiter<CharT>);
+      stream.put(internal::token_array_delimiter<
+                 typename GenericValue<Allocator>::Char>);
     }
   }
 
@@ -430,29 +515,34 @@ auto prettify(
     internal::indent(stream, indentation);
   }
 
-  stream.put(internal::token_array_end<CharT>);
+  stream.put(internal::token_array_end<typename GenericValue<Allocator>::Char>);
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto prettify(
-    const typename GenericValue<CharT, Traits, Allocator>::Object &document,
-    std::basic_ostream<CharT, Traits> &stream,
+    const typename GenericValue<Allocator>::Object &document,
+    std::basic_ostream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
     const std::size_t indentation) -> void {
-  stream.put(internal::token_object_begin<CharT>);
+  stream.put(
+      internal::token_object_begin<typename GenericValue<Allocator>::Char>);
   const auto end{std::cend(document)};
   for (auto iterator = std::cbegin(document); iterator != end; ++iterator) {
-    stream.put(internal::token_whitespace_line_feed<CharT>);
+    stream.put(internal::token_whitespace_line_feed<
+               typename GenericValue<Allocator>::Char>);
     internal::indent(stream, indentation + 1);
-    stringify<CharT, Traits, Allocator>(iterator->first, stream);
-    stream.put(internal::token_object_key_delimiter<CharT>);
-    stream.put(internal::token_whitespace_space<CharT>);
-    prettify<CharT, Traits, Allocator>(iterator->second, stream,
-                                       indentation + 1);
+    stringify<Allocator>(iterator->first, stream);
+    stream.put(internal::token_object_key_delimiter<
+               typename GenericValue<Allocator>::Char>);
+    stream.put(internal::token_whitespace_space<
+               typename GenericValue<Allocator>::Char>);
+    prettify<Allocator>(iterator->second, stream, indentation + 1);
     if (std::next(iterator) == end) {
-      stream.put(internal::token_whitespace_line_feed<CharT>);
+      stream.put(internal::token_whitespace_line_feed<
+                 typename GenericValue<Allocator>::Char>);
     } else {
-      stream.put(internal::token_object_delimiter<CharT>);
+      stream.put(internal::token_object_delimiter<
+                 typename GenericValue<Allocator>::Char>);
     }
   }
 
@@ -460,66 +550,67 @@ auto prettify(
     internal::indent(stream, indentation);
   }
 
-  stream.put(internal::token_object_end<CharT>);
+  stream.put(
+      internal::token_object_end<typename GenericValue<Allocator>::Char>);
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto stringify(const GenericValue<CharT, Traits, Allocator> &document,
-               std::basic_ostream<CharT, Traits> &stream) -> void {
+template <template <typename T> typename Allocator>
+auto stringify(const GenericValue<Allocator> &document,
+               std::basic_ostream<typename GenericValue<Allocator>::Char,
+                                  typename GenericValue<Allocator>::CharTraits>
+                   &stream) -> void {
   switch (document.type()) {
-    case GenericValue<CharT, Traits, Allocator>::Type::Null:
-      stringify<CharT, Traits, Allocator>(nullptr, stream);
+    case GenericValue<Allocator>::Type::Null:
+      stringify<Allocator>(nullptr, stream);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::Boolean:
-      stringify<CharT, Traits, Allocator>(document.to_boolean(), stream);
+    case GenericValue<Allocator>::Type::Boolean:
+      stringify<Allocator>(document.to_boolean(), stream);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::Integer:
-      stringify<CharT, Traits, Allocator>(document.to_integer(), stream);
+    case GenericValue<Allocator>::Type::Integer:
+      stringify<Allocator>(document.to_integer(), stream);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::Real:
-      stringify<CharT, Traits, Allocator>(document.to_real(), stream);
+    case GenericValue<Allocator>::Type::Real:
+      stringify<Allocator>(document.to_real(), stream);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::String:
-      stringify<CharT, Traits, Allocator>(document.to_string(), stream);
+    case GenericValue<Allocator>::Type::String:
+      stringify<Allocator>(document.to_string(), stream);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::Array:
-      stringify<CharT, Traits, Allocator>(document.as_array(), stream);
+    case GenericValue<Allocator>::Type::Array:
+      stringify<Allocator>(document.as_array(), stream);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::Object:
-      stringify<CharT, Traits, Allocator>(document.as_object(), stream);
+    case GenericValue<Allocator>::Type::Object:
+      stringify<Allocator>(document.as_object(), stream);
       break;
   }
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto prettify(const GenericValue<CharT, Traits, Allocator> &document,
-              std::basic_ostream<CharT, Traits> &stream,
-              const std::size_t indentation = 0) -> void {
+template <template <typename T> typename Allocator>
+auto prettify(
+    const GenericValue<Allocator> &document,
+    std::basic_ostream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    const std::size_t indentation = 0) -> void {
   switch (document.type()) {
-    case GenericValue<CharT, Traits, Allocator>::Type::Null:
-      stringify<CharT, Traits, Allocator>(nullptr, stream);
+    case GenericValue<Allocator>::Type::Null:
+      stringify<Allocator>(nullptr, stream);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::Boolean:
-      stringify<CharT, Traits, Allocator>(document.to_boolean(), stream);
+    case GenericValue<Allocator>::Type::Boolean:
+      stringify<Allocator>(document.to_boolean(), stream);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::Integer:
-      stringify<CharT, Traits, Allocator>(document.to_integer(), stream);
+    case GenericValue<Allocator>::Type::Integer:
+      stringify<Allocator>(document.to_integer(), stream);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::Real:
-      stringify<CharT, Traits, Allocator>(document.to_real(), stream);
+    case GenericValue<Allocator>::Type::Real:
+      stringify<Allocator>(document.to_real(), stream);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::String:
-      stringify<CharT, Traits, Allocator>(document.to_string(), stream);
+    case GenericValue<Allocator>::Type::String:
+      stringify<Allocator>(document.to_string(), stream);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::Array:
-      prettify<CharT, Traits, Allocator>(document.as_array(), stream,
-                                         indentation);
+    case GenericValue<Allocator>::Type::Array:
+      prettify<Allocator>(document.as_array(), stream, indentation);
       break;
-    case GenericValue<CharT, Traits, Allocator>::Type::Object:
-      prettify<CharT, Traits, Allocator>(document.as_object(), stream,
-                                         indentation);
+    case GenericValue<Allocator>::Type::Object:
+      prettify<Allocator>(document.as_object(), stream, indentation);
       break;
   }
 }

@@ -18,7 +18,7 @@ private:
       typename std::vector<GenericPointer<CharT, Traits, Allocator>>;
 
 public:
-  GenericPointerWalker(const GenericValue<CharT, Traits, Allocator> &document) {
+  GenericPointerWalker(const GenericValue<Allocator> &document) {
     this->walk(document, {});
   }
 
@@ -29,7 +29,7 @@ public:
   auto cend() const -> const_iterator { return this->pointers.cend(); };
 
 private:
-  auto walk(const GenericValue<CharT, Traits, Allocator> &document,
+  auto walk(const GenericValue<Allocator> &document,
             const GenericPointer<CharT, Traits, Allocator> &pointer) -> void {
     this->pointers.push_back(pointer);
     if (document.is_array()) {

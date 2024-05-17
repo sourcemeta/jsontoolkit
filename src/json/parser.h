@@ -19,62 +19,71 @@
 
 namespace sourcemeta::jsontoolkit::internal {
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-inline auto parse_null(const std::uint64_t line, const std::uint64_t column,
-                       std::basic_istream<CharT, Traits> &stream)
-    -> GenericValue<CharT, Traits, Allocator> {
+template <template <typename T> typename Allocator>
+inline auto parse_null(
+    const std::uint64_t line, const std::uint64_t column,
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream)
+    -> GenericValue<Allocator> {
   auto new_column{column};
   for (const auto character :
-       internal::constant_null<CharT, Traits>.substr(1)) {
+       internal::constant_null<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.substr(1)) {
     new_column += 1;
     if (stream.get() != character) {
       throw ParseError(line, new_column);
     }
   }
 
-  return GenericValue<CharT, Traits, Allocator>{nullptr};
+  return GenericValue<Allocator>{nullptr};
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-inline auto parse_boolean_true(const std::uint64_t line, std::uint64_t &column,
-                               std::basic_istream<CharT, Traits> &stream)
-    -> GenericValue<CharT, Traits, Allocator> {
+template <template <typename T> typename Allocator>
+inline auto parse_boolean_true(
+    const std::uint64_t line, std::uint64_t &column,
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream)
+    -> GenericValue<Allocator> {
   for (const auto character :
-       internal::constant_true<CharT, Traits>.substr(1)) {
+       internal::constant_true<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.substr(1)) {
     column += 1;
     if (stream.get() != character) {
       throw ParseError(line, column);
     }
   }
 
-  return GenericValue<CharT, Traits, Allocator>{true};
+  return GenericValue<Allocator>{true};
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-inline auto parse_boolean_false(const std::uint64_t line, std::uint64_t &column,
-                                std::basic_istream<CharT, Traits> &stream)
-    -> GenericValue<CharT, Traits, Allocator> {
+template <template <typename T> typename Allocator>
+inline auto parse_boolean_false(
+    const std::uint64_t line, std::uint64_t &column,
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream)
+    -> GenericValue<Allocator> {
   for (const auto character :
-       internal::constant_false<CharT, Traits>.substr(1)) {
+       internal::constant_false<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.substr(1)) {
     column += 1;
     if (stream.get() != character) {
       throw ParseError(line, column);
     }
   }
 
-  return GenericValue<CharT, Traits, Allocator>{false};
+  return GenericValue<Allocator>{false};
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto parse_string_unicode(
     const std::uint64_t line, std::uint64_t &column,
-    std::basic_istream<CharT, Traits> &stream,
-    std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result) -> void {
-  std::basic_string<CharT, Traits, Allocator<CharT>> code_point;
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                             typename GenericValue<Allocator>::CharTraits,
+                             Allocator<typename GenericValue<Allocator>::Char>>
+        &result) -> void {
+  std::basic_string<typename GenericValue<Allocator>::Char,
+                    typename GenericValue<Allocator>::CharTraits,
+                    Allocator<typename GenericValue<Allocator>::Char>>
+      code_point;
   code_point.resize(4);
   std::size_t code_point_size{0};
 
@@ -91,7 +100,8 @@ auto parse_string_unicode(
   // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
   while (code_point_size < 4) {
     column += 1;
-    code_point[code_point_size] = static_cast<CharT>(stream.get());
+    code_point[code_point_size] =
+        static_cast<typename GenericValue<Allocator>::Char>(stream.get());
     if (std::isxdigit(code_point[code_point_size])) {
       code_point_size += 1;
     } else {
@@ -103,39 +113,51 @@ auto parse_string_unicode(
   // According to ECMA 404, \u can be followed by "any"
   // sequence of 4 hexadecimal digits.
   constexpr auto unicode_base{16};
-  result.put(static_cast<CharT>(std::stoul(code_point, nullptr, unicode_base)));
+  result.put(static_cast<typename GenericValue<Allocator>::Char>(
+      std::stoul(code_point, nullptr, unicode_base)));
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto parse_string_escape(
     const std::uint64_t line, std::uint64_t &column,
-    std::basic_istream<CharT, Traits> &stream,
-    std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result) -> void {
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                             typename GenericValue<Allocator>::CharTraits,
+                             Allocator<typename GenericValue<Allocator>::Char>>
+        &result) -> void {
   column += 1;
   switch (stream.get()) {
-    case internal::token_string_quote<CharT>:
-      result.put(internal::token_string_quote<CharT>);
+    case internal::token_string_quote<typename GenericValue<Allocator>::Char>:
+      result.put(
+          internal::token_string_quote<typename GenericValue<Allocator>::Char>);
       return;
-    case internal::token_string_escape<CharT>:
-      result.put(internal::token_string_escape<CharT>);
+    case internal::token_string_escape<typename GenericValue<Allocator>::Char>:
+      result.put(internal::token_string_escape<
+                 typename GenericValue<Allocator>::Char>);
       return;
-    case internal::token_string_solidus<CharT>:
-      result.put(internal::token_string_solidus<CharT>);
+    case internal::token_string_solidus<typename GenericValue<Allocator>::Char>:
+      result.put(internal::token_string_solidus<
+                 typename GenericValue<Allocator>::Char>);
       return;
-    case internal::token_string_escape_backspace<CharT>:
+    case internal::token_string_escape_backspace<
+        typename GenericValue<Allocator>::Char>:
       result.put('\b');
       return;
-    case internal::token_string_escape_form_feed<CharT>:
+    case internal::token_string_escape_form_feed<
+        typename GenericValue<Allocator>::Char>:
       result.put('\f');
       return;
-    case internal::token_string_escape_line_feed<CharT>:
+    case internal::token_string_escape_line_feed<
+        typename GenericValue<Allocator>::Char>:
       result.put('\n');
       return;
-    case internal::token_string_escape_carriage_return<CharT>:
+    case internal::token_string_escape_carriage_return<
+        typename GenericValue<Allocator>::Char>:
       result.put('\r');
       return;
-    case internal::token_string_escape_tabulation<CharT>:
+    case internal::token_string_escape_tabulation<
+        typename GenericValue<Allocator>::Char>:
       result.put('\t');
       return;
 
@@ -150,7 +172,8 @@ auto parse_string_escape(
     // or lowercase (U+0061 through U+0066).
     // See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_string_escape_unicode<CharT>:
+    case internal::token_string_escape_unicode<
+        typename GenericValue<Allocator>::Char>:
       parse_string_unicode(line, column, stream, result);
       return;
 
@@ -159,22 +182,28 @@ auto parse_string_escape(
   }
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto parse_string(const std::uint64_t line, std::uint64_t &column,
-                  std::basic_istream<CharT, Traits> &stream) ->
-    typename GenericValue<CharT, Traits, Allocator>::String {
-  std::basic_ostringstream<CharT, Traits, Allocator<CharT>> result;
+template <template <typename T> typename Allocator>
+auto parse_string(
+    const std::uint64_t line, std::uint64_t &column,
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream) ->
+    typename GenericValue<Allocator>::String {
+  std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                           typename GenericValue<Allocator>::CharTraits,
+                           Allocator<typename GenericValue<Allocator>::Char>>
+      result;
   while (!stream.eof()) {
     column += 1;
-    const CharT character{static_cast<CharT>(stream.get())};
+    const typename GenericValue<Allocator>::Char character{
+        static_cast<typename GenericValue<Allocator>::Char>(stream.get())};
     switch (character) {
       // A string is a sequence of Unicode code points wrapped with quotation
       // marks (U+0022). See
       // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-      case internal::token_string_quote<CharT>:
+      case internal::token_string_quote<typename GenericValue<Allocator>::Char>:
         return result.str();
-      case internal::token_string_escape<CharT>:
+      case internal::token_string_escape<
+          typename GenericValue<Allocator>::Char>:
         parse_string_escape(line, column, stream, result);
         break;
       // These are always disallowed
@@ -210,7 +239,8 @@ auto parse_string(const std::uint64_t line, std::uint64_t &column,
       case '\u001D':
       case '\u001E':
       case '\u001F':
-      case static_cast<CharT>(Traits::eof()):
+      case static_cast<typename GenericValue<Allocator>::Char>(
+          GenericValue<Allocator>::CharTraits::eof()):
         throw ParseError(line, column);
       default:
         result.put(character);
@@ -243,27 +273,30 @@ auto parse_number_real(const std::uint64_t line, const std::uint64_t column,
   }
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto parse_number_exponent_rest(
     const std::uint64_t line, std::uint64_t &column,
     const std::uint64_t original_column,
-    std::basic_istream<CharT, Traits> &stream,
-    std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> double {
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                             typename GenericValue<Allocator>::CharTraits,
+                             Allocator<typename GenericValue<Allocator>::Char>>
+        &result) -> double {
   while (!stream.eof()) {
-    const CharT character{static_cast<CharT>(stream.peek())};
+    const typename GenericValue<Allocator>::Char character{
+        static_cast<typename GenericValue<Allocator>::Char>(stream.peek())};
     switch (character) {
-      case internal::token_number_zero<CharT>:
-      case internal::token_number_one<CharT>:
-      case internal::token_number_two<CharT>:
-      case internal::token_number_three<CharT>:
-      case internal::token_number_four<CharT>:
-      case internal::token_number_five<CharT>:
-      case internal::token_number_six<CharT>:
-      case internal::token_number_seven<CharT>:
-      case internal::token_number_eight<CharT>:
-      case internal::token_number_nine<CharT>:
+      case internal::token_number_zero<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_one<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_two<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_three<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_four<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_five<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_six<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_seven<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_eight<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_nine<typename GenericValue<Allocator>::Char>:
         result.put(character);
         stream.ignore(1);
         column += 1;
@@ -276,27 +309,30 @@ auto parse_number_exponent_rest(
   throw ParseError(line, column);
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto parse_number_exponent(
     const std::uint64_t line, std::uint64_t &column,
     const std::uint64_t original_column,
-    std::basic_istream<CharT, Traits> &stream,
-    std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> double {
-  const CharT character{static_cast<CharT>(stream.get())};
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                             typename GenericValue<Allocator>::CharTraits,
+                             Allocator<typename GenericValue<Allocator>::Char>>
+        &result) -> double {
+  const typename GenericValue<Allocator>::Char character{
+      static_cast<typename GenericValue<Allocator>::Char>(stream.get())};
   column += 1;
   switch (character) {
-    case internal::token_number_zero<CharT>:
-    case internal::token_number_one<CharT>:
-    case internal::token_number_two<CharT>:
-    case internal::token_number_three<CharT>:
-    case internal::token_number_four<CharT>:
-    case internal::token_number_five<CharT>:
-    case internal::token_number_six<CharT>:
-    case internal::token_number_seven<CharT>:
-    case internal::token_number_eight<CharT>:
-    case internal::token_number_nine<CharT>:
+    case internal::token_number_zero<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_one<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_two<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_three<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_four<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_five<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_six<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_seven<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_eight<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_nine<typename GenericValue<Allocator>::Char>:
       result.put(character);
       return parse_number_exponent_rest(line, column, original_column, stream,
                                         result);
@@ -305,37 +341,40 @@ auto parse_number_exponent(
   }
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto parse_number_exponent_first(
     const std::uint64_t line, std::uint64_t &column,
     const std::uint64_t original_column,
-    std::basic_istream<CharT, Traits> &stream,
-    std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> double {
-  const CharT character{static_cast<CharT>(stream.get())};
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                             typename GenericValue<Allocator>::CharTraits,
+                             Allocator<typename GenericValue<Allocator>::Char>>
+        &result) -> double {
+  const typename GenericValue<Allocator>::Char character{
+      static_cast<typename GenericValue<Allocator>::Char>(stream.get())};
   column += 1;
   switch (character) {
-    case internal::token_number_plus<CharT>:
+    case internal::token_number_plus<typename GenericValue<Allocator>::Char>:
       // Exponents are positive by default,
       // so no need to write the plus sign.
       return parse_number_exponent(line, column, original_column, stream,
                                    result);
-    case internal::token_number_minus<CharT>:
+    case internal::token_number_minus<typename GenericValue<Allocator>::Char>:
       result.put(character);
       return parse_number_exponent(line, column, original_column, stream,
                                    result);
 
-    case internal::token_number_zero<CharT>:
-    case internal::token_number_one<CharT>:
-    case internal::token_number_two<CharT>:
-    case internal::token_number_three<CharT>:
-    case internal::token_number_four<CharT>:
-    case internal::token_number_five<CharT>:
-    case internal::token_number_six<CharT>:
-    case internal::token_number_seven<CharT>:
-    case internal::token_number_eight<CharT>:
-    case internal::token_number_nine<CharT>:
+    case internal::token_number_zero<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_one<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_two<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_three<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_four<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_five<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_six<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_seven<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_eight<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_nine<typename GenericValue<Allocator>::Char>:
       result.put(character);
       return parse_number_exponent_rest(line, column, original_column, stream,
                                         result);
@@ -344,38 +383,43 @@ auto parse_number_exponent_first(
   }
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto parse_number_fractional(
     const std::uint64_t line, std::uint64_t &column,
     const std::uint64_t original_column,
-    std::basic_istream<CharT, Traits> &stream,
-    std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> double {
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                             typename GenericValue<Allocator>::CharTraits,
+                             Allocator<typename GenericValue<Allocator>::Char>>
+        &result) -> double {
   while (!stream.eof()) {
-    const CharT character{static_cast<CharT>(stream.peek())};
+    const typename GenericValue<Allocator>::Char character{
+        static_cast<typename GenericValue<Allocator>::Char>(stream.peek())};
     switch (character) {
       // [A number] may have an exponent, prefixed by e (U+0065) or E (U+0045)
       // See
       // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-      case internal::token_number_exponent_uppercase<CharT>:
-      case internal::token_number_exponent_lowercase<CharT>:
+      case internal::token_number_exponent_uppercase<
+          typename GenericValue<Allocator>::Char>:
+      case internal::token_number_exponent_lowercase<
+          typename GenericValue<Allocator>::Char>:
         result.put(character);
         stream.ignore(1);
         column += 1;
         return parse_number_exponent_first(line, column, original_column,
                                            stream, result);
 
-      case internal::token_number_zero<CharT>:
-      case internal::token_number_one<CharT>:
-      case internal::token_number_two<CharT>:
-      case internal::token_number_three<CharT>:
-      case internal::token_number_four<CharT>:
-      case internal::token_number_five<CharT>:
-      case internal::token_number_six<CharT>:
-      case internal::token_number_seven<CharT>:
-      case internal::token_number_eight<CharT>:
-      case internal::token_number_nine<CharT>:
+      case internal::token_number_zero<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_one<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_two<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_three<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_four<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_five<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_six<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_seven<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_eight<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_nine<typename GenericValue<Allocator>::Char>:
         result.put(character);
         stream.ignore(1);
         column += 1;
@@ -388,33 +432,38 @@ auto parse_number_fractional(
   throw ParseError(line, column);
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto parse_number_fractional_first(
     const std::uint64_t line, std::uint64_t &column,
     const std::uint64_t original_column,
-    std::basic_istream<CharT, Traits> &stream,
-    std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> double {
-  const CharT character{static_cast<CharT>(stream.peek())};
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                             typename GenericValue<Allocator>::CharTraits,
+                             Allocator<typename GenericValue<Allocator>::Char>>
+        &result) -> double {
+  const typename GenericValue<Allocator>::Char character{
+      static_cast<typename GenericValue<Allocator>::Char>(stream.peek())};
   switch (character) {
     // [A number] may have a fractional part prefixed by a decimal point
     // (U+002E). See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_number_decimal_point<CharT>:
-    case static_cast<CharT>(Traits::eof()):
+    case internal::token_number_decimal_point<
+        typename GenericValue<Allocator>::Char>:
+    case static_cast<typename GenericValue<Allocator>::Char>(
+        GenericValue<Allocator>::CharTraits::eof()):
       column += 1;
       throw ParseError(line, column);
-    case internal::token_number_zero<CharT>:
-    case internal::token_number_one<CharT>:
-    case internal::token_number_two<CharT>:
-    case internal::token_number_three<CharT>:
-    case internal::token_number_four<CharT>:
-    case internal::token_number_five<CharT>:
-    case internal::token_number_six<CharT>:
-    case internal::token_number_seven<CharT>:
-    case internal::token_number_eight<CharT>:
-    case internal::token_number_nine<CharT>:
+    case internal::token_number_zero<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_one<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_two<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_three<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_four<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_five<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_six<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_seven<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_eight<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_nine<typename GenericValue<Allocator>::Char>:
       result.put(character);
       stream.ignore(1);
       column += 1;
@@ -425,95 +474,104 @@ auto parse_number_fractional_first(
   }
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto parse_number_maybe_fractional(
     const std::uint64_t line, std::uint64_t &column,
     const std::uint64_t original_column,
-    std::basic_istream<CharT, Traits> &stream,
-    std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> GenericValue<CharT, Traits, Allocator> {
-  const CharT character{static_cast<CharT>(stream.peek())};
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                             typename GenericValue<Allocator>::CharTraits,
+                             Allocator<typename GenericValue<Allocator>::Char>>
+        &result) -> GenericValue<Allocator> {
+  const typename GenericValue<Allocator>::Char character{
+      static_cast<typename GenericValue<Allocator>::Char>(stream.peek())};
   switch (character) {
     // [A number] may have a fractional part prefixed by a decimal point
     // (U+002E). See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_number_decimal_point<CharT>:
+    case internal::token_number_decimal_point<
+        typename GenericValue<Allocator>::Char>:
       result.put(character);
       stream.ignore(1);
       column += 1;
-      return GenericValue<CharT, Traits, Allocator>{
-          parse_number_fractional_first(line, column, original_column, stream,
-                                        result)};
-    case internal::token_number_exponent_uppercase<CharT>:
-    case internal::token_number_exponent_lowercase<CharT>:
-      result.put(character);
-      stream.ignore(1);
-      column += 1;
-      return GenericValue<CharT, Traits, Allocator>{parse_number_exponent_first(
+      return GenericValue<Allocator>{parse_number_fractional_first(
           line, column, original_column, stream, result)};
-    case internal::token_number_one<CharT>:
-    case internal::token_number_two<CharT>:
-    case internal::token_number_three<CharT>:
-    case internal::token_number_four<CharT>:
-    case internal::token_number_five<CharT>:
-    case internal::token_number_six<CharT>:
-    case internal::token_number_seven<CharT>:
-    case internal::token_number_eight<CharT>:
-    case internal::token_number_nine<CharT>:
+    case internal::token_number_exponent_uppercase<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_number_exponent_lowercase<
+        typename GenericValue<Allocator>::Char>:
+      result.put(character);
+      stream.ignore(1);
+      column += 1;
+      return GenericValue<Allocator>{parse_number_exponent_first(
+          line, column, original_column, stream, result)};
+    case internal::token_number_one<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_two<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_three<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_four<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_five<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_six<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_seven<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_eight<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_nine<typename GenericValue<Allocator>::Char>:
       column += 1;
       throw ParseError(line, column);
     default:
-      return GenericValue<CharT, Traits, Allocator>{
+      return GenericValue<Allocator>{
           parse_number_integer(line, original_column, result.str())};
   }
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto parse_number_any_rest(
     const std::uint64_t line, std::uint64_t &column,
     const std::uint64_t original_column,
-    std::basic_istream<CharT, Traits> &stream,
-    std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> GenericValue<CharT, Traits, Allocator> {
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                             typename GenericValue<Allocator>::CharTraits,
+                             Allocator<typename GenericValue<Allocator>::Char>>
+        &result) -> GenericValue<Allocator> {
   while (!stream.eof()) {
-    const CharT character{static_cast<CharT>(stream.peek())};
+    const typename GenericValue<Allocator>::Char character{
+        static_cast<typename GenericValue<Allocator>::Char>(stream.peek())};
     switch (character) {
       // [A number] may have a fractional part prefixed by a decimal point
       // (U+002E). See
       // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-      case internal::token_number_decimal_point<CharT>:
+      case internal::token_number_decimal_point<
+          typename GenericValue<Allocator>::Char>:
         result.put(character);
         stream.ignore(1);
         column += 1;
-        return GenericValue<CharT, Traits, Allocator>{
-            parse_number_fractional_first(line, column, original_column, stream,
-                                          result)};
-      case internal::token_number_exponent_uppercase<CharT>:
-      case internal::token_number_exponent_lowercase<CharT>:
+        return GenericValue<Allocator>{parse_number_fractional_first(
+            line, column, original_column, stream, result)};
+      case internal::token_number_exponent_uppercase<
+          typename GenericValue<Allocator>::Char>:
+      case internal::token_number_exponent_lowercase<
+          typename GenericValue<Allocator>::Char>:
         result.put(character);
         stream.ignore(1);
         column += 1;
-        return GenericValue<CharT, Traits, Allocator>{
-            parse_number_exponent_first(line, column, original_column, stream,
-                                        result)};
-      case internal::token_number_zero<CharT>:
-      case internal::token_number_one<CharT>:
-      case internal::token_number_two<CharT>:
-      case internal::token_number_three<CharT>:
-      case internal::token_number_four<CharT>:
-      case internal::token_number_five<CharT>:
-      case internal::token_number_six<CharT>:
-      case internal::token_number_seven<CharT>:
-      case internal::token_number_eight<CharT>:
-      case internal::token_number_nine<CharT>:
+        return GenericValue<Allocator>{parse_number_exponent_first(
+            line, column, original_column, stream, result)};
+      case internal::token_number_zero<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_one<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_two<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_three<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_four<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_five<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_six<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_seven<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_eight<typename GenericValue<Allocator>::Char>:
+      case internal::token_number_nine<typename GenericValue<Allocator>::Char>:
         result.put(character);
         stream.ignore(1);
         column += 1;
         break;
       default:
-        return GenericValue<CharT, Traits, Allocator>{
+        return GenericValue<Allocator>{
             parse_number_integer(line, original_column, result.str())};
     }
   }
@@ -521,33 +579,36 @@ auto parse_number_any_rest(
   throw ParseError(line, column);
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <template <typename T> typename Allocator>
 auto parse_number_any_negative_first(
     const std::uint64_t line, std::uint64_t &column,
     const std::uint64_t original_column,
-    std::basic_istream<CharT, Traits> &stream,
-    std::basic_ostringstream<CharT, Traits, Allocator<CharT>> &result)
-    -> GenericValue<CharT, Traits, Allocator> {
-  const CharT character{static_cast<CharT>(stream.get())};
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                             typename GenericValue<Allocator>::CharTraits,
+                             Allocator<typename GenericValue<Allocator>::Char>>
+        &result) -> GenericValue<Allocator> {
+  const typename GenericValue<Allocator>::Char character{
+      static_cast<typename GenericValue<Allocator>::Char>(stream.get())};
   column += 1;
   switch (character) {
     // A number is a sequence of decimal digits with no superfluous leading
     // zero. See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_number_zero<CharT>:
+    case internal::token_number_zero<typename GenericValue<Allocator>::Char>:
       result.put(character);
       return parse_number_maybe_fractional(line, column, original_column,
                                            stream, result);
-    case internal::token_number_one<CharT>:
-    case internal::token_number_two<CharT>:
-    case internal::token_number_three<CharT>:
-    case internal::token_number_four<CharT>:
-    case internal::token_number_five<CharT>:
-    case internal::token_number_six<CharT>:
-    case internal::token_number_seven<CharT>:
-    case internal::token_number_eight<CharT>:
-    case internal::token_number_nine<CharT>:
+    case internal::token_number_one<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_two<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_three<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_four<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_five<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_six<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_seven<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_eight<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_nine<typename GenericValue<Allocator>::Char>:
       result.put(character);
       return parse_number_any_rest(line, column, original_column, stream,
                                    result);
@@ -556,22 +617,27 @@ auto parse_number_any_negative_first(
   }
 }
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto parse_number(const std::uint64_t line, std::uint64_t &column,
-                  std::basic_istream<CharT, Traits> &stream,
-                  const CharT first) -> GenericValue<CharT, Traits, Allocator> {
-  std::basic_ostringstream<CharT, Traits, Allocator<CharT>> result;
+template <template <typename T> typename Allocator>
+auto parse_number(
+    const std::uint64_t line, std::uint64_t &column,
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    const typename GenericValue<Allocator>::Char first)
+    -> GenericValue<Allocator> {
+  std::basic_ostringstream<typename GenericValue<Allocator>::Char,
+                           typename GenericValue<Allocator>::CharTraits,
+                           Allocator<typename GenericValue<Allocator>::Char>>
+      result;
   result.put(first);
 
   // A number is a sequence of decimal digits with no superfluous leading zero.
   // It may have a preceding minus sign (U+002D). See
   // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
   switch (first) {
-    case internal::token_number_minus<CharT>:
+    case internal::token_number_minus<typename GenericValue<Allocator>::Char>:
       return parse_number_any_negative_first(line, column, column, stream,
                                              result);
-    case internal::token_number_zero<CharT>:
+    case internal::token_number_zero<typename GenericValue<Allocator>::Char>:
       return parse_number_maybe_fractional(line, column, column, stream,
                                            result);
     // Any other digit
@@ -586,18 +652,19 @@ auto parse_number(const std::uint64_t line, std::uint64_t &column,
 // NOLINTBEGIN(cppcoreguidelines-avoid-goto)
 
 namespace sourcemeta::jsontoolkit {
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto parse(std::basic_istream<CharT, Traits> &stream, std::uint64_t &line,
-           std::uint64_t &column) -> GenericValue<CharT, Traits, Allocator> {
+template <template <typename T> typename Allocator>
+auto parse(
+    std::basic_istream<typename GenericValue<Allocator>::Char,
+                       typename GenericValue<Allocator>::CharTraits> &stream,
+    std::uint64_t &line, std::uint64_t &column) -> GenericValue<Allocator> {
   // Globals
-  using Result = GenericValue<CharT, Traits, Allocator>;
+  using Result = GenericValue<Allocator>;
   enum class Container { Array, Object };
   std::stack<Container> levels;
   std::stack<std::reference_wrapper<Result>> frames;
   std::optional<Result> result;
   typename Result::String key{""};
-  CharT character;
+  typename GenericValue<Allocator>::Char character;
 
   /*
    * Parse any JSON document
@@ -605,57 +672,56 @@ auto parse(std::basic_istream<CharT, Traits> &stream, std::uint64_t &line,
 
 do_parse:
   column += 1;
-  character = static_cast<CharT>(stream.get());
+  character = static_cast<typename GenericValue<Allocator>::Char>(stream.get());
 
   // A JSON value can be an object, array, number, string, true, false, or null.
   // See
   // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
   switch (character) {
-    case internal::constant_true<CharT, Traits>.front():
-      return internal::parse_boolean_true<CharT, Traits, Allocator>(
-          line, column, stream);
-    case internal::constant_false<CharT, Traits>.front():
-      return internal::parse_boolean_false<CharT, Traits, Allocator>(
-          line, column, stream);
-    case internal::constant_null<CharT, Traits>.front():
-      return internal::parse_null<CharT, Traits, Allocator>(line, column,
-                                                            stream);
+    case internal::constant_true<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.front():
+      return internal::parse_boolean_true<Allocator>(line, column, stream);
+    case internal::constant_false<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.front():
+      return internal::parse_boolean_false<Allocator>(line, column, stream);
+    case internal::constant_null<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.front():
+      return internal::parse_null<Allocator>(line, column, stream);
 
     // A string is a sequence of Unicode code points wrapped with quotation
     // marks (U+0022). See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_string_quote<CharT>:
-      return Result{internal::parse_string<CharT, Traits, Allocator>(
-          line, column, stream)};
-    case internal::token_array_begin<CharT>:
+    case internal::token_string_quote<typename GenericValue<Allocator>::Char>:
+      return Result{internal::parse_string<Allocator>(line, column, stream)};
+    case internal::token_array_begin<typename GenericValue<Allocator>::Char>:
       goto do_parse_array;
-    case internal::token_object_begin<CharT>:
+    case internal::token_object_begin<typename GenericValue<Allocator>::Char>:
       goto do_parse_object;
 
-    case internal::token_number_minus<CharT>:
-    case internal::token_number_zero<CharT>:
-    case internal::token_number_one<CharT>:
-    case internal::token_number_two<CharT>:
-    case internal::token_number_three<CharT>:
-    case internal::token_number_four<CharT>:
-    case internal::token_number_five<CharT>:
-    case internal::token_number_six<CharT>:
-    case internal::token_number_seven<CharT>:
-    case internal::token_number_eight<CharT>:
-    case internal::token_number_nine<CharT>:
-      return internal::parse_number<CharT, Traits, Allocator>(
-          line, column, stream, character);
+    case internal::token_number_minus<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_zero<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_one<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_two<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_three<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_four<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_five<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_six<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_seven<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_eight<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_nine<typename GenericValue<Allocator>::Char>:
+      return internal::parse_number<Allocator>(line, column, stream, character);
 
     // Insignificant whitespace is allowed before or after any token.
     // See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_whitespace_line_feed<CharT>:
+    case internal::token_whitespace_line_feed<
+        typename GenericValue<Allocator>::Char>:
       column = 0;
       line += 1;
       goto do_parse;
-    case internal::token_whitespace_tabulation<CharT>:
-    case internal::token_whitespace_carriage_return<CharT>:
-    case internal::token_whitespace_space<CharT>:
+    case internal::token_whitespace_tabulation<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_carriage_return<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_space<
+        typename GenericValue<Allocator>::Char>:
       goto do_parse;
     default:
       throw ParseError(line, column);
@@ -695,10 +761,10 @@ do_parse_array:
 do_parse_array_item:
   assert(levels.top() == Container::Array);
   column += 1;
-  character = static_cast<CharT>(stream.get());
+  character = static_cast<typename GenericValue<Allocator>::Char>(stream.get());
   switch (character) {
     // Positional
-    case internal::token_array_end<CharT>:
+    case internal::token_array_end<typename GenericValue<Allocator>::Char>:
       if (frames.top().get().empty()) {
         goto do_parse_container_end;
       } else {
@@ -706,60 +772,60 @@ do_parse_array_item:
       }
 
     // Values
-    case internal::token_array_begin<CharT>:
+    case internal::token_array_begin<typename GenericValue<Allocator>::Char>:
       goto do_parse_array;
-    case internal::token_object_begin<CharT>:
+    case internal::token_object_begin<typename GenericValue<Allocator>::Char>:
       goto do_parse_object;
-    case internal::constant_true<CharT, Traits>.front():
+    case internal::constant_true<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.front():
       frames.top().get().push_back(
-          internal::parse_boolean_true<CharT, Traits, Allocator>(line, column,
-                                                                 stream));
+          internal::parse_boolean_true<Allocator>(line, column, stream));
       goto do_parse_array_item_separator;
-    case internal::constant_false<CharT, Traits>.front():
+    case internal::constant_false<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.front():
       frames.top().get().push_back(
-          internal::parse_boolean_false<CharT, Traits, Allocator>(line, column,
-                                                                  stream));
+          internal::parse_boolean_false<Allocator>(line, column, stream));
       goto do_parse_array_item_separator;
-    case internal::constant_null<CharT, Traits>.front():
+    case internal::constant_null<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.front():
       frames.top().get().push_back(
-          internal::parse_null<CharT, Traits, Allocator>(line, column, stream));
+          internal::parse_null<Allocator>(line, column, stream));
       goto do_parse_array_item_separator;
 
     // A string is a sequence of Unicode code points wrapped with quotation
     // marks (U+0022). See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_string_quote<CharT>:
+    case internal::token_string_quote<typename GenericValue<Allocator>::Char>:
       frames.top().get().push_back(
-          Result{internal::parse_string<CharT, Traits, Allocator>(line, column,
-                                                                  stream)});
+          Result{internal::parse_string<Allocator>(line, column, stream)});
       goto do_parse_array_item_separator;
 
-    case internal::token_number_minus<CharT>:
-    case internal::token_number_zero<CharT>:
-    case internal::token_number_one<CharT>:
-    case internal::token_number_two<CharT>:
-    case internal::token_number_three<CharT>:
-    case internal::token_number_four<CharT>:
-    case internal::token_number_five<CharT>:
-    case internal::token_number_six<CharT>:
-    case internal::token_number_seven<CharT>:
-    case internal::token_number_eight<CharT>:
-    case internal::token_number_nine<CharT>:
+    case internal::token_number_minus<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_zero<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_one<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_two<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_three<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_four<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_five<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_six<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_seven<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_eight<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_nine<typename GenericValue<Allocator>::Char>:
       frames.top().get().push_back(
-          internal::parse_number<CharT, Traits, Allocator>(line, column, stream,
-                                                           character));
+          internal::parse_number<Allocator>(line, column, stream, character));
       goto do_parse_array_item_separator;
 
     // Insignificant whitespace is allowed before or after any token.
     // See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_whitespace_line_feed<CharT>:
+    case internal::token_whitespace_line_feed<
+        typename GenericValue<Allocator>::Char>:
       column = 0;
       line += 1;
       goto do_parse_array_item;
-    case internal::token_whitespace_tabulation<CharT>:
-    case internal::token_whitespace_carriage_return<CharT>:
-    case internal::token_whitespace_space<CharT>:
+    case internal::token_whitespace_tabulation<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_carriage_return<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_space<
+        typename GenericValue<Allocator>::Char>:
       goto do_parse_array_item;
     default:
       goto error;
@@ -768,24 +834,29 @@ do_parse_array_item:
 do_parse_array_item_separator:
   assert(levels.top() == Container::Array);
   column += 1;
-  character = static_cast<CharT>(stream.get());
+  character = static_cast<typename GenericValue<Allocator>::Char>(stream.get());
   switch (character) {
     // Positional
-    case internal::token_array_delimiter<CharT>:
+    case internal::token_array_delimiter<
+        typename GenericValue<Allocator>::Char>:
       goto do_parse_array_item;
-    case internal::token_array_end<CharT>:
+    case internal::token_array_end<typename GenericValue<Allocator>::Char>:
       goto do_parse_container_end;
 
     // Insignificant whitespace is allowed before or after any token.
     // See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_whitespace_line_feed<CharT>:
+    case internal::token_whitespace_line_feed<
+        typename GenericValue<Allocator>::Char>:
       column = 0;
       line += 1;
       goto do_parse_array_item_separator;
-    case internal::token_whitespace_tabulation<CharT>:
-    case internal::token_whitespace_carriage_return<CharT>:
-    case internal::token_whitespace_space<CharT>:
+    case internal::token_whitespace_tabulation<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_carriage_return<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_space<
+        typename GenericValue<Allocator>::Char>:
       goto do_parse_array_item_separator;
     default:
       goto error;
@@ -828,9 +899,9 @@ do_parse_object:
 do_parse_object_property_key:
   assert(levels.top() == Container::Object);
   column += 1;
-  character = static_cast<CharT>(stream.get());
+  character = static_cast<typename GenericValue<Allocator>::Char>(stream.get());
   switch (character) {
-    case internal::token_object_end<CharT>:
+    case internal::token_object_end<typename GenericValue<Allocator>::Char>:
       if (frames.top().get().empty()) {
         goto do_parse_container_end;
       } else {
@@ -840,21 +911,24 @@ do_parse_object_property_key:
     // A string is a sequence of Unicode code points wrapped with quotation
     // marks (U+0022). See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_string_quote<CharT>:
-      key = internal::parse_string<CharT, Traits, Allocator>(line, column,
-                                                             stream);
+    case internal::token_string_quote<typename GenericValue<Allocator>::Char>:
+      key = internal::parse_string<Allocator>(line, column, stream);
       goto do_parse_object_property_separator;
 
     // Insignificant whitespace is allowed before or after any token.
     // See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_whitespace_line_feed<CharT>:
+    case internal::token_whitespace_line_feed<
+        typename GenericValue<Allocator>::Char>:
       column = 0;
       line += 1;
       goto do_parse_object_property_key;
-    case internal::token_whitespace_tabulation<CharT>:
-    case internal::token_whitespace_carriage_return<CharT>:
-    case internal::token_whitespace_space<CharT>:
+    case internal::token_whitespace_tabulation<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_carriage_return<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_space<
+        typename GenericValue<Allocator>::Char>:
       goto do_parse_object_property_key;
     default:
       goto error;
@@ -863,21 +937,26 @@ do_parse_object_property_key:
 do_parse_object_property_separator:
   assert(levels.top() == Container::Object);
   column += 1;
-  character = static_cast<CharT>(stream.get());
+  character = static_cast<typename GenericValue<Allocator>::Char>(stream.get());
   switch (character) {
-    case internal::token_object_key_delimiter<CharT>:
+    case internal::token_object_key_delimiter<
+        typename GenericValue<Allocator>::Char>:
       goto do_parse_object_property_value;
 
     // Insignificant whitespace is allowed before or after any token.
     // See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_whitespace_line_feed<CharT>:
+    case internal::token_whitespace_line_feed<
+        typename GenericValue<Allocator>::Char>:
       column = 0;
       line += 1;
       goto do_parse_object_property_separator;
-    case internal::token_whitespace_tabulation<CharT>:
-    case internal::token_whitespace_carriage_return<CharT>:
-    case internal::token_whitespace_space<CharT>:
+    case internal::token_whitespace_tabulation<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_carriage_return<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_space<
+        typename GenericValue<Allocator>::Char>:
       goto do_parse_object_property_separator;
     default:
       goto error;
@@ -886,64 +965,63 @@ do_parse_object_property_separator:
 do_parse_object_property_value:
   assert(levels.top() == Container::Object);
   column += 1;
-  character = static_cast<CharT>(stream.get());
+  character = static_cast<typename GenericValue<Allocator>::Char>(stream.get());
   switch (character) {
     // Values
-    case internal::token_array_begin<CharT>:
+    case internal::token_array_begin<typename GenericValue<Allocator>::Char>:
       goto do_parse_array;
-    case internal::token_object_begin<CharT>:
+    case internal::token_object_begin<typename GenericValue<Allocator>::Char>:
       goto do_parse_object;
-    case internal::constant_true<CharT, Traits>.front():
+    case internal::constant_true<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.front():
       frames.top().get().assign(
-          key, internal::parse_boolean_true<CharT, Traits, Allocator>(
-                   line, column, stream));
+          key, internal::parse_boolean_true<Allocator>(line, column, stream));
       goto do_parse_object_property_end;
-    case internal::constant_false<CharT, Traits>.front():
+    case internal::constant_false<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.front():
       frames.top().get().assign(
-          key, internal::parse_boolean_false<CharT, Traits, Allocator>(
-                   line, column, stream));
+          key, internal::parse_boolean_false<Allocator>(line, column, stream));
       goto do_parse_object_property_end;
-    case internal::constant_null<CharT, Traits>.front():
+    case internal::constant_null<typename GenericValue<Allocator>::Char, typename GenericValue<Allocator>::CharTraits>.front():
       frames.top().get().assign(
-          key,
-          internal::parse_null<CharT, Traits, Allocator>(line, column, stream));
+          key, internal::parse_null<Allocator>(line, column, stream));
       goto do_parse_object_property_end;
 
     // A string is a sequence of Unicode code points wrapped with quotation
     // marks (U+0022). See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_string_quote<CharT>:
+    case internal::token_string_quote<typename GenericValue<Allocator>::Char>:
       frames.top().get().assign(
-          key, Result{internal::parse_string<CharT, Traits, Allocator>(
-                   line, column, stream)});
+          key, Result{internal::parse_string<Allocator>(line, column, stream)});
       goto do_parse_object_property_end;
 
-    case internal::token_number_minus<CharT>:
-    case internal::token_number_zero<CharT>:
-    case internal::token_number_one<CharT>:
-    case internal::token_number_two<CharT>:
-    case internal::token_number_three<CharT>:
-    case internal::token_number_four<CharT>:
-    case internal::token_number_five<CharT>:
-    case internal::token_number_six<CharT>:
-    case internal::token_number_seven<CharT>:
-    case internal::token_number_eight<CharT>:
-    case internal::token_number_nine<CharT>:
-      frames.top().get().assign(
-          key, internal::parse_number<CharT, Traits, Allocator>(
-                   line, column, stream, character));
+    case internal::token_number_minus<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_zero<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_one<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_two<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_three<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_four<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_five<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_six<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_seven<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_eight<typename GenericValue<Allocator>::Char>:
+    case internal::token_number_nine<typename GenericValue<Allocator>::Char>:
+      frames.top().get().assign(key, internal::parse_number<Allocator>(
+                                         line, column, stream, character));
       goto do_parse_object_property_end;
 
     // Insignificant whitespace is allowed before or after any token.
     // See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_whitespace_line_feed<CharT>:
+    case internal::token_whitespace_line_feed<
+        typename GenericValue<Allocator>::Char>:
       column = 0;
       line += 1;
       goto do_parse_object_property_value;
-    case internal::token_whitespace_tabulation<CharT>:
-    case internal::token_whitespace_carriage_return<CharT>:
-    case internal::token_whitespace_space<CharT>:
+    case internal::token_whitespace_tabulation<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_carriage_return<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_space<
+        typename GenericValue<Allocator>::Char>:
       goto do_parse_object_property_value;
     default:
       goto error;
@@ -952,23 +1030,28 @@ do_parse_object_property_value:
 do_parse_object_property_end:
   assert(levels.top() == Container::Object);
   column += 1;
-  character = static_cast<CharT>(stream.get());
+  character = static_cast<typename GenericValue<Allocator>::Char>(stream.get());
   switch (character) {
-    case internal::token_object_delimiter<CharT>:
+    case internal::token_object_delimiter<
+        typename GenericValue<Allocator>::Char>:
       goto do_parse_object_property_key;
-    case internal::token_object_end<CharT>:
+    case internal::token_object_end<typename GenericValue<Allocator>::Char>:
       goto do_parse_container_end;
 
     // Insignificant whitespace is allowed before or after any token.
     // See
     // https://www.ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
-    case internal::token_whitespace_line_feed<CharT>:
+    case internal::token_whitespace_line_feed<
+        typename GenericValue<Allocator>::Char>:
       column = 0;
       line += 1;
       goto do_parse_object_property_end;
-    case internal::token_whitespace_tabulation<CharT>:
-    case internal::token_whitespace_carriage_return<CharT>:
-    case internal::token_whitespace_space<CharT>:
+    case internal::token_whitespace_tabulation<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_carriage_return<
+        typename GenericValue<Allocator>::Char>:
+    case internal::token_whitespace_space<
+        typename GenericValue<Allocator>::Char>:
       goto do_parse_object_property_end;
     default:
       goto error;
@@ -1008,12 +1091,17 @@ do_parse_container_end:
 
 // NOLINTEND(cppcoreguidelines-avoid-goto)
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto parse(const std::basic_string<CharT, Traits> &input, std::uint64_t &line,
-           std::uint64_t &column) -> GenericValue<CharT, Traits, Allocator> {
-  std::basic_istringstream<CharT, Traits, Allocator<CharT>> stream{input};
-  return parse<CharT, Traits, Allocator>(stream, line, column);
+template <template <typename T> typename Allocator>
+auto parse(const std::basic_string<typename GenericValue<Allocator>::Char,
+                                   typename GenericValue<Allocator>::CharTraits>
+               &input,
+           std::uint64_t &line,
+           std::uint64_t &column) -> GenericValue<Allocator> {
+  std::basic_istringstream<typename GenericValue<Allocator>::Char,
+                           typename GenericValue<Allocator>::CharTraits,
+                           Allocator<typename GenericValue<Allocator>::Char>>
+      stream{input};
+  return parse<Allocator>(stream, line, column);
 }
 
 } // namespace sourcemeta::jsontoolkit

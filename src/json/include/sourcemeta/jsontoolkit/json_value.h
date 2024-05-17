@@ -14,29 +14,27 @@
 #include <set>              // std::set
 #include <sstream>          // std::basic_istringstream
 #include <stdexcept>        // std::invalid_argument
-#include <string>           // std::basic_string, std::to_string
-#include <string_view>      // std::basic_string_view
-#include <type_traits>      // std::enable_if_t, std::is_same_v
-#include <utility>          // std::in_place_type, std::pair, std::move
-#include <variant>          // std::variant, std::holds_alternative, std::get
+#include <string>      // std::basic_string, std::to_string, std::char_traits
+#include <string_view> // std::basic_string_view
+#include <type_traits> // std::enable_if_t, std::is_same_v
+#include <utility>     // std::in_place_type, std::pair, std::move
+#include <variant>     // std::variant, std::holds_alternative, std::get
 
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup json
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-class GenericValue {
+template <template <typename T> typename Allocator> class GenericValue {
 public:
-  /// The character traits used by the JSON document.
-  using CharTraits = Traits;
   /// The character type used by the JSON document.
-  using Char = typename CharTraits::char_type;
+  using Char = char;
+  /// The character traits used by the JSON document.
+  using CharTraits = std::char_traits<Char>;
   /// The integer type used by the JSON document.
   using Integer = std::int64_t;
   /// The real type used by the JSON document.
   using Real = double;
   /// The string type used by the JSON document.
-  using String = std::basic_string<CharT, Traits, Allocator<CharT>>;
+  using String = std::basic_string<Char, CharTraits, Allocator<Char>>;
   /// The array type used by the JSON document.
   using Array = GenericArray<GenericValue, Allocator<GenericValue>>;
   /// The object type used by the JSON document.
@@ -153,7 +151,7 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::JSON my_string{"foo"};
   /// ```
-  explicit GenericValue(const std::basic_string_view<CharT, Traits> &value)
+  explicit GenericValue(const std::basic_string_view<Char, CharTraits> &value)
       : data{std::in_place_type<String>, value} {}
 
   /// This constructor creates a JSON document from a string type. For example:
@@ -163,7 +161,7 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::JSON my_string{"foo"};
   /// ```
-  explicit GenericValue(const CharT *const value)
+  explicit GenericValue(const Char *const value)
       : data{std::in_place_type<String>, value} {}
 
   /// This constructor creates a JSON array from a set of other JSON documents.
@@ -258,8 +256,7 @@ public:
    * Operators
    */
 
-  auto operator<(const GenericValue<CharT, Traits, Allocator> &other)
-      const noexcept -> bool {
+  auto operator<(const GenericValue<Allocator> &other) const noexcept -> bool {
     if ((this->type() == Type::Integer && other.type() == Type::Real) ||
         (this->type() == Type::Real && other.type() == Type::Integer)) {
       return this->as_real() < other.as_real();
@@ -289,23 +286,19 @@ public:
     }
   }
 
-  auto operator<=(const GenericValue<CharT, Traits, Allocator> &other)
-      const noexcept -> bool {
+  auto operator<=(const GenericValue<Allocator> &other) const noexcept -> bool {
     return *this < other || *this == other;
   }
 
-  auto operator>(const GenericValue<CharT, Traits, Allocator> &other)
-      const noexcept -> bool {
+  auto operator>(const GenericValue<Allocator> &other) const noexcept -> bool {
     return !(*this < other) && *this != other;
   }
 
-  auto operator>=(const GenericValue<CharT, Traits, Allocator> &other)
-      const noexcept -> bool {
+  auto operator>=(const GenericValue<Allocator> &other) const noexcept -> bool {
     return *this > other || *this == other;
   }
 
-  auto operator==(const GenericValue<CharT, Traits, Allocator> &other)
-      const noexcept -> bool {
+  auto operator==(const GenericValue<Allocator> &other) const noexcept -> bool {
     if ((this->type() == Type::Integer && other.type() == Type::Real) ||
         (this->type() == Type::Real && other.type() == Type::Integer)) {
       return this->as_real() == other.as_real();
@@ -314,8 +307,8 @@ public:
     return this->data == other.data;
   }
 
-  auto operator!=(const GenericValue<CharT, Traits, Allocator> &) const noexcept
-      -> bool = default;
+  auto
+  operator!=(const GenericValue<Allocator> &) const noexcept -> bool = default;
 
   /// Add two numeric JSON instances and get a new instance with the result. For
   /// example:
@@ -672,8 +665,8 @@ public:
   /// assert(stream.get() == 'f');
   /// ```
   [[nodiscard]] auto to_stringstream() const
-      -> std::basic_istringstream<CharT, Traits, Allocator<CharT>> {
-    return std::basic_istringstream<CharT, Traits, Allocator<CharT>>{
+      -> std::basic_istringstream<Char, CharTraits, Allocator<Char>> {
+    return std::basic_istringstream<Char, CharTraits, Allocator<Char>>{
         std::get<String>(this->data)};
   }
 
@@ -1047,7 +1040,7 @@ public:
                              [](const std::uint64_t accumulator,
                                 const typename Object::value_type &pair) {
                                return accumulator +
-                                      (pair.first.size() * sizeof(CharT)) +
+                                      (pair.first.size() * sizeof(Char)) +
                                       pair.second.estimated_byte_size();
                              });
     } else if (this->is_array()) {
@@ -1060,7 +1053,7 @@ public:
     } else if (this->is_string()) {
       // Keep in mind that standard strings might reserve more
       // space than what it is actually used by the string
-      return this->byte_size() * sizeof(CharT);
+      return this->byte_size() * sizeof(Char);
     } else if (this->is_integer()) {
       return sizeof(Integer);
     } else if (this->is_real()) {
@@ -1684,7 +1677,7 @@ public:
   /// assert(document.empty());
   /// ```
   auto into_array() -> void {
-    this->into(GenericValue<CharT, Traits, Allocator>::make_array());
+    this->into(GenericValue<Allocator>::make_array());
   }
 
   /// This method converts an existing JSON instance into an empty object. For
@@ -1701,7 +1694,7 @@ public:
   /// assert(document.empty());
   /// ```
   auto into_object() -> void {
-    this->into(GenericValue<CharT, Traits, Allocator>::make_object());
+    this->into(GenericValue<Allocator>::make_object());
   }
 
 private:
