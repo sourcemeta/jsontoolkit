@@ -41,13 +41,25 @@ auto from_file(const std::filesystem::path &path) -> JSON {
 auto stringify(const JSON &document,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
-  stringify<std::allocator>(document, stream);
+  stringify<std::allocator>(document, stream, nullptr);
 }
 
 auto prettify(const JSON &document,
               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
-  prettify<std::allocator>(document, stream);
+  prettify<std::allocator>(document, stream, nullptr);
+}
+
+auto stringify(const JSON &document,
+               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
+               const KeyComparison &compare) -> void {
+  stringify<std::allocator>(document, stream, compare);
+}
+
+auto prettify(const JSON &document,
+              std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
+              const KeyComparison &compare) -> void {
+  prettify<std::allocator>(document, stream, compare);
 }
 
 auto operator<<(std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,

@@ -148,6 +148,30 @@ TEST(JSON_prettify, object_integers) {
   EXPECT_TRUE(matches);
 }
 
+TEST(JSON_prettify, object_integers_order_1) {
+  const sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{1}},
+      {"bar", sourcemeta::jsontoolkit::JSON{2}},
+      {"baz", sourcemeta::jsontoolkit::JSON{3}}};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::prettify(
+      document, stream,
+      [](const auto &left, const auto &right) { return left < right; });
+  EXPECT_EQ(stream.str(), "{\n  \"bar\": 2,\n  \"baz\": 3,\n  \"foo\": 1\n}");
+}
+
+TEST(JSON_prettify, object_integers_order_2) {
+  const sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{1}},
+      {"bar", sourcemeta::jsontoolkit::JSON{2}},
+      {"baz", sourcemeta::jsontoolkit::JSON{3}}};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::prettify(
+      document, stream,
+      [](const auto &left, const auto &right) { return left > right; });
+  EXPECT_EQ(stream.str(), "{\n  \"foo\": 1,\n  \"baz\": 3,\n  \"bar\": 2\n}");
+}
+
 TEST(JSON_prettify, object_empty) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::JSON::make_object();
