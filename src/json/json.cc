@@ -11,29 +11,25 @@ namespace sourcemeta::jsontoolkit {
 
 auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream,
            std::uint64_t &line, std::uint64_t &column) -> JSON {
-  return parse<JSON::Char, JSON::CharTraits, std::allocator>(stream, line,
-                                                             column);
+  return internal_parse(stream, line, column);
 }
 
 auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input,
            std::uint64_t &line, std::uint64_t &column) -> JSON {
-  return parse<JSON::Char, JSON::CharTraits, std::allocator>(input, line,
-                                                             column);
+  return internal_parse(input, line, column);
 }
 
 auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream) -> JSON {
   std::uint64_t line{1};
   std::uint64_t column{0};
-  return parse<JSON::Char, JSON::CharTraits, std::allocator>(stream, line,
-                                                             column);
+  return parse(stream, line, column);
 }
 
 auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input)
     -> JSON {
   std::uint64_t line{1};
   std::uint64_t column{0};
-  return parse<JSON::Char, JSON::CharTraits, std::allocator>(input, line,
-                                                             column);
+  return parse(input, line, column);
 }
 
 auto from_file(const std::filesystem::path &path) -> JSON {
@@ -45,13 +41,13 @@ auto from_file(const std::filesystem::path &path) -> JSON {
 auto stringify(const JSON &document,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
-  stringify<JSON::Char, JSON::CharTraits, std::allocator>(document, stream);
+  stringify<std::allocator>(document, stream);
 }
 
 auto prettify(const JSON &document,
               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
-  prettify<JSON::Char, JSON::CharTraits, std::allocator>(document, stream);
+  prettify<std::allocator>(document, stream);
 }
 
 auto operator<<(std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,

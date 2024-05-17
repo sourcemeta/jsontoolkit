@@ -14,7 +14,7 @@ template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
 class GenericToken {
 public:
-  using Value = GenericValue<CharT, Traits, Allocator>;
+  using Value = JSON;
   using Property = typename Value::String;
   using Index = typename Value::Array::size_type;
 
@@ -199,11 +199,11 @@ public:
   /// assert(json_index.is_integer());
   /// assert(json_property.is_string());
   /// ```
-  [[nodiscard]] auto to_json() const -> GenericValue<CharT, Traits, Allocator> {
+  [[nodiscard]] auto to_json() const -> JSON {
     if (this->is_property()) {
-      return GenericValue<CharT, Traits, Allocator>{this->to_property()};
+      return JSON{this->to_property()};
     } else {
-      return GenericValue<CharT, Traits, Allocator>{this->to_index()};
+      return JSON{this->to_index()};
     }
   }
 

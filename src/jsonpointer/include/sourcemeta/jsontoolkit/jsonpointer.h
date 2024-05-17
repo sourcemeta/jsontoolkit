@@ -28,6 +28,8 @@
 /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
 /// ```
 
+// TODO: Remove character and character traits template arguments from pointers
+
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonpointer
