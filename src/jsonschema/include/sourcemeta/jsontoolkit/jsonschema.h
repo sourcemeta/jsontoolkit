@@ -209,6 +209,29 @@ auto vocabularies(const SchemaResolver &resolver,
                   const std::string &base_dialect, const std::string &dialect)
     -> std::future<std::map<std::string, bool>>;
 
+/// @ingroup jsonschema
+///
+/// An opinionated JSON Schema aware key comparison for use with
+/// sourcemeta::jsontoolkit::prettify or sourcemeta::jsontoolkit::stringify for
+/// formatting purposes. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <iostream>
+/// #include <sstream>
+///
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(
+///     "{ \"type\": \"string\", \"minLength\": 3 }");
+/// std::ostringstream stream;
+/// sourcemeta::jsontoolkit::prettify(document, stream,
+///   sourcemeta::jsontoolkit::schema_format_compare);
+/// std::cout << stream.str() << std::endl;
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+auto schema_format_compare(const JSON::String &left,
+                           const JSON::String &right) -> bool;
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif
