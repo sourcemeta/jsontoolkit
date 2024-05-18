@@ -7,20 +7,23 @@ if(NOT UriParser_FOUND)
 
   add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/uriparser")
   add_library(uriparser::uriparser ALIAS uriparser)
-  include(GNUInstallDirs)
-  install(TARGETS uriparser
-    EXPORT uriparser
-    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-      COMPONENT sourcemeta_jsontoolkit
-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-      COMPONENT sourcemeta_jsontoolkit
-      NAMELINK_COMPONENT sourcemeta_jsontoolkit_dev
-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+
+  if(JSONTOOLKIT_INSTALL)
+    include(GNUInstallDirs)
+    install(TARGETS uriparser
+      EXPORT uriparser
+      RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+        COMPONENT sourcemeta_jsontoolkit
+      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        COMPONENT sourcemeta_jsontoolkit
+        NAMELINK_COMPONENT sourcemeta_jsontoolkit_dev
+      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        COMPONENT sourcemeta_jsontoolkit_dev)
+    install(EXPORT uriparser
+      DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/uriparser"
+      NAMESPACE uriparser::
       COMPONENT sourcemeta_jsontoolkit_dev)
-  install(EXPORT uriparser
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/uriparser"
-    NAMESPACE uriparser::
-    COMPONENT sourcemeta_jsontoolkit_dev)
+  endif()
 
   set(UriParser_FOUND ON)
 endif()
