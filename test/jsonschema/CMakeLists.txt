@@ -89,7 +89,8 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_transformer_test.cc
   jsonschema_transform_rule_test.cc
   jsonschema_transform_bundle_test.cc
-  jsonschema_transform_rules.h)
+  jsonschema_transform_rules.h
+  jsonschema_format_test.cc)
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema_unit)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE GTest::gtest)
