@@ -5,6 +5,20 @@
 #include <stdexcept> // std::runtime_error
 #include <utility>   // std::move
 
+namespace {
+
+auto vocabularies_to_set(const std::map<std::string, bool> &vocabularies)
+    -> std::set<std::string> {
+  std::set<std::string> result;
+  for (const auto &pair : vocabularies) {
+    result.insert(pair.first);
+  }
+
+  return result;
+}
+
+} // namespace
+
 sourcemeta::jsontoolkit::SchemaTransformRule::SchemaTransformRule(
     std::string &&name, std::string &&message)
     : name_{std::move(name)}, message_{std::move(message)} {}
@@ -37,13 +51,9 @@ auto sourcemeta::jsontoolkit::SchemaTransformRule::apply(
         "Could not determine the schema dialect");
   }
 
-  std::set<std::string> vocabularies;
-  for (const auto &pair :
-       sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)
-           .get()) {
-    vocabularies.insert(pair.first);
-  }
-
+  const auto vocabularies{vocabularies_to_set(
+      sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)
+          .get())};
   if (!this->condition(schema, dialect.value(), vocabularies, pointer)) {
     return {};
   }
@@ -62,4 +72,22 @@ auto sourcemeta::jsontoolkit::SchemaTransformRule::apply(
   }
 
   return transformer.traces();
+}
+
+auto sourcemeta::jsontoolkit::SchemaTransformRule::check(
+    const sourcemeta::jsontoolkit::JSON &schema,
+    const sourcemeta::jsontoolkit::Pointer &pointer,
+    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+    const std::optional<std::string> &default_dialect) const -> bool {
+  const std::optional<std::string> dialect{
+      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+  if (!dialect.has_value()) {
+    throw sourcemeta::jsontoolkit::SchemaError(
+        "Could not determine the schema dialect");
+  }
+
+  const auto vocabularies{vocabularies_to_set(
+      sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)
+          .get())};
+  return this->condition(schema, dialect.value(), vocabularies, pointer);
 }

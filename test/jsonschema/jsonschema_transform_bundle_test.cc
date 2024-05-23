@@ -1,6 +1,10 @@
 #include <gtest/gtest.h>
+#include <string>
+#include <tuple>
+#include <vector>
 
 #include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
 #include "jsonschema_transform_rules.h"
@@ -445,4 +449,190 @@ TEST(JSONSchema_transform_bundle, dialect_specific_rules) {
   })JSON");
 
   EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_transform_bundle, check_top_level) {
+  sourcemeta::jsontoolkit::SchemaTransformBundle bundle;
+  bundle.add<ExampleRule1>();
+  bundle.add<ExampleRule2>();
+
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "foo": "bar",
+    "properties": {
+      "xxx": {
+        "bar": "baz"
+      }
+    }
+  })JSON");
+
+  std::vector<
+      std::tuple<sourcemeta::jsontoolkit::Pointer, std::string, std::string>>
+      entries;
+  const bool result = bundle.check(
+      document, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      [&entries](const auto &pointer, const auto &name, const auto &message) {
+        entries.emplace_back(pointer, name, message);
+      });
+
+  EXPECT_FALSE(result);
+  EXPECT_EQ(entries.size(), 2);
+
+  EXPECT_EQ(std::get<0>(entries.at(0)), sourcemeta::jsontoolkit::Pointer{});
+  EXPECT_EQ(std::get<1>(entries.at(0)), "example_rule_1");
+  EXPECT_EQ(std::get<2>(entries.at(0)), "Keyword foo is not permitted");
+
+  EXPECT_EQ(std::get<0>(entries.at(1)),
+            sourcemeta::jsontoolkit::Pointer({"properties", "xxx"}));
+  EXPECT_EQ(std::get<1>(entries.at(1)), "example_rule_2");
+  EXPECT_EQ(std::get<2>(entries.at(1)), "Keyword bar is not permitted");
+}
+
+TEST(JSONSchema_transform_bundle, check_subschema) {
+  sourcemeta::jsontoolkit::SchemaTransformBundle bundle;
+  bundle.add<ExampleRule1>();
+  bundle.add<ExampleRule2>();
+
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "foo": "bar",
+    "properties": {
+      "xxx": {
+        "bar": "baz"
+      }
+    }
+  })JSON");
+
+  std::vector<
+      std::tuple<sourcemeta::jsontoolkit::Pointer, std::string, std::string>>
+      entries;
+  const bool result = bundle.check(
+      document, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      [&entries](const auto &pointer, const auto &name, const auto &message) {
+        entries.emplace_back(pointer, name, message);
+      },
+      {"properties", "xxx"});
+
+  EXPECT_FALSE(result);
+  EXPECT_EQ(entries.size(), 1);
+
+  EXPECT_EQ(std::get<0>(entries.at(0)),
+            sourcemeta::jsontoolkit::Pointer({"properties", "xxx"}));
+  EXPECT_EQ(std::get<1>(entries.at(0)), "example_rule_2");
+  EXPECT_EQ(std::get<2>(entries.at(0)), "Keyword bar is not permitted");
+}
+
+TEST(JSONSchema_transform_bundle, check_no_match) {
+  sourcemeta::jsontoolkit::SchemaTransformBundle bundle;
+  bundle.add<ExampleRule1>();
+  bundle.add<ExampleRule2>();
+
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "xxx": {
+        "type": "string"
+      }
+    }
+  })JSON");
+
+  std::vector<
+      std::tuple<sourcemeta::jsontoolkit::Pointer, std::string, std::string>>
+      entries;
+  const bool result = bundle.check(
+      document, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      [&entries](const auto &pointer, const auto &name, const auto &message) {
+        entries.emplace_back(pointer, name, message);
+      });
+
+  EXPECT_TRUE(result);
+  EXPECT_TRUE(entries.empty());
+}
+
+TEST(JSONSchema_transform_bundle, check_empty) {
+  sourcemeta::jsontoolkit::SchemaTransformBundle bundle;
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "foo": "bar"
+  })JSON");
+
+  std::vector<
+      std::tuple<sourcemeta::jsontoolkit::Pointer, std::string, std::string>>
+      entries;
+  const bool result = bundle.check(
+      document, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      [&entries](const auto &pointer, const auto &name, const auto &message) {
+        entries.emplace_back(pointer, name, message);
+      });
+
+  EXPECT_TRUE(result);
+  EXPECT_TRUE(entries.empty());
+}
+
+TEST(JSONSchema_transform_bundle, check_throw_if_no_dialect_invalid_default) {
+  sourcemeta::jsontoolkit::SchemaTransformBundle bundle;
+  bundle.add<ExampleRule1>();
+  bundle.add<ExampleRule2>();
+
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": "bar",
+    "bar": "baz",
+    "qux": "xxx"
+  })JSON");
+
+  EXPECT_THROW(bundle.check(document,
+                            sourcemeta::jsontoolkit::default_schema_walker,
+                            sourcemeta::jsontoolkit::official_resolver, nullptr,
+                            sourcemeta::jsontoolkit::empty_pointer,
+                            "https://example.com/invalid"),
+               sourcemeta::jsontoolkit::SchemaResolutionError);
+}
+
+TEST(JSONSchema_transform_bundle, check_with_default_dialect) {
+  sourcemeta::jsontoolkit::SchemaTransformBundle bundle;
+  bundle.add<ExampleRule1>();
+  bundle.add<ExampleRule2>();
+
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": "bar",
+    "properties": {
+      "xxx": {
+        "bar": "baz"
+      }
+    }
+  })JSON");
+
+  std::vector<
+      std::tuple<sourcemeta::jsontoolkit::Pointer, std::string, std::string>>
+      entries;
+  const bool result = bundle.check(
+      document, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      [&entries](const auto &pointer, const auto &name, const auto &message) {
+        entries.emplace_back(pointer, name, message);
+      },
+      sourcemeta::jsontoolkit::empty_pointer,
+      "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_FALSE(result);
+  EXPECT_EQ(entries.size(), 2);
+
+  EXPECT_EQ(std::get<0>(entries.at(0)), sourcemeta::jsontoolkit::Pointer{});
+  EXPECT_EQ(std::get<1>(entries.at(0)), "example_rule_1");
+  EXPECT_EQ(std::get<2>(entries.at(0)), "Keyword foo is not permitted");
+
+  EXPECT_EQ(std::get<0>(entries.at(1)),
+            sourcemeta::jsontoolkit::Pointer({"properties", "xxx"}));
+  EXPECT_EQ(std::get<1>(entries.at(1)), "example_rule_2");
+  EXPECT_EQ(std::get<2>(entries.at(1)), "Keyword bar is not permitted");
 }

@@ -8,7 +8,8 @@
 class ExampleRule1 final : public sourcemeta::jsontoolkit::SchemaTransformRule {
 public:
   ExampleRule1()
-      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_1"){};
+      : sourcemeta::jsontoolkit::SchemaTransformRule(
+            "example_rule_1", "Keyword foo is not permitted"){};
 
   [[nodiscard]] auto
   condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
@@ -26,7 +27,8 @@ public:
 class ExampleRule2 final : public sourcemeta::jsontoolkit::SchemaTransformRule {
 public:
   ExampleRule2()
-      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_2"){};
+      : sourcemeta::jsontoolkit::SchemaTransformRule(
+            "example_rule_2", "Keyword bar is not permitted"){};
 
   [[nodiscard]] auto
   condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
