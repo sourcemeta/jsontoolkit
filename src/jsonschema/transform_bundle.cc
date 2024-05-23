@@ -51,3 +51,33 @@ auto sourcemeta::jsontoolkit::SchemaTransformBundle::apply(
     apply(schema, walker, resolver, pointer.concat(entry.pointer), dialect);
   }
 }
+
+auto sourcemeta::jsontoolkit::SchemaTransformBundle::check(
+    const sourcemeta::jsontoolkit::JSON &schema,
+    const sourcemeta::jsontoolkit::SchemaWalker &walker,
+    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+    const sourcemeta::jsontoolkit::SchemaTransformBundle::CheckCallback
+        &callback,
+    const sourcemeta::jsontoolkit::Pointer &pointer,
+    const std::optional<std::string> &default_dialect) const -> bool {
+  const auto &current{sourcemeta::jsontoolkit::get(schema, pointer)};
+  const std::optional<std::string> root_dialect{
+      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+  const std::optional<std::string> dialect{
+      sourcemeta::jsontoolkit::dialect(current, root_dialect)};
+
+  bool result{true};
+  for (const auto &entry : sourcemeta::jsontoolkit::SchemaIterator{
+           current, walker, resolver, dialect}) {
+    const auto current_pointer{pointer.concat(entry.pointer)};
+    for (const auto &[name, rule] : this->rules) {
+      if (rule->check(sourcemeta::jsontoolkit::get(current, entry.pointer),
+                      current_pointer, resolver, dialect)) {
+        result = false;
+        callback(current_pointer, name, rule->message());
+      }
+    }
+  }
+
+  return result;
+}

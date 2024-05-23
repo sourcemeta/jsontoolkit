@@ -78,6 +78,12 @@ public:
              const std::optional<std::string> &default_dialect =
                  std::nullopt) const -> std::vector<SchemaTransformerOperation>;
 
+  /// Check if the rule applies to a schema
+  auto check(const JSON &schema, const Pointer &pointer,
+             const SchemaResolver &resolver,
+             const std::optional<std::string> &default_dialect =
+                 std::nullopt) const -> bool;
+
 private:
   /// The rule condition
   [[nodiscard]] virtual auto

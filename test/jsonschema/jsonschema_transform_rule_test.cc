@@ -26,7 +26,7 @@ TEST(JSONSchema_transform_rule, instances_of_different_rules_are_different) {
 }
 
 TEST(JSONSchema_transform_rule, default_message) {
-  const ExampleRule1 rule{};
+  const ExampleRule4 rule{};
   EXPECT_EQ(rule.message(), "Condition matched");
 }
 
