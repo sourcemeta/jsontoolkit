@@ -2,6 +2,7 @@
 
 #include "default_compiler_2020_12.h"
 #include "default_compiler_draft4.h"
+#include "default_compiler_draft6.h"
 
 #include <cassert> // assert
 
@@ -24,10 +25,23 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
     return {};                                                                 \
   }
 
+  // ********************************************
+  // 2020-12
+  // ********************************************
+
   COMPILE("https://json-schema.org/draft/2020-12/vocab/validation", "type",
           compiler_2020_12_validation_type);
 
-  // TODO: Implement "format" for Draft 4
+  // ********************************************
+  // DRAFT 6
+  // ********************************************
+
+  COMPILE("http://json-schema.org/draft-06/schema#", "const",
+          compiler_draft6_validation_const);
+
+  // ********************************************
+  // DRAFT 4
+  // ********************************************
 
   COMPILE("http://json-schema.org/draft-04/schema#", "$ref",
           compiler_draft4_core_ref);
