@@ -115,6 +115,25 @@ public:
   }
 };
 
+class ExampleRule7 final : public sourcemeta::jsontoolkit::SchemaTransformRule {
+public:
+  ExampleRule7()
+      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_1",
+                                                     "My custom message"){};
+
+  [[nodiscard]] auto
+  condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
+            const std::set<std::string> &,
+            const sourcemeta::jsontoolkit::Pointer &) const -> bool override {
+    return schema.defines("foo");
+  }
+
+  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &transformer) const
+      -> void override {
+    transformer.erase("foo");
+  }
+};
+
 class ExampleRuleConflictsWith1 final
     : public sourcemeta::jsontoolkit::SchemaTransformRule {
 public:

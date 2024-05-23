@@ -6,8 +6,8 @@
 #include <utility>   // std::move
 
 sourcemeta::jsontoolkit::SchemaTransformRule::SchemaTransformRule(
-    std::string &&name)
-    : name_{std::move(name)} {}
+    std::string &&name, std::string &&message)
+    : name_{std::move(name)}, message_{std::move(message)} {}
 
 auto sourcemeta::jsontoolkit::SchemaTransformRule::operator==(
     const sourcemeta::jsontoolkit::SchemaTransformRule &other) const -> bool {
@@ -17,6 +17,11 @@ auto sourcemeta::jsontoolkit::SchemaTransformRule::operator==(
 auto sourcemeta::jsontoolkit::SchemaTransformRule::name() const
     -> const std::string & {
   return this->name_;
+}
+
+auto sourcemeta::jsontoolkit::SchemaTransformRule::message() const
+    -> const std::string & {
+  return this->message_;
 }
 
 auto sourcemeta::jsontoolkit::SchemaTransformRule::apply(
