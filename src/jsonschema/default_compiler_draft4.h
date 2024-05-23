@@ -489,6 +489,13 @@ auto compiler_draft4_applicator_dependencies(
 auto compiler_draft4_validation_enum(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_array());
+
+  if (context.value.size() == 1) {
+    return {
+        make<SchemaCompilerAssertionEqual>(context, context.value.front(), {},
+                                           SchemaCompilerTargetType::Instance)};
+  }
+
   SchemaCompilerTemplate children;
   const auto subcontext{applicate(context)};
   for (const auto &choice : context.value.as_array()) {

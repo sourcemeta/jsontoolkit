@@ -1803,6 +1803,23 @@ TEST(JSONSchema_compile_draft4, enum_2) {
   EVALUATE_TRACE_FAILURE(3, LogicalOr, "/enum", "#/enum", "");
 }
 
+TEST(JSONSchema_compile_draft4, enum_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [ 1 ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{1};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_SUCCESS(0, AssertionEqual, "/enum", "#/enum", "");
+}
+
 TEST(JSONSchema_compile_draft4, uniqueItems_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
