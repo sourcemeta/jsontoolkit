@@ -14,7 +14,7 @@ Unikraft.
 Installation
 ------------
 
-### With homebrew for macOS
+### With Homebrew
 
 ```sh
 $ brew install jsontoolkit
