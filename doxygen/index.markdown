@@ -14,12 +14,6 @@ Unikraft.
 Installation
 ------------
 
-### With Homebrew
-
-```sh
-$ brew install jsontoolkit
-```
-
 ### As a git submodule
 
 ```sh
@@ -73,6 +67,14 @@ target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::j
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonschema)
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonpointer)
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonl)
+```
+
+At the moment of this writing, JSON Toolkit is available with `find_package`
+integration on the following package managers:
+
+```sh
+# Homebrew
+$ brew install jsontoolkit
 ```
 
 ### Using Unikraft
