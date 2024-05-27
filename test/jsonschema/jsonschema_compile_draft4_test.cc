@@ -5,6 +5,22 @@
 
 #include "jsonschema_test_utils.h"
 
+TEST(JSONSchema_compile_draft4, metaschema) {
+  const auto metaschema{sourcemeta::jsontoolkit::official_resolver(
+                            "http://json-schema.org/draft-04/schema#")
+                            .get()};
+  EXPECT_TRUE(metaschema.has_value());
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      metaschema.value(), sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{}")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+}
+
 TEST(JSONSchema_compile_draft4, type_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
