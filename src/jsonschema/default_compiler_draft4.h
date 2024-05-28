@@ -523,6 +523,7 @@ auto compiler_draft4_validation_enum(const SchemaCompilerContext &context)
                                            SchemaCompilerTargetType::Instance)};
   }
 
+  // TODO: Create a higher level "contains" step
   SchemaCompilerTemplate children;
   const auto subcontext{applicate(context)};
   for (const auto &choice : context.value.as_array()) {

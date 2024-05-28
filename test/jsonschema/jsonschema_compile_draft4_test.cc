@@ -36,6 +36,8 @@ TEST(JSONSchema_compile_draft4, type_1) {
   const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
 }
 
 TEST(JSONSchema_compile_draft4, type_2) {
@@ -53,6 +55,8 @@ TEST(JSONSchema_compile_draft4, type_2) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type", "");
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
 }
 
 TEST(JSONSchema_compile_draft4, type_3) {
@@ -70,6 +74,8 @@ TEST(JSONSchema_compile_draft4, type_3) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionTypeAny, "/type", "#/type", "");
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of one of the given types");
 }
 
 TEST(JSONSchema_compile_draft4, type_4) {
@@ -87,6 +93,8 @@ TEST(JSONSchema_compile_draft4, type_4) {
   const sourcemeta::jsontoolkit::JSON instance{3.14};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionTypeAny, "/type", "#/type", "");
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of one of the given types");
 }
 
 TEST(JSONSchema_compile_draft4, type_5) {
@@ -104,6 +112,8 @@ TEST(JSONSchema_compile_draft4, type_5) {
   const sourcemeta::jsontoolkit::JSON instance{"3.14"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionTypeAny, "/type", "#/type", "");
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of one of the given types");
 }
 
 TEST(JSONSchema_compile_draft4, type_6) {
@@ -121,6 +131,8 @@ TEST(JSONSchema_compile_draft4, type_6) {
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
 }
 
 TEST(JSONSchema_compile_draft4, type_7) {
@@ -138,6 +150,8 @@ TEST(JSONSchema_compile_draft4, type_7) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type", "");
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
 }
 
 TEST(JSONSchema_compile_draft4, type_8) {
@@ -155,6 +169,8 @@ TEST(JSONSchema_compile_draft4, type_8) {
   const sourcemeta::jsontoolkit::JSON instance{3};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionTypeAny, "/type", "#/type", "");
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of one of the given types");
 }
 
 TEST(JSONSchema_compile_draft4, type_9) {
@@ -172,6 +188,8 @@ TEST(JSONSchema_compile_draft4, type_9) {
   const sourcemeta::jsontoolkit::JSON instance{true};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionTypeAny, "/type", "#/type", "");
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of one of the given types");
 }
 
 TEST(JSONSchema_compile_draft4, required_1) {
@@ -206,6 +224,8 @@ TEST(JSONSchema_compile_draft4, required_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionDefines, "/required", "#/required", "");
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target object is expected to define the given property");
 }
 
 TEST(JSONSchema_compile_draft4, required_3) {
@@ -226,6 +246,15 @@ TEST(JSONSchema_compile_draft4, required_3) {
   EVALUATE_TRACE_SUCCESS(0, AssertionDefines, "/required", "#/required", "");
   EVALUATE_TRACE_FAILURE(1, AssertionDefines, "/required", "#/required", "");
   EVALUATE_TRACE_FAILURE(2, LogicalAnd, "/required", "#/required", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target object is expected to define the given property");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target object is expected to define the given property");
+
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, required_4) {
@@ -248,6 +277,17 @@ TEST(JSONSchema_compile_draft4, required_4) {
   EVALUATE_TRACE_SUCCESS(1, AssertionDefines, "/required", "#/required", "");
   EVALUATE_TRACE_SUCCESS(2, AssertionDefines, "/required", "#/required", "");
   EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/required", "#/required", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target object is expected to define the given property");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target object is expected to define the given property");
+
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, allOf_1) {
@@ -277,6 +317,17 @@ TEST(JSONSchema_compile_draft4, allOf_1) {
                          "#/allOf/1/required", "");
   EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/allOf/1/required",
                          "#/allOf/1/required", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target object is expected to define the given property");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target object is expected to define the given property");
+
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, allOf_2) {
@@ -306,6 +357,17 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
                          "#/allOf/1/required", "");
   EVALUATE_TRACE_FAILURE(3, LogicalAnd, "/allOf/1/required",
                          "#/allOf/1/required", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target object is expected to define the given property");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target object is expected to define the given property");
+
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, ref_1) {
@@ -329,6 +391,14 @@ TEST(JSONSchema_compile_draft4, ref_1) {
                          "#/definitions/string/type", "");
   EVALUATE_TRACE_FAILURE(1, ControlLabel, "/allOf/0/$ref", "#/allOf/0/$ref",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+
+  // TODO: Remove this step from the traces
+  EVALUATE_TRACE_DESCRIBE(
+      1,
+      "Mark the current position of the evaluation process for future jumps");
 }
 
 TEST(JSONSchema_compile_draft4, ref_2) {
@@ -353,6 +423,14 @@ TEST(JSONSchema_compile_draft4, ref_2) {
                          "#/definitions/string/type", "");
   EVALUATE_TRACE_SUCCESS(1, ControlLabel, "/allOf/0/$ref", "#/allOf/0/$ref",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+
+  // TODO: Remove this step from the traces
+  EVALUATE_TRACE_DESCRIBE(
+      1,
+      "Mark the current position of the evaluation process for future jumps");
 }
 
 TEST(JSONSchema_compile_draft4, ref_3) {
@@ -391,6 +469,25 @@ TEST(JSONSchema_compile_draft4, ref_3) {
                          "https://example.com#/properties", "");
   EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties",
                          "https://example.com#/properties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step from the traces
+  EVALUATE_TRACE_DESCRIBE(
+      3,
+      "Mark the current position of the evaluation process for future jumps");
+  EVALUATE_TRACE_DESCRIBE(4, "Emit an internal annotation");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      6, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, ref_4) {
@@ -444,6 +541,36 @@ TEST(JSONSchema_compile_draft4, ref_4) {
                          "https://example.com#/properties", "");
   EVALUATE_TRACE_SUCCESS(11, LogicalAnd, "/properties",
                          "https://example.com#/properties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step from the traces
+  EVALUATE_TRACE_DESCRIBE(4, "Jump to another point of the evaluation process");
+  EVALUATE_TRACE_DESCRIBE(5, "Emit an internal annotation");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      6, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      7, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step from the traces
+  EVALUATE_TRACE_DESCRIBE(
+      8,
+      "Mark the current position of the evaluation process for future jumps");
+  EVALUATE_TRACE_DESCRIBE(9, "Emit an internal annotation");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      10, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      11, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, ref_5) {
@@ -489,6 +616,31 @@ TEST(JSONSchema_compile_draft4, ref_5) {
                          "https://example.com#/properties", "");
   EVALUATE_TRACE_FAILURE(8, LogicalAnd, "/properties",
                          "https://example.com#/properties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  // TODO: Remove this step from the traces
+  EVALUATE_TRACE_DESCRIBE(3, "Jump to another point of the evaluation process");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step from the traces
+  EVALUATE_TRACE_DESCRIBE(
+      6,
+      "Mark the current position of the evaluation process for future jumps");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      7, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      8, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, ref_6) {
@@ -523,6 +675,25 @@ TEST(JSONSchema_compile_draft4, ref_6) {
                                     "foo");
   EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties", "#/properties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step from the traces
+  EVALUATE_TRACE_DESCRIBE(
+      3,
+      "Mark the current position of the evaluation process for future jumps");
+  EVALUATE_TRACE_DESCRIBE(4, "Emit an internal annotation");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      6, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, ref_7) {
@@ -549,6 +720,10 @@ TEST(JSONSchema_compile_draft4, ref_7) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
+
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, properties_1) {
@@ -579,6 +754,21 @@ TEST(JSONSchema_compile_draft4, properties_1) {
                          "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_FAILURE(4, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_FAILURE(5, LogicalAnd, "/properties", "#/properties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target document is expected to be of the given type");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, properties_2) {
@@ -611,6 +801,22 @@ TEST(JSONSchema_compile_draft4, properties_2) {
                                     "foo");
   EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties", "#/properties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(4, "Emit an internal annotation");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      6, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, properties_3) {
@@ -633,6 +839,10 @@ TEST(JSONSchema_compile_draft4, properties_3) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
+
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, properties_4) {
@@ -673,6 +883,23 @@ TEST(JSONSchema_compile_draft4, properties_4) {
                                     "foo");
   EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties", "#/properties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(4, "Emit an internal annotation");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
+  // TODO: Remove this step
+  EVALUATE_TRACE_DESCRIBE(
+      6, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, pattern_1) {
@@ -690,6 +917,9 @@ TEST(JSONSchema_compile_draft4, pattern_1) {
   const sourcemeta::jsontoolkit::JSON instance{"xxx"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionRegex, "/pattern", "#/pattern", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target string is expected to match the given regular expression");
 }
 
 TEST(JSONSchema_compile_draft4, pattern_2) {
@@ -707,6 +937,9 @@ TEST(JSONSchema_compile_draft4, pattern_2) {
   const sourcemeta::jsontoolkit::JSON instance{"aaa"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionRegex, "/pattern", "#/pattern", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target string is expected to match the given regular expression");
 }
 
 TEST(JSONSchema_compile_draft4, pattern_3) {
@@ -765,6 +998,12 @@ TEST(JSONSchema_compile_draft4, patternProperties_2) {
                          "#/patternProperties", "");
   EVALUATE_TRACE_SUCCESS(1, LogicalAnd, "/patternProperties",
                          "#/patternProperties", "");
+
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(0, "Loop over the properties of the target object");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_3) {
@@ -793,6 +1032,16 @@ TEST(JSONSchema_compile_draft4, patternProperties_3) {
                          "#/patternProperties", "");
   EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/patternProperties",
                          "#/patternProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(0, "Emit an internal annotation");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(2, "Loop over the properties of the target object");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_4) {
@@ -824,6 +1073,18 @@ TEST(JSONSchema_compile_draft4, patternProperties_4) {
                          "#/patternProperties", "");
   EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/patternProperties",
                          "#/patternProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(3, "Loop over the properties of the target object");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_5) {
@@ -853,6 +1114,17 @@ TEST(JSONSchema_compile_draft4, patternProperties_5) {
                          "#/patternProperties", "");
   EVALUATE_TRACE_FAILURE(3, LogicalAnd, "/patternProperties",
                          "#/patternProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(2, "Loop over the properties of the target object");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_6) {
@@ -889,6 +1161,22 @@ TEST(JSONSchema_compile_draft4, patternProperties_6) {
                          "#/patternProperties", "/foo");
   EVALUATE_TRACE_SUCCESS(6, LoopProperties, "/patternProperties",
                          "#/patternProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(3, "Loop over the properties of the target object");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target document is expected to be of the given type");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
+  // TODO: Remove this
+  EVALUATE_TRACE_DESCRIBE(6, "Loop over the properties of the target object");
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_7) {
@@ -936,6 +1224,21 @@ TEST(JSONSchema_compile_draft4, patternProperties_7) {
                          "#/patternProperties", "");
   EVALUATE_TRACE_SUCCESS(8, LogicalAnd, "/patternProperties",
                          "#/patternProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(3, "Loop over the properties of the target object");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(5, "Emit an internal annotation");
+  EVALUATE_TRACE_DESCRIBE(
+      6, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(7, "Loop over the properties of the target object");
+  EVALUATE_TRACE_DESCRIBE(
+      8, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_1) {
@@ -966,6 +1269,16 @@ TEST(JSONSchema_compile_draft4, additionalProperties_1) {
                          "#/additionalProperties", "/foo");
   EVALUATE_TRACE_SUCCESS(4, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(4, "Loop over the properties of the target object");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_2) {
@@ -1003,6 +1316,19 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
                          "#/additionalProperties", "/bar");
   EVALUATE_TRACE_SUCCESS(6, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(6, "Loop over the properties of the target object");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_3) {
@@ -1039,6 +1365,18 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
                          "#/additionalProperties", "/foo");
   EVALUATE_TRACE_SUCCESS(5, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(5, "Loop over the properties of the target object");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_4) {
@@ -1093,6 +1431,27 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
                          "#/additionalProperties", "/baz");
   EVALUATE_TRACE_SUCCESS(11, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(3, "Loop over the properties of the target object");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(6, "Emit an internal annotation");
+  EVALUATE_TRACE_DESCRIBE(
+      7, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      8, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      9, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      10, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(11, "Loop over the properties of the target object");
 }
 
 TEST(JSONSchema_compile_draft4, not_1) {
@@ -1113,6 +1472,11 @@ TEST(JSONSchema_compile_draft4, not_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
   EVALUATE_TRACE_FAILURE(0, AssertionType, "/not/type", "#/not/type", "");
   EVALUATE_TRACE_SUCCESS(1, LogicalNot, "/not", "#/not", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The given schema is expected to not validate successfully");
 }
 
 TEST(JSONSchema_compile_draft4, not_2) {
@@ -1133,6 +1497,11 @@ TEST(JSONSchema_compile_draft4, not_2) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/not/type", "#/not/type", "");
   EVALUATE_TRACE_FAILURE(1, LogicalNot, "/not", "#/not", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The given schema is expected to not validate successfully");
 }
 
 TEST(JSONSchema_compile_draft4, not_3) {
@@ -1175,6 +1544,21 @@ TEST(JSONSchema_compile_draft4, not_3) {
   EVALUATE_TRACE_FAILURE(6, LoopProperties, "/not/additionalProperties",
                          "#/not/additionalProperties", "");
   EVALUATE_TRACE_SUCCESS(7, LogicalNot, "/not", "#/not", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(6, "Loop over the properties of the target object");
+  EVALUATE_TRACE_DESCRIBE(
+      7, "The given schema is expected to not validate successfully");
 }
 
 TEST(JSONSchema_compile_draft4, items_1) {
@@ -1216,6 +1600,14 @@ TEST(JSONSchema_compile_draft4, items_2) {
   EVALUATE_TRACE_SUCCESS(1, AssertionType, "/items/type", "#/items/type", "/1");
   EVALUATE_TRACE_SUCCESS(2, AssertionType, "/items/type", "#/items/type", "/2");
   EVALUATE_TRACE_SUCCESS(3, LoopItems, "/items", "#/items", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(3, "Loop over the items of the target array");
 }
 
 TEST(JSONSchema_compile_draft4, items_3) {
@@ -1238,6 +1630,12 @@ TEST(JSONSchema_compile_draft4, items_3) {
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/items/type", "#/items/type", "/0");
   EVALUATE_TRACE_FAILURE(1, AssertionType, "/items/type", "#/items/type", "/1");
   EVALUATE_TRACE_FAILURE(2, LoopItems, "/items", "#/items", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(2, "Loop over the items of the target array");
 }
 
 TEST(JSONSchema_compile_draft4, items_4) {
@@ -1272,6 +1670,9 @@ TEST(JSONSchema_compile_draft4, items_5) {
       sourcemeta::jsontoolkit::parse("[]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/items", "#/items", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, items_6) {
@@ -1293,6 +1694,15 @@ TEST(JSONSchema_compile_draft4, items_6) {
                          "/0");
   EVALUATE_TRACE_SUCCESS(1, LogicalAnd, "/items", "#/items", "");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+
+  // TODO: Remove these
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, items_7) {
@@ -1317,6 +1727,17 @@ TEST(JSONSchema_compile_draft4, items_7) {
                          "/1");
   EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/items", "#/items", "");
   EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/items", "#/items", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, items_8) {
@@ -1341,6 +1762,17 @@ TEST(JSONSchema_compile_draft4, items_8) {
                          "/1");
   EVALUATE_TRACE_FAILURE(3, LogicalAnd, "/items", "#/items", "");
   EVALUATE_TRACE_FAILURE(4, LogicalAnd, "/items", "#/items", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, additionalItems_1) {
@@ -1382,6 +1814,14 @@ TEST(JSONSchema_compile_draft4, additionalItems_2) {
   EVALUATE_TRACE_SUCCESS(1, AssertionType, "/items/type", "#/items/type", "/1");
   EVALUATE_TRACE_SUCCESS(2, AssertionType, "/items/type", "#/items/type", "/2");
   EVALUATE_TRACE_SUCCESS(3, LoopItems, "/items", "#/items", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(3, "Loop over the items of the target array");
 }
 
 TEST(JSONSchema_compile_draft4, additionalItems_3) {
@@ -1413,6 +1853,18 @@ TEST(JSONSchema_compile_draft4, additionalItems_3) {
   EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/items", "#/items", "");
   EVALUATE_TRACE_SUCCESS(5, LoopItems, "/additionalItems", "#/additionalItems",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(5, "Loop over the items of the target array");
 }
 
 TEST(JSONSchema_compile_draft4, additionalItems_4) {
@@ -1448,6 +1900,22 @@ TEST(JSONSchema_compile_draft4, additionalItems_4) {
                          "#/additionalItems/type", "/3");
   EVALUATE_TRACE_SUCCESS(7, LoopItems, "/additionalItems", "#/additionalItems",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      6, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(7, "Loop over the items of the target array");
 }
 
 TEST(JSONSchema_compile_draft4, additionalItems_5) {
@@ -1481,6 +1949,20 @@ TEST(JSONSchema_compile_draft4, additionalItems_5) {
                          "#/additionalItems/type", "/2");
   EVALUATE_TRACE_FAILURE(6, LoopItems, "/additionalItems", "#/additionalItems",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(6, "Loop over the items of the target array");
 }
 
 TEST(JSONSchema_compile_draft4, anyOf_1) {
@@ -1509,6 +1991,18 @@ TEST(JSONSchema_compile_draft4, anyOf_1) {
                          "");
   EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/anyOf", "#/anyOf", "");
   EVALUATE_TRACE_SUCCESS(4, LogicalOr, "/anyOf", "#/anyOf", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      4,
+      "The target is expected to match at least one of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, anyOf_2) {
@@ -1540,6 +2034,22 @@ TEST(JSONSchema_compile_draft4, anyOf_2) {
                          "");
   EVALUATE_TRACE_FAILURE(5, LogicalAnd, "/anyOf", "#/anyOf", "");
   EVALUATE_TRACE_FAILURE(6, LogicalOr, "/anyOf", "#/anyOf", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target document is expected to be of one of the given types");
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      6,
+      "The target is expected to match at least one of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, oneOf_1) {
@@ -1565,6 +2075,13 @@ TEST(JSONSchema_compile_draft4, oneOf_1) {
                          "");
   EVALUATE_TRACE_SUCCESS(1, LogicalAnd, "/oneOf", "#/oneOf", "");
   EVALUATE_TRACE_SUCCESS(2, LogicalXor, "/oneOf", "#/oneOf", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(2, "The target is expected to match one and only one "
+                             "of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, oneOf_2) {
@@ -1598,6 +2115,21 @@ TEST(JSONSchema_compile_draft4, oneOf_2) {
                          "");
   EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/oneOf", "#/oneOf", "");
   EVALUATE_TRACE_SUCCESS(6, LogicalXor, "/oneOf", "#/oneOf", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target document is expected to be of one of the given types");
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(6, "The target is expected to match one and only one "
+                             "of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, oneOf_3) {
@@ -1633,6 +2165,25 @@ TEST(JSONSchema_compile_draft4, oneOf_3) {
                          "");
   EVALUATE_TRACE_FAILURE(7, LogicalAnd, "/oneOf", "#/oneOf", "");
   EVALUATE_TRACE_FAILURE(8, LogicalXor, "/oneOf", "#/oneOf", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      4, "The target document is expected to be of one of the given types");
+  EVALUATE_TRACE_DESCRIBE(
+      5, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      6, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(
+      7, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(8, "The target is expected to match one and only one "
+                             "of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, dependencies_1) {
@@ -1679,6 +2230,15 @@ TEST(JSONSchema_compile_draft4, dependencies_2) {
                          "");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/dependencies", "#/dependencies", "");
   EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/dependencies", "#/dependencies", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target object is expected to define the given property");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target object is expected to define the given property");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, dependencies_3) {
@@ -1704,6 +2264,13 @@ TEST(JSONSchema_compile_draft4, dependencies_3) {
                          "");
   EVALUATE_TRACE_FAILURE(1, LogicalAnd, "/dependencies", "#/dependencies", "");
   EVALUATE_TRACE_FAILURE(2, LogicalAnd, "/dependencies", "#/dependencies", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target object is expected to define the given property");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, dependencies_4) {
@@ -1729,6 +2296,13 @@ TEST(JSONSchema_compile_draft4, dependencies_4) {
                          "#/dependencies/qux/required", "");
   EVALUATE_TRACE_SUCCESS(1, LogicalAnd, "/dependencies", "#/dependencies", "");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/dependencies", "#/dependencies", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target object is expected to define the given property");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, dependencies_5) {
@@ -1754,6 +2328,13 @@ TEST(JSONSchema_compile_draft4, dependencies_5) {
                          "#/dependencies/qux/required", "");
   EVALUATE_TRACE_FAILURE(1, LogicalAnd, "/dependencies", "#/dependencies", "");
   EVALUATE_TRACE_FAILURE(2, LogicalAnd, "/dependencies", "#/dependencies", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target object is expected to define the given property");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, enum_1) {
@@ -1774,6 +2355,14 @@ TEST(JSONSchema_compile_draft4, enum_1) {
   EVALUATE_TRACE_FAILURE(0, AssertionEqual, "/enum", "#/enum", "");
   EVALUATE_TRACE_SUCCESS(1, AssertionEqual, "/enum", "#/enum", "");
   EVALUATE_TRACE_SUCCESS(2, LogicalOr, "/enum", "#/enum", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be equal to the given number");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target size is expected to be equal to the given number");
+  EVALUATE_TRACE_DESCRIBE(
+      2,
+      "The target is expected to match at least one of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, enum_2) {
@@ -1795,6 +2384,16 @@ TEST(JSONSchema_compile_draft4, enum_2) {
   EVALUATE_TRACE_FAILURE(1, AssertionEqual, "/enum", "#/enum", "");
   EVALUATE_TRACE_FAILURE(2, AssertionEqual, "/enum", "#/enum", "");
   EVALUATE_TRACE_FAILURE(3, LogicalOr, "/enum", "#/enum", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be equal to the given number");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target size is expected to be equal to the given number");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target size is expected to be equal to the given number");
+  EVALUATE_TRACE_DESCRIBE(
+      3,
+      "The target is expected to match at least one of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, enum_3) {
@@ -1812,6 +2411,9 @@ TEST(JSONSchema_compile_draft4, enum_3) {
   const sourcemeta::jsontoolkit::JSON instance{1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionEqual, "/enum", "#/enum", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be equal to the given number");
 }
 
 TEST(JSONSchema_compile_draft4, uniqueItems_1) {
@@ -1831,6 +2433,9 @@ TEST(JSONSchema_compile_draft4, uniqueItems_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionUnique, "/uniqueItems", "#/uniqueItems",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target array is expected to not contain duplicates");
 }
 
 TEST(JSONSchema_compile_draft4, uniqueItems_2) {
@@ -1867,6 +2472,9 @@ TEST(JSONSchema_compile_draft4, uniqueItems_3) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionUnique, "/uniqueItems", "#/uniqueItems",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target array is expected to not contain duplicates");
 }
 
 TEST(JSONSchema_compile_draft4, uniqueItems_4) {
@@ -1886,6 +2494,9 @@ TEST(JSONSchema_compile_draft4, uniqueItems_4) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionUnique, "/uniqueItems", "#/uniqueItems",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target array is expected to not contain duplicates");
 }
 
 TEST(JSONSchema_compile_draft4, uniqueItems_5) {
@@ -1937,6 +2548,9 @@ TEST(JSONSchema_compile_draft4, minLength_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionSizeGreater, "/minLength", "#/minLength",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be greater than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, minLength_3) {
@@ -1955,6 +2569,9 @@ TEST(JSONSchema_compile_draft4, minLength_3) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionSizeGreater, "/minLength", "#/minLength",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be greater than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, maxLength_1) {
@@ -1988,6 +2605,9 @@ TEST(JSONSchema_compile_draft4, maxLength_2) {
   const sourcemeta::jsontoolkit::JSON instance{"xx"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionSizeLess, "/maxLength", "#/maxLength", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be less than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, maxLength_3) {
@@ -2005,6 +2625,9 @@ TEST(JSONSchema_compile_draft4, maxLength_3) {
   const sourcemeta::jsontoolkit::JSON instance{"xxx"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionSizeLess, "/maxLength", "#/maxLength", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be less than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, minItems_1) {
@@ -2040,6 +2663,9 @@ TEST(JSONSchema_compile_draft4, minItems_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionSizeGreater, "/minItems", "#/minItems",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be greater than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, minItems_3) {
@@ -2059,6 +2685,9 @@ TEST(JSONSchema_compile_draft4, minItems_3) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionSizeGreater, "/minItems", "#/minItems",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be greater than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, maxItems_1) {
@@ -2093,6 +2722,9 @@ TEST(JSONSchema_compile_draft4, maxItems_2) {
       sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionSizeLess, "/maxItems", "#/maxItems", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be less than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, maxItems_3) {
@@ -2111,6 +2743,9 @@ TEST(JSONSchema_compile_draft4, maxItems_3) {
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionSizeLess, "/maxItems", "#/maxItems", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be less than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, minProperties_1) {
@@ -2146,6 +2781,9 @@ TEST(JSONSchema_compile_draft4, minProperties_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionSizeGreater, "/minProperties",
                          "#/minProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be greater than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, minProperties_3) {
@@ -2165,6 +2803,9 @@ TEST(JSONSchema_compile_draft4, minProperties_3) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionSizeGreater, "/minProperties",
                          "#/minProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be greater than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, maxProperties_1) {
@@ -2200,6 +2841,9 @@ TEST(JSONSchema_compile_draft4, maxProperties_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionSizeLess, "/maxProperties",
                          "#/maxProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be less than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, maxProperties_3) {
@@ -2219,6 +2863,9 @@ TEST(JSONSchema_compile_draft4, maxProperties_3) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionSizeLess, "/maxProperties",
                          "#/maxProperties", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be less than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, minimum_1) {
@@ -2252,6 +2899,9 @@ TEST(JSONSchema_compile_draft4, minimum_2) {
   const sourcemeta::jsontoolkit::JSON instance{2.1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionGreaterEqual, "/minimum", "#/minimum", "");
+
+  EVALUATE_TRACE_DESCRIBE(0, "The target number is expected to be greater than "
+                             "or equal to the given number");
 }
 
 TEST(JSONSchema_compile_draft4, minimum_3) {
@@ -2269,6 +2919,9 @@ TEST(JSONSchema_compile_draft4, minimum_3) {
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionGreaterEqual, "/minimum", "#/minimum", "");
+
+  EVALUATE_TRACE_DESCRIBE(0, "The target number is expected to be greater than "
+                             "or equal to the given number");
 }
 
 TEST(JSONSchema_compile_draft4, minimum_4) {
@@ -2286,6 +2939,9 @@ TEST(JSONSchema_compile_draft4, minimum_4) {
   const sourcemeta::jsontoolkit::JSON instance{1.8};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionGreaterEqual, "/minimum", "#/minimum", "");
+
+  EVALUATE_TRACE_DESCRIBE(0, "The target number is expected to be greater than "
+                             "or equal to the given number");
 }
 
 TEST(JSONSchema_compile_draft4, maximum_1) {
@@ -2319,6 +2975,9 @@ TEST(JSONSchema_compile_draft4, maximum_2) {
   const sourcemeta::jsontoolkit::JSON instance{1.9};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionLessEqual, "/maximum", "#/maximum", "");
+
+  EVALUATE_TRACE_DESCRIBE(0, "The target number is expected to be less than or "
+                             "equal to the given number");
 }
 
 TEST(JSONSchema_compile_draft4, maximum_3) {
@@ -2336,6 +2995,9 @@ TEST(JSONSchema_compile_draft4, maximum_3) {
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionLessEqual, "/maximum", "#/maximum", "");
+
+  EVALUATE_TRACE_DESCRIBE(0, "The target number is expected to be less than or "
+                             "equal to the given number");
 }
 
 TEST(JSONSchema_compile_draft4, maximum_4) {
@@ -2353,6 +3015,9 @@ TEST(JSONSchema_compile_draft4, maximum_4) {
   const sourcemeta::jsontoolkit::JSON instance{2.1};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionLessEqual, "/maximum", "#/maximum", "");
+
+  EVALUATE_TRACE_DESCRIBE(0, "The target number is expected to be less than or "
+                             "equal to the given number");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMinimum_1) {
@@ -2371,6 +3036,9 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_1) {
   const sourcemeta::jsontoolkit::JSON instance{2.1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionGreater, "/minimum", "#/minimum", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target number is expected to be greater than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMinimum_2) {
@@ -2389,6 +3057,9 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_2) {
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionGreater, "/minimum", "#/minimum", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target number is expected to be greater than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMinimum_3) {
@@ -2407,6 +3078,9 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_3) {
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionGreaterEqual, "/minimum", "#/minimum", "");
+
+  EVALUATE_TRACE_DESCRIBE(0, "The target number is expected to be greater than "
+                             "or equal to the given number");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMaximum_1) {
@@ -2425,6 +3099,9 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_1) {
   const sourcemeta::jsontoolkit::JSON instance{1.9};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionLess, "/maximum", "#/maximum", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target number is expected to be less than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMaximum_2) {
@@ -2443,6 +3120,9 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_2) {
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionLess, "/maximum", "#/maximum", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target number is expected to be less than the given number");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMaximum_3) {
@@ -2461,6 +3141,9 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_3) {
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionLessEqual, "/maximum", "#/maximum", "");
+
+  EVALUATE_TRACE_DESCRIBE(0, "The target number is expected to be less than or "
+                             "equal to the given number");
 }
 
 TEST(JSONSchema_compile_draft4, multipleOf_1) {
@@ -2495,6 +3178,9 @@ TEST(JSONSchema_compile_draft4, multipleOf_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionDivisible, "/multipleOf", "#/multipleOf",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target number is expected to be divisible by the given number");
 }
 
 TEST(JSONSchema_compile_draft4, multipleOf_3) {
@@ -2513,6 +3199,9 @@ TEST(JSONSchema_compile_draft4, multipleOf_3) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionDivisible, "/multipleOf", "#/multipleOf",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target number is expected to be divisible by the given number");
 }
 
 TEST(JSONSchema_compile_draft4, multipleOf_4) {
@@ -2531,6 +3220,9 @@ TEST(JSONSchema_compile_draft4, multipleOf_4) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionDivisible, "/multipleOf", "#/multipleOf",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target number is expected to be divisible by the given number");
 }
 
 TEST(JSONSchema_compile_draft4, multipleOf_5) {
@@ -2549,4 +3241,7 @@ TEST(JSONSchema_compile_draft4, multipleOf_5) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionDivisible, "/multipleOf", "#/multipleOf",
                          "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target number is expected to be divisible by the given number");
 }
