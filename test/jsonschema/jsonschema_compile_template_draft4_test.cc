@@ -39,56 +39,22 @@ TEST(JSONSchema_compile_template_draft4, allof_type) {
       }
     },
     {
-      "category": "logical",
-      "type": "or",
-      "value": null,
+      "category": "assertion",
+      "type": "type-any",
+      "condition": [],
+      "relativeSchemaLocation": "/allOf/1/type",
+      "relativeInstanceLocation": "",
+      "absoluteKeywordLocation": "#/allOf/1/type",
       "target": {
         "category": "target",
         "location": "",
         "type": "instance"
       },
-      "condition": [],
-      "relativeSchemaLocation": "/allOf/1/type",
-      "relativeInstanceLocation": "",
-      "absoluteKeywordLocation": "#/allOf/1/type",
-      "children": [
-        {
-          "category": "assertion",
-          "type": "type",
-          "condition": [],
-          "relativeSchemaLocation": "",
-          "relativeInstanceLocation": "",
-          "absoluteKeywordLocation": "#/allOf/1/type",
-          "target": {
-            "category": "target",
-            "location": "",
-            "type": "instance"
-          },
-          "value": {
-            "category": "value",
-            "type": "type",
-            "value": "real"
-          }
-        },
-        {
-          "category": "assertion",
-          "condition": [],
-          "relativeSchemaLocation": "",
-          "relativeInstanceLocation": "",
-          "absoluteKeywordLocation": "#/allOf/1/type",
-          "target": {
-            "category": "target",
-            "location": "",
-            "type": "instance"
-          },
-          "type": "type",
-          "value": {
-            "category": "value",
-            "type": "type",
-            "value": "integer"
-          }
-        }
-      ]
+      "value": {
+        "category": "value",
+        "type": "types",
+        "value": [ "integer", "real" ]
+      }
     }
   ])EOF")};
 

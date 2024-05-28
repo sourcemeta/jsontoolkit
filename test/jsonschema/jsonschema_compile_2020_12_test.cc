@@ -52,10 +52,8 @@ TEST(JSONSchema_compile_2020_12, type_3) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_SUCCESS(2, LogicalOr, "/type", "#/type", "");
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeAny, "/type", "#/type", "");
 }
 
 TEST(JSONSchema_compile_2020_12, type_4) {
@@ -71,9 +69,8 @@ TEST(JSONSchema_compile_2020_12, type_4) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{3.14};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_SUCCESS(1, LogicalOr, "/type", "#/type", "");
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeAny, "/type", "#/type", "");
 }
 
 TEST(JSONSchema_compile_2020_12, type_5) {
@@ -89,10 +86,8 @@ TEST(JSONSchema_compile_2020_12, type_5) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{"3.14"};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_FAILURE(1, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_FAILURE(2, LogicalOr, "/type", "#/type", "");
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeAny, "/type", "#/type", "");
 }
 
 TEST(JSONSchema_compile_2020_12, type_6) {
@@ -108,9 +103,8 @@ TEST(JSONSchema_compile_2020_12, type_6) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_SUCCESS(1, LogicalOr, "/type", "#/type", "");
 }
 
 TEST(JSONSchema_compile_2020_12, type_7) {
@@ -126,9 +120,8 @@ TEST(JSONSchema_compile_2020_12, type_7) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_FAILURE(1, LogicalOr, "/type", "#/type", "");
 }
 
 TEST(JSONSchema_compile_2020_12, type_8) {
@@ -144,12 +137,8 @@ TEST(JSONSchema_compile_2020_12, type_8) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{3};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_FAILURE(1, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_SUCCESS(3, LogicalOr, "/type", "#/type", "");
-  EVALUATE_TRACE_SUCCESS(4, LogicalOr, "/type", "#/type", "");
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeAny, "/type", "#/type", "");
 }
 
 TEST(JSONSchema_compile_2020_12, type_9) {
@@ -165,11 +154,6 @@ TEST(JSONSchema_compile_2020_12, type_9) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{true};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 6);
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_FAILURE(1, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_FAILURE(2, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_FAILURE(3, LogicalOr, "/type", "#/type", "");
-  EVALUATE_TRACE_FAILURE(4, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_FAILURE(5, LogicalOr, "/type", "#/type", "");
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeAny, "/type", "#/type", "");
 }
