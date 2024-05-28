@@ -87,6 +87,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_compile_draft4_test.cc
   jsonschema_keyword_iterator_test.cc
   jsonschema_official_resolver_test.cc
+  jsonschema_map_resolver_test.cc
   jsonschema_transformer_test.cc
   jsonschema_transform_rule_test.cc
   jsonschema_transform_bundle_test.cc
