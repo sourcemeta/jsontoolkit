@@ -236,7 +236,7 @@ auto compiler_draft4_applicator_properties(const SchemaCompilerContext &context)
     // as such don't exist in Draft 4, so emit a private annotation instead
     substeps.push_back(make<SchemaCompilerAnnotationPrivate>(
         subcontext, JSON{key}, {}, SchemaCompilerTargetType::Instance));
-    children.push_back(make<SchemaCompilerLogicalAnd>(
+    children.push_back(make<SchemaCompilerInternalContainer>(
         subcontext, SchemaCompilerValueNone{}, std::move(substeps),
         // TODO: As an optimization, avoid this condition if the subschema
         // declares `required` and includes the given key
@@ -244,7 +244,7 @@ auto compiler_draft4_applicator_properties(const SchemaCompilerContext &context)
             subcontext, key, {}, SchemaCompilerTargetType::Instance)}));
   }
 
-  return {make<SchemaCompilerLogicalAnd>(
+  return {make<SchemaCompilerInternalContainer>(
       context, SchemaCompilerValueNone{}, std::move(children),
       type_condition(context, JSON::Type::Object))};
 }

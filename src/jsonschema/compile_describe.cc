@@ -20,6 +20,10 @@ struct DescribeVisitor {
   auto operator()(const SchemaCompilerLogicalNot &) const -> std::string {
     return "The given schema is expected to not validate successfully";
   }
+  auto
+  operator()(const SchemaCompilerInternalContainer &) const -> std::string {
+    return "Internal";
+  }
   auto operator()(const SchemaCompilerControlLabel &) const -> std::string {
     return "Mark the current position of the evaluation process for future "
            "jumps";

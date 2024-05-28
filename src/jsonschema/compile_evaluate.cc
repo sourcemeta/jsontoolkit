@@ -412,6 +412,24 @@ auto evaluate_step(
         }
       }
     }
+  } else if (std::holds_alternative<SchemaCompilerInternalContainer>(step)) {
+    const auto &container{std::get<SchemaCompilerInternalContainer>(step)};
+    assert(std::holds_alternative<SchemaCompilerValueNone>(container.value));
+    context.push(container);
+    EVALUATE_CONDITION_GUARD(container.condition, instance);
+    result = true;
+    for (const auto &child : container.children) {
+      if (!evaluate_step(child, instance, mode, callback, context)) {
+        result = false;
+        if (mode == SchemaCompilerEvaluationMode::Fast) {
+          break;
+        }
+      }
+    }
+
+    // We treat this step as transparent to the consumer
+    context.pop();
+    return result;
   } else if (std::holds_alternative<SchemaCompilerControlLabel>(step)) {
     const auto &control{std::get<SchemaCompilerControlLabel>(step)};
     context.mark(control.id, control.children);
