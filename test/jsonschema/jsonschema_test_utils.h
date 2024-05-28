@@ -169,6 +169,7 @@
               &step,                                                           \
           const sourcemeta::jsontoolkit::Pointer &evaluate_path,               \
           const sourcemeta::jsontoolkit::Pointer &instance_location,           \
+          const sourcemeta::jsontoolkit::JSON &,                               \
           const sourcemeta::jsontoolkit::JSON &annotation) {                   \
         trace.push_back(                                                       \
             {valid, evaluate_path, instance_location, step, annotation});      \

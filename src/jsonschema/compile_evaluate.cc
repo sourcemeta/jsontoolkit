@@ -166,6 +166,7 @@ auto callback_noop(
     bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
     const sourcemeta::jsontoolkit::Pointer &,
     const sourcemeta::jsontoolkit::Pointer &,
+    const sourcemeta::jsontoolkit::JSON &,
     const sourcemeta::jsontoolkit::JSON &) noexcept -> void {}
 
 auto evaluate_step(
@@ -458,7 +459,7 @@ auto evaluate_step(
     // Otherwise we risk confusing consumers
     if (value.second) {
       callback(result, step, context.evaluate_path(), current_instance_location,
-               value.first);
+               instance, value.first);
     }
 
     context.pop();
@@ -480,7 +481,7 @@ auto evaluate_step(
       // While this is a private annotation, we still emit it on the callback
       // for implementing debugging-related tools, etc
       callback(result, step, context.evaluate_path(), current_instance_location,
-               value.first);
+               instance, value.first);
     }
 
     context.pop();
@@ -551,7 +552,7 @@ auto evaluate_step(
 #undef EVALUATE_CONDITION_GUARD
 evaluate_step_end:
   callback(result, step, context.evaluate_path(), context.instance_location(),
-           context.value(nullptr));
+           instance, context.value(nullptr));
   context.pop();
   return result;
 }
