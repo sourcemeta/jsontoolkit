@@ -194,6 +194,10 @@ struct SchemaCompilerLogicalXor;
 struct SchemaCompilerLogicalNot;
 
 /// @ingroup jsonschema
+/// Represents a compiler hidden logical step that represents a conjunction
+struct SchemaCompilerLogicalContainer;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that loops over object properties
 struct SchemaCompilerLoopProperties;
 
@@ -224,9 +228,9 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionDivisible, SchemaCompilerAssertionStringType,
     SchemaCompilerAnnotationPublic, SchemaCompilerAnnotationPrivate,
     SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
-    SchemaCompilerLogicalNot, SchemaCompilerLoopProperties,
-    SchemaCompilerLoopItems, SchemaCompilerControlLabel,
-    SchemaCompilerControlJump>>;
+    SchemaCompilerLogicalNot, SchemaCompilerLogicalContainer,
+    SchemaCompilerLoopProperties, SchemaCompilerLoopItems,
+    SchemaCompilerControlLabel, SchemaCompilerControlJump>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -282,6 +286,7 @@ DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Logical, Container, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueUnsignedInteger)
 DEFINE_CONTROL(Label)

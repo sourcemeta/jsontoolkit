@@ -222,10 +222,9 @@ TEST(JSONSchema_compile_draft4, required_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
   EVALUATE_TRACE_SUCCESS(0, AssertionDefines, "/required", "#/required", "");
   EVALUATE_TRACE_FAILURE(1, AssertionDefines, "/required", "#/required", "");
-  EVALUATE_TRACE_FAILURE(2, LogicalAnd, "/required", "#/required", "");
 }
 
 TEST(JSONSchema_compile_draft4, required_4) {
@@ -243,11 +242,10 @@ TEST(JSONSchema_compile_draft4, required_4) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
   EVALUATE_TRACE_SUCCESS(1, AssertionDefines, "/required", "#/required", "");
   EVALUATE_TRACE_SUCCESS(2, AssertionDefines, "/required", "#/required", "");
-  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/required", "#/required", "");
 }
 
 TEST(JSONSchema_compile_draft4, allOf_1) {
@@ -268,14 +266,12 @@ TEST(JSONSchema_compile_draft4, allOf_1) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/allOf/0/type", "#/allOf/0/type",
                          "");
   EVALUATE_TRACE_SUCCESS(1, AssertionDefines, "/allOf/1/required",
                          "#/allOf/1/required", "");
   EVALUATE_TRACE_SUCCESS(2, AssertionDefines, "/allOf/1/required",
-                         "#/allOf/1/required", "");
-  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/allOf/1/required",
                          "#/allOf/1/required", "");
 }
 
@@ -297,14 +293,12 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"baz\": 2 }")};
 
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/allOf/0/type", "#/allOf/0/type",
                          "");
   EVALUATE_TRACE_SUCCESS(1, AssertionDefines, "/allOf/1/required",
                          "#/allOf/1/required", "");
   EVALUATE_TRACE_FAILURE(2, AssertionDefines, "/allOf/1/required",
-                         "#/allOf/1/required", "");
-  EVALUATE_TRACE_FAILURE(3, LogicalAnd, "/allOf/1/required",
                          "#/allOf/1/required", "");
 }
 

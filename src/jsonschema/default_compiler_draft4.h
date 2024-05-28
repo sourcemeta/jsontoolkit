@@ -154,7 +154,7 @@ auto compiler_draft4_validation_required(const SchemaCompilerContext &context)
           SchemaCompilerTargetType::Instance));
     }
 
-    return {make<SchemaCompilerLogicalAnd>(
+    return {make<SchemaCompilerLogicalContainer>(
         context, SchemaCompilerValueNone{}, std::move(children),
         type_condition(context, JSON::Type::Object))};
   } else {
