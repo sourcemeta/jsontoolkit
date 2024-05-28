@@ -86,7 +86,7 @@ enum class SchemaCompilerValueStringType { URI };
 /// @ingroup jsonschema
 /// Represents a value in a compiler step
 template <typename T>
-using SchemaCompilerValue = std::variant<T, SchemaCompilerTarget>;
+using SchemaCompilerStepValue = std::variant<T, SchemaCompilerTarget>;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that always fails
@@ -235,7 +235,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
-    const SchemaCompilerValue<type> value;                                     \
+    const SchemaCompilerStepValue<type> value;                                 \
     const SchemaCompilerTemplate condition;                                    \
   };
 
@@ -245,7 +245,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
-    const SchemaCompilerValue<type> value;                                     \
+    const SchemaCompilerStepValue<type> value;                                 \
     const SchemaCompilerTemplate children;                                     \
     const SchemaCompilerTemplate condition;                                    \
   };
