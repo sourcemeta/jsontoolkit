@@ -360,12 +360,13 @@ enum class SchemaCompilerEvaluationMode {
 /// - The step that was just evaluated
 /// - The evaluation path
 /// - The instance location
+/// - The instance document
 /// - The annotation result, if any (otherwise null)
 ///
 /// You can use this callback mechanism to implement arbitrary output formats.
-using SchemaCompilerEvaluationCallback =
-    std::function<void(bool, const SchemaCompilerTemplate::value_type &,
-                       const Pointer &, const Pointer &, const JSON &)>;
+using SchemaCompilerEvaluationCallback = std::function<void(
+    bool, const SchemaCompilerTemplate::value_type &, const Pointer &,
+    const Pointer &, const JSON &, const JSON &)>;
 
 // TODO: Support standard output formats. Maybe through pre-made evaluation
 // callbacks?
@@ -426,6 +427,7 @@ evaluate(const SchemaCompilerTemplate &steps, const JSON &instance) -> bool;
 ///     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step,
 ///     const sourcemeta::jsontoolkit::Pointer &evaluate_path,
 ///     const sourcemeta::jsontoolkit::Pointer &instance_location,
+///     const sourcemeta::jsontoolkit::JSON &document,
 ///     const sourcemeta::jsontoolkit::JSON &annotation) -> void {
 ///   std::cout << "TYPE: " << (result ? "Success" : "Failure") << "\n";
 ///   std::cout << "STEP:\n";

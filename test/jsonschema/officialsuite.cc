@@ -56,6 +56,7 @@ static auto callback_noop(
     bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
     const sourcemeta::jsontoolkit::Pointer &,
     const sourcemeta::jsontoolkit::Pointer &,
+    const sourcemeta::jsontoolkit::JSON &,
     const sourcemeta::jsontoolkit::JSON &) noexcept -> void {}
 
 static auto slugify(const std::string &input, std::ostream &output) -> void {
