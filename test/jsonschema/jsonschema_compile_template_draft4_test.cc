@@ -145,8 +145,8 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
   const sourcemeta::jsontoolkit::JSON expected{
       sourcemeta::jsontoolkit::parse(R"EOF([
     {
-      "category": "logical",
-      "type": "and",
+      "category": "internal",
+      "type": "container",
       "value": null,
       "target": {
         "category": "target",
@@ -178,8 +178,8 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
       ],
       "children": [
         {
-          "category": "logical",
-          "type": "and",
+          "category": "internal",
+          "type": "container",
           "value": null,
           "target": {
             "category": "target",
@@ -276,8 +276,8 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
   const sourcemeta::jsontoolkit::JSON expected{
       sourcemeta::jsontoolkit::parse(R"EOF([
     {
-      "category": "logical",
-      "type": "and",
+      "category": "internal",
+      "type": "container",
       "value": null,
       "target": {
         "category": "target",
@@ -309,8 +309,8 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
       ],
       "children": [
         {
-          "category": "logical",
-          "type": "and",
+          "category": "internal",
+          "type": "container",
           "value": null,
           "target": {
             "category": "target",
@@ -380,8 +380,8 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
           ]
         },
         {
-          "category": "logical",
-          "type": "and",
+          "category": "internal",
+          "type": "container",
           "value": null,
           "target": {
             "category": "target",

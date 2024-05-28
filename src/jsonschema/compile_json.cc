@@ -175,6 +175,7 @@ struct StepVisitor {
   HANDLE_STEP("logical", "and", SchemaCompilerLogicalAnd)
   HANDLE_STEP("logical", "xor", SchemaCompilerLogicalXor)
   HANDLE_STEP("logical", "not", SchemaCompilerLogicalNot)
+  HANDLE_STEP("internal", "container", SchemaCompilerInternalContainer)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)
   HANDLE_STEP("control", "label", SchemaCompilerControlLabel)

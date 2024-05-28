@@ -18,7 +18,7 @@ TEST(JSONSchema_compile_draft4, metaschema) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{}")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 }
 
 TEST(JSONSchema_compile_draft4, type_1) {
@@ -454,40 +454,25 @@ TEST(JSONSchema_compile_draft4, ref_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
                          "");
   EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo");
-  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties/foo/$ref/properties",
-                         "https://example.com#/properties", "/foo");
-  EVALUATE_TRACE_SUCCESS(3, ControlLabel, "/properties/foo/$ref",
+  EVALUATE_TRACE_SUCCESS(2, ControlLabel, "/properties/foo/$ref",
                          "https://example.com#/properties/foo/$ref", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(
-      4, "/properties", "https://example.com#/properties", "", "foo");
-  EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties",
-                         "https://example.com#/properties", "");
-  EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties",
-                         "https://example.com#/properties", "");
+      3, "/properties", "https://example.com#/properties", "", "foo");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
       1, "The target document is expected to be of the given type");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      2, "The target is expected to match all of the given assertions");
   // TODO: Remove this step from the traces
   EVALUATE_TRACE_DESCRIBE(
-      3,
+      2,
       "Mark the current position of the evaluation process for future jumps");
-  EVALUATE_TRACE_DESCRIBE(4, "Emit an internal annotation");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      5, "The target is expected to match all of the given assertions");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      6, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(3, "Emit an internal annotation");
 }
 
 TEST(JSONSchema_compile_draft4, ref_4) {
@@ -511,7 +496,7 @@ TEST(JSONSchema_compile_draft4, ref_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"foo\": {} } }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 12);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
 
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
                          "");
@@ -520,27 +505,16 @@ TEST(JSONSchema_compile_draft4, ref_4) {
   EVALUATE_TRACE_SUCCESS(2, AssertionType,
                          "/properties/foo/$ref/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo/foo");
-  EVALUATE_TRACE_SUCCESS(3, LogicalAnd,
-                         "/properties/foo/$ref/properties/foo/$ref/properties",
-                         "https://example.com#/properties", "/foo/foo");
   EVALUATE_TRACE_SUCCESS(
-      4, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
+      3, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
       "https://example.com#/properties/foo/$ref", "/foo/foo");
-  EVALUATE_TRACE_ANNOTATION_PRIVATE(5, "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(4, "/properties/foo/$ref/properties",
                                     "https://example.com#/properties", "/foo",
                                     "foo");
-  EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties/foo/$ref/properties",
-                         "https://example.com#/properties", "/foo");
-  EVALUATE_TRACE_SUCCESS(7, LogicalAnd, "/properties/foo/$ref/properties",
-                         "https://example.com#/properties", "/foo");
-  EVALUATE_TRACE_SUCCESS(8, ControlLabel, "/properties/foo/$ref",
+  EVALUATE_TRACE_SUCCESS(5, ControlLabel, "/properties/foo/$ref",
                          "https://example.com#/properties/foo/$ref", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(
-      9, "/properties", "https://example.com#/properties", "", "foo");
-  EVALUATE_TRACE_SUCCESS(10, LogicalAnd, "/properties",
-                         "https://example.com#/properties", "");
-  EVALUATE_TRACE_SUCCESS(11, LogicalAnd, "/properties",
-                         "https://example.com#/properties", "");
+      6, "/properties", "https://example.com#/properties", "", "foo");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
@@ -548,29 +522,14 @@ TEST(JSONSchema_compile_draft4, ref_4) {
       1, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
       2, "The target document is expected to be of the given type");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      3, "The target is expected to match all of the given assertions");
   // TODO: Remove this step from the traces
-  EVALUATE_TRACE_DESCRIBE(4, "Jump to another point of the evaluation process");
-  EVALUATE_TRACE_DESCRIBE(5, "Emit an internal annotation");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      6, "The target is expected to match all of the given assertions");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      7, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(3, "Jump to another point of the evaluation process");
+  EVALUATE_TRACE_DESCRIBE(4, "Emit an internal annotation");
   // TODO: Remove this step from the traces
   EVALUATE_TRACE_DESCRIBE(
-      8,
+      5,
       "Mark the current position of the evaluation process for future jumps");
-  EVALUATE_TRACE_DESCRIBE(9, "Emit an internal annotation");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      10, "The target is expected to match all of the given assertions");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      11, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(6, "Emit an internal annotation");
 }
 
 TEST(JSONSchema_compile_draft4, ref_5) {
@@ -594,7 +553,7 @@ TEST(JSONSchema_compile_draft4, ref_5) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"foo\": 1 } }")};
 
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 9);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 5);
 
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
                          "");
@@ -606,16 +565,8 @@ TEST(JSONSchema_compile_draft4, ref_5) {
   EVALUATE_TRACE_FAILURE(
       3, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
       "https://example.com#/properties/foo/$ref", "/foo/foo");
-  EVALUATE_TRACE_FAILURE(4, LogicalAnd, "/properties/foo/$ref/properties",
-                         "https://example.com#/properties", "/foo");
-  EVALUATE_TRACE_FAILURE(5, LogicalAnd, "/properties/foo/$ref/properties",
-                         "https://example.com#/properties", "/foo");
-  EVALUATE_TRACE_FAILURE(6, ControlLabel, "/properties/foo/$ref",
+  EVALUATE_TRACE_FAILURE(4, ControlLabel, "/properties/foo/$ref",
                          "https://example.com#/properties/foo/$ref", "/foo");
-  EVALUATE_TRACE_FAILURE(7, LogicalAnd, "/properties",
-                         "https://example.com#/properties", "");
-  EVALUATE_TRACE_FAILURE(8, LogicalAnd, "/properties",
-                         "https://example.com#/properties", "");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
@@ -625,22 +576,10 @@ TEST(JSONSchema_compile_draft4, ref_5) {
       2, "The target document is expected to be of the given type");
   // TODO: Remove this step from the traces
   EVALUATE_TRACE_DESCRIBE(3, "Jump to another point of the evaluation process");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      4, "The target is expected to match all of the given assertions");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      5, "The target is expected to match all of the given assertions");
   // TODO: Remove this step from the traces
   EVALUATE_TRACE_DESCRIBE(
-      6,
+      4,
       "Mark the current position of the evaluation process for future jumps");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      7, "The target is expected to match all of the given assertions");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      8, "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, ref_6) {
@@ -663,37 +602,24 @@ TEST(JSONSchema_compile_draft4, ref_6) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
   EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
                          "#/type", "/foo");
-  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties/foo/$ref/properties",
-                         "#/properties", "/foo");
-  EVALUATE_TRACE_SUCCESS(3, ControlLabel, "/properties/foo/$ref",
+  EVALUATE_TRACE_SUCCESS(2, ControlLabel, "/properties/foo/$ref",
                          "#/properties/foo/$ref", "/foo");
-  EVALUATE_TRACE_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "",
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(3, "/properties", "#/properties", "",
                                     "foo");
-  EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
       1, "The target document is expected to be of the given type");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      2, "The target is expected to match all of the given assertions");
   // TODO: Remove this step from the traces
   EVALUATE_TRACE_DESCRIBE(
-      3,
+      2,
       "Mark the current position of the evaluation process for future jumps");
-  EVALUATE_TRACE_DESCRIBE(4, "Emit an internal annotation");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      5, "The target is expected to match all of the given assertions");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      6, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(3, "Emit an internal annotation");
 }
 
 TEST(JSONSchema_compile_draft4, ref_7) {
@@ -718,12 +644,7 @@ TEST(JSONSchema_compile_draft4, ref_7) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
-  EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
-
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      0, "The target is expected to match all of the given assertions");
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
 TEST(JSONSchema_compile_draft4, properties_1) {
@@ -744,31 +665,19 @@ TEST(JSONSchema_compile_draft4, properties_1) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 6);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/properties/bar/type",
                          "#/properties/bar/type", "/bar");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
                                     "bar");
-  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_FAILURE(3, AssertionType, "/properties/foo/type",
+  EVALUATE_TRACE_FAILURE(2, AssertionType, "/properties/foo/type",
                          "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_FAILURE(4, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_FAILURE(5, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
-  // TODO: Remove this step
   EVALUATE_TRACE_DESCRIBE(
-      2, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(
-      3, "The target document is expected to be of the given type");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      4, "The target is expected to match all of the given assertions");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      5, "The target is expected to match all of the given assertions");
+      2, "The target document is expected to be of the given type");
 }
 
 TEST(JSONSchema_compile_draft4, properties_2) {
@@ -789,34 +698,22 @@ TEST(JSONSchema_compile_draft4, properties_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": \"xxx\", \"bar\": 2 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/properties/bar/type",
                          "#/properties/bar/type", "/bar");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
                                     "bar");
-  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_SUCCESS(3, AssertionType, "/properties/foo/type",
+  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/properties/foo/type",
                          "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "",
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(3, "/properties", "#/properties", "",
                                     "foo");
-  EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
-  // TODO: Remove this step
   EVALUATE_TRACE_DESCRIBE(
-      2, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(
-      3, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_DESCRIBE(4, "Emit an internal annotation");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      5, "The target is expected to match all of the given assertions");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      6, "The target is expected to match all of the given assertions");
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_DESCRIBE(3, "Emit an internal annotation");
 }
 
 TEST(JSONSchema_compile_draft4, properties_3) {
@@ -837,12 +734,7 @@ TEST(JSONSchema_compile_draft4, properties_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"baz\": [] }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
-  EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
-
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      0, "The target is expected to match all of the given assertions");
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
 TEST(JSONSchema_compile_draft4, properties_4) {
@@ -868,38 +760,20 @@ TEST(JSONSchema_compile_draft4, properties_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"bar\": \"baz\" } }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
   EVALUATE_TRACE_SUCCESS(0, AssertionType,
                          "/properties/foo/properties/bar/type",
                          "#/properties/foo/properties/bar/type", "/foo/bar");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties/foo/properties",
                                     "#/properties/foo/properties", "/foo",
                                     "bar");
-  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties/foo/properties",
-                         "#/properties/foo/properties", "/foo");
-  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/properties/foo/properties",
-                         "#/properties/foo/properties", "/foo");
-  EVALUATE_TRACE_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "",
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(2, "/properties", "#/properties", "",
                                     "foo");
-  EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_SUCCESS(6, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      2, "The target is expected to match all of the given assertions");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      3, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(4, "Emit an internal annotation");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      5, "The target is expected to match all of the given assertions");
-  // TODO: Remove this step
-  EVALUATE_TRACE_DESCRIBE(
-      6, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(2, "Emit an internal annotation");
 }
 
 TEST(JSONSchema_compile_draft4, pattern_1) {
@@ -1303,32 +1177,26 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": 2 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/properties/foo/type",
                          "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
                                     "foo");
-  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_SUCCESS(4, AssertionType, "/additionalProperties/type",
+  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/additionalProperties/type",
                          "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/additionalProperties",
+  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/additionalProperties",
                          "#/additionalProperties", "/bar");
-  EVALUATE_TRACE_SUCCESS(6, LoopProperties, "/additionalProperties",
+  EVALUATE_TRACE_SUCCESS(4, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
   EVALUATE_TRACE_DESCRIBE(
-      2, "The target is expected to match all of the given assertions");
+      2, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
       3, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(
-      4, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_DESCRIBE(
-      5, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(6, "Loop over the properties of the target object");
+  EVALUATE_TRACE_DESCRIBE(4, "Loop over the properties of the target object");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_3) {
@@ -1353,30 +1221,27 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
-  EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/additionalProperties/type",
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/additionalProperties/type",
                          "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/additionalProperties",
+  EVALUATE_TRACE_SUCCESS(1, LogicalAnd, "/additionalProperties",
                          "#/additionalProperties", "/bar");
-  EVALUATE_TRACE_SUCCESS(3, AssertionType, "/additionalProperties/type",
+  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/additionalProperties/type",
                          "#/additionalProperties/type", "/foo");
-  EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/additionalProperties",
+  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/additionalProperties",
                          "#/additionalProperties", "/foo");
-  EVALUATE_TRACE_SUCCESS(5, LoopProperties, "/additionalProperties",
+  EVALUATE_TRACE_SUCCESS(4, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
 
   EVALUATE_TRACE_DESCRIBE(
-      0, "The target is expected to match all of the given assertions");
+      0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
-      1, "The target document is expected to be of the given type");
+      1, "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_DESCRIBE(
-      2, "The target is expected to match all of the given assertions");
+      2, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
-      3, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_DESCRIBE(
-      4, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(5, "Loop over the properties of the target object");
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(4, "Loop over the properties of the target object");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_4) {
@@ -1400,7 +1265,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
   const sourcemeta::jsontoolkit::JSON instance{sourcemeta::jsontoolkit::parse(
       "{ \"foo\": true, \"bar\": 2, \"baz\": \"qux\" }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 12);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 10);
 
   // `patternProperties`
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/patternProperties/^bar$/type",
@@ -1420,16 +1285,13 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
                          "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(6, "/properties", "#/properties", "",
                                     "foo");
-  EVALUATE_TRACE_SUCCESS(7, LogicalAnd, "/properties", "#/properties", "");
-
-  EVALUATE_TRACE_SUCCESS(8, LogicalAnd, "/properties", "#/properties", "");
 
   // `additionalProperties`
-  EVALUATE_TRACE_SUCCESS(9, AssertionType, "/additionalProperties/type",
+  EVALUATE_TRACE_SUCCESS(7, AssertionType, "/additionalProperties/type",
                          "#/additionalProperties/type", "/baz");
-  EVALUATE_TRACE_SUCCESS(10, LogicalAnd, "/additionalProperties",
+  EVALUATE_TRACE_SUCCESS(8, LogicalAnd, "/additionalProperties",
                          "#/additionalProperties", "/baz");
-  EVALUATE_TRACE_SUCCESS(11, LoopProperties, "/additionalProperties",
+  EVALUATE_TRACE_SUCCESS(9, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1444,14 +1306,10 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
       5, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(6, "Emit an internal annotation");
   EVALUATE_TRACE_DESCRIBE(
-      7, "The target is expected to match all of the given assertions");
+      7, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
       8, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(
-      9, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_DESCRIBE(
-      10, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(11, "Loop over the properties of the target object");
+  EVALUATE_TRACE_DESCRIBE(9, "Loop over the properties of the target object");
 }
 
 TEST(JSONSchema_compile_draft4, not_1) {
@@ -1528,37 +1386,29 @@ TEST(JSONSchema_compile_draft4, not_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": false }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 8);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/not/properties/foo/type",
                          "#/not/properties/foo/type", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/not/properties", "#/not/properties",
                                     "", "foo");
-  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/not/properties", "#/not/properties",
-                         "");
-  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/not/properties", "#/not/properties",
-                         "");
-  EVALUATE_TRACE_FAILURE(4, AssertionType, "/not/additionalProperties/type",
+  EVALUATE_TRACE_FAILURE(2, AssertionType, "/not/additionalProperties/type",
                          "#/not/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_FAILURE(5, LogicalAnd, "/not/additionalProperties",
+  EVALUATE_TRACE_FAILURE(3, LogicalAnd, "/not/additionalProperties",
                          "#/not/additionalProperties", "/bar");
-  EVALUATE_TRACE_FAILURE(6, LoopProperties, "/not/additionalProperties",
+  EVALUATE_TRACE_FAILURE(4, LoopProperties, "/not/additionalProperties",
                          "#/not/additionalProperties", "");
-  EVALUATE_TRACE_SUCCESS(7, LogicalNot, "/not", "#/not", "");
+  EVALUATE_TRACE_SUCCESS(5, LogicalNot, "/not", "#/not", "");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
   EVALUATE_TRACE_DESCRIBE(
-      2, "The target is expected to match all of the given assertions");
+      2, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
       3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_DESCRIBE(4, "Loop over the properties of the target object");
   EVALUATE_TRACE_DESCRIBE(
-      4, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_DESCRIBE(
-      5, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(6, "Loop over the properties of the target object");
-  EVALUATE_TRACE_DESCRIBE(
-      7, "The given schema is expected to not validate successfully");
+      5, "The given schema is expected to not validate successfully");
 }
 
 TEST(JSONSchema_compile_draft4, items_1) {
