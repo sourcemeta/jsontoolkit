@@ -207,6 +207,14 @@ auto evaluate_step(
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     result = target.type() == value;
+  } else if (std::holds_alternative<SchemaCompilerAssertionTypeAny>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionTypeAny>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
+    result = value.contains(target.type());
   } else if (std::holds_alternative<SchemaCompilerAssertionRegex>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionRegex>(step)};
     context.push(assertion);

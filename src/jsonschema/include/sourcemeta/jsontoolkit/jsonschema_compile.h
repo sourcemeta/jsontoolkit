@@ -65,6 +65,10 @@ using SchemaCompilerValueString = JSON::String;
 using SchemaCompilerValueType = JSON::Type;
 
 /// @ingroup jsonschema
+/// Represents a compiler step JSON types value
+using SchemaCompilerValueTypes = std::set<JSON::Type>;
+
+/// @ingroup jsonschema
 /// Represents a compiler step ECMA regular expression value. We store both the
 /// original string and the regular expression as standard regular expressions
 /// do not keep a copy of their original value (which we need for serialization
@@ -97,6 +101,11 @@ struct SchemaCompilerAssertionDefines;
 /// Represents a compiler assertion step that checks if a document is of the
 /// given type
 struct SchemaCompilerAssertionType;
+
+/// @ingroup jsonschema
+/// Represents a compiler assertion step that checks if a document is of any of
+/// the given types
+struct SchemaCompilerAssertionTypeAny;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that checks a string against an ECMA
@@ -206,15 +215,15 @@ struct SchemaCompilerControlJump;
 /// Represents a schema compilation step that can be evaluated
 using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
-    SchemaCompilerAssertionType, SchemaCompilerAssertionRegex,
-    SchemaCompilerAssertionNotContains, SchemaCompilerAssertionSizeGreater,
-    SchemaCompilerAssertionSizeLess, SchemaCompilerAssertionEqual,
-    SchemaCompilerAssertionGreaterEqual, SchemaCompilerAssertionLessEqual,
-    SchemaCompilerAssertionGreater, SchemaCompilerAssertionLess,
-    SchemaCompilerAssertionUnique, SchemaCompilerAssertionDivisible,
-    SchemaCompilerAssertionStringType, SchemaCompilerAnnotationPublic,
-    SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
-    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerAssertionType, SchemaCompilerAssertionTypeAny,
+    SchemaCompilerAssertionRegex, SchemaCompilerAssertionNotContains,
+    SchemaCompilerAssertionSizeGreater, SchemaCompilerAssertionSizeLess,
+    SchemaCompilerAssertionEqual, SchemaCompilerAssertionGreaterEqual,
+    SchemaCompilerAssertionLessEqual, SchemaCompilerAssertionGreater,
+    SchemaCompilerAssertionLess, SchemaCompilerAssertionUnique,
+    SchemaCompilerAssertionDivisible, SchemaCompilerAssertionStringType,
+    SchemaCompilerAnnotationPublic, SchemaCompilerAnnotationPrivate,
+    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalNot, SchemaCompilerLoopProperties,
     SchemaCompilerLoopItems, SchemaCompilerControlLabel,
     SchemaCompilerControlJump>>;
@@ -253,6 +262,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 DEFINE_STEP_WITH_VALUE(Assertion, Fail, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Assertion, Defines, SchemaCompilerValueString)
 DEFINE_STEP_WITH_VALUE(Assertion, Type, SchemaCompilerValueType)
+DEFINE_STEP_WITH_VALUE(Assertion, TypeAny, SchemaCompilerValueTypes)
 DEFINE_STEP_WITH_VALUE(Assertion, Regex, SchemaCompilerValueRegex)
 DEFINE_STEP_WITH_VALUE(Assertion, NotContains, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, SizeGreater,
