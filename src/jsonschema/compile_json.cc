@@ -35,8 +35,8 @@ auto target_to_json(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target)
 }
 
 template <typename T>
-auto value_to_json(const sourcemeta::jsontoolkit::SchemaCompilerValue<T> &value)
-    -> sourcemeta::jsontoolkit::JSON {
+auto value_to_json(const sourcemeta::jsontoolkit::SchemaCompilerStepValue<T>
+                       &value) -> sourcemeta::jsontoolkit::JSON {
   using namespace sourcemeta::jsontoolkit;
   if (std::holds_alternative<SchemaCompilerTarget>(value)) {
     return target_to_json(std::get<SchemaCompilerTarget>(value));

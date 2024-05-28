@@ -124,9 +124,9 @@ public:
   }
 
   template <typename T>
-  auto
-  resolve_value(const sourcemeta::jsontoolkit::SchemaCompilerValue<T> &value,
-                const JSON &instance) -> T {
+  auto resolve_value(
+      const sourcemeta::jsontoolkit::SchemaCompilerStepValue<T> &value,
+      const JSON &instance) -> T {
     using namespace sourcemeta::jsontoolkit;
     // We only define target resolution for JSON documents, at least for now
     if constexpr (std::is_same_v<SchemaCompilerValueJSON, T>) {
