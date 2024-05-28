@@ -223,4 +223,8 @@
                  instance_location);                                           \
   EXPECT_TRUE(std::get<4>(trace.at(index)).is_null());
 
+#define EVALUATE_TRACE_DESCRIBE(index, message)                                \
+  EXPECT_EQ(sourcemeta::jsontoolkit::describe(std::get<3>(trace.at(index))),   \
+            (message));
+
 #endif
