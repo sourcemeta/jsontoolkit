@@ -24,11 +24,11 @@ struct DescribeVisitor {
   operator()(const SchemaCompilerInternalContainer &) const -> std::string {
     return "Internal";
   }
-  auto operator()(const SchemaCompilerControlLabel &) const -> std::string {
+  auto operator()(const SchemaCompilerInternalLabel &) const -> std::string {
     return "Mark the current position of the evaluation process for future "
            "jumps";
   }
-  auto operator()(const SchemaCompilerControlJump &) const -> std::string {
+  auto operator()(const SchemaCompilerInternalJump &) const -> std::string {
     return "Jump to another point of the evaluation process";
   }
   auto operator()(const SchemaCompilerAnnotationPublic &) const -> std::string {
