@@ -24,11 +24,20 @@ struct DescribeVisitor {
   operator()(const SchemaCompilerInternalContainer &) const -> std::string {
     return "Internal";
   }
-  auto operator()(const SchemaCompilerInternalLabel &) const -> std::string {
+  auto
+  operator()(const SchemaCompilerInternalNoAnnotation &) const -> std::string {
+    return "The target was not annotated with the given value";
+  }
+  auto
+  operator()(const SchemaCompilerInternalDefinesAll &) const -> std::string {
+    return "The target object is expected to define all of the given "
+           "properties";
+  }
+  auto operator()(const SchemaCompilerControlLabel &) const -> std::string {
     return "Mark the current position of the evaluation process for future "
            "jumps";
   }
-  auto operator()(const SchemaCompilerInternalJump &) const -> std::string {
+  auto operator()(const SchemaCompilerControlJump &) const -> std::string {
     return "Jump to another point of the evaluation process";
   }
   auto operator()(const SchemaCompilerAnnotationPublic &) const -> std::string {
@@ -50,6 +59,11 @@ struct DescribeVisitor {
   auto operator()(const SchemaCompilerAssertionDefines &) const -> std::string {
     return "The target object is expected to define the given property";
   }
+  auto
+  operator()(const SchemaCompilerAssertionDefinesAll &) const -> std::string {
+    return "The target object is expected to define all of the given "
+           "properties";
+  }
   auto operator()(const SchemaCompilerAssertionType &) const -> std::string {
     return "The target document is expected to be of the given type";
   }
@@ -59,10 +73,6 @@ struct DescribeVisitor {
   auto operator()(const SchemaCompilerAssertionRegex &) const -> std::string {
     return "The target string is expected to match the given regular "
            "expression";
-  }
-  auto
-  operator()(const SchemaCompilerAssertionNotContains &) const -> std::string {
-    return "The target array is expected to not contain the given value";
   }
   auto
   operator()(const SchemaCompilerAssertionSizeGreater &) const -> std::string {
@@ -101,6 +111,10 @@ struct DescribeVisitor {
   auto
   operator()(const SchemaCompilerAssertionStringType &) const -> std::string {
     return "The target string is expected to match the given logical type";
+  }
+  auto
+  operator()(const SchemaCompilerAssertionEqualsAny &) const -> std::string {
+    return "The target document is expected to be one of the given values";
   }
 };
 

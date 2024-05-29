@@ -904,7 +904,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
                                    Pointer{"loop"},
                                    Pointer{},
                                    "#/loop",
-                                   SchemaCompilerValueNone{},
+                                   true,
                                    children,
                                    condition}};
 
@@ -913,7 +913,11 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
     {
       "category": "loop",
       "type": "properties",
-      "value": null,
+      "value": {
+        "category": "value",
+        "type": "boolean",
+        "value": true
+      },
       "relativeSchemaLocation": "/loop",
       "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/loop",
@@ -1019,7 +1023,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_basename) {
                                    Pointer{"loop"},
                                    Pointer{},
                                    "#/loop",
-                                   SchemaCompilerValueNone{},
+                                   true,
                                    children,
                                    {}}};
 
@@ -1028,7 +1032,11 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_basename) {
     {
       "category": "loop",
       "type": "properties",
-      "value": null,
+      "value": {
+        "category": "value",
+        "type": "boolean",
+        "value": true
+      },
       "relativeSchemaLocation": "/loop",
       "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/loop",
@@ -1080,7 +1088,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_parent) {
                                    Pointer{"loop"},
                                    Pointer{},
                                    "#/loop",
-                                   SchemaCompilerValueNone{},
+                                   true,
                                    children,
                                    {}}};
 
@@ -1089,7 +1097,11 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_parent) {
     {
       "category": "loop",
       "type": "properties",
-      "value": null,
+      "value": {
+        "category": "value",
+        "type": "boolean",
+        "value": true
+      },
       "relativeSchemaLocation": "/loop",
       "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/loop",
