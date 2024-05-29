@@ -178,8 +178,8 @@ struct StepVisitor {
   HANDLE_STEP("internal", "container", SchemaCompilerInternalContainer)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)
-  HANDLE_STEP("control", "label", SchemaCompilerControlLabel)
-  HANDLE_STEP("control", "jump", SchemaCompilerControlJump)
+  HANDLE_STEP("internal", "label", SchemaCompilerInternalLabel)
+  HANDLE_STEP("internal", "jump", SchemaCompilerInternalJump)
 
 #undef HANDLE_STEP
 };

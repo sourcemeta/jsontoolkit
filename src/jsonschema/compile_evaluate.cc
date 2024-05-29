@@ -430,8 +430,8 @@ auto evaluate_step(
     // We treat this step as transparent to the consumer
     context.pop();
     return result;
-  } else if (std::holds_alternative<SchemaCompilerControlLabel>(step)) {
-    const auto &control{std::get<SchemaCompilerControlLabel>(step)};
+  } else if (std::holds_alternative<SchemaCompilerInternalLabel>(step)) {
+    const auto &control{std::get<SchemaCompilerInternalLabel>(step)};
     context.mark(control.id, control.children);
     context.push(control);
     result = true;
@@ -443,8 +443,12 @@ auto evaluate_step(
         }
       }
     }
-  } else if (std::holds_alternative<SchemaCompilerControlJump>(step)) {
-    const auto &control{std::get<SchemaCompilerControlJump>(step)};
+
+    // We treat this step as transparent to the consumer
+    context.pop();
+    return result;
+  } else if (std::holds_alternative<SchemaCompilerInternalJump>(step)) {
+    const auto &control{std::get<SchemaCompilerInternalJump>(step)};
     context.push(control);
     assert(control.children.empty());
     result = true;
@@ -456,6 +460,10 @@ auto evaluate_step(
         }
       }
     }
+
+    // We treat this step as transparent to the consumer
+    context.pop();
+    return result;
   } else if (std::holds_alternative<SchemaCompilerAnnotationPublic>(step)) {
     // Annotations never fail
     result = true;

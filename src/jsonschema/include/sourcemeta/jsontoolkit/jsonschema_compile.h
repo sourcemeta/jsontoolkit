@@ -208,12 +208,12 @@ struct SchemaCompilerLoopItems;
 
 /// @ingroup jsonschema
 /// Represents a compiler step that consists of a mark to jump to
-struct SchemaCompilerControlLabel;
+struct SchemaCompilerInternalLabel;
 
 /// @ingroup jsonschema
 /// Represents a compiler step that consists of jumping into a pre-registered
 /// label
-struct SchemaCompilerControlJump;
+struct SchemaCompilerInternalJump;
 
 /// @ingroup jsonschema
 /// Represents a schema compilation step that can be evaluated
@@ -230,7 +230,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalNot, SchemaCompilerInternalContainer,
     SchemaCompilerLoopProperties, SchemaCompilerLoopItems,
-    SchemaCompilerControlLabel, SchemaCompilerControlJump>>;
+    SchemaCompilerInternalLabel, SchemaCompilerInternalJump>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -255,7 +255,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
   };
 
 #define DEFINE_CONTROL(name)                                                   \
-  struct SchemaCompilerControl##name {                                         \
+  struct SchemaCompilerInternal##name {                                        \
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \

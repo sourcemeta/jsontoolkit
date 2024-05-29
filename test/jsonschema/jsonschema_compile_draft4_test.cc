@@ -386,19 +386,12 @@ TEST(JSONSchema_compile_draft4, ref_1) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_FAILURE(0, AssertionType, "/allOf/0/$ref/type",
                          "#/definitions/string/type", "");
-  EVALUATE_TRACE_FAILURE(1, ControlLabel, "/allOf/0/$ref", "#/allOf/0/$ref",
-                         "");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
-
-  // TODO: Remove this step from the traces
-  EVALUATE_TRACE_DESCRIBE(
-      1,
-      "Mark the current position of the evaluation process for future jumps");
 }
 
 TEST(JSONSchema_compile_draft4, ref_2) {
@@ -418,19 +411,12 @@ TEST(JSONSchema_compile_draft4, ref_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/allOf/0/$ref/type",
                          "#/definitions/string/type", "");
-  EVALUATE_TRACE_SUCCESS(1, ControlLabel, "/allOf/0/$ref", "#/allOf/0/$ref",
-                         "");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
-
-  // TODO: Remove this step from the traces
-  EVALUATE_TRACE_DESCRIBE(
-      1,
-      "Mark the current position of the evaluation process for future jumps");
 }
 
 TEST(JSONSchema_compile_draft4, ref_3) {
@@ -454,25 +440,19 @@ TEST(JSONSchema_compile_draft4, ref_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
                          "");
   EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo");
-  EVALUATE_TRACE_SUCCESS(2, ControlLabel, "/properties/foo/$ref",
-                         "https://example.com#/properties/foo/$ref", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(
-      3, "/properties", "https://example.com#/properties", "", "foo");
+      2, "/properties", "https://example.com#/properties", "", "foo");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
       1, "The target document is expected to be of the given type");
-  // TODO: Remove this step from the traces
-  EVALUATE_TRACE_DESCRIBE(
-      2,
-      "Mark the current position of the evaluation process for future jumps");
-  EVALUATE_TRACE_DESCRIBE(3, "Emit an internal annotation");
+  EVALUATE_TRACE_DESCRIBE(2, "Emit an internal annotation");
 }
 
 TEST(JSONSchema_compile_draft4, ref_4) {
@@ -496,7 +476,7 @@ TEST(JSONSchema_compile_draft4, ref_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"foo\": {} } }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
 
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
                          "");
@@ -505,16 +485,11 @@ TEST(JSONSchema_compile_draft4, ref_4) {
   EVALUATE_TRACE_SUCCESS(2, AssertionType,
                          "/properties/foo/$ref/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo/foo");
-  EVALUATE_TRACE_SUCCESS(
-      3, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
-      "https://example.com#/properties/foo/$ref", "/foo/foo");
-  EVALUATE_TRACE_ANNOTATION_PRIVATE(4, "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(3, "/properties/foo/$ref/properties",
                                     "https://example.com#/properties", "/foo",
                                     "foo");
-  EVALUATE_TRACE_SUCCESS(5, ControlLabel, "/properties/foo/$ref",
-                         "https://example.com#/properties/foo/$ref", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(
-      6, "/properties", "https://example.com#/properties", "", "foo");
+      4, "/properties", "https://example.com#/properties", "", "foo");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
@@ -522,14 +497,8 @@ TEST(JSONSchema_compile_draft4, ref_4) {
       1, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
       2, "The target document is expected to be of the given type");
-  // TODO: Remove this step from the traces
-  EVALUATE_TRACE_DESCRIBE(3, "Jump to another point of the evaluation process");
+  EVALUATE_TRACE_DESCRIBE(3, "Emit an internal annotation");
   EVALUATE_TRACE_DESCRIBE(4, "Emit an internal annotation");
-  // TODO: Remove this step from the traces
-  EVALUATE_TRACE_DESCRIBE(
-      5,
-      "Mark the current position of the evaluation process for future jumps");
-  EVALUATE_TRACE_DESCRIBE(6, "Emit an internal annotation");
 }
 
 TEST(JSONSchema_compile_draft4, ref_5) {
@@ -553,7 +522,7 @@ TEST(JSONSchema_compile_draft4, ref_5) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"foo\": 1 } }")};
 
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
 
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
                          "");
@@ -562,11 +531,6 @@ TEST(JSONSchema_compile_draft4, ref_5) {
   EVALUATE_TRACE_FAILURE(2, AssertionType,
                          "/properties/foo/$ref/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo/foo");
-  EVALUATE_TRACE_FAILURE(
-      3, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
-      "https://example.com#/properties/foo/$ref", "/foo/foo");
-  EVALUATE_TRACE_FAILURE(4, ControlLabel, "/properties/foo/$ref",
-                         "https://example.com#/properties/foo/$ref", "/foo");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
@@ -574,12 +538,6 @@ TEST(JSONSchema_compile_draft4, ref_5) {
       1, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
       2, "The target document is expected to be of the given type");
-  // TODO: Remove this step from the traces
-  EVALUATE_TRACE_DESCRIBE(3, "Jump to another point of the evaluation process");
-  // TODO: Remove this step from the traces
-  EVALUATE_TRACE_DESCRIBE(
-      4,
-      "Mark the current position of the evaluation process for future jumps");
 }
 
 TEST(JSONSchema_compile_draft4, ref_6) {
@@ -602,24 +560,18 @@ TEST(JSONSchema_compile_draft4, ref_6) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
   EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
   EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
                          "#/type", "/foo");
-  EVALUATE_TRACE_SUCCESS(2, ControlLabel, "/properties/foo/$ref",
-                         "#/properties/foo/$ref", "/foo");
-  EVALUATE_TRACE_ANNOTATION_PRIVATE(3, "/properties", "#/properties", "",
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(2, "/properties", "#/properties", "",
                                     "foo");
 
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_DESCRIBE(
       1, "The target document is expected to be of the given type");
-  // TODO: Remove this step from the traces
-  EVALUATE_TRACE_DESCRIBE(
-      2,
-      "Mark the current position of the evaluation process for future jumps");
-  EVALUATE_TRACE_DESCRIBE(3, "Emit an internal annotation");
+  EVALUATE_TRACE_DESCRIBE(2, "Emit an internal annotation");
 }
 
 TEST(JSONSchema_compile_draft4, ref_7) {
