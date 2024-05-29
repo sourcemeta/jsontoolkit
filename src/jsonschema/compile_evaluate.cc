@@ -200,6 +200,21 @@ auto evaluate_step(
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     result = target.is_object() && target.defines(value);
+  } else if (std::holds_alternative<SchemaCompilerAssertionDefinesAll>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionDefinesAll>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
+    assert(target.is_object());
+    result = true;
+    for (const auto &property : value) {
+      if (!target.defines(property)) {
+        result = false;
+        break;
+      }
+    }
   } else if (std::holds_alternative<SchemaCompilerAssertionType>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionType>(step)};
     context.push(assertion);
@@ -225,14 +240,6 @@ auto evaluate_step(
         context.resolve_target<JSON>(assertion.target, instance)};
     assert(target.is_string());
     result = std::regex_search(target.to_string(), value.first);
-  } else if (std::holds_alternative<SchemaCompilerAssertionNotContains>(step)) {
-    const auto &assertion{std::get<SchemaCompilerAssertionNotContains>(step)};
-    context.push(assertion);
-    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<std::set<JSON>>(assertion.target, instance)};
-    result = !target.contains(value);
   } else if (std::holds_alternative<SchemaCompilerAssertionSizeGreater>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionSizeGreater>(step)};
     context.push(assertion);
@@ -259,6 +266,14 @@ auto evaluate_step(
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     result = (target == value);
+  } else if (std::holds_alternative<SchemaCompilerAssertionEqualsAny>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionEqualsAny>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
+    result = value.contains(target);
   } else if (std::holds_alternative<SchemaCompilerAssertionGreaterEqual>(
                  step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionGreaterEqual>(step)};
@@ -412,6 +427,18 @@ auto evaluate_step(
         }
       }
     }
+  } else if (std::holds_alternative<SchemaCompilerInternalNoAnnotation>(step)) {
+    const auto &assertion{std::get<SchemaCompilerInternalNoAnnotation>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<std::set<JSON>>(assertion.target, instance)};
+    result = !target.contains(value);
+
+    // We treat this step as transparent to the consumer
+    context.pop();
+    return result;
   } else if (std::holds_alternative<SchemaCompilerInternalContainer>(step)) {
     const auto &container{std::get<SchemaCompilerInternalContainer>(step)};
     assert(std::holds_alternative<SchemaCompilerValueNone>(container.value));
@@ -430,8 +457,27 @@ auto evaluate_step(
     // We treat this step as transparent to the consumer
     context.pop();
     return result;
-  } else if (std::holds_alternative<SchemaCompilerInternalLabel>(step)) {
-    const auto &control{std::get<SchemaCompilerInternalLabel>(step)};
+  } else if (std::holds_alternative<SchemaCompilerInternalDefinesAll>(step)) {
+    const auto &assertion{std::get<SchemaCompilerInternalDefinesAll>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
+    assert(target.is_object());
+    result = true;
+    for (const auto &property : value) {
+      if (!target.defines(property)) {
+        result = false;
+        break;
+      }
+    }
+
+    // We treat this step as transparent to the consumer
+    context.pop();
+    return result;
+  } else if (std::holds_alternative<SchemaCompilerControlLabel>(step)) {
+    const auto &control{std::get<SchemaCompilerControlLabel>(step)};
     context.mark(control.id, control.children);
     context.push(control);
     result = true;
@@ -443,12 +489,8 @@ auto evaluate_step(
         }
       }
     }
-
-    // We treat this step as transparent to the consumer
-    context.pop();
-    return result;
-  } else if (std::holds_alternative<SchemaCompilerInternalJump>(step)) {
-    const auto &control{std::get<SchemaCompilerInternalJump>(step)};
+  } else if (std::holds_alternative<SchemaCompilerControlJump>(step)) {
+    const auto &control{std::get<SchemaCompilerControlJump>(step)};
     context.push(control);
     assert(control.children.empty());
     result = true;
@@ -460,10 +502,6 @@ auto evaluate_step(
         }
       }
     }
-
-    // We treat this step as transparent to the consumer
-    context.pop();
-    return result;
   } else if (std::holds_alternative<SchemaCompilerAnnotationPublic>(step)) {
     // Annotations never fail
     result = true;
@@ -514,21 +552,21 @@ auto evaluate_step(
     return result;
   } else if (std::holds_alternative<SchemaCompilerLoopProperties>(step)) {
     const auto &loop{std::get<SchemaCompilerLoopProperties>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueNone>(loop.value));
     context.push(loop);
     EVALUATE_CONDITION_GUARD(loop.condition, instance);
+    const auto value{context.resolve_value(loop.value, instance)};
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
     assert(target.is_object());
     result = true;
-    for (const auto &[key, value] : target.as_object()) {
-      context.push(empty_pointer, {key});
+    for (const auto &entry : target.as_object()) {
+      context.push(empty_pointer, {entry.first});
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, instance, mode, callback, context)) {
           result = false;
           if (mode == SchemaCompilerEvaluationMode::Fast) {
             context.pop();
             // For efficiently breaking from the outer loop too
-            goto evaluate_step_end;
+            goto evaluate_loop_properties_end;
           } else {
             break;
           }
@@ -536,6 +574,13 @@ auto evaluate_step(
       }
 
       context.pop();
+    }
+
+  evaluate_loop_properties_end:
+    // Setting the value to false means "don't report it"
+    if (!value) {
+      context.pop();
+      return result;
     }
   } else if (std::holds_alternative<SchemaCompilerLoopItems>(step)) {
     const auto &loop{std::get<SchemaCompilerLoopItems>(step)};

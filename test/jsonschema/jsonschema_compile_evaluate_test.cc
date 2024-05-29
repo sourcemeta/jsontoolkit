@@ -475,7 +475,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_empty) {
                                    {"loop"},
                                    {},
                                    "#/loop",
-                                   SchemaCompilerValueNone{},
+                                   true,
                                    children,
                                    {}}};
 
@@ -500,7 +500,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_true) {
                                    {"loop"},
                                    {},
                                    "#/loop",
-                                   SchemaCompilerValueNone{},
+                                   true,
                                    children,
                                    {}}};
 
@@ -525,7 +525,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_false) {
                                    {"loop"},
                                    {},
                                    "#/loop",
-                                   SchemaCompilerValueNone{},
+                                   true,
                                    children,
                                    {}}};
 
@@ -550,7 +550,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_true) {
                                    {"loop"},
                                    {},
                                    "#/loop",
-                                   SchemaCompilerValueNone{},
+                                   true,
                                    children,
                                    {}}};
 
@@ -575,7 +575,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_false) {
                                    {"loop"},
                                    {},
                                    "#/loop",
-                                   SchemaCompilerValueNone{},
+                                   true,
                                    children,
                                    {}}};
 
@@ -632,7 +632,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_regex_instance_basename_empty) {
                                    {"loop"},
                                    {},
                                    "#/loop",
-                                   SchemaCompilerValueNone{},
+                                   true,
                                    children,
                                    {}}};
 
@@ -658,7 +658,7 @@ TEST(JSONSchema_compile_evaluate,
                                    {"loop"},
                                    {},
                                    "#/loop",
-                                   SchemaCompilerValueNone{},
+                                   true,
                                    children,
                                    {}}};
 
@@ -684,7 +684,7 @@ TEST(JSONSchema_compile_evaluate,
                                    {"loop"},
                                    {},
                                    "#/loop",
-                                   SchemaCompilerValueNone{},
+                                   true,
                                    children,
                                    {}}};
 
