@@ -21,6 +21,22 @@ TEST(JSONSchema_compile_draft4, metaschema) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 }
 
+TEST(JSONSchema_compile_draft4, unknown_keyword) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "foobar": "baz"
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
 TEST(JSONSchema_compile_draft4, type_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
