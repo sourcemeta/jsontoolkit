@@ -80,9 +80,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_error_test.cc
   jsonschema_compile_evaluate_test.cc
   jsonschema_compile_json_test.cc
-  jsonschema_compile_template_2020_12_test.cc
   jsonschema_compile_template_draft4_test.cc
-  jsonschema_compile_2020_12_test.cc
   jsonschema_compile_draft6_test.cc
   jsonschema_compile_draft4_test.cc
   jsonschema_keyword_iterator_test.cc
