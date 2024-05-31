@@ -26,6 +26,10 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_frame_draft1_test.cc
   jsonschema_frame_draft0_test.cc
   jsonschema_frame_test.cc
+  jsonschema_lint_2020_12_test.cc
+  jsonschema_lint_2019_09_test.cc
+  jsonschema_lint_draft7_test.cc
+  jsonschema_lint_draft6_test.cc
   jsonschema_bundle_2020_12_test.cc
   jsonschema_bundle_2019_09_test.cc
   jsonschema_bundle_draft7_test.cc
