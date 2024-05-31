@@ -97,6 +97,7 @@ SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_dialect
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_dialect_draft6_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_dialect_draft7_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_dialect_test.cc
+SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_metaschema_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_error_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_id_2019_09_test.cc
 SOURCEMETA_JSONTOOLKIT_TEST_SRCS-y += $(TEST_BASE)/jsonschema/jsonschema_id_2020_12_test.cc

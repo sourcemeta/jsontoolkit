@@ -44,6 +44,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_bundle_draft1_test.cc
   jsonschema_bundle_draft0_test.cc
   jsonschema_bundle_test.cc
+  jsonschema_metaschema_test.cc
   jsonschema_dialect_test.cc
   jsonschema_dialect_2020_12_test.cc
   jsonschema_dialect_2019_09_test.cc
