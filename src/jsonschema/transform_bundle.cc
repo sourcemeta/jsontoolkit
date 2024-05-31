@@ -16,7 +16,9 @@ auto contains_any(const T &container, const T &values) -> bool {
 }
 
 // Modernize
+#include "rules/const_with_type.h"
 #include "rules/enum_to_const.h"
+#include "rules/enum_with_type.h"
 } // namespace sourcemeta::jsontoolkit
 
 auto sourcemeta::jsontoolkit::SchemaTransformBundle::add(
@@ -25,6 +27,10 @@ auto sourcemeta::jsontoolkit::SchemaTransformBundle::add(
   switch (category) {
     case sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Modernize:
       this->template add<EnumToConst>();
+      break;
+    case sourcemeta::jsontoolkit::SchemaTransformBundle::Category::AntiPattern:
+      this->template add<EnumWithType>();
+      this->template add<ConstWithType>();
       break;
     default:
       // We should never get here

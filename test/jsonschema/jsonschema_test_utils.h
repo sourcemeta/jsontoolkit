@@ -227,4 +227,13 @@
   EXPECT_EQ(sourcemeta::jsontoolkit::describe(std::get<3>(trace.at(index))),   \
             (message));
 
+#define LINT_AND_FIX(document)                                                 \
+  sourcemeta::jsontoolkit::SchemaTransformBundle bundle;                       \
+  bundle.add(                                                                  \
+      sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Modernize);    \
+  bundle.add(                                                                  \
+      sourcemeta::jsontoolkit::SchemaTransformBundle::Category::AntiPattern);  \
+  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,       \
+               sourcemeta::jsontoolkit::official_resolver);
+
 #endif

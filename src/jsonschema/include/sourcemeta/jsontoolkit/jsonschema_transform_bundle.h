@@ -107,7 +107,10 @@ public:
   /// The category of a built-in transformation rule
   enum class Category {
     /// Rules that make use of newer features within the same dialect
-    Modernize
+    Modernize,
+
+    /// Rules that detect common anti-patterns
+    AntiPattern
   };
 
   /// Add a set of built-in rules given a category
