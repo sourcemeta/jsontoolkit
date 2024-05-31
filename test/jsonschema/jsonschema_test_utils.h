@@ -233,6 +233,8 @@
       sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Modernize);    \
   bundle.add(                                                                  \
       sourcemeta::jsontoolkit::SchemaTransformBundle::Category::AntiPattern);  \
+  bundle.add(                                                                  \
+      sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Simplify);     \
   bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,       \
                sourcemeta::jsontoolkit::official_resolver);
 

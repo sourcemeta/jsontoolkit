@@ -19,6 +19,7 @@ auto contains_any(const T &container, const T &values) -> bool {
 #include "rules/const_with_type.h"
 #include "rules/enum_to_const.h"
 #include "rules/enum_with_type.h"
+#include "rules/single_type_array.h"
 } // namespace sourcemeta::jsontoolkit
 
 auto sourcemeta::jsontoolkit::SchemaTransformBundle::add(
@@ -31,6 +32,9 @@ auto sourcemeta::jsontoolkit::SchemaTransformBundle::add(
     case sourcemeta::jsontoolkit::SchemaTransformBundle::Category::AntiPattern:
       this->template add<EnumWithType>();
       this->template add<ConstWithType>();
+      break;
+    case sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Simplify:
+      this->template add<SingleTypeArray>();
       break;
     default:
       // We should never get here
