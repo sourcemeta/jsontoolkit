@@ -34,6 +34,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_lint_draft3_test.cc
   jsonschema_lint_draft2_test.cc
   jsonschema_lint_draft1_test.cc
+  jsonschema_lint_draft0_test.cc
   jsonschema_bundle_2020_12_test.cc
   jsonschema_bundle_2019_09_test.cc
   jsonschema_bundle_draft7_test.cc

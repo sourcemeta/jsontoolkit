@@ -12,9 +12,10 @@ noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
     compile_helpers.h default_compiler.cc
     default_compiler_draft6.h
     default_compiler_draft4.h
+    rules/const_with_type.h
     rules/enum_to_const.h
     rules/enum_with_type.h
-    rules/const_with_type.h
+    rules/single_type_array.h
     "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 
 if(JSONTOOLKIT_INSTALL)
