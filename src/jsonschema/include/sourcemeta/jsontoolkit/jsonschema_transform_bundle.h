@@ -113,7 +113,10 @@ public:
     AntiPattern,
 
     /// Rules that simplify the given schema
-    Simplify
+    Simplify,
+
+    /// Rules that remove schema redundancies
+    Redundant
   };
 
   /// Add a set of built-in rules given a category
