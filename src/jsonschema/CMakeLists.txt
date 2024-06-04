@@ -23,6 +23,8 @@ noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
     rules/min_contains_without_contains.h
     rules/single_type_array.h
     rules/then_without_if.h
+    rules/unevaluated_items_default.h
+    rules/unevaluated_properties_default.h
 
     "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 

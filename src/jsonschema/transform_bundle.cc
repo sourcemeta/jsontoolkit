@@ -29,6 +29,8 @@ auto contains_any(const T &container, const T &values) -> bool {
 #include "rules/max_contains_without_contains.h"
 #include "rules/min_contains_without_contains.h"
 #include "rules/then_without_if.h"
+#include "rules/unevaluated_items_default.h"
+#include "rules/unevaluated_properties_default.h"
 } // namespace sourcemeta::jsontoolkit
 
 auto sourcemeta::jsontoolkit::SchemaTransformBundle::add(
@@ -52,6 +54,8 @@ auto sourcemeta::jsontoolkit::SchemaTransformBundle::add(
       this->template add<MaxContainsWithoutContains>();
       this->template add<MinContainsWithoutContains>();
       this->template add<ThenWithoutIf>();
+      this->template add<UnevaluatedItemsDefault>();
+      this->template add<UnevaluatedPropertiesDefault>();
       break;
     default:
       // We should never get here

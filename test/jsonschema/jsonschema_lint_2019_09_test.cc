@@ -262,3 +262,107 @@ TEST(JSONSchema_lint_2019_09, else_without_if_2) {
 
   EXPECT_EQ(document, expected);
 }
+
+TEST(JSONSchema_lint_2019_09, unevaluated_properties_default_1) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedProperties": true
+  })JSON");
+
+  LINT_AND_FIX(document);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema"
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_lint_2019_09, unevaluated_properties_default_2) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedProperties": {}
+  })JSON");
+
+  LINT_AND_FIX(document);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema"
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_lint_2019_09, unevaluated_properties_default_3) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedProperties": { "type": "string" }
+  })JSON");
+
+  LINT_AND_FIX(document);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedProperties": { "type": "string" }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_lint_2019_09, unevaluated_items_default_1) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedItems": true
+  })JSON");
+
+  LINT_AND_FIX(document);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema"
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_lint_2019_09, unevaluated_items_default_2) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedItems": {}
+  })JSON");
+
+  LINT_AND_FIX(document);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema"
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_lint_2019_09, unevaluated_items_default_3) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedItems": { "type": "string" }
+  })JSON");
+
+  LINT_AND_FIX(document);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedItems": { "type": "string" }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
