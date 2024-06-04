@@ -17,6 +17,8 @@ auto contains_any(const T &container, const T &values) -> bool {
 
 // Modernize
 #include "rules/const_with_type.h"
+#include "rules/content_media_type_without_encoding.h"
+#include "rules/content_schema_without_media_type.h"
 #include "rules/enum_to_const.h"
 #include "rules/enum_with_type.h"
 #include "rules/single_type_array.h"
@@ -35,6 +37,8 @@ auto sourcemeta::jsontoolkit::SchemaTransformBundle::add(
       break;
     case sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Simplify:
       this->template add<SingleTypeArray>();
+      this->template add<ContentMediaTypeWithoutEncoding>();
+      this->template add<ContentSchemaWithoutMediaType>();
       break;
     default:
       // We should never get here

@@ -78,3 +78,20 @@ TEST(JSONSchema_lint_draft7, single_type_array_1) {
 
   EXPECT_EQ(document, expected);
 }
+
+TEST(JSONSchema_lint_draft7, content_media_type_without_encoding_1) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "contentMediaType": "application/json"
+  })JSON");
+
+  LINT_AND_FIX(document);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#"
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
