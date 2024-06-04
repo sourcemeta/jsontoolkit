@@ -16,11 +16,13 @@ noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
     rules/const_with_type.h
     rules/content_media_type_without_encoding.h
     rules/content_schema_without_media_type.h
+    rules/else_without_if.h
     rules/enum_to_const.h
     rules/enum_with_type.h
     rules/max_contains_without_contains.h
     rules/min_contains_without_contains.h
     rules/single_type_array.h
+    rules/then_without_if.h
 
     "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 
