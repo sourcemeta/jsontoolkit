@@ -25,8 +25,10 @@ auto contains_any(const T &container, const T &values) -> bool {
 // Redundant
 #include "rules/content_media_type_without_encoding.h"
 #include "rules/content_schema_without_media_type.h"
+#include "rules/else_without_if.h"
 #include "rules/max_contains_without_contains.h"
 #include "rules/min_contains_without_contains.h"
+#include "rules/then_without_if.h"
 } // namespace sourcemeta::jsontoolkit
 
 auto sourcemeta::jsontoolkit::SchemaTransformBundle::add(
@@ -46,8 +48,10 @@ auto sourcemeta::jsontoolkit::SchemaTransformBundle::add(
     case sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Redundant:
       this->template add<ContentMediaTypeWithoutEncoding>();
       this->template add<ContentSchemaWithoutMediaType>();
+      this->template add<ElseWithoutIf>();
       this->template add<MaxContainsWithoutContains>();
       this->template add<MinContainsWithoutContains>();
+      this->template add<ThenWithoutIf>();
       break;
     default:
       // We should never get here
