@@ -23,9 +23,13 @@ auto contains_any(const T &container, const T &values) -> bool {
 // Simplify
 #include "rules/single_type_array.h"
 // Redundant
+#include "rules/additional_properties_default.h"
 #include "rules/content_media_type_without_encoding.h"
+#include "rules/content_schema_default.h"
 #include "rules/content_schema_without_media_type.h"
 #include "rules/else_without_if.h"
+#include "rules/items_array_default.h"
+#include "rules/items_schema_default.h"
 #include "rules/max_contains_without_contains.h"
 #include "rules/min_contains_without_contains.h"
 #include "rules/then_without_if.h"
@@ -48,9 +52,13 @@ auto sourcemeta::jsontoolkit::SchemaTransformBundle::add(
       this->template add<SingleTypeArray>();
       break;
     case sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Redundant:
+      this->template add<AdditionalPropertiesDefault>();
       this->template add<ContentMediaTypeWithoutEncoding>();
+      this->template add<ContentSchemaDefault>();
       this->template add<ContentSchemaWithoutMediaType>();
       this->template add<ElseWithoutIf>();
+      this->template add<ItemsArrayDefault>();
+      this->template add<ItemsSchemaDefault>();
       this->template add<MaxContainsWithoutContains>();
       this->template add<MinContainsWithoutContains>();
       this->template add<ThenWithoutIf>();
