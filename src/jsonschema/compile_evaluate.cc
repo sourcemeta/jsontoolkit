@@ -618,6 +618,35 @@ auto evaluate_step(
 
       context.pop();
     }
+  } else if (std::holds_alternative<SchemaCompilerLoopContains>(step)) {
+    const auto &loop{std::get<SchemaCompilerLoopContains>(step)};
+    context.push(loop);
+    EVALUATE_CONDITION_GUARD(loop.condition, instance);
+    // TODO: Later on, extend to take a min, max pair
+    // to support `minContains` and `maxContains`
+    assert(std::holds_alternative<SchemaCompilerValueNone>(loop.value));
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    assert(target.is_array());
+    const auto &array{target.as_array()};
+    for (auto iterator = array.cbegin(); iterator != array.cend(); ++iterator) {
+      const auto index{std::distance(array.cbegin(), iterator)};
+      context.push(empty_pointer, {static_cast<Pointer::Token::Index>(index)});
+      bool subresult{true};
+      for (const auto &child : loop.children) {
+        if (!evaluate_step(child, instance, mode, callback, context)) {
+          subresult = false;
+          break;
+        }
+      }
+
+      context.pop();
+      if (subresult) {
+        result = subresult;
+        if (mode == SchemaCompilerEvaluationMode::Fast) {
+          break;
+        }
+      }
+    }
   }
 
 #undef EVALUATE_CONDITION_GUARD

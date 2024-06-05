@@ -203,6 +203,7 @@ struct StepVisitor {
   HANDLE_STEP("internal", "defines-all", SchemaCompilerInternalDefinesAll)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)
+  HANDLE_STEP("loop", "contains", SchemaCompilerLoopContains)
   HANDLE_STEP("control", "label", SchemaCompilerControlLabel)
   HANDLE_STEP("control", "jump", SchemaCompilerControlJump)
 
