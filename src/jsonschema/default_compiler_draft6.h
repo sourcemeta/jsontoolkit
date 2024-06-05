@@ -55,5 +55,18 @@ auto compiler_draft6_validation_exclusive_minimum(
       SchemaCompilerTargetType::Instance)};
 }
 
+auto compiler_draft6_validation_contains(const SchemaCompilerContext &context)
+    -> SchemaCompilerTemplate {
+  const auto subcontext{applicate(context)};
+  return {make<SchemaCompilerLoopContains>(
+      context, SchemaCompilerValueNone{},
+      compile(subcontext, empty_pointer, empty_pointer),
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `array` already
+      {make<SchemaCompilerAssertionType>(context, JSON::Type::Array, {},
+                                         SchemaCompilerTargetType::Instance)})};
+}
+
 } // namespace internal
 #endif
