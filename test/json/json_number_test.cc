@@ -397,6 +397,11 @@ TEST(JSON_number, is_integer_real_integer_real) {
   EXPECT_TRUE(document.is_integer_real());
 }
 
+TEST(JSON_number, is_integer_real_non_number) {
+  const sourcemeta::jsontoolkit::JSON document{true};
+  EXPECT_FALSE(document.is_integer_real());
+}
+
 TEST(JSON_number, as_integer_integer) {
   const sourcemeta::jsontoolkit::JSON document{5};
   EXPECT_EQ(document.as_integer(), 5);
