@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cctype>
+#include <cstdlib>
 #include <filesystem>
 #include <iostream>
 #include <optional>
@@ -175,19 +176,27 @@ static auto register_tests(const std::filesystem::path &subdirectory,
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
 
-  // Draft4
-  register_tests("draft4", "JSONSchemaOfficialSuite_Draft4",
-                 "http://json-schema.org/draft-04/schema#", {});
-  register_tests(std::filesystem::path{"draft4"} / "optional",
-                 "JSONSchemaOfficialSuite_Draft4_Optional",
-                 "http://json-schema.org/draft-04/schema#",
-                 // TODO: Enable all tests
-                 {"bignum", "ecmascript-regex", "non-bmp-regex"});
-  register_tests(std::filesystem::path{"draft4"} / "optional" / "format",
-                 "JSONSchemaOfficialSuite_Draft4_Optional_Format",
-                 "http://json-schema.org/draft-04/schema#",
-                 // TODO: Enable all tests
-                 {"date-time", "email", "hostname", "ipv6"});
+  try {
+    // Draft4
+    register_tests("draft4", "JSONSchemaOfficialSuite_Draft4",
+                   "http://json-schema.org/draft-04/schema#", {});
+    register_tests(std::filesystem::path{"draft4"} / "optional",
+                   "JSONSchemaOfficialSuite_Draft4_Optional",
+                   "http://json-schema.org/draft-04/schema#",
+                   // TODO: Enable all tests
+                   {"bignum", "ecmascript-regex", "non-bmp-regex"});
+    register_tests(std::filesystem::path{"draft4"} / "optional" / "format",
+                   "JSONSchemaOfficialSuite_Draft4_Optional_Format",
+                   "http://json-schema.org/draft-04/schema#",
+                   // TODO: Enable all tests
+                   {"date-time", "email", "hostname", "ipv6"});
+  } catch (const sourcemeta::jsontoolkit::SchemaResolutionError &error) {
+    std::cerr << error.what() << ": " << error.id() << "\n";
+    return EXIT_FAILURE;
+  } catch (const std::exception &error) {
+    std::cerr << "Error: " << error.what() << "\n";
+    return EXIT_FAILURE;
+  }
 
   return RUN_ALL_TESTS();
 }
