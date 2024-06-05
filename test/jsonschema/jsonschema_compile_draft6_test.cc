@@ -244,3 +244,83 @@ TEST(JSONSchema_compile_draft6, contains_4) {
   EVALUATE_TRACE_DESCRIBE(
       1, "A certain number of array items must satisfy the given constraints");
 }
+
+TEST(JSONSchema_compile_draft6, propertyNames_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "propertyNames": { "minLength": 5 }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{2};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
+TEST(JSONSchema_compile_draft6, propertyNames_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "propertyNames": { "minLength": 3 }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_SUCCESS(0, AssertionSizeGreater, "/propertyNames/minLength",
+                         "#/propertyNames/minLength", "/bar");
+  EVALUATE_TRACE_SUCCESS(1, AssertionSizeGreater, "/propertyNames/minLength",
+                         "#/propertyNames/minLength", "/baz");
+  EVALUATE_TRACE_SUCCESS(2, AssertionSizeGreater, "/propertyNames/minLength",
+                         "#/propertyNames/minLength", "/foo");
+  EVALUATE_TRACE_SUCCESS(3, LoopKeys, "/propertyNames", "#/propertyNames", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be greater than the given number");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target size is expected to be greater than the given number");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target size is expected to be greater than the given number");
+  EVALUATE_TRACE_DESCRIBE(3,
+                          "Loop over the property keys of the target object");
+}
+
+TEST(JSONSchema_compile_draft6, propertyNames_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "propertyNames": { "minLength": 3 }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"fo\": 1, \"bar\": 2 }")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_SUCCESS(0, AssertionSizeGreater, "/propertyNames/minLength",
+                         "#/propertyNames/minLength", "/bar");
+  EVALUATE_TRACE_FAILURE(1, AssertionSizeGreater, "/propertyNames/minLength",
+                         "#/propertyNames/minLength", "/fo");
+  EVALUATE_TRACE_FAILURE(2, LoopKeys, "/propertyNames", "#/propertyNames", "");
+
+  EVALUATE_TRACE_DESCRIBE(
+      0, "The target size is expected to be greater than the given number");
+  EVALUATE_TRACE_DESCRIBE(
+      1, "The target size is expected to be greater than the given number");
+  EVALUATE_TRACE_DESCRIBE(2,
+                          "Loop over the property keys of the target object");
+}

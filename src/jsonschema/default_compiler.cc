@@ -53,6 +53,10 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   COMPILE("http://json-schema.org/draft-06/schema#", "contains",
           compiler_draft6_validation_contains);
 
+  // Object
+  COMPILE("http://json-schema.org/draft-06/schema#", "propertyNames",
+          compiler_draft6_validation_propertynames);
+
   // Number
   COMPILE("http://json-schema.org/draft-06/schema#", "exclusiveMaximum",
           compiler_draft6_validation_exclusivemaximum);
@@ -62,6 +66,10 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // Same as Draft 4
   COMPILE("http://json-schema.org/draft-06/schema#", "type",
           compiler_draft4_validation_type);
+  COMPILE("http://json-schema.org/draft-06/schema#", "maxLength",
+          compiler_draft4_validation_maxlength);
+  COMPILE("http://json-schema.org/draft-06/schema#", "minLength",
+          compiler_draft4_validation_minlength);
 
   // ********************************************
   // DRAFT 4
