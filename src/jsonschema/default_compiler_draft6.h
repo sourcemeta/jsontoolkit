@@ -68,5 +68,18 @@ auto compiler_draft6_validation_contains(const SchemaCompilerContext &context)
                                          SchemaCompilerTargetType::Instance)})};
 }
 
+auto compiler_draft6_validation_propertynames(
+    const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
+  const auto subcontext{applicate(context)};
+  return {make<SchemaCompilerLoopKeys>(
+      context, SchemaCompilerValueNone{},
+      compile(subcontext, empty_pointer, empty_pointer),
+
+      // TODO: As an optimization, avoid this condition if the subschema
+      // declares `type` to `object` already
+      {make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {},
+                                         SchemaCompilerTargetType::Instance)})};
+}
+
 } // namespace internal
 #endif
