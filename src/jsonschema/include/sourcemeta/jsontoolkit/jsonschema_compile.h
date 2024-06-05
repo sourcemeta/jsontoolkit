@@ -229,6 +229,10 @@ struct SchemaCompilerInternalDefinesAll;
 struct SchemaCompilerLoopProperties;
 
 /// @ingroup jsonschema
+/// Represents a compiler step that loops over object property keys
+struct SchemaCompilerLoopKeys;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that loops over array items starting from a given
 /// index
 struct SchemaCompilerLoopItems;
@@ -262,9 +266,9 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalNot, SchemaCompilerInternalNoAnnotation,
     SchemaCompilerInternalContainer, SchemaCompilerInternalDefinesAll,
-    SchemaCompilerLoopProperties, SchemaCompilerLoopItems,
-    SchemaCompilerLoopContains, SchemaCompilerControlLabel,
-    SchemaCompilerControlJump>>;
+    SchemaCompilerLoopProperties, SchemaCompilerLoopKeys,
+    SchemaCompilerLoopItems, SchemaCompilerLoopContains,
+    SchemaCompilerControlLabel, SchemaCompilerControlJump>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -325,6 +329,7 @@ DEFINE_STEP_WITH_VALUE(Internal, NoAnnotation, SchemaCompilerValueJSON)
 DEFINE_STEP_APPLICATOR(Internal, Container, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Internal, DefinesAll, SchemaCompilerValueStrings)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueBoolean)
+DEFINE_STEP_APPLICATOR(Loop, Keys, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_APPLICATOR(Loop, Contains, SchemaCompilerValueNone)
 DEFINE_CONTROL(Label)

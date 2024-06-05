@@ -50,6 +50,9 @@ struct DescribeVisitor {
   auto operator()(const SchemaCompilerLoopProperties &) const -> std::string {
     return "Loop over the properties of the target object";
   }
+  auto operator()(const SchemaCompilerLoopKeys &) const -> std::string {
+    return "Loop over the property keys of the target object";
+  }
   auto operator()(const SchemaCompilerLoopItems &) const -> std::string {
     return "Loop over the items of the target array";
   }

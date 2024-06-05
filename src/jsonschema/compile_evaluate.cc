@@ -116,7 +116,14 @@ public:
       static_assert(std::is_same_v<JSON, T>);
       switch (target.first) {
         case SchemaCompilerTargetType::Instance:
-        case SchemaCompilerTargetType::InstanceParent:
+          if (this->target_type() == TargetType::Key) {
+            assert(!this->instance_location(target).empty());
+            assert(this->instance_location(target).back().is_property());
+            return this->value(
+                JSON{this->instance_location(target).back().to_property()});
+          }
+
+          assert(this->target_type() == TargetType::Value);
           return get(instance, this->instance_location(target));
         case SchemaCompilerTargetType::InstanceBasename:
           return this->value(this->instance_location(target).back().to_json());
@@ -588,6 +595,34 @@ auto evaluate_step(
       context.pop();
       return result;
     }
+  } else if (std::holds_alternative<SchemaCompilerLoopKeys>(step)) {
+    const auto &loop{std::get<SchemaCompilerLoopKeys>(step)};
+    context.push(loop);
+    EVALUATE_CONDITION_GUARD(loop.condition, instance);
+    assert(std::holds_alternative<SchemaCompilerValueNone>(loop.value));
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    assert(target.is_object());
+    result = true;
+    context.target_type(EvaluationContext::TargetType::Key);
+    for (const auto &entry : target.as_object()) {
+      context.push(empty_pointer, {entry.first});
+      for (const auto &child : loop.children) {
+        if (!evaluate_step(child, instance, mode, callback, context)) {
+          result = false;
+          if (mode == SchemaCompilerEvaluationMode::Fast) {
+            context.pop();
+            goto evaluate_loop_keys_end;
+          } else {
+            break;
+          }
+        }
+      }
+
+      context.pop();
+    }
+
+  evaluate_loop_keys_end:
+    context.target_type(EvaluationContext::TargetType::Value);
   } else if (std::holds_alternative<SchemaCompilerLoopItems>(step)) {
     const auto &loop{std::get<SchemaCompilerLoopItems>(step)};
     context.push(loop);
