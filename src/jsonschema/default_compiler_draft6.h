@@ -15,7 +15,7 @@ auto compiler_draft6_validation_const(const SchemaCompilerContext &context)
       context, context.value, {}, SchemaCompilerTargetType::Instance)};
 }
 
-auto compiler_draft6_validation_exclusive_maximum(
+auto compiler_draft6_validation_exclusivemaximum(
     const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
   assert(context.value.is_number());
   const auto subcontext{applicate(context)};
@@ -35,7 +35,7 @@ auto compiler_draft6_validation_exclusive_maximum(
       SchemaCompilerTargetType::Instance)};
 }
 
-auto compiler_draft6_validation_exclusive_minimum(
+auto compiler_draft6_validation_exclusiveminimum(
     const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
   assert(context.value.is_number());
   const auto subcontext{applicate(context)};
