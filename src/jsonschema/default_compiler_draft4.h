@@ -137,9 +137,10 @@ auto compiler_draft4_validation_type(const SchemaCompilerContext &context)
 auto compiler_draft4_validation_required(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   assert(context.value.is_array());
-  assert(!context.value.empty());
 
-  if (context.value.size() > 1) {
+  if (context.value.empty()) {
+    return {};
+  } else if (context.value.size() > 1) {
     std::set<JSON::String> properties;
     for (const auto &property : context.value.as_array()) {
       assert(property.is_string());
