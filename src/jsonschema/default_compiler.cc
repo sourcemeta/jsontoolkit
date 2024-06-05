@@ -49,11 +49,19 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   COMPILE("http://json-schema.org/draft-06/schema#", "const",
           compiler_draft6_validation_const);
 
+  // Array
+  COMPILE("http://json-schema.org/draft-06/schema#", "contains",
+          compiler_draft6_validation_contains);
+
   // Number
   COMPILE("http://json-schema.org/draft-06/schema#", "exclusiveMaximum",
           compiler_draft6_validation_exclusive_maximum);
   COMPILE("http://json-schema.org/draft-06/schema#", "exclusiveMinimum",
           compiler_draft6_validation_exclusive_minimum);
+
+  // Same as Draft 4
+  COMPILE("http://json-schema.org/draft-06/schema#", "type",
+          compiler_draft4_validation_type);
 
   // ********************************************
   // DRAFT 4
