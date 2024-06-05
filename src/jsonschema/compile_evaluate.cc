@@ -19,6 +19,7 @@ public:
   using JSON = sourcemeta::jsontoolkit::JSON;
   using Annotations = std::set<JSON>;
   using Template = sourcemeta::jsontoolkit::SchemaCompilerTemplate;
+  enum class TargetType { Value, Key };
 
   template <typename T> auto value(T &&document) -> const JSON & {
     return *(this->values.emplace(std::forward<T>(document)).first);
@@ -93,6 +94,10 @@ public:
     return this->instance_location(step.target);
   }
 
+  auto target_type(const TargetType type) -> void { this->target_type_ = type; }
+
+  auto target_type() const -> TargetType { return this->target_type_; }
+
   template <typename T>
   auto
   resolve_target(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
@@ -160,6 +165,7 @@ private:
   // efficiency when resolving keywords like `unevaluatedProperties`
   std::map<Pointer, std::map<Pointer, Annotations>> annotations_;
   std::map<std::size_t, const std::reference_wrapper<const Template>> labels;
+  TargetType target_type_ = TargetType::Value;
 };
 
 auto callback_noop(
