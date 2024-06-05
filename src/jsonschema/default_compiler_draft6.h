@@ -15,5 +15,45 @@ auto compiler_draft6_validation_const(const SchemaCompilerContext &context)
       context, context.value, {}, SchemaCompilerTargetType::Instance)};
 }
 
+auto compiler_draft6_validation_exclusive_maximum(
+    const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
+  assert(context.value.is_number());
+  const auto subcontext{applicate(context)};
+
+  // TODO: As an optimization, avoid this condition if the subschema
+  // declares `type` to `number` or `integer` already
+  SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
+      subcontext, SchemaCompilerValueNone{},
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Real, {},
+                                         SchemaCompilerTargetType::Instance),
+       make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Integer, {},
+                                         SchemaCompilerTargetType::Instance)},
+      SchemaCompilerTemplate{})};
+
+  return {make<SchemaCompilerAssertionLess>(
+      context, context.value, std::move(condition),
+      SchemaCompilerTargetType::Instance)};
+}
+
+auto compiler_draft6_validation_exclusive_minimum(
+    const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
+  assert(context.value.is_number());
+  const auto subcontext{applicate(context)};
+
+  // TODO: As an optimization, avoid this condition if the subschema
+  // declares `type` to `number` or `integer` already
+  SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
+      subcontext, SchemaCompilerValueNone{},
+      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Real, {},
+                                         SchemaCompilerTargetType::Instance),
+       make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Integer, {},
+                                         SchemaCompilerTargetType::Instance)},
+      SchemaCompilerTemplate{})};
+
+  return {make<SchemaCompilerAssertionGreater>(
+      context, context.value, std::move(condition),
+      SchemaCompilerTargetType::Instance)};
+}
+
 } // namespace internal
 #endif

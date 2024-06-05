@@ -45,8 +45,15 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // DRAFT 6
   // ********************************************
 
+  // Any
   COMPILE("http://json-schema.org/draft-06/schema#", "const",
           compiler_draft6_validation_const);
+
+  // Number
+  COMPILE("http://json-schema.org/draft-06/schema#", "exclusiveMaximum",
+          compiler_draft6_validation_exclusive_maximum);
+  COMPILE("http://json-schema.org/draft-06/schema#", "exclusiveMinimum",
+          compiler_draft6_validation_exclusive_minimum);
 
   // ********************************************
   // DRAFT 4
