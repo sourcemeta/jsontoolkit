@@ -381,3 +381,33 @@ TEST(JSON_number, big_real) {
   EXPECT_TRUE(document.is_real());
   EXPECT_EQ(document.to_real(), 1e308);
 }
+
+TEST(JSON_number, is_integer_real_integer) {
+  const sourcemeta::jsontoolkit::JSON document{5};
+  EXPECT_FALSE(document.is_integer_real());
+}
+
+TEST(JSON_number, is_integer_real_non_integer_real) {
+  const sourcemeta::jsontoolkit::JSON document{5.3};
+  EXPECT_FALSE(document.is_integer_real());
+}
+
+TEST(JSON_number, is_integer_real_integer_real) {
+  const sourcemeta::jsontoolkit::JSON document{5.0};
+  EXPECT_TRUE(document.is_integer_real());
+}
+
+TEST(JSON_number, as_integer_integer) {
+  const sourcemeta::jsontoolkit::JSON document{5};
+  EXPECT_EQ(document.as_integer(), 5);
+}
+
+TEST(JSON_number, as_integer_integer_real) {
+  const sourcemeta::jsontoolkit::JSON document{5.0};
+  EXPECT_EQ(document.as_integer(), 5);
+}
+
+TEST(JSON_number, as_integer_non_integer_real) {
+  const sourcemeta::jsontoolkit::JSON document{5.5};
+  EXPECT_EQ(document.as_integer(), 5);
+}
