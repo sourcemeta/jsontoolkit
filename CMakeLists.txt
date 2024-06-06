@@ -7,4 +7,7 @@ include(cmake/CompilerOptions.cmake)
 find_package(GoogleTest REQUIRED)
 enable_testing()
 
-add_subdirectory(test/json)
+add_executable(example test.cc)
+sourcemeta_jsontoolkit_add_compile_options(example)
+target_link_libraries(example PRIVATE GTest::gtest GTest::gtest_main)
+add_test(NAME Example COMMAND example --gtest_catch_exceptions=0)
