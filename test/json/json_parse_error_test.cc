@@ -2,6 +2,8 @@
 #include <gtest/gtest.h>
 #include <sstream>
 
+#include <iostream>
+
 #include <sourcemeta/jsontoolkit/json.h>
 
 #define EXPECT_PARSE_ERROR(input, expected_line, expected_column)              \
@@ -17,6 +19,8 @@
   }
 
 TEST(JSON_parse_error, boolean_true_invalid) {
+  std::cerr << "JSON_parse_error.boolean_true_invalid\n";
   std::istringstream input{"trrue"};
+  std::cerr << "After std::istringstream\n";
   EXPECT_PARSE_ERROR(input, 1, 3);
 }
