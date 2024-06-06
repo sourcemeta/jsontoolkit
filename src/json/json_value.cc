@@ -175,15 +175,16 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
 }
 
 [[nodiscard]] auto JSON::is_integer_real() const noexcept -> bool {
-  assert(this->is_number());
   if (this->is_integer()) {
     return false;
+  } else if (this->is_real()) {
+    const auto value{this->to_real()};
+    Real integral;
+    return !std::isinf(value) && !std::isnan(value) &&
+           std::modf(value, &integral) == 0.0;
+  } else {
+    return false;
   }
-
-  const auto value{this->to_real()};
-  Real integral;
-  return !std::isinf(value) && !std::isnan(value) &&
-         std::modf(value, &integral) == 0.0;
 }
 
 [[nodiscard]] auto JSON::is_number() const noexcept -> bool {
