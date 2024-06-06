@@ -9,15 +9,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/googletest")
 enable_testing()
 
 add_executable(example test.cc)
-if(WIN32)
-  target_compile_options(example PRIVATE
-    /options:strict
-    /permissive-
-    /W4
-    /WL
-    /MP
-    /sdl)
-endif()
+
 
 target_link_libraries(example PRIVATE GTest::gtest GTest::gtest_main)
 add_test(NAME Example COMMAND example --gtest_catch_exceptions=0)
