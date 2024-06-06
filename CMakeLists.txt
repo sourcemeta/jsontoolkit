@@ -18,61 +18,8 @@ option(JSONTOOLKIT_INSTALL "Install the JSON Toolkit library" ON)
 option(JSONTOOLKIT_ADDRESS_SANITIZER "Build JSON Toolkit with an address sanitizer" OFF)
 option(JSONTOOLKIT_UNDEFINED_SANITIZER "Build JSON Toolkit with an undefined behavior sanitizer" OFF)
 
-if(JSONTOOLKIT_INSTALL)
-  include(GNUInstallDirs)
-  include(CMakePackageConfigHelpers)
-  configure_package_config_file(
-    config.cmake.in
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
-  write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
-    COMPATIBILITY SameMajorVersion)
-  install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-    COMPONENT sourcemeta_jsontoolkit_dev)
-endif()
-
-if(JSONTOOLKIT_URI)
-  find_package(UriParser REQUIRED)
-  add_subdirectory(src/uri)
-endif()
-
 if(JSONTOOLKIT_JSON)
   add_subdirectory(src/json)
-endif()
-
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
-  add_subdirectory(src/jsonpointer)
-endif()
-
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
-  add_subdirectory(src/jsonschema)
-endif()
-
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
-  add_subdirectory(src/jsonl)
-endif()
-
-if(JSONTOOLKIT_ADDRESS_SANITIZER)
-  noa_sanitizer(TYPE address)
-elseif(JSONTOOLKIT_UNDEFINED_SANITIZER)
-  noa_sanitizer(TYPE undefined)
-endif()
-
-if(JSONTOOLKIT_DOCS)
-  noa_target_doxygen(CONFIG "${PROJECT_SOURCE_DIR}/doxygen/Doxyfile.in"
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/website")
-endif()
-
-if(PROJECT_IS_TOP_LEVEL)
-  noa_target_clang_format(SOURCES
-    src/*.h src/*.cc
-    test/*.h test/*.cc)
-  noa_target_clang_tidy(SOURCES
-    src/*.h src/*.cc)
 endif()
 
 # Testing
@@ -80,23 +27,7 @@ if(JSONTOOLKIT_TESTS)
   find_package(GoogleTest REQUIRED)
   enable_testing()
 
-  if(JSONTOOLKIT_URI)
-    add_subdirectory(test/uri)
-  endif()
-
   if(JSONTOOLKIT_JSON)
     add_subdirectory(test/json)
-  endif()
-
-  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
-    add_subdirectory(test/jsonschema)
-  endif()
-
-  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
-    add_subdirectory(test/jsonpointer)
-  endif()
-
-  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
-    add_subdirectory(test/jsonl)
   endif()
 endif()

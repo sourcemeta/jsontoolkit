@@ -18,12 +18,7 @@ configure: .always
 		-DBUILD_SHARED_LIBS:BOOL=$(SHARED)
 
 compile: .always
-	$(CMAKE) --build ./build --config $(PRESET) --target clang_format
 	$(CMAKE) --build ./build --config $(PRESET) --parallel 4
-	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
-		--component sourcemeta_jsontoolkit
-	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
-		--component sourcemeta_jsontoolkit_dev
 
 lint: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target clang_tidy
@@ -31,7 +26,7 @@ lint: .always
 test: .always
 	$(CMAKE) -E env UBSAN_OPTIONS=print_stacktrace=1 \
 		$(CTEST) --test-dir ./build --build-config $(PRESET) \
-			--output-on-failure --progress --parallel
+			--verbose
 
 doxygen: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target doxygen

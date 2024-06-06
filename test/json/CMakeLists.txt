@@ -7,4 +7,4 @@ target_link_libraries(sourcemeta_jsontoolkit_json_unit
   PRIVATE sourcemeta::jsontoolkit::json)
 set_target_properties(sourcemeta_jsontoolkit_json_unit
   PROPERTIES FOLDER "JSON Toolkit/JSON")
-add_test(NAME JSON COMMAND sourcemeta_jsontoolkit_json_unit)
+add_test(NAME JSON COMMAND sourcemeta_jsontoolkit_json_unit --gtest_catch_exceptions=0)
