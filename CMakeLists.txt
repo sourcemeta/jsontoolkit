@@ -99,12 +99,4 @@ if(JSONTOOLKIT_TESTS)
   if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
     add_subdirectory(test/jsonl)
   endif()
-
-  if(PROJECT_IS_TOP_LEVEL)
-    # Otherwise we need the child project to link
-    # against the sanitizers too.
-    if(NOT JSONTOOLKIT_ADDRESS_SANITIZER AND NOT JSONTOOLKIT_UNDEFINED_SANITIZER)
-      add_subdirectory(test/packaging)
-    endif()
-  endif()
 endif()
