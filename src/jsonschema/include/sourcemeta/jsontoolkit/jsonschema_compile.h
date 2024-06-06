@@ -117,12 +117,12 @@ struct SchemaCompilerAssertionDefinesAll;
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that checks if a document is of the
 /// given type
-struct SchemaCompilerAssertionType;
+struct SchemaCompilerAssertionTypeStrict;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that checks if a document is of any of
 /// the given types
-struct SchemaCompilerAssertionTypeAny;
+struct SchemaCompilerAssertionTypeStrictAny;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that checks a string against an ECMA
@@ -254,8 +254,8 @@ struct SchemaCompilerControlJump;
 /// Represents a schema compilation step that can be evaluated
 using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
-    SchemaCompilerAssertionDefinesAll, SchemaCompilerAssertionType,
-    SchemaCompilerAssertionTypeAny, SchemaCompilerAssertionRegex,
+    SchemaCompilerAssertionDefinesAll, SchemaCompilerAssertionTypeStrict,
+    SchemaCompilerAssertionTypeStrictAny, SchemaCompilerAssertionRegex,
     SchemaCompilerAssertionSizeGreater, SchemaCompilerAssertionSizeLess,
     SchemaCompilerAssertionEqual, SchemaCompilerAssertionEqualsAny,
     SchemaCompilerAssertionGreaterEqual, SchemaCompilerAssertionLessEqual,
@@ -304,8 +304,8 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 DEFINE_STEP_WITH_VALUE(Assertion, Fail, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Assertion, Defines, SchemaCompilerValueString)
 DEFINE_STEP_WITH_VALUE(Assertion, DefinesAll, SchemaCompilerValueStrings)
-DEFINE_STEP_WITH_VALUE(Assertion, Type, SchemaCompilerValueType)
-DEFINE_STEP_WITH_VALUE(Assertion, TypeAny, SchemaCompilerValueTypes)
+DEFINE_STEP_WITH_VALUE(Assertion, TypeStrict, SchemaCompilerValueType)
+DEFINE_STEP_WITH_VALUE(Assertion, TypeStrictAny, SchemaCompilerValueTypes)
 DEFINE_STEP_WITH_VALUE(Assertion, Regex, SchemaCompilerValueRegex)
 DEFINE_STEP_WITH_VALUE(Assertion, SizeGreater,
                        SchemaCompilerValueUnsignedInteger)

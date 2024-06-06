@@ -178,8 +178,9 @@ struct StepVisitor {
   HANDLE_STEP("assertion", "fail", SchemaCompilerAssertionFail)
   HANDLE_STEP("assertion", "defines", SchemaCompilerAssertionDefines)
   HANDLE_STEP("assertion", "defines-all", SchemaCompilerAssertionDefinesAll)
-  HANDLE_STEP("assertion", "type", SchemaCompilerAssertionType)
-  HANDLE_STEP("assertion", "type-any", SchemaCompilerAssertionTypeAny)
+  HANDLE_STEP("assertion", "type-strict", SchemaCompilerAssertionTypeStrict)
+  HANDLE_STEP("assertion", "type-strict-any",
+              SchemaCompilerAssertionTypeStrictAny)
   HANDLE_STEP("assertion", "regex", SchemaCompilerAssertionRegex)
   HANDLE_STEP("assertion", "size-greater", SchemaCompilerAssertionSizeGreater)
   HANDLE_STEP("assertion", "size-less", SchemaCompilerAssertionSizeLess)

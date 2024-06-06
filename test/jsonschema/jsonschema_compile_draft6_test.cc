@@ -171,10 +171,10 @@ TEST(JSONSchema_compile_draft6, contains_2) {
       sourcemeta::jsontoolkit::parse("[ 1, \"bar\", 3 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/contains/type", "#/contains/type",
-                         "/0");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/contains/type", "#/contains/type",
-                         "/1");
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrict, "/contains/type",
+                         "#/contains/type", "/0");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/contains/type",
+                         "#/contains/type", "/1");
   EVALUATE_TRACE_SUCCESS(2, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -201,12 +201,12 @@ TEST(JSONSchema_compile_draft6, contains_3) {
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/contains/type", "#/contains/type",
-                         "/0");
-  EVALUATE_TRACE_FAILURE(1, AssertionType, "/contains/type", "#/contains/type",
-                         "/1");
-  EVALUATE_TRACE_FAILURE(2, AssertionType, "/contains/type", "#/contains/type",
-                         "/2");
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrict, "/contains/type",
+                         "#/contains/type", "/0");
+  EVALUATE_TRACE_FAILURE(1, AssertionTypeStrict, "/contains/type",
+                         "#/contains/type", "/1");
+  EVALUATE_TRACE_FAILURE(2, AssertionTypeStrict, "/contains/type",
+                         "#/contains/type", "/2");
   EVALUATE_TRACE_FAILURE(3, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -235,8 +235,8 @@ TEST(JSONSchema_compile_draft6, contains_4) {
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/contains/type", "#/contains/type",
-                         "/0");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/contains/type",
+                         "#/contains/type", "/0");
   EVALUATE_TRACE_SUCCESS(1, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_DESCRIBE(
