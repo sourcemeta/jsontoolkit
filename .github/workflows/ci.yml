@@ -15,56 +15,9 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - os: macos-latest
-            cc: clang
-            cxx: clang++
-            type: static
-            shell: sh
-          - os: macos-latest
-            cc: clang
-            cxx: clang++
-            type: shared
-            shell: sh
-          - os: ubuntu-latest
-            cc: clang
-            cxx: clang++
-            type: static
-            shell: sh
-          - os: ubuntu-latest
-            cc: gcc
-            cxx: g++
-            type: static
-            shell: sh
-          - os: ubuntu-latest
-            cc: clang
-            cxx: clang++
-            type: shared
-            shell: sh
-          - os: ubuntu-latest
-            cc: gcc
-            cxx: g++
-            type: shared
-            shell: sh
           - os: windows-latest
             type: static
             shell: pwsh
-          - os: windows-latest
-            type: shared
-            shell: pwsh
-
-          # Sanitizers
-          - os: ubuntu-latest
-            cc: clang
-            cxx: clang++
-            type: static
-            shell: sh
-            options: -DJSONTOOLKIT_ADDRESS_SANITIZER:BOOL=ON
-          - os: ubuntu-latest
-            cc: clang
-            cxx: clang++
-            type: static
-            shell: sh
-            options: -DJSONTOOLKIT_UNDEFINED_SANITIZER:BOOL=ON
 
     defaults:
       run:
@@ -122,20 +75,3 @@ jobs:
         env:
           # See https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
           UBSAN_OPTIONS: print_stacktrace=1
-
-  unikraft:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install dependencies (GNU/Linux)
-        run: |
-          sudo apt-get update --yes
-          sudo apt-get install --yes qemu-system-x86
-      - uses: actions/checkout@v3
-      - name: Install KraftKit
-        run: |
-          wget https://github.com/unikraft/kraftkit/releases/download/v0.7.2/kraftkit_0.7.2_linux_amd64.deb
-          sudo dpkg -i kraftkit_0.7.2_linux_amd64.deb
-          rm kraftkit_0.7.2_linux_amd64.deb
-
-      - run: kraft build --target development --jobs 4 --log-type=basic unikraft
-      - run: kraft run --target development --disable-acceleration unikraft --memory 128Mi

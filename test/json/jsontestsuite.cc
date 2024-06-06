@@ -41,7 +41,11 @@ public:
           sourcemeta::jsontoolkit::parse(stream);
         }
       } catch (const sourcemeta::jsontoolkit::ParseError &) {
+        // As SUCCEED() is broken on MSVC
+        // See https://github.com/google/googletest/issues/4556
+#if !defined(_MSC_VER)
         SUCCEED();
+#endif
       } catch (const std::exception &) {
         FAIL() << "The parse function threw an unexpected error";
       }
