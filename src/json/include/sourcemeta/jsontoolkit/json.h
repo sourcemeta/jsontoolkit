@@ -11,7 +11,6 @@
 #include <sourcemeta/jsontoolkit/json_value.h>
 
 #include <cstdint>    // std::uint64_t
-#include <filesystem> // std::filesystem
 #include <istream>    // std::basic_istream
 #include <ostream>    // std::basic_ostream
 #include <string>     // std::basic_string
