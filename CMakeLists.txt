@@ -52,21 +52,6 @@ if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
   add_subdirectory(src/jsonschema)
 endif()
 
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
-  add_subdirectory(src/jsonl)
-endif()
-
-if(JSONTOOLKIT_ADDRESS_SANITIZER)
-  noa_sanitizer(TYPE address)
-elseif(JSONTOOLKIT_UNDEFINED_SANITIZER)
-  noa_sanitizer(TYPE undefined)
-endif()
-
-if(JSONTOOLKIT_DOCS)
-  noa_target_doxygen(CONFIG "${PROJECT_SOURCE_DIR}/doxygen/Doxyfile.in"
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/website")
-endif()
-
 if(PROJECT_IS_TOP_LEVEL)
   noa_target_clang_format(SOURCES
     src/*.h src/*.cc

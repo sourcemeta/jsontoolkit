@@ -2,10 +2,6 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_id_draft4_test.cc)
 sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema_unit)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
-  PRIVATE GTest::gtest)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
-  PRIVATE GTest::gtest_main)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE sourcemeta::jsontoolkit::json)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE sourcemeta::jsontoolkit::jsonpointer)
@@ -13,7 +9,7 @@ target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE sourcemeta::jsontoolkit::jsonschema)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE sourcemeta::jsontoolkit::uri)
-add_test(NAME JSONSchema COMMAND sourcemeta_jsontoolkit_jsonschema_unit --gtest_brief=1)
+add_test(NAME JSONSchema COMMAND sourcemeta_jsontoolkit_jsonschema_unit)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema_unit
   PROPERTIES FOLDER "JSON Toolkit/JSON Schema")
 
