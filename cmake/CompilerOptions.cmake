@@ -7,6 +7,8 @@ function(sourcemeta_jsontoolkit_add_compile_options target)
       /EHsc
       /W4
       /WL
+      /std:c++20
+      /MD
       /MP
       /sdl)
   else()
