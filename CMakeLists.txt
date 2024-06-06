@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.22)
-project(jsontoolkit VERSION 2.0.0 LANGUAGES CXX)
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+project(example VERSION 1.0.0 LANGUAGES CXX)
 include(vendor/noa/cmake/noa.cmake)
 
-find_package(GoogleTest REQUIRED)
+set(BUILD_GMOCK OFF CACHE BOOL "disable googlemock")
+set(INSTALL_GTEST OFF CACHE BOOL "disable installation")
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/googletest")
+
 enable_testing()
 
 add_executable(example test.cc)
