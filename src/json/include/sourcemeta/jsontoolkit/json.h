@@ -13,7 +13,6 @@
 #include <cstdint>    // std::uint64_t
 #include <istream>    // std::basic_istream
 #include <ostream>    // std::basic_ostream
-#include <string>     // std::basic_string
 
 /// @defgroup json JSON
 /// @brief A full-blown ECMA-404 implementation with read, write, and iterators
