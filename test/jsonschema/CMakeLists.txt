@@ -1,6 +1,5 @@
 add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_id_draft4_test.cc)
-sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonschema_unit)
 add_test(NAME JSONSchema COMMAND sourcemeta_jsontoolkit_jsonschema_unit)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema_unit
   PROPERTIES FOLDER "JSON Toolkit/JSON Schema")
