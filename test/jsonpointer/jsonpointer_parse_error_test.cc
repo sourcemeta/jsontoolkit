@@ -13,7 +13,7 @@
     sourcemeta::jsontoolkit::parse(stream.str());                              \
     FAIL() << "The parse function was expected to throw";                      \
   } catch (const sourcemeta::jsontoolkit::ParseError &) {                      \
-    SUCCEED();                                                                 \
+    EXPECT_TRUE(true);                                                         \
   } catch (const std::exception &) {                                           \
     FAIL() << "The parse operation threw an unexpected error";                 \
   }
@@ -24,7 +24,6 @@
     FAIL() << "The to_pointer function was expected to throw";                 \
   } catch (const sourcemeta::jsontoolkit::PointerParseError &error) {          \
     EXPECT_EQ(error.column(), expected_column);                                \
-    SUCCEED();                                                                 \
   } catch (const std::exception &) {                                           \
     FAIL() << "The to_pointer function threw an unexpected error";             \
   }

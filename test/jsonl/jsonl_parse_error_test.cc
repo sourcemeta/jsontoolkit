@@ -15,7 +15,6 @@
   } catch (const sourcemeta::jsontoolkit::ParseError &error) {                 \
     EXPECT_EQ(error.line(), expected_line);                                    \
     EXPECT_EQ(error.column(), expected_column);                                \
-    SUCCEED();                                                                 \
   } catch (const std::exception &) {                                           \
     FAIL() << "The JSONL parser was expected to throw a parse error";          \
   }
