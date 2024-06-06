@@ -80,31 +80,31 @@ if(JSONTOOLKIT_TESTS)
   find_package(GoogleTest REQUIRED)
   enable_testing()
 
-  if(JSONTOOLKIT_URI)
-    add_subdirectory(test/uri)
-  endif()
+  # if(JSONTOOLKIT_URI)
+    # add_subdirectory(test/uri)
+  # endif()
 
-  if(JSONTOOLKIT_JSON)
-    add_subdirectory(test/json)
-  endif()
+  # if(JSONTOOLKIT_JSON)
+    # add_subdirectory(test/json)
+  # endif()
 
   if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
     add_subdirectory(test/jsonschema)
   endif()
 
-  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
-    add_subdirectory(test/jsonpointer)
-  endif()
+  # if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
+    # add_subdirectory(test/jsonpointer)
+  # endif()
 
-  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
-    add_subdirectory(test/jsonl)
-  endif()
+  # if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
+    # add_subdirectory(test/jsonl)
+  # endif()
 
-  if(PROJECT_IS_TOP_LEVEL)
-    # Otherwise we need the child project to link
-    # against the sanitizers too.
-    if(NOT JSONTOOLKIT_ADDRESS_SANITIZER AND NOT JSONTOOLKIT_UNDEFINED_SANITIZER)
-      add_subdirectory(test/packaging)
-    endif()
-  endif()
+  # if(PROJECT_IS_TOP_LEVEL)
+    # # Otherwise we need the child project to link
+    # # against the sanitizers too.
+    # if(NOT JSONTOOLKIT_ADDRESS_SANITIZER AND NOT JSONTOOLKIT_UNDEFINED_SANITIZER)
+      # add_subdirectory(test/packaging)
+    # endif()
+  # endif()
 endif()

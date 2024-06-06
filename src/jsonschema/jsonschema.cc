@@ -10,6 +10,8 @@
 #include <type_traits> // std::remove_reference_t
 #include <utility>     // std::move
 
+#include <iostream>
+
 auto sourcemeta::jsontoolkit::is_schema(
     const sourcemeta::jsontoolkit::JSON &schema) -> bool {
   return schema.is_object() || schema.is_boolean();
@@ -20,17 +22,23 @@ auto sourcemeta::jsontoolkit::id(
     const std::optional<std::string> &default_dialect,
     const std::optional<std::string> &default_id)
     -> std::future<std::optional<std::string>> {
+  std::cerr << "@@@@ id()\n";
   const std::optional<std::string> maybe_base_dialect{
       sourcemeta::jsontoolkit::base_dialect(schema, resolver, default_dialect)
           .get()};
+  std::cerr << "@@@@ maybe_base_dialect result\n";
   if (!maybe_base_dialect.has_value()) {
+    std::cerr << "@@@@ no maybe_base_dialect\n";
     std::promise<std::optional<std::string>> promise;
     promise.set_value(default_id);
+    std::cerr << "@@@@ returning future 1\n";
     return promise.get_future();
   }
 
+  std::cerr << "@@@@ set result\n";
   std::promise<std::optional<std::string>> promise;
   promise.set_value(id(schema, maybe_base_dialect.value(), default_id));
+  std::cerr << "@@@@ returning future 2\n";
   return promise.get_future();
 }
 
@@ -112,13 +120,16 @@ auto sourcemeta::jsontoolkit::base_dialect(
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect)
     -> std::future<std::optional<std::string>> {
+  std::cerr << "++++ base_dialect()\n";
   assert(sourcemeta::jsontoolkit::is_schema(schema));
+  std::cerr << "++++ getting dialect\n";
   const std::optional<std::string> dialect{
       sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
 
   // There is no metaschema information whatsoever
   // Nothing we can do at this point
   if (!dialect.has_value()) {
+    std::cerr << "++++ dialect has no value\n";
     std::promise<std::optional<std::string>> promise;
     promise.set_value(std::nullopt);
     return promise.get_future();
@@ -131,6 +142,7 @@ auto sourcemeta::jsontoolkit::base_dialect(
       effective_dialect == "https://json-schema.org/draft/2019-09/schema" ||
       effective_dialect == "http://json-schema.org/draft-07/schema#" ||
       effective_dialect == "http://json-schema.org/draft-06/schema#") {
+    std::cerr << "++++ short circuit 1\n";
     std::promise<std::optional<std::string>> promise;
     promise.set_value(effective_dialect);
     return promise.get_future();
@@ -151,14 +163,18 @@ auto sourcemeta::jsontoolkit::base_dialect(
       effective_dialect == "http://json-schema.org/draft-03/schema#" ||
       effective_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
       effective_dialect == "http://json-schema.org/draft-04/schema#") {
+    std::cerr << "++++ short circuit 2\n";
     std::promise<std::optional<std::string>> promise;
-    promise.set_value(effective_dialect);
+    std::cerr << "++++ setting promise value: " << effective_dialect << "\n";
+    promise.set_value(std::optional<std::string>{effective_dialect});
+    std::cerr << "++++ returning future\n";
     return promise.get_future();
   }
 
   // If we reach the bottom of the metaschema hierarchy, where the schema
   // defines itself, then we got to the base dialect
   if (schema.is_object() && schema.defines("$id")) {
+    std::cerr << "++++ using $id\n";
     assert(schema.at("$id").is_string());
     if (schema.at("$id").to_string() == effective_dialect) {
       std::promise<std::optional<std::string>> promise;
@@ -168,13 +184,16 @@ auto sourcemeta::jsontoolkit::base_dialect(
   }
 
   // Otherwise, traverse the metaschema hierarchy up
+  std::cerr << "++++ getting metaschema\n";
   const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
       resolver(effective_dialect).get()};
   if (!metaschema.has_value()) {
+    std::cerr << "++++ no metaschema\n";
     throw sourcemeta::jsontoolkit::SchemaResolutionError(
         effective_dialect, "Could not resolve schema");
   }
 
+  std::cerr << "++++ recursing\n";
   return base_dialect(metaschema.value(), resolver, effective_dialect);
 }
 
