@@ -1,15 +1,22 @@
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <future>
+#include <optional>
+#include <string>
 
 #include <iostream>
 
+auto base_dialect() -> std::future<std::optional<std::string>> {
+  std::cerr << "++++ dialect has no value\n";
+  std::promise<std::optional<std::string>> promise;
+  std::cerr << "++++ setting promise value\n";
+  promise.set_value(std::nullopt);
+  std::cerr << "++++ returning\n";
+  return promise.get_future();
+}
+
 int main() {
   std::cerr << "XXXX JSONSchema_id_draft4.id_boolean_default_dialect\n";
-  const sourcemeta::jsontoolkit::JSON document{true};
   std::cerr << "XXXX Getting id\n";
-  sourcemeta::jsontoolkit::base_dialect(
-      document, sourcemeta::jsontoolkit::official_resolver)
-      .wait();
+  base_dialect().wait();
   std::cerr << "XXXX Got id\n";
   return 0;
 }

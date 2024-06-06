@@ -35,23 +35,6 @@ if(JSONTOOLKIT_INSTALL)
     COMPONENT sourcemeta_jsontoolkit_dev)
 endif()
 
-if(JSONTOOLKIT_URI)
-  find_package(UriParser REQUIRED)
-  add_subdirectory(src/uri)
-endif()
-
-if(JSONTOOLKIT_JSON)
-  add_subdirectory(src/json)
-endif()
-
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
-  add_subdirectory(src/jsonpointer)
-endif()
-
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
-  add_subdirectory(src/jsonschema)
-endif()
-
 if(PROJECT_IS_TOP_LEVEL)
   noa_target_clang_format(SOURCES
     src/*.h src/*.cc
