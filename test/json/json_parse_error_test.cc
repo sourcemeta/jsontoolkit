@@ -15,6 +15,7 @@
     std::cerr << "PARSE_ERROR\n"; \
     EXPECT_EQ(error.line(), expected_line);                                    \
     EXPECT_EQ(error.column(), expected_column);                                \
+    std::cerr << "SUCCEED!\n"; \
     SUCCEED();                                                                 \
   } catch (const std::exception &) {                                           \
     std::cerr << "GENERAL EXCEPTION\n"; \

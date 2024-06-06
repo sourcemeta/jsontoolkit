@@ -30,8 +30,10 @@ inline auto parse_boolean_true(
       const auto character :
       internal::constant_true<typename JSON::Char, typename JSON::CharTraits>.substr(
           1)) {
+    std::cerr << "CHARACTER: " << character << "\n";
     column += 1;
     if (stream.get() != character) {
+      std::cerr << "MISMATCH!\n";
       throw ParseError(line, column);
     }
   }
