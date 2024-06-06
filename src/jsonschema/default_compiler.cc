@@ -55,7 +55,7 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
 
   // Array
   COMPILE("http://json-schema.org/draft-06/schema#", "contains",
-          compiler_draft6_validation_contains);
+          compiler_draft6_applicator_contains);
 
   // Object
   COMPILE("http://json-schema.org/draft-06/schema#", "propertyNames",
