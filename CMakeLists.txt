@@ -18,16 +18,9 @@ option(JSONTOOLKIT_INSTALL "Install the JSON Toolkit library" ON)
 option(JSONTOOLKIT_ADDRESS_SANITIZER "Build JSON Toolkit with an address sanitizer" OFF)
 option(JSONTOOLKIT_UNDEFINED_SANITIZER "Build JSON Toolkit with an undefined behavior sanitizer" OFF)
 
+find_package(GoogleTest REQUIRED)
+enable_testing()
+
 if(JSONTOOLKIT_JSON)
-  add_subdirectory(src/json)
-endif()
-
-# Testing
-if(JSONTOOLKIT_TESTS)
-  find_package(GoogleTest REQUIRED)
-  enable_testing()
-
-  if(JSONTOOLKIT_JSON)
-    add_subdirectory(test/json)
-  endif()
+  add_subdirectory(test/json)
 endif()
