@@ -542,7 +542,7 @@ auto compiler_draft4_validation_uniqueitems(
 
 auto compiler_draft4_validation_maxlength(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
-  assert(context.value.is_integer());
+  assert(context.value.is_integer() || context.value.is_integer_real());
   assert(context.value.is_positive());
 
   // TODO: As an optimization, if `minLength` is set to the same number, do
@@ -550,14 +550,14 @@ auto compiler_draft4_validation_maxlength(const SchemaCompilerContext &context)
   return {make<SchemaCompilerAssertionSizeLess>(
       context,
       SchemaCompilerValueUnsignedInteger{
-          static_cast<unsigned long>(context.value.to_integer()) + 1},
+          static_cast<unsigned long>(context.value.as_integer()) + 1},
       type_condition(context, JSON::Type::String),
       SchemaCompilerTargetType::Instance)};
 }
 
 auto compiler_draft4_validation_minlength(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
-  assert(context.value.is_integer());
+  assert(context.value.is_integer() || context.value.is_integer_real());
   assert(context.value.is_positive());
 
   // TODO: As an optimization, if `maxLength` is set to the same number, do
@@ -565,14 +565,14 @@ auto compiler_draft4_validation_minlength(const SchemaCompilerContext &context)
   return {make<SchemaCompilerAssertionSizeGreater>(
       context,
       SchemaCompilerValueUnsignedInteger{
-          static_cast<unsigned long>(context.value.to_integer()) - 1},
+          static_cast<unsigned long>(context.value.as_integer()) - 1},
       type_condition(context, JSON::Type::String),
       SchemaCompilerTargetType::Instance)};
 }
 
 auto compiler_draft4_validation_maxitems(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
-  assert(context.value.is_integer());
+  assert(context.value.is_integer() || context.value.is_integer_real());
   assert(context.value.is_positive());
 
   // TODO: As an optimization, if `minItems` is set to the same number, do
@@ -580,14 +580,14 @@ auto compiler_draft4_validation_maxitems(const SchemaCompilerContext &context)
   return {make<SchemaCompilerAssertionSizeLess>(
       context,
       SchemaCompilerValueUnsignedInteger{
-          static_cast<unsigned long>(context.value.to_integer()) + 1},
+          static_cast<unsigned long>(context.value.as_integer()) + 1},
       type_condition(context, JSON::Type::Array),
       SchemaCompilerTargetType::Instance)};
 }
 
 auto compiler_draft4_validation_minitems(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
-  assert(context.value.is_integer());
+  assert(context.value.is_integer() || context.value.is_integer_real());
   assert(context.value.is_positive());
 
   // TODO: As an optimization, if `maxItems` is set to the same number, do
@@ -595,14 +595,14 @@ auto compiler_draft4_validation_minitems(const SchemaCompilerContext &context)
   return {make<SchemaCompilerAssertionSizeGreater>(
       context,
       SchemaCompilerValueUnsignedInteger{
-          static_cast<unsigned long>(context.value.to_integer()) - 1},
+          static_cast<unsigned long>(context.value.as_integer()) - 1},
       type_condition(context, JSON::Type::Array),
       SchemaCompilerTargetType::Instance)};
 }
 
 auto compiler_draft4_validation_maxproperties(
     const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
-  assert(context.value.is_integer());
+  assert(context.value.is_integer() || context.value.is_integer_real());
   assert(context.value.is_positive());
 
   // TODO: As an optimization, if `minProperties` is set to the same number, do
@@ -610,14 +610,14 @@ auto compiler_draft4_validation_maxproperties(
   return {make<SchemaCompilerAssertionSizeLess>(
       context,
       SchemaCompilerValueUnsignedInteger{
-          static_cast<unsigned long>(context.value.to_integer()) + 1},
+          static_cast<unsigned long>(context.value.as_integer()) + 1},
       type_condition(context, JSON::Type::Object),
       SchemaCompilerTargetType::Instance)};
 }
 
 auto compiler_draft4_validation_minproperties(
     const SchemaCompilerContext &context) -> SchemaCompilerTemplate {
-  assert(context.value.is_integer());
+  assert(context.value.is_integer() || context.value.is_integer_real());
   assert(context.value.is_positive());
 
   // TODO: As an optimization, if `maxProperties` is set to the same number, do
@@ -625,7 +625,7 @@ auto compiler_draft4_validation_minproperties(
   return {make<SchemaCompilerAssertionSizeGreater>(
       context,
       SchemaCompilerValueUnsignedInteger{
-          static_cast<unsigned long>(context.value.to_integer()) - 1},
+          static_cast<unsigned long>(context.value.as_integer()) - 1},
       type_condition(context, JSON::Type::Object),
       SchemaCompilerTargetType::Instance)};
 }
