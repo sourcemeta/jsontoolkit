@@ -5,8 +5,6 @@ enable_testing()
 add_executable(example test.cc)
 if(MSVC)
   target_compile_options(example PRIVATE
-    /std:c++20
-    /MD
     /MP
     /sdl)
 endif()
