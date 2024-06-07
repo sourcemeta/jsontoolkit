@@ -59,7 +59,7 @@ auto compiler_draft6_validation_exclusiveminimum(
       SchemaCompilerTargetType::Instance)};
 }
 
-auto compiler_draft6_validation_contains(const SchemaCompilerContext &context)
+auto compiler_draft6_applicator_contains(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   const auto subcontext{applicate(context)};
   return {make<SchemaCompilerLoopContains>(
