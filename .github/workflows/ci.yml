@@ -129,17 +129,10 @@ jobs:
   unikraft:
     runs-on: ubuntu-latest
     steps:
-      - name: Install dependencies (GNU/Linux)
-        run: |
-          sudo apt-get update --yes
-          sudo apt-get install --yes qemu-system-x86
-      - uses: actions/checkout@v3
-      - name: Install KraftKit
-        run: |
-          wget https://github.com/unikraft/kraftkit/releases/download/v0.8.7-34-gd076e5f4/kraftkit_0.8.7-34-gd076e5f4_linux_amd64.deb
-          sudo dpkg -i kraftkit_0.8.7-34-gd076e5f4_linux_amd64.deb
-          rm kraftkit_0.8.7-34-gd076e5f4_linux_amd64.deb
-
-      - run: qemu-system-x86_64 --version
-      - run: kraft build --target development --jobs 4 --log-type=basic unikraft
-      - run: kraft run --target development unikraft --memory 128Mi
+      - uses: actions/checkout@v4
+      - uses: unikraft/kraftkit@stable
+        with:
+          workdir: .
+          run: |
+            kraft build --target development --jobs 4 --log-type=basic unikraft
+            kraft run --target development --disable-acceleration unikraft --memory 128Mi
