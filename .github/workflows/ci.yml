@@ -45,15 +45,12 @@ jobs:
             cxx: g++
             type: shared
             shell: sh
-
-          # TODO: Add back once the SEH sudden exceptions are gone
-          # See: https://github.com/actions/runner-images/issues/10004
-          # - os: windows-latest
-            # type: static
-            # shell: pwsh
-          # - os: windows-latest
-            # type: shared
-            # shell: pwsh
+          - os: windows-latest
+            type: static
+            shell: pwsh
+          - os: windows-latest
+            type: shared
+            shell: pwsh
 
           # Sanitizers
           - os: ubuntu-latest
@@ -117,6 +114,15 @@ jobs:
       - run: >
           cmake --install ./build --prefix ./build/dist --config Release --verbose
           --component sourcemeta_jsontoolkit_dev
+
+      - name: Copy in the correct VC runtime DLLs (workaround for actions/runner-images#10004)
+        if: runner.os == 'windows'
+        run: |
+          Copy-Item (Join-Path `
+            ((Get-ChildItem -Directory `
+                -Path "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Redist\MSVC\14.*" |
+              Sort -Descending | Select-Object -First 1).FullName
+            ) 'x64\Microsoft.VC143.CRT\*.dll') "build\bin\Release"
 
       # Not every CTest version supports the --test-dir option. If such option
       # is not recognized, `ctest` will successfully exit finding no tests.
