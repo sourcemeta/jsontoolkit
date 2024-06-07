@@ -140,5 +140,6 @@ jobs:
           sudo dpkg -i kraftkit_0.8.7-34-gd076e5f4_linux_amd64.deb
           rm kraftkit_0.8.7-34-gd076e5f4_linux_amd64.deb
 
+      - run: qemu-system-x86_64 --version
       - run: kraft build --target development --jobs 4 --log-type=basic unikraft
       - run: kraft run --target development --disable-acceleration unikraft --memory 128Mi
