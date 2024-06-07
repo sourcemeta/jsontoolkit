@@ -45,12 +45,15 @@ jobs:
             cxx: g++
             type: shared
             shell: sh
-          - os: windows-latest
-            type: static
-            shell: pwsh
-          - os: windows-latest
-            type: shared
-            shell: pwsh
+
+          # TODO: Add back once the SEH sudden exceptions are gone
+          # See: https://github.com/actions/runner-images/issues/10004
+          # - os: windows-latest
+            # type: static
+            # shell: pwsh
+          # - os: windows-latest
+            # type: shared
+            # shell: pwsh
 
           # Sanitizers
           - os: ubuntu-latest
