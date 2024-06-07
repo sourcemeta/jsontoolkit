@@ -47,6 +47,17 @@ static auto test_resolver(std::string_view identifier)
   READ_SCHEMA_FILE(
       "http://localhost:1234/locationIndependentIdentifierDraft4.json",
       "locationIndependentIdentifierDraft4.json")
+  READ_SCHEMA_FILE("http://localhost:1234/ref-and-definitions.json",
+                   "ref-and-definitions.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/locationIndependentIdentifierPre2019.json",
+      "locationIndependentIdentifierPre2019.json")
+  READ_SCHEMA_FILE("http://localhost:1234/nested/foo-ref-string.json",
+                   std::filesystem::path{"nested"} / "foo-ref-string.json")
+  READ_SCHEMA_FILE("http://localhost:1234/nested/string.json",
+                   std::filesystem::path{"nested"} / "string.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft6/detached-ref.json",
+                   std::filesystem::path{"draft6"} / "detached-ref.json")
 
 #undef READ_SCHEMA_FILE
 
@@ -123,6 +134,8 @@ static auto register_tests(const std::filesystem::path &subdirectory,
       assert(sourcemeta::jsontoolkit::is_schema(test.at("schema")));
       assert(test.at("tests").is_array());
 
+      std::cerr << "    Compiling: " << test.at("description").to_string()
+                << "\n";
       const auto schema{sourcemeta::jsontoolkit::compile(
           test.at("schema"), sourcemeta::jsontoolkit::default_schema_walker,
           test_resolver, sourcemeta::jsontoolkit::default_schema_compiler,
@@ -177,6 +190,22 @@ int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
 
   try {
+    // Draft 6
+    register_tests("draft6", "JSONSchemaOfficialSuite_Draft6",
+                   "http://json-schema.org/draft-06/schema#", {});
+    register_tests(std::filesystem::path{"draft6"} / "optional",
+                   "JSONSchemaOfficialSuite_Draft6_Optional",
+                   "http://json-schema.org/draft-06/schema#",
+                   // TODO: Enable all tests
+                   {"bignum", "ecmascript-regex", "non-bmp-regex"});
+    register_tests(std::filesystem::path{"draft6"} / "optional" / "format",
+                   "JSONSchemaOfficialSuite_Draft6_Optional_Format",
+                   "http://json-schema.org/draft-06/schema#",
+                   // TODO: Enable all tests
+                   {"date-time", "email", "hostname", "ipv4", "ipv6",
+                    "json-pointer", "unknown", "uri-reference", "uri-template",
+                    "uri"});
+
     // Draft4
     register_tests("draft4", "JSONSchemaOfficialSuite_Draft4",
                    "http://json-schema.org/draft-04/schema#", {});
