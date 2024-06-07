@@ -408,7 +408,7 @@ auto compiler_draft4_applicator_not(const SchemaCompilerContext &context)
 auto compiler_draft4_applicator_items(const SchemaCompilerContext &context)
     -> SchemaCompilerTemplate {
   const auto subcontext{applicate(context)};
-  if (context.value.is_object()) {
+  if (is_schema(context.value)) {
     return {make<SchemaCompilerLoopItems>(
         context, SchemaCompilerValueUnsignedInteger{0},
         compile(subcontext, empty_pointer, empty_pointer),
@@ -480,16 +480,18 @@ auto compiler_draft4_applicator_dependencies(
   const auto subcontext{applicate(context)};
 
   for (const auto &entry : context.value.as_object()) {
-    if (entry.second.is_object()) {
-      children.push_back(make<SchemaCompilerInternalContainer>(
-          subcontext, SchemaCompilerValueNone{},
-          compile(subcontext, {entry.first}, empty_pointer),
+    if (is_schema(entry.second)) {
+      if (!entry.second.is_boolean() || !entry.second.to_boolean()) {
+        children.push_back(make<SchemaCompilerInternalContainer>(
+            subcontext, SchemaCompilerValueNone{},
+            compile(subcontext, {entry.first}, empty_pointer),
 
-          // TODO: As an optimization, avoid this condition if the subschema
-          // declares `required` and includes the given key
-          {make<SchemaCompilerAssertionDefines>(
-              subcontext, entry.first, {},
-              SchemaCompilerTargetType::Instance)}));
+            // TODO: As an optimization, avoid this condition if the subschema
+            // declares `required` and includes the given key
+            {make<SchemaCompilerAssertionDefines>(
+                subcontext, entry.first, {},
+                SchemaCompilerTargetType::Instance)}));
+      }
     } else if (entry.second.is_array()) {
       std::set<JSON::String> properties;
       for (const auto &property : entry.second.as_array()) {
