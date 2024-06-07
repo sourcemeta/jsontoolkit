@@ -41,7 +41,7 @@ unikraft: .always
 	$(KRAFT) run --target development unikraft
 
 clean: .always
-	$(CMAKE) -E rm -R -f build
+	$(CMAKE) -E rm -R -f build unikraft/.unikraft unikraft/.config*
 
 # For NMake, which doesn't support .PHONY
 .always:
