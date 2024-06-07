@@ -5,7 +5,6 @@ enable_testing()
 add_executable(example test.cc)
 if(MSVC)
   target_compile_options(example PRIVATE
-    /MP
     /sdl)
 endif()
 add_test(NAME Example COMMAND example)
