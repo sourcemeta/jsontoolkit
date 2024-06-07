@@ -4,7 +4,7 @@
 #include <iostream>
 
 int main() {
-  std::promise<std::optional<std::string>> promise;
+  std::promise<std::optional<int>> promise;
   std::cerr << "Setting promise value\n";
   promise.set_value(std::nullopt);
   std::cerr << "Exitting\n";
