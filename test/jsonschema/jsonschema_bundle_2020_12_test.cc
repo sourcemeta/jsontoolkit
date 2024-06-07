@@ -61,6 +61,16 @@ static auto test_resolver(std::string_view identifier)
     promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "type": "integer"
     })JSON"));
+  } else if (identifier == "https://example.com/nested/ref-string.json") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$ref": "string.json"
+    })JSON"));
+  } else if (identifier == "https://example.com/nested/string.json") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "string"
+    })JSON"));
   } else {
     promise.set_value(
         sourcemeta::jsontoolkit::official_resolver(identifier).get());
@@ -468,6 +478,40 @@ TEST(JSONSchema_bundle_2020_12, anonymous_no_dialect) {
       "https://www.sourcemeta.com/anonymous": {
         "$id": "https://www.sourcemeta.com/anonymous",
         "type": "integer"
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2020_12, relative_in_target_without_id) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/test",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "nested/ref-string.json"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/test",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "nested/ref-string.json",
+    "$defs": {
+      "https://example.com/nested/ref-string.json": {
+        "$id": "https://example.com/nested/ref-string.json",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$ref": "string.json"
+      },
+      "https://example.com/nested/string.json": {
+        "$id": "https://example.com/nested/string.json",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "string"
       }
     }
   })JSON");
