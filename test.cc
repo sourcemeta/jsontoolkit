@@ -1,12 +1,10 @@
 #include <future>
-#include <optional>
-#include <string>
 #include <iostream>
 
 int main() {
   std::promise<int> promise;
-  std::cerr << "Setting promise value\n";
+  std::cerr << "XXX Setting promise value\n";
   promise.set_value(5);
-  std::cerr << "Exitting\n";
+  std::cerr << "XXX Exitting\n";
   return 0;
 }
