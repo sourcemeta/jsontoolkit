@@ -22,13 +22,15 @@ auto compiler_draft6_validation_exclusivemaximum(
 
   // TODO: As an optimization, avoid this condition if the subschema
   // declares `type` to `number` or `integer` already
-  SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
-      subcontext, SchemaCompilerValueNone{},
-      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Real, {},
+  SchemaCompilerTemplate condition{
+      make<SchemaCompilerLogicalOr>(subcontext, SchemaCompilerValueNone{},
+                                    {make<SchemaCompilerAssertionTypeStrict>(
+                                         subcontext, JSON::Type::Real, {},
                                          SchemaCompilerTargetType::Instance),
-       make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Integer, {},
+                                     make<SchemaCompilerAssertionTypeStrict>(
+                                         subcontext, JSON::Type::Integer, {},
                                          SchemaCompilerTargetType::Instance)},
-      SchemaCompilerTemplate{})};
+                                    SchemaCompilerTemplate{})};
 
   return {make<SchemaCompilerAssertionLess>(
       context, context.value, std::move(condition),
@@ -42,13 +44,15 @@ auto compiler_draft6_validation_exclusiveminimum(
 
   // TODO: As an optimization, avoid this condition if the subschema
   // declares `type` to `number` or `integer` already
-  SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
-      subcontext, SchemaCompilerValueNone{},
-      {make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Real, {},
+  SchemaCompilerTemplate condition{
+      make<SchemaCompilerLogicalOr>(subcontext, SchemaCompilerValueNone{},
+                                    {make<SchemaCompilerAssertionTypeStrict>(
+                                         subcontext, JSON::Type::Real, {},
                                          SchemaCompilerTargetType::Instance),
-       make<SchemaCompilerAssertionType>(subcontext, JSON::Type::Integer, {},
+                                     make<SchemaCompilerAssertionTypeStrict>(
+                                         subcontext, JSON::Type::Integer, {},
                                          SchemaCompilerTargetType::Instance)},
-      SchemaCompilerTemplate{})};
+                                    SchemaCompilerTemplate{})};
 
   return {make<SchemaCompilerAssertionGreater>(
       context, context.value, std::move(condition),
@@ -64,8 +68,9 @@ auto compiler_draft6_validation_contains(const SchemaCompilerContext &context)
 
       // TODO: As an optimization, avoid this condition if the subschema
       // declares `type` to `array` already
-      {make<SchemaCompilerAssertionType>(context, JSON::Type::Array, {},
-                                         SchemaCompilerTargetType::Instance)})};
+      {make<SchemaCompilerAssertionTypeStrict>(
+          context, JSON::Type::Array, {},
+          SchemaCompilerTargetType::Instance)})};
 }
 
 auto compiler_draft6_validation_propertynames(
@@ -77,8 +82,9 @@ auto compiler_draft6_validation_propertynames(
 
       // TODO: As an optimization, avoid this condition if the subschema
       // declares `type` to `object` already
-      {make<SchemaCompilerAssertionType>(context, JSON::Type::Object, {},
-                                         SchemaCompilerTargetType::Instance)})};
+      {make<SchemaCompilerAssertionTypeStrict>(
+          context, JSON::Type::Object, {},
+          SchemaCompilerTargetType::Instance)})};
 }
 
 } // namespace internal

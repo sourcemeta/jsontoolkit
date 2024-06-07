@@ -58,7 +58,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
       "condition": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "condition": [],
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
@@ -91,7 +91,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
           "children": [
             {
               "category": "assertion",
-              "type": "type",
+              "type": "type-strict",
               "condition": [],
               "relativeSchemaLocation": "/foo/type",
               "relativeInstanceLocation": "/foo",
@@ -189,7 +189,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
       "condition": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "condition": [],
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
@@ -222,7 +222,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
           "children": [
             {
               "category": "assertion",
-              "type": "type",
+              "type": "type-strict",
               "condition": [],
               "relativeSchemaLocation": "/bar/type",
               "relativeInstanceLocation": "/bar",
@@ -293,7 +293,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
           "children": [
             {
               "category": "assertion",
-              "type": "type",
+              "type": "type-strict",
               "condition": [],
               "relativeSchemaLocation": "/foo/type",
               "relativeInstanceLocation": "/foo",

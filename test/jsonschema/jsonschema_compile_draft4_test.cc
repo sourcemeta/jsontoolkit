@@ -51,7 +51,7 @@ TEST(JSONSchema_compile_draft4, type_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
 }
@@ -70,7 +70,7 @@ TEST(JSONSchema_compile_draft4, type_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type", "");
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
 }
@@ -89,7 +89,7 @@ TEST(JSONSchema_compile_draft4, type_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
-  EVALUATE_TRACE_SUCCESS(0, AssertionTypeAny, "/type", "#/type", "");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of one of the given types");
 }
@@ -108,7 +108,7 @@ TEST(JSONSchema_compile_draft4, type_4) {
 
   const sourcemeta::jsontoolkit::JSON instance{3.14};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
-  EVALUATE_TRACE_SUCCESS(0, AssertionTypeAny, "/type", "#/type", "");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of one of the given types");
 }
@@ -127,7 +127,7 @@ TEST(JSONSchema_compile_draft4, type_5) {
 
   const sourcemeta::jsontoolkit::JSON instance{"3.14"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
-  EVALUATE_TRACE_FAILURE(0, AssertionTypeAny, "/type", "#/type", "");
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of one of the given types");
 }
@@ -146,7 +146,7 @@ TEST(JSONSchema_compile_draft4, type_6) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
 }
@@ -165,7 +165,7 @@ TEST(JSONSchema_compile_draft4, type_7) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/type", "#/type", "");
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of the given type");
 }
@@ -184,7 +184,7 @@ TEST(JSONSchema_compile_draft4, type_8) {
 
   const sourcemeta::jsontoolkit::JSON instance{3};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
-  EVALUATE_TRACE_SUCCESS(0, AssertionTypeAny, "/type", "#/type", "");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of one of the given types");
 }
@@ -203,7 +203,7 @@ TEST(JSONSchema_compile_draft4, type_9) {
 
   const sourcemeta::jsontoolkit::JSON instance{true};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
-  EVALUATE_TRACE_FAILURE(0, AssertionTypeAny, "/type", "#/type", "");
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_DESCRIBE(
       0, "The target document is expected to be of one of the given types");
 }
@@ -281,7 +281,7 @@ TEST(JSONSchema_compile_draft4, required_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_SUCCESS(1, AssertionDefinesAll, "/required", "#/required", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -309,8 +309,8 @@ TEST(JSONSchema_compile_draft4, allOf_1) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/allOf/0/type", "#/allOf/0/type",
-                         "");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/allOf/0/type",
+                         "#/allOf/0/type", "");
   EVALUATE_TRACE_SUCCESS(1, AssertionDefinesAll, "/allOf/1/required",
                          "#/allOf/1/required", "");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/allOf", "#/allOf", "");
@@ -342,8 +342,8 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"baz\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/allOf/0/type", "#/allOf/0/type",
-                         "");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/allOf/0/type",
+                         "#/allOf/0/type", "");
   EVALUATE_TRACE_FAILURE(1, AssertionDefinesAll, "/allOf/1/required",
                          "#/allOf/1/required", "");
   EVALUATE_TRACE_FAILURE(2, LogicalAnd, "/allOf", "#/allOf", "");
@@ -373,7 +373,7 @@ TEST(JSONSchema_compile_draft4, ref_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/allOf/0/$ref/type",
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrict, "/allOf/0/$ref/type",
                          "#/definitions/string/type", "");
   EVALUATE_TRACE_FAILURE(1, ControlLabel, "/allOf/0/$ref", "#/allOf/0/$ref",
                          "");
@@ -406,7 +406,7 @@ TEST(JSONSchema_compile_draft4, ref_2) {
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/allOf/0/$ref/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/allOf/0/$ref/type",
                          "#/definitions/string/type", "");
   EVALUATE_TRACE_SUCCESS(1, ControlLabel, "/allOf/0/$ref", "#/allOf/0/$ref",
                          "");
@@ -443,9 +443,9 @@ TEST(JSONSchema_compile_draft4, ref_3) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
-                         "");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/type",
+                         "https://example.com#/type", "");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo");
 
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties/foo/$ref/properties",
@@ -494,11 +494,11 @@ TEST(JSONSchema_compile_draft4, ref_4) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 10);
 
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
-                         "");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/type",
+                         "https://example.com#/type", "");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo");
-  EVALUATE_TRACE_SUCCESS(2, AssertionType,
+  EVALUATE_TRACE_SUCCESS(2, AssertionTypeStrict,
                          "/properties/foo/$ref/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo/foo");
   EVALUATE_TRACE_SUCCESS(3, LogicalAnd,
@@ -562,11 +562,11 @@ TEST(JSONSchema_compile_draft4, ref_5) {
 
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 7);
 
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "https://example.com#/type",
-                         "");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/type",
+                         "https://example.com#/type", "");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo");
-  EVALUATE_TRACE_FAILURE(2, AssertionType,
+  EVALUATE_TRACE_FAILURE(2, AssertionTypeStrict,
                          "/properties/foo/$ref/properties/foo/$ref/type",
                          "https://example.com#/type", "/foo/foo");
   EVALUATE_TRACE_FAILURE(
@@ -616,8 +616,8 @@ TEST(JSONSchema_compile_draft4, ref_6) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/type", "#/type", "");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/properties/foo/$ref/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/properties/foo/$ref/type",
                          "#/type", "/foo");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties/foo/$ref/properties",
                          "#/properties", "/foo");
@@ -689,11 +689,11 @@ TEST(JSONSchema_compile_draft4, properties_1) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/properties/bar/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
                          "#/properties/bar/type", "/bar");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
                                     "bar");
-  EVALUATE_TRACE_FAILURE(2, AssertionType, "/properties/foo/type",
+  EVALUATE_TRACE_FAILURE(2, AssertionTypeStrict, "/properties/foo/type",
                          "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_FAILURE(3, LogicalAnd, "/properties", "#/properties", "");
 
@@ -725,11 +725,11 @@ TEST(JSONSchema_compile_draft4, properties_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": \"xxx\", \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/properties/bar/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
                          "#/properties/bar/type", "/bar");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
                                     "bar");
-  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/properties/foo/type",
+  EVALUATE_TRACE_SUCCESS(2, AssertionTypeStrict, "/properties/foo/type",
                          "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(3, "/properties", "#/properties", "",
                                     "foo");
@@ -793,7 +793,7 @@ TEST(JSONSchema_compile_draft4, properties_4) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"bar\": \"baz\" } }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType,
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict,
                          "/properties/foo/properties/bar/type",
                          "#/properties/foo/properties/bar/type", "/foo/bar");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties/foo/properties",
@@ -960,7 +960,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_4) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/patternProperties/^f/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/patternProperties/^f/type",
                          // Note that the caret needs to be URI escaped
                          "#/patternProperties/%5Ef/type", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/patternProperties",
@@ -993,7 +993,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_5) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/patternProperties/^f/type",
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrict, "/patternProperties/^f/type",
                          // Note that the caret needs to be URI escaped
                          "#/patternProperties/%5Ef/type", "/foo");
   EVALUATE_TRACE_FAILURE(1, LogicalAnd, "/patternProperties",
@@ -1024,12 +1024,12 @@ TEST(JSONSchema_compile_draft4, patternProperties_6) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/patternProperties/^f/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/patternProperties/^f/type",
                          // Note that the caret needs to be URI escaped
                          "#/patternProperties/%5Ef/type", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/patternProperties",
                                     "#/patternProperties", "", "foo");
-  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/patternProperties/o$/type",
+  EVALUATE_TRACE_SUCCESS(2, AssertionTypeStrict, "/patternProperties/o$/type",
                          "#/patternProperties/o$/type", "/foo");
   EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/patternProperties",
                          "#/patternProperties", "");
@@ -1066,7 +1066,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_7) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
   EVALUATE_TRACE_SUCCESS(
-      0, AssertionType, "/patternProperties/^f/patternProperties/^b/type",
+      0, AssertionTypeStrict, "/patternProperties/^f/patternProperties/^b/type",
       "#/patternProperties/%5Ef/patternProperties/%5Eb/type", "/foo/bar");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(
       1, "/patternProperties/^f/patternProperties",
@@ -1107,9 +1107,9 @@ TEST(JSONSchema_compile_draft4, additionalProperties_1) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/additionalProperties/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/additionalProperties/type",
                          "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/additionalProperties/type",
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/additionalProperties/type",
                          "#/additionalProperties/type", "/foo");
   EVALUATE_TRACE_SUCCESS(2, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
@@ -1144,12 +1144,12 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/properties/foo/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
                          "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
                                     "foo");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_SUCCESS(3, AssertionType, "/additionalProperties/type",
+  EVALUATE_TRACE_SUCCESS(3, AssertionTypeStrict, "/additionalProperties/type",
                          "#/additionalProperties/type", "/bar");
   EVALUATE_TRACE_SUCCESS(4, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
@@ -1189,9 +1189,9 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
   EVALUATE_TRACE_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/additionalProperties/type",
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/additionalProperties/type",
                          "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/additionalProperties/type",
+  EVALUATE_TRACE_SUCCESS(2, AssertionTypeStrict, "/additionalProperties/type",
                          "#/additionalProperties/type", "/foo");
   EVALUATE_TRACE_SUCCESS(3, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
@@ -1229,7 +1229,8 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 8);
 
   // `patternProperties`
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/patternProperties/^bar$/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict,
+                         "/patternProperties/^bar$/type",
                          // Note that the caret needs to be URI escaped
                          "#/patternProperties/%5Ebar$/type", "/bar");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/patternProperties",
@@ -1238,14 +1239,14 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
                          "#/patternProperties", "");
 
   // `properties`
-  EVALUATE_TRACE_SUCCESS(3, AssertionType, "/properties/foo/type",
+  EVALUATE_TRACE_SUCCESS(3, AssertionTypeStrict, "/properties/foo/type",
                          "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "",
                                     "foo");
   EVALUATE_TRACE_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
 
   // `additionalProperties`
-  EVALUATE_TRACE_SUCCESS(6, AssertionType, "/additionalProperties/type",
+  EVALUATE_TRACE_SUCCESS(6, AssertionTypeStrict, "/additionalProperties/type",
                          "#/additionalProperties/type", "/baz");
   EVALUATE_TRACE_SUCCESS(7, LoopProperties, "/additionalProperties",
                          "#/additionalProperties", "");
@@ -1281,7 +1282,7 @@ TEST(JSONSchema_compile_draft4, not_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/not/type", "#/not/type", "");
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrict, "/not/type", "#/not/type", "");
   EVALUATE_TRACE_SUCCESS(1, LogicalNot, "/not", "#/not", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1306,7 +1307,7 @@ TEST(JSONSchema_compile_draft4, not_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/not/type", "#/not/type", "");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/not/type", "#/not/type", "");
   EVALUATE_TRACE_FAILURE(1, LogicalNot, "/not", "#/not", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1340,13 +1341,14 @@ TEST(JSONSchema_compile_draft4, not_3) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": false }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/not/properties/foo/type",
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/not/properties/foo/type",
                          "#/not/properties/foo/type", "/foo");
   EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/not/properties", "#/not/properties",
                                     "", "foo");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/not/properties", "#/not/properties",
                          "");
-  EVALUATE_TRACE_FAILURE(3, AssertionType, "/not/additionalProperties/type",
+  EVALUATE_TRACE_FAILURE(3, AssertionTypeStrict,
+                         "/not/additionalProperties/type",
                          "#/not/additionalProperties/type", "/bar");
   EVALUATE_TRACE_FAILURE(4, LoopProperties, "/not/additionalProperties",
                          "#/not/additionalProperties", "");
@@ -1399,9 +1401,12 @@ TEST(JSONSchema_compile_draft4, items_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/items/type", "#/items/type", "/0");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/items/type", "#/items/type", "/1");
-  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/items/type", "#/items/type", "/2");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/items/type", "#/items/type",
+                         "/0");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                         "/1");
+  EVALUATE_TRACE_SUCCESS(2, AssertionTypeStrict, "/items/type", "#/items/type",
+                         "/2");
   EVALUATE_TRACE_SUCCESS(3, LoopItems, "/items", "#/items", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1430,8 +1435,10 @@ TEST(JSONSchema_compile_draft4, items_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", 5, \"baz\" ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/items/type", "#/items/type", "/0");
-  EVALUATE_TRACE_FAILURE(1, AssertionType, "/items/type", "#/items/type", "/1");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/items/type", "#/items/type",
+                         "/0");
+  EVALUATE_TRACE_FAILURE(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                         "/1");
   EVALUATE_TRACE_FAILURE(2, LoopItems, "/items", "#/items", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1493,8 +1500,8 @@ TEST(JSONSchema_compile_draft4, items_6) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/items/0/type", "#/items/0/type",
-                         "/0");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                         "#/items/0/type", "/0");
   EVALUATE_TRACE_SUCCESS(1, LogicalAnd, "/items", "#/items", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1518,10 +1525,10 @@ TEST(JSONSchema_compile_draft4, items_7) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5, true, \"extra\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/items/0/type", "#/items/0/type",
-                         "/0");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/items/1/type", "#/items/1/type",
-                         "/1");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                         "#/items/0/type", "/0");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
+                         "#/items/1/type", "/1");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1547,10 +1554,10 @@ TEST(JSONSchema_compile_draft4, items_8) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5, 1, \"extra\" ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/items/0/type", "#/items/0/type",
-                         "/0");
-  EVALUATE_TRACE_FAILURE(1, AssertionType, "/items/1/type", "#/items/1/type",
-                         "/1");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                         "#/items/0/type", "/0");
+  EVALUATE_TRACE_FAILURE(1, AssertionTypeStrict, "/items/1/type",
+                         "#/items/1/type", "/1");
   EVALUATE_TRACE_FAILURE(2, LogicalAnd, "/items", "#/items", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1596,9 +1603,12 @@ TEST(JSONSchema_compile_draft4, additionalItems_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/items/type", "#/items/type", "/0");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/items/type", "#/items/type", "/1");
-  EVALUATE_TRACE_SUCCESS(2, AssertionType, "/items/type", "#/items/type", "/2");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/items/type", "#/items/type",
+                         "/0");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                         "/1");
+  EVALUATE_TRACE_SUCCESS(2, AssertionTypeStrict, "/items/type", "#/items/type",
+                         "/2");
   EVALUATE_TRACE_SUCCESS(3, LoopItems, "/items", "#/items", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1630,10 +1640,10 @@ TEST(JSONSchema_compile_draft4, additionalItems_3) {
       sourcemeta::jsontoolkit::parse("[ true, 5 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/items/0/type", "#/items/0/type",
-                         "/0");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/items/1/type", "#/items/1/type",
-                         "/1");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                         "#/items/0/type", "/0");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
+                         "#/items/1/type", "/1");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
   EVALUATE_TRACE_SUCCESS(3, LoopItems, "/additionalItems", "#/additionalItems",
                          "");
@@ -1667,14 +1677,14 @@ TEST(JSONSchema_compile_draft4, additionalItems_4) {
       sourcemeta::jsontoolkit::parse("[ true, 5, \"foo\", \"bar\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
 
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/items/0/type", "#/items/0/type",
-                         "/0");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/items/1/type", "#/items/1/type",
-                         "/1");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                         "#/items/0/type", "/0");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
+                         "#/items/1/type", "/1");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
-  EVALUATE_TRACE_SUCCESS(3, AssertionType, "/additionalItems/type",
+  EVALUATE_TRACE_SUCCESS(3, AssertionTypeStrict, "/additionalItems/type",
                          "#/additionalItems/type", "/2");
-  EVALUATE_TRACE_SUCCESS(4, AssertionType, "/additionalItems/type",
+  EVALUATE_TRACE_SUCCESS(4, AssertionTypeStrict, "/additionalItems/type",
                          "#/additionalItems/type", "/3");
   EVALUATE_TRACE_SUCCESS(5, LoopItems, "/additionalItems", "#/additionalItems",
                          "");
@@ -1712,12 +1722,12 @@ TEST(JSONSchema_compile_draft4, additionalItems_5) {
       sourcemeta::jsontoolkit::parse("[ true, 5, 6, \"bar\" ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 5);
 
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/items/0/type", "#/items/0/type",
-                         "/0");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/items/1/type", "#/items/1/type",
-                         "/1");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                         "#/items/0/type", "/0");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
+                         "#/items/1/type", "/1");
   EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
-  EVALUATE_TRACE_FAILURE(3, AssertionType, "/additionalItems/type",
+  EVALUATE_TRACE_FAILURE(3, AssertionTypeStrict, "/additionalItems/type",
                          "#/additionalItems/type", "/2");
   EVALUATE_TRACE_FAILURE(4, LoopItems, "/additionalItems", "#/additionalItems",
                          "");
@@ -1752,10 +1762,10 @@ TEST(JSONSchema_compile_draft4, anyOf_1) {
   const sourcemeta::jsontoolkit::JSON instance{1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/anyOf/0/type", "#/anyOf/0/type",
-                         "");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/anyOf/1/type", "#/anyOf/1/type",
-                         "");
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrict, "/anyOf/0/type",
+                         "#/anyOf/0/type", "");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/anyOf/1/type",
+                         "#/anyOf/1/type", "");
   EVALUATE_TRACE_SUCCESS(2, LogicalOr, "/anyOf", "#/anyOf", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1786,12 +1796,12 @@ TEST(JSONSchema_compile_draft4, anyOf_2) {
   const sourcemeta::jsontoolkit::JSON instance{true};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/anyOf/0/type", "#/anyOf/0/type",
-                         "");
-  EVALUATE_TRACE_FAILURE(1, AssertionType, "/anyOf/1/type", "#/anyOf/1/type",
-                         "");
-  EVALUATE_TRACE_FAILURE(2, AssertionTypeAny, "/anyOf/2/type", "#/anyOf/2/type",
-                         "");
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrict, "/anyOf/0/type",
+                         "#/anyOf/0/type", "");
+  EVALUATE_TRACE_FAILURE(1, AssertionTypeStrict, "/anyOf/1/type",
+                         "#/anyOf/1/type", "");
+  EVALUATE_TRACE_FAILURE(2, AssertionTypeStrictAny, "/anyOf/2/type",
+                         "#/anyOf/2/type", "");
   EVALUATE_TRACE_FAILURE(3, LogicalOr, "/anyOf", "#/anyOf", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1824,8 +1834,8 @@ TEST(JSONSchema_compile_draft4, oneOf_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
-  EVALUATE_TRACE_SUCCESS(0, AssertionType, "/oneOf/0/type", "#/oneOf/0/type",
-                         "");
+  EVALUATE_TRACE_SUCCESS(0, AssertionTypeStrict, "/oneOf/0/type",
+                         "#/oneOf/0/type", "");
   EVALUATE_TRACE_SUCCESS(1, LogicalXor, "/oneOf", "#/oneOf", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1854,13 +1864,13 @@ TEST(JSONSchema_compile_draft4, oneOf_2) {
   const sourcemeta::jsontoolkit::JSON instance{3.14};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/oneOf/0/type", "#/oneOf/0/type",
-                         "");
-  EVALUATE_TRACE_FAILURE(1, AssertionType, "/oneOf/1/type", "#/oneOf/1/type",
-                         "");
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrict, "/oneOf/0/type",
+                         "#/oneOf/0/type", "");
+  EVALUATE_TRACE_FAILURE(1, AssertionTypeStrict, "/oneOf/1/type",
+                         "#/oneOf/1/type", "");
 
-  EVALUATE_TRACE_SUCCESS(2, AssertionTypeAny, "/oneOf/2/type", "#/oneOf/2/type",
-                         "");
+  EVALUATE_TRACE_SUCCESS(2, AssertionTypeStrictAny, "/oneOf/2/type",
+                         "#/oneOf/2/type", "");
   EVALUATE_TRACE_SUCCESS(3, LogicalXor, "/oneOf", "#/oneOf", "");
 
   EVALUATE_TRACE_DESCRIBE(
@@ -1893,14 +1903,14 @@ TEST(JSONSchema_compile_draft4, oneOf_3) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 5);
 
-  EVALUATE_TRACE_FAILURE(0, AssertionType, "/oneOf/0/type", "#/oneOf/0/type",
-                         "");
-  EVALUATE_TRACE_SUCCESS(1, AssertionType, "/oneOf/1/type", "#/oneOf/1/type",
-                         "");
-  EVALUATE_TRACE_SUCCESS(2, AssertionTypeAny, "/oneOf/2/type", "#/oneOf/2/type",
-                         "");
-  EVALUATE_TRACE_FAILURE(3, AssertionType, "/oneOf/3/type", "#/oneOf/3/type",
-                         "");
+  EVALUATE_TRACE_FAILURE(0, AssertionTypeStrict, "/oneOf/0/type",
+                         "#/oneOf/0/type", "");
+  EVALUATE_TRACE_SUCCESS(1, AssertionTypeStrict, "/oneOf/1/type",
+                         "#/oneOf/1/type", "");
+  EVALUATE_TRACE_SUCCESS(2, AssertionTypeStrictAny, "/oneOf/2/type",
+                         "#/oneOf/2/type", "");
+  EVALUATE_TRACE_FAILURE(3, AssertionTypeStrict, "/oneOf/3/type",
+                         "#/oneOf/3/type", "");
   EVALUATE_TRACE_FAILURE(4, LogicalXor, "/oneOf", "#/oneOf", "");
 
   EVALUATE_TRACE_DESCRIBE(

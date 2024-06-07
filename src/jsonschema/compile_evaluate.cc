@@ -228,16 +228,17 @@ auto evaluate_step(
         break;
       }
     }
-  } else if (std::holds_alternative<SchemaCompilerAssertionType>(step)) {
-    const auto &assertion{std::get<SchemaCompilerAssertionType>(step)};
+  } else if (std::holds_alternative<SchemaCompilerAssertionTypeStrict>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionTypeStrict>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     result = target.type() == value;
-  } else if (std::holds_alternative<SchemaCompilerAssertionTypeAny>(step)) {
-    const auto &assertion{std::get<SchemaCompilerAssertionTypeAny>(step)};
+  } else if (std::holds_alternative<SchemaCompilerAssertionTypeStrictAny>(
+                 step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionTypeStrictAny>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
     const auto &value{context.resolve_value(assertion.value, instance)};

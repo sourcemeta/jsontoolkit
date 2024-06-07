@@ -169,19 +169,19 @@ TEST(JSONSchema_compile_json, fail_basic_root) {
 
 TEST(JSONSchema_compile_json, type_basic_root) {
   using namespace sourcemeta::jsontoolkit;
-  const SchemaCompilerTemplate steps{
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::String},
-                                  {}}};
+  const SchemaCompilerTemplate steps{SchemaCompilerAssertionTypeStrict{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerValueType{JSON::Type::String},
+      {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
     {
       "category": "assertion",
-      "type": "type",
+      "type": "type-strict",
       "relativeSchemaLocation": "",
       "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#",
@@ -238,13 +238,13 @@ TEST(JSONSchema_compile_json, or_empty) {
 TEST(JSONSchema_compile_json, or_single_child) {
   using namespace sourcemeta::jsontoolkit;
 
-  const SchemaCompilerTemplate children{
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::String},
-                                  {}}};
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerValueType{JSON::Type::String},
+      {}}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLogicalOr{{SchemaCompilerTargetType::Instance, {}},
@@ -272,7 +272,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
       "children": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
@@ -300,18 +300,20 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::String},
-                                  {}},
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::Array},
-                                  {}}};
+      SchemaCompilerAssertionTypeStrict{
+          {SchemaCompilerTargetType::Instance, {}},
+          Pointer{},
+          Pointer{},
+          "#",
+          SchemaCompilerValueType{JSON::Type::String},
+          {}},
+      SchemaCompilerAssertionTypeStrict{
+          {SchemaCompilerTargetType::Instance, {}},
+          Pointer{},
+          Pointer{},
+          "#",
+          SchemaCompilerValueType{JSON::Type::Array},
+          {}}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLogicalOr{{SchemaCompilerTargetType::Instance, {}},
@@ -339,7 +341,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
       "children": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
@@ -357,7 +359,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
         },
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
@@ -384,13 +386,13 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
 TEST(JSONSchema_compile_json, or_empty_single_condition) {
   using namespace sourcemeta::jsontoolkit;
 
-  const SchemaCompilerTemplate condition{
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::String},
-                                  {}}};
+  const SchemaCompilerTemplate condition{SchemaCompilerAssertionTypeStrict{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerValueType{JSON::Type::String},
+      {}}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLogicalOr{{SchemaCompilerTargetType::Instance, {}},
@@ -419,7 +421,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
       "condition": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
@@ -478,13 +480,13 @@ TEST(JSONSchema_compile_json, and_empty) {
 TEST(JSONSchema_compile_json, and_single_child) {
   using namespace sourcemeta::jsontoolkit;
 
-  const SchemaCompilerTemplate children{
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::String},
-                                  {}}};
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerValueType{JSON::Type::String},
+      {}}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLogicalAnd{{SchemaCompilerTargetType::Instance, {}},
@@ -512,7 +514,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
       "children": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
@@ -540,18 +542,20 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::String},
-                                  {}},
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::Array},
-                                  {}}};
+      SchemaCompilerAssertionTypeStrict{
+          {SchemaCompilerTargetType::Instance, {}},
+          Pointer{},
+          Pointer{},
+          "#",
+          SchemaCompilerValueType{JSON::Type::String},
+          {}},
+      SchemaCompilerAssertionTypeStrict{
+          {SchemaCompilerTargetType::Instance, {}},
+          Pointer{},
+          Pointer{},
+          "#",
+          SchemaCompilerValueType{JSON::Type::Array},
+          {}}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLogicalAnd{{SchemaCompilerTargetType::Instance, {}},
@@ -579,7 +583,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
       "children": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
@@ -597,7 +601,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
         },
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
@@ -624,13 +628,13 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
 TEST(JSONSchema_compile_json, and_empty_single_condition) {
   using namespace sourcemeta::jsontoolkit;
 
-  const SchemaCompilerTemplate condition{
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::String},
-                                  {}}};
+  const SchemaCompilerTemplate condition{SchemaCompilerAssertionTypeStrict{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerValueType{JSON::Type::String},
+      {}}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLogicalAnd{{SchemaCompilerTargetType::Instance, {}},
@@ -659,7 +663,7 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
       "condition": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
@@ -757,13 +761,13 @@ TEST(JSONSchema_compile_json, private_annotation_without_condition) {
 TEST(JSONSchema_compile_json, public_annotation_with_condition) {
   using namespace sourcemeta::jsontoolkit;
 
-  const SchemaCompilerTemplate condition{
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::Object},
-                                  {}}};
+  const SchemaCompilerTemplate condition{SchemaCompilerAssertionTypeStrict{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerValueType{JSON::Type::Object},
+      {}}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPublic{
       {SchemaCompilerTargetType::Instance, {"foo"}},
@@ -794,7 +798,7 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
       "condition": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
@@ -820,13 +824,13 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
 TEST(JSONSchema_compile_json, private_annotation_with_condition) {
   using namespace sourcemeta::jsontoolkit;
 
-  const SchemaCompilerTemplate condition{
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::Object},
-                                  {}}};
+  const SchemaCompilerTemplate condition{SchemaCompilerAssertionTypeStrict{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerValueType{JSON::Type::Object},
+      {}}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPrivate{
       {SchemaCompilerTargetType::Instance, {"foo"}},
@@ -857,7 +861,7 @@ TEST(JSONSchema_compile_json, private_annotation_with_condition) {
       "condition": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
@@ -883,21 +887,21 @@ TEST(JSONSchema_compile_json, private_annotation_with_condition) {
 TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
   using namespace sourcemeta::jsontoolkit;
 
-  const SchemaCompilerTemplate children{
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::String},
-                                  {}}};
+  const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerValueType{JSON::Type::String},
+      {}}};
 
-  const SchemaCompilerTemplate condition{
-      SchemaCompilerAssertionType{{SchemaCompilerTargetType::Instance, {}},
-                                  Pointer{},
-                                  Pointer{},
-                                  "#",
-                                  SchemaCompilerValueType{JSON::Type::Object},
-                                  {}}};
+  const SchemaCompilerTemplate condition{SchemaCompilerAssertionTypeStrict{
+      {SchemaCompilerTargetType::Instance, {}},
+      Pointer{},
+      Pointer{},
+      "#",
+      SchemaCompilerValueType{JSON::Type::Object},
+      {}}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopProperties{{SchemaCompilerTargetType::Instance, {}},
@@ -929,7 +933,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
       "children": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
@@ -949,7 +953,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
       "condition": [
         {
           "category": "assertion",
-          "type": "type",
+          "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "absoluteKeywordLocation": "#",
