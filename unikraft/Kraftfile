@@ -1,0 +1,30 @@
+specification: v0.6
+name: sourcemeta_jsontoolkit_test
+unikraft:
+  version: stable
+
+targets:
+  - name: development
+    platform: qemu
+    architecture: x86_64
+
+libraries:
+  libcxxabi:
+    version: stable
+  libcxx:
+    version: stable
+  libunwind:
+    version: stable
+  compiler-rt:
+    version: stable
+  musl:
+    version: stable
+  googletest:
+    version: stable
+    kconfig:
+      - CONFIG_LIBGOOGLETEST=y
+      - CONFIG_LIBGOOGLETEST_BUILD_MAIN=y
+  jsontoolkit:
+    source: ..
+    kconfig:
+      - CONFIG_LIBJSONTOOLKIT=y
