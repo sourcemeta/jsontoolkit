@@ -217,6 +217,11 @@ struct SchemaCompilerLogicalAnd;
 struct SchemaCompilerLogicalXor;
 
 /// @ingroup jsonschema
+/// Represents a compiler logical step that represents a conjunction that always
+/// reports success
+struct SchemaCompilerLogicalTry;
+
+/// @ingroup jsonschema
 /// Represents a compiler logical step that represents a negation
 struct SchemaCompilerLogicalNot;
 
@@ -275,10 +280,10 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionStringType, SchemaCompilerAnnotationPublic,
     SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
     SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
-    SchemaCompilerLogicalNot, SchemaCompilerInternalNoAnnotation,
-    SchemaCompilerInternalContainer, SchemaCompilerInternalDefinesAll,
-    SchemaCompilerLoopProperties, SchemaCompilerLoopKeys,
-    SchemaCompilerLoopItems, SchemaCompilerLoopContains,
+    SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
+    SchemaCompilerInternalNoAnnotation, SchemaCompilerInternalContainer,
+    SchemaCompilerInternalDefinesAll, SchemaCompilerLoopProperties,
+    SchemaCompilerLoopKeys, SchemaCompilerLoopItems, SchemaCompilerLoopContains,
     SchemaCompilerControlLabel, SchemaCompilerControlJump>>;
 
 #if !defined(DOXYGEN)
@@ -337,6 +342,7 @@ DEFINE_STEP_WITH_VALUE(Annotation, Private, SchemaCompilerValueJSON)
 DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Logical, Try, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Internal, NoAnnotation, SchemaCompilerValueJSON)
 DEFINE_STEP_APPLICATOR(Internal, Container, SchemaCompilerValueNone)

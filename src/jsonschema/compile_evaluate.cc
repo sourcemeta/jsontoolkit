@@ -449,6 +449,18 @@ auto evaluate_step(
         break;
       }
     }
+  } else if (std::holds_alternative<SchemaCompilerLogicalTry>(step)) {
+    const auto &logical{std::get<SchemaCompilerLogicalTry>(step)};
+    assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
+    context.push(logical);
+    EVALUATE_CONDITION_GUARD(logical.condition, instance);
+    result = true;
+    for (const auto &child : logical.children) {
+      if (!evaluate_step(child, instance, mode, callback, context) &&
+          mode == SchemaCompilerEvaluationMode::Fast) {
+        break;
+      }
+    }
   } else if (std::holds_alternative<SchemaCompilerLogicalNot>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalNot>(step)};
     assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
