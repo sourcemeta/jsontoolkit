@@ -20,26 +20,23 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - run: sudo apt update
-      - run: sudo apt install -y doxygen
-      - run: >
-          cmake -S . -B ./build
-          -DCMAKE_BUILD_TYPE:STRING=Release
-          -DJSONTOOLKIT_URI:BOOL=OFF
-          -DJSONTOOLKIT_JSON:BOOL=OFF
-          -DJSONTOOLKIT_JSONSCHEMA:BOOL=OFF
-          -DJSONTOOLKIT_JSONPOINTER:BOOL=OFF
-          -DJSONTOOLKIT_TESTS:BOOL=OFF
-          -DJSONTOOLKIT_DOCS:BOOL=ON
-      - run: cmake --build ./build --config Release --target doxygen
-      - name: Setup Pages
-        uses: actions/configure-pages@v1
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - uses: actions/checkout@v4
+      - name: Installing dependencies
+        uses: sourcemeta/noa@035f7a9270e7bac134455b04e7acb649b68bdd1e
         with:
-          path: ./build/website
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+          step: dependencies
+      - name: Configuring
+        uses: sourcemeta/noa@035f7a9270e7bac134455b04e7acb649b68bdd1e
+        with:
+          step: configure
+          compiler: auto
+          mode: static
+          options: -DJSONTOOLKIT_DOCS_ONLY:BOOL=ON
+      - name: Doxygen
+        uses: sourcemeta/noa@035f7a9270e7bac134455b04e7acb649b68bdd1e
+        with:
+          step: doxygen
+      - name: Website
+        uses: sourcemeta/noa@035f7a9270e7bac134455b04e7acb649b68bdd1e
+        with:
+          step: website

@@ -14,6 +14,7 @@ option(JSONTOOLKIT_JSONPOINTER "Build the JSON Toolkit JSON Pointer library" ON)
 option(JSONTOOLKIT_JSONL "Build the JSON Toolkit JSONL library" ON)
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" OFF)
 option(JSONTOOLKIT_DOCS "Build the JSON Toolkit docs" OFF)
+option(JSONTOOLKIT_DOCS_ONLY "Build only the JSON Toolkit docs" OFF)
 option(JSONTOOLKIT_INSTALL "Install the JSON Toolkit library" ON)
 option(JSONTOOLKIT_ADDRESS_SANITIZER "Build JSON Toolkit with an address sanitizer" OFF)
 option(JSONTOOLKIT_UNDEFINED_SANITIZER "Build JSON Toolkit with an undefined behavior sanitizer" OFF)
@@ -35,39 +36,41 @@ if(JSONTOOLKIT_INSTALL)
     COMPONENT sourcemeta_jsontoolkit_dev)
 endif()
 
-if(JSONTOOLKIT_URI)
-  find_package(UriParser REQUIRED)
-  add_subdirectory(src/uri)
+if(NOT JSONTOOLKIT_DOCS_ONLY)
+  if(JSONTOOLKIT_URI)
+    find_package(UriParser REQUIRED)
+    add_subdirectory(src/uri)
+  endif()
+
+  if(JSONTOOLKIT_JSON)
+    add_subdirectory(src/json)
+  endif()
+
+  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
+    add_subdirectory(src/jsonpointer)
+  endif()
+
+  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
+    add_subdirectory(src/jsonschema)
+  endif()
+
+  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
+    add_subdirectory(src/jsonl)
+  endif()
+
+  if(JSONTOOLKIT_ADDRESS_SANITIZER)
+    noa_sanitizer(TYPE address)
+  elseif(JSONTOOLKIT_UNDEFINED_SANITIZER)
+    noa_sanitizer(TYPE undefined)
+  endif()
 endif()
 
-if(JSONTOOLKIT_JSON)
-  add_subdirectory(src/json)
-endif()
-
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
-  add_subdirectory(src/jsonpointer)
-endif()
-
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
-  add_subdirectory(src/jsonschema)
-endif()
-
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
-  add_subdirectory(src/jsonl)
-endif()
-
-if(JSONTOOLKIT_ADDRESS_SANITIZER)
-  noa_sanitizer(TYPE address)
-elseif(JSONTOOLKIT_UNDEFINED_SANITIZER)
-  noa_sanitizer(TYPE undefined)
-endif()
-
-if(JSONTOOLKIT_DOCS)
+if(JSONTOOLKIT_DOCS OR JSONTOOLKIT_DOCS_ONLY)
   noa_target_doxygen(CONFIG "${PROJECT_SOURCE_DIR}/doxygen/Doxyfile.in"
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/website")
 endif()
 
-if(PROJECT_IS_TOP_LEVEL)
+if(PROJECT_IS_TOP_LEVEL AND NOT JSONTOOLKIT_DOCS_ONLY)
   noa_target_clang_format(SOURCES
     src/*.h src/*.cc
     test/*.h test/*.cc)
@@ -76,7 +79,7 @@ if(PROJECT_IS_TOP_LEVEL)
 endif()
 
 # Testing
-if(JSONTOOLKIT_TESTS)
+if(JSONTOOLKIT_TESTS AND NOT JSONTOOLKIT_DOCS_ONLY)
   find_package(GoogleTest REQUIRED)
   enable_testing()
 

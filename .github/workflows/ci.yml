@@ -55,31 +55,31 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Installing dependencies
-        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        uses: sourcemeta/noa@035f7a9270e7bac134455b04e7acb649b68bdd1e
         with:
           step: dependencies
       - name: Configuring
-        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        uses: sourcemeta/noa@035f7a9270e7bac134455b04e7acb649b68bdd1e
         with:
           step: configure
           mode: ${{ matrix.platform.type }}
           compiler: ${{ matrix.platform.compiler }}
           options: -DJSONTOOLKIT_TESTS:BOOL=ON -DJSONTOOLKIT_DOCS:BOOL=OFF ${{ matrix.platform.options }}
       - name: Check
-        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        uses: sourcemeta/noa@035f7a9270e7bac134455b04e7acb649b68bdd1e
         with:
           step: check
       - name: Build
-        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        uses: sourcemeta/noa@035f7a9270e7bac134455b04e7acb649b68bdd1e
         with:
           step: build
       - name: Install
-        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        uses: sourcemeta/noa@035f7a9270e7bac134455b04e7acb649b68bdd1e
         with:
           step: install
           component: jsontoolkit
       - name: Test
-        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        uses: sourcemeta/noa@035f7a9270e7bac134455b04e7acb649b68bdd1e
         with:
           step: test
 
@@ -87,9 +87,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: unikraft/kraftkit@stable
+      - uses: sourcemeta/noa@035f7a9270e7bac134455b04e7acb649b68bdd1e
         with:
-          workdir: .
-          run: |
-            kraft build --target development --jobs 4 --log-type=basic unikraft
-            kraft run --target development --disable-acceleration unikraft --memory 128Mi
+          step: unikraft
