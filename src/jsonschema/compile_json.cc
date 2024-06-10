@@ -24,6 +24,9 @@ auto target_to_json(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target)
     case SchemaCompilerTargetType::InstanceParent:
       result.assign("type", JSON{"instance-parent"});
       return result;
+    case SchemaCompilerTargetType::AdjacentAnnotations:
+      result.assign("type", JSON{"adjacent-annotations"});
+      return result;
     case SchemaCompilerTargetType::ParentAdjacentAnnotations:
       result.assign("type", JSON{"parent-adjacent-annotations"});
       return result;

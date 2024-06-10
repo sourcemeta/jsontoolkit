@@ -39,6 +39,10 @@ enum class SchemaCompilerTargetType {
   /// The penultimate path (i.e. property or index) of the instance location
   InstanceParent,
 
+  /// The annotations produced at the same base evaluation path for the
+  /// current instance location
+  AdjacentAnnotations,
+
   /// The annotations produced at the same base evaluation path for the parent
   /// of the current instance location
   ParentAdjacentAnnotations
