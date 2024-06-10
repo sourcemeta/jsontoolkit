@@ -17,6 +17,9 @@ struct DescribeVisitor {
     return "The target is expected to match one and only one of the given "
            "assertions";
   }
+  auto operator()(const SchemaCompilerLogicalTry &) const -> std::string {
+    return "The target might match all of the given assertions";
+  }
   auto operator()(const SchemaCompilerLogicalNot &) const -> std::string {
     return "The given schema is expected to not validate successfully";
   }

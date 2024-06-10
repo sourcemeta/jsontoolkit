@@ -200,6 +200,7 @@ struct StepVisitor {
   HANDLE_STEP("logical", "or", SchemaCompilerLogicalOr)
   HANDLE_STEP("logical", "and", SchemaCompilerLogicalAnd)
   HANDLE_STEP("logical", "xor", SchemaCompilerLogicalXor)
+  HANDLE_STEP("logical", "try", SchemaCompilerLogicalTry)
   HANDLE_STEP("logical", "not", SchemaCompilerLogicalNot)
   HANDLE_STEP("internal", "no-annotation", SchemaCompilerInternalNoAnnotation)
   HANDLE_STEP("internal", "container", SchemaCompilerInternalContainer)
