@@ -231,6 +231,11 @@ struct SchemaCompilerLogicalNot;
 
 /// @ingroup jsonschema
 /// Represents a hidden compiler assertion step that checks a certain
+/// annotation was produced
+struct SchemaCompilerInternalAnnotation;
+
+/// @ingroup jsonschema
+/// Represents a hidden compiler assertion step that checks a certain
 /// annotation was not produced
 struct SchemaCompilerInternalNoAnnotation;
 
@@ -285,9 +290,10 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
     SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
-    SchemaCompilerInternalNoAnnotation, SchemaCompilerInternalContainer,
-    SchemaCompilerInternalDefinesAll, SchemaCompilerLoopProperties,
-    SchemaCompilerLoopKeys, SchemaCompilerLoopItems, SchemaCompilerLoopContains,
+    SchemaCompilerInternalAnnotation, SchemaCompilerInternalNoAnnotation,
+    SchemaCompilerInternalContainer, SchemaCompilerInternalDefinesAll,
+    SchemaCompilerLoopProperties, SchemaCompilerLoopKeys,
+    SchemaCompilerLoopItems, SchemaCompilerLoopContains,
     SchemaCompilerControlLabel, SchemaCompilerControlJump>>;
 
 #if !defined(DOXYGEN)
@@ -348,6 +354,7 @@ DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Try, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
+DEFINE_STEP_WITH_VALUE(Internal, Annotation, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Internal, NoAnnotation, SchemaCompilerValueJSON)
 DEFINE_STEP_APPLICATOR(Internal, Container, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Internal, DefinesAll, SchemaCompilerValueStrings)

@@ -477,6 +477,18 @@ auto evaluate_step(
         }
       }
     }
+  } else if (std::holds_alternative<SchemaCompilerInternalAnnotation>(step)) {
+    const auto &assertion{std::get<SchemaCompilerInternalAnnotation>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<std::set<JSON>>(assertion.target, instance)};
+    result = target.contains(value);
+
+    // We treat this step as transparent to the consumer
+    context.pop();
+    return result;
   } else if (std::holds_alternative<SchemaCompilerInternalNoAnnotation>(step)) {
     const auto &assertion{std::get<SchemaCompilerInternalNoAnnotation>(step)};
     context.push(assertion);
