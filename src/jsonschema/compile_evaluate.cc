@@ -106,12 +106,14 @@ public:
 
     // An optimization for efficiently accessing annotations
     if constexpr (std::is_same_v<Annotations, T>) {
-      assert(target.first ==
-             SchemaCompilerTargetType::ParentAdjacentAnnotations);
       const auto schema_location{
           this->evaluate_path().initial().concat(target.second)};
-      return this->annotations(this->instance_location().initial(),
-                               schema_location);
+      if (target.first == SchemaCompilerTargetType::ParentAdjacentAnnotations) {
+        return this->annotations(this->instance_location().initial(),
+                                 schema_location);
+      } else {
+        return this->annotations(this->instance_location(), schema_location);
+      }
     } else {
       static_assert(std::is_same_v<JSON, T>);
       switch (target.first) {
