@@ -192,6 +192,24 @@ int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
 
   try {
+    // Draft 7
+    register_tests("draft7", "JSONSchemaOfficialSuite_Draft7",
+                   "http://json-schema.org/draft-07/schema#", {});
+    register_tests(std::filesystem::path{"draft7"} / "optional",
+                   "JSONSchemaOfficialSuite_Draft7_Optional",
+                   "http://json-schema.org/draft-07/schema#",
+                   // TODO: Enable all tests
+                   {"bignum", "content", "cross-draft", "ecmascript-regex",
+                    "id", "non-bmp-regex"});
+    register_tests(std::filesystem::path{"draft7"} / "optional" / "format",
+                   "JSONSchemaOfficialSuite_Draft7_Optional_Format",
+                   "http://json-schema.org/draft-07/schema#",
+                   // TODO: Enable all tests
+                   {"date-time", "date", "email", "hostname", "idn-email",
+                    "idn-hostname", "ipv4", "ipv6", "iri-reference", "iri",
+                    "json-pointer", "regex", "relative-json-pointer", "time",
+                    "unknown", "uri-reference", "uri-template", "uri"});
+
     // Draft 6
     register_tests("draft6", "JSONSchemaOfficialSuite_Draft6",
                    "http://json-schema.org/draft-06/schema#", {});
