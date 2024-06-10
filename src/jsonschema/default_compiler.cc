@@ -3,6 +3,7 @@
 
 #include "default_compiler_draft4.h"
 #include "default_compiler_draft6.h"
+#include "default_compiler_draft7.h"
 
 #include <cassert> // assert
 #include <set>     // std::set
@@ -49,6 +50,14 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   COMPILE("http://json-schema.org/draft-07/schema#", "$ref",
           compiler_draft4_core_ref);
   STOP_IF_SIBLING_KEYWORD("http://json-schema.org/draft-07/schema#", "$ref");
+
+  // Any
+  COMPILE("http://json-schema.org/draft-07/schema#", "if",
+          compiler_draft7_applicator_if);
+  COMPILE("http://json-schema.org/draft-07/schema#", "then",
+          compiler_draft7_applicator_then);
+  COMPILE("http://json-schema.org/draft-07/schema#", "else",
+          compiler_draft7_applicator_else);
 
   // Same as Draft 6
 
