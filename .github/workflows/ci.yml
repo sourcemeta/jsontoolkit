@@ -16,121 +16,72 @@ jobs:
       matrix:
         platform:
           - os: macos-latest
-            cc: clang
-            cxx: clang++
+            compiler: llvm
             type: static
-            shell: sh
           - os: macos-latest
-            cc: clang
-            cxx: clang++
+            compiler: llvm
             type: shared
-            shell: sh
           - os: ubuntu-latest
-            cc: clang
-            cxx: clang++
+            compiler: llvm
             type: static
-            shell: sh
           - os: ubuntu-latest
-            cc: gcc
-            cxx: g++
+            compiler: gcc
             type: static
-            shell: sh
           - os: ubuntu-latest
-            cc: clang
-            cxx: clang++
+            compiler: llvm
             type: shared
-            shell: sh
           - os: ubuntu-latest
-            cc: gcc
-            cxx: g++
+            compiler: gcc
             type: shared
-            shell: sh
           - os: windows-latest
+            compiler: msvc
             type: static
-            shell: pwsh
           - os: windows-latest
+            compiler: msvc
             type: shared
-            shell: pwsh
 
           # Sanitizers
           - os: ubuntu-latest
-            cc: clang
-            cxx: clang++
+            compiler: llvm
             type: static
-            shell: sh
             options: -DJSONTOOLKIT_ADDRESS_SANITIZER:BOOL=ON
           - os: ubuntu-latest
-            cc: clang
-            cxx: clang++
+            compiler: llvm
             type: static
-            shell: sh
             options: -DJSONTOOLKIT_UNDEFINED_SANITIZER:BOOL=ON
 
-    defaults:
-      run:
-        shell: ${{ matrix.platform.shell }}
-
     runs-on: ${{ matrix.platform.os }}
-    env:
-      CC: ${{ matrix.platform.cc }}
-      CXX: ${{ matrix.platform.cxx }}
     steps:
-      - name: Install ClangFormat
-        run: pip install clang-format==18.1.5
+      - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v3
-      - name: Install dependencies (macOS)
-        if: runner.os == 'macos'
-        run: brew bundle
-        env:
-          HOMEBREW_NO_ANALYTICS: 1
-          HOMEBREW_NO_AUTO_UPDATE: 1
-      - run: cmake --version
-      - name: Configure JSON Toolkit (static)
-        if: matrix.platform.type == 'static'
-        run: >
-          cmake -S . -B ./build
-          -DCMAKE_BUILD_TYPE:STRING=Release
-          -DJSONTOOLKIT_TESTS:BOOL=ON
-          -DJSONTOOLKIT_DOCS:BOOL=OFF
-          -DBUILD_SHARED_LIBS:BOOL=OFF
-          -DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON
-          ${{ matrix.platform.options }}
-      - name: Configure JSON Toolkit (shared)
-        if: matrix.platform.type == 'shared'
-        run: >
-          cmake -S . -B ./build
-          -DCMAKE_BUILD_TYPE:STRING=Release
-          -DJSONTOOLKIT_TESTS:BOOL=ON
-          -DJSONTOOLKIT_DOCS:BOOL=OFF
-          -DBUILD_SHARED_LIBS:BOOL=ON
-          -DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON
-          ${{ matrix.platform.options }}
-      - run: cmake --build ./build --config Release --target clang_format_test
-      - run: cmake --build ./build --config Release --parallel 4
-      - run: >
-          cmake --install ./build --prefix ./build/dist --config Release --verbose
-          --component sourcemeta_jsontoolkit
-      - run: >
-          cmake --install ./build --prefix ./build/dist --config Release --verbose
-          --component sourcemeta_jsontoolkit_dev
-
-      - name: Copy in the correct VC runtime DLLs (workaround for actions/runner-images#10004)
-        if: runner.os == 'windows'
-        run: |
-          Copy-Item (Join-Path `
-            ((Get-ChildItem -Directory `
-                -Path "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Redist\MSVC\14.*" |
-              Sort -Descending | Select-Object -First 1).FullName
-            ) 'x64\Microsoft.VC143.CRT\*.dll') "build\bin\Release"
-
-      # Not every CTest version supports the --test-dir option. If such option
-      # is not recognized, `ctest` will successfully exit finding no tests.
-      # Better to be sure and `cd` all the time here.
-      - run: cd ./build && ctest --build-config Release --output-on-failure --parallel
-        env:
-          # See https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
-          UBSAN_OPTIONS: print_stacktrace=1
+      - name: Installing dependencies
+        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        with:
+          step: dependencies
+      - name: Configuring
+        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        with:
+          step: configure
+          mode: ${{ matrix.platform.type }}
+          compiler: ${{ matrix.platform.compiler }}
+          options: -DJSONTOOLKIT_TESTS:BOOL=ON -DJSONTOOLKIT_DOCS:BOOL=OFF ${{ matrix.platform.options }}
+      - name: Check
+        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        with:
+          step: check
+      - name: Build
+        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        with:
+          step: build
+      - name: Install
+        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        with:
+          step: install
+          component: jsontoolkit
+      - name: Test
+        uses: sourcemeta/noa@bf776e10ed7d4a056627923eb9bf6ff61a38e92b
+        with:
+          step: test
 
   unikraft:
     runs-on: ubuntu-latest
