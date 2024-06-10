@@ -23,6 +23,7 @@ vendor/googletest
 vendor/googletest.mask
 vendor/referencing-suite
 vendor/referencing-suite.mask
+vendor/jsonschema-test-suite
 cmake/FindGoogleTest.cmake
 .editorconfig
 .ackrc
