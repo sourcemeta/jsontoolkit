@@ -28,6 +28,10 @@ struct DescribeVisitor {
     return "Internal";
   }
   auto
+  operator()(const SchemaCompilerInternalAnnotation &) const -> std::string {
+    return "The target was annotated with the given value";
+  }
+  auto
   operator()(const SchemaCompilerInternalNoAnnotation &) const -> std::string {
     return "The target was not annotated with the given value";
   }
