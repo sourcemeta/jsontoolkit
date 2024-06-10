@@ -58,6 +58,8 @@ static auto test_resolver(std::string_view identifier)
                    std::filesystem::path{"nested"} / "string.json")
   READ_SCHEMA_FILE("http://localhost:1234/draft6/detached-ref.json",
                    std::filesystem::path{"draft6"} / "detached-ref.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft7/detached-ref.json",
+                   std::filesystem::path{"draft7"} / "detached-ref.json")
 
 #undef READ_SCHEMA_FILE
 
