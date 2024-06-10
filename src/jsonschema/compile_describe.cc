@@ -98,7 +98,7 @@ struct DescribeVisitor {
   }
 
   auto operator()(const SchemaCompilerAssertionEqual &) const -> std::string {
-    return "The target size is expected to be equal to the given number";
+    return "The target is expected to be equal to the given value";
   }
   auto operator()(const SchemaCompilerAssertionGreaterEqual &) const {
     return "The target number is expected to be greater than or equal to the "

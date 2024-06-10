@@ -2107,7 +2107,7 @@ TEST(JSONSchema_compile_draft4, enum_3) {
   EVALUATE_TRACE_SUCCESS(0, AssertionEqual, "/enum", "#/enum", "");
 
   EVALUATE_TRACE_DESCRIBE(
-      0, "The target size is expected to be equal to the given number");
+      0, "The target is expected to be equal to the given value");
 }
 
 TEST(JSONSchema_compile_draft4, uniqueItems_1) {
