@@ -16,7 +16,7 @@ add_executable(sourcemeta_jsontoolkit_jsonpointer_unit
   jsonpointer_concat_test.cc
   jsonpointer_starts_with_test.cc
   jsonpointer_rebase_test.cc)
-sourcemeta_jsontoolkit_add_compile_options(sourcemeta_jsontoolkit_jsonpointer_unit)
+noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_jsonpointer_unit)
 target_link_libraries(sourcemeta_jsontoolkit_jsonpointer_unit
   PRIVATE GTest::gtest GTest::gtest_main)
 target_link_libraries(sourcemeta_jsontoolkit_jsonpointer_unit
