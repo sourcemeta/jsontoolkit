@@ -28,4 +28,6 @@ cmake/FindGoogleTest.cmake
 .ackrc
 .gitattributes
 .cirrus.yml
+Brewfile
+Brewfile.lock.json
 CHANGELOG.markdown
