@@ -13,6 +13,47 @@
                       "https://json-schema.org/draft/2019-09/schema",          \
                       expected_base, expected_relative_pointer);
 
+TEST(JSONSchema_frame_2019_09, anonymous_with_nested_schema_resource) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalProperties": { "$id": "https://example.com" }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 6);
+
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "https://example.com",
+                                "/additionalProperties",
+                                "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "https://example.com#/$id",
+                                "/additionalProperties/$id",
+                                "https://json-schema.org/draft/2019-09/schema");
+
+  // JSON Pointers
+
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "", "",
+                                "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/$schema", "/$schema",
+                                "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/additionalProperties",
+                                "/additionalProperties",
+                                "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/additionalProperties/$id",
+                                "/additionalProperties/$id",
+                                "https://json-schema.org/draft/2019-09/schema");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
+}
+
 TEST(JSONSchema_frame_2019_09, empty_schema) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
