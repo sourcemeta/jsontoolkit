@@ -458,8 +458,7 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD(logical.condition, instance);
     result = true;
     for (const auto &child : logical.children) {
-      if (!evaluate_step(child, instance, mode, callback, context) &&
-          mode == SchemaCompilerEvaluationMode::Fast) {
+      if (!evaluate_step(child, instance, mode, callback, context)) {
         break;
       }
     }
