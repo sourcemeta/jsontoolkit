@@ -444,6 +444,7 @@ TEST(JSONSchema_bundle_2019_09, anonymous_no_dialect) {
 
   sourcemeta::jsontoolkit::bundle(
       document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      sourcemeta::jsontoolkit::BundleOptions::Default,
       "https://json-schema.org/draft/2019-09/schema")
       .wait();
 

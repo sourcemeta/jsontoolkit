@@ -132,6 +132,7 @@ TEST(JSONSchema_bundle, with_default_dialect) {
 
   sourcemeta::jsontoolkit::bundle(
       document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      sourcemeta::jsontoolkit::BundleOptions::Default,
       "https://json-schema.org/draft/2020-12/schema")
       .wait();
 

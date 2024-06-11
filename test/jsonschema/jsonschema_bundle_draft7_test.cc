@@ -456,6 +456,7 @@ TEST(JSONSchema_bundle_draft7, anonymous_no_dialect) {
 
   sourcemeta::jsontoolkit::bundle(
       document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      sourcemeta::jsontoolkit::BundleOptions::Default,
       "http://json-schema.org/draft-07/schema#")
       .wait();
 

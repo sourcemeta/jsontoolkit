@@ -134,8 +134,14 @@ namespace sourcemeta::jsontoolkit {
 
 auto bundle(sourcemeta::jsontoolkit::JSON &schema, const SchemaWalker &walker,
             const SchemaResolver &resolver,
+#ifdef NDEBUG
+            const BundleOptions,
+#else
+            const BundleOptions options,
+#endif
             const std::optional<std::string> &default_dialect)
     -> std::future<void> {
+  assert(options == BundleOptions::Default);
   const auto vocabularies{
       sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)
           .get()};
@@ -147,10 +153,11 @@ auto bundle(sourcemeta::jsontoolkit::JSON &schema, const SchemaWalker &walker,
 
 auto bundle(const sourcemeta::jsontoolkit::JSON &schema,
             const SchemaWalker &walker, const SchemaResolver &resolver,
+            const BundleOptions options,
             const std::optional<std::string> &default_dialect)
     -> std::future<sourcemeta::jsontoolkit::JSON> {
   sourcemeta::jsontoolkit::JSON copy = schema;
-  bundle(copy, walker, resolver, default_dialect).wait();
+  bundle(copy, walker, resolver, options, default_dialect).wait();
   std::promise<sourcemeta::jsontoolkit::JSON> promise;
   promise.set_value(std::move(copy));
   return promise.get_future();
