@@ -340,3 +340,39 @@ TEST(JSONSchema_compile_draft6, propertyNames_3) {
   EVALUATE_TRACE_DESCRIBE(2,
                           "Loop over the property keys of the target object");
 }
+
+TEST(JSONSchema_compile_draft6, property_names_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "properties": {
+      "foo": {
+        "propertyNames": {}
+      }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": {}
+  })JSON")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_SUCCESS(0, LoopKeys, "/properties/foo/propertyNames",
+                         "#/properties/foo/propertyNames", "/foo");
+  EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
+                                    "foo");
+  EVALUATE_TRACE_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
+
+  EVALUATE_TRACE_DESCRIBE(0,
+                          "Loop over the property keys of the target object");
+  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+}
