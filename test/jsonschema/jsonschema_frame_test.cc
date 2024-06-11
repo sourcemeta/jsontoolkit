@@ -168,7 +168,9 @@ TEST(JSONSchema_frame, no_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(frame.size(), 11);
+  EXPECT_EQ(frame.size(), 14);
+
+  // Top level
 
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "", "", "https://json-schema.org/draft/2020-12/schema");
@@ -178,6 +180,9 @@ TEST(JSONSchema_frame, no_id) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/properties", "/properties",
       "https://json-schema.org/draft/2020-12/schema");
+
+  // Foo
+
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/properties/foo", "/properties/foo",
       "https://json-schema.org/draft/2020-12/schema");
@@ -190,6 +195,9 @@ TEST(JSONSchema_frame, no_id) {
   EXPECT_ANONYMOUS_FRAME_STATIC_ANCHOR(
       frame, "#foo", "/properties/foo",
       "https://json-schema.org/draft/2020-12/schema");
+
+  // Bar
+
   EXPECT_ANONYMOUS_FRAME_STATIC_RESOURCE(
       frame, "https://example.com", "/properties/bar",
       "https://json-schema.org/draft/2020-12/schema");
@@ -201,6 +209,16 @@ TEST(JSONSchema_frame, no_id) {
       "https://json-schema.org/draft/2020-12/schema");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "https://example.com#/$anchor", "/properties/bar/$anchor",
+      "https://json-schema.org/draft/2020-12/schema");
+
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/properties/bar", "/properties/bar",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/properties/bar/$id", "/properties/bar/$id",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/properties/bar/$anchor", "/properties/bar/$anchor",
       "https://json-schema.org/draft/2020-12/schema");
 
   // References
