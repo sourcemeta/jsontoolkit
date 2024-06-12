@@ -253,11 +253,17 @@ TEST(JSONSchema_compile_draft7, invalid_ref_top_level) {
     "$ref": "#/definitions/i-dont-exist"
   })JSON")};
 
-  EXPECT_THROW(sourcemeta::jsontoolkit::compile(
-                   schema, sourcemeta::jsontoolkit::default_schema_walker,
-                   sourcemeta::jsontoolkit::official_resolver,
-                   sourcemeta::jsontoolkit::default_schema_compiler),
-               sourcemeta::jsontoolkit::SchemaResolutionError);
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+  } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
+    EXPECT_EQ(error.location(), sourcemeta::jsontoolkit::Pointer({"$ref"}));
+    SUCCEED();
+  } catch (...) {
+    throw;
+  }
 }
 
 TEST(JSONSchema_compile_draft7, invalid_ref_nested) {
@@ -271,9 +277,48 @@ TEST(JSONSchema_compile_draft7, invalid_ref_nested) {
     }
   })JSON")};
 
-  EXPECT_THROW(sourcemeta::jsontoolkit::compile(
-                   schema, sourcemeta::jsontoolkit::default_schema_walker,
-                   sourcemeta::jsontoolkit::official_resolver,
-                   sourcemeta::jsontoolkit::default_schema_compiler),
-               sourcemeta::jsontoolkit::SchemaResolutionError);
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+  } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
+    EXPECT_EQ(error.location(),
+              sourcemeta::jsontoolkit::Pointer({"properties", "foo", "$ref"}));
+  } catch (...) {
+    throw;
+  }
+}
+
+TEST(JSONSchema_compile_draft7, invalid_ref_embedded) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": {
+      "$ref": "#/definitions/bar"
+    },
+    "definitions": {
+      "bar": {
+        "$id": "https://example.com/nested",
+        "additionalProperties": {
+          "$ref": "#/definitions/baz"
+        }
+      },
+      "baz": {}
+    }
+  })JSON")};
+
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+  } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
+    EXPECT_EQ(error.location(),
+              sourcemeta::jsontoolkit::Pointer(
+                  {"definitions", "bar", "additionalProperties", "$ref"}));
+  } catch (...) {
+    throw;
+  }
 }
