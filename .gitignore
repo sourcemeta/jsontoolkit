@@ -13,3 +13,4 @@ Brewfile.lock.json
 .DS_Store
 /unikraft/.unikraft
 /unikraft/.config.*
+.cache
