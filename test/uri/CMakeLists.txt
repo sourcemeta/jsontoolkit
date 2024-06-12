@@ -14,7 +14,8 @@ add_executable(sourcemeta_jsontoolkit_uri_unit
   uri_canonicalize_test.cc
   uri_resolve_from_test.cc
   uri_escape_test.cc
-  uri_unescape_test.cc)
+  uri_unescape_test.cc
+  uri_user_info_test.cc)
 noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_uri_unit)
 target_link_libraries(sourcemeta_jsontoolkit_uri_unit
   PRIVATE GTest::gtest GTest::gtest_main)
