@@ -109,6 +109,11 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
     root.assign_if_missing(container,
                            sourcemeta::jsontoolkit::JSON::make_object());
 
+    if (!reference.base.has_value()) {
+      throw sourcemeta::jsontoolkit::SchemaResolutionError(
+          reference.destination, "Could not resolve schema reference");
+    }
+
     assert(reference.base.has_value());
     const auto identifier{reference.base.value()};
     const auto remote{resolver(identifier).get()};
