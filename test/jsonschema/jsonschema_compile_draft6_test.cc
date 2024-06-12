@@ -376,3 +376,35 @@ TEST(JSONSchema_compile_draft6, property_names_4) {
   EVALUATE_TRACE_DESCRIBE(
       2, "The target is expected to match all of the given assertions");
 }
+
+TEST(JSONSchema_compile_draft6, invalid_ref_top_level) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/i-dont-exist"
+  })JSON")};
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::compile(
+                   schema, sourcemeta::jsontoolkit::default_schema_walker,
+                   sourcemeta::jsontoolkit::official_resolver,
+                   sourcemeta::jsontoolkit::default_schema_compiler),
+               sourcemeta::jsontoolkit::SchemaResolutionError);
+}
+
+TEST(JSONSchema_compile_draft6, invalid_ref_nested) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "properties": {
+      "foo": {
+        "$ref": "#/definitions/i-dont-exist"
+      }
+    }
+  })JSON")};
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::compile(
+                   schema, sourcemeta::jsontoolkit::default_schema_walker,
+                   sourcemeta::jsontoolkit::official_resolver,
+                   sourcemeta::jsontoolkit::default_schema_compiler),
+               sourcemeta::jsontoolkit::SchemaResolutionError);
+}

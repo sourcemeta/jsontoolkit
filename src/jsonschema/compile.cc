@@ -115,7 +115,12 @@ auto compile(const SchemaCompilerContext &context, const Pointer &schema_suffix,
                 .recompose()};
 
   // Otherwise the recursion attempt is non-sense
-  assert(context.frame.contains({ReferenceType::Static, destination}));
+  if (!context.frame.contains({ReferenceType::Static, destination})) {
+    throw SchemaResolutionError(
+        destination,
+        "The target of the reference does not exist in the schema");
+  }
+
   const auto &entry{context.frame.at({ReferenceType::Static, destination})};
 
   const auto &new_schema{get(context.root, entry.pointer)};
