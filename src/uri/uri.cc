@@ -74,14 +74,14 @@ struct URI::Internal {
 };
 
 URI::URI(std::string input) : data{std::move(input)}, internal{new Internal} {
-  uri_parse(this->data, &this->internal->uri);
+  this->parse();
 }
 
 URI::URI(std::istream &input) : internal{new Internal} {
   std::ostringstream output;
   output << input.rdbuf();
   this->data = output.str();
-  uri_parse(this->data, &this->internal->uri);
+  this->parse();
 }
 
 URI::~URI() { uriFreeUriMembersA(&this->internal->uri); }
@@ -92,6 +92,8 @@ URI::URI(URI &&other)
     : data{std::move(other.data)}, internal{std::move(other.internal)} {
   other.internal = nullptr;
 }
+
+auto URI::parse() -> void { uri_parse(this->data, &this->internal->uri); }
 
 auto URI::is_absolute() const noexcept -> bool {
   // An absolute URI always contains a scheme component,

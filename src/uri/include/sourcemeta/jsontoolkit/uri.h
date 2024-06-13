@@ -293,6 +293,8 @@ public:
   static auto from_fragment(std::string_view fragment) -> URI;
 
 private:
+  auto parse() -> void;
+
 // Exporting symbols that depends on the standard C++ library is considered
 // safe.
 // https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4275?view=msvc-170&redirectedfrom=MSDN
