@@ -14,6 +14,7 @@
 #include <memory>      // std::unique_ptr
 #include <optional>    // std::optional
 #include <ostream>     // std::ostream
+#include <span>        // std::span
 #include <string>      // std::string
 #include <string_view> // std::string_view
 
@@ -151,9 +152,10 @@ public:
   /// const sourcemeta::jsontoolkit::URI
   /// uri{"https://www.sourcemeta.com/foo/bar"};
   /// assert(uri.path().has_value());
-  /// assert(uri.path().value() == "/foo/bar");
+  /// assert(uri.path().value().at(0) == "foo");
+  /// assert(uri.path().value().at(1) == "bar");
   /// ```
-  [[nodiscard]] auto path() const -> std::optional<std::string>;
+  [[nodiscard]] auto path() const -> std::optional<std::span<std::string>>;
 
   /// Get the fragment part of the URI, if any. For example:
   ///
@@ -301,6 +303,9 @@ private:
   // points to fragments of it.
   // We keep this as const as this class is immutable
   std::string data;
+
+  mutable std::vector<std::string> components;
+
   // Use PIMPL idiom to hide `urlparser`
   struct Internal;
   std::unique_ptr<Internal> internal;

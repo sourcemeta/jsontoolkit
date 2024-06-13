@@ -4,10 +4,14 @@
 #include <cassert>   // assert
 #include <cstdint>   // std::uint32_t
 #include <istream>   // std::istream
+#include <optional>  // std::optional
+#include <span>      // std::span
 #include <sstream>   // std::ostringstream
 #include <stdexcept> // std::length_error, std::runtime_error
 #include <string>    // std::stoul, std::string, std::tolower
 #include <utility>   // std::move
+
+#include <iostream>
 
 static auto uri_normalize(UriUriA *uri) -> void {
   if (uriNormalizeSyntaxA(uri) != URI_SUCCESS) {
@@ -127,29 +131,32 @@ auto URI::port() const -> std::optional<std::uint32_t> {
   return std::stoul(std::string{port_text.value()});
 }
 
-auto URI::path() const -> std::optional<std::string> {
+auto URI::path() const -> std::optional<std::span<std::string>> {
   const UriPathSegmentA *segment{this->internal->uri.pathHead};
   if (!segment) {
     return std::nullopt;
+  }
+
+  if (this->components.size() > 0) {
+    return std::span<std::string>(this->components);
   }
 
   // URNs and tags have a single path segment by definition
   if (this->is_urn() || this->is_tag()) {
     const auto part{uri_text_range(&segment->text)};
     assert(part.has_value());
-    return std::string{part.value()};
+    this->components.push_back(std::string{part.value()});
+    return std::span<std::string>(this->components);
   }
 
-  std::ostringstream result;
   while (segment) {
     const auto part{uri_text_range(&segment->text)};
     assert(part.has_value());
-    result << '/';
-    result << part.value();
+    this->components.push_back(std::string{part.value()});
     segment = segment->next;
   }
 
-  return result.str();
+  return std::span<std::string>(this->components);
 }
 
 auto URI::fragment() const -> std::optional<std::string_view> {
@@ -193,7 +200,11 @@ auto URI::recompose_without_fragment() const -> std::optional<std::string> {
   // Path
   const auto result_path{this->path()};
   if (result_path.has_value()) {
-    result << result_path.value();
+    auto seprator = (this->is_urn() || this->is_tag()) ? "" : "/";
+    for (auto &component : result_path.value()) {
+      result << seprator << component;
+      seprator = "/";
+    }
   }
 
   // Query
@@ -252,7 +263,11 @@ auto URI::canonicalize() -> URI & {
   // Path
   const auto result_path{this->path()};
   if (result_path.has_value()) {
-    result << result_path.value();
+    auto seprator = (this->is_urn() || this->is_tag()) ? "" : "/";
+    for (auto &component : result_path.value()) {
+      result << seprator << component;
+      seprator = "/";
+    }
   }
 
   // Query
