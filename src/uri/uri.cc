@@ -93,7 +93,36 @@ URI::URI(URI &&other)
   other.internal = nullptr;
 }
 
-auto URI::parse() -> void { uri_parse(this->data, &this->internal->uri); }
+auto URI::parse() -> void {
+  if (this->parsed) {
+    // clean
+    this->components.clear();
+    this->parsed = false;
+  }
+
+  uri_parse(this->data, &this->internal->uri);
+
+  const UriPathSegmentA *segment{this->internal->uri.pathHead};
+  if (!segment) {
+    this->parsed = true;
+    return;
+  }
+
+  // URNs and tags have one segement bu default
+  if (this->is_urn() || this->is_tag()) {
+    const auto part{uri_text_range(&segment->text)};
+    assert(part.has_value());
+    this->components.push_back(std::string{part.value()});
+  } else {
+    while (segment) {
+      const auto part{uri_text_range(&segment->text)};
+      assert(part.has_value());
+      this->components.push_back(std::string{part.value()});
+      segment = segment->next;
+    }
+  }
+  this->parsed = true;
+}
 
 auto URI::is_absolute() const noexcept -> bool {
   // An absolute URI always contains a scheme component,
@@ -134,31 +163,11 @@ auto URI::port() const -> std::optional<std::uint32_t> {
 }
 
 auto URI::path() const -> std::optional<std::span<std::string>> {
-  const UriPathSegmentA *segment{this->internal->uri.pathHead};
-  if (!segment) {
-    return std::nullopt;
-  }
+  assert(this->parsed);
 
-  if (this->components.size() > 0) {
+  if (this->components.size() > 0)
     return std::span<std::string>(this->components);
-  }
-
-  // URNs and tags have a single path segment by definition
-  if (this->is_urn() || this->is_tag()) {
-    const auto part{uri_text_range(&segment->text)};
-    assert(part.has_value());
-    this->components.push_back(std::string{part.value()});
-    return std::span<std::string>(this->components);
-  }
-
-  while (segment) {
-    const auto part{uri_text_range(&segment->text)};
-    assert(part.has_value());
-    this->components.push_back(std::string{part.value()});
-    segment = segment->next;
-  }
-
-  return std::span<std::string>(this->components);
+  return std::nullopt;
 }
 
 auto URI::fragment() const -> std::optional<std::string_view> {
@@ -286,7 +295,7 @@ auto URI::canonicalize() -> URI & {
 
   this->data = result.str();
   uriFreeUriMembersA(&this->internal->uri);
-  uri_parse(this->data, &this->internal->uri);
+  this->parse();
   return *this;
 }
 
@@ -313,7 +322,7 @@ auto URI::resolve_from(const URI &base) -> URI & {
     this->data = uri_to_string(&absoluteDest);
     uriFreeUriMembersA(&absoluteDest);
     uriFreeUriMembersA(&this->internal->uri);
-    uri_parse(this->data, &this->internal->uri);
+    this->parse();
     return *this;
   } catch (...) {
     uriFreeUriMembersA(&absoluteDest);

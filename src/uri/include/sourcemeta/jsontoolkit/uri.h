@@ -293,6 +293,7 @@ public:
   static auto from_fragment(std::string_view fragment) -> URI;
 
 private:
+  bool parsed = false;
   auto parse() -> void;
 
 // Exporting symbols that depends on the standard C++ library is considered
