@@ -108,7 +108,7 @@ auto URI::parse() -> void {
     return;
   }
 
-  // URNs and tags have one segement bu default
+  // URNs and tags have a single path segment by definition
   if (this->is_urn() || this->is_tag()) {
     const auto part{uri_text_range(&segment->text)};
     assert(part.has_value());
