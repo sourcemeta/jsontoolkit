@@ -95,7 +95,7 @@ URI::URI(URI &&other)
 auto URI::parse() -> void {
   if (this->parsed) {
     // clean
-    this->components.clear();
+    this->path_components.clear();
     this->parsed = false;
     uriFreeUriMembersA(&this->internal->uri);
   }
@@ -112,12 +112,12 @@ auto URI::parse() -> void {
   if (this->is_urn() || this->is_tag()) {
     const auto part{uri_text_range(&segment->text)};
     assert(part.has_value());
-    this->components.push_back(std::string{part.value()});
+    this->path_components.push_back(std::string{part.value()});
   } else {
     while (segment) {
       const auto part{uri_text_range(&segment->text)};
       assert(part.has_value());
-      this->components.push_back(std::string{part.value()});
+      this->path_components.push_back(std::string{part.value()});
       segment = segment->next;
     }
   }
@@ -165,8 +165,8 @@ auto URI::port() const -> std::optional<std::uint32_t> {
 auto URI::path() const -> std::optional<std::span<std::string>> {
   assert(this->parsed);
 
-  if (this->components.size() > 0)
-    return std::span<std::string>(this->components);
+  if (this->path_components.size() > 0)
+    return std::span<std::string>(this->path_components);
   return std::nullopt;
 }
 
