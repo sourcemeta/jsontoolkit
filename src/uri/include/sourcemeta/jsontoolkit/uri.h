@@ -17,6 +17,7 @@
 #include <span>        // std::span
 #include <string>      // std::string
 #include <string_view> // std::string_view
+#include <vector>      // std::vector
 
 /// @defgroup uri URI
 /// @brief A RFC 3986 URI implementation based on `uriparser`.

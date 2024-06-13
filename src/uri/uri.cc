@@ -10,6 +10,7 @@
 #include <stdexcept> // std::length_error, std::runtime_error
 #include <string>    // std::stoul, std::string, std::tolower
 #include <utility>   // std::move
+#include <vector>    // std::vector
 
 static auto uri_normalize(UriUriA *uri) -> void {
   if (uriNormalizeSyntaxA(uri) != URI_SUCCESS) {
