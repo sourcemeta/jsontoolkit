@@ -299,12 +299,12 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::URI uri{"https://user:@host"};
   /// assert(uri.user_info().has_value());
-  /// assert(uri.user_info().value() == "user");
+  /// assert(uri.user_info().value() == "user:);
   /// ```
   ///
   /// As mentioned in RFC 3986, the format "user:password" is deprecated.
   /// Applications should not render as clear text any data after the first
-  /// colon. Cf. https://tools.ietf.org/html/rfc3986#section-3.2.1
+  /// colon. See https://tools.ietf.org/html/rfc3986#section-3.2.1
   [[nodiscard]] auto user_info() const -> std::optional<std::string_view>;
 
 private:
