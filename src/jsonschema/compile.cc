@@ -114,8 +114,19 @@ auto compile(const SchemaCompilerContext &context, const Pointer &schema_suffix,
                 .canonicalize()
                 .recompose()};
 
+  const Pointer destination_pointer{
+      context.keyword.empty()
+          ? context.base_schema_location.concat(schema_suffix)
+          : context.base_schema_location.concat({context.keyword})
+                .concat(schema_suffix)};
+
   // Otherwise the recursion attempt is non-sense
-  assert(context.frame.contains({ReferenceType::Static, destination}));
+  if (!context.frame.contains({ReferenceType::Static, destination})) {
+    throw SchemaReferenceError(
+        destination, destination_pointer,
+        "The target of the reference does not exist in the schema");
+  }
+
   const auto &entry{context.frame.at({ReferenceType::Static, destination})};
 
   const auto &new_schema{get(context.root, entry.pointer)};
@@ -123,10 +134,7 @@ auto compile(const SchemaCompilerContext &context, const Pointer &schema_suffix,
       {context.keyword, new_schema,
        vocabularies(new_schema, context.resolver, entry.dialect).get(),
        context.value, context.root, entry.base, entry.relative_pointer,
-       context.keyword.empty()
-           ? context.base_schema_location.concat(schema_suffix)
-           : context.base_schema_location.concat({context.keyword})
-                 .concat(schema_suffix),
+       destination_pointer,
        context.base_instance_location.concat(instance_suffix), context.labels,
        context.frame, context.references, context.walker, context.resolver,
        context.compiler, entry.dialect});

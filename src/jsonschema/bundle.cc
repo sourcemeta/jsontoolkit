@@ -109,12 +109,27 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
     root.assign_if_missing(container,
                            sourcemeta::jsontoolkit::JSON::make_object());
 
+    if (!reference.base.has_value()) {
+      throw sourcemeta::jsontoolkit::SchemaReferenceError(
+          reference.destination, key.second,
+          "Could not resolve schema reference");
+    }
+
     assert(reference.base.has_value());
     const auto identifier{reference.base.value()};
     const auto remote{resolver(identifier).get()};
     if (!remote.has_value()) {
+      if (frame.contains(
+              {sourcemeta::jsontoolkit::ReferenceType::Static, identifier}) ||
+          frame.contains(
+              {sourcemeta::jsontoolkit::ReferenceType::Dynamic, identifier})) {
+        throw sourcemeta::jsontoolkit::SchemaReferenceError(
+            reference.destination, key.second,
+            "Could not resolve schema reference");
+      }
+
       throw sourcemeta::jsontoolkit::SchemaResolutionError(
-          reference.base.value(), "Could not resolve schema");
+          identifier, "Could not resolve schema");
     }
 
     // Otherwise, if the target schema does not declare an inline identifier,

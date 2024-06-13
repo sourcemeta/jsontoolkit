@@ -245,3 +245,80 @@ TEST(JSONSchema_compile_draft7, else_4) {
   EVALUATE_TRACE_DESCRIBE(
       3, "The target is expected to match all of the given assertions");
 }
+
+TEST(JSONSchema_compile_draft7, invalid_ref_top_level) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$ref": "#/definitions/i-dont-exist"
+  })JSON")};
+
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+  } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
+    EXPECT_EQ(error.location(), sourcemeta::jsontoolkit::Pointer({"$ref"}));
+    SUCCEED();
+  } catch (...) {
+    throw;
+  }
+}
+
+TEST(JSONSchema_compile_draft7, invalid_ref_nested) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "properties": {
+      "foo": {
+        "$ref": "#/definitions/i-dont-exist"
+      }
+    }
+  })JSON")};
+
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+  } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
+    EXPECT_EQ(error.location(),
+              sourcemeta::jsontoolkit::Pointer({"properties", "foo", "$ref"}));
+  } catch (...) {
+    throw;
+  }
+}
+
+TEST(JSONSchema_compile_draft7, invalid_ref_embedded) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": {
+      "$ref": "#/definitions/bar"
+    },
+    "definitions": {
+      "bar": {
+        "$id": "https://example.com/nested",
+        "additionalProperties": {
+          "$ref": "#/definitions/baz"
+        }
+      },
+      "baz": {}
+    }
+  })JSON")};
+
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+  } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
+    EXPECT_EQ(error.location(),
+              sourcemeta::jsontoolkit::Pointer(
+                  {"definitions", "bar", "additionalProperties", "$ref"}));
+  } catch (...) {
+    throw;
+  }
+}
