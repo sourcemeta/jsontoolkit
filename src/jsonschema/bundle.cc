@@ -28,11 +28,10 @@ auto definitions_keyword(const std::map<std::string, bool> &vocabularies)
       "Cannot determine how to bundle on this dialect");
 }
 
-// TODO: Turn it into an official function to set a schema identifier
-auto upsert_id(sourcemeta::jsontoolkit::JSON &target,
-               const std::string &identifier,
-               const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-               const std::optional<std::string> &default_dialect) -> void {
+auto identifier_string(const sourcemeta::jsontoolkit::JSON &target,
+                       const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+                       const std::optional<std::string> &default_dialect)
+    -> std::optional<std::string> {
   const auto dialect{sourcemeta::jsontoolkit::dialect(target, default_dialect)};
   assert(dialect.has_value());
   const auto base_dialect{
@@ -52,7 +51,7 @@ auto upsert_id(sourcemeta::jsontoolkit::JSON &target,
             "https://json-schema.org/draft/2019-09/vocab/core") ||
         vocabularies.contains("http://json-schema.org/draft-07/schema#") ||
         vocabularies.contains("http://json-schema.org/draft-06/schema#")) {
-      target.assign("$id", sourcemeta::jsontoolkit::JSON{identifier});
+      return "$id";
     } else if (vocabularies.contains(
                    "http://json-schema.org/draft-04/schema#") ||
                vocabularies.contains(
@@ -63,19 +62,19 @@ auto upsert_id(sourcemeta::jsontoolkit::JSON &target,
                    "http://json-schema.org/draft-01/schema#") ||
                vocabularies.contains(
                    "http://json-schema.org/draft-00/schema#")) {
-      target.assign("id", sourcemeta::jsontoolkit::JSON{identifier});
+      return "id";
     } else {
       throw sourcemeta::jsontoolkit::SchemaError(
           "Cannot determine how to bundle on this dialect");
     }
   }
 
-  assert(sourcemeta::jsontoolkit::id(target, base_dialect.value()).has_value());
+  return std::nullopt;
 }
 
 auto embed_schema(sourcemeta::jsontoolkit::JSON &definitions,
                   const std::string &identifier,
-                  const sourcemeta::jsontoolkit::JSON &target) -> void {
+                  const sourcemeta::jsontoolkit::JSON &target) -> std::string {
   std::ostringstream key;
   key << identifier;
   // Ensure we get a definitions entry that does not exist
@@ -84,25 +83,58 @@ auto embed_schema(sourcemeta::jsontoolkit::JSON &definitions,
   }
 
   definitions.assign(key.str(), target);
+  return key.str();
+}
+
+auto set_pointer_as_uri_fragment(
+    sourcemeta::jsontoolkit::JSON &document,
+    const sourcemeta::jsontoolkit::Pointer &location,
+    const sourcemeta::jsontoolkit::Pointer &pointer) -> void {
+  sourcemeta::jsontoolkit::set(
+      document, location,
+      sourcemeta::jsontoolkit::JSON{
+          sourcemeta::jsontoolkit::to_uri(pointer).recompose()});
+}
+
+auto revise_framed_reference(
+    sourcemeta::jsontoolkit::JSON &root,
+    const sourcemeta::jsontoolkit::ReferenceFrame &frame,
+    const sourcemeta::jsontoolkit::Pointer &base,
+    const sourcemeta::jsontoolkit::ReferenceType &type,
+    const std::string &reference,
+    const sourcemeta::jsontoolkit::Pointer &relative_schema_location,
+    const sourcemeta::jsontoolkit::BundleOptions &options) -> void {
+  if (base.empty() ||
+      options != sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers) {
+    return;
+  }
+
+  const auto &frame_entry{frame.at({type, reference})};
+  set_pointer_as_uri_fragment(root, base.concat(relative_schema_location),
+                              base.concat(frame_entry.pointer));
 }
 
 auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
+                   const sourcemeta::jsontoolkit::Pointer &base,
                    const std::string &container,
-                   const sourcemeta::jsontoolkit::JSON &subschema,
                    sourcemeta::jsontoolkit::ReferenceFrame &frame,
+                   const sourcemeta::jsontoolkit::ReferenceMap &references,
                    const sourcemeta::jsontoolkit::SchemaWalker &walker,
                    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+                   const sourcemeta::jsontoolkit::BundleOptions options,
                    const std::optional<std::string> &default_dialect) -> void {
-  sourcemeta::jsontoolkit::ReferenceMap references;
-  sourcemeta::jsontoolkit::frame(subschema, frame, references, walker, resolver,
-                                 default_dialect)
-      .wait();
-
   for (const auto &[key, reference] : references) {
     if (frame.contains({sourcemeta::jsontoolkit::ReferenceType::Static,
-                        reference.destination}) ||
-        frame.contains({sourcemeta::jsontoolkit::ReferenceType::Dynamic,
                         reference.destination})) {
+      revise_framed_reference(root, frame, base,
+                              sourcemeta::jsontoolkit::ReferenceType::Static,
+                              reference.destination, key.second, options);
+      continue;
+    } else if (frame.contains({sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+                               reference.destination})) {
+      revise_framed_reference(root, frame, base,
+                              sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+                              reference.destination, key.second, options);
       continue;
     }
 
@@ -132,14 +164,70 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
           identifier, "Could not resolve schema");
     }
 
-    // Otherwise, if the target schema does not declare an inline identifier,
-    // references to that identifier from the outer schema won't resolve.
     sourcemeta::jsontoolkit::JSON copy{remote.value()};
-    upsert_id(copy, identifier, resolver, default_dialect);
 
-    embed_schema(root.at(container), identifier, copy);
-    bundle_schema(root, container, copy, frame, walker, resolver,
-                  default_dialect);
+    const auto identifier_key{
+        identifier_string(copy, resolver, default_dialect)};
+    if (identifier_key.has_value()) {
+      copy.assign(identifier_key.value(),
+                  sourcemeta::jsontoolkit::JSON{identifier});
+    }
+
+    // We need to frame after fixing-up missing identifiers but before
+    // potentially removing the identifiers (if requested by the user)
+    sourcemeta::jsontoolkit::ReferenceMap new_references;
+    sourcemeta::jsontoolkit::frame(copy, frame, new_references, walker,
+                                   resolver, default_dialect)
+        .wait();
+
+    if (options == sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers) {
+      // Remove ids
+      if (identifier_key.has_value()) {
+        copy.erase(identifier_key.value());
+      }
+
+      // Remove anchors
+      for (const auto &entry : sourcemeta::jsontoolkit::SchemaIterator{
+               copy, walker, resolver, default_dialect}) {
+        if (entry.vocabularies.contains(
+                "https://json-schema.org/draft/2020-12/vocab/core")) {
+          auto &subschema{sourcemeta::jsontoolkit::get(copy, entry.pointer)};
+          subschema.erase("$anchor");
+          subschema.erase("$dynamicAnchor");
+        }
+
+        if (entry.vocabularies.contains(
+                "https://json-schema.org/draft/2019-09/vocab/core")) {
+          auto &subschema{sourcemeta::jsontoolkit::get(copy, entry.pointer)};
+          subschema.erase("$anchor");
+          subschema.erase("$recursiveAnchor");
+        }
+      }
+    }
+
+    const auto embed_key{embed_schema(root.at(container), identifier, copy)};
+    const sourcemeta::jsontoolkit::Pointer embed_location{container, embed_key};
+
+    // Rephrase the reference as a plain pointer URI
+    if (options == sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers) {
+      assert(frame.contains({sourcemeta::jsontoolkit::ReferenceType::Static,
+                             reference.destination}) ||
+             frame.contains({sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+                             reference.destination}));
+      const auto reference_type{
+          frame.contains({sourcemeta::jsontoolkit::ReferenceType::Static,
+                          reference.destination})
+              ? sourcemeta::jsontoolkit::ReferenceType::Static
+              : sourcemeta::jsontoolkit::ReferenceType::Dynamic};
+      const auto &frame_entry{
+          frame.at({reference_type, reference.destination})};
+      const auto destination_pointer{
+          embed_location.concat(frame_entry.pointer)};
+      set_pointer_as_uri_fragment(root, key.second, destination_pointer);
+    }
+
+    bundle_schema(root, embed_location, container, frame, new_references,
+                  walker, resolver, options, default_dialect);
   }
 }
 
@@ -148,21 +236,21 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
 namespace sourcemeta::jsontoolkit {
 
 auto bundle(sourcemeta::jsontoolkit::JSON &schema, const SchemaWalker &walker,
-            const SchemaResolver &resolver,
-#ifdef NDEBUG
-            const BundleOptions,
-#else
-            const BundleOptions options,
-#endif
+            const SchemaResolver &resolver, const BundleOptions options,
             const std::optional<std::string> &default_dialect)
     -> std::future<void> {
-  assert(options == BundleOptions::Default);
   const auto vocabularies{
       sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)
           .get()};
+
   sourcemeta::jsontoolkit::ReferenceFrame frame;
-  bundle_schema(schema, definitions_keyword(vocabularies), schema, frame,
-                walker, resolver, default_dialect);
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(schema, frame, references, walker, resolver,
+                                 default_dialect)
+      .wait();
+
+  bundle_schema(schema, empty_pointer, definitions_keyword(vocabularies), frame,
+                references, walker, resolver, options, default_dialect);
   return std::promise<void>{}.get_future();
 }
 
