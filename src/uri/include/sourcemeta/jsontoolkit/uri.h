@@ -298,14 +298,14 @@ public:
   /// #include <cassert>
   ///
   /// const sourcemeta::jsontoolkit::URI uri{"https://user:@host"};
-  /// assert(uri.user_info().has_value());
-  /// assert(uri.user_info().value() == "user:);
+  /// assert(uri.userinfo().has_value());
+  /// assert(uri.userinfo().value() == "user:);
   /// ```
   ///
   /// As mentioned in RFC 3986, the format "user:password" is deprecated.
   /// Applications should not render as clear text any data after the first
   /// colon. See https://tools.ietf.org/html/rfc3986#section-3.2.1
-  [[nodiscard]] auto user_info() const -> std::optional<std::string_view>;
+  [[nodiscard]] auto userinfo() const -> std::optional<std::string_view>;
 
 private:
 // Exporting symbols that depends on the standard C++ library is considered
