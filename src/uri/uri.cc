@@ -211,10 +211,10 @@ auto URI::recompose_without_fragment() const -> std::optional<std::string> {
   // Path
   const auto result_path{this->path()};
   if (result_path.has_value()) {
-    auto seprator = (this->is_urn() || this->is_tag()) ? "" : "/";
+    auto separator = (this->is_urn() || this->is_tag()) ? "" : "/";
     for (auto &component : result_path.value()) {
-      result << seprator << component;
-      seprator = "/";
+      result << separator << component;
+      separator = "/";
     }
   }
 
@@ -274,10 +274,10 @@ auto URI::canonicalize() -> URI & {
   // Path
   const auto result_path{this->path()};
   if (result_path.has_value()) {
-    auto seprator = (this->is_urn() || this->is_tag()) ? "" : "/";
+    auto separator = (this->is_urn() || this->is_tag()) ? "" : "/";
     for (auto &component : result_path.value()) {
-      result << seprator << component;
-      seprator = "/";
+      result << separator << component;
+      separator = "/";
     }
   }
 
