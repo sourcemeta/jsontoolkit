@@ -162,11 +162,11 @@ auto URI::port() const -> std::optional<std::uint32_t> {
   return std::stoul(std::string{port_text.value()});
 }
 
-auto URI::path() const -> std::optional<std::span<std::string>> {
+auto URI::path() const -> std::optional<std::span<const std::string>> {
   assert(this->parsed);
 
   if (this->components.size() > 0)
-    return std::span<std::string>(this->components);
+    return std::span<const std::string>(this->components);
   return std::nullopt;
 }
 
