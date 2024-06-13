@@ -28,7 +28,7 @@ public:
       : line_{line}, column_{column} {}
 
   [[nodiscard]] auto what() const noexcept -> const char * override {
-    return "The input is not a valid JSON document";
+    return "Failed to parse the JSON document";
   }
 
   /// Get the line number of the error
