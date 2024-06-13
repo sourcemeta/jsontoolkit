@@ -156,8 +156,7 @@ public:
   /// assert(uri.path().value().at(0) == "foo");
   /// assert(uri.path().value().at(1) == "bar");
   /// ```
-  [[nodiscard]] auto
-  path() const -> std::optional<std::span<const std::string>>;
+  [[nodiscard]] auto path() const -> std::optional<std::span<std::string>>;
 
   /// Get the fragment part of the URI, if any. For example:
   ///
@@ -309,7 +308,7 @@ private:
   // We keep this as const as this class is immutable
   std::string data;
 
-  mutable std::vector<const std::string> components;
+  mutable std::vector<std::string> components;
 
   // Use PIMPL idiom to hide `urlparser`
   struct Internal;

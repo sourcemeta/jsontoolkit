@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <sourcemeta/jsontoolkit/uri.h>
 
-void EXPECT_SPAN_EQ(std::span<const std::string> span,
+void EXPECT_SPAN_EQ(std::span<std::string> span,
                     std::initializer_list<std::string> expected) {
   ASSERT_EQ(span.size(), expected.size())
       << "Span size does not match expected size";
