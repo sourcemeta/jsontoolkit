@@ -11,8 +11,6 @@
 #include <string>    // std::stoul, std::string, std::tolower
 #include <utility>   // std::move
 
-#include <iostream>
-
 static auto uri_normalize(UriUriA *uri) -> void {
   if (uriNormalizeSyntaxA(uri) != URI_SUCCESS) {
     throw sourcemeta::jsontoolkit::URIError{"Could not normalize URI"};
