@@ -98,6 +98,7 @@ auto URI::parse() -> void {
     // clean
     this->components.clear();
     this->parsed = false;
+    uriFreeUriMembersA(&this->internal->uri);
   }
 
   uri_parse(this->data, &this->internal->uri);
@@ -294,7 +295,6 @@ auto URI::canonicalize() -> URI & {
   }
 
   this->data = result.str();
-  uriFreeUriMembersA(&this->internal->uri);
   this->parse();
   return *this;
 }
@@ -321,7 +321,6 @@ auto URI::resolve_from(const URI &base) -> URI & {
     uri_normalize(&absoluteDest);
     this->data = uri_to_string(&absoluteDest);
     uriFreeUriMembersA(&absoluteDest);
-    uriFreeUriMembersA(&this->internal->uri);
     this->parse();
     return *this;
   } catch (...) {
