@@ -628,3 +628,19 @@ TEST(JSON_parse_error, backspace_is_not_whitespace) {
   std::istringstream input{"\bfalse\b"};
   EXPECT_PARSE_ERROR(input, 1, 1);
 }
+
+#if !defined(__Unikraft__)
+TEST(JSON_parse_error, from_file) {
+  try {
+    sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY} /
+                                       "stub_invalid.json");
+  } catch (const sourcemeta::jsontoolkit::FileParseError &error) {
+    EXPECT_EQ(error.path(),
+              std::filesystem::path{TEST_DIRECTORY} / "stub_invalid.json");
+    EXPECT_EQ(error.line(), 3);
+    EXPECT_EQ(error.column(), 9);
+  } catch (...) {
+    FAIL() << "The parse function was expected to throw a file parse error";
+  }
+}
+#endif

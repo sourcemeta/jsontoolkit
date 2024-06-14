@@ -1455,3 +1455,16 @@ TEST(JSON_parse, custom_line_column_from_string_stream) {
   EXPECT_TRUE(document.at(1).is_boolean());
   EXPECT_TRUE(document.at(1).to_boolean());
 }
+
+#if !defined(__Unikraft__)
+TEST(JSON_parse, from_file) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY} /
+                                         "stub_valid.json")};
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 1);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_TRUE(document.at("foo").is_integer());
+  EXPECT_EQ(document.at("foo").to_integer(), 1);
+}
+#endif

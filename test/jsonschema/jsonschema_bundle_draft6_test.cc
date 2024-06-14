@@ -473,3 +473,44 @@ TEST(JSONSchema_bundle_draft6, anonymous_no_dialect) {
 
   EXPECT_EQ(document, expected);
 }
+
+TEST(JSONSchema_bundle_draft6, without_id) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/top-level",
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "properties": {
+      "foo": {
+        "$ref": "recursive#/properties/foo"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/top-level",
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "properties": {
+      "foo": {
+        "$ref": "#/definitions/https%3A~1~1www.sourcemeta.com~1recursive/properties/foo"
+      }
+    },
+    "definitions": {
+      "https://www.sourcemeta.com/recursive": {
+        "$schema": "http://json-schema.org/draft-06/schema#",
+        "properties": {
+          "foo": {
+            "$ref": "#/definitions/https%3A~1~1www.sourcemeta.com~1recursive"
+          }
+        }
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
