@@ -325,7 +325,7 @@ private:
   // We keep this as const as this class is immutable
   std::string data;
 
-  mutable std::vector<std::string> path_components;
+  mutable std::vector<std::string> path_components_;
   std::optional<std::string> userinfo_;
 
   // Use PIMPL idiom to hide `urlparser`
