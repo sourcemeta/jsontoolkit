@@ -5,6 +5,8 @@
 #include <sstream> // std::ostringstream
 #include <utility> // std::move
 
+#include <iostream> // TODO DEBUG
+
 namespace {
 
 auto definitions_keyword(const std::map<std::string, bool> &vocabularies)
@@ -203,14 +205,42 @@ auto remove_identifiers(sourcemeta::jsontoolkit::JSON &schema,
 
 namespace sourcemeta::jsontoolkit {
 
-auto bundle(sourcemeta::jsontoolkit::JSON &schema, const SchemaWalker &walker,
+auto bundle(JSON &schema, const SchemaWalker &walker,
             const SchemaResolver &resolver, const BundleOptions options,
             const std::optional<std::string> &default_dialect)
     -> std::future<void> {
   const auto vocabularies{
       sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)
           .get()};
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
+
+  // This is a workaround to handle schemas on Draft 7 or older that
+  // define a top-level `$ref`. In those dialects, `$ref` makes any
+  // sibling keyword ignored, resulting in an invalid bundled schema
+  // where the `definitions` keyword we add ends up getting ignored.
+  if (schema.is_object() && schema.defines("$ref") &&
+      (vocabularies.contains("http://json-schema.org/draft-07/schema#") ||
+       vocabularies.contains("http://json-schema.org/draft-07/hyper-schema#") ||
+       vocabularies.contains("http://json-schema.org/draft-06/schema#") ||
+       vocabularies.contains("http://json-schema.org/draft-06/hyper-schema#") ||
+       vocabularies.contains("http://json-schema.org/draft-04/schema#") ||
+       vocabularies.contains("http://json-schema.org/draft-04/hyper-schema#") ||
+       vocabularies.contains("http://json-schema.org/draft-03/schema#") ||
+       vocabularies.contains("http://json-schema.org/draft-03/hyper-schema#") ||
+       vocabularies.contains("http://json-schema.org/draft-02/hyper-schema#") ||
+       vocabularies.contains("http://json-schema.org/draft-01/hyper-schema#") ||
+       vocabularies.contains(
+           "http://json-schema.org/draft-00/hyper-schema#"))) {
+    if (!schema.defines("allOf")) {
+      schema.assign("allOf", JSON::make_array());
+    }
+
+    auto wrapper{JSON::make_object()};
+    wrapper.assign("$ref", schema.at("$ref"));
+    schema.at("allOf").push_back(std::move(wrapper));
+    schema.erase("$ref");
+  }
+
+  ReferenceFrame frame;
   bundle_schema(schema, definitions_keyword(vocabularies), schema, frame,
                 walker, resolver, default_dialect);
 
@@ -221,14 +251,13 @@ auto bundle(sourcemeta::jsontoolkit::JSON &schema, const SchemaWalker &walker,
   return std::promise<void>{}.get_future();
 }
 
-auto bundle(const sourcemeta::jsontoolkit::JSON &schema,
-            const SchemaWalker &walker, const SchemaResolver &resolver,
-            const BundleOptions options,
+auto bundle(const JSON &schema, const SchemaWalker &walker,
+            const SchemaResolver &resolver, const BundleOptions options,
             const std::optional<std::string> &default_dialect)
-    -> std::future<sourcemeta::jsontoolkit::JSON> {
-  sourcemeta::jsontoolkit::JSON copy = schema;
+    -> std::future<JSON> {
+  JSON copy = schema;
   bundle(copy, walker, resolver, options, default_dialect).wait();
-  std::promise<sourcemeta::jsontoolkit::JSON> promise;
+  std::promise<JSON> promise;
   promise.set_value(std::move(copy));
   return promise.get_future();
 }

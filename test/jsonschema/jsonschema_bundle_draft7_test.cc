@@ -404,7 +404,9 @@ TEST(JSONSchema_bundle_draft7, recursive) {
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$ref": "https://www.sourcemeta.com/recursive",
+    "allOf": [
+      { "$ref": "https://www.sourcemeta.com/recursive" }
+    ],
     "definitions": {
       "https://www.sourcemeta.com/recursive": {
         "$schema": "http://json-schema.org/draft-07/schema#",
