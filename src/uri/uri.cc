@@ -121,6 +121,12 @@ auto URI::parse() -> void {
 
   this->userinfo_ = uri_text_range(&this->internal->uri.userInfo);
   this->host_ = uri_text_range(&this->internal->uri.hostText);
+  const auto port_text{uri_text_range(&this->internal->uri.portText)};
+  if (!port_text.has_value()) {
+    this->port_ = std::nullopt;
+  } else {
+    this->port_ = std::stoul(std::string{port_text.value()});
+  }
 
   this->parsed = true;
 }
@@ -154,14 +160,7 @@ auto URI::host() const -> std::optional<std::string_view> {
   return this->host_;
 }
 
-auto URI::port() const -> std::optional<std::uint32_t> {
-  const auto port_text{uri_text_range(&this->internal->uri.portText)};
-  if (!port_text.has_value()) {
-    return std::nullopt;
-  }
-
-  return std::stoul(std::string{port_text.value()});
-}
+auto URI::port() const -> std::optional<std::uint32_t> { return this->port_; }
 
 auto URI::path() const -> std::optional<std::span<std::string>> {
   assert(this->parsed);
