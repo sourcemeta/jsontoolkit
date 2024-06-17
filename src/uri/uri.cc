@@ -103,26 +103,24 @@ auto URI::parse() -> void {
   uri_parse(this->data, &this->internal->uri);
 
   const UriPathSegmentA *segment{this->internal->uri.pathHead};
-  if (!segment) {
-    this->parsed = true;
-    return;
-  }
-
-  // URNs and tags have a single path segment by definition
-  if (this->is_urn() || this->is_tag()) {
-    const auto part{uri_text_range(&segment->text)};
-    assert(part.has_value());
-    this->path_components_.push_back(std::string{part.value()});
-  } else {
-    while (segment) {
+  if (segment != nullptr) {
+    // URNs and tags have a single path segment by definition
+    if (this->is_urn() || this->is_tag()) {
       const auto part{uri_text_range(&segment->text)};
       assert(part.has_value());
       this->path_components_.push_back(std::string{part.value()});
-      segment = segment->next;
+    } else {
+      while (segment) {
+        const auto part{uri_text_range(&segment->text)};
+        assert(part.has_value());
+        this->path_components_.push_back(std::string{part.value()});
+        segment = segment->next;
+      }
     }
   }
 
   this->userinfo_ = uri_text_range(&this->internal->uri.userInfo);
+  this->host_ = uri_text_range(&this->internal->uri.hostText);
 
   this->parsed = true;
 }
@@ -153,7 +151,7 @@ auto URI::scheme() const -> std::optional<std::string_view> {
 }
 
 auto URI::host() const -> std::optional<std::string_view> {
-  return uri_text_range(&this->internal->uri.hostText);
+  return this->host_;
 }
 
 auto URI::port() const -> std::optional<std::uint32_t> {

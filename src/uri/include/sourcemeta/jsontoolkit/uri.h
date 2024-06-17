@@ -327,6 +327,7 @@ private:
 
   mutable std::vector<std::string> path_components_;
   std::optional<std::string> userinfo_;
+  std::optional<std::string> host_;
 
   // Use PIMPL idiom to hide `urlparser`
   struct Internal;
