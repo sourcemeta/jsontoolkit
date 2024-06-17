@@ -493,7 +493,6 @@ TEST(JSONSchema_bundle_draft6, without_id) {
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
-    "$id": "https://www.sourcemeta.com/top-level",
     "$schema": "http://json-schema.org/draft-06/schema#",
     "properties": {
       "foo": {
