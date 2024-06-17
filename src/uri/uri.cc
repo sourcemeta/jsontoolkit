@@ -121,6 +121,9 @@ auto URI::parse() -> void {
       segment = segment->next;
     }
   }
+
+  this->userinfo_ = uri_text_range(&this->internal->uri.userInfo);
+
   this->parsed = true;
 }
 
@@ -344,7 +347,7 @@ auto URI::resolve_from_if_absolute(const URI &base) -> URI & {
 }
 
 auto URI::userinfo() const -> std::optional<std::string_view> {
-  return uri_text_range(&this->internal->uri.userInfo);
+  return this->userinfo_;
 }
 
 } // namespace sourcemeta::jsontoolkit
