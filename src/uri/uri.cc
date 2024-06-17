@@ -122,6 +122,7 @@ auto URI::parse() -> void {
   this->scheme_ = uri_text_range(&this->internal->uri.scheme);
   this->userinfo_ = uri_text_range(&this->internal->uri.userInfo);
   this->host_ = uri_text_range(&this->internal->uri.hostText);
+  this->fragment_ = uri_text_range(&this->internal->uri.fragment);
   const auto port_text{uri_text_range(&this->internal->uri.portText)};
   if (!port_text.has_value()) {
     this->port_ = std::nullopt;
@@ -172,7 +173,7 @@ auto URI::path() const -> std::optional<std::span<std::string>> {
 }
 
 auto URI::fragment() const -> std::optional<std::string_view> {
-  return uri_text_range(&this->internal->uri.fragment);
+  return this->fragment_;
 }
 
 auto URI::query() const -> std::optional<std::string_view> {
