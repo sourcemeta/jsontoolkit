@@ -331,6 +331,7 @@ private:
   std::optional<std::uint32_t> port_;
   std::optional<std::string> scheme_;
   std::optional<std::string> fragment_;
+  std::optional<std::string> query_;
 
   // Use PIMPL idiom to hide `urlparser`
   struct Internal;
