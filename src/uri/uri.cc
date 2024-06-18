@@ -96,6 +96,12 @@ auto URI::parse() -> void {
   if (this->parsed) {
     // clean
     this->path_components_.clear();
+    this->scheme_ = std::nullopt;
+    this->userinfo_ = std::nullopt;
+    this->host_ = std::nullopt;
+    this->port_ = std::nullopt;
+    this->fragment_ = std::nullopt;
+    this->query_ = std::nullopt;
     this->parsed = false;
     uriFreeUriMembersA(&this->internal->uri);
   }
