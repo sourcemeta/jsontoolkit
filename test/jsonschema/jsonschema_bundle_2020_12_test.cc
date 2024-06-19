@@ -584,3 +584,29 @@ TEST(JSONSchema_bundle_2020_12, without_id) {
 
   EXPECT_EQ(document, expected);
 }
+
+TEST(JSONSchema_bundle_2020_12, without_id_boolean_subschema) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/top-level",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": true
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": true
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}

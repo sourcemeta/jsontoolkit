@@ -184,6 +184,16 @@
   EVALUATE_WITH_TRACE(Fast, schema_template, instance, count)                  \
   EXPECT_FALSE(result);
 
+#define EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema_template, instance,      \
+                                               count)                          \
+  EVALUATE_WITH_TRACE(Exhaustive, schema_template, instance, count)            \
+  EXPECT_TRUE(result);
+
+#define EVALUATE_WITH_TRACE_EXHAUSITVE_FAILURE(schema_template, instance,      \
+                                               count)                          \
+  EVALUATE_WITH_TRACE(Exhaustive, schema_template, instance, count)            \
+  EXPECT_FALSE(result);
+
 #define EVALUATE_TRACE(index, step_type, evaluate_path,                        \
                        expected_keyword_location, expected_instance_location)  \
   EXPECT_EQ(std::get<1>(trace.at(index)), TO_POINTER(evaluate_path));          \
@@ -211,6 +221,16 @@
   EXPECT_TRUE(index < trace.size());                                           \
   EXPECT_TRUE(std::get<0>(trace.at(index)));                                   \
   EVALUATE_TRACE(index, AnnotationPrivate, evaluate_path, keyword_location,    \
+                 instance_location);                                           \
+  EXPECT_EQ(std::get<4>(trace.at(index)),                                      \
+            sourcemeta::jsontoolkit::JSON(expected_annotation));
+
+#define EVALUATE_TRACE_ANNOTATION_PUBLIC(index, evaluate_path,                 \
+                                         keyword_location, instance_location,  \
+                                         expected_annotation)                  \
+  EXPECT_TRUE(index < trace.size());                                           \
+  EXPECT_TRUE(std::get<0>(trace.at(index)));                                   \
+  EVALUATE_TRACE(index, AnnotationPublic, evaluate_path, keyword_location,     \
                  instance_location);                                           \
   EXPECT_EQ(std::get<4>(trace.at(index)),                                      \
             sourcemeta::jsontoolkit::JSON(expected_annotation));
