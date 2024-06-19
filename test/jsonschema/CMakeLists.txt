@@ -88,6 +88,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_walker_none_test.cc
   jsonschema_walker_test.cc
   jsonschema_error_test.cc
+  jsonschema_compile_test.cc
   jsonschema_compile_evaluate_test.cc
   jsonschema_compile_json_test.cc
   jsonschema_compile_template_draft4_test.cc
