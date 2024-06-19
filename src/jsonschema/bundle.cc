@@ -130,7 +130,7 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
       }
 
       throw sourcemeta::jsontoolkit::SchemaResolutionError(
-          identifier, "Could not resolve schema");
+          identifier, "Could not resolve the requested schema");
     }
 
     // Otherwise, if the target schema does not declare an inline identifier,
