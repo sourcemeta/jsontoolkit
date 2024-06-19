@@ -7,7 +7,6 @@
 
 #include <cassert> // assert
 #include <set>     // std::set
-#include <sstream> // std::ostringstream
 #include <string>  // std::string
 
 // TODO: Support every keyword
@@ -23,9 +22,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   for (const auto &vocabulary : context.vocabularies) {
     if (!SUPPORTED_VOCABULARIES.contains(vocabulary.first) &&
         vocabulary.second) {
-      std::ostringstream error;
-      error << "Cannot compile unsupported vocabulary: " << vocabulary.first;
-      throw SchemaError(error.str());
+      throw SchemaVocabularyError(vocabulary.first,
+                                  "Cannot compile unsupported vocabulary");
     }
   }
 
