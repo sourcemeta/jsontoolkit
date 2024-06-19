@@ -85,10 +85,20 @@ URI::URI(std::istream &input) : internal{new Internal} {
 
 URI::~URI() { uriFreeUriMembersA(&this->internal->uri); }
 
+// TODO: Test the copy constructor
 URI::URI(const URI &other) : URI{other.recompose()} {}
 
 URI::URI(URI &&other)
     : data{std::move(other.data)}, internal{std::move(other.internal)} {
+  this->parsed = other.parsed;
+  this->path_components_ = std::move(other.path_components_);
+  this->scheme_ = std::move(other.scheme_);
+  this->userinfo_ = std::move(other.userinfo_);
+  this->host_ = std::move(other.host_);
+  this->port_ = std::move(other.port_);
+  this->fragment_ = std::move(other.fragment_);
+  this->query_ = std::move(other.query_);
+
   other.internal = nullptr;
 }
 
@@ -188,7 +198,56 @@ auto URI::query() const -> std::optional<std::string_view> {
 }
 
 auto URI::recompose() const -> std::string {
-  return uri_to_string(&this->internal->uri);
+  std::ostringstream result;
+
+  // Scheme
+  const auto result_scheme{this->scheme()};
+  if (result_scheme.has_value()) {
+    result << result_scheme.value();
+    if (this->is_urn() || this->is_tag()) {
+      result << ":";
+    } else {
+      result << "://";
+    }
+  }
+
+  // Host
+  const auto result_host{this->host()};
+  if (result_host.has_value()) {
+    result << result_host.value();
+  }
+
+  // Port
+  const auto result_port{this->port()};
+  if (result_port.has_value()) {
+    result << ':' << result_port.value();
+  }
+
+  // Path
+  const auto result_path{this->path()};
+  if (result_path.has_value()) {
+    auto separator =
+        (this->is_urn() || this->is_tag() || !this->scheme().has_value()) ? ""
+                                                                          : "/";
+    for (auto &component : result_path.value()) {
+      result << separator << component;
+      separator = "/";
+    }
+  }
+
+  // Query
+  const auto result_query{this->query()};
+  if (result_query.has_value()) {
+    result << '?' << result_query.value();
+  }
+
+  // Fragment
+  const auto result_fragment{this->fragment()};
+  if (result_fragment.has_value() && !result_fragment.value().empty()) {
+    result << '#' << result_fragment.value();
+  }
+
+  return result.str();
 }
 
 auto URI::recompose_without_fragment() const -> std::optional<std::string> {
@@ -220,7 +279,9 @@ auto URI::recompose_without_fragment() const -> std::optional<std::string> {
   // Path
   const auto result_path{this->path()};
   if (result_path.has_value()) {
-    auto separator = (this->is_urn() || this->is_tag()) ? "" : "/";
+    auto separator =
+        (this->is_urn() || this->is_tag() || !this->scheme().has_value()) ? ""
+                                                                          : "/";
     for (auto &component : result_path.value()) {
       result << separator << component;
       separator = "/";
@@ -241,28 +302,41 @@ auto URI::recompose_without_fragment() const -> std::optional<std::string> {
 }
 
 auto URI::canonicalize() -> URI & {
-  std::ostringstream result;
 
   // Scheme
   const auto result_scheme{this->scheme()};
   if (result_scheme.has_value()) {
+    std::ostringstream lowercased_scheme;
     for (const auto character : result_scheme.value()) {
-      result << static_cast<char>(std::tolower(character));
+      lowercased_scheme << static_cast<char>(std::tolower(character));
     }
-
-    if (this->is_urn() || this->is_tag()) {
-      result << ":";
-    } else {
-      result << "://";
-    }
+    this->scheme_ = lowercased_scheme.str();
   }
 
   // Host
   const auto result_host{this->host()};
   if (result_host.has_value()) {
+    std::ostringstream lowercased_host;
     for (const auto character : result_host.value()) {
-      result << static_cast<char>(std::tolower(character));
+      lowercased_host << static_cast<char>(std::tolower(character));
     }
+    this->host_ = lowercased_host.str();
+  }
+
+  // Clean path form ".." and "."
+  const auto result_path{this->path()};
+  if (result_path.has_value()) {
+    std::vector<std::string> cleaned_path;
+    for (const auto &component : result_path.value()) {
+      if (component == "..") {
+        if (!cleaned_path.empty()) {
+          cleaned_path.pop_back();
+        }
+      } else if (component != ".") {
+        cleaned_path.push_back(component);
+      }
+    }
+    this->path_components_ = cleaned_path;
   }
 
   // Port
@@ -276,34 +350,12 @@ auto URI::canonicalize() -> URI & {
                                      result_port.value() == 443};
 
     if (!is_default_http_port && !is_default_https_port) {
-      result << ':' << result_port.value();
+      this->port_ = result_port.value();
+    } else {
+      this->port_ = std::nullopt;
     }
   }
 
-  // Path
-  const auto result_path{this->path()};
-  if (result_path.has_value()) {
-    auto separator = (this->is_urn() || this->is_tag()) ? "" : "/";
-    for (auto &component : result_path.value()) {
-      result << separator << component;
-      separator = "/";
-    }
-  }
-
-  // Query
-  const auto result_query{this->query()};
-  if (result_query.has_value()) {
-    result << '?' << result_query.value();
-  }
-
-  // Fragment
-  const auto result_fragment{this->fragment()};
-  if (result_fragment.has_value() && !result_fragment.value().empty()) {
-    result << '#' << result_fragment.value();
-  }
-
-  this->data = result.str();
-  this->parse();
   return *this;
 }
 

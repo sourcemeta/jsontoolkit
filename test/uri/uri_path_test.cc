@@ -69,3 +69,8 @@ TEST(URI_path, tag_with_fragment) {
   EXPECT_SPAN_EQ(uri.path().value(),
                  {"bowtie.report,2023-11:referencing-suite-tag-uris-id"});
 }
+
+TEST(URI_path, without_scheme) {
+  const sourcemeta::jsontoolkit::URI uri{"example.com/foo"};
+  EXPECT_SPAN_EQ(uri.path().value(), {"example.com", "foo"});
+}

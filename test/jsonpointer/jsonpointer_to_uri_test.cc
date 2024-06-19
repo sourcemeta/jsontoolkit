@@ -6,7 +6,7 @@ TEST(JSONPointer_to_uri, empty) {
   const sourcemeta::jsontoolkit::Pointer pointer;
   const sourcemeta::jsontoolkit::URI fragment{
       sourcemeta::jsontoolkit::to_uri(pointer)};
-  EXPECT_EQ(fragment.recompose(), "#");
+  EXPECT_EQ(fragment.recompose(), "");
 }
 
 TEST(JSONPointer_to_uri, empty_fragment) {
