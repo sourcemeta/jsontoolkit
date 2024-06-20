@@ -51,7 +51,10 @@ TEST(JSONSchema_compile_draft4, type_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
+
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
 }
@@ -70,7 +73,10 @@ TEST(JSONSchema_compile_draft4, type_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/type", "#/type", "");
+
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
 }
@@ -89,6 +95,7 @@ TEST(JSONSchema_compile_draft4, type_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of one of the given types");
@@ -108,6 +115,7 @@ TEST(JSONSchema_compile_draft4, type_4) {
 
   const sourcemeta::jsontoolkit::JSON instance{3.14};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of one of the given types");
@@ -127,6 +135,7 @@ TEST(JSONSchema_compile_draft4, type_5) {
 
   const sourcemeta::jsontoolkit::JSON instance{"3.14"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of one of the given types");
@@ -146,6 +155,7 @@ TEST(JSONSchema_compile_draft4, type_6) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
@@ -165,6 +175,7 @@ TEST(JSONSchema_compile_draft4, type_7) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
@@ -184,6 +195,7 @@ TEST(JSONSchema_compile_draft4, type_8) {
 
   const sourcemeta::jsontoolkit::JSON instance{3};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of one of the given types");
@@ -203,6 +215,7 @@ TEST(JSONSchema_compile_draft4, type_9) {
 
   const sourcemeta::jsontoolkit::JSON instance{true};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of one of the given types");
@@ -239,6 +252,7 @@ TEST(JSONSchema_compile_draft4, required_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionDefines, "/required", "#/required", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionDefines, "/required", "#/required",
                               "");
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -260,6 +274,7 @@ TEST(JSONSchema_compile_draft4, required_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionDefinesAll, "/required", "#/required", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionDefinesAll, "/required", "#/required",
                               "");
 
@@ -283,6 +298,8 @@ TEST(JSONSchema_compile_draft4, required_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_PRE(1, AssertionDefinesAll, "/required", "#/required", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionDefinesAll, "/required", "#/required",
                               "");
@@ -312,6 +329,13 @@ TEST(JSONSchema_compile_draft4, allOf_1) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/allOf/0/type", "#/allOf/0/type",
+                     "");
+  EVALUATE_TRACE_PRE(2, AssertionDefinesAll, "/allOf/1/required",
+                     "#/allOf/1/required", "");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/type",
                               "#/allOf/0/type", "");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionDefinesAll, "/allOf/1/required",
@@ -345,6 +369,13 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"baz\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/allOf/0/type", "#/allOf/0/type",
+                     "");
+  EVALUATE_TRACE_PRE(2, AssertionDefinesAll, "/allOf/1/required",
+                     "#/allOf/1/required", "");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/type",
                               "#/allOf/0/type", "");
   EVALUATE_TRACE_POST_FAILURE(1, AssertionDefinesAll, "/allOf/1/required",
@@ -376,6 +407,12 @@ TEST(JSONSchema_compile_draft4, ref_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_PRE(1, ControlLabel, "/allOf/0/$ref", "#/allOf/0/$ref", "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/$ref/type",
+                     "#/definitions/string/type", "");
+
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/allOf/0/$ref/type",
                               "#/definitions/string/type", "");
   EVALUATE_TRACE_POST_FAILURE(1, ControlLabel, "/allOf/0/$ref",
@@ -409,6 +446,12 @@ TEST(JSONSchema_compile_draft4, ref_2) {
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_PRE(1, ControlLabel, "/allOf/0/$ref", "#/allOf/0/$ref", "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/$ref/type",
+                     "#/definitions/string/type", "");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/$ref/type",
                               "#/definitions/string/type", "");
   EVALUATE_TRACE_POST_SUCCESS(1, ControlLabel, "/allOf/0/$ref",
@@ -446,12 +489,25 @@ TEST(JSONSchema_compile_draft4, ref_3) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type",
+                     "https://example.com#/type", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties",
+                     "https://example.com#/properties", "");
+  EVALUATE_TRACE_PRE(2, ControlLabel, "/properties/foo/$ref",
+                     "https://example.com#/properties/foo/$ref", "/foo");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/$ref/type",
+                     "https://example.com#/type", "/foo");
+  EVALUATE_TRACE_PRE(4, LogicalAnd, "/properties/foo/$ref/properties",
+                     "https://example.com#/properties", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(5, "/properties",
+                                        "https://example.com#/properties", "");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type",
                               "https://example.com#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
                               "/properties/foo/$ref/type",
                               "https://example.com#/type", "/foo");
-
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties/foo/$ref/properties",
                               "https://example.com#/properties", "/foo");
   EVALUATE_TRACE_POST_SUCCESS(3, ControlLabel, "/properties/foo/$ref",
@@ -498,6 +554,30 @@ TEST(JSONSchema_compile_draft4, ref_4) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"foo\": {} } }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 10);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type",
+                     "https://example.com#/type", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties",
+                     "https://example.com#/properties", "");
+  EVALUATE_TRACE_PRE(2, ControlLabel, "/properties/foo/$ref",
+                     "https://example.com#/properties/foo/$ref", "/foo");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/$ref/type",
+                     "https://example.com#/type", "/foo");
+  EVALUATE_TRACE_PRE(4, LogicalAnd, "/properties/foo/$ref/properties",
+                     "https://example.com#/properties", "/foo");
+  EVALUATE_TRACE_PRE(5, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
+                     "https://example.com#/properties/foo/$ref", "/foo/foo");
+  EVALUATE_TRACE_PRE(6, AssertionTypeStrict,
+                     "/properties/foo/$ref/properties/foo/$ref/type",
+                     "https://example.com#/type", "/foo/foo");
+  EVALUATE_TRACE_PRE(7, LogicalAnd,
+                     "/properties/foo/$ref/properties/foo/$ref/properties",
+                     "https://example.com#/properties", "/foo/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(8, "/properties/foo/$ref/properties",
+                                        "https://example.com#/properties",
+                                        "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(9, "/properties",
+                                        "https://example.com#/properties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type",
                               "https://example.com#/type", "");
@@ -570,6 +650,22 @@ TEST(JSONSchema_compile_draft4, ref_5) {
 
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 7);
 
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type",
+                     "https://example.com#/type", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties",
+                     "https://example.com#/properties", "");
+  EVALUATE_TRACE_PRE(2, ControlLabel, "/properties/foo/$ref",
+                     "https://example.com#/properties/foo/$ref", "/foo");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/$ref/type",
+                     "https://example.com#/type", "/foo");
+  EVALUATE_TRACE_PRE(4, LogicalAnd, "/properties/foo/$ref/properties",
+                     "https://example.com#/properties", "/foo");
+  EVALUATE_TRACE_PRE(5, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
+                     "https://example.com#/properties/foo/$ref", "/foo/foo");
+  EVALUATE_TRACE_PRE(6, AssertionTypeStrict,
+                     "/properties/foo/$ref/properties/foo/$ref/type",
+                     "https://example.com#/type", "/foo/foo");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type",
                               "https://example.com#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
@@ -627,6 +723,17 @@ TEST(JSONSchema_compile_draft4, ref_6) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": {} }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(2, ControlLabel, "/properties/foo/$ref",
+                     "#/properties/foo/$ref", "/foo");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/$ref/type",
+                     "#/type", "/foo");
+  EVALUATE_TRACE_PRE(4, LogicalAnd, "/properties/foo/$ref/properties",
+                     "#/properties", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(5, "/properties", "#/properties", "");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
                               "/properties/foo/$ref/type", "#/type", "/foo");
@@ -636,7 +743,6 @@ TEST(JSONSchema_compile_draft4, ref_6) {
                               "#/properties/foo/$ref", "/foo");
   EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "",
                                          "foo");
-
   EVALUATE_TRACE_POST_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -676,6 +782,7 @@ TEST(JSONSchema_compile_draft4, ref_7) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to match all of the given assertions");
@@ -700,6 +807,14 @@ TEST(JSONSchema_compile_draft4, properties_1) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
+                     "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
                               "#/properties/bar/type", "/bar");
   EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
@@ -736,6 +851,15 @@ TEST(JSONSchema_compile_draft4, properties_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": \"xxx\", \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
+                     "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
                               "#/properties/bar/type", "/bar");
   EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
@@ -775,6 +899,7 @@ TEST(JSONSchema_compile_draft4, properties_3) {
       sourcemeta::jsontoolkit::parse("{ \"baz\": [] }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to match all of the given assertions");
@@ -804,6 +929,17 @@ TEST(JSONSchema_compile_draft4, properties_4) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"bar\": \"baz\" } }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties/foo/properties",
+                     "#/properties/foo/properties", "/foo");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict,
+                     "/properties/foo/properties/bar/type",
+                     "#/properties/foo/properties/bar/type", "/foo/bar");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(3, "/properties/foo/properties",
+                                        "#/properties/foo/properties", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "");
+
   EVALUATE_TRACE_POST_SUCCESS(
       0, AssertionTypeStrict, "/properties/foo/properties/bar/type",
       "#/properties/foo/properties/bar/type", "/foo/bar");
@@ -840,6 +976,7 @@ TEST(JSONSchema_compile_draft4, pattern_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{"xxx"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionRegex, "/pattern", "#/pattern", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionRegex, "/pattern", "#/pattern", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -860,6 +997,7 @@ TEST(JSONSchema_compile_draft4, pattern_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{"aaa"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionRegex, "/pattern", "#/pattern", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionRegex, "/pattern", "#/pattern", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -918,6 +1056,8 @@ TEST(JSONSchema_compile_draft4, patternProperties_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/patternProperties", "#/patternProperties",
+                     "");
   EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/patternProperties",
                               "#/patternProperties", "");
 
@@ -943,6 +1083,12 @@ TEST(JSONSchema_compile_draft4, patternProperties_3) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/patternProperties", "#/patternProperties",
+                     "");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(1, "/patternProperties",
+                                        "#/patternProperties", "");
+
   EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(0, "/patternProperties",
                                          "#/patternProperties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/patternProperties",
@@ -971,6 +1117,15 @@ TEST(JSONSchema_compile_draft4, patternProperties_4) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/patternProperties", "#/patternProperties",
+                     "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/patternProperties/^f/type",
+                     // Note that the caret needs to be URI escaped
+                     "#/patternProperties/%5Ef/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/patternProperties",
+                                        "#/patternProperties", "");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
                               "/patternProperties/^f/type",
                               // Note that the caret needs to be URI escaped
@@ -1005,6 +1160,13 @@ TEST(JSONSchema_compile_draft4, patternProperties_5) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/patternProperties", "#/patternProperties",
+                     "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/patternProperties/^f/type",
+                     // Note that the caret needs to be URI escaped
+                     "#/patternProperties/%5Ef/type", "/foo");
+
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict,
                               "/patternProperties/^f/type",
                               // Note that the caret needs to be URI escaped
@@ -1037,6 +1199,17 @@ TEST(JSONSchema_compile_draft4, patternProperties_6) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/patternProperties", "#/patternProperties",
+                     "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/patternProperties/^f/type",
+                     // Note that the caret needs to be URI escaped
+                     "#/patternProperties/%5Ef/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/patternProperties",
+                                        "#/patternProperties", "");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/patternProperties/o$/type",
+                     "#/patternProperties/o$/type", "/foo");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
                               "/patternProperties/^f/type",
                               // Note that the caret needs to be URI escaped
@@ -1080,6 +1253,20 @@ TEST(JSONSchema_compile_draft4, patternProperties_7) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"bar\": 2 } }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/patternProperties", "#/patternProperties",
+                     "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/patternProperties/^f/patternProperties",
+                     "#/patternProperties/%5Ef/patternProperties", "/foo");
+  EVALUATE_TRACE_PRE(
+      2, AssertionTypeStrict, "/patternProperties/^f/patternProperties/^b/type",
+      "#/patternProperties/%5Ef/patternProperties/%5Eb/type", "/foo/bar");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(
+      3, "/patternProperties/^f/patternProperties",
+      "#/patternProperties/%5Ef/patternProperties", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(4, "/patternProperties",
+                                        "#/patternProperties", "");
+
   EVALUATE_TRACE_POST_SUCCESS(
       0, AssertionTypeStrict, "/patternProperties/^f/patternProperties/^b/type",
       "#/patternProperties/%5Ef/patternProperties/%5Eb/type", "/foo/bar");
@@ -1122,6 +1309,14 @@ TEST(JSONSchema_compile_draft4, additionalProperties_1) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/additionalProperties/type",
+                     "#/additionalProperties/type", "/bar");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/additionalProperties/type",
+                     "#/additionalProperties/type", "/foo");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
                               "/additionalProperties/type",
                               "#/additionalProperties/type", "/bar");
@@ -1162,6 +1357,16 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": 2 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(3, LoopProperties, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/additionalProperties/type",
+                     "#/additionalProperties/type", "/bar");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
@@ -1208,6 +1413,14 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, LoopProperties, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/additionalProperties/type",
+                     "#/additionalProperties/type", "/bar");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/additionalProperties/type",
+                     "#/additionalProperties/type", "/foo");
+
   EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
                               "/additionalProperties/type",
@@ -1250,6 +1463,24 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
       "{ \"foo\": true, \"bar\": 2, \"baz\": \"qux\" }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 8);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/patternProperties", "#/patternProperties",
+                     "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/patternProperties/^bar$/type",
+                     // Note that the caret needs to be URI escaped
+                     "#/patternProperties/%5Ebar$/type", "/bar");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/patternProperties",
+                                        "#/patternProperties", "");
+
+  EVALUATE_TRACE_PRE(3, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(5, "/properties", "#/properties", "");
+
+  EVALUATE_TRACE_PRE(6, LoopProperties, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(7, AssertionTypeStrict, "/additionalProperties/type",
+                     "#/additionalProperties/type", "/baz");
 
   // `patternProperties`
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
@@ -1307,6 +1538,10 @@ TEST(JSONSchema_compile_draft4, not_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalNot, "/not", "#/not", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/not/type", "#/not/type", "");
+
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/not/type", "#/not/type",
                               "");
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalNot, "/not", "#/not", "");
@@ -1333,6 +1568,10 @@ TEST(JSONSchema_compile_draft4, not_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalNot, "/not", "#/not", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/not/type", "#/not/type", "");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/not/type", "#/not/type",
                               "");
   EVALUATE_TRACE_POST_FAILURE(1, LogicalNot, "/not", "#/not", "");
@@ -1368,6 +1607,18 @@ TEST(JSONSchema_compile_draft4, not_3) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": true, \"bar\": false }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
+
+  EVALUATE_TRACE_PRE(0, LogicalNot, "/not", "#/not", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/not/properties", "#/not/properties", "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/not/properties/foo/type",
+                     "#/not/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(3, "/not/properties",
+                                        "#/not/properties", "");
+  EVALUATE_TRACE_PRE(4, LoopProperties, "/not/additionalProperties",
+                     "#/not/additionalProperties", "");
+  EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/not/additionalProperties/type",
+                     "#/not/additionalProperties/type", "/bar");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
                               "/not/properties/foo/type",
                               "#/not/properties/foo/type", "/foo");
@@ -1430,6 +1681,15 @@ TEST(JSONSchema_compile_draft4, items_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/2");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/type",
@@ -1464,6 +1724,13 @@ TEST(JSONSchema_compile_draft4, items_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", 5, \"baz\" ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/1");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/0");
   EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/items/type",
@@ -1508,6 +1775,8 @@ TEST(JSONSchema_compile_draft4, items_5) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
   EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -1529,6 +1798,11 @@ TEST(JSONSchema_compile_draft4, items_6) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/items", "#/items", "");
@@ -1554,6 +1828,13 @@ TEST(JSONSchema_compile_draft4, items_7) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5, true, \"extra\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
+                     "/1");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
@@ -1583,6 +1864,13 @@ TEST(JSONSchema_compile_draft4, items_8) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5, 1, \"extra\" ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
+                     "/1");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/items/1/type",
@@ -1632,6 +1920,15 @@ TEST(JSONSchema_compile_draft4, additionalItems_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/2");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/type",
@@ -1669,6 +1966,13 @@ TEST(JSONSchema_compile_draft4, additionalItems_3) {
       sourcemeta::jsontoolkit::parse("[ true, 5 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
+                     "/1");
+  EVALUATE_TRACE_PRE(3, LoopItems, "/additionalItems", "#/additionalItems", "");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
@@ -1705,6 +2009,17 @@ TEST(JSONSchema_compile_draft4, additionalItems_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ true, 5, \"foo\", \"bar\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
+                     "/1");
+  EVALUATE_TRACE_PRE(3, LoopItems, "/additionalItems", "#/additionalItems", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/additionalItems/type",
+                     "#/additionalItems/type", "/2");
+  EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/additionalItems/type",
+                     "#/additionalItems/type", "/3");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
@@ -1751,6 +2066,15 @@ TEST(JSONSchema_compile_draft4, additionalItems_5) {
       sourcemeta::jsontoolkit::parse("[ true, 5, 6, \"bar\" ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 5);
 
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
+                     "/1");
+  EVALUATE_TRACE_PRE(3, LoopItems, "/additionalItems", "#/additionalItems", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/additionalItems/type",
+                     "#/additionalItems/type", "/2");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
@@ -1791,6 +2115,12 @@ TEST(JSONSchema_compile_draft4, anyOf_1) {
   const sourcemeta::jsontoolkit::JSON instance{1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
+  EVALUATE_TRACE_PRE(0, LogicalOr, "/anyOf", "#/anyOf", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/anyOf/0/type", "#/anyOf/0/type",
+                     "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/anyOf/1/type", "#/anyOf/1/type",
+                     "");
+
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/anyOf/0/type",
                               "#/anyOf/0/type", "");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/anyOf/1/type",
@@ -1824,6 +2154,14 @@ TEST(JSONSchema_compile_draft4, anyOf_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{true};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LogicalOr, "/anyOf", "#/anyOf", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/anyOf/0/type", "#/anyOf/0/type",
+                     "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/anyOf/1/type", "#/anyOf/1/type",
+                     "");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrictAny, "/anyOf/2/type",
+                     "#/anyOf/2/type", "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/anyOf/0/type",
                               "#/anyOf/0/type", "");
@@ -1863,6 +2201,11 @@ TEST(JSONSchema_compile_draft4, oneOf_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalXor, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/oneOf/0/type", "#/oneOf/0/type",
+                     "");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/oneOf/0/type",
                               "#/oneOf/0/type", "");
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalXor, "/oneOf", "#/oneOf", "");
@@ -1894,11 +2237,18 @@ TEST(JSONSchema_compile_draft4, oneOf_2) {
   const sourcemeta::jsontoolkit::JSON instance{3.14};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
+  EVALUATE_TRACE_PRE(0, LogicalXor, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/oneOf/0/type", "#/oneOf/0/type",
+                     "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/oneOf/1/type", "#/oneOf/1/type",
+                     "");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrictAny, "/oneOf/2/type",
+                     "#/oneOf/2/type", "");
+
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/oneOf/0/type",
                               "#/oneOf/0/type", "");
   EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/oneOf/1/type",
                               "#/oneOf/1/type", "");
-
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrictAny, "/oneOf/2/type",
                               "#/oneOf/2/type", "");
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalXor, "/oneOf", "#/oneOf", "");
@@ -1933,6 +2283,16 @@ TEST(JSONSchema_compile_draft4, oneOf_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LogicalXor, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/oneOf/0/type", "#/oneOf/0/type",
+                     "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/oneOf/1/type", "#/oneOf/1/type",
+                     "");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrictAny, "/oneOf/2/type",
+                     "#/oneOf/2/type", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/oneOf/3/type", "#/oneOf/3/type",
+                     "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/oneOf/0/type",
                               "#/oneOf/0/type", "");
@@ -1994,8 +2354,11 @@ TEST(JSONSchema_compile_draft4, dependencies_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependencies", "#/dependencies", "");
   EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependencies", "#/dependencies",
                               "");
+
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to match all of the given assertions");
 }
@@ -2018,6 +2381,7 @@ TEST(JSONSchema_compile_draft4, dependencies_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"baz\": 3 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependencies", "#/dependencies", "");
   EVALUATE_TRACE_POST_FAILURE(0, LogicalAnd, "/dependencies", "#/dependencies",
                               "");
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -2042,6 +2406,10 @@ TEST(JSONSchema_compile_draft4, dependencies_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"qux\": 1, \"extra\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependencies", "#/dependencies", "");
+  EVALUATE_TRACE_PRE(1, AssertionDefines, "/dependencies/qux/required",
+                     "#/dependencies/qux/required", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionDefines, "/dependencies/qux/required",
                               "#/dependencies/qux/required", "");
@@ -2073,6 +2441,10 @@ TEST(JSONSchema_compile_draft4, dependencies_5) {
       sourcemeta::jsontoolkit::parse("{ \"qux\": 1 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
 
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependencies", "#/dependencies", "");
+  EVALUATE_TRACE_PRE(1, AssertionDefines, "/dependencies/qux/required",
+                     "#/dependencies/qux/required", "");
+
   EVALUATE_TRACE_POST_FAILURE(0, AssertionDefines, "/dependencies/qux/required",
                               "#/dependencies/qux/required", "");
   EVALUATE_TRACE_POST_FAILURE(1, LogicalAnd, "/dependencies", "#/dependencies",
@@ -2099,6 +2471,8 @@ TEST(JSONSchema_compile_draft4, enum_1) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{}")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionEqualsAny, "/enum", "#/enum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqualsAny, "/enum", "#/enum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -2120,6 +2494,8 @@ TEST(JSONSchema_compile_draft4, enum_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionEqualsAny, "/enum", "#/enum", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqualsAny, "/enum", "#/enum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -2140,6 +2516,8 @@ TEST(JSONSchema_compile_draft4, enum_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionEqual, "/enum", "#/enum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/enum", "#/enum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -2161,6 +2539,8 @@ TEST(JSONSchema_compile_draft4, uniqueItems_1) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionUnique, "/uniqueItems", "#/uniqueItems", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionUnique, "/uniqueItems",
                               "#/uniqueItems", "");
 
@@ -2200,6 +2580,8 @@ TEST(JSONSchema_compile_draft4, uniqueItems_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionUnique, "/uniqueItems", "#/uniqueItems", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionUnique, "/uniqueItems",
                               "#/uniqueItems", "");
 
@@ -2222,6 +2604,8 @@ TEST(JSONSchema_compile_draft4, uniqueItems_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 2, 1, 2 ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionUnique, "/uniqueItems", "#/uniqueItems", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionUnique, "/uniqueItems",
                               "#/uniqueItems", "");
 
@@ -2276,6 +2660,8 @@ TEST(JSONSchema_compile_draft4, minLength_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{"xx"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minLength", "#/minLength", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeGreater, "/minLength",
                               "#/minLength", "");
 
@@ -2297,6 +2683,8 @@ TEST(JSONSchema_compile_draft4, minLength_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{"x"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minLength", "#/minLength", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeGreater, "/minLength",
                               "#/minLength", "");
 
@@ -2334,6 +2722,8 @@ TEST(JSONSchema_compile_draft4, maxLength_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{"xx"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxLength", "#/maxLength", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeLess, "/maxLength", "#/maxLength",
                               "");
 
@@ -2355,6 +2745,8 @@ TEST(JSONSchema_compile_draft4, maxLength_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{"xxx"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxLength", "#/maxLength", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeLess, "/maxLength", "#/maxLength",
                               "");
 
@@ -2393,6 +2785,8 @@ TEST(JSONSchema_compile_draft4, minItems_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minItems", "#/minItems", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeGreater, "/minItems",
                               "#/minItems", "");
 
@@ -2415,6 +2809,8 @@ TEST(JSONSchema_compile_draft4, minItems_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 1 ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minItems", "#/minItems", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeGreater, "/minItems",
                               "#/minItems", "");
 
@@ -2453,6 +2849,8 @@ TEST(JSONSchema_compile_draft4, maxItems_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxItems", "#/maxItems", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeLess, "/maxItems", "#/maxItems",
                               "");
 
@@ -2475,6 +2873,8 @@ TEST(JSONSchema_compile_draft4, maxItems_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxItems", "#/maxItems", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeLess, "/maxItems", "#/maxItems",
                               "");
 
@@ -2513,6 +2913,9 @@ TEST(JSONSchema_compile_draft4, minProperties_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minProperties",
+                     "#/minProperties", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeGreater, "/minProperties",
                               "#/minProperties", "");
 
@@ -2535,6 +2938,9 @@ TEST(JSONSchema_compile_draft4, minProperties_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minProperties",
+                     "#/minProperties", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeGreater, "/minProperties",
                               "#/minProperties", "");
 
@@ -2573,6 +2979,9 @@ TEST(JSONSchema_compile_draft4, maxProperties_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxProperties", "#/maxProperties",
+                     "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeLess, "/maxProperties",
                               "#/maxProperties", "");
 
@@ -2595,6 +3004,9 @@ TEST(JSONSchema_compile_draft4, maxProperties_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxProperties", "#/maxProperties",
+                     "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeLess, "/maxProperties",
                               "#/maxProperties", "");
 
@@ -2632,6 +3044,8 @@ TEST(JSONSchema_compile_draft4, minimum_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{2.1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionGreaterEqual, "/minimum", "#/minimum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreaterEqual, "/minimum", "#/minimum",
                               "");
 
@@ -2654,6 +3068,8 @@ TEST(JSONSchema_compile_draft4, minimum_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionGreaterEqual, "/minimum", "#/minimum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreaterEqual, "/minimum", "#/minimum",
                               "");
 
@@ -2676,6 +3092,8 @@ TEST(JSONSchema_compile_draft4, minimum_4) {
 
   const sourcemeta::jsontoolkit::JSON instance{1.8};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionGreaterEqual, "/minimum", "#/minimum", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionGreaterEqual, "/minimum", "#/minimum",
                               "");
 
@@ -2714,6 +3132,8 @@ TEST(JSONSchema_compile_draft4, maximum_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{1.9};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionLessEqual, "/maximum", "#/maximum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionLessEqual, "/maximum", "#/maximum",
                               "");
 
@@ -2736,6 +3156,8 @@ TEST(JSONSchema_compile_draft4, maximum_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionLessEqual, "/maximum", "#/maximum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionLessEqual, "/maximum", "#/maximum",
                               "");
 
@@ -2758,6 +3180,8 @@ TEST(JSONSchema_compile_draft4, maximum_4) {
 
   const sourcemeta::jsontoolkit::JSON instance{2.1};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionLessEqual, "/maximum", "#/maximum", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionLessEqual, "/maximum", "#/maximum",
                               "");
 
@@ -2781,6 +3205,8 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{2.1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionGreater, "/minimum", "#/minimum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreater, "/minimum", "#/minimum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -2802,6 +3228,8 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionGreater, "/minimum", "#/minimum", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionGreater, "/minimum", "#/minimum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -2823,6 +3251,8 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionGreaterEqual, "/minimum", "#/minimum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreaterEqual, "/minimum", "#/minimum",
                               "");
 
@@ -2846,6 +3276,8 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{1.9};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionLess, "/maximum", "#/maximum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionLess, "/maximum", "#/maximum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -2867,6 +3299,8 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionLess, "/maximum", "#/maximum", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionLess, "/maximum", "#/maximum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -2888,6 +3322,8 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionLessEqual, "/maximum", "#/maximum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionLessEqual, "/maximum", "#/maximum",
                               "");
 
@@ -2926,6 +3362,8 @@ TEST(JSONSchema_compile_draft4, multipleOf_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{6};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionDivisible, "/multipleOf", "#/multipleOf", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionDivisible, "/multipleOf",
                               "#/multipleOf", "");
 
@@ -2947,6 +3385,8 @@ TEST(JSONSchema_compile_draft4, multipleOf_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{7};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionDivisible, "/multipleOf", "#/multipleOf", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionDivisible, "/multipleOf",
                               "#/multipleOf", "");
 
@@ -2968,6 +3408,8 @@ TEST(JSONSchema_compile_draft4, multipleOf_4) {
 
   const sourcemeta::jsontoolkit::JSON instance{6.4};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionDivisible, "/multipleOf", "#/multipleOf", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionDivisible, "/multipleOf",
                               "#/multipleOf", "");
 
@@ -2989,6 +3431,8 @@ TEST(JSONSchema_compile_draft4, multipleOf_5) {
 
   const sourcemeta::jsontoolkit::JSON instance{6.0};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionDivisible, "/multipleOf", "#/multipleOf", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionDivisible, "/multipleOf",
                               "#/multipleOf", "");
 
