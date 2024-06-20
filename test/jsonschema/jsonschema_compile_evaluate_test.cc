@@ -298,10 +298,16 @@ TEST(JSONSchema_compile_evaluate,
   const JSON instance{"foo bar"};
   const auto result{evaluate(
       steps, instance, SchemaCompilerEvaluationMode::Fast,
-      [&trace](const bool subresult,
+      [&trace](const sourcemeta::jsontoolkit::SchemaCompilerEvaluationType type,
+               const bool subresult,
                const SchemaCompilerTemplate::value_type &step,
                const Pointer &evaluate_path, const Pointer &,
                const JSON &document, const JSON &value) {
+        if (type !=
+            sourcemeta::jsontoolkit::SchemaCompilerEvaluationType::Post) {
+          return;
+        }
+
         trace.push_back({subresult, step, evaluate_path, document, value});
       })};
 
@@ -359,10 +365,16 @@ TEST(JSONSchema_compile_evaluate,
   const JSON instance{"foo bar"};
   const auto result{evaluate(
       steps, instance, SchemaCompilerEvaluationMode::Exhaustive,
-      [&trace](const bool subresult,
+      [&trace](const sourcemeta::jsontoolkit::SchemaCompilerEvaluationType type,
+               const bool subresult,
                const SchemaCompilerTemplate::value_type &step,
                const Pointer &evaluate_path, const Pointer &,
                const JSON &document, const JSON &value) {
+        if (type !=
+            sourcemeta::jsontoolkit::SchemaCompilerEvaluationType::Post) {
+          return;
+        }
+
         trace.push_back({subresult, step, evaluate_path, document, value});
       })};
 

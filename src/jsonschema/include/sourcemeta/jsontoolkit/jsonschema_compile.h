@@ -441,10 +441,16 @@ enum class SchemaCompilerEvaluationMode {
 };
 
 /// @ingroup jsonschema
+/// Represents the state of a step evaluation
+enum class SchemaCompilerEvaluationType { Pre, Post };
+
+/// @ingroup jsonschema
 /// A callback of this type is invoked after evaluating any keyword. The
 /// arguments go as follows:
 ///
-/// - Whether the evaluation was successful or not
+/// - The stage at which the step in question is
+/// - Whether the evaluation was successful or not (always true before
+/// evaluation)
 /// - The step that was just evaluated
 /// - The evaluation path
 /// - The instance location
@@ -453,7 +459,8 @@ enum class SchemaCompilerEvaluationMode {
 ///
 /// You can use this callback mechanism to implement arbitrary output formats.
 using SchemaCompilerEvaluationCallback = std::function<void(
-    bool, const SchemaCompilerTemplate::value_type &, const Pointer &,
+    const SchemaCompilerEvaluationType, bool,
+    const SchemaCompilerTemplate::value_type &, const Pointer &,
     const Pointer &, const JSON &, const JSON &)>;
 
 /// @ingroup jsonschema
