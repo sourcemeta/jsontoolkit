@@ -51,6 +51,7 @@ TEST(JSONSchema_compile_draft6, const_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionEqual, "/const", "#/const", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/const", "#/const", "");
 }
 
@@ -68,6 +69,7 @@ TEST(JSONSchema_compile_draft6, const_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionEqual, "/const", "#/const", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/const", "#/const", "");
 }
 
@@ -85,6 +87,8 @@ TEST(JSONSchema_compile_draft6, exclusiveMinimum_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{2.1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionGreater, "/exclusiveMinimum",
+                     "#/exclusiveMinimum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreater, "/exclusiveMinimum",
                               "#/exclusiveMinimum", "");
 
@@ -106,6 +110,8 @@ TEST(JSONSchema_compile_draft6, exclusiveMinimum_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionGreater, "/exclusiveMinimum",
+                     "#/exclusiveMinimum", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionGreater, "/exclusiveMinimum",
                               "#/exclusiveMinimum", "");
 
@@ -127,6 +133,8 @@ TEST(JSONSchema_compile_draft6, exclusiveMaximum_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{1.9};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionLess, "/exclusiveMaximum",
+                     "#/exclusiveMaximum", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionLess, "/exclusiveMaximum",
                               "#/exclusiveMaximum", "");
 
@@ -148,6 +156,8 @@ TEST(JSONSchema_compile_draft6, exclusiveMaximum_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, AssertionLess, "/exclusiveMaximum",
+                     "#/exclusiveMaximum", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionLess, "/exclusiveMaximum",
                               "#/exclusiveMaximum", "");
 
@@ -187,6 +197,12 @@ TEST(JSONSchema_compile_draft6, contains_2) {
       sourcemeta::jsontoolkit::parse("[ 1, \"bar\", 3 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/1");
+
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/contains/type",
                               "#/contains/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/contains/type",
@@ -216,6 +232,14 @@ TEST(JSONSchema_compile_draft6, contains_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/2");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/contains/type",
                               "#/contains/type", "/0");
@@ -250,6 +274,10 @@ TEST(JSONSchema_compile_draft6, contains_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/contains/type",
                               "#/contains/type", "/0");
@@ -293,6 +321,14 @@ TEST(JSONSchema_compile_draft6, propertyNames_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
+  EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
+  EVALUATE_TRACE_PRE(1, AssertionSizeGreater, "/propertyNames/minLength",
+                     "#/propertyNames/minLength", "/bar");
+  EVALUATE_TRACE_PRE(2, AssertionSizeGreater, "/propertyNames/minLength",
+                     "#/propertyNames/minLength", "/baz");
+  EVALUATE_TRACE_PRE(3, AssertionSizeGreater, "/propertyNames/minLength",
+                     "#/propertyNames/minLength", "/foo");
+
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeGreater,
                               "/propertyNames/minLength",
                               "#/propertyNames/minLength", "/bar");
@@ -330,6 +366,12 @@ TEST(JSONSchema_compile_draft6, propertyNames_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"fo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
+  EVALUATE_TRACE_PRE(1, AssertionSizeGreater, "/propertyNames/minLength",
+                     "#/propertyNames/minLength", "/bar");
+  EVALUATE_TRACE_PRE(2, AssertionSizeGreater, "/propertyNames/minLength",
+                     "#/propertyNames/minLength", "/fo");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeGreater,
                               "/propertyNames/minLength",
@@ -370,6 +412,11 @@ TEST(JSONSchema_compile_draft6, property_names_4) {
   })JSON")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, LoopKeys, "/properties/foo/propertyNames",
+                     "#/properties/foo/propertyNames", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, LoopKeys, "/properties/foo/propertyNames",
                               "#/properties/foo/propertyNames", "/foo");
