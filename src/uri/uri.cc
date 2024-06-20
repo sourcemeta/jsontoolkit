@@ -243,8 +243,11 @@ auto URI::recompose() const -> std::string {
 
   // Fragment
   const auto result_fragment{this->fragment()};
-  if (result_fragment.has_value() && !result_fragment.value().empty()) {
-    result << '#' << result_fragment.value();
+  if (result_fragment.has_value()) {
+    result << '#';
+    if (!result_fragment.value().empty()) {
+      result << result_fragment.value();
+    }
   }
 
   return result.str();
@@ -323,7 +326,7 @@ auto URI::canonicalize() -> URI & {
     this->host_ = lowercased_host.str();
   }
 
-  // Clean path form ".." and "."
+  // Clean Path form ".." and "."
   const auto result_path{this->path()};
   if (result_path.has_value()) {
     std::vector<std::string> cleaned_path;
@@ -337,6 +340,15 @@ auto URI::canonicalize() -> URI & {
       }
     }
     this->path_components_ = cleaned_path;
+  }
+
+  // Fragment
+  // The empty fragment is optional
+  const auto result_fragment{this->fragment()};
+  if (result_fragment.has_value() && !result_fragment.value().empty()) {
+    this->fragment_ = result_fragment.value();
+  } else {
+    this->fragment_ = std::nullopt;
   }
 
   // Port
