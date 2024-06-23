@@ -19,14 +19,14 @@ auto sourcemeta::jsontoolkit::keyword_priority(
 }
 
 namespace {
-enum class SchemaWalkerype_t { Deep, Flat };
+enum class SchemaWalkerType_t { Deep, Flat };
 
 auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
           std::vector<sourcemeta::jsontoolkit::SchemaIteratorEntry> &subschemas,
           const sourcemeta::jsontoolkit::JSON &subschema,
           const sourcemeta::jsontoolkit::SchemaWalker &walker,
           const sourcemeta::jsontoolkit::SchemaResolver &resolver,
-          const std::string &dialect, const SchemaWalkerype_t type,
+          const std::string &dialect, const SchemaWalkerType_t type,
           const std::size_t level) -> void {
   if (!is_schema(subschema)) {
     return;
@@ -50,14 +50,14 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
                                             new_dialect)
           .get()};
 
-  if (type == SchemaWalkerype_t::Deep || level > 0) {
+  if (type == SchemaWalkerType_t::Deep || level > 0) {
     subschemas.push_back(
         {pointer, new_dialect, vocabularies, base_dialect, subschema});
   }
 
   // We can't recurse any further
   if (!subschema.is_object() ||
-      (type == SchemaWalkerype_t::Flat && level > 0)) {
+      (type == SchemaWalkerType_t::Flat && level > 0)) {
     return;
   }
 
@@ -160,7 +160,7 @@ sourcemeta::jsontoolkit::SchemaIterator::SchemaIterator(
   } else {
     sourcemeta::jsontoolkit::Pointer pointer;
     walk(pointer, this->subschemas, schema, walker, resolver, dialect.value(),
-         SchemaWalkerype_t::Deep, 0);
+         SchemaWalkerType_t::Deep, 0);
   }
 }
 
@@ -174,7 +174,7 @@ sourcemeta::jsontoolkit::SchemaIteratorFlat::SchemaIteratorFlat(
   if (dialect.has_value()) {
     sourcemeta::jsontoolkit::Pointer pointer;
     walk(pointer, this->subschemas, schema, walker, resolver, dialect.value(),
-         SchemaWalkerype_t::Flat, 0);
+         SchemaWalkerType_t::Flat, 0);
   }
 }
 
