@@ -5,6 +5,9 @@ on:
     # Once per day, Monday to Friday
     - cron: '0 19 * * 1-5'
   push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   test:
@@ -73,14 +76,7 @@ jobs:
       CXX: ${{ matrix.platform.cxx }}
     steps:
       - name: Install ClangFormat
-        run: pip install clang-format==18.1.0
-
-      # See https://github.com/actions/runner-images/issues/8659
-      - name: Workaround Clang issue (GNU/Linux)
-        if: runner.os == 'linux' && matrix.platform.cc == 'clang'
-        run: |
-          sudo apt-get purge -y g++-13 gcc-13 libstdc++-13-dev
-          sudo apt-get install -y --allow-downgrades libstdc++-12-dev libstdc++6=12.* libgcc-s1=12.*
+        run: pip install clang-format==18.1.5
 
       - uses: actions/checkout@v3
       - name: Install dependencies (macOS)
@@ -95,7 +91,6 @@ jobs:
         run: >
           cmake -S . -B ./build
           -DCMAKE_BUILD_TYPE:STRING=Release
-          -DJSONTOOLKIT_CONTRIB:BOOL=ON
           -DJSONTOOLKIT_TESTS:BOOL=ON
           -DJSONTOOLKIT_DOCS:BOOL=OFF
           -DBUILD_SHARED_LIBS:BOOL=OFF
@@ -106,7 +101,6 @@ jobs:
         run: >
           cmake -S . -B ./build
           -DCMAKE_BUILD_TYPE:STRING=Release
-          -DJSONTOOLKIT_CONTRIB:BOOL=ON
           -DJSONTOOLKIT_TESTS:BOOL=ON
           -DJSONTOOLKIT_DOCS:BOOL=OFF
           -DBUILD_SHARED_LIBS:BOOL=ON
@@ -132,16 +126,10 @@ jobs:
   unikraft:
     runs-on: ubuntu-latest
     steps:
-      - name: Install dependencies (GNU/Linux)
-        run: |
-          sudo apt-get update --yes
-          sudo apt-get install --yes qemu-system-x86
-      - uses: actions/checkout@v3
-      - name: Install KraftKit
-        run: |
-          wget https://github.com/unikraft/kraftkit/releases/download/v0.7.2/kraftkit_0.7.2_linux_amd64.deb
-          sudo dpkg -i kraftkit_0.7.2_linux_amd64.deb
-          rm kraftkit_0.7.2_linux_amd64.deb
-
-      - run: kraft build --target development --jobs 4 --log-type=basic unikraft
-      - run: kraft run --target development --disable-acceleration unikraft
+      - uses: actions/checkout@v4
+      - uses: unikraft/kraftkit@stable
+        with:
+          workdir: .
+          run: |
+            kraft build --target development --jobs 4 --log-type=basic unikraft
+            kraft run --target development --disable-acceleration unikraft --memory 128Mi

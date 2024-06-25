@@ -20,6 +20,20 @@ namespace sourcemeta::jsontoolkit {
 // TODO: Optionally let users bundle the metaschema too
 
 /// @ingroup jsonschema
+/// A set of options that modify the behavior of bundling
+enum class BundleOptions {
+  /// Perform standard JSON Schema bundling
+  Default,
+
+  /// Perform standard JSON Schema bundling but without making
+  /// use of identifiers. This is helpful for delivering
+  /// schemas to some non-compliant implementations that do not
+  /// recognize identifiers (like Visua Studio Code at the time
+  /// of this writing)
+  WithoutIdentifiers
+};
+
+/// @ingroup jsonschema
 ///
 /// This function bundles a JSON Schema (starting from Draft 4) by embedding
 /// every remote reference into the top level schema resource, handling circular
@@ -75,6 +89,7 @@ namespace sourcemeta::jsontoolkit {
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto bundle(sourcemeta::jsontoolkit::JSON &schema, const SchemaWalker &walker,
             const SchemaResolver &resolver,
+            const BundleOptions options = BundleOptions::Default,
             const std::optional<std::string> &default_dialect = std::nullopt)
     -> std::future<void>;
 
@@ -136,6 +151,7 @@ auto bundle(sourcemeta::jsontoolkit::JSON &schema, const SchemaWalker &walker,
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto bundle(const sourcemeta::jsontoolkit::JSON &schema,
             const SchemaWalker &walker, const SchemaResolver &resolver,
+            const BundleOptions options = BundleOptions::Default,
             const std::optional<std::string> &default_dialect = std::nullopt)
     -> std::future<sourcemeta::jsontoolkit::JSON>;
 

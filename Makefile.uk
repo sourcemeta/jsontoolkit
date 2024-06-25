@@ -7,6 +7,7 @@ LIBJSONTOOLKIT_CXXFLAGS-y += --std=c++20
 # JSON
 CXXINCLUDES-$(CONFIG_LIBJSONTOOLKIT) += -I$(LIBJSONTOOLKIT_SRC)/json/include
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/json/json.cc
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/json/json_value.cc
 
 # JSONL
 CXXINCLUDES-$(CONFIG_LIBJSONTOOLKIT) += -I$(LIBJSONTOOLKIT_SRC)/jsonl/include
@@ -52,9 +53,11 @@ LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/reference.cc
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/transform_rule.cc
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/transform_bundle.cc
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/transformer.cc
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/resolver.cc
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/compile.cc
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/compile_evaluate.cc
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/compile_json.cc
+LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/compile_describe.cc
 LIBJSONTOOLKIT_SRCS-y += $(LIBJSONTOOLKIT_SRC)/jsonschema/default_compiler.cc
 
 # TODO: Can we do this with standard POSIX tools?

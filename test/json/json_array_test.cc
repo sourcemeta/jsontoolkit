@@ -409,3 +409,95 @@ TEST(JSON_array, estimated_byte_size_nested) {
       sourcemeta::jsontoolkit::parse("[1,[\"foo\"],[[true]]]");
   EXPECT_EQ(document.estimated_byte_size(), 12);
 }
+
+TEST(JSON_array, push_back_if_unique_copy_exists) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[1,2,3]");
+
+  const sourcemeta::jsontoolkit::JSON element{2};
+  const auto result{document.push_back_if_unique(element)};
+
+  EXPECT_TRUE(result.first.get().is_integer());
+  EXPECT_EQ(result.first.get().to_integer(), 2);
+  EXPECT_FALSE(result.second);
+
+  EXPECT_TRUE(document.is_array());
+  EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.at(0).to_integer(), 1);
+  EXPECT_EQ(document.at(1).to_integer(), 2);
+  EXPECT_EQ(document.at(2).to_integer(), 3);
+}
+
+TEST(JSON_array, push_back_if_unique_copy_not_exist) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[1,2,3]");
+
+  const sourcemeta::jsontoolkit::JSON element{4};
+  const auto result{document.push_back_if_unique(element)};
+
+  EXPECT_TRUE(result.first.get().is_integer());
+  EXPECT_EQ(result.first.get().to_integer(), 4);
+  EXPECT_TRUE(result.second);
+
+  EXPECT_TRUE(document.is_array());
+  EXPECT_EQ(document.size(), 4);
+  EXPECT_EQ(document.at(0).to_integer(), 1);
+  EXPECT_EQ(document.at(1).to_integer(), 2);
+  EXPECT_EQ(document.at(2).to_integer(), 3);
+  EXPECT_EQ(document.at(3).to_integer(), 4);
+}
+
+TEST(JSON_array, push_back_if_unique_move_exists) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[1,2,3]");
+
+  sourcemeta::jsontoolkit::JSON element{2};
+  const auto result{document.push_back_if_unique(std::move(element))};
+
+  EXPECT_TRUE(result.first.get().is_integer());
+  EXPECT_EQ(result.first.get().to_integer(), 2);
+  EXPECT_FALSE(result.second);
+
+  EXPECT_TRUE(document.is_array());
+  EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.at(0).to_integer(), 1);
+  EXPECT_EQ(document.at(1).to_integer(), 2);
+  EXPECT_EQ(document.at(2).to_integer(), 3);
+}
+
+TEST(JSON_array, push_back_if_unique_move_not_exist) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[1,2,3]");
+
+  sourcemeta::jsontoolkit::JSON element{4};
+  const auto result{document.push_back_if_unique(std::move(element))};
+
+  EXPECT_TRUE(result.first.get().is_integer());
+  EXPECT_EQ(result.first.get().to_integer(), 4);
+  EXPECT_TRUE(result.second);
+
+  EXPECT_TRUE(document.is_array());
+  EXPECT_EQ(document.size(), 4);
+  EXPECT_EQ(document.at(0).to_integer(), 1);
+  EXPECT_EQ(document.at(1).to_integer(), 2);
+  EXPECT_EQ(document.at(2).to_integer(), 3);
+  EXPECT_EQ(document.at(3).to_integer(), 4);
+}
+
+TEST(JSON_array, unique_empty) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[]");
+  EXPECT_TRUE(document.unique());
+}
+
+TEST(JSON_array, unique_true) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[ 1, 2, {} ]");
+  EXPECT_TRUE(document.unique());
+}
+
+TEST(JSON_array, unique_false) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[ [2], 1, [2] ]");
+  EXPECT_FALSE(document.unique());
+}

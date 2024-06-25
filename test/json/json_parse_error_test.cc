@@ -628,3 +628,47 @@ TEST(JSON_parse_error, backspace_is_not_whitespace) {
   std::istringstream input{"\bfalse\b"};
   EXPECT_PARSE_ERROR(input, 1, 1);
 }
+
+#if !defined(__Unikraft__)
+TEST(JSON_parse_error, from_file_invalid) {
+  try {
+    sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY} /
+                                       "stub_invalid.json");
+  } catch (const sourcemeta::jsontoolkit::FileParseError &error) {
+    EXPECT_EQ(error.path(),
+              std::filesystem::path{TEST_DIRECTORY} / "stub_invalid.json");
+    EXPECT_EQ(error.line(), 3);
+    EXPECT_EQ(error.column(), 9);
+  } catch (...) {
+    FAIL() << "The parse function was expected to throw a file parse error";
+  }
+}
+#endif
+
+#if !defined(__Unikraft__)
+TEST(JSON_parse_error, from_file_directory) {
+  try {
+    sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY});
+  } catch (const std::filesystem::filesystem_error &error) {
+    EXPECT_EQ(error.code(), std::errc::is_a_directory);
+    EXPECT_EQ(error.path1(), std::filesystem::path{TEST_DIRECTORY});
+  } catch (...) {
+    FAIL() << "The parse function was expected to throw a filesystem error";
+  }
+}
+#endif
+
+#if !defined(__Unikraft__)
+TEST(JSON_parse_error, from_file_non_existent) {
+  try {
+    sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY} /
+                                       "i-dont-exist");
+  } catch (const std::filesystem::filesystem_error &error) {
+    EXPECT_EQ(error.code(), std::errc::no_such_file_or_directory);
+    EXPECT_EQ(error.path1(),
+              std::filesystem::path{TEST_DIRECTORY} / "i-dont-exist");
+  } catch (...) {
+    FAIL() << "The parse function was expected to throw a filesystem error";
+  }
+}
+#endif

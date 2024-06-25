@@ -69,6 +69,14 @@ target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::j
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonl)
 ```
 
+At the moment of this writing, JSON Toolkit is available with `find_package`
+integration on the following package managers:
+
+```sh
+# Homebrew
+$ brew install jsontoolkit
+```
+
 ### Using Unikraft
 
 On your [`Kraftfile`](https://unikraft.org/docs/cli/reference/kraftfile/v0.5)
@@ -101,7 +109,6 @@ CMake
 | `JSONTOOLKIT_JSONPOINTER`         | Boolean | `ON`    | Build the JSON Toolkit JSON Pointer library |
 | `JSONTOOLKIT_JSONL`               | Boolean | `ON`    | Build the JSON Toolkit JSONL library        |
 | `JSONTOOLKIT_TESTS`               | Boolean | `OFF`   | Build the JSON Toolkit tests                |
-| `JSONTOOLKIT_CONTRIB`             | Boolean | `OFF`   | Build the JSON Toolkit `contrib` programs   |
 | `JSONTOOLKIT_DOCS`                | Boolean | `OFF`   | Build the JSON Toolkit docs                 |
 | `JSONTOOLKIT_INSTALL`             | Boolean | `ON`    | Install the JSON Toolkit library            |
 | `JSONTOOLKIT_ADDRESS_SANITIZER`   | Boolean | `OFF`   | Enable the address sanitizer                |
@@ -116,7 +123,6 @@ into a set of CMake components:
 |----------------------------------|------------------------------------------------|
 | `sourcemeta_jsontoolkit`         | The core JSON Toolkit libraries                |
 | `sourcemeta_jsontoolkit_dev`     | The JSON Toolkit headers and development files |
-| `sourcemeta_jsontoolkit_contrib` | The optional executables located in `contrib/` |
 
 Contributing
 ------------
@@ -128,7 +134,6 @@ configure, build and test the project as follows:
 cmake -S . -B ./build \
   -DCMAKE_BUILD_TYPE:STRING=<Debug|Release> \
   -DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON \
-  -DJSONTOOLKIT_CONTRIB:BOOL=ON \
   -DJSONTOOLKIT_DOCS:BOOL=ON \
   -DJSONTOOLKIT_TESTS:BOOL=ON
 # Format the code

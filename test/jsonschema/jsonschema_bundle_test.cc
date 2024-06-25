@@ -34,6 +34,14 @@ static auto test_resolver(std::string_view identifier)
       "id": "https://www.sourcemeta.com/test-4",
       "type": "string"
     })JSON"));
+  } else if (identifier == "https://www.sourcemeta.com/no-dialect") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "foo": 1
+    })JSON"));
+  } else if (identifier == "https://www.sourcemeta.com/array") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON([
+      "foo", "bar", "baz"
+    ])JSON"));
   } else {
     promise.set_value(
         sourcemeta::jsontoolkit::official_resolver(identifier).get());
@@ -132,6 +140,7 @@ TEST(JSONSchema_bundle, with_default_dialect) {
 
   sourcemeta::jsontoolkit::bundle(
       document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      sourcemeta::jsontoolkit::BundleOptions::Default,
       "https://json-schema.org/draft/2020-12/schema")
       .wait();
 
@@ -164,4 +173,34 @@ TEST(JSONSchema_bundle, without_default_dialect) {
                    document, sourcemeta::jsontoolkit::default_schema_walker,
                    test_resolver),
                sourcemeta::jsontoolkit::SchemaError);
+}
+
+TEST(JSONSchema_bundle, target_no_dialect) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": { "$ref": "https://www.sourcemeta.com/no-dialect" }
+    }
+  })JSON");
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::bundle(
+                   document, sourcemeta::jsontoolkit::default_schema_walker,
+                   test_resolver),
+               sourcemeta::jsontoolkit::SchemaResolutionError);
+}
+
+TEST(JSONSchema_bundle, target_array) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": { "$ref": "https://www.sourcemeta.com/array" }
+    }
+  })JSON");
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::bundle(
+                   document, sourcemeta::jsontoolkit::default_schema_walker,
+                   test_resolver),
+               sourcemeta::jsontoolkit::SchemaResolutionError);
 }

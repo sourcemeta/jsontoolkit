@@ -6,6 +6,11 @@ standards such as [JSON Schema](http://json-schema.org), [JSON
 Pointer](https://www.rfc-editor.org/rfc/rfc6901),
 [JSONL](https://jsonlines.org), and more.
 
+![Supported Dialects](https://img.shields.io/endpoint?url=https%3A%2F%2Fbowtie.report%2Fbadges%2Fc%2B%2B-jsontoolkit%2Fsupported_versions.json)
+![Draft 7](https://img.shields.io/endpoint?url=https%3A%2F%2Fbowtie.report%2Fbadges%2Fc%2B%2B-jsontoolkit%2Fcompliance%2Fdraft7.json)
+![Draft 6](https://img.shields.io/endpoint?url=https%3A%2F%2Fbowtie.report%2Fbadges%2Fc%2B%2B-jsontoolkit%2Fcompliance%2Fdraft6.json)
+![Draft 4](https://img.shields.io/endpoint?url=https%3A%2F%2Fbowtie.report%2Fbadges%2Fc%2B%2B-jsontoolkit%2Fcompliance%2Fdraft4.json)
+
 Documentation
 -------------
 

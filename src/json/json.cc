@@ -3,55 +3,77 @@
 
 #include <sourcemeta/jsontoolkit/json.h>
 
-#include <cassert> // assert
-#include <fstream> // std::ifstream
-#include <ios>     // std::ios_base
+#include <cassert>      // assert
+#include <fstream>      // std::ifstream
+#include <system_error> // std::make_error_code, std::errc
 
 namespace sourcemeta::jsontoolkit {
 
 auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream,
            std::uint64_t &line, std::uint64_t &column) -> JSON {
-  return parse<JSON::Char, JSON::CharTraits, std::allocator>(stream, line,
-                                                             column);
+  return internal_parse(stream, line, column);
 }
 
 auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input,
            std::uint64_t &line, std::uint64_t &column) -> JSON {
-  return parse<JSON::Char, JSON::CharTraits, std::allocator>(input, line,
-                                                             column);
+  return internal_parse(input, line, column);
 }
 
 auto parse(std::basic_istream<JSON::Char, JSON::CharTraits> &stream) -> JSON {
   std::uint64_t line{1};
   std::uint64_t column{0};
-  return parse<JSON::Char, JSON::CharTraits, std::allocator>(stream, line,
-                                                             column);
+  return parse(stream, line, column);
 }
 
 auto parse(const std::basic_string<JSON::Char, JSON::CharTraits> &input)
     -> JSON {
   std::uint64_t line{1};
   std::uint64_t column{0};
-  return parse<JSON::Char, JSON::CharTraits, std::allocator>(input, line,
-                                                             column);
+  return parse(input, line, column);
 }
 
 auto from_file(const std::filesystem::path &path) -> JSON {
-  std::ifstream stream{path};
-  stream.exceptions(std::ios_base::badbit);
-  return parse(stream);
+  if (std::filesystem::is_directory(path)) {
+    throw std::filesystem::filesystem_error(
+        "Cannot parse a directory as JSON", path,
+        std::make_error_code(std::errc::is_a_directory));
+  }
+
+  std::ifstream stream{std::filesystem::canonical(path)};
+  stream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+  assert(!stream.fail());
+  assert(stream.is_open());
+
+  try {
+    return parse(stream);
+  } catch (const ParseError &error) {
+    // For producing better error messages
+    throw FileParseError(path, error);
+  }
 }
 
 auto stringify(const JSON &document,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
-  stringify<JSON::Char, JSON::CharTraits, std::allocator>(document, stream);
+  stringify<std::allocator>(document, stream, nullptr);
 }
 
 auto prettify(const JSON &document,
               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
-  prettify<JSON::Char, JSON::CharTraits, std::allocator>(document, stream);
+  prettify<std::allocator>(document, stream, nullptr);
+}
+
+auto stringify(const JSON &document,
+               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
+               const KeyComparison &compare) -> void {
+  stringify<std::allocator>(document, stream, compare);
+}
+
+auto prettify(const JSON &document,
+              std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
+              const KeyComparison &compare) -> void {
+  prettify<std::allocator>(document, stream, compare);
 }
 
 auto operator<<(std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,

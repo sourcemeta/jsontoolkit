@@ -20,3 +20,9 @@ TEST(URI, from_fragment) {
   EXPECT_EQ(fragment.value(), "foo");
   EXPECT_EQ(uri.recompose(), "#foo");
 }
+
+TEST(URI, using_istream) {
+  std::istringstream input{"https://example.com"};
+  const sourcemeta::jsontoolkit::URI uri{input};
+  EXPECT_EQ(uri.recompose(), "https://example.com");
+}

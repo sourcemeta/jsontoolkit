@@ -39,3 +39,35 @@ TEST(URI_fragment, urn_with_fragment) {
   EXPECT_TRUE(uri.fragment().has_value());
   EXPECT_EQ(uri.fragment().value(), "foo");
 }
+
+TEST(URI_fragment, is_fragment_only_true_1) {
+  const sourcemeta::jsontoolkit::URI uri{"#foo"};
+  EXPECT_TRUE(uri.is_fragment_only());
+}
+
+TEST(URI_fragment, is_fragment_only_true_2) {
+  // In this case it is not really a query, but part of the fragment
+  const sourcemeta::jsontoolkit::URI uri{"#foo?bar=baz"};
+  EXPECT_TRUE(uri.is_fragment_only());
+  EXPECT_EQ(uri.fragment().value(), "foo?bar=baz");
+}
+
+TEST(URI_fragment, is_fragment_only_true_3) {
+  const sourcemeta::jsontoolkit::URI uri{"#"};
+  EXPECT_TRUE(uri.is_fragment_only());
+}
+
+TEST(URI_fragment, is_fragment_only_false_1) {
+  const sourcemeta::jsontoolkit::URI uri{"foo#bar"};
+  EXPECT_FALSE(uri.is_fragment_only());
+}
+
+TEST(URI_fragment, is_fragment_only_false_2) {
+  const sourcemeta::jsontoolkit::URI uri{"example.com/#bar"};
+  EXPECT_FALSE(uri.is_fragment_only());
+}
+
+TEST(URI_fragment, is_fragment_only_false_3) {
+  const sourcemeta::jsontoolkit::URI uri{"urn:example:schema#foo"};
+  EXPECT_FALSE(uri.is_fragment_only());
+}

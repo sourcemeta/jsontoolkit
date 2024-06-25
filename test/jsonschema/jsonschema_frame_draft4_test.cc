@@ -13,6 +13,47 @@
                       "http://json-schema.org/draft-04/schema#",               \
                       expected_base, expected_relative_pointer);
 
+TEST(JSONSchema_frame_draft4, anonymous_with_nested_schema_resource) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": { "id": "https://example.com" }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 6);
+
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "https://example.com",
+                                "/additionalProperties",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "https://example.com#/id",
+                                "/additionalProperties/id",
+                                "http://json-schema.org/draft-04/schema#");
+
+  // JSON Pointers
+
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "", "",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/$schema", "/$schema",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/additionalProperties",
+                                "/additionalProperties",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/additionalProperties/id",
+                                "/additionalProperties/id",
+                                "http://json-schema.org/draft-04/schema#");
+
+  // References
+
+  EXPECT_TRUE(references.empty());
+}
+
 TEST(JSONSchema_frame_draft4, empty_schema) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -357,4 +398,93 @@ TEST(JSONSchema_frame_draft4, explicit_argument_id_different) {
   // References
 
   EXPECT_TRUE(references.empty());
+}
+
+TEST(JSONSchema_frame_draft4, ref_metaschema) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "http://json-schema.org/draft-04/schema#"
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 3);
+
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "", "",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/$schema", "/$schema",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/$ref", "/$ref",
+                                "http://json-schema.org/draft-04/schema#");
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$ref", "http://json-schema.org/draft-04/schema",
+      "http://json-schema.org/draft-04/schema", std::nullopt);
+}
+
+TEST(JSONSchema_frame_draft4, location_independent_identifier_anonymous) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+      "foo": {
+        "id": "#foo"
+      },
+      "bar": {
+        "$ref": "#foo"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 8);
+
+  // Pointers
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "", "",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/$schema", "/$schema",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/definitions", "/definitions",
+                                "http://json-schema.org/draft-04/schema#");
+
+  // Foo
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/definitions/foo", "/definitions/foo",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/definitions/foo/id",
+                                "/definitions/foo/id",
+                                "http://json-schema.org/draft-04/schema#");
+
+  // Bar
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/definitions/bar", "/definitions/bar",
+                                "http://json-schema.org/draft-04/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#/definitions/bar/$ref",
+                                "/definitions/bar/$ref",
+                                "http://json-schema.org/draft-04/schema#");
+
+  // Anchors
+  EXPECT_ANONYMOUS_FRAME_STATIC(frame, "#foo", "/definitions/foo",
+                                "http://json-schema.org/draft-04/schema#");
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(references, "/definitions/bar/$ref", "#foo",
+                          std::nullopt, "foo");
 }

@@ -42,6 +42,17 @@ public:
   /// ```
   URI(std::string input);
 
+  /// This constructor creates a URI from a C++ input stream. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <sstream>
+  ///
+  /// std::istringstream input{"https://www.sourcemeta.com"};
+  /// const sourcemeta::jsontoolkit::URI uri{input};
+  /// ```
+  URI(std::istream &input);
+
   /// Destructor
   ~URI();
 
@@ -83,6 +94,17 @@ public:
   /// assert(uri.is_tag());
   /// ```
   auto is_tag() const -> bool;
+
+  /// Check if the URI only consists of a fragment. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"#foo"};
+  /// assert(uri.is_fragment_only());
+  /// ```
+  auto is_fragment_only() const -> bool;
 
   /// Get the scheme part of the URI, if any. For example:
   ///
@@ -266,7 +288,24 @@ public:
   /// const sourcemeta::jsontoolkit::URI uri{
   ///   sourcemeta::jsontoolkit::URI::from_fragment("foo")};
   /// assert(uri.recompose() == "#foo");
+  /// ```
   static auto from_fragment(std::string_view fragment) -> URI;
+
+  /// Get the user information part of the URI, if any. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"https://user:@host"};
+  /// assert(uri.userinfo().has_value());
+  /// assert(uri.userinfo().value() == "user:);
+  /// ```
+  ///
+  /// As mentioned in RFC 3986, the format "user:password" is deprecated.
+  /// Applications should not render as clear text any data after the first
+  /// colon. See https://tools.ietf.org/html/rfc3986#section-3.2.1
+  [[nodiscard]] auto userinfo() const -> std::optional<std::string_view>;
 
 private:
 // Exporting symbols that depends on the standard C++ library is considered

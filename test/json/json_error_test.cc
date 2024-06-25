@@ -11,8 +11,7 @@ TEST(JSON_error, parse_error) {
       "Must subclass std::exception");
   auto exception{sourcemeta::jsontoolkit::ParseError(5, 6)};
   EXPECT_THROW(throw exception, sourcemeta::jsontoolkit::ParseError);
-  EXPECT_EQ(std::string{exception.what()},
-            "The input is not a valid JSON document");
+  EXPECT_EQ(std::string{exception.what()}, "Failed to parse the JSON document");
   EXPECT_EQ(exception.line(), 5);
   EXPECT_EQ(exception.column(), 6);
 }

@@ -36,6 +36,20 @@
 /// Older JSON Schema versions might not be supported, but older JSON Schema
 /// documents can be automatically upgraded using a tool like
 /// [Alterschema](https://github.com/sourcemeta/alterschema).
+///
+/// Supported JSON Schema dialects:
+///
+/// | Dialect | Support |
+/// |---------|---------|
+/// | 2020-12 | Partial |
+/// | 2019-09 | Partial |
+/// | Draft 7 | Partial |
+/// | Draft 6 | Partial |
+/// | Draft 4 | Partial |
+/// | Draft 3 | Partial |
+/// | Draft 2 | Partial |
+/// | Draft 1 | Partial |
+/// | Draft 0 | Partial |
 
 namespace sourcemeta::jsontoolkit {
 
@@ -120,6 +134,35 @@ auto dialect(const JSON &schema,
 
 /// @ingroup jsonschema
 ///
+/// Get the metaschema document that describes the given schema. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonschema.h>
+/// #include <iostream>
+///
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(R"JSON({
+///   "$schema": "https://json-schema.org/draft/2020-12/schema",
+///   "type": "object"
+/// })JSON");
+///
+/// const sourcemeta::jsontoolkit::JSON metaschema{
+///   sourcemeta::jsontoolkit::metaschema(
+///     document, sourcemeta::jsontoolkit::official_resolver)};
+///
+/// sourcemeta::jsontoolkit::prettify(metaschema, std::cout);
+/// std::cout << std::endl;
+/// ```
+///
+/// This function will throw if the metaschema cannot be determined or resolved.
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+auto metaschema(
+    const JSON &schema, const SchemaResolver &resolver,
+    const std::optional<std::string> &default_dialect = std::nullopt) -> JSON;
+
+/// @ingroup jsonschema
+///
 /// Get the URI of the base dialect that applies to the given schema. If you set
 /// a default dialect URI, this will be used if the given schema does not
 /// declare the `$schema` keyword. The result of this function is unset
@@ -194,6 +237,29 @@ SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto vocabularies(const SchemaResolver &resolver,
                   const std::string &base_dialect, const std::string &dialect)
     -> std::future<std::map<std::string, bool>>;
+
+/// @ingroup jsonschema
+///
+/// An opinionated JSON Schema aware key comparison for use with
+/// sourcemeta::jsontoolkit::prettify or sourcemeta::jsontoolkit::stringify for
+/// formatting purposes. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <iostream>
+/// #include <sstream>
+///
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(
+///     "{ \"type\": \"string\", \"minLength\": 3 }");
+/// std::ostringstream stream;
+/// sourcemeta::jsontoolkit::prettify(document, stream,
+///   sourcemeta::jsontoolkit::schema_format_compare);
+/// std::cout << stream.str() << std::endl;
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+auto schema_format_compare(const JSON::String &left,
+                           const JSON::String &right) -> bool;
 
 } // namespace sourcemeta::jsontoolkit
 

@@ -16,6 +16,17 @@ static auto test_resolver(std::string_view identifier)
       "$id": "https://example.com/foo/bar",
       "$anchor": "baz"
     })JSON"));
+  } else if (identifier == "https://example.com/baz-anchor") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://example.com/baz-anchor",
+      "$defs": {
+        "baz": {
+          "$anchor": "baz",
+          "type": "string"
+        }
+      }
+    })JSON"));
   } else if (identifier == "https://www.sourcemeta.com/test-1") {
     promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -39,6 +50,37 @@ static auto test_resolver(std::string_view identifier)
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://www.sourcemeta.com/test-4",
       "type": "boolean"
+    })JSON"));
+  } else if (identifier == "https://www.sourcemeta.com/recursive") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://www.sourcemeta.com/recursive",
+      "properties": {
+        "foo": { "$ref": "#" }
+      }
+    })JSON"));
+  } else if (identifier ==
+             "https://www.sourcemeta.com/recursive-empty-fragment") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://www.sourcemeta.com/recursive-empty-fragment#",
+      "properties": {
+        "foo": { "$ref": "#" }
+      }
+    })JSON"));
+  } else if (identifier == "https://www.sourcemeta.com/anonymous") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "type": "integer"
+    })JSON"));
+  } else if (identifier == "https://example.com/nested/ref-string.json") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$ref": "string.json"
+    })JSON"));
+  } else if (identifier == "https://example.com/nested/string.json") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "string"
     })JSON"));
   } else {
     promise.set_value(
@@ -365,6 +407,204 @@ TEST(JSONSchema_bundle_2020_12, taken_definitions_entry) {
         "$id": "https://www.sourcemeta.com/test-4",
         "type": "boolean"
       }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2020_12, recursive) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "https://www.sourcemeta.com/recursive"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "https://www.sourcemeta.com/recursive",
+    "$defs": {
+      "https://www.sourcemeta.com/recursive": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://www.sourcemeta.com/recursive",
+        "properties": {
+          "foo": { "$ref": "#" }
+        }
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2020_12, recursive_empty_fragment) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "https://www.sourcemeta.com/recursive-empty-fragment#"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "https://www.sourcemeta.com/recursive-empty-fragment#",
+    "$defs": {
+      "https://www.sourcemeta.com/recursive-empty-fragment": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://www.sourcemeta.com/recursive-empty-fragment",
+        "properties": {
+          "foo": { "$ref": "#" }
+        }
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2020_12, anonymous_no_dialect) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$ref": "https://www.sourcemeta.com/anonymous"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      sourcemeta::jsontoolkit::BundleOptions::Default,
+      "https://json-schema.org/draft/2020-12/schema")
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$ref": "https://www.sourcemeta.com/anonymous",
+    "$defs": {
+      "https://www.sourcemeta.com/anonymous": {
+        "$id": "https://www.sourcemeta.com/anonymous",
+        "type": "integer"
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2020_12, relative_in_target_without_id) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/test",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "nested/ref-string.json"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/test",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "nested/ref-string.json",
+    "$defs": {
+      "https://example.com/nested/ref-string.json": {
+        "$id": "https://example.com/nested/ref-string.json",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$ref": "string.json"
+      },
+      "https://example.com/nested/string.json": {
+        "$id": "https://example.com/nested/string.json",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "string"
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2020_12, without_id) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/top-level",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": {
+        "$ref": "recursive#/properties/foo"
+      },
+      "baz": {
+        "$ref": "https://example.com/baz-anchor#baz"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": {
+        "$ref": "#/$defs/https%3A~1~1www.sourcemeta.com~1recursive/properties/foo"
+      },
+      "baz": {
+        "$ref": "#/$defs/https%3A~1~1example.com~1baz-anchor/$defs/baz"
+      }
+    },
+    "$defs": {
+      "https://www.sourcemeta.com/recursive": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "foo": {
+            "$ref": "#/$defs/https%3A~1~1www.sourcemeta.com~1recursive"
+          }
+        }
+      },
+      "https://example.com/baz-anchor": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$defs": {
+          "baz": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2020_12, without_id_boolean_subschema) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/top-level",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": true
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": true
     }
   })JSON");
 

@@ -12,3 +12,6 @@ CONTRIBUTORS
 googletest_deps.bzl
 README.md
 WORKSPACE
+MODULE.bazel
+WORKSPACE.bzlmod
+fake_fuchsia_sdk.bzl

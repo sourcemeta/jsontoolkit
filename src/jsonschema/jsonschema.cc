@@ -2,7 +2,10 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
 #include <cassert>     // assert
+#include <cstdint>     // std::uint64_t
+#include <functional>  // std::less
 #include <future>      // std::future
+#include <limits>      // std::numeric_limits
 #include <sstream>     // std::ostringstream
 #include <type_traits> // std::remove_reference_t
 #include <utility>     // std::move
@@ -83,6 +86,27 @@ auto sourcemeta::jsontoolkit::dialect(
   return dialect.to_string();
 }
 
+auto sourcemeta::jsontoolkit::metaschema(
+    const sourcemeta::jsontoolkit::JSON &schema,
+    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+    const std::optional<std::string> &default_dialect) -> JSON {
+  const auto maybe_dialect{
+      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+  if (!maybe_dialect.has_value()) {
+    throw sourcemeta::jsontoolkit::SchemaError(
+        "Could not determine dialect of the schema");
+  }
+
+  const auto maybe_metaschema{resolver(maybe_dialect.value()).get()};
+  if (!maybe_metaschema.has_value()) {
+    throw sourcemeta::jsontoolkit::SchemaResolutionError(
+        maybe_dialect.value(),
+        "Could not resolve the metaschema of the schema");
+  }
+
+  return maybe_metaschema.value();
+}
+
 auto sourcemeta::jsontoolkit::base_dialect(
     const sourcemeta::jsontoolkit::JSON &schema,
     const sourcemeta::jsontoolkit::SchemaResolver &resolver,
@@ -148,7 +172,7 @@ auto sourcemeta::jsontoolkit::base_dialect(
       resolver(effective_dialect).get()};
   if (!metaschema.has_value()) {
     throw sourcemeta::jsontoolkit::SchemaResolutionError(
-        effective_dialect, "Could not resolve schema");
+        effective_dialect, "Could not resolve the requested schema");
   }
 
   return base_dialect(metaschema.value(), resolver, effective_dialect);
@@ -260,7 +284,7 @@ auto sourcemeta::jsontoolkit::vocabularies(
       resolver(dialect).get()};
   if (!maybe_schema_dialect.has_value()) {
     throw sourcemeta::jsontoolkit::SchemaResolutionError(
-        dialect, "Could not resolve schema");
+        dialect, "Could not resolve the requested schema");
   }
   const sourcemeta::jsontoolkit::JSON &schema_dialect{
       maybe_schema_dialect.value()};
@@ -301,4 +325,114 @@ auto sourcemeta::jsontoolkit::vocabularies(
   std::promise<std::map<std::string, bool>> promise;
   promise.set_value(std::move(result));
   return promise.get_future();
+}
+
+auto sourcemeta::jsontoolkit::schema_format_compare(
+    const sourcemeta::jsontoolkit::JSON::String &left,
+    const sourcemeta::jsontoolkit::JSON::String &right) -> bool {
+  using Rank =
+      std::map<JSON::String, std::uint64_t, std::less<JSON::String>,
+               JSON::Allocator<std::pair<const JSON::String, std::uint64_t>>>;
+  static Rank rank{// Most core keywords tend to come first
+                   {"$schema", 0},
+                   {"$id", 1},
+                   {"id", 2},
+                   {"$vocabulary", 3},
+                   {"$anchor", 4},
+                   {"$dynamicAnchor", 5},
+                   {"$recursiveAnchor", 6},
+
+                   // Then important metadata about the schema
+                   {"title", 7},
+                   {"description", 8},
+                   {"$comment", 10},
+                   {"examples", 11},
+                   {"deprecated", 12},
+                   {"readOnly", 13},
+                   {"writeOnly", 14},
+                   {"default", 15},
+
+                   // Then references
+                   {"$ref", 16},
+                   {"$dynamicRef", 17},
+                   {"$recursiveRef", 18},
+
+                   // Then keywords that apply to any type
+                   {"type", 19},
+                   {"disallow", 20},
+                   {"extends", 21},
+                   {"const", 22},
+                   {"enum", 23},
+                   {"optional", 0},
+                   {"requires", 0},
+                   {"allOf", 24},
+                   {"anyOf", 25},
+                   {"oneOf", 26},
+                   {"not", 27},
+                   {"if", 28},
+                   {"then", 29},
+                   {"else", 30},
+
+                   // Then keywords about numbers
+                   {"exclusiveMaximum", 31},
+                   {"maximum", 32},
+                   {"maximumCanEqual", 33},
+                   {"exclusiveMinimum", 34},
+                   {"minimum", 35},
+                   {"minimumCanEqual", 36},
+                   {"multipleOf", 37},
+                   {"divisibleBy", 38},
+                   {"maxDecimal", 39},
+
+                   // Then keywords about strings
+                   {"pattern", 40},
+                   {"format", 41},
+                   {"maxLength", 42},
+                   {"minLength", 43},
+                   {"contentEncoding", 44},
+                   {"contentMediaType", 45},
+                   {"contentSchema", 46},
+
+                   // Then keywords about arrays
+                   {"maxItems", 47},
+                   {"minItems", 48},
+                   {"uniqueItems", 49},
+                   {"maxContains", 50},
+                   {"minContains", 51},
+                   {"contains", 52},
+                   {"prefixItems", 53},
+                   {"items", 54},
+                   {"additionalItems", 55},
+                   {"unevaluatedItems", 56},
+
+                   // Object
+                   {"required", 57},
+                   {"maxProperties", 58},
+                   {"minProperties", 59},
+                   {"propertyNames", 60},
+                   {"properties", 61},
+                   {"patternProperties", 62},
+                   {"additionalProperties", 63},
+                   {"unevaluatedProperties", 64},
+                   {"dependentRequired", 65},
+                   {"dependencies", 66},
+                   {"dependentSchemas", 67},
+
+                   // Reusable utilities go last
+                   {"$defs", 68},
+                   {"definitions", 69}};
+
+  if (rank.contains(left) || rank.contains(right)) {
+    constexpr auto DEFAULT{std::numeric_limits<Rank::mapped_type>::max()};
+    const auto left_rank{rank.contains(left) ? rank.at(left) : DEFAULT};
+    const auto right_rank{rank.contains(right) ? rank.at(right) : DEFAULT};
+    // If the ranks are equal, then either the keywords are the same or
+    // none of them are recognized keywords.
+    assert((left_rank != right_rank) ||
+           (left == right || left_rank == DEFAULT));
+    return left_rank < right_rank;
+  } else {
+    // For unknown keywords, go alphabetically
+    return left < right;
+  }
 }

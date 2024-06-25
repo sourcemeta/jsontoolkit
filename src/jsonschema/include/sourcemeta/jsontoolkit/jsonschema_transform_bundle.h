@@ -11,13 +11,15 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema_transform_rule.h>
 
-#include <cassert>  // assert
-#include <concepts> // std::derived_from
-#include <map>      // std::map
-#include <memory>   // std::make_unique, std::unique_ptr
-#include <optional> // std::optional, std::nullopt
-#include <string>   // std::string
-#include <utility>  // std::move
+#include <cassert>     // assert
+#include <concepts>    // std::derived_from
+#include <functional>  // std::function
+#include <map>         // std::map
+#include <memory>      // std::make_unique, std::unique_ptr
+#include <optional>    // std::optional, std::nullopt
+#include <string>      // std::string
+#include <string_view> // std::string_view
+#include <utility>     // std::move
 
 namespace sourcemeta::jsontoolkit {
 /// @ingroup jsonschema
@@ -102,12 +104,46 @@ public:
     this->rules.emplace(rule->name(), std::move(rule));
   }
 
+  /// The category of a built-in transformation rule
+  enum class Category {
+    /// Rules that make use of newer features within the same dialect
+    Modernize,
+
+    /// Rules that detect common anti-patterns
+    AntiPattern,
+
+    /// Rules that simplify the given schema
+    Simplify,
+
+    /// Rules that remove schema redundancies
+    Redundant
+  };
+
+  /// Add a set of built-in rules given a category
+  auto add(const Category category) -> void;
+
   /// Apply the bundle of rules to a schema
   auto apply(JSON &schema, const SchemaWalker &walker,
              const SchemaResolver &resolver,
              const Pointer &pointer = empty_pointer,
              const std::optional<std::string> &default_dialect =
                  std::nullopt) const -> void;
+
+  /// The callback that is called whenever the "check" functionality reports a
+  /// rule whose condition holds true. The arguments are as follows:
+  ///
+  /// - The JSON Pointer to the given subschema
+  /// - The name of the rule
+  /// - The message of the rule
+  using CheckCallback = std::function<void(
+      const Pointer &, const std::string_view, const std::string_view)>;
+
+  /// Report back the rules from the bundle that need to be applied to a schema
+  auto check(const JSON &schema, const SchemaWalker &walker,
+             const SchemaResolver &resolver, const CheckCallback &callback,
+             const Pointer &pointer = empty_pointer,
+             const std::optional<std::string> &default_dialect =
+                 std::nullopt) const -> bool;
 
 private:
 // Exporting symbols that depends on the standard C++ library is considered

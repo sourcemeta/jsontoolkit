@@ -24,3 +24,13 @@ TEST(JSONSchema_transform_rule, instances_of_different_rules_are_different) {
   const ExampleRule2 bar{};
   EXPECT_NE(foo, bar);
 }
+
+TEST(JSONSchema_transform_rule, default_message) {
+  const ExampleRule4 rule{};
+  EXPECT_EQ(rule.message(), "Condition matched");
+}
+
+TEST(JSONSchema_transform_rule, custom_message) {
+  const ExampleRule7 rule{};
+  EXPECT_EQ(rule.message(), "My custom message");
+}

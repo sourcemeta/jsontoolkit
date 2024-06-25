@@ -775,6 +775,14 @@ TEST(JSON_parse, positive_multi_digit_negative_integer) {
   EXPECT_EQ(document.to_integer(), -1234);
 }
 
+TEST(JSON_parse, positive_large_integer) {
+  std::istringstream input{"12391239123"};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
+  EXPECT_TRUE(document.is_integer());
+  EXPECT_EQ(document.to_integer(), 12391239123);
+}
+
 TEST(JSON_parse, positive_real_trailing_zeroes) {
   std::istringstream input{"1.50000"};
   const sourcemeta::jsontoolkit::JSON document =
@@ -1117,15 +1125,17 @@ TEST(JSON_parse, real_equality) {
   EXPECT_FALSE(document_2 == document_3);
 }
 
-TEST(JSON_parse, integer_real_not_equal) {
+TEST(JSON_parse, integer_real_equal) {
   std::istringstream left{"1"};
   std::istringstream right{"1.0"};
   const sourcemeta::jsontoolkit::JSON document_1 =
       sourcemeta::jsontoolkit::parse(left);
   const sourcemeta::jsontoolkit::JSON document_2 =
       sourcemeta::jsontoolkit::parse(right);
-  EXPECT_FALSE(document_1 == document_2);
-  EXPECT_FALSE(document_2 == document_1);
+  EXPECT_TRUE(document_1 == document_2);
+  EXPECT_TRUE(document_2 == document_1);
+  EXPECT_FALSE(document_1 != document_2);
+  EXPECT_FALSE(document_2 != document_1);
 }
 
 TEST(JSON_parse, string_escaped_quotes) {
@@ -1207,6 +1217,15 @@ TEST(JSON_parse, string_unicode_code_points) {
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 1);
   EXPECT_EQ(document.to_string(), "\u002F");
+}
+
+TEST(JSON_parse, string_unicode_length) {
+  std::istringstream input{"\"\\uD83D\\uDCA9\""};
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(input);
+  EXPECT_TRUE(document.is_string());
+  EXPECT_EQ(document.size(), 1);
+  EXPECT_EQ(document.byte_size(), 2);
 }
 
 TEST(JSON_parse, string_unicode_code_point_equality) {
@@ -1436,3 +1455,16 @@ TEST(JSON_parse, custom_line_column_from_string_stream) {
   EXPECT_TRUE(document.at(1).is_boolean());
   EXPECT_TRUE(document.at(1).to_boolean());
 }
+
+#if !defined(__Unikraft__)
+TEST(JSON_parse, from_file) {
+  const sourcemeta::jsontoolkit::JSON document{
+      sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY} /
+                                         "stub_valid.json")};
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 1);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_TRUE(document.at("foo").is_integer());
+  EXPECT_EQ(document.at("foo").to_integer(), 1);
+}
+#endif

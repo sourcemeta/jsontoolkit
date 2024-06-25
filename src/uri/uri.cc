@@ -3,6 +3,7 @@
 
 #include <cassert>   // assert
 #include <cstdint>   // std::uint32_t
+#include <istream>   // std::istream
 #include <sstream>   // std::ostringstream
 #include <stdexcept> // std::length_error, std::runtime_error
 #include <string>    // std::stoul, std::string, std::tolower
@@ -72,6 +73,13 @@ URI::URI(std::string input) : data{std::move(input)}, internal{new Internal} {
   uri_parse(this->data, &this->internal->uri);
 }
 
+URI::URI(std::istream &input) : internal{new Internal} {
+  std::ostringstream output;
+  output << input.rdbuf();
+  this->data = output.str();
+  uri_parse(this->data, &this->internal->uri);
+}
+
 URI::~URI() { uriFreeUriMembersA(&this->internal->uri); }
 
 URI::URI(const URI &other) : URI{other.recompose()} {}
@@ -94,6 +102,12 @@ auto URI::is_urn() const -> bool {
 auto URI::is_tag() const -> bool {
   const auto scheme{this->scheme()};
   return scheme.has_value() && scheme.value() == "tag";
+}
+
+auto URI::is_fragment_only() const -> bool {
+  return !this->scheme().has_value() && !this->host().has_value() &&
+         !this->port().has_value() && !this->path().has_value() &&
+         this->fragment().has_value() && !this->query().has_value();
 }
 
 auto URI::scheme() const -> std::optional<std::string_view> {
@@ -303,6 +317,10 @@ auto URI::resolve_from_if_absolute(const URI &base) -> URI & {
   } else {
     return *this;
   }
+}
+
+auto URI::userinfo() const -> std::optional<std::string_view> {
+  return uri_text_range(&this->internal->uri.userInfo);
 }
 
 } // namespace sourcemeta::jsontoolkit

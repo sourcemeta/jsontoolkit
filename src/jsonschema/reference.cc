@@ -44,7 +44,9 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
     }
   }
 
-  if (result.empty()) {
+  if (result.empty() ||
+      // This means the top-level schema is anonymous
+      result.back().second != sourcemeta::jsontoolkit::empty_pointer) {
     result.push_back({"", sourcemeta::jsontoolkit::empty_pointer});
   }
 
@@ -70,6 +72,15 @@ ref_overrides_adjacent_keywords(const std::string &base_dialect) -> bool {
          base_dialect == "http://json-schema.org/draft-00/hyper-schema#";
 }
 
+static auto supports_id_anchors(const std::string &base_dialect) -> bool {
+  return base_dialect == "http://json-schema.org/draft-07/schema#" ||
+         base_dialect == "http://json-schema.org/draft-07/hyper-schema#" ||
+         base_dialect == "http://json-schema.org/draft-06/schema#" ||
+         base_dialect == "http://json-schema.org/draft-06/hyper-schema#" ||
+         base_dialect == "http://json-schema.org/draft-04/schema#" ||
+         base_dialect == "http://json-schema.org/draft-04/hyper-schema#";
+}
+
 static auto fragment_string(const sourcemeta::jsontoolkit::URI uri)
     -> std::optional<std::string> {
   const auto fragment{uri.fragment()};
@@ -82,6 +93,7 @@ static auto fragment_string(const sourcemeta::jsontoolkit::URI uri)
 
 static auto store(sourcemeta::jsontoolkit::ReferenceFrame &frame,
                   const sourcemeta::jsontoolkit::ReferenceType type,
+                  const sourcemeta::jsontoolkit::ReferenceEntryType entry_type,
                   const std::string &uri,
                   const std::optional<std::string> &root_id,
                   const std::string &base_id,
@@ -92,8 +104,8 @@ static auto store(sourcemeta::jsontoolkit::ReferenceFrame &frame,
       sourcemeta::jsontoolkit::URI{uri}.canonicalize().recompose()};
   if (!frame
            .insert({{type, canonical},
-                    {root_id, base_id, pointer_from_root, pointer_from_base,
-                     dialect}})
+                    {entry_type, root_id, base_id, pointer_from_root,
+                     pointer_from_base, dialect}})
            .second) {
     std::ostringstream error;
     error << "Schema identifier already exists: " << uri;
@@ -141,8 +153,9 @@ auto sourcemeta::jsontoolkit::frame(
                                        default_id.has_value() &&
                                        root_id.value() != default_id.value()};
   if (has_explicit_different_id) {
-    store(frame, ReferenceType::Static, default_id.value(), root_id.value(),
-          root_id.value(), sourcemeta::jsontoolkit::empty_pointer,
+    store(frame, ReferenceType::Static, ReferenceEntryType::Resource,
+          default_id.value(), root_id.value(), root_id.value(),
+          sourcemeta::jsontoolkit::empty_pointer,
           sourcemeta::jsontoolkit::empty_pointer, root_dialect.value());
     base_uris.insert(
         {sourcemeta::jsontoolkit::empty_pointer, {default_id.value()}});
@@ -171,20 +184,40 @@ auto sourcemeta::jsontoolkit::frame(
     if (entry.id.has_value()) {
       const bool ref_overrides =
           ref_overrides_adjacent_keywords(entry.common.base_dialect.value());
-      if (!entry.common.value.defines("$ref") || !ref_overrides) {
+      const bool is_pre_2019_09_location_independent_identifier =
+          supports_id_anchors(entry.common.base_dialect.value()) &&
+          sourcemeta::jsontoolkit::URI{entry.id.value()}.is_fragment_only();
+
+      if ((!entry.common.value.defines("$ref") || !ref_overrides) &&
+          // If we are dealing with a pre-2019-09 location independent
+          // identifier, we ignore it as a traditional identifier and take care
+          // of it as an anchor
+          !is_pre_2019_09_location_independent_identifier) {
         const auto bases{
             find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
         for (const auto &base_string : bases.first) {
           const sourcemeta::jsontoolkit::URI base{base_string};
           sourcemeta::jsontoolkit::URI maybe_relative{entry.id.value()};
+          const auto maybe_fragment{maybe_relative.fragment()};
+
+          // See
+          // https://json-schema.org/draft/2019-09/draft-handrews-json-schema-02#rfc.section.8.2.2
+          // See
+          // https://json-schema.org/draft/2020-12/draft-bhutton-json-schema-01#section-8.2.1-5
+          if (maybe_fragment.has_value() && !maybe_fragment.value().empty()) {
+            throw SchemaError(
+                "Identifiers must not contain non-empty fragments");
+          }
+
           const bool maybe_relative_is_absolute{maybe_relative.is_absolute()};
           maybe_relative.resolve_from(base);
           const std::string new_id{maybe_relative.recompose()};
 
           if (!maybe_relative_is_absolute ||
               !frame.contains({ReferenceType::Static, new_id})) {
-            store(frame, ReferenceType::Static, new_id, root_id, new_id,
-                  entry.common.pointer, sourcemeta::jsontoolkit::empty_pointer,
+            store(frame, ReferenceType::Static, ReferenceEntryType::Resource,
+                  new_id, root_id, new_id, entry.common.pointer,
+                  sourcemeta::jsontoolkit::empty_pointer,
                   entry.common.dialect.value());
           }
 
@@ -211,16 +244,16 @@ auto sourcemeta::jsontoolkit::frame(
 
         if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
             type == sourcemeta::jsontoolkit::AnchorType::All) {
-          store(frame, ReferenceType::Static, relative_anchor_uri, root_id, "",
-                entry.common.pointer,
+          store(frame, ReferenceType::Static, ReferenceEntryType::Anchor,
+                relative_anchor_uri, root_id, "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
                 entry.common.dialect.value());
         }
 
         if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
             type == sourcemeta::jsontoolkit::AnchorType::All) {
-          store(frame, ReferenceType::Dynamic, relative_anchor_uri, root_id, "",
-                entry.common.pointer,
+          store(frame, ReferenceType::Dynamic, ReferenceEntryType::Anchor,
+                relative_anchor_uri, root_id, "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
                 entry.common.dialect.value());
         }
@@ -229,7 +262,7 @@ auto sourcemeta::jsontoolkit::frame(
         for (const auto &base_string : bases.first) {
           auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
           const sourcemeta::jsontoolkit::URI anchor_base{base_string};
-          anchor_uri.resolve_from(anchor_base);
+          anchor_uri.resolve_from_if_absolute(anchor_base);
           const auto absolute_anchor_uri{anchor_uri.recompose()};
 
           if (!is_first &&
@@ -240,8 +273,8 @@ auto sourcemeta::jsontoolkit::frame(
           if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
               type == sourcemeta::jsontoolkit::AnchorType::All) {
             store(frame, sourcemeta::jsontoolkit::ReferenceType::Static,
-                  absolute_anchor_uri, root_id, base_string,
-                  entry.common.pointer,
+                  ReferenceEntryType::Anchor, absolute_anchor_uri, root_id,
+                  base_string, entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
                   entry.common.dialect.value());
           }
@@ -249,8 +282,8 @@ auto sourcemeta::jsontoolkit::frame(
           if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
               type == sourcemeta::jsontoolkit::AnchorType::All) {
             store(frame, sourcemeta::jsontoolkit::ReferenceType::Dynamic,
-                  absolute_anchor_uri, root_id, base_string,
-                  entry.common.pointer,
+                  ReferenceEntryType::Anchor, absolute_anchor_uri, root_id,
+                  base_string, entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
                   entry.common.dialect.value());
           }
@@ -281,8 +314,8 @@ auto sourcemeta::jsontoolkit::frame(
         const auto nearest_bases{
             find_nearest_bases(base_uris, pointer, base.first)};
         assert(!nearest_bases.first.empty());
-        store(frame, ReferenceType::Static, result, root_id,
-              nearest_bases.first.front(), pointer,
+        store(frame, ReferenceType::Static, ReferenceEntryType::Pointer, result,
+              root_id, nearest_bases.first.front(), pointer,
               pointer.resolve_from(nearest_bases.second),
               dialects.first.front());
       }
@@ -305,6 +338,7 @@ auto sourcemeta::jsontoolkit::frame(
           ref.resolve_from(nearest_bases.first.front());
         }
 
+        ref.canonicalize();
         references.insert(
             {{ReferenceType::Static, entry.common.pointer.concat({"$ref"})},
              {ref.recompose(), ref.recompose_without_fragment(),
@@ -321,6 +355,7 @@ auto sourcemeta::jsontoolkit::frame(
           ref.resolve_from(nearest_bases.first.front());
         }
 
+        ref.canonicalize();
         // TODO: Check bookending requirement
         const auto destination{ref.recompose()};
         // TODO: We shouldn't need to reparse if the URI handled mutations

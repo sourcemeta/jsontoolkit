@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
+
+#include <cmath>
 #include <limits>
+
 #include <sourcemeta/jsontoolkit/json.h>
 
 TEST(JSON_real, positive) {

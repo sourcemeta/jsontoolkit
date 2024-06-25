@@ -84,3 +84,16 @@ TEST(JSONSchema_anchor_2019_09, vocabularies_shortcut) {
   EXPECT_TRUE(anchors.contains("foo"));
   EXPECT_EQ(anchors.at("foo"), sourcemeta::jsontoolkit::AnchorType::Static);
 }
+
+TEST(JSONSchema_anchor_2019_09, old_id_anchor_not_recognized) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "#foo"
+  })JSON");
+
+  const auto anchors{sourcemeta::jsontoolkit::anchors(
+                         document, sourcemeta::jsontoolkit::official_resolver)
+                         .get()};
+  EXPECT_TRUE(anchors.empty());
+}

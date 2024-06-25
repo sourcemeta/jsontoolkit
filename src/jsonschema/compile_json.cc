@@ -3,173 +3,221 @@
 #include <cassert>     // assert
 #include <sstream>     // std::ostringstream
 #include <string_view> // std::string_view
+#include <type_traits> // std::is_same_v
 #include <utility>     // std::move
 
 namespace {
 
-struct TargetVisitor {
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerTargetInstance
-                      &pointer) const -> sourcemeta::jsontoolkit::JSON {
-    using namespace sourcemeta::jsontoolkit;
-    JSON result{JSON::make_object()};
-    result.assign("category", JSON{"target"});
-    result.assign("type", JSON{"instance"});
-    result.assign("location", JSON{to_string(pointer)});
-    return result;
+auto target_to_json(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target)
+    -> sourcemeta::jsontoolkit::JSON {
+  using namespace sourcemeta::jsontoolkit;
+  JSON result{JSON::make_object()};
+  result.assign("category", JSON{"target"});
+  result.assign("location", JSON{to_string(target.second)});
+  switch (target.first) {
+    case SchemaCompilerTargetType::Instance:
+      result.assign("type", JSON{"instance"});
+      return result;
+    case SchemaCompilerTargetType::InstanceBasename:
+      result.assign("type", JSON{"instance-basename"});
+      return result;
+    case SchemaCompilerTargetType::InstanceParent:
+      result.assign("type", JSON{"instance-parent"});
+      return result;
+    case SchemaCompilerTargetType::AdjacentAnnotations:
+      result.assign("type", JSON{"adjacent-annotations"});
+      return result;
+    case SchemaCompilerTargetType::ParentAdjacentAnnotations:
+      result.assign("type", JSON{"parent-adjacent-annotations"});
+      return result;
+    default:
+      // We should never get here
+      assert(false);
+      return result;
   }
-};
+}
 
+template <typename T>
+auto value_to_json(const sourcemeta::jsontoolkit::SchemaCompilerStepValue<T>
+                       &value) -> sourcemeta::jsontoolkit::JSON {
+  using namespace sourcemeta::jsontoolkit;
+  if (std::holds_alternative<SchemaCompilerTarget>(value)) {
+    return target_to_json(std::get<SchemaCompilerTarget>(value));
+  }
+
+  assert(std::holds_alternative<T>(value));
+  JSON result{JSON::make_object()};
+  result.assign("category", JSON{"value"});
+  if constexpr (std::is_same_v<SchemaCompilerValueJSON, T>) {
+    result.assign("type", JSON{"json"});
+    result.assign("value", JSON{std::get<T>(value)});
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueBoolean, T>) {
+    result.assign("type", JSON{"boolean"});
+    result.assign("value", JSON{std::get<T>(value)});
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueRegex, T>) {
+    result.assign("type", JSON{"regex"});
+    result.assign("value", JSON{std::get<T>(value).second});
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueType, T>) {
+    result.assign("type", JSON{"type"});
+    std::ostringstream type_string;
+    type_string << std::get<T>(value);
+    result.assign("value", JSON{type_string.str()});
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueTypes, T>) {
+    result.assign("type", JSON{"types"});
+    JSON types{JSON::make_array()};
+    for (const auto type : std::get<T>(value)) {
+      std::ostringstream type_string;
+      type_string << type;
+      types.push_back(JSON{type_string.str()});
+    }
+
+    result.assign("value", std::move(types));
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueString, T>) {
+    result.assign("type", JSON{"string"});
+    result.assign("value", JSON{std::get<T>(value)});
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueStrings, T>) {
+    result.assign("type", JSON{"strings"});
+    JSON items{JSON::make_array()};
+    for (const auto &item : std::get<T>(value)) {
+      items.push_back(JSON{item});
+    }
+
+    result.assign("value", std::move(items));
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueArray, T>) {
+    result.assign("type", JSON{"array"});
+    JSON items{JSON::make_array()};
+    for (const auto &item : std::get<T>(value)) {
+      items.push_back(item);
+    }
+
+    result.assign("value", std::move(items));
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueUnsignedInteger, T>) {
+    result.assign("type", JSON{"unsigned-integer"});
+    result.assign("value", JSON{std::get<T>(value)});
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueStringType, T>) {
+    result.assign("type", JSON{"string-type"});
+    switch (std::get<T>(value)) {
+      case SchemaCompilerValueStringType::URI:
+        result.assign("value", JSON{"uri"});
+        break;
+      default:
+        // We should never get here
+        assert(false);
+    }
+
+    return result;
+  } else {
+    static_assert(std::is_same_v<SchemaCompilerValueNone, T>);
+    return JSON{nullptr};
+  }
+}
+
+template <typename V>
 auto step_to_json(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step)
-    -> sourcemeta::jsontoolkit::JSON;
-
-auto assertion_to_json(
-    const std::string_view type,
-    const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
-    const sourcemeta::jsontoolkit::Pointer &evaluation_path,
-    const std::string &keyword_location, sourcemeta::jsontoolkit::JSON &&value,
-    const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
     -> sourcemeta::jsontoolkit::JSON {
+  static V visitor;
+  return std::visit(visitor, step);
+}
+
+template <typename V, typename T>
+auto encode_step(const std::string_view category, const std::string_view type,
+                 const T &step) -> sourcemeta::jsontoolkit::JSON {
   using namespace sourcemeta::jsontoolkit;
-  static const TargetVisitor visitor;
   JSON result{JSON::make_object()};
-  result.assign("category", JSON{"assertion"});
+  result.assign("category", JSON{category});
   result.assign("type", JSON{type});
-  result.assign("target", std::visit(visitor, target));
-  result.assign("keywordLocation", JSON{to_string(evaluation_path)});
-  result.assign("absoluteKeywordLocation", JSON{keyword_location});
-  result.assign("value", std::move(value));
-  result.assign("condition", JSON::make_array());
-  for (const auto &substep : condition) {
-    result.at("condition").push_back(step_to_json(substep));
+  result.assign("relativeSchemaLocation",
+                JSON{to_string(step.relative_schema_location)});
+  result.assign("relativeInstanceLocation",
+                JSON{to_string(step.relative_instance_location)});
+  result.assign("absoluteKeywordLocation", JSON{step.keyword_location});
+
+  if constexpr (requires { step.id; }) {
+    result.assign("id", JSON{step.id});
   }
 
-  return result;
-}
-
-auto logical_to_json(
-    const std::string_view type,
-    const sourcemeta::jsontoolkit::Pointer &evaluation_path,
-    const std::string &keyword_location,
-    const sourcemeta::jsontoolkit::SchemaCompilerTemplate &children,
-    const sourcemeta::jsontoolkit::SchemaCompilerTemplate &condition)
-    -> sourcemeta::jsontoolkit::JSON {
-  using namespace sourcemeta::jsontoolkit;
-  JSON result{JSON::make_object()};
-  result.assign("category", JSON{"logical"});
-  result.assign("type", JSON{type});
-  result.assign("keywordLocation", JSON{to_string(evaluation_path)});
-  result.assign("absoluteKeywordLocation", JSON{keyword_location});
-  result.assign("condition", JSON::make_array());
-  result.assign("children", JSON::make_array());
-
-  for (const auto &substep : condition) {
-    result.at("condition").push_back(step_to_json(substep));
+  if constexpr (requires { step.target; }) {
+    result.assign("target", target_to_json(step.target));
   }
 
-  for (const auto &child : children) {
-    result.at("children").push_back(step_to_json(child));
+  if constexpr (requires { step.value; }) {
+    result.assign("value", value_to_json(step.value));
   }
 
-  return result;
-}
-
-auto control_to_json(const std::string_view type, const std::size_t id,
-                     const sourcemeta::jsontoolkit::SchemaCompilerTemplate
-                         &children) -> sourcemeta::jsontoolkit::JSON {
-  using namespace sourcemeta::jsontoolkit;
-  JSON result{JSON::make_object()};
-  result.assign("category", JSON{"control"});
-  result.assign("type", JSON{type});
-  result.assign("id", JSON{id});
-  result.assign("children", JSON::make_array());
-  for (const auto &child : children) {
-    result.at("children").push_back(step_to_json(child));
+  if constexpr (requires { step.condition; }) {
+    result.assign("condition", JSON::make_array());
+    for (const auto &substep : step.condition) {
+      result.at("condition").push_back(step_to_json<V>(substep));
+    }
   }
 
-  return result;
-}
+  if constexpr (requires { step.children; }) {
+    result.assign("children", JSON::make_array());
+    for (const auto &child : step.children) {
+      result.at("children").push_back(step_to_json<V>(child));
+    }
+  }
 
-auto value_string(const sourcemeta::jsontoolkit::SchemaCompilerValueString
-                      &value) -> sourcemeta::jsontoolkit::JSON {
-  using namespace sourcemeta::jsontoolkit;
-  JSON result{JSON::make_object()};
-  result.assign("category", JSON{"value"});
-  result.assign("type", JSON{"string"});
-  result.assign("value", JSON{value});
-  return result;
-}
-
-auto value_type(const sourcemeta::jsontoolkit::SchemaCompilerValueType &value)
-    -> sourcemeta::jsontoolkit::JSON {
-  using namespace sourcemeta::jsontoolkit;
-  JSON result{JSON::make_object()};
-  result.assign("category", JSON{"value"});
-  result.assign("type", JSON{"type"});
-  std::ostringstream type_string;
-  type_string << value;
-  result.assign("value", JSON{type_string.str()});
   return result;
 }
 
 struct StepVisitor {
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionFail
-                      &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    using namespace sourcemeta::jsontoolkit;
-    assert(std::holds_alternative<SchemaCompilerValueNone>(assertion.value));
-    return assertion_to_json(
-        "fail", assertion.target, assertion.evaluation_path,
-        assertion.keyword_location, JSON{nullptr}, assertion.condition);
+#define HANDLE_STEP(category, type, name)                                      \
+  auto operator()(const sourcemeta::jsontoolkit::name &step)                   \
+      const->sourcemeta::jsontoolkit::JSON {                                   \
+    return encode_step<StepVisitor>(category, type, step);                     \
   }
 
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionDefines
-                      &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    using namespace sourcemeta::jsontoolkit;
-    assert(std::holds_alternative<SchemaCompilerValueString>(assertion.value));
-    return assertion_to_json(
-        "defines", assertion.target, assertion.evaluation_path,
-        assertion.keyword_location,
-        value_string(std::get<SchemaCompilerValueString>(assertion.value)),
-        assertion.condition);
-  }
+  HANDLE_STEP("assertion", "fail", SchemaCompilerAssertionFail)
+  HANDLE_STEP("assertion", "defines", SchemaCompilerAssertionDefines)
+  HANDLE_STEP("assertion", "defines-all", SchemaCompilerAssertionDefinesAll)
+  HANDLE_STEP("assertion", "type", SchemaCompilerAssertionType)
+  HANDLE_STEP("assertion", "type-any", SchemaCompilerAssertionTypeAny)
+  HANDLE_STEP("assertion", "type-strict", SchemaCompilerAssertionTypeStrict)
+  HANDLE_STEP("assertion", "type-strict-any",
+              SchemaCompilerAssertionTypeStrictAny)
+  HANDLE_STEP("assertion", "regex", SchemaCompilerAssertionRegex)
+  HANDLE_STEP("assertion", "size-greater", SchemaCompilerAssertionSizeGreater)
+  HANDLE_STEP("assertion", "size-less", SchemaCompilerAssertionSizeLess)
+  HANDLE_STEP("assertion", "equal", SchemaCompilerAssertionEqual)
+  HANDLE_STEP("assertion", "greater-equal", SchemaCompilerAssertionGreaterEqual)
+  HANDLE_STEP("assertion", "less-equal", SchemaCompilerAssertionLessEqual)
+  HANDLE_STEP("assertion", "greater", SchemaCompilerAssertionGreater)
+  HANDLE_STEP("assertion", "less", SchemaCompilerAssertionLess)
+  HANDLE_STEP("assertion", "unique", SchemaCompilerAssertionUnique)
+  HANDLE_STEP("assertion", "divisible", SchemaCompilerAssertionDivisible)
+  HANDLE_STEP("assertion", "string-type", SchemaCompilerAssertionStringType)
+  HANDLE_STEP("assertion", "equals-any", SchemaCompilerAssertionEqualsAny)
+  HANDLE_STEP("annotation", "public", SchemaCompilerAnnotationPublic)
+  HANDLE_STEP("annotation", "private", SchemaCompilerAnnotationPrivate)
+  HANDLE_STEP("logical", "or", SchemaCompilerLogicalOr)
+  HANDLE_STEP("logical", "and", SchemaCompilerLogicalAnd)
+  HANDLE_STEP("logical", "xor", SchemaCompilerLogicalXor)
+  HANDLE_STEP("logical", "try", SchemaCompilerLogicalTry)
+  HANDLE_STEP("logical", "not", SchemaCompilerLogicalNot)
+  HANDLE_STEP("internal", "annotation", SchemaCompilerInternalAnnotation)
+  HANDLE_STEP("internal", "no-annotation", SchemaCompilerInternalNoAnnotation)
+  HANDLE_STEP("internal", "container", SchemaCompilerInternalContainer)
+  HANDLE_STEP("internal", "defines-all", SchemaCompilerInternalDefinesAll)
+  HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
+  HANDLE_STEP("loop", "keys", SchemaCompilerLoopKeys)
+  HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)
+  HANDLE_STEP("loop", "contains", SchemaCompilerLoopContains)
+  HANDLE_STEP("control", "label", SchemaCompilerControlLabel)
+  HANDLE_STEP("control", "jump", SchemaCompilerControlJump)
 
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerAssertionType
-                      &assertion) const -> sourcemeta::jsontoolkit::JSON {
-    using namespace sourcemeta::jsontoolkit;
-    assert(std::holds_alternative<SchemaCompilerValueType>(assertion.value));
-    return assertion_to_json(
-        "type", assertion.target, assertion.evaluation_path,
-        assertion.keyword_location,
-        value_type(std::get<SchemaCompilerValueType>(assertion.value)),
-        assertion.condition);
-  }
-
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalOr
-                      &logical) const -> sourcemeta::jsontoolkit::JSON {
-    return logical_to_json("or", logical.evaluation_path,
-                           logical.keyword_location, logical.children,
-                           logical.condition);
-  }
-
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerLogicalAnd
-                      &logical) const -> sourcemeta::jsontoolkit::JSON {
-    return logical_to_json("and", logical.evaluation_path,
-                           logical.keyword_location, logical.children,
-                           logical.condition);
-  }
-
-  auto operator()(const sourcemeta::jsontoolkit::SchemaCompilerControlLabel
-                      &control) const -> sourcemeta::jsontoolkit::JSON {
-    return control_to_json("label", control.id, control.children);
-  }
+#undef HANDLE_STEP
 };
-
-auto step_to_json(
-    const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step)
-    -> sourcemeta::jsontoolkit::JSON {
-  static StepVisitor visitor;
-  return std::visit(visitor, step);
-}
 
 } // namespace
 
@@ -178,7 +226,7 @@ namespace sourcemeta::jsontoolkit {
 auto to_json(const SchemaCompilerTemplate &steps) -> JSON {
   JSON result{JSON::make_array()};
   for (const auto &step : steps) {
-    result.push_back(step_to_json(step));
+    result.push_back(step_to_json<StepVisitor>(step));
   }
 
   return result;

@@ -155,14 +155,26 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
 
   // Draft4
   WALK(HTTP_BASE "draft-04/schema#", "definitions", Members, "$ref")
-  WALK(HTTP_BASE "draft-04/schema#", "dependencies", Members, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "items", ValueOrElements, "$ref")
-  WALK(HTTP_BASE "draft-04/schema#", "properties", Members, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "patternProperties", Members, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "allOf", Elements, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "anyOf", Elements, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "oneOf", Elements, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "not", Value, "$ref")
+
+  // These dependencies are only for the purpose of compiler optimizations
+  WALK(HTTP_BASE "draft-04/schema#", "dependencies", Members, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "required", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "uniqueItems", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "pattern", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "format", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "maxLength", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "minLength", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "maxItems", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "minItems", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "maxProperties", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "minProperties", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "properties", Members, "$ref", "type")
 
   WALK_MAYBE_DEPENDENT(HTTP_BASE "draft-04/hyper-schema#", "targetSchema",
                        Value, HTTP_BASE "draft-04/schema#", "$ref")

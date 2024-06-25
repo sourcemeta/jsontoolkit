@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <type_traits>
+#include <utility>
 
 TEST(JSON_value, general_traits) {
   EXPECT_FALSE(
@@ -225,6 +226,39 @@ TEST(JSON_value, compare_object_object_different) {
   EXPECT_TRUE(right < left);
 }
 
+TEST(JSON_value, compare_int_operator_less_than_or_equal_int) {
+  const sourcemeta::jsontoolkit::JSON left{3};
+  const sourcemeta::jsontoolkit::JSON right{4};
+  EXPECT_TRUE(left <= right);
+  EXPECT_FALSE(right <= left);
+}
+
+TEST(JSON_value, compare_int_operator_greater_than_int) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{4};
+  EXPECT_TRUE(left > right);
+  EXPECT_FALSE(right > left);
+}
+
+TEST(JSON_value, compare_int_operator_greater_than_int_equal) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{5};
+  EXPECT_FALSE(left > right);
+}
+
+TEST(JSON_value, compare_int_operator_greater_than_or_equal_int) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{4};
+  EXPECT_TRUE(left >= right);
+  EXPECT_FALSE(right >= left);
+}
+
+TEST(JSON_value, compare_int_operator_not_equal_int) {
+  const sourcemeta::jsontoolkit::JSON left{5};
+  const sourcemeta::jsontoolkit::JSON right{4};
+  EXPECT_TRUE(left != right);
+}
+
 TEST(JSON_value, set_null) {
   sourcemeta::jsontoolkit::JSON document{true};
   EXPECT_FALSE(document.is_null());
@@ -322,4 +356,25 @@ TEST(JSON_value, to_ostream) {
 #else
   EXPECT_EQ(stream.str(), "[\n  1,\n  2,\n  3,\n  4\n]");
 #endif
+}
+
+class ClassMemberInitializerList {
+public:
+  ClassMemberInitializerList(sourcemeta::jsontoolkit::JSON document)
+      : data{std::move(document)} {}
+  auto get() const -> const sourcemeta::jsontoolkit::JSON & {
+    return this->data;
+  }
+
+private:
+  const sourcemeta::jsontoolkit::JSON data;
+};
+
+TEST(JSON_value, class_member_initializer_list) {
+  const sourcemeta::jsontoolkit::JSON document{5};
+  EXPECT_TRUE(document.is_integer());
+  const ClassMemberInitializerList container{document};
+  EXPECT_TRUE(container.get().is_integer());
+  EXPECT_EQ(container.get().to_integer(), 5);
+  EXPECT_EQ(container.get(), document);
 }

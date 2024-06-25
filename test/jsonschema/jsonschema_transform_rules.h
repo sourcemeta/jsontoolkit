@@ -8,7 +8,8 @@
 class ExampleRule1 final : public sourcemeta::jsontoolkit::SchemaTransformRule {
 public:
   ExampleRule1()
-      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_1"){};
+      : sourcemeta::jsontoolkit::SchemaTransformRule(
+            "example_rule_1", "Keyword foo is not permitted") {};
 
   [[nodiscard]] auto
   condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
@@ -26,7 +27,8 @@ public:
 class ExampleRule2 final : public sourcemeta::jsontoolkit::SchemaTransformRule {
 public:
   ExampleRule2()
-      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_2"){};
+      : sourcemeta::jsontoolkit::SchemaTransformRule(
+            "example_rule_2", "Keyword bar is not permitted") {};
 
   [[nodiscard]] auto
   condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
@@ -44,7 +46,7 @@ public:
 class ExampleRule3 final : public sourcemeta::jsontoolkit::SchemaTransformRule {
 public:
   ExampleRule3()
-      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_3"){};
+      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_3") {};
 
   [[nodiscard]] auto condition(
       const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
@@ -62,7 +64,7 @@ public:
 class ExampleRule4 final : public sourcemeta::jsontoolkit::SchemaTransformRule {
 public:
   ExampleRule4()
-      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_4"){};
+      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_4") {};
 
   [[nodiscard]] auto
   condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
@@ -80,7 +82,7 @@ public:
 class ExampleRule5 final : public sourcemeta::jsontoolkit::SchemaTransformRule {
 public:
   ExampleRule5()
-      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_5"){};
+      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_5") {};
 
   [[nodiscard]] auto condition(
       const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
@@ -99,7 +101,7 @@ public:
 class ExampleRule6 final : public sourcemeta::jsontoolkit::SchemaTransformRule {
 public:
   ExampleRule6()
-      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_6"){};
+      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_6") {};
 
   [[nodiscard]] auto
   condition(const sourcemeta::jsontoolkit::JSON &schema,
@@ -115,12 +117,31 @@ public:
   }
 };
 
+class ExampleRule7 final : public sourcemeta::jsontoolkit::SchemaTransformRule {
+public:
+  ExampleRule7()
+      : sourcemeta::jsontoolkit::SchemaTransformRule("example_rule_1",
+                                                     "My custom message") {};
+
+  [[nodiscard]] auto
+  condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,
+            const std::set<std::string> &,
+            const sourcemeta::jsontoolkit::Pointer &) const -> bool override {
+    return schema.defines("foo");
+  }
+
+  auto transform(sourcemeta::jsontoolkit::SchemaTransformer &transformer) const
+      -> void override {
+    transformer.erase("foo");
+  }
+};
+
 class ExampleRuleConflictsWith1 final
     : public sourcemeta::jsontoolkit::SchemaTransformRule {
 public:
   ExampleRuleConflictsWith1()
       : sourcemeta::jsontoolkit::SchemaTransformRule(
-            "example_rule_conflicts_with_1"){};
+            "example_rule_conflicts_with_1") {};
 
   [[nodiscard]] auto
   condition(const sourcemeta::jsontoolkit::JSON &schema, const std::string &,

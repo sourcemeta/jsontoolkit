@@ -51,7 +51,8 @@ namespace sourcemeta::jsontoolkit {
 class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaTransformRule {
 public:
   /// Create a transformation rule. Each rule must have a unique name.
-  SchemaTransformRule(std::string &&name);
+  SchemaTransformRule(std::string &&name,
+                      std::string &&message = "Condition matched");
 
   // Necessary to wrap rules on smart pointers
   virtual ~SchemaTransformRule() = default;
@@ -68,11 +69,20 @@ public:
   /// Fetch the name of a rule
   [[nodiscard]] auto name() const -> const std::string &;
 
+  /// Fetch the message of a rule
+  [[nodiscard]] auto message() const -> const std::string &;
+
   /// Apply the rule to a schema
   auto apply(JSON &schema, const Pointer &pointer,
              const SchemaResolver &resolver,
              const std::optional<std::string> &default_dialect =
                  std::nullopt) const -> std::vector<SchemaTransformerOperation>;
+
+  /// Check if the rule applies to a schema
+  auto check(const JSON &schema, const Pointer &pointer,
+             const SchemaResolver &resolver,
+             const std::optional<std::string> &default_dialect =
+                 std::nullopt) const -> bool;
 
 private:
   /// The rule condition
@@ -91,6 +101,7 @@ private:
 #pragma warning(disable : 4251)
 #endif
   const std::string name_;
+  const std::string message_;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251)
 #endif

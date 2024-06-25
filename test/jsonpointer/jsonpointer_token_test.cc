@@ -79,3 +79,17 @@ TEST(JSONPointer_token, ordering_less_than) {
   EXPECT_TRUE(token_3 < token_1);
   EXPECT_TRUE(token_2 < token_3);
 }
+
+TEST(JSONPointer_token, to_json_index) {
+  const sourcemeta::jsontoolkit::Pointer::Token token{5};
+  const sourcemeta::jsontoolkit::JSON result{token.to_json()};
+  EXPECT_TRUE(result.is_integer());
+  EXPECT_EQ(result.to_integer(), 5);
+}
+
+TEST(JSONPointer_token, to_json_property) {
+  const sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
+  const sourcemeta::jsontoolkit::JSON result{token.to_json()};
+  EXPECT_TRUE(result.is_string());
+  EXPECT_EQ(result.to_string(), "foo");
+}
