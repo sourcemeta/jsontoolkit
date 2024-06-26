@@ -5,7 +5,6 @@
 #include <cstdint>   // std::uint32_t
 #include <istream>   // std::istream
 #include <optional>  // std::optional
-#include <span>      // std::span
 #include <sstream>   // std::ostringstream
 #include <stdexcept> // std::length_error, std::runtime_error
 #include <string>    // std::stoul, std::string, std::tolower
@@ -66,6 +65,45 @@ static auto uri_parse(const std::string &data, UriUriA *uri) -> void {
   uri_normalize(uri);
 }
 
+static auto
+canonicalize_path(const std::string &path) -> std::optional<std::string> {
+  std::vector<std::string> segments;
+  std::string segment;
+
+  if (path.empty()) {
+    return std::nullopt;
+  }
+
+  bool has_leading_with_word = path.front() != '/' && path.front() != '.';
+  for (unsigned int i = has_leading_with_word ? 0 : 1; i <= path.size(); i++) {
+    char c = path[i];
+    if (c == '/' || i == path.size()) {
+      if (segment == "..") {
+        if (!segments.empty()) {
+          segments.pop_back();
+        }
+      } else if (segment != "." && !segment.empty()) {
+        segments.push_back(segment);
+      }
+      segment.clear();
+    } else {
+      segment += c;
+    }
+  }
+
+  // Reconstruct the canonical path
+  std::string canonical_path;
+  std::string separator = "";
+  for (const auto &seg : segments) {
+    canonical_path += separator + seg;
+    separator = "/";
+  }
+
+  if (canonical_path.empty())
+    return std::nullopt;
+  return canonical_path;
+}
+
 namespace sourcemeta::jsontoolkit {
 
 struct URI::Internal {
@@ -91,7 +129,7 @@ URI::URI(const URI &other) : URI{other.recompose()} {}
 URI::URI(URI &&other)
     : data{std::move(other.data)}, internal{std::move(other.internal)} {
   this->parsed = other.parsed;
-  this->path_components_ = std::move(other.path_components_);
+  this->path_ = std::move(other.path_);
   this->scheme_ = std::move(other.scheme_);
   this->userinfo_ = std::move(other.userinfo_);
   this->host_ = std::move(other.host_);
@@ -105,7 +143,7 @@ URI::URI(URI &&other)
 auto URI::parse() -> void {
   if (this->parsed) {
     // clean
-    this->path_components_.clear();
+    this->path_ = std::nullopt;
     this->scheme_ = std::nullopt;
     this->userinfo_ = std::nullopt;
     this->host_ = std::nullopt;
@@ -118,23 +156,7 @@ auto URI::parse() -> void {
 
   uri_parse(this->data, &this->internal->uri);
 
-  const UriPathSegmentA *segment{this->internal->uri.pathHead};
-  if (segment != nullptr) {
-    // URNs and tags have a single path segment by definition
-    if (this->is_urn() || this->is_tag()) {
-      const auto part{uri_text_range(&segment->text)};
-      assert(part.has_value());
-      this->path_components_.push_back(std::string{part.value()});
-    } else {
-      while (segment) {
-        const auto part{uri_text_range(&segment->text)};
-        assert(part.has_value());
-        this->path_components_.push_back(std::string{part.value()});
-        segment = segment->next;
-      }
-    }
-  }
-
+  this->scheme_ = uri_text_range(&this->internal->uri.scheme);
   this->scheme_ = uri_text_range(&this->internal->uri.scheme);
   this->userinfo_ = uri_text_range(&this->internal->uri.userInfo);
   this->host_ = uri_text_range(&this->internal->uri.hostText);
@@ -145,6 +167,34 @@ auto URI::parse() -> void {
     this->port_ = std::nullopt;
   } else {
     this->port_ = std::stoul(std::string{port_text.value()});
+  }
+
+  const UriPathSegmentA *segment{this->internal->uri.pathHead};
+  if (segment != nullptr) {
+    std::ostringstream path;
+    // URNs and tags have a single path segment by definition
+    if (this->is_urn() || this->is_tag()) {
+      const auto part{uri_text_range(&segment->text)};
+      assert(part.has_value());
+      path << part.value();
+    } else {
+      bool first{true};
+      while (segment) {
+        const auto part{uri_text_range(&segment->text)};
+        assert(part.has_value());
+        const auto value{part.value()};
+
+        if (first) {
+          path << value;
+        } else {
+          path << "/" << value;
+        }
+
+        segment = segment->next;
+        first = false;
+      }
+    }
+    this->path_ = path.str();
   }
 
   this->parsed = true;
@@ -181,13 +231,7 @@ auto URI::host() const -> std::optional<std::string_view> {
 
 auto URI::port() const -> std::optional<std::uint32_t> { return this->port_; }
 
-auto URI::path() const -> std::optional<std::span<std::string>> {
-  assert(this->parsed);
-
-  if (this->path_components_.size() > 0)
-    return std::span<std::string>(this->path_components_);
-  return std::nullopt;
-}
+auto URI::path() const -> std::optional<std::string> { return this->path_; }
 
 auto URI::fragment() const -> std::optional<std::string_view> {
   return this->fragment_;
@@ -226,13 +270,10 @@ auto URI::recompose() const -> std::string {
   // Path
   const auto result_path{this->path()};
   if (result_path.has_value()) {
-    auto separator =
-        (this->is_urn() || this->is_tag() || !this->scheme().has_value()) ? ""
-                                                                          : "/";
-    for (auto &component : result_path.value()) {
-      result << separator << component;
-      separator = "/";
+    if (!this->is_urn() && !this->is_tag() && this->scheme().has_value()) {
+      result << '/';
     }
+    result << result_path.value();
   }
 
   // Query
@@ -244,10 +285,7 @@ auto URI::recompose() const -> std::string {
   // Fragment
   const auto result_fragment{this->fragment()};
   if (result_fragment.has_value()) {
-    result << '#';
-    if (!result_fragment.value().empty()) {
-      result << result_fragment.value();
-    }
+    result << '#' << result_fragment.value();
   }
 
   return result.str();
@@ -282,13 +320,10 @@ auto URI::recompose_without_fragment() const -> std::optional<std::string> {
   // Path
   const auto result_path{this->path()};
   if (result_path.has_value()) {
-    auto separator =
-        (this->is_urn() || this->is_tag() || !this->scheme().has_value()) ? ""
-                                                                          : "/";
-    for (auto &component : result_path.value()) {
-      result << separator << component;
-      separator = "/";
+    if (!this->is_urn() && !this->is_tag()) {
+      result << '/';
     }
+    result << result_path.value();
   }
 
   // Query
@@ -305,7 +340,6 @@ auto URI::recompose_without_fragment() const -> std::optional<std::string> {
 }
 
 auto URI::canonicalize() -> URI & {
-
   // Scheme
   const auto result_scheme{this->scheme()};
   if (result_scheme.has_value()) {
@@ -329,17 +363,10 @@ auto URI::canonicalize() -> URI & {
   // Clean Path form ".." and "."
   const auto result_path{this->path()};
   if (result_path.has_value()) {
-    std::vector<std::string> cleaned_path;
-    for (const auto &component : result_path.value()) {
-      if (component == "..") {
-        if (!cleaned_path.empty()) {
-          cleaned_path.pop_back();
-        }
-      } else if (component != ".") {
-        cleaned_path.push_back(component);
-      }
+    const auto canonical_path{canonicalize_path(result_path.value())};
+    if (canonical_path.has_value()) {
+      this->path_ = canonical_path.value();
     }
-    this->path_components_ = cleaned_path;
   }
 
   // Fragment
