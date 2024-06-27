@@ -38,15 +38,15 @@ TEST(JSONSchema_compile_draft7, if_1) {
 
   EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/if", "#/if", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/if", "#/if", "", true);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target might match all of the given assertions");
 }
@@ -112,13 +112,13 @@ TEST(JSONSchema_compile_draft7, then_2) {
 
   EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(3, LogicalAnd, "/then", "#/then", "");
   EVALUATE_TRACE_PRE(4, AssertionDivisible, "/then/multipleOf",
                      "#/then/multipleOf", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/if", "#/if", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/if", "#/if", "", true);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
   EVALUATE_TRACE_POST_SUCCESS(3, AssertionDivisible, "/then/multipleOf",
                               "#/then/multipleOf", "");
@@ -126,7 +126,7 @@ TEST(JSONSchema_compile_draft7, then_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target might match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -197,15 +197,15 @@ TEST(JSONSchema_compile_draft7, else_2) {
 
   EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/if", "#/if", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/if", "#/if", "", true);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target might match all of the given assertions");
 }

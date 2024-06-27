@@ -500,8 +500,8 @@ TEST(JSONSchema_compile_draft4, ref_3) {
                      "https://example.com#/type", "/foo");
   EVALUATE_TRACE_PRE(4, LogicalAnd, "/properties/foo/$ref/properties",
                      "https://example.com#/properties", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(5, "/properties",
-                                        "https://example.com#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(5, "/properties",
+                                "https://example.com#/properties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type",
                               "https://example.com#/type", "");
@@ -513,8 +513,8 @@ TEST(JSONSchema_compile_draft4, ref_3) {
   EVALUATE_TRACE_POST_SUCCESS(3, ControlLabel, "/properties/foo/$ref",
                               "https://example.com#/properties/foo/$ref",
                               "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(
-      4, "/properties", "https://example.com#/properties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/properties",
+                                 "https://example.com#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(5, LogicalAnd, "/properties",
                               "https://example.com#/properties", "");
 
@@ -527,7 +527,7 @@ TEST(JSONSchema_compile_draft4, ref_3) {
   EVALUATE_TRACE_POST_DESCRIBE(
       3,
       "Mark the current position of the evaluation process for future jumps");
-  EVALUATE_TRACE_POST_DESCRIBE(4, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(4, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       5, "The target is expected to match all of the given assertions");
 }
@@ -573,11 +573,10 @@ TEST(JSONSchema_compile_draft4, ref_4) {
   EVALUATE_TRACE_PRE(7, LogicalAnd,
                      "/properties/foo/$ref/properties/foo/$ref/properties",
                      "https://example.com#/properties", "/foo/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(8, "/properties/foo/$ref/properties",
-                                        "https://example.com#/properties",
-                                        "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(9, "/properties",
-                                        "https://example.com#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(8, "/properties/foo/$ref/properties",
+                                "https://example.com#/properties", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION(9, "/properties",
+                                "https://example.com#/properties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type",
                               "https://example.com#/type", "");
@@ -593,16 +592,16 @@ TEST(JSONSchema_compile_draft4, ref_4) {
   EVALUATE_TRACE_POST_SUCCESS(
       4, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
       "https://example.com#/properties/foo/$ref", "/foo/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(5, "/properties/foo/$ref/properties",
-                                         "https://example.com#/properties",
-                                         "/foo", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(5, "/properties/foo/$ref/properties",
+                                 "https://example.com#/properties", "/foo",
+                                 "foo");
   EVALUATE_TRACE_POST_SUCCESS(6, LogicalAnd, "/properties/foo/$ref/properties",
                               "https://example.com#/properties", "/foo");
   EVALUATE_TRACE_POST_SUCCESS(7, ControlLabel, "/properties/foo/$ref",
                               "https://example.com#/properties/foo/$ref",
                               "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(
-      8, "/properties", "https://example.com#/properties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(8, "/properties",
+                                 "https://example.com#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(9, LogicalAnd, "/properties",
                               "https://example.com#/properties", "");
 
@@ -616,13 +615,13 @@ TEST(JSONSchema_compile_draft4, ref_4) {
       3, "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
       4, "Jump to another point of the evaluation process");
-  EVALUATE_TRACE_POST_DESCRIBE(5, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(5, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       6, "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
       7,
       "Mark the current position of the evaluation process for future jumps");
-  EVALUATE_TRACE_POST_DESCRIBE(8, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(8, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       9, "The target is expected to match all of the given assertions");
 }
@@ -732,7 +731,7 @@ TEST(JSONSchema_compile_draft4, ref_6) {
                      "#/type", "/foo");
   EVALUATE_TRACE_PRE(4, LogicalAnd, "/properties/foo/$ref/properties",
                      "#/properties", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(5, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(5, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
@@ -741,8 +740,7 @@ TEST(JSONSchema_compile_draft4, ref_6) {
                               "#/properties", "/foo");
   EVALUATE_TRACE_POST_SUCCESS(3, ControlLabel, "/properties/foo/$ref",
                               "#/properties/foo/$ref", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "",
-                                         "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -754,7 +752,7 @@ TEST(JSONSchema_compile_draft4, ref_6) {
   EVALUATE_TRACE_POST_DESCRIBE(
       3,
       "Mark the current position of the evaluation process for future jumps");
-  EVALUATE_TRACE_POST_DESCRIBE(4, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(4, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       5, "The target is expected to match all of the given assertions");
 }
@@ -811,21 +809,20 @@ TEST(JSONSchema_compile_draft4, properties_1) {
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
                      "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
                               "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
-                                         "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "bar");
   EVALUATE_TRACE_POST_FAILURE(2, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_POST_FAILURE(3, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -855,27 +852,25 @@ TEST(JSONSchema_compile_draft4, properties_2) {
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
                      "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
                               "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
-                                         "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "bar");
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(3, "/properties", "#/properties", "",
-                                         "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(3, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(3, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(3, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       4, "The target is expected to match all of the given assertions");
 }
@@ -936,28 +931,26 @@ TEST(JSONSchema_compile_draft4, properties_4) {
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict,
                      "/properties/foo/properties/bar/type",
                      "#/properties/foo/properties/bar/type", "/foo/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(3, "/properties/foo/properties",
-                                        "#/properties/foo/properties", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/properties/foo/properties",
+                                "#/properties/foo/properties", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(
       0, AssertionTypeStrict, "/properties/foo/properties/bar/type",
       "#/properties/foo/properties/bar/type", "/foo/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/properties/foo/properties",
-                                         "#/properties/foo/properties", "/foo",
-                                         "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties/foo/properties",
+                                 "#/properties/foo/properties", "/foo", "bar");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties/foo/properties",
                               "#/properties/foo/properties", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(3, "/properties", "#/properties", "",
-                                         "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(3, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(3, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(3, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       4, "The target is expected to match all of the given assertions");
 }
@@ -1086,15 +1079,15 @@ TEST(JSONSchema_compile_draft4, patternProperties_3) {
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/patternProperties", "#/patternProperties",
                      "");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(1, "/patternProperties",
-                                        "#/patternProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(1, "/patternProperties", "#/patternProperties",
+                                "");
 
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(0, "/patternProperties",
-                                         "#/patternProperties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/patternProperties", "#/patternProperties",
+                                 "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/patternProperties",
                               "#/patternProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(0, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(0, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       1, "The target is expected to match all of the given assertions");
 }
@@ -1123,21 +1116,21 @@ TEST(JSONSchema_compile_draft4, patternProperties_4) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/patternProperties/^f/type",
                      // Note that the caret needs to be URI escaped
                      "#/patternProperties/%5Ef/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/patternProperties",
-                                        "#/patternProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/patternProperties", "#/patternProperties",
+                                "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
                               "/patternProperties/^f/type",
                               // Note that the caret needs to be URI escaped
                               "#/patternProperties/%5Ef/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/patternProperties",
-                                         "#/patternProperties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/patternProperties", "#/patternProperties",
+                                 "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/patternProperties",
                               "#/patternProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target is expected to match all of the given assertions");
 }
@@ -1205,8 +1198,8 @@ TEST(JSONSchema_compile_draft4, patternProperties_6) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/patternProperties/^f/type",
                      // Note that the caret needs to be URI escaped
                      "#/patternProperties/%5Ef/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/patternProperties",
-                                        "#/patternProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/patternProperties", "#/patternProperties",
+                                "");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/patternProperties/o$/type",
                      "#/patternProperties/o$/type", "/foo");
 
@@ -1214,8 +1207,8 @@ TEST(JSONSchema_compile_draft4, patternProperties_6) {
                               "/patternProperties/^f/type",
                               // Note that the caret needs to be URI escaped
                               "#/patternProperties/%5Ef/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/patternProperties",
-                                         "#/patternProperties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/patternProperties", "#/patternProperties",
+                                 "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict,
                               "/patternProperties/o$/type",
                               "#/patternProperties/o$/type", "/foo");
@@ -1224,7 +1217,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_6) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -1261,32 +1254,32 @@ TEST(JSONSchema_compile_draft4, patternProperties_7) {
   EVALUATE_TRACE_PRE(
       2, AssertionTypeStrict, "/patternProperties/^f/patternProperties/^b/type",
       "#/patternProperties/%5Ef/patternProperties/%5Eb/type", "/foo/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(
-      3, "/patternProperties/^f/patternProperties",
-      "#/patternProperties/%5Ef/patternProperties", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(4, "/patternProperties",
-                                        "#/patternProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/patternProperties/^f/patternProperties",
+                                "#/patternProperties/%5Ef/patternProperties",
+                                "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/patternProperties", "#/patternProperties",
+                                "");
 
   EVALUATE_TRACE_POST_SUCCESS(
       0, AssertionTypeStrict, "/patternProperties/^f/patternProperties/^b/type",
       "#/patternProperties/%5Ef/patternProperties/%5Eb/type", "/foo/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(
-      1, "/patternProperties/^f/patternProperties",
-      "#/patternProperties/%5Ef/patternProperties", "/foo", "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/patternProperties/^f/patternProperties",
+                                 "#/patternProperties/%5Ef/patternProperties",
+                                 "/foo", "bar");
   EVALUATE_TRACE_POST_SUCCESS(
       2, LogicalAnd, "/patternProperties/^f/patternProperties",
       "#/patternProperties/%5Ef/patternProperties", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(3, "/patternProperties",
-                                         "#/patternProperties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(3, "/patternProperties", "#/patternProperties",
+                                 "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/patternProperties",
                               "#/patternProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(3, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(3, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       4, "The target is expected to match all of the given assertions");
 }
@@ -1361,7 +1354,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(3, LoopProperties, "/additionalProperties",
                      "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/additionalProperties/type",
@@ -1369,8 +1362,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
-                                         "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_POST_SUCCESS(3, AssertionTypeStrict,
                               "/additionalProperties/type",
@@ -1380,7 +1372,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -1469,13 +1461,13 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/patternProperties/^bar$/type",
                      // Note that the caret needs to be URI escaped
                      "#/patternProperties/%5Ebar$/type", "/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/patternProperties",
-                                        "#/patternProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/patternProperties", "#/patternProperties",
+                                "");
 
   EVALUATE_TRACE_PRE(3, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(5, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(5, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_PRE(6, LoopProperties, "/additionalProperties",
                      "#/additionalProperties", "");
@@ -1487,16 +1479,15 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
                               "/patternProperties/^bar$/type",
                               // Note that the caret needs to be URI escaped
                               "#/patternProperties/%5Ebar$/type", "/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/patternProperties",
-                                         "#/patternProperties", "", "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/patternProperties", "#/patternProperties",
+                                 "", "bar");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/patternProperties",
                               "#/patternProperties", "");
 
   // `properties`
   EVALUATE_TRACE_POST_SUCCESS(3, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(4, "/properties", "#/properties", "",
-                                         "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
 
   // `additionalProperties`
@@ -1508,12 +1499,12 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
       3, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(4, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(4, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       5, "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -1612,8 +1603,7 @@ TEST(JSONSchema_compile_draft4, not_3) {
   EVALUATE_TRACE_PRE(1, LogicalAnd, "/not/properties", "#/not/properties", "");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/not/properties/foo/type",
                      "#/not/properties/foo/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(3, "/not/properties",
-                                        "#/not/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/not/properties", "#/not/properties", "");
   EVALUATE_TRACE_PRE(4, LoopProperties, "/not/additionalProperties",
                      "#/not/additionalProperties", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/not/additionalProperties/type",
@@ -1622,8 +1612,8 @@ TEST(JSONSchema_compile_draft4, not_3) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
                               "/not/properties/foo/type",
                               "#/not/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/not/properties",
-                                         "#/not/properties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/not/properties", "#/not/properties", "",
+                                 "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/not/properties",
                               "#/not/properties", "");
   EVALUATE_TRACE_POST_FAILURE(3, AssertionTypeStrict,
@@ -1635,7 +1625,7 @@ TEST(JSONSchema_compile_draft4, not_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(

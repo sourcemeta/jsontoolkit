@@ -416,17 +416,16 @@ TEST(JSONSchema_compile_draft6, property_names_4) {
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, LoopKeys, "/properties/foo/propertyNames",
                      "#/properties/foo/propertyNames", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, LoopKeys, "/properties/foo/propertyNames",
                               "#/properties/foo/propertyNames", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(1, "/properties", "#/properties", "",
-                                         "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "Loop over the property keys of the target object");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an internal annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target is expected to match all of the given assertions");
 }

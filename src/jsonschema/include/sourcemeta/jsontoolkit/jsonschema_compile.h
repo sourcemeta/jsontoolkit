@@ -201,12 +201,8 @@ struct SchemaCompilerAssertionDivisible;
 struct SchemaCompilerAssertionStringType;
 
 /// @ingroup jsonschema
-/// Represents a compiler step that emits a public annotation
+/// Represents a compiler step that emits an annotation
 struct SchemaCompilerAnnotationPublic;
-
-/// @ingroup jsonschema
-/// Represents a compiler step that emits a private annotation
-struct SchemaCompilerAnnotationPrivate;
 
 /// @ingroup jsonschema
 /// Represents a compiler logical step that represents a disjunction
@@ -287,8 +283,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionGreater, SchemaCompilerAssertionLess,
     SchemaCompilerAssertionUnique, SchemaCompilerAssertionDivisible,
     SchemaCompilerAssertionStringType, SchemaCompilerAnnotationPublic,
-    SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
-    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
     SchemaCompilerInternalAnnotation, SchemaCompilerInternalNoAnnotation,
     SchemaCompilerInternalContainer, SchemaCompilerInternalDefinesAll,
@@ -348,7 +343,6 @@ DEFINE_STEP_WITH_VALUE(Assertion, Unique, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Assertion, Divisible, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, StringType, SchemaCompilerValueStringType)
 DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
-DEFINE_STEP_WITH_VALUE(Annotation, Private, SchemaCompilerValueJSON)
 DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueNone)

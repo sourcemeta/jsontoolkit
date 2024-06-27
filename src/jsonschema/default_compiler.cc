@@ -50,15 +50,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
 
   // TODO: Implement the new keywords
 
-  // With public annotations
-  COMPILE(
-      "https://json-schema.org/draft/2019-09/vocab/applicator", "properties",
-      compiler_draft4_applicator_properties<SchemaCompilerAnnotationPublic>);
-  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator",
-          "patternProperties",
-          compiler_draft4_applicator_patternproperties<
-              SchemaCompilerAnnotationPublic>);
-
   // Same as Draft 7
 
   COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator", "if",
@@ -94,6 +85,11 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_applicator_oneof);
   COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator", "not",
           compiler_draft4_applicator_not);
+
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator",
+          "properties", compiler_draft4_applicator_properties);
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator",
+          "patternProperties", compiler_draft4_applicator_patternproperties);
 
   COMPILE("https://json-schema.org/draft/2019-09/vocab/validation", "enum",
           compiler_draft4_validation_enum);
@@ -183,12 +179,10 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_maxproperties);
   COMPILE("http://json-schema.org/draft-07/schema#", "minProperties",
           compiler_draft4_validation_minproperties);
-  COMPILE(
-      "http://json-schema.org/draft-07/schema#", "properties",
-      compiler_draft4_applicator_properties<SchemaCompilerAnnotationPrivate>);
+  COMPILE("http://json-schema.org/draft-07/schema#", "properties",
+          compiler_draft4_applicator_properties);
   COMPILE("http://json-schema.org/draft-07/schema#", "patternProperties",
-          compiler_draft4_applicator_patternproperties<
-              SchemaCompilerAnnotationPrivate>);
+          compiler_draft4_applicator_patternproperties);
   COMPILE("http://json-schema.org/draft-07/schema#", "additionalProperties",
           compiler_draft4_applicator_additionalproperties);
   COMPILE("http://json-schema.org/draft-07/schema#", "dependencies",
@@ -266,12 +260,10 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_validation_maxproperties);
   COMPILE("http://json-schema.org/draft-06/schema#", "minProperties",
           compiler_draft4_validation_minproperties);
-  COMPILE(
-      "http://json-schema.org/draft-06/schema#", "properties",
-      compiler_draft4_applicator_properties<SchemaCompilerAnnotationPrivate>);
+  COMPILE("http://json-schema.org/draft-06/schema#", "properties",
+          compiler_draft4_applicator_properties);
   COMPILE("http://json-schema.org/draft-06/schema#", "patternProperties",
-          compiler_draft4_applicator_patternproperties<
-              SchemaCompilerAnnotationPrivate>);
+          compiler_draft4_applicator_patternproperties);
   COMPILE("http://json-schema.org/draft-06/schema#", "additionalProperties",
           compiler_draft4_applicator_additionalproperties);
   COMPILE("http://json-schema.org/draft-06/schema#", "dependencies",
@@ -308,12 +300,10 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
           compiler_draft4_applicator_oneof);
   COMPILE("http://json-schema.org/draft-04/schema#", "not",
           compiler_draft4_applicator_not);
-  COMPILE(
-      "http://json-schema.org/draft-04/schema#", "properties",
-      compiler_draft4_applicator_properties<SchemaCompilerAnnotationPrivate>);
+  COMPILE("http://json-schema.org/draft-04/schema#", "properties",
+          compiler_draft4_applicator_properties);
   COMPILE("http://json-schema.org/draft-04/schema#", "patternProperties",
-          compiler_draft4_applicator_patternproperties<
-              SchemaCompilerAnnotationPrivate>);
+          compiler_draft4_applicator_patternproperties);
   COMPILE("http://json-schema.org/draft-04/schema#", "additionalProperties",
           compiler_draft4_applicator_additionalproperties);
   COMPILE("http://json-schema.org/draft-04/schema#", "items",

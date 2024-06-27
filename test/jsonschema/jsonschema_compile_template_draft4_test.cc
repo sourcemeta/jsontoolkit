@@ -109,7 +109,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
             },
             {
               "category": "annotation",
-              "type": "private",
+              "type": "public",
               "condition": [],
               "relativeSchemaLocation": "",
               "relativeInstanceLocation": "",
@@ -240,7 +240,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
             },
             {
               "category": "annotation",
-              "type": "private",
+              "type": "public",
               "condition": [],
               "relativeSchemaLocation": "",
               "relativeInstanceLocation": "",
@@ -311,7 +311,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
             },
             {
               "category": "annotation",
-              "type": "private",
+              "type": "public",
               "condition": [],
               "relativeSchemaLocation": "",
               "relativeInstanceLocation": "",
