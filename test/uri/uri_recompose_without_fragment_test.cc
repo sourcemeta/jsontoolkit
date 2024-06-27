@@ -46,6 +46,14 @@ TEST(URI_recompose_without_fragment, urn_with_fragment) {
   EXPECT_EQ(uri.recompose_without_fragment().value(), "urn:example:schema");
 }
 
+TEST(URI_recompose_without_fragment, tag_with_fragment) {
+  const sourcemeta::jsontoolkit::URI uri{
+      "tag:example.com,2024-06-12:some-unique-id#tag"};
+  EXPECT_TRUE(uri.recompose_without_fragment().has_value());
+  EXPECT_EQ(uri.recompose_without_fragment().value(),
+            "tag:example.com,2024-06-12:some-unique-id");
+}
+
 TEST(URI_recompose_without_fragment, fragment_only) {
   const sourcemeta::jsontoolkit::URI uri{"#bar"};
   EXPECT_FALSE(uri.recompose_without_fragment().has_value());

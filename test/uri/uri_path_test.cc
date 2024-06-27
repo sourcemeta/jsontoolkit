@@ -9,25 +9,25 @@ TEST(URI_path, https_example_url_no_path) {
 TEST(URI_path, https_example_url_slash) {
   const sourcemeta::jsontoolkit::URI uri{"https://example.com/"};
   EXPECT_TRUE(uri.path().has_value());
-  EXPECT_EQ(uri.path().value(), "/");
+  EXPECT_EQ(uri.path().value(), "");
 }
 
 TEST(URI_path, https_example_url_single) {
   const sourcemeta::jsontoolkit::URI uri{"https://example.com/foo"};
   EXPECT_TRUE(uri.path().has_value());
-  EXPECT_EQ(uri.path().value(), "/foo");
+  EXPECT_EQ(uri.path().value(), "foo");
 }
 
 TEST(URI_path, https_example_url_multi) {
   const sourcemeta::jsontoolkit::URI uri{"https://example.com/foo/bar/baz"};
   EXPECT_TRUE(uri.path().has_value());
-  EXPECT_EQ(uri.path().value(), "/foo/bar/baz");
+  EXPECT_EQ(uri.path().value(), "foo/bar/baz");
 }
 
 TEST(URI_path, relative_multi) {
   const sourcemeta::jsontoolkit::URI uri{"../foo/bar"};
   EXPECT_TRUE(uri.path().has_value());
-  EXPECT_EQ(uri.path().value(), "/../foo/bar");
+  EXPECT_EQ(uri.path().value(), "../foo/bar");
 }
 
 TEST(URI_path, urn) {
@@ -56,4 +56,9 @@ TEST(URI_path, tag_with_fragment) {
   EXPECT_TRUE(uri.path().has_value());
   EXPECT_EQ(uri.path().value(),
             "bowtie.report,2023-11:referencing-suite-tag-uris-id");
+}
+
+TEST(URI_path, without_scheme) {
+  const sourcemeta::jsontoolkit::URI uri{"example.com/foo"};
+  EXPECT_EQ(uri.path().value(), "example.com/foo");
 }

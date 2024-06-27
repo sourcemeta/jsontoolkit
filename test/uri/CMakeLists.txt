@@ -23,4 +23,4 @@ target_link_libraries(sourcemeta_jsontoolkit_uri_unit
   PRIVATE sourcemeta::jsontoolkit::uri)
 set_target_properties(sourcemeta_jsontoolkit_uri_unit
   PROPERTIES FOLDER "JSON Toolkit/URI")
-add_test(NAME JSON COMMAND sourcemeta_jsontoolkit_uri_unit --gtest_brief=1)
+add_test(NAME URI COMMAND sourcemeta_jsontoolkit_uri_unit --gtest_brief=1)
