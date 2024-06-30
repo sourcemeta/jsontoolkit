@@ -248,18 +248,17 @@
                       instance_location);                                      \
   EXPECT_TRUE(std::get<4>(trace_post.at(index)).is_null());
 
-#define EVALUATE_TRACE_PRE_ANNOTATION_PRIVATE(                                 \
-    index, evaluate_path, keyword_location, instance_location)                 \
-  EVALUATE_TRACE_PRE(index, AnnotationPrivate, evaluate_path,                  \
-                     keyword_location, instance_location);                     \
+#define EVALUATE_TRACE_PRE_ANNOTATION(index, evaluate_path, keyword_location,  \
+                                      instance_location)                       \
+  EVALUATE_TRACE_PRE(index, AnnotationPublic, evaluate_path, keyword_location, \
+                     instance_location);                                       \
   EXPECT_TRUE(std::get<4>(trace_pre.at(index)).is_null());
 
-#define EVALUATE_TRACE_POST_ANNOTATION_PRIVATE(                                \
-    index, evaluate_path, keyword_location, instance_location,                 \
-    expected_annotation)                                                       \
+#define EVALUATE_TRACE_POST_ANNOTATION(index, evaluate_path, keyword_location, \
+                                       instance_location, expected_annotation) \
   EXPECT_TRUE(index < trace_post.size());                                      \
   EXPECT_TRUE(std::get<0>(trace_post.at(index)));                              \
-  EVALUATE_TRACE_POST(index, AnnotationPrivate, evaluate_path,                 \
+  EVALUATE_TRACE_POST(index, AnnotationPublic, evaluate_path,                  \
                       keyword_location, instance_location);                    \
   EXPECT_EQ(std::get<4>(trace_post.at(index)),                                 \
             sourcemeta::jsontoolkit::JSON(expected_annotation));

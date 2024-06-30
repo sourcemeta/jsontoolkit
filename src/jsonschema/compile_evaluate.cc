@@ -594,14 +594,6 @@ auto evaluate_step(
       }
     }
   } else if (std::holds_alternative<SchemaCompilerAnnotationPublic>(step)) {
-    // Annotations never fail
-    result = true;
-
-    // No reasons to emit public annotations on this mode
-    if (mode == SchemaCompilerEvaluationMode::Fast) {
-      return result;
-    }
-
     const auto &annotation{std::get<SchemaCompilerAnnotationPublic>(step)};
     context.push(annotation);
     EVALUATE_CONDITION_GUARD(annotation.condition, instance);
@@ -609,26 +601,6 @@ auto evaluate_step(
     const auto value{
         context.annotate(current_instance_location,
                          context.resolve_value(annotation.value, instance))};
-
-    // As a safety guard, only emit the annotation if it didn't exist already.
-    // Otherwise we risk confusing consumers
-    if (value.second) {
-      CALLBACK_PRE(current_instance_location);
-      callback(SchemaCompilerEvaluationType::Post, result, step,
-               context.evaluate_path(), current_instance_location, instance,
-               value.first);
-    }
-
-    context.pop();
-    return result;
-  } else if (std::holds_alternative<SchemaCompilerAnnotationPrivate>(step)) {
-    const auto &annotation{std::get<SchemaCompilerAnnotationPrivate>(step)};
-    context.push(annotation);
-    EVALUATE_CONDITION_GUARD(annotation.condition, instance);
-    const auto current_instance_location{context.instance_location(annotation)};
-    const auto value{
-        context.annotate(current_instance_location,
-                         context.resolve_value(annotation.value, instance))};
     // Annotations never fail
     result = true;
 
@@ -636,9 +608,6 @@ auto evaluate_step(
     // Otherwise we risk confusing consumers
     if (value.second) {
       CALLBACK_PRE(current_instance_location);
-
-      // While this is a private annotation, we still emit it on the callback
-      // for implementing debugging-related tools, etc
       callback(SchemaCompilerEvaluationType::Post, result, step,
                context.evaluate_path(), current_instance_location, instance,
                value.first);
