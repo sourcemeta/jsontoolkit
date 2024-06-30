@@ -92,6 +92,11 @@ using SchemaCompilerValueRegex = std::pair<std::regex, std::string>;
 using SchemaCompilerValueUnsignedInteger = std::size_t;
 
 /// @ingroup jsonschema
+/// Represents a compiler step range value
+using SchemaCompilerValueRange =
+    std::pair<std::size_t, std::optional<std::size_t>>;
+
+/// @ingroup jsonschema
 /// Represents a compiler step boolean value
 using SchemaCompilerValueBoolean = bool;
 
@@ -355,7 +360,7 @@ DEFINE_STEP_WITH_VALUE(Internal, DefinesAll, SchemaCompilerValueStrings)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueBoolean)
 DEFINE_STEP_APPLICATOR(Loop, Keys, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueUnsignedInteger)
-DEFINE_STEP_APPLICATOR(Loop, Contains, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Loop, Contains, SchemaCompilerValueRange)
 DEFINE_CONTROL(Label)
 DEFINE_CONTROL(Jump)
 
