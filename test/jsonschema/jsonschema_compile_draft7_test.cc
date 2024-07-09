@@ -35,15 +35,20 @@ TEST(JSONSchema_compile_draft7, if_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
-  EVALUATE_TRACE_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/if", "#/if", "", true);
-  EVALUATE_TRACE_SUCCESS(2, LogicalTry, "/if", "#/if", "");
 
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/if", "#/if", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/if", "#/if", "", true);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
-  EVALUATE_TRACE_DESCRIBE(2,
-                          "The target might match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target might match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft7, if_2) {
@@ -60,13 +65,17 @@ TEST(JSONSchema_compile_draft7, if_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
-  EVALUATE_TRACE_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_SUCCESS(1, LogicalTry, "/if", "#/if", "");
 
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_DESCRIBE(1,
-                          "The target might match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target might match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft7, then_1) {
@@ -100,21 +109,29 @@ TEST(JSONSchema_compile_draft7, then_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{10};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
-  EVALUATE_TRACE_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/if", "#/if", "", true);
-  EVALUATE_TRACE_SUCCESS(2, LogicalTry, "/if", "#/if", "");
-  EVALUATE_TRACE_SUCCESS(3, AssertionDivisible, "/then/multipleOf",
-                         "#/then/multipleOf", "");
-  EVALUATE_TRACE_SUCCESS(4, LogicalAnd, "/then", "#/then", "");
 
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(3, LogicalAnd, "/then", "#/then", "");
+  EVALUATE_TRACE_PRE(4, AssertionDivisible, "/then/multipleOf",
+                     "#/then/multipleOf", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/if", "#/if", "", true);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, AssertionDivisible, "/then/multipleOf",
+                              "#/then/multipleOf", "");
+  EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/then", "#/then", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
-  EVALUATE_TRACE_DESCRIBE(2,
-                          "The target might match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target might match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(
       3, "The target number is expected to be divisible by the given number");
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_POST_DESCRIBE(
       4, "The target is expected to match all of the given assertions");
 }
 
@@ -133,13 +150,17 @@ TEST(JSONSchema_compile_draft7, then_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
-  EVALUATE_TRACE_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_SUCCESS(1, LogicalTry, "/if", "#/if", "");
 
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_DESCRIBE(1,
-                          "The target might match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target might match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft7, else_1) {
@@ -173,15 +194,20 @@ TEST(JSONSchema_compile_draft7, else_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
-  EVALUATE_TRACE_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_ANNOTATION_PRIVATE(1, "/if", "#/if", "", true);
-  EVALUATE_TRACE_SUCCESS(2, LogicalTry, "/if", "#/if", "");
 
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/if", "#/if", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/if", "#/if", "", true);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_DESCRIBE(1, "Emit an internal annotation");
-  EVALUATE_TRACE_DESCRIBE(2,
-                          "The target might match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target might match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft7, else_3) {
@@ -199,19 +225,26 @@ TEST(JSONSchema_compile_draft7, else_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{10};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
-  EVALUATE_TRACE_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_SUCCESS(1, LogicalTry, "/if", "#/if", "");
-  EVALUATE_TRACE_SUCCESS(2, AssertionDivisible, "/else/multipleOf",
-                         "#/else/multipleOf", "");
-  EVALUATE_TRACE_SUCCESS(3, LogicalAnd, "/else", "#/else", "");
 
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_PRE(2, LogicalAnd, "/else", "#/else", "");
+  EVALUATE_TRACE_PRE(3, AssertionDivisible, "/else/multipleOf",
+                     "#/else/multipleOf", "");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionDivisible, "/else/multipleOf",
+                              "#/else/multipleOf", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/else", "#/else", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_DESCRIBE(1,
-                          "The target might match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target might match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target number is expected to be divisible by the given number");
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_POST_DESCRIBE(
       3, "The target is expected to match all of the given assertions");
 }
 
@@ -230,19 +263,26 @@ TEST(JSONSchema_compile_draft7, else_4) {
 
   const sourcemeta::jsontoolkit::JSON instance{8};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
-  EVALUATE_TRACE_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_SUCCESS(1, LogicalTry, "/if", "#/if", "");
-  EVALUATE_TRACE_FAILURE(2, AssertionDivisible, "/else/multipleOf",
-                         "#/else/multipleOf", "");
-  EVALUATE_TRACE_FAILURE(3, LogicalAnd, "/else", "#/else", "");
 
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_PRE(2, LogicalAnd, "/else", "#/else", "");
+  EVALUATE_TRACE_PRE(3, AssertionDivisible, "/else/multipleOf",
+                     "#/else/multipleOf", "");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_POST_FAILURE(2, AssertionDivisible, "/else/multipleOf",
+                              "#/else/multipleOf", "");
+  EVALUATE_TRACE_POST_FAILURE(3, LogicalAnd, "/else", "#/else", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_DESCRIBE(1,
-                          "The target might match all of the given assertions");
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target might match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target number is expected to be divisible by the given number");
-  EVALUATE_TRACE_DESCRIBE(
+  EVALUATE_TRACE_POST_DESCRIBE(
       3, "The target is expected to match all of the given assertions");
 }
 

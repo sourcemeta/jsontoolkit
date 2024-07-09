@@ -67,7 +67,8 @@ static auto test_resolver(std::string_view identifier)
 }
 
 static auto callback_noop(
-    bool, const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
+    const sourcemeta::jsontoolkit::SchemaCompilerEvaluationType, bool,
+    const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
     const sourcemeta::jsontoolkit::Pointer &,
     const sourcemeta::jsontoolkit::Pointer &,
     const sourcemeta::jsontoolkit::JSON &,

@@ -115,15 +115,6 @@ jobs:
           cmake --install ./build --prefix ./build/dist --config Release --verbose
           --component sourcemeta_jsontoolkit_dev
 
-      - name: Copy in the correct VC runtime DLLs (workaround for actions/runner-images#10004)
-        if: runner.os == 'windows'
-        run: |
-          Copy-Item (Join-Path `
-            ((Get-ChildItem -Directory `
-                -Path "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Redist\MSVC\14.*" |
-              Sort -Descending | Select-Object -First 1).FullName
-            ) 'x64\Microsoft.VC143.CRT\*.dll') "build\bin\Release"
-
       # Not every CTest version supports the --test-dir option. If such option
       # is not recognized, `ctest` will successfully exit finding no tests.
       # Better to be sure and `cd` all the time here.

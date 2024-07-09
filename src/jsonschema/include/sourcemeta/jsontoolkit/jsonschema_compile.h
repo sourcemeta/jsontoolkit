@@ -201,12 +201,8 @@ struct SchemaCompilerAssertionDivisible;
 struct SchemaCompilerAssertionStringType;
 
 /// @ingroup jsonschema
-/// Represents a compiler step that emits a public annotation
+/// Represents a compiler step that emits an annotation
 struct SchemaCompilerAnnotationPublic;
-
-/// @ingroup jsonschema
-/// Represents a compiler step that emits a private annotation
-struct SchemaCompilerAnnotationPrivate;
 
 /// @ingroup jsonschema
 /// Represents a compiler logical step that represents a disjunction
@@ -287,8 +283,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionGreater, SchemaCompilerAssertionLess,
     SchemaCompilerAssertionUnique, SchemaCompilerAssertionDivisible,
     SchemaCompilerAssertionStringType, SchemaCompilerAnnotationPublic,
-    SchemaCompilerAnnotationPrivate, SchemaCompilerLogicalOr,
-    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
     SchemaCompilerInternalAnnotation, SchemaCompilerInternalNoAnnotation,
     SchemaCompilerInternalContainer, SchemaCompilerInternalDefinesAll,
@@ -348,7 +343,6 @@ DEFINE_STEP_WITH_VALUE(Assertion, Unique, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Assertion, Divisible, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, StringType, SchemaCompilerValueStringType)
 DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
-DEFINE_STEP_WITH_VALUE(Annotation, Private, SchemaCompilerValueJSON)
 DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueNone)
@@ -370,53 +364,63 @@ DEFINE_CONTROL(Jump)
 #undef DEFINE_CONTROL
 #endif
 
+/// @ingroup jsonschema
+/// The schema compiler context is the current subschema information you have at
+/// your disposal to implement a keyword
+struct SchemaCompilerSchemaContext {
+  /// The schema location relative to the base URI
+  const Pointer &relative_pointer;
+  /// The current subschema
+  const JSON &schema;
+  /// The schema vocabularies in use
+  const std::map<std::string, bool> &vocabularies;
+  /// The schema base URI
+  const URI &base;
+  /// The set of labels registered so far
+  std::set<std::size_t> labels;
+};
+
+/// @ingroup jsonschema
+/// The dynamic compiler context is the read-write information you have at your
+/// disposal to implement a keyword
+struct SchemaCompilerDynamicContext {
+  /// The schema keyword
+  const std::string &keyword;
+  /// The schema base keyword path
+  const Pointer &base_schema_location;
+  /// The base instance location that the keyword must be evaluated to
+  const Pointer &base_instance_location;
+};
+
 #if !defined(DOXYGEN)
 struct SchemaCompilerContext;
 #endif
 
 /// @ingroup jsonschema
-/// A compiler is represented as a function that maps a keyword compiler context
-/// into a compiler template. You can provide your own to implement your own
-/// keywords
-using SchemaCompiler =
-    std::function<SchemaCompilerTemplate(const SchemaCompilerContext &)>;
+/// A compiler is represented as a function that maps a keyword compiler
+/// contexts into a compiler template. You can provide your own to implement
+/// your own keywords
+using SchemaCompiler = std::function<SchemaCompilerTemplate(
+    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
+    const SchemaCompilerDynamicContext &)>;
 
 /// @ingroup jsonschema
-/// The compiler context is the information you have at your disposal to
-/// implement a keyword
+/// The static compiler context is the information you have at your
+/// disposal to implement a keyword that will never change throughout
+/// the compilation process
 struct SchemaCompilerContext {
-  /// The schema keyword
-  const std::string keyword;
-  /// The current subschema
-  const JSON &schema;
-  /// The schema vocabularies in use
-  const std::map<std::string, bool> &vocabularies;
-  /// The value of the keyword
-  const JSON &value;
   /// The root schema resource
   const JSON &root;
-  /// The schema base URI
-  const URI base;
-  /// The schema location relative to the base URI
-  const Pointer relative_pointer;
-  /// The schema base keyword path
-  const Pointer base_schema_location;
-  /// The base instance location that the keyword must be evaluated to
-  const Pointer base_instance_location;
-  /// The set of labels registered so far
-  const std::set<std::size_t> labels;
   /// The reference frame of the entire schema
   const ReferenceFrame &frame;
   /// The references of the entire schema
   const ReferenceMap &references;
   /// The schema walker in use
-  const SchemaWalker walker;
+  const SchemaWalker &walker;
   /// The schema resolver in use
-  const SchemaResolver resolver;
+  const SchemaResolver &resolver;
   /// The schema compiler in use
-  const SchemaCompiler compiler;
-  /// The default dialect of the schema
-  const std::optional<std::string> &default_dialect;
+  const SchemaCompiler &compiler;
 };
 
 /// @ingroup jsonschema
@@ -431,10 +435,16 @@ enum class SchemaCompilerEvaluationMode {
 };
 
 /// @ingroup jsonschema
+/// Represents the state of a step evaluation
+enum class SchemaCompilerEvaluationType { Pre, Post };
+
+/// @ingroup jsonschema
 /// A callback of this type is invoked after evaluating any keyword. The
 /// arguments go as follows:
 ///
-/// - Whether the evaluation was successful or not
+/// - The stage at which the step in question is
+/// - Whether the evaluation was successful or not (always true before
+/// evaluation)
 /// - The step that was just evaluated
 /// - The evaluation path
 /// - The instance location
@@ -443,7 +453,8 @@ enum class SchemaCompilerEvaluationMode {
 ///
 /// You can use this callback mechanism to implement arbitrary output formats.
 using SchemaCompilerEvaluationCallback = std::function<void(
-    bool, const SchemaCompilerTemplate::value_type &, const Pointer &,
+    const SchemaCompilerEvaluationType, bool,
+    const SchemaCompilerTemplate::value_type &, const Pointer &,
     const Pointer &, const JSON &, const JSON &)>;
 
 /// @ingroup jsonschema
@@ -544,7 +555,8 @@ evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
 /// A default compiler that aims to implement every keyword for official JSON
 /// Schema dialects.
 auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT default_schema_compiler(
-    const SchemaCompilerContext &) -> SchemaCompilerTemplate;
+    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
+    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate;
 
 /// @ingroup jsonschema
 ///
@@ -583,7 +595,10 @@ compile(const JSON &schema, const SchemaWalker &walker,
 /// directly, but instead as a building block for supporting applicators on
 /// compiler functions.
 auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-compile(const SchemaCompilerContext &context, const Pointer &schema_suffix,
+compile(const SchemaCompilerContext &context,
+        const SchemaCompilerSchemaContext &schema_context,
+        const SchemaCompilerDynamicContext &dynamic_context,
+        const Pointer &schema_suffix,
         const Pointer &instance_suffix = empty_pointer,
         const std::optional<std::string> &uri = std::nullopt)
     -> SchemaCompilerTemplate;

@@ -722,42 +722,6 @@ TEST(JSONSchema_compile_json, public_annotation_without_condition) {
   EXPECT_EQ(result, expected);
 }
 
-TEST(JSONSchema_compile_json, private_annotation_without_condition) {
-  using namespace sourcemeta::jsontoolkit;
-
-  const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPrivate{
-      {SchemaCompilerTargetType::Instance, {"foo"}},
-      Pointer{"test"},
-      Pointer{},
-      "#/test",
-      JSON{5},
-      {}}};
-
-  const JSON result{to_json(steps)};
-  const JSON expected{parse(R"EOF([
-    {
-      "category": "annotation",
-      "type": "private",
-      "relativeSchemaLocation": "/test",
-      "relativeInstanceLocation": "",
-      "absoluteKeywordLocation": "#/test",
-      "target": {
-        "category": "target",
-        "location": "/foo",
-        "type": "instance"
-      },
-      "value": {
-        "category": "value",
-        "type": "json",
-        "value": 5
-      },
-      "condition": []
-    }
-  ])EOF")};
-
-  EXPECT_EQ(result, expected);
-}
-
 TEST(JSONSchema_compile_json, public_annotation_with_condition) {
   using namespace sourcemeta::jsontoolkit;
 
@@ -782,69 +746,6 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
     {
       "category": "annotation",
       "type": "public",
-      "relativeSchemaLocation": "/test",
-      "relativeInstanceLocation": "",
-      "absoluteKeywordLocation": "#/test",
-      "target": {
-        "category": "target",
-        "location": "/foo",
-        "type": "instance"
-      },
-      "value": {
-        "category": "value",
-        "type": "json",
-        "value": 5
-      },
-      "condition": [
-        {
-          "category": "assertion",
-          "type": "type-strict",
-          "relativeSchemaLocation": "",
-          "relativeInstanceLocation": "",
-          "absoluteKeywordLocation": "#",
-          "target": {
-            "category": "target",
-            "location": "",
-            "type": "instance"
-          },
-          "value": {
-            "category": "value",
-            "type": "type",
-            "value": "object"
-          },
-          "condition": []
-        }
-      ]
-    }
-  ])EOF")};
-
-  EXPECT_EQ(result, expected);
-}
-
-TEST(JSONSchema_compile_json, private_annotation_with_condition) {
-  using namespace sourcemeta::jsontoolkit;
-
-  const SchemaCompilerTemplate condition{SchemaCompilerAssertionTypeStrict{
-      {SchemaCompilerTargetType::Instance, {}},
-      Pointer{},
-      Pointer{},
-      "#",
-      SchemaCompilerValueType{JSON::Type::Object},
-      {}}};
-
-  const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPrivate{
-      {SchemaCompilerTargetType::Instance, {"foo"}},
-      Pointer{"test"},
-      Pointer{},
-      "#/test",
-      JSON{5},
-      condition}};
-
-  const JSON result{to_json(steps)};
-  const JSON expected{parse(R"EOF([
-    {
-      "category": "annotation",
-      "type": "private",
       "relativeSchemaLocation": "/test",
       "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/test",
