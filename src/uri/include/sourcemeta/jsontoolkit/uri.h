@@ -153,8 +153,7 @@ public:
   /// const sourcemeta::jsontoolkit::URI
   /// uri{"https://www.sourcemeta.com/foo/bar"};
   /// assert(uri.path().has_value());
-  /// assert(uri.path().value().at(0) == "foo");
-  /// assert(uri.path().value().at(1) == "bar");
+  /// assert(uri.path().value() == "/foo/bar");
   /// ```
   [[nodiscard]] auto path() const -> std::optional<std::string>;
 
