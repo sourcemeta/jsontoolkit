@@ -320,7 +320,7 @@ auto URI::recompose_without_fragment() const -> std::optional<std::string> {
   // Path
   const auto result_path{this->path()};
   if (result_path.has_value()) {
-    if (!this->is_urn() && !this->is_tag()) {
+    if (!this->is_urn() && !this->is_tag() && this->scheme().has_value()) {
       result << '/';
     }
     result << result_path.value();
