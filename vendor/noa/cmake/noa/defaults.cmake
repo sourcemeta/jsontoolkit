@@ -41,6 +41,23 @@ endif()
 # It is very useful for IDE integration, linting, etc
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Enable IPO/LTO to help the compiler optimize across modules.
+# Only do so in release, given these optimizations can significantly
+# increase build times.
+# See: https://cmake.org/cmake/help/latest/module/CheckIPOSupported.html
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT ipo_supported OUTPUT ipo_supported_error)
+  if(ipo_supported)
+    message(STATUS "Enabling IPO")
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+  else()
+    message(WARNING "IPO not supported: ${ipo_supported_error}")
+  endif()
+  unset(ipo_supported)
+  unset(ipo_supported_error)
+endif()
+
 # Prevent DT_RPATH/DT_RUNPATH problem
 # This problem is not present on Apple platforms.
 # See https://www.youtube.com/watch?v=m0DwB4OvDXk

@@ -76,6 +76,11 @@ function(noa_library)
         FOLDER "${NOA_LIBRARY_FOLDER}")
   endif()
 
+  # TODO: https://github.com/android/ndk/issues/242
+  if(NOA_COMPILER_LLVM AND UNIX AND NOT APPLE)
+    target_link_options(${TARGET_NAME} PUBLIC "-fuse-ld=gold")
+  endif()
+
   if(NOA_LIBRARY_SOURCES)
     include(GenerateExportHeader)
     generate_export_header(${TARGET_NAME}
