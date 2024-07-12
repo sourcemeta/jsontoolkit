@@ -142,7 +142,15 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 2);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
+  EXPECT_STATIC_REFERENCE(references, "/$defs/foo/$schema",
+                          "http://json-schema.org/draft-04/schema",
+                          "http://json-schema.org/draft-04/schema",
+                          std::nullopt);
 }
 
 TEST(JSONSchema_frame, no_id) {
@@ -223,7 +231,11 @@ TEST(JSONSchema_frame, no_id) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame, no_id_with_default) {
@@ -264,7 +276,11 @@ TEST(JSONSchema_frame, no_id_with_default) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame, anchor_on_absolute_subid) {
@@ -343,7 +359,11 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame, uri_iterators) {
@@ -389,7 +409,11 @@ TEST(JSONSchema_frame, uri_iterators) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame, reference_frame_static) {
@@ -466,7 +490,11 @@ TEST(JSONSchema_frame, no_refs) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame, refs_with_id) {
@@ -498,7 +526,10 @@ TEST(JSONSchema_frame, refs_with_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(references.size(), 4);
+  EXPECT_EQ(references.size(), 5);
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
   EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref",
                           "https://www.sourcemeta.com/schema",
                           "https://www.sourcemeta.com/schema", std::nullopt);
@@ -542,7 +573,10 @@ TEST(JSONSchema_frame, refs_with_no_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(references.size(), 4);
+  EXPECT_EQ(references.size(), 5);
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
   EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref", "", std::nullopt,
                           std::nullopt);
   EXPECT_STATIC_REFERENCE(references, "/properties/bar/$ref",
@@ -571,7 +605,11 @@ TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame, remote_refs) {
@@ -592,7 +630,10 @@ TEST(JSONSchema_frame, remote_refs) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(references.size(), 3);
+  EXPECT_EQ(references.size(), 4);
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
   EXPECT_STATIC_REFERENCE(references, "/properties/foo/$ref",
                           "https://www.example.com", "https://www.example.com",
                           std::nullopt);

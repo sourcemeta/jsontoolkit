@@ -51,7 +51,11 @@ TEST(JSONSchema_frame_draft2, anonymous_with_nested_schema_resource) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "http://json-schema.org/draft-02/schema",
+      "http://json-schema.org/draft-02/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_draft2, empty_schema) {
@@ -85,7 +89,11 @@ TEST(JSONSchema_frame_draft2, empty_schema) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "http://json-schema.org/draft-02/schema",
+      "http://json-schema.org/draft-02/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_draft2, one_level_applicators_without_identifiers) {
@@ -142,7 +150,11 @@ TEST(JSONSchema_frame_draft2, one_level_applicators_without_identifiers) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "http://json-schema.org/draft-02/schema",
+      "http://json-schema.org/draft-02/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_draft2, one_level_applicators_with_identifiers) {
@@ -199,7 +211,11 @@ TEST(JSONSchema_frame_draft2, one_level_applicators_with_identifiers) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "http://json-schema.org/draft-02/schema",
+      "http://json-schema.org/draft-02/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_draft2, subschema_absolute_identifier) {
@@ -257,7 +273,11 @@ TEST(JSONSchema_frame_draft2, subschema_absolute_identifier) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "http://json-schema.org/draft-02/schema",
+      "http://json-schema.org/draft-02/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_draft2, id_override) {
@@ -311,7 +331,11 @@ TEST(JSONSchema_frame_draft2, explicit_argument_id_same) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "http://json-schema.org/draft-02/schema",
+      "http://json-schema.org/draft-02/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_draft2, explicit_argument_id_different) {
@@ -398,7 +422,11 @@ TEST(JSONSchema_frame_draft2, explicit_argument_id_different) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "http://json-schema.org/draft-02/schema",
+      "http://json-schema.org/draft-02/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_draft2, ref_metaschema) {
@@ -426,8 +454,11 @@ TEST(JSONSchema_frame_draft2, ref_metaschema) {
 
   // References
 
-  EXPECT_EQ(references.size(), 1);
+  EXPECT_EQ(references.size(), 2);
 
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "http://json-schema.org/draft-02/schema",
+      "http://json-schema.org/draft-02/schema", std::nullopt);
   EXPECT_STATIC_REFERENCE(
       references, "/$ref", "http://json-schema.org/draft-02/schema",
       "http://json-schema.org/draft-02/schema", std::nullopt);

@@ -61,6 +61,16 @@ static auto test_resolver(std::string_view identifier)
     promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
       "type": "integer"
     })JSON"));
+  } else if (identifier == "https://example.com/meta/1.json") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://example.com/meta/2.json",
+      "$id": "https://example.com/meta/1.json"
+    })JSON"));
+  } else if (identifier == "https://example.com/meta/2.json") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "$id": "https://example.com/meta/2.json"
+    })JSON"));
   } else {
     promise.set_value(
         sourcemeta::jsontoolkit::official_resolver(identifier).get());
@@ -507,6 +517,65 @@ TEST(JSONSchema_bundle_draft7, without_id) {
             "$ref": "#/definitions/https%3A~1~1www.sourcemeta.com~1recursive"
           }
         }
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_draft7, metaschema) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://example.com/meta/1.json",
+    "type": "string"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://example.com/meta/1.json",
+    "type": "string",
+    "definitions": {
+      "https://example.com/meta/1.json": {
+        "$schema": "https://example.com/meta/2.json",
+        "$id": "https://example.com/meta/1.json"
+      },
+      "https://example.com/meta/2.json": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$id": "https://example.com/meta/2.json"
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_draft7, metaschema_without_id) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://example.com/meta/1.json",
+    "type": "string"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "#/definitions/https%3A~1~1example.com~1meta~11.json",
+    "type": "string",
+    "definitions": {
+      "https://example.com/meta/1.json": {
+        "$schema": "#/definitions/https%3A~1~1example.com~1meta~12.json"
+      },
+      "https://example.com/meta/2.json": {
+        "$schema": "http://json-schema.org/draft-07/schema#"
       }
     }
   })JSON");

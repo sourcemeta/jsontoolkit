@@ -82,6 +82,18 @@ static auto test_resolver(std::string_view identifier)
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "string"
     })JSON"));
+  } else if (identifier == "https://example.com/meta/1.json") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://example.com/meta/2.json",
+      "$id": "https://example.com/meta/1.json",
+      "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
+    })JSON"));
+  } else if (identifier == "https://example.com/meta/2.json") {
+    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://example.com/meta/2.json",
+      "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
+    })JSON"));
   } else {
     promise.set_value(
         sourcemeta::jsontoolkit::official_resolver(identifier).get());
@@ -605,6 +617,69 @@ TEST(JSONSchema_bundle_2020_12, without_id_boolean_subschema) {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": true
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2020_12, metaschema) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://example.com/meta/1.json",
+    "type": "string"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://example.com/meta/1.json",
+    "type": "string",
+    "$defs": {
+      "https://example.com/meta/1.json": {
+        "$schema": "https://example.com/meta/2.json",
+        "$id": "https://example.com/meta/1.json",
+        "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
+      },
+      "https://example.com/meta/2.json": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://example.com/meta/2.json",
+        "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_bundle_2020_12, metaschema_without_id) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://example.com/meta/1.json",
+    "type": "string"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
+      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers)
+      .wait();
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "#/$defs/https%3A~1~1example.com~1meta~11.json",
+    "type": "string",
+    "$defs": {
+      "https://example.com/meta/1.json": {
+        "$schema": "#/$defs/https%3A~1~1example.com~1meta~12.json",
+        "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
+      },
+      "https://example.com/meta/2.json": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
+      }
     }
   })JSON");
 

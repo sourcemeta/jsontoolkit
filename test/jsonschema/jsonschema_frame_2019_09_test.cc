@@ -51,7 +51,11 @@ TEST(JSONSchema_frame_2019_09, anonymous_with_nested_schema_resource) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_2019_09, empty_schema) {
@@ -85,7 +89,11 @@ TEST(JSONSchema_frame_2019_09, empty_schema) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
@@ -142,7 +150,11 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
@@ -228,7 +240,11 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
@@ -287,7 +303,11 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_2019_09, nested_schemas) {
@@ -456,7 +476,11 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_2019_09, id_override) {
@@ -529,7 +553,11 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_same) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_2019_09, anchor_top_level) {
@@ -572,7 +600,11 @@ TEST(JSONSchema_frame_2019_09, anchor_top_level) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
@@ -706,7 +738,11 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
 
   // References
 
-  EXPECT_TRUE(references.empty());
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_2019_09, ref_metaschema) {
@@ -734,8 +770,11 @@ TEST(JSONSchema_frame_2019_09, ref_metaschema) {
 
   // References
 
-  EXPECT_EQ(references.size(), 1);
+  EXPECT_EQ(references.size(), 2);
 
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
   EXPECT_STATIC_REFERENCE(
       references, "/$ref", "https://json-schema.org/draft/2019-09/schema",
       "https://json-schema.org/draft/2019-09/schema", std::nullopt);
