@@ -9,6 +9,13 @@
 namespace internal {
 using namespace sourcemeta::jsontoolkit;
 
+auto compiler_2019_09_applicator_dependentschemas(
+    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
+    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
+  // TODO: Implement
+  return {};
+}
+
 auto compiler_2019_09_validation_dependentrequired(
     const SchemaCompilerContext &,
     const SchemaCompilerSchemaContext &schema_context,
@@ -42,6 +49,62 @@ auto compiler_2019_09_validation_dependentrequired(
   return {make<SchemaCompilerLogicalAnd>(
       schema_context, dynamic_context, SchemaCompilerValueNone{},
       std::move(children), type_condition(schema_context, JSON::Type::Object))};
+}
+
+auto compiler_2019_09_core_annotation(
+    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
+    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
+  // TODO: Implement
+  return {};
+}
+
+auto compiler_2019_09_applicator_contains(
+    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
+    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
+  // TODO: Implement
+  return {};
+}
+
+auto compiler_2019_09_applicator_additionalproperties(
+    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
+    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
+  // TODO: Implement
+  return {};
+}
+
+auto compiler_2019_09_applicator_items(
+    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
+    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
+  // TODO: Implement
+  return {};
+}
+
+auto compiler_2019_09_applicator_additionalitems(
+    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
+    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
+  // TODO: Implement
+  return {};
+}
+
+auto compiler_2019_09_applicator_unevaluateditems(
+    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
+    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
+  // TODO: Implement
+  return {};
+}
+
+auto compiler_2019_09_applicator_unevaluatedproperties(
+    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
+    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
+  // TODO: Implement
+  return {};
+}
+
+auto compiler_2019_09_core_recursiveref(
+    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
+    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
+  // TODO: Implement
+  return {};
 }
 
 } // namespace internal
