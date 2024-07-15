@@ -1,6 +1,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 #include <sourcemeta/jsontoolkit/jsonschema_error.h>
 
+#include "default_compiler_2019_09.h"
 #include "default_compiler_draft4.h"
 #include "default_compiler_draft6.h"
 #include "default_compiler_draft7.h"
@@ -55,6 +56,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // ********************************************
 
   // TODO: Implement the new keywords
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/validation",
+          "dependentRequired", compiler_2019_09_validation_dependentrequired);
 
   // Same as Draft 7
 
