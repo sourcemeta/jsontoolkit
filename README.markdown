@@ -4,7 +4,37 @@ JSON Toolkit is a swiss-army knife for [JSON](https://www.json.org) programming
 in modern C++. It comes with a built-in parser and growing support for
 standards such as [JSON Schema](http://json-schema.org), [JSON
 Pointer](https://www.rfc-editor.org/rfc/rfc6901),
-[JSONL](https://jsonlines.org), and more.
+[JSONL](https://jsonlines.org), and more. For example:
+
+```cpp
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonpointer.h>
+
+#include <sstream>
+#include <iostream>
+#include <stdlib>
+#include <utility>
+
+auto main() -> int {
+  // Parsing a JSON document from a string
+  sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(R"JSON({
+    "name": "John Doe",
+    "age": 20,
+    "address": "14 Manchester Road, Coventry CV77 1XN"
+  })JSON");
+
+  // Updating a property using JSON Pointer
+  const sourcemeta::jsontoolkit::Pointer pointer{"name"};
+  sourcemeta::jsontoolkit::JSON new_value{"Jane Doe"};
+  sourcemeta::jsontoolkit::set(document, pointer, std::move(new_value));
+
+  // Pretty-print result
+  sourcemeta::jsontoolkit::prettify(document, std::cout);
+  std::cout << "\n";
+
+  return EXIT_SUCCESS:
+}
+```
 
 ![Supported Dialects](https://img.shields.io/endpoint?url=https%3A%2F%2Fbowtie.report%2Fbadges%2Fc%2B%2B-jsontoolkit%2Fsupported_versions.json)
 ![Draft 7](https://img.shields.io/endpoint?url=https%3A%2F%2Fbowtie.report%2Fbadges%2Fc%2B%2B-jsontoolkit%2Fcompliance%2Fdraft7.json)
