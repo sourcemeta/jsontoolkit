@@ -638,6 +638,37 @@ compile(const SchemaCompilerContext &context,
 auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 to_json(const SchemaCompilerTemplate &steps) -> JSON;
 
+/// @ingroup jsonschema
+///
+/// An opinionated key comparison for printing JSON Schema compiler templates
+/// with sourcemeta::jsontoolkit::prettify or
+/// sourcemeta::jsontoolkit::stringify. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonschema.h>
+/// #include <iostream>
+///
+/// const sourcemeta::jsontoolkit::JSON schema =
+///     sourcemeta::jsontoolkit::parse(R"JSON({
+///   "$schema": "https://json-schema.org/draft/2020-12/schema",
+///   "type": "string"
+/// })JSON");
+///
+/// const auto schema_template{sourcemeta::jsontoolkit::compile(
+///     schema, sourcemeta::jsontoolkit::default_schema_walker,
+///     sourcemeta::jsontoolkit::official_resolver,
+///     sourcemeta::jsontoolkit::default_schema_compiler)};
+///
+/// const sourcemeta::jsontoolkit::JSON result{
+///     sourcemeta::jsontoolkit::to_json(schema_template)};
+///
+/// sourcemeta::jsontoolkit::prettify(result, std::cout,
+/// compiler_template_format_compare); std::cout << "\n";
+/// ```
+auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT compiler_template_format_compare(
+    const JSON::String &left, const JSON::String &right) -> bool;
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif
