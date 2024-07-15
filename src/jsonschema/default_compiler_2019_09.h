@@ -66,10 +66,51 @@ auto compiler_2019_09_applicator_contains(
 }
 
 auto compiler_2019_09_applicator_additionalproperties(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
-  // TODO: Implement
-  return {};
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  // Evaluate the subschema against the current property if it
+  // was NOT collected as an annotation on either "properties" or
+  // "patternProperties"
+  SchemaCompilerTemplate conjunctions{
+      make<SchemaCompilerInternalNoAnnotation>(
+          schema_context, relative_dynamic_context,
+          SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                               empty_pointer},
+          {}, SchemaCompilerTargetType::ParentAdjacentAnnotations,
+          Pointer{"properties"}),
+
+      make<SchemaCompilerInternalNoAnnotation>(
+          schema_context, relative_dynamic_context,
+          SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                               empty_pointer},
+          {}, SchemaCompilerTargetType::ParentAdjacentAnnotations,
+          Pointer{"patternProperties"}),
+  };
+
+  SchemaCompilerTemplate children{compile(context, schema_context,
+                                          relative_dynamic_context,
+                                          empty_pointer, empty_pointer)};
+
+  children.push_back(make<SchemaCompilerAnnotationPublic>(
+      schema_context, relative_dynamic_context,
+      SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                           empty_pointer},
+      {}, SchemaCompilerTargetType::InstanceParent));
+
+  SchemaCompilerTemplate wrapper{make<SchemaCompilerInternalContainer>(
+      schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+      std::move(children),
+      {make<SchemaCompilerLogicalAnd>(
+          schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+          std::move(conjunctions), SchemaCompilerTemplate{})})};
+
+  return {make<SchemaCompilerLoopProperties>(
+      schema_context, dynamic_context, true, {std::move(wrapper)},
+      {make<SchemaCompilerAssertionTypeStrict>(
+          schema_context, relative_dynamic_context, JSON::Type::Object, {},
+          SchemaCompilerTargetType::Instance)})};
 }
 
 auto compiler_2019_09_applicator_items(
