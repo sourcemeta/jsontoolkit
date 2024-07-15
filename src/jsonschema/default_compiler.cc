@@ -55,9 +55,26 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // 2019-09
   // ********************************************
 
-  // TODO: Implement the new keywords
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/core", "$recursiveRef",
+          compiler_2019_09_core_recursiveref);
   COMPILE("https://json-schema.org/draft/2019-09/vocab/validation",
           "dependentRequired", compiler_2019_09_validation_dependentrequired);
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator",
+          "dependentSchemas", compiler_2019_09_applicator_dependentschemas);
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator", "contains",
+          compiler_2019_09_applicator_contains);
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator",
+          "unevaluatedItems", compiler_2019_09_applicator_unevaluateditems);
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator",
+          "unevaluatedProperties",
+          compiler_2019_09_applicator_unevaluatedproperties);
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator", "items",
+          compiler_2019_09_applicator_items);
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator",
+          "additionalItems", compiler_2019_09_applicator_additionalitems);
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator",
+          "additionalProperties",
+          compiler_2019_09_applicator_additionalproperties);
 
   // Same as Draft 7
 
@@ -365,6 +382,13 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
 #undef COMPILE
 #undef STOP_IF_SIBLING_KEYWORD
 
-  // TODO: Collect unknown keywords as annotations starting in 2019-09
+  if (schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/core") ||
+      schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2019-09/vocab/core")) {
+    return internal::compiler_2019_09_core_annotation(context, schema_context,
+                                                      dynamic_context);
+  }
+
   return {};
 }
