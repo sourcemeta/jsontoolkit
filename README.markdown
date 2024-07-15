@@ -4,41 +4,35 @@ JSON Toolkit is a swiss-army knife for [JSON](https://www.json.org) programming
 in modern C++. It comes with a built-in parser and growing support for
 standards such as [JSON Schema](http://json-schema.org), [JSON
 Pointer](https://www.rfc-editor.org/rfc/rfc6901),
-[JSONL](https://jsonlines.org), and more.
-
-Example
+[JSONL](https://jsonlines.org), and more. For example:
 
 ```cpp
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
+
 #include <sstream>
 #include <iostream>
+#include <stdlib>
+#include <utility>
 
-int main()  {
-    // Creating JSON using parse
-    sourcemeta::jsontoolkit::JSON document =
-        sourcemeta::jsontoolkit::parse(R"JSON({
-            "name": "John Doe",
-            "age": 20,
-            "address": "zxy"
-        })JSON");
+auto main() -> int {
+  // Parsing a JSON document from a string
+  sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(R"JSON({
+    "name": "John Doe",
+    "age": 20,
+    "address": "14 Manchester Road, Coventry CV77 1XN"
+  })JSON");
 
-    // JSON pointer for the name property
-    const sourcemeta::jsontoolkit::Pointer name_pointer{"name"};
-    // A new JSON document for the name
-    const sourcemeta::jsontoolkit::JSON name_value{"Johnny Doe"};
-    // Updating the value of the name using JSON pointer
-    sourcemeta::jsontoolkit::set(document, name_pointer, name_value);
-    sourcemeta::jsontoolkit::prettify(document, std::cout);
-    std::cout<<"\n";
+  // Updating a property using JSON Pointer
+  const sourcemeta::jsontoolkit::Pointer pointer{"name"};
+  sourcemeta::jsontoolkit::JSON new_value{"Jane Doe"};
+  sourcemeta::jsontoolkit::set(document, pointer, std::move(new_value));
 
-    // The above program will print the following to standard output:
-    //output :
-    //    {
-    //       "address": "zxy_with_bar",
-    //       "age": 21,
-    //       "name": "xyz_with_foo"
-    //    }
+  // Pretty-print result
+  sourcemeta::jsontoolkit::prettify(document, std::cout);
+  std::cout << "\n";
+
+  return EXIT_SUCCESS:
 }
 ```
 
@@ -58,5 +52,3 @@ long the outcome is distributed under the same license. Otherwise, you must
 obtain a [commercial license](./LICENSE-COMMERCIAL) that removes such
 restrictions. Read more about our licensing approach
 [here](https://www.sourcemeta.com/licensing/).
-
-
