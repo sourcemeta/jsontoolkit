@@ -204,7 +204,7 @@
   EVALUATE_WITH_TRACE(Exhaustive, schema_template, instance, count)            \
   EXPECT_TRUE(result);
 
-#define EVALUATE_WITH_TRACE_EXHAUSITVE_FAILURE(schema_template, instance,      \
+#define EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(schema_template, instance,      \
                                                count)                          \
   EVALUATE_WITH_TRACE(Exhaustive, schema_template, instance, count)            \
   EXPECT_FALSE(result);
