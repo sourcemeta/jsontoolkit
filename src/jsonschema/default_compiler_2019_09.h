@@ -75,10 +75,14 @@ auto compiler_2019_09_validation_dependentrequired(
 }
 
 auto compiler_2019_09_core_annotation(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
-  // TODO: Implement
-  return {};
+    const SchemaCompilerContext &,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  return {make<SchemaCompilerAnnotationPublic>(
+      schema_context, dynamic_context,
+      schema_context.schema.at(dynamic_context.keyword), {},
+      SchemaCompilerTargetType::Instance)};
 }
 
 auto compiler_2019_09_applicator_contains(
