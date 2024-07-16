@@ -172,10 +172,95 @@ auto compiler_2019_09_applicator_additionalproperties(
 }
 
 auto compiler_2019_09_applicator_items(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
-  // TODO: Implement
-  return {};
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  if (is_schema(schema_context.schema.at(dynamic_context.keyword))) {
+    SchemaCompilerTemplate children;
+    children.push_back(make<SchemaCompilerLoopItems>(
+        schema_context, relative_dynamic_context,
+        SchemaCompilerValueUnsignedInteger{0},
+        compile(context, schema_context, relative_dynamic_context,
+                empty_pointer, empty_pointer),
+        SchemaCompilerTemplate{}));
+    children.push_back(make<SchemaCompilerAnnotationPublic>(
+        schema_context, relative_dynamic_context, JSON{true}, {},
+        SchemaCompilerTargetType::Instance));
+
+    return {make<SchemaCompilerInternalContainer>(
+        schema_context, dynamic_context, SchemaCompilerValueNone{},
+        std::move(children),
+        {make<SchemaCompilerAssertionTypeStrict>(
+            schema_context, relative_dynamic_context, JSON::Type::Array, {},
+            SchemaCompilerTargetType::Instance)})};
+  }
+
+  assert(schema_context.schema.at(dynamic_context.keyword).is_array());
+  const auto items_size{
+      schema_context.schema.at(dynamic_context.keyword).size()};
+  if (items_size == 0) {
+    return {};
+  }
+
+  // The idea here is to precompile all possibilities depending on the size
+  // of the instance array up to the size of the `items` keyword array.
+  // For example, if `items` is set to `[ {}, {}, {} ]`, we create 3
+  // conjunctions:
+  // - [ {}, {}, {} ] if the instance array size is >= 3
+  // - [ {}, {} ] if the instance array size is == 2
+  // - [ {} ] if the instance array size is == 1
+
+  // Precompile subschemas
+  std::vector<SchemaCompilerTemplate> subschemas;
+  subschemas.reserve(items_size);
+  const auto &array{
+      schema_context.schema.at(dynamic_context.keyword).as_array()};
+  for (auto iterator{array.cbegin()}; iterator != array.cend(); ++iterator) {
+    subschemas.push_back(compile(context, schema_context,
+                                 relative_dynamic_context, {subschemas.size()},
+                                 {subschemas.size()}));
+  }
+
+  SchemaCompilerTemplate children;
+  for (std::size_t cursor = items_size; cursor > 0; cursor--) {
+    SchemaCompilerTemplate subchildren;
+    for (std::size_t index = 0; index < cursor; index++) {
+      for (const auto &substep : subschemas.at(index)) {
+        subchildren.push_back(substep);
+      }
+    }
+
+    // The first entry
+    if (cursor == items_size) {
+      subchildren.push_back(make<SchemaCompilerAnnotationPublic>(
+          schema_context, relative_dynamic_context, JSON{true}, {},
+          SchemaCompilerTargetType::Instance));
+      children.push_back(make<SchemaCompilerInternalContainer>(
+          schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+          std::move(subchildren),
+          {make<SchemaCompilerAssertionSizeGreater>(
+              schema_context, relative_dynamic_context, cursor - 1, {},
+              SchemaCompilerTargetType::Instance)}));
+    } else {
+      subchildren.push_back(make<SchemaCompilerAnnotationPublic>(
+          schema_context, relative_dynamic_context, JSON{cursor - 1}, {},
+          SchemaCompilerTargetType::Instance));
+      children.push_back(make<SchemaCompilerInternalContainer>(
+          schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+          std::move(subchildren),
+          {make<SchemaCompilerAssertionSizeEqual>(
+              schema_context, relative_dynamic_context, cursor, {},
+              SchemaCompilerTargetType::Instance)}));
+    }
+  }
+
+  return {make<SchemaCompilerLogicalAnd>(
+      schema_context, dynamic_context, SchemaCompilerValueNone{},
+      std::move(children),
+      {make<SchemaCompilerAssertionTypeStrict>(
+          schema_context, relative_dynamic_context, JSON::Type::Array, {},
+          SchemaCompilerTargetType::Instance)})};
 }
 
 auto compiler_2019_09_applicator_additionalitems(

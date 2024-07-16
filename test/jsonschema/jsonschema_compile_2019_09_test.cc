@@ -1268,3 +1268,286 @@ TEST(JSONSchema_compile_2019_09, unknown_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(0, "Emit an annotation");
 }
+
+TEST(JSONSchema_compile_2019_09, items_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": {
+      "type": "string"
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
+TEST(JSONSchema_compile_2019_09, items_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": {
+      "type": "string"
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/2");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(4, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/2");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(4, "/items", "#/items", "", true);
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(3, "Loop over the items of the target array");
+  EVALUATE_TRACE_POST_DESCRIBE(4, "Emit an annotation");
+}
+
+TEST(JSONSchema_compile_2019_09, items_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": {
+      "type": "string"
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", 5, \"baz\" ]")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/1");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/0");
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/1");
+  EVALUATE_TRACE_POST_FAILURE(2, LoopItems, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(2, "Loop over the items of the target array");
+}
+
+TEST(JSONSchema_compile_2019_09, items_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "string" } ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
+TEST(JSONSchema_compile_2019_09, items_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "integer" }, { "type": "boolean" } ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target is expected to match all of the given assertions");
+}
+
+TEST(JSONSchema_compile_2019_09, items_6) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "integer" }, { "type": "boolean" } ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 5 ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", 0);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+}
+
+TEST(JSONSchema_compile_2019_09, items_7) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "integer" }, { "type": "boolean" } ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 5, true, \"extra\" ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
+                     "/1");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
+                              "#/items/1/type", "/1");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+}
+
+TEST(JSONSchema_compile_2019_09, items_8) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "integer" }, { "type": "boolean" } ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 5, 1, \"extra\" ]")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
+                     "/1");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/items/1/type",
+                              "#/items/1/type", "/1");
+  EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+}
+
+TEST(JSONSchema_compile_2019_09, items_9) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "integer" }, { "type": "boolean" } ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 5, true ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
+                     "/1");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
+                              "#/items/1/type", "/1");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+}
