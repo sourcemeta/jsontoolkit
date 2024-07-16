@@ -10,10 +10,33 @@ namespace internal {
 using namespace sourcemeta::jsontoolkit;
 
 auto compiler_2019_09_applicator_dependentschemas(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
-  // TODO: Implement
-  return {};
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  assert(schema_context.schema.at(dynamic_context.keyword).is_object());
+  SchemaCompilerTemplate children;
+
+  for (const auto &entry :
+       schema_context.schema.at(dynamic_context.keyword).as_object()) {
+    if (!is_schema(entry.second)) {
+      continue;
+    }
+
+    if (!entry.second.is_boolean() || !entry.second.to_boolean()) {
+      children.push_back(make<SchemaCompilerInternalContainer>(
+          schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+          compile(context, schema_context, relative_dynamic_context,
+                  {entry.first}, empty_pointer),
+          {make<SchemaCompilerAssertionDefines>(
+              schema_context, relative_dynamic_context, entry.first, {},
+              SchemaCompilerTargetType::Instance)}));
+    }
+  }
+
+  return {make<SchemaCompilerLogicalAnd>(
+      schema_context, dynamic_context, SchemaCompilerValueNone{},
+      std::move(children), type_condition(schema_context, JSON::Type::Object))};
 }
 
 auto compiler_2019_09_validation_dependentrequired(
