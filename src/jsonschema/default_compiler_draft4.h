@@ -581,17 +581,19 @@ auto compiler_draft4_applicator_additionalitems(
                         ? schema_context.schema.at("items").size()
                         : 0};
 
+  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionTypeStrict>(
+      schema_context, dynamic_context, JSON::Type::Array, {},
+      SchemaCompilerTargetType::Instance)};
+  condition.push_back(make<SchemaCompilerAssertionSizeGreater>(
+      schema_context, dynamic_context, cursor, {},
+      SchemaCompilerTargetType::Instance));
+
   return {make<SchemaCompilerLoopItems>(
       schema_context, dynamic_context,
       SchemaCompilerValueUnsignedInteger{cursor},
       compile(context, schema_context, relative_dynamic_context, empty_pointer,
               empty_pointer),
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `array` already
-      {make<SchemaCompilerAssertionTypeStrict>(
-          schema_context, dynamic_context, JSON::Type::Array, {},
-          SchemaCompilerTargetType::Instance)})};
+      std::move(condition))};
 }
 
 auto compiler_draft4_applicator_dependencies(

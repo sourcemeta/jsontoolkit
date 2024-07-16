@@ -1954,22 +1954,19 @@ TEST(JSONSchema_compile_draft4, additionalItems_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ true, 5 ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
                      "/1");
-  EVALUATE_TRACE_PRE(3, LoopItems, "/additionalItems", "#/additionalItems", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
                               "#/items/1/type", "/1");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
-  EVALUATE_TRACE_POST_SUCCESS(3, LoopItems, "/additionalItems",
-                              "#/additionalItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       0, "The target document is expected to be of the given type");
@@ -1977,7 +1974,6 @@ TEST(JSONSchema_compile_draft4, additionalItems_3) {
       1, "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
       2, "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(3, "Loop over the items of the target array");
 }
 
 TEST(JSONSchema_compile_draft4, additionalItems_4) {
