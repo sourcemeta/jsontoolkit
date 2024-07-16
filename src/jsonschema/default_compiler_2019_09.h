@@ -264,10 +264,43 @@ auto compiler_2019_09_applicator_items(
 }
 
 auto compiler_2019_09_applicator_additionalitems(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
-  // TODO: Implement
-  return {};
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  assert(schema_context.schema.is_object());
+
+  // Nothing to do here
+  if (!schema_context.schema.defines("items") ||
+      schema_context.schema.at("items").is_object()) {
+    return {};
+  }
+
+  const auto cursor{(schema_context.schema.defines("items") &&
+                     schema_context.schema.at("items").is_array())
+                        ? schema_context.schema.at("items").size()
+                        : 0};
+
+  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionTypeStrict>(
+      schema_context, dynamic_context, JSON::Type::Array, {},
+      SchemaCompilerTargetType::Instance)};
+  condition.push_back(make<SchemaCompilerAssertionSizeGreater>(
+      schema_context, dynamic_context, cursor, {},
+      SchemaCompilerTargetType::Instance));
+
+  SchemaCompilerTemplate children{make<SchemaCompilerLoopItems>(
+      schema_context, relative_dynamic_context,
+      SchemaCompilerValueUnsignedInteger{cursor},
+      compile(context, schema_context, relative_dynamic_context, empty_pointer,
+              empty_pointer),
+      SchemaCompilerTemplate{})};
+  children.push_back(make<SchemaCompilerAnnotationPublic>(
+      schema_context, relative_dynamic_context, JSON{true}, {},
+      SchemaCompilerTargetType::Instance));
+
+  return {make<SchemaCompilerInternalContainer>(
+      schema_context, dynamic_context, SchemaCompilerValueNone{},
+      std::move(children), std::move(condition))};
 }
 
 auto compiler_2019_09_applicator_unevaluateditems(
