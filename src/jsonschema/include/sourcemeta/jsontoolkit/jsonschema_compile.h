@@ -161,6 +161,12 @@ struct SchemaCompilerAssertionSizeGreater;
 struct SchemaCompilerAssertionSizeLess;
 
 /// @ingroup jsonschema
+/// Represents a compiler assertion step that checks a given array, object, or
+/// string has a certain number of items, properties, or characters,
+/// respectively
+struct SchemaCompilerAssertionSizeEqual;
+
+/// @ingroup jsonschema
 /// Represents a compiler assertion step that checks the instance equals a given
 /// JSON document
 struct SchemaCompilerAssertionEqual;
@@ -283,12 +289,13 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionTypeAny, SchemaCompilerAssertionTypeStrict,
     SchemaCompilerAssertionTypeStrictAny, SchemaCompilerAssertionRegex,
     SchemaCompilerAssertionSizeGreater, SchemaCompilerAssertionSizeLess,
-    SchemaCompilerAssertionEqual, SchemaCompilerAssertionEqualsAny,
-    SchemaCompilerAssertionGreaterEqual, SchemaCompilerAssertionLessEqual,
-    SchemaCompilerAssertionGreater, SchemaCompilerAssertionLess,
-    SchemaCompilerAssertionUnique, SchemaCompilerAssertionDivisible,
-    SchemaCompilerAssertionStringType, SchemaCompilerAnnotationPublic,
-    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerAssertionSizeEqual, SchemaCompilerAssertionEqual,
+    SchemaCompilerAssertionEqualsAny, SchemaCompilerAssertionGreaterEqual,
+    SchemaCompilerAssertionLessEqual, SchemaCompilerAssertionGreater,
+    SchemaCompilerAssertionLess, SchemaCompilerAssertionUnique,
+    SchemaCompilerAssertionDivisible, SchemaCompilerAssertionStringType,
+    SchemaCompilerAnnotationPublic, SchemaCompilerLogicalOr,
+    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
     SchemaCompilerInternalAnnotation, SchemaCompilerInternalNoAnnotation,
     SchemaCompilerInternalContainer, SchemaCompilerInternalDefinesAll,
@@ -338,6 +345,7 @@ DEFINE_STEP_WITH_VALUE(Assertion, Regex, SchemaCompilerValueRegex)
 DEFINE_STEP_WITH_VALUE(Assertion, SizeGreater,
                        SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_WITH_VALUE(Assertion, SizeLess, SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_WITH_VALUE(Assertion, SizeEqual, SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_WITH_VALUE(Assertion, Equal, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, EqualsAny, SchemaCompilerValueArray)
 DEFINE_STEP_WITH_VALUE(Assertion, GreaterEqual, SchemaCompilerValueJSON)

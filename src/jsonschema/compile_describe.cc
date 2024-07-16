@@ -99,6 +99,10 @@ struct DescribeVisitor {
   operator()(const SchemaCompilerAssertionSizeLess &) const -> std::string {
     return "The target size is expected to be less than the given number";
   }
+  auto
+  operator()(const SchemaCompilerAssertionSizeEqual &) const -> std::string {
+    return "The target size is expected to be equal to the given number";
+  }
 
   auto operator()(const SchemaCompilerAssertionEqual &) const -> std::string {
     return "The target is expected to be equal to the given value";

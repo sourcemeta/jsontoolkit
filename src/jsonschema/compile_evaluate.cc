@@ -313,6 +313,16 @@ auto evaluate_step(
         context.resolve_target<JSON>(assertion.target, instance)};
     result = (target.is_array() || target.is_object() || target.is_string()) &&
              (target.size() < value);
+  } else if (std::holds_alternative<SchemaCompilerAssertionSizeEqual>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionSizeEqual>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    CALLBACK_PRE(context.instance_location());
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<JSON>(assertion.target, instance)};
+    result = (target.is_array() || target.is_object() || target.is_string()) &&
+             (target.size() == value);
   } else if (std::holds_alternative<SchemaCompilerAssertionEqual>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionEqual>(step)};
     context.push(assertion);
