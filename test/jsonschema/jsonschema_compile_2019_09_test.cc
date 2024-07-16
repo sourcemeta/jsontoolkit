@@ -1153,3 +1153,76 @@ TEST(JSONSchema_compile_2019_09, examples) {
 
   EVALUATE_TRACE_POST_DESCRIBE(0, "Emit an annotation");
 }
+
+TEST(JSONSchema_compile_2019_09, contentEncoding) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "contentEncoding": "base64"
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/contentEncoding",
+                                       "#/contentEncoding", "");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/contentEncoding",
+                                        "#/contentEncoding", "", "base64");
+
+  EVALUATE_TRACE_POST_DESCRIBE(0, "Emit an annotation");
+}
+
+TEST(JSONSchema_compile_2019_09, contentMediaType) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "contentMediaType": "application/json"
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/contentMediaType",
+                                       "#/contentMediaType", "");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
+      0, "/contentMediaType", "#/contentMediaType", "", "application/json");
+
+  EVALUATE_TRACE_POST_DESCRIBE(0, "Emit an annotation");
+}
+
+TEST(JSONSchema_compile_2019_09, contentSchema) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "contentSchema": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/contentSchema", "#/contentSchema",
+                                       "");
+
+  auto content_schema{sourcemeta::jsontoolkit::JSON::make_object()};
+  content_schema.assign("type", sourcemeta::jsontoolkit::JSON{"string"});
+
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/contentSchema", "#/contentSchema",
+                                        "", content_schema);
+
+  EVALUATE_TRACE_POST_DESCRIBE(0, "Emit an annotation");
+}
