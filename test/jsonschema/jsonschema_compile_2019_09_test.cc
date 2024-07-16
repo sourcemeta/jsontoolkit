@@ -99,6 +99,61 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_2) {
       0, "The target is expected to match all of the given assertions");
 }
 
+TEST(JSONSchema_compile_2019_09, dependentSchemas_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "dependentSchemas": {
+      "foo": { "required": [ "bar", "baz" ] },
+      "qux": { "required": [ "extra" ] }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
+TEST(JSONSchema_compile_2019_09, dependentSchemas_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "dependentSchemas": {
+      "foo": { "required": [ "bar", "baz" ] },
+      "qux": { "required": [ "extra" ] }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"qux\": 1, \"extra\": 2 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentSchemas", "#/dependentSchemas",
+                     "");
+  EVALUATE_TRACE_PRE(1, AssertionDefines, "/dependentSchemas/qux/required",
+                     "#/dependentSchemas/qux/required", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionDefines,
+                              "/dependentSchemas/qux/required",
+                              "#/dependentSchemas/qux/required", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/dependentSchemas",
+                              "#/dependentSchemas", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target object is expected to define the given property");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target is expected to match all of the given assertions");
+}
+
 TEST(JSONSchema_compile_2019_09, additionalProperties_1_fast) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
