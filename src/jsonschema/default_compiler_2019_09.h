@@ -82,10 +82,41 @@ auto compiler_2019_09_core_annotation(
 }
 
 auto compiler_2019_09_applicator_contains(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
-  // TODO: Implement
-  return {};
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+
+  std::size_t minimum{1};
+  if (schema_context.schema.defines("minContains") &&
+      schema_context.schema.at("minContains").is_integer() &&
+      schema_context.schema.at("minContains").is_positive() &&
+      schema_context.schema.at("minContains").to_integer() > 0) {
+    minimum = static_cast<std::size_t>(
+        schema_context.schema.at("minContains").to_integer());
+  }
+
+  std::optional<std::size_t> maximum;
+  if (schema_context.schema.defines("maxContains") &&
+      schema_context.schema.at("maxContains").is_integer() &&
+      schema_context.schema.at("maxContains").is_positive()) {
+    maximum = schema_context.schema.at("maxContains").to_integer();
+  }
+
+  if (maximum.has_value() && minimum > maximum.value()) {
+    return {make<SchemaCompilerAssertionFail>(
+        schema_context, dynamic_context, SchemaCompilerValueNone{}, {},
+        SchemaCompilerTargetType::Instance)};
+  }
+
+  return {make<SchemaCompilerLoopContains>(
+      schema_context, dynamic_context,
+      SchemaCompilerValueRange{minimum, maximum},
+      compile(context, schema_context, relative_dynamic_context, empty_pointer,
+              empty_pointer),
+      {make<SchemaCompilerAssertionTypeStrict>(
+          schema_context, relative_dynamic_context, JSON::Type::Array, {},
+          SchemaCompilerTargetType::Instance)})};
 }
 
 auto compiler_2019_09_applicator_additionalproperties(

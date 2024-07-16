@@ -454,3 +454,454 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_3_exhaustive) {
   EVALUATE_TRACE_POST_DESCRIBE(3,
                                "Loop over the properties of the target object");
 }
+
+TEST(JSONSchema_compile_2019_09, contains_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{2};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
+TEST(JSONSchema_compile_2019_09, contains_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, \"bar\", 3 ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/1");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, LoopContains, "/contains", "#/contains", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "A certain number of array items must satisfy the given constraints");
+}
+
+TEST(JSONSchema_compile_2019_09, contains_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/2");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/0");
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/1");
+  EVALUATE_TRACE_POST_FAILURE(2, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/2");
+  EVALUATE_TRACE_POST_FAILURE(3, LoopContains, "/contains", "#/contains", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "A certain number of array items must satisfy the given constraints");
+}
+
+TEST(JSONSchema_compile_2019_09, contains_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, LoopContains, "/contains", "#/contains", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "A certain number of array items must satisfy the given constraints");
+}
+
+TEST(JSONSchema_compile_2019_09, contains_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "minContains": 2,
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, \"bar\", \"baz\" ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/2");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/2");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopContains, "/contains", "#/contains", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "A certain number of array items must satisfy the given constraints");
+}
+
+TEST(JSONSchema_compile_2019_09, contains_6) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "minContains": 2,
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, \"foo\", \"bar\", \"baz\" ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/2");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/2");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopContains, "/contains", "#/contains", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "A certain number of array items must satisfy the given constraints");
+}
+
+TEST(JSONSchema_compile_2019_09, contains_7) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "minContains": 2,
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, \"foo\", 2 ]")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/2");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/1");
+  EVALUATE_TRACE_POST_FAILURE(2, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/2");
+  EVALUATE_TRACE_POST_FAILURE(3, LoopContains, "/contains", "#/contains", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "A certain number of array items must satisfy the given constraints");
+}
+
+TEST(JSONSchema_compile_2019_09, contains_8) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "maxContains": 2,
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, \"foo\", \"bar\" ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/2");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/2");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopContains, "/contains", "#/contains", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "A certain number of array items must satisfy the given constraints");
+}
+
+TEST(JSONSchema_compile_2019_09, contains_9) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "maxContains": 2,
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/2");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/2");
+  EVALUATE_TRACE_POST_FAILURE(3, LoopContains, "/contains", "#/contains", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "A certain number of array items must satisfy the given constraints");
+}
+
+TEST(JSONSchema_compile_2019_09, contains_10) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "minContains": 2,
+    "maxContains": 2,
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", 1 ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/2");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/1");
+  EVALUATE_TRACE_POST_FAILURE(2, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/2");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopContains, "/contains", "#/contains", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "A certain number of array items must satisfy the given constraints");
+}
+
+TEST(JSONSchema_compile_2019_09, contains_11) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "minContains": 2,
+    "maxContains": 2,
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/contains/type",
+                     "#/contains/type", "/2");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/contains/type",
+                              "#/contains/type", "/2");
+  EVALUATE_TRACE_POST_FAILURE(3, LoopContains, "/contains", "#/contains", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "A certain number of array items must satisfy the given constraints");
+}
+
+TEST(JSONSchema_compile_2019_09, contains_12) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "minContains": 3,
+    "maxContains": 2,
+    "contains": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionFail, "/contains", "#/contains", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionFail, "/contains", "#/contains", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(0, "Abort evaluation on failure");
+}

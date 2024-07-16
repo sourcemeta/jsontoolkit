@@ -727,6 +727,7 @@ auto evaluate_step(
     CALLBACK_PRE(context.instance_location());
     const auto &value{context.resolve_value(loop.value, instance)};
     const auto minimum{value.first};
+    assert(minimum > 0);
     const auto &maximum{value.second};
     assert(!maximum.has_value() || maximum.value() >= minimum);
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
@@ -755,7 +756,7 @@ auto evaluate_step(
           break;
         }
 
-        if (match_count > minimum) {
+        if (match_count >= minimum) {
           result = true;
 
           // Exceeding the lower bound when there is no upper bound
