@@ -400,3 +400,35 @@ TEST(JSONSchema_compile_draft7, content) {
   const sourcemeta::jsontoolkit::JSON instance{"test"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
+
+TEST(JSONSchema_compile_draft7, unknown_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "fooBar": "baz"
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
+TEST(JSONSchema_compile_draft7, unknown_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "x-test": 1
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
