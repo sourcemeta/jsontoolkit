@@ -200,6 +200,7 @@ struct StepVisitor {
   HANDLE_STEP("assertion", "regex", SchemaCompilerAssertionRegex)
   HANDLE_STEP("assertion", "size-greater", SchemaCompilerAssertionSizeGreater)
   HANDLE_STEP("assertion", "size-less", SchemaCompilerAssertionSizeLess)
+  HANDLE_STEP("assertion", "size-equal", SchemaCompilerAssertionSizeEqual)
   HANDLE_STEP("assertion", "equal", SchemaCompilerAssertionEqual)
   HANDLE_STEP("assertion", "greater-equal", SchemaCompilerAssertionGreaterEqual)
   HANDLE_STEP("assertion", "less-equal", SchemaCompilerAssertionLessEqual)
