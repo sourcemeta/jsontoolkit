@@ -147,7 +147,7 @@ public:
     if constexpr (std::is_same_v<SchemaCompilerValueJSON, T>) {
       if (std::holds_alternative<SchemaCompilerTarget>(value)) {
         const auto &target{std::get<SchemaCompilerTarget>(value)};
-        return this->resolve_target<JSON>(target, instance);
+        return this->resolve_target<T>(target, instance);
       }
     }
 
