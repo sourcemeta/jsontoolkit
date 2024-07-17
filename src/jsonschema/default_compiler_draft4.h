@@ -373,7 +373,7 @@ auto compiler_draft4_applicator_additionalproperties(
 
       // TODO: As an optimization, avoid this condition if the subschema does
       // not declare `properties`
-      make<SchemaCompilerInternalNoAnnotation>(
+      make<SchemaCompilerInternalNoAdjacentAnnotation>(
           schema_context, relative_dynamic_context,
           SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
                                empty_pointer},
@@ -382,7 +382,7 @@ auto compiler_draft4_applicator_additionalproperties(
 
       // TODO: As an optimization, avoid this condition if the subschema does
       // not declare `patternProperties`
-      make<SchemaCompilerInternalNoAnnotation>(
+      make<SchemaCompilerInternalNoAdjacentAnnotation>(
           schema_context, relative_dynamic_context,
           SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
                                empty_pointer},

@@ -529,8 +529,10 @@ auto evaluate_step(
     // We treat this step as transparent to the consumer
     context.pop();
     return result;
-  } else if (std::holds_alternative<SchemaCompilerInternalNoAnnotation>(step)) {
-    const auto &assertion{std::get<SchemaCompilerInternalNoAnnotation>(step)};
+  } else if (std::holds_alternative<SchemaCompilerInternalNoAdjacentAnnotation>(
+                 step)) {
+    const auto &assertion{
+        std::get<SchemaCompilerInternalNoAdjacentAnnotation>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion.condition, instance);
     const auto &value{context.resolve_value(assertion.value, instance)};

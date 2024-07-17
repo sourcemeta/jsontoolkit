@@ -31,9 +31,10 @@ struct DescribeVisitor {
   operator()(const SchemaCompilerInternalAnnotation &) const -> std::string {
     return "The target was annotated with the given value";
   }
-  auto
-  operator()(const SchemaCompilerInternalNoAnnotation &) const -> std::string {
-    return "The target was not annotated with the given value";
+  auto operator()(const SchemaCompilerInternalNoAdjacentAnnotation &) const
+      -> std::string {
+    return "The target was not annotated with the given value at the same "
+           "schema location";
   }
   auto
   operator()(const SchemaCompilerInternalDefinesAll &) const -> std::string {
