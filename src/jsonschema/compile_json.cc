@@ -217,7 +217,8 @@ struct StepVisitor {
   HANDLE_STEP("logical", "try", SchemaCompilerLogicalTry)
   HANDLE_STEP("logical", "not", SchemaCompilerLogicalNot)
   HANDLE_STEP("internal", "annotation", SchemaCompilerInternalAnnotation)
-  HANDLE_STEP("internal", "no-annotation", SchemaCompilerInternalNoAnnotation)
+  HANDLE_STEP("internal", "no-adjacent-annotation",
+              SchemaCompilerInternalNoAdjacentAnnotation)
   HANDLE_STEP("internal", "container", SchemaCompilerInternalContainer)
   HANDLE_STEP("internal", "defines-all", SchemaCompilerInternalDefinesAll)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)

@@ -132,14 +132,14 @@ auto compiler_2019_09_applicator_additionalproperties(
   // was NOT collected as an annotation on either "properties" or
   // "patternProperties"
   SchemaCompilerTemplate conjunctions{
-      make<SchemaCompilerInternalNoAnnotation>(
+      make<SchemaCompilerInternalNoAdjacentAnnotation>(
           schema_context, relative_dynamic_context,
           SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
                                empty_pointer},
           {}, SchemaCompilerTargetType::ParentAdjacentAnnotations,
           Pointer{"properties"}),
 
-      make<SchemaCompilerInternalNoAnnotation>(
+      make<SchemaCompilerInternalNoAdjacentAnnotation>(
           schema_context, relative_dynamic_context,
           SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
                                empty_pointer},
