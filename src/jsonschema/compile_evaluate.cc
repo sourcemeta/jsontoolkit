@@ -19,6 +19,7 @@ public:
   using Pointer = sourcemeta::jsontoolkit::Pointer;
   using JSON = sourcemeta::jsontoolkit::JSON;
   using Annotations = std::set<JSON>;
+  using InstanceAnnotations = std::map<Pointer, Annotations>;
   using Template = sourcemeta::jsontoolkit::SchemaCompilerTemplate;
   enum class TargetType { Value, Key };
 
@@ -173,7 +174,7 @@ private:
   std::set<JSON> values;
   // We don't use a pair for holding the two pointers for runtime
   // efficiency when resolving keywords like `unevaluatedProperties`
-  std::map<Pointer, std::map<Pointer, Annotations>> annotations_;
+  std::map<Pointer, InstanceAnnotations> annotations_;
   std::map<std::size_t, const std::reference_wrapper<const Template>> labels;
   TargetType target_type_ = TargetType::Value;
 };
