@@ -570,19 +570,18 @@ auto evaluate_step(
     const auto &target{
         context.resolve_target<EvaluationContext::InstanceAnnotations>(
             assertion.target, instance)};
-
-    // Otherwise this step becomes a no-op
-    assert(!assertion.data.empty());
-
     result = true;
-    for (const auto &[schema_location, annotations] : target) {
-      assert(!schema_location.empty());
-      const auto &keyword{schema_location.back()};
-      if (keyword.is_property() &&
-          assertion.data.contains(keyword.to_property()) &&
-          annotations.contains(value)) {
-        result = false;
-        break;
+
+    if (!assertion.data.empty()) {
+      for (const auto &[schema_location, annotations] : target) {
+        assert(!schema_location.empty());
+        const auto &keyword{schema_location.back()};
+        if (keyword.is_property() &&
+            assertion.data.contains(keyword.to_property()) &&
+            annotations.contains(value)) {
+          result = false;
+          break;
+        }
       }
     }
 
