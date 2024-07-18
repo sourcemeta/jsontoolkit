@@ -311,10 +311,43 @@ auto compiler_2019_09_applicator_unevaluateditems(
 }
 
 auto compiler_2019_09_applicator_unevaluatedproperties(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
-  // TODO: Implement
-  return {};
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  std::set<std::string> dependencies{"unevaluatedProperties"};
+  if (schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2019-09/vocab/applicator")) {
+    dependencies.emplace("properties");
+    dependencies.emplace("patternProperties");
+    dependencies.emplace("additionalProperties");
+  }
+
+  SchemaCompilerTemplate condition{make<SchemaCompilerInternalNoAnnotation>(
+      schema_context, relative_dynamic_context,
+      SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                           empty_pointer},
+      {}, SchemaCompilerTargetType::ParentAnnotations,
+      std::move(dependencies))};
+
+  SchemaCompilerTemplate children{compile(context, schema_context,
+                                          relative_dynamic_context,
+                                          empty_pointer, empty_pointer)};
+  children.push_back(make<SchemaCompilerAnnotationPublic>(
+      schema_context, relative_dynamic_context,
+      SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                           empty_pointer},
+      {}, SchemaCompilerTargetType::InstanceParent));
+
+  SchemaCompilerTemplate wrapper{make<SchemaCompilerInternalContainer>(
+      schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+      std::move(children), std::move(condition))};
+
+  return {make<SchemaCompilerLoopProperties>(
+      schema_context, dynamic_context, true, {std::move(wrapper)},
+      {make<SchemaCompilerAssertionTypeStrict>(
+          schema_context, relative_dynamic_context, JSON::Type::Object, {},
+          SchemaCompilerTargetType::Instance)})};
 }
 
 auto compiler_2019_09_core_recursiveref(
