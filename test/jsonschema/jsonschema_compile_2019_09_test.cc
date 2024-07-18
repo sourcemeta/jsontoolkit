@@ -1467,7 +1467,7 @@ TEST(JSONSchema_compile_2019_09, items_7) {
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
                               "#/items/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", 1);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -1695,7 +1695,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_4) {
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/items/1/type",
                               "#/items/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", 1);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/items", "#/items", "");
   EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict, "/additionalItems/type",
                               "#/additionalItems/type", "/2");
@@ -1754,7 +1754,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_5) {
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/items/1/type",
                               "#/items/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", 1);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/items", "#/items", "");
   EVALUATE_TRACE_POST_FAILURE(4, AssertionTypeStrict, "/additionalItems/type",
                               "#/additionalItems/type", "/2");

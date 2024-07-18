@@ -234,8 +234,18 @@ auto compiler_2019_09_applicator_items(
     // The first entry
     if (cursor == items_size) {
       subchildren.push_back(make<SchemaCompilerAnnotationPublic>(
-          schema_context, relative_dynamic_context, JSON{true}, {},
+          schema_context, relative_dynamic_context, JSON{true},
+          {make<SchemaCompilerAssertionSizeEqual>(
+              schema_context, relative_dynamic_context, cursor, {},
+              SchemaCompilerTargetType::Instance)},
           SchemaCompilerTargetType::Instance));
+      subchildren.push_back(make<SchemaCompilerAnnotationPublic>(
+          schema_context, relative_dynamic_context, JSON{cursor - 1},
+          {make<SchemaCompilerAssertionSizeGreater>(
+              schema_context, relative_dynamic_context, cursor, {},
+              SchemaCompilerTargetType::Instance)},
+          SchemaCompilerTargetType::Instance));
+
       children.push_back(make<SchemaCompilerInternalContainer>(
           schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
           std::move(subchildren),
