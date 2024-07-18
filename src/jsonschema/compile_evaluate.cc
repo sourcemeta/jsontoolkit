@@ -562,6 +562,33 @@ auto evaluate_step(
     // We treat this step as transparent to the consumer
     context.pop();
     return result;
+  } else if (std::holds_alternative<SchemaCompilerInternalNoAnnotation>(step)) {
+    const auto &assertion{std::get<SchemaCompilerInternalNoAnnotation>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion.condition, instance);
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<EvaluationContext::InstanceAnnotations>(
+            assertion.target, instance)};
+
+    // Otherwise this step becomes a no-op
+    assert(!assertion.data.empty());
+
+    result = true;
+    for (const auto &[schema_location, annotations] : target) {
+      assert(!schema_location.empty());
+      const auto &keyword{schema_location.back()};
+      if (keyword.is_property() &&
+          assertion.data.contains(keyword.to_property()) &&
+          annotations.contains(value)) {
+        result = false;
+        break;
+      }
+    }
+
+    // We treat this step as transparent to the consumer
+    context.pop();
+    return result;
   } else if (std::holds_alternative<SchemaCompilerInternalContainer>(step)) {
     const auto &container{std::get<SchemaCompilerInternalContainer>(step)};
     assert(std::holds_alternative<SchemaCompilerValueNone>(container.value));

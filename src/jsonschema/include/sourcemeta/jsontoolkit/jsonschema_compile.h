@@ -250,6 +250,11 @@ struct SchemaCompilerInternalAnnotation;
 struct SchemaCompilerInternalNoAdjacentAnnotation;
 
 /// @ingroup jsonschema
+/// Represents a hidden compiler assertion step that checks a certain
+/// annotation was not produced independently of the schema location
+struct SchemaCompilerInternalNoAnnotation;
+
+/// @ingroup jsonschema
 /// Represents a hidden conjunction compiler step
 struct SchemaCompilerInternalContainer;
 
@@ -301,7 +306,8 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
     SchemaCompilerInternalAnnotation,
-    SchemaCompilerInternalNoAdjacentAnnotation, SchemaCompilerInternalContainer,
+    SchemaCompilerInternalNoAdjacentAnnotation,
+    SchemaCompilerInternalNoAnnotation, SchemaCompilerInternalContainer,
     SchemaCompilerInternalDefinesAll, SchemaCompilerLoopProperties,
     SchemaCompilerLoopKeys, SchemaCompilerLoopItems, SchemaCompilerLoopContains,
     SchemaCompilerControlLabel, SchemaCompilerControlJump>>;
@@ -315,6 +321,17 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const std::string keyword_location;                                        \
     const SchemaCompilerStepValue<type> value;                                 \
     const SchemaCompilerTemplate condition;                                    \
+  };
+
+#define DEFINE_STEP_WITH_VALUE_AND_DATA(category, name, type, data_type)       \
+  struct SchemaCompiler##category##name {                                      \
+    const SchemaCompilerTarget target;                                         \
+    const Pointer relative_schema_location;                                    \
+    const Pointer relative_instance_location;                                  \
+    const std::string keyword_location;                                        \
+    const SchemaCompilerStepValue<type> value;                                 \
+    const SchemaCompilerTemplate condition;                                    \
+    const data_type data;                                                      \
   };
 
 #define DEFINE_STEP_APPLICATOR(category, name, type)                           \
@@ -366,6 +383,8 @@ DEFINE_STEP_APPLICATOR(Logical, Try, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Internal, Annotation, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Internal, NoAdjacentAnnotation, SchemaCompilerValueJSON)
+DEFINE_STEP_WITH_VALUE_AND_DATA(Internal, NoAnnotation, SchemaCompilerValueJSON,
+                                std::set<std::string>)
 DEFINE_STEP_APPLICATOR(Internal, Container, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Internal, DefinesAll, SchemaCompilerValueStrings)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueBoolean)
@@ -376,6 +395,7 @@ DEFINE_CONTROL(Label)
 DEFINE_CONTROL(Jump)
 
 #undef DEFINE_STEP_WITH_VALUE
+#undef DEFINE_STEP_WITH_VALUE_AND_DATA
 #undef DEFINE_STEP_APPLICATOR
 #undef DEFINE_CONTROL
 #endif

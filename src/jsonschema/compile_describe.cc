@@ -37,6 +37,10 @@ struct DescribeVisitor {
            "schema location";
   }
   auto
+  operator()(const SchemaCompilerInternalNoAnnotation &) const -> std::string {
+    return "The target was not annotated with the given value";
+  }
+  auto
   operator()(const SchemaCompilerInternalDefinesAll &) const -> std::string {
     return "The target object is expected to define all of the given "
            "properties";
