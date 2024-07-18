@@ -35,6 +35,9 @@ auto target_to_json(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target)
     case SchemaCompilerTargetType::ParentAnnotations:
       result.assign("type", JSON{"parent-annotations"});
       return result;
+    case SchemaCompilerTargetType::Annotations:
+      result.assign("type", JSON{"annotations"});
+      return result;
     default:
       // We should never get here
       assert(false);

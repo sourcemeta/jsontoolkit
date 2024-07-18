@@ -132,8 +132,12 @@ public:
         return this->annotations(this->instance_location(), schema_location);
       }
     } else if constexpr (std::is_same_v<InstanceAnnotations, T>) {
-      assert(target.first == SchemaCompilerTargetType::ParentAnnotations);
-      return this->annotations(this->instance_location().initial());
+      if (target.first == SchemaCompilerTargetType::ParentAnnotations) {
+        return this->annotations(this->instance_location().initial());
+      } else {
+        assert(target.first == SchemaCompilerTargetType::Annotations);
+        return this->annotations(this->instance_location());
+      }
     } else {
       static_assert(std::is_same_v<JSON, T>);
       switch (target.first) {
