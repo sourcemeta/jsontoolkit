@@ -135,6 +135,27 @@ auto value_to_json(const sourcemeta::jsontoolkit::SchemaCompilerStepValue<T>
   }
 }
 
+template <typename T>
+auto data_to_json(const T &data) -> sourcemeta::jsontoolkit::JSON {
+  using namespace sourcemeta::jsontoolkit;
+  JSON result{JSON::make_object()};
+  result.assign("category", JSON{"data"});
+  if constexpr (std::is_same_v<SchemaCompilerValueStrings, T>) {
+    result.assign("type", JSON{"strings"});
+    JSON items{JSON::make_array()};
+    for (const auto &item : data) {
+      items.push_back(JSON{item});
+    }
+
+    result.assign("value", std::move(items));
+    return result;
+  } else {
+    // We should never get here
+    assert(false);
+    return JSON{nullptr};
+  }
+}
+
 template <typename V>
 auto step_to_json(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step)
@@ -166,6 +187,10 @@ auto encode_step(const std::string_view category, const std::string_view type,
 
   if constexpr (requires { step.value; }) {
     result.assign("value", value_to_json(step.value));
+  }
+
+  if constexpr (requires { step.data; }) {
+    result.assign("data", data_to_json(step.data));
   }
 
   if constexpr (requires { step.condition; }) {

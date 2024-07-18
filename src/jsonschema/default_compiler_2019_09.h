@@ -315,7 +315,7 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
-  std::set<std::string> dependencies{"unevaluatedProperties"};
+  SchemaCompilerValueStrings dependencies{"unevaluatedProperties"};
   if (schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/applicator")) {
     dependencies.emplace("properties");
