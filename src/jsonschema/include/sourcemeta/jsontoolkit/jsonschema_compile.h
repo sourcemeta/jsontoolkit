@@ -48,7 +48,10 @@ enum class SchemaCompilerTargetType {
   ParentAdjacentAnnotations,
 
   /// The annotations produced for the parent of the current instance location
-  ParentAnnotations
+  ParentAnnotations,
+
+  /// The annotations produced for current instance location
+  Annotations
 };
 
 /// @ingroup jsonschema
