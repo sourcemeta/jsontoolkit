@@ -314,10 +314,47 @@ auto compiler_2019_09_applicator_additionalitems(
 }
 
 auto compiler_2019_09_applicator_unevaluateditems(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
-  // TODO: Implement
-  return {};
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  SchemaCompilerValueStrings dependencies{"unevaluatedItems"};
+  if (schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2019-09/vocab/applicator")) {
+    dependencies.emplace("items");
+    dependencies.emplace("additionalItems");
+  }
+
+  SchemaCompilerTemplate children{compile(context, schema_context,
+                                          relative_dynamic_context,
+                                          empty_pointer, empty_pointer)};
+  children.push_back(make<SchemaCompilerAnnotationPublic>(
+      schema_context, relative_dynamic_context, JSON{true}, {},
+      SchemaCompilerTargetType::InstanceParent));
+
+  SchemaCompilerTemplate loop;
+  if (dependencies.contains("items")) {
+    loop.push_back(make<SchemaCompilerLoopItemsFromAnnotationIndex>(
+        schema_context, relative_dynamic_context,
+        SchemaCompilerValueString{"items"}, std::move(children),
+        SchemaCompilerTemplate{}));
+  } else {
+    loop.push_back(make<SchemaCompilerLoopItems>(
+        schema_context, relative_dynamic_context,
+        SchemaCompilerValueUnsignedInteger{0}, std::move(children),
+        SchemaCompilerTemplate{}));
+  }
+
+  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionTypeStrict>(
+      schema_context, dynamic_context, JSON::Type::Array, {},
+      SchemaCompilerTargetType::Instance)};
+  condition.push_back(make<SchemaCompilerInternalNoAnnotation>(
+      schema_context, relative_dynamic_context, JSON{true}, {},
+      SchemaCompilerTargetType::Annotations, std::move(dependencies)));
+
+  return {make<SchemaCompilerInternalContainer>(
+      schema_context, dynamic_context, SchemaCompilerValueNone{},
+      std::move(loop), std::move(condition))};
 }
 
 auto compiler_2019_09_applicator_unevaluatedproperties(
