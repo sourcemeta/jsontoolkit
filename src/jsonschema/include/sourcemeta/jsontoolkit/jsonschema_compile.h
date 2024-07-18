@@ -384,7 +384,7 @@ DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Internal, Annotation, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Internal, NoAdjacentAnnotation, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE_AND_DATA(Internal, NoAnnotation, SchemaCompilerValueJSON,
-                                std::set<std::string>)
+                                SchemaCompilerValueStrings)
 DEFINE_STEP_APPLICATOR(Internal, Container, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Internal, DefinesAll, SchemaCompilerValueStrings)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueBoolean)
