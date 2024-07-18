@@ -64,6 +64,11 @@ struct DescribeVisitor {
   auto operator()(const SchemaCompilerLoopItems &) const -> std::string {
     return "Loop over the items of the target array";
   }
+  auto operator()(const SchemaCompilerLoopItemsFromAnnotationIndex &) const
+      -> std::string {
+    return "Loop over the items of the target array potentially bound by an "
+           "annotation result";
+  }
   auto operator()(const SchemaCompilerLoopContains &) const -> std::string {
     return "A certain number of array items must satisfy the given constraints";
   }

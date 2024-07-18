@@ -781,6 +781,66 @@ auto evaluate_step(
 
       context.pop();
     }
+  } else if (std::holds_alternative<SchemaCompilerLoopItemsFromAnnotationIndex>(
+                 step)) {
+    const auto &loop{
+        std::get<SchemaCompilerLoopItemsFromAnnotationIndex>(step)};
+    context.push(loop);
+    EVALUATE_CONDITION_GUARD(loop.condition, instance);
+    CALLBACK_PRE(context.instance_location());
+    const auto &value{context.resolve_value(loop.value, instance)};
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    assert(target.is_array());
+    const auto &array{target.as_array()};
+    result = true;
+    auto iterator{array.cbegin()};
+
+    // Determine the proper start based on integer annotations collected for the
+    // current instance location by the keyword requested by the user. We will
+    // exhaustively check the matching annotations and end up with the largest
+    // index or zero
+    std::uint64_t start{0};
+    for (const auto &[schema_location, annotations] :
+         context.annotations(context.instance_location())) {
+      assert(!schema_location.empty());
+      const auto &keyword{schema_location.back()};
+      if (!keyword.is_property() || keyword.to_property() != value) {
+        continue;
+      }
+
+      for (const auto &annotation : annotations) {
+        if (annotation.is_integer() && annotation.is_positive()) {
+          start = std::max(
+              start, static_cast<std::uint64_t>(annotation.to_integer()) + 1);
+        }
+      }
+    }
+
+    // We need this check, as advancing an iterator past its bounds
+    // is considered undefined behavior
+    // See https://en.cppreference.com/w/cpp/iterator/advance
+    std::advance(iterator,
+                 std::min(static_cast<std::ptrdiff_t>(start),
+                          static_cast<std::ptrdiff_t>(target.size())));
+
+    for (; iterator != array.cend(); ++iterator) {
+      const auto index{std::distance(array.cbegin(), iterator)};
+      context.push(empty_pointer, {static_cast<Pointer::Token::Index>(index)});
+      for (const auto &child : loop.children) {
+        if (!evaluate_step(child, instance, mode, callback, context)) {
+          result = false;
+          if (mode == SchemaCompilerEvaluationMode::Fast) {
+            context.pop();
+            // For efficiently breaking from the outer loop too
+            goto evaluate_step_end;
+          } else {
+            break;
+          }
+        }
+      }
+
+      context.pop();
+    }
   } else if (std::holds_alternative<SchemaCompilerLoopContains>(step)) {
     const auto &loop{std::get<SchemaCompilerLoopContains>(step)};
     context.push(loop);
