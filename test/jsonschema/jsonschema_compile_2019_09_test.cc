@@ -1959,3 +1959,351 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
   EVALUATE_TRACE_POST_DESCRIBE(5,
                                "Loop over the properties of the target object");
 }
+
+TEST(JSONSchema_compile_2019_09, unevaluatedItems_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[]")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+                     "#/unevaluatedItems", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LoopItemsFromAnnotationIndex,
+                              "/unevaluatedItems", "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(0, "Loop over the items of the target array "
+                                  "potentially bound by an annotation result");
+}
+
+TEST(JSONSchema_compile_2019_09, unevaluatedItems_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ true, false ]")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_TRACE_PRE(0, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+                     "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/unevaluatedItems/type",
+                     "#/unevaluatedItems/type", "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/unevaluatedItems",
+                                       "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/unevaluatedItems/type",
+                     "#/unevaluatedItems/type", "/1");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/unevaluatedItems/type",
+                              "#/unevaluatedItems/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/unevaluatedItems",
+                                        "#/unevaluatedItems", "", true);
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/unevaluatedItems/type",
+                              "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopItemsFromAnnotationIndex,
+                              "/unevaluatedItems", "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(3, "Loop over the items of the target array "
+                                  "potentially bound by an annotation result");
+}
+
+TEST(JSONSchema_compile_2019_09, unevaluatedItems_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": { "type": "string" },
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\" ]")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", true);
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Loop over the items of the target array");
+  EVALUATE_TRACE_POST_DESCRIBE(2, "Emit an annotation");
+}
+
+TEST(JSONSchema_compile_2019_09, unevaluatedItems_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "string" }, { "type": "string" } ],
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\" ]")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(3, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+                     "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", 0);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopItemsFromAnnotationIndex,
+                              "/unevaluatedItems", "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(3, "Loop over the items of the target array "
+                                  "potentially bound by an annotation result");
+}
+
+TEST(JSONSchema_compile_2019_09, unevaluatedItems_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "string" } ],
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\" ]")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+}
+
+TEST(JSONSchema_compile_2019_09, unevaluatedItems_6) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "string" } ],
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", true ]")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(3, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+                     "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/unevaluatedItems/type",
+                     "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(5, "/unevaluatedItems",
+                                       "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", 0);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, AssertionTypeStrict, "/unevaluatedItems/type",
+                              "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(4, "/unevaluatedItems",
+                                        "#/unevaluatedItems", "", true);
+  EVALUATE_TRACE_POST_SUCCESS(5, LoopItemsFromAnnotationIndex,
+                              "/unevaluatedItems", "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(4, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(5, "Loop over the items of the target array "
+                                  "potentially bound by an annotation result");
+}
+
+TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "allOf": [
+      { "items": [ { "type": "string" } ] }
+    ],
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", true ]")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/items", "#/allOf/0/items", "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/items/0/type",
+                     "#/allOf/0/items/0/type", "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/allOf/0/items", "#/allOf/0/items",
+                                       "");
+  EVALUATE_TRACE_PRE(4, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+                     "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedItems/type",
+                     "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(6, "/unevaluatedItems",
+                                       "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/items/0/type",
+                              "#/allOf/0/items/0/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/allOf/0/items", "#/allOf/0/items",
+                                        "", 0);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/allOf/0/items",
+                              "#/allOf/0/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict, "/unevaluatedItems/type",
+                              "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(5, "/unevaluatedItems",
+                                        "#/unevaluatedItems", "", true);
+  EVALUATE_TRACE_POST_SUCCESS(6, LoopItemsFromAnnotationIndex,
+                              "/unevaluatedItems", "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      4, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(5, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(6, "Loop over the items of the target array "
+                                  "potentially bound by an annotation result");
+}
+
+TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "allOf": [
+      { "items": [ { "type": "string" } ] }
+    ],
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", 1 ]")};
+
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 6);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/items", "#/allOf/0/items", "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/items/0/type",
+                     "#/allOf/0/items/0/type", "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/allOf/0/items", "#/allOf/0/items",
+                                       "");
+  EVALUATE_TRACE_PRE(4, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+                     "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedItems/type",
+                     "#/unevaluatedItems/type", "/1");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/items/0/type",
+                              "#/allOf/0/items/0/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/allOf/0/items", "#/allOf/0/items",
+                                        "", 0);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/allOf/0/items",
+                              "#/allOf/0/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_POST_FAILURE(4, AssertionTypeStrict, "/unevaluatedItems/type",
+                              "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_POST_FAILURE(5, LoopItemsFromAnnotationIndex,
+                              "/unevaluatedItems", "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      2, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      3, "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      4, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(5, "Loop over the items of the target array "
+                                  "potentially bound by an annotation result");
+}
