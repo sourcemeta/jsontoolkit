@@ -56,6 +56,20 @@ public:
     return schema_location_result->second;
   }
 
+  auto annotations(const Pointer &current_instance_location) const
+      -> const InstanceAnnotations & {
+    static const InstanceAnnotations placeholder;
+    // Use `.find()` instead of `.contains()` and `.at()` for performance
+    // reasons
+    const auto instance_location_result{
+        this->annotations_.find(current_instance_location)};
+    if (instance_location_result == this->annotations_.end()) {
+      return placeholder;
+    }
+
+    return instance_location_result->second;
+  }
+
   auto push(const Pointer &relative_evaluate_path,
             const Pointer &relative_instance_location) -> void {
     this->frame_sizes.emplace_back(relative_evaluate_path.size(),
@@ -110,12 +124,16 @@ public:
     if constexpr (std::is_same_v<Annotations, T>) {
       const auto schema_location{
           this->evaluate_path().initial().concat(target.second)};
+      assert(target.first != SchemaCompilerTargetType::ParentAnnotations);
       if (target.first == SchemaCompilerTargetType::ParentAdjacentAnnotations) {
         return this->annotations(this->instance_location().initial(),
                                  schema_location);
       } else {
         return this->annotations(this->instance_location(), schema_location);
       }
+    } else if constexpr (std::is_same_v<InstanceAnnotations, T>) {
+      assert(target.first == SchemaCompilerTargetType::ParentAnnotations);
+      return this->annotations(this->instance_location().initial());
     } else {
       static_assert(std::is_same_v<JSON, T>);
       switch (target.first) {
