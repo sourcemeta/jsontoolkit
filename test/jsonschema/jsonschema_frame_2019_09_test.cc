@@ -27,6 +27,13 @@
                              "https://json-schema.org/draft/2019-09/schema",   \
                              expected_base, expected_relative_pointer);
 
+#define EXPECT_FRAME_DYNAMIC_2019_09_ANCHOR(frame, reference, root_id,         \
+                                            expected_pointer, expected_base,   \
+                                            expected_relative_pointer)         \
+  EXPECT_FRAME_DYNAMIC_ANCHOR(frame, reference, root_id, expected_pointer,     \
+                              "https://json-schema.org/draft/2019-09/schema",  \
+                              expected_base, expected_relative_pointer);
+
 TEST(JSONSchema_frame_2019_09, anonymous_with_nested_schema_resource) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -843,4 +850,207 @@ TEST(JSONSchema_frame_2019_09, location_independent_identifier_anonymous) {
                    sourcemeta::jsontoolkit::official_resolver)
                    .wait(),
                sourcemeta::jsontoolkit::SchemaError);
+}
+
+TEST(JSONSchema_frame_2019_09, recursive_anchor_true_with_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$recursiveAnchor": true
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 5);
+
+  // Dynamic anchors
+
+  EXPECT_FRAME_DYNAMIC_2019_09_ANCHOR(frame,
+                                      "https://www.sourcemeta.com/schema",
+                                      "https://www.sourcemeta.com/schema", "",
+                                      "https://www.sourcemeta.com/schema", "");
+
+  // Static identifiers
+
+  EXPECT_FRAME_STATIC_2019_09_RESOURCE(frame,
+                                       "https://www.sourcemeta.com/schema",
+                                       "https://www.sourcemeta.com/schema", "",
+                                       "https://www.sourcemeta.com/schema", "");
+
+  // Static pointers
+
+  EXPECT_FRAME_STATIC_2019_09_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/$id",
+      "https://www.sourcemeta.com/schema", "/$id",
+      "https://www.sourcemeta.com/schema", "/$id");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/$schema",
+      "https://www.sourcemeta.com/schema", "/$schema",
+      "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/$recursiveAnchor",
+      "https://www.sourcemeta.com/schema", "/$recursiveAnchor",
+      "https://www.sourcemeta.com/schema", "/$recursiveAnchor");
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
+}
+
+TEST(JSONSchema_frame_2019_09, recursive_anchor_false_with_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$recursiveAnchor": false
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 4);
+
+  // Static identifiers
+
+  EXPECT_FRAME_STATIC_2019_09_RESOURCE(frame,
+                                       "https://www.sourcemeta.com/schema",
+                                       "https://www.sourcemeta.com/schema", "",
+                                       "https://www.sourcemeta.com/schema", "");
+
+  // Static pointers
+
+  EXPECT_FRAME_STATIC_2019_09_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/$id",
+      "https://www.sourcemeta.com/schema", "/$id",
+      "https://www.sourcemeta.com/schema", "/$id");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/$schema",
+      "https://www.sourcemeta.com/schema", "/$schema",
+      "https://www.sourcemeta.com/schema", "/$schema");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/$recursiveAnchor",
+      "https://www.sourcemeta.com/schema", "/$recursiveAnchor",
+      "https://www.sourcemeta.com/schema", "/$recursiveAnchor");
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
+}
+
+TEST(JSONSchema_frame_2019_09, recursive_anchor_true_without_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "properties": {
+      "foo": {
+        "$recursiveAnchor": true
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 6);
+
+  // Dynamic anchors
+
+  EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
+      frame, "", "/properties/foo",
+      "https://json-schema.org/draft/2019-09/schema");
+
+  // Static frames
+
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "", "", "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$schema", "/$schema",
+      "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/properties", "/properties",
+      "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/properties/foo", "/properties/foo",
+      "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/properties/foo/$recursiveAnchor",
+      "/properties/foo/$recursiveAnchor",
+      "https://json-schema.org/draft/2019-09/schema");
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
+}
+
+TEST(JSONSchema_frame_2019_09, recursive_anchor_false_without_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "properties": {
+      "foo": {
+        "$recursiveAnchor": false
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 5);
+
+  // Static frames
+
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "", "", "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$schema", "/$schema",
+      "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/properties", "/properties",
+      "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/properties/foo", "/properties/foo",
+      "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/properties/foo/$recursiveAnchor",
+      "/properties/foo/$recursiveAnchor",
+      "https://json-schema.org/draft/2019-09/schema");
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
 }
