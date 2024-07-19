@@ -52,6 +52,53 @@ TEST(JSONSchema_anchor_2019_09, top_level_dynamic_anchor) {
   EXPECT_TRUE(anchors.empty());
 }
 
+TEST(JSONSchema_anchor_2019_09, top_level_recursive_anchor_false) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$recursiveAnchor": false
+  })JSON");
+
+  const auto anchors{sourcemeta::jsontoolkit::anchors(
+                         document, sourcemeta::jsontoolkit::official_resolver)
+                         .get()};
+
+  EXPECT_TRUE(anchors.empty());
+}
+
+TEST(JSONSchema_anchor_2019_09, top_level_recursive_anchor_true) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$recursiveAnchor": true
+  })JSON");
+
+  const auto anchors{sourcemeta::jsontoolkit::anchors(
+                         document, sourcemeta::jsontoolkit::official_resolver)
+                         .get()};
+
+  EXPECT_EQ(anchors.size(), 1);
+  EXPECT_TRUE(anchors.contains(""));
+  EXPECT_EQ(anchors.at(""), sourcemeta::jsontoolkit::AnchorType::Dynamic);
+}
+
+TEST(JSONSchema_anchor_2019_09, top_level_recursive_anchor_true_and_empty) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$recursiveAnchor": true,
+    "$anchor": ""
+  })JSON");
+
+  const auto anchors{sourcemeta::jsontoolkit::anchors(
+                         document, sourcemeta::jsontoolkit::official_resolver)
+                         .get()};
+
+  EXPECT_EQ(anchors.size(), 1);
+  EXPECT_TRUE(anchors.contains(""));
+  EXPECT_EQ(anchors.at(""), sourcemeta::jsontoolkit::AnchorType::All);
+}
+
 TEST(JSONSchema_anchor_2019_09, nested_static_with_default_dialect) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
