@@ -1467,4 +1467,15 @@ TEST(JSON_parse, from_file) {
   EXPECT_TRUE(document.at("foo").is_integer());
   EXPECT_EQ(document.at("foo").to_integer(), 1);
 }
+
+TEST(JSON_parse, read_file) {
+  auto stream{sourcemeta::jsontoolkit::read_file(
+      std::filesystem::path{TEST_DIRECTORY} / "stub_valid.json")};
+  const auto document{sourcemeta::jsontoolkit::parse(stream)};
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 1);
+  EXPECT_TRUE(document.defines("foo"));
+  EXPECT_TRUE(document.at("foo").is_integer());
+  EXPECT_EQ(document.at("foo").to_integer(), 1);
+}
 #endif
