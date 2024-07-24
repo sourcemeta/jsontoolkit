@@ -71,13 +71,13 @@ TEST(URI_canonicalize, example_10) {
 TEST(URI_canonicalize, example_relative_1) {
   sourcemeta::jsontoolkit::URI uri{"../foo"};
   uri.canonicalize();
-  EXPECT_EQ(uri.recompose(), "foo");
+  EXPECT_EQ(uri.recompose(), "/foo");
 }
 
 TEST(URI_canonicalize, example_relative_2) {
   sourcemeta::jsontoolkit::URI uri{"./foo"};
   uri.canonicalize();
-  EXPECT_EQ(uri.recompose(), "foo");
+  EXPECT_EQ(uri.recompose(), "/foo");
 }
 
 TEST(URI_canonicalize, example_12) {

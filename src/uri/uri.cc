@@ -231,7 +231,23 @@ auto URI::host() const -> std::optional<std::string_view> {
 
 auto URI::port() const -> std::optional<std::uint32_t> { return this->port_; }
 
-auto URI::path() const -> std::optional<std::string> { return this->path_; }
+auto URI::path() const -> std::optional<std::string> {
+  if (!this->path_.has_value()) {
+    return std::nullopt;
+  }
+
+  if (!this->is_urn() && !this->is_tag() && this->scheme().has_value()) {
+    return "/" + this->path_.value();
+  }
+
+  size_t path_pos = this->data.find(this->path_.value());
+  if (path_pos != std::string::npos && path_pos > 0 &&
+      this->data[path_pos - 1] == '/') {
+    return "/" + this->path_.value();
+  }
+
+  return path_;
+}
 
 auto URI::fragment() const -> std::optional<std::string_view> {
   return this->fragment_;
@@ -287,9 +303,6 @@ auto URI::recompose_without_fragment() const -> std::optional<std::string> {
   // Path
   const auto result_path{this->path()};
   if (result_path.has_value()) {
-    if (!this->is_urn() && !this->is_tag() && this->scheme().has_value()) {
-      result << '/';
-    }
     result << result_path.value();
   }
 
