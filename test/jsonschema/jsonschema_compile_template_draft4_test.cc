@@ -55,26 +55,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
       "relativeSchemaLocation": "/properties",
       "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/properties",
-      "condition": [
-        {
-          "category": "assertion",
-          "type": "type-strict",
-          "condition": [],
-          "relativeSchemaLocation": "",
-          "relativeInstanceLocation": "",
-          "absoluteKeywordLocation": "#/properties",
-          "target": {
-            "category": "target",
-            "location": "",
-            "type": "instance"
-          },
-          "value": {
-            "category": "value",
-            "type": "type",
-            "value": "object"
-          }
-        }
-      ],
+      "condition": [],
       "children": [
         {
           "category": "internal",
@@ -186,26 +167,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
       "relativeSchemaLocation": "/properties",
       "relativeInstanceLocation": "",
       "absoluteKeywordLocation": "#/properties",
-      "condition": [
-        {
-          "category": "assertion",
-          "type": "type-strict",
-          "condition": [],
-          "relativeSchemaLocation": "",
-          "relativeInstanceLocation": "",
-          "absoluteKeywordLocation": "#/properties",
-          "target": {
-            "category": "target",
-            "location": "",
-            "type": "instance"
-          },
-          "value": {
-            "category": "value",
-            "type": "type",
-            "value": "object"
-          }
-        }
-      ],
+      "condition": [],
       "children": [
         {
           "category": "internal",
