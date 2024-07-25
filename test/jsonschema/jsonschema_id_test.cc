@@ -260,13 +260,14 @@ TEST(JSONSchema_id, loose_with_resolvable_default_dialect) {
 TEST(JSONSchema_id, loose_with_unresolvable_dialect) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
-    "$id": "http://example.com/my-schema",
-    "id": "https://example.com/my-schema",
+    "$id": "https://example.com/my-schema",
     "$schema": "https://www.sourcemeta.com/invalid-dialect"
   })JSON");
-  EXPECT_THROW(sourcemeta::jsontoolkit::id(
-                   document, sourcemeta::jsontoolkit::official_resolver,
-                   sourcemeta::jsontoolkit::IdentificationStrategy::Loose,
-                   "https://www.sourcemeta.com/invalid-dialect"),
-               sourcemeta::jsontoolkit::SchemaResolutionError);
+  std::optional<std::string> id{
+      sourcemeta::jsontoolkit::id(
+          document, sourcemeta::jsontoolkit::official_resolver,
+          sourcemeta::jsontoolkit::IdentificationStrategy::Loose)
+          .get()};
+  EXPECT_TRUE(id.has_value());
+  EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
