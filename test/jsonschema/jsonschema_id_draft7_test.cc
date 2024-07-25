@@ -44,9 +44,10 @@ TEST(JSONSchema_id_draft7, old_one_hop) {
 TEST(JSONSchema_id_draft7, id_boolean_default_dialect) {
   const sourcemeta::jsontoolkit::JSON document{true};
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::id(document,
-                                  sourcemeta::jsontoolkit::official_resolver,
-                                  "http://json-schema.org/draft-07/schema#")
+      sourcemeta::jsontoolkit::id(
+          document, sourcemeta::jsontoolkit::official_resolver,
+          sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
+          "http://json-schema.org/draft-07/schema#")
           .get()};
   EXPECT_FALSE(id.has_value());
 }
@@ -55,9 +56,10 @@ TEST(JSONSchema_id_draft7, empty_object_default_dialect) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{}");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::id(document,
-                                  sourcemeta::jsontoolkit::official_resolver,
-                                  "http://json-schema.org/draft-07/schema#")
+      sourcemeta::jsontoolkit::id(
+          document, sourcemeta::jsontoolkit::official_resolver,
+          sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
+          "http://json-schema.org/draft-07/schema#")
           .get()};
   EXPECT_FALSE(id.has_value());
 }
@@ -96,9 +98,10 @@ TEST(JSONSchema_id_draft7, default_dialect_precedence) {
     "$schema": "http://json-schema.org/draft-07/schema#"
   })JSON");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::id(document,
-                                  sourcemeta::jsontoolkit::official_resolver,
-                                  "http://json-schema.org/draft-04/schema#")
+      sourcemeta::jsontoolkit::id(
+          document, sourcemeta::jsontoolkit::official_resolver,
+          sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
+          "http://json-schema.org/draft-04/schema#")
           .get()};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");

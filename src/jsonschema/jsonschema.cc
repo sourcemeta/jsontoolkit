@@ -17,6 +17,7 @@ auto sourcemeta::jsontoolkit::is_schema(
 
 auto sourcemeta::jsontoolkit::id(
     const sourcemeta::jsontoolkit::JSON &schema, const SchemaResolver &resolver,
+    const IdentificationStrategy strategy,
     const std::optional<std::string> &default_dialect,
     const std::optional<std::string> &default_id)
     -> std::future<std::optional<std::string>> {
@@ -24,6 +25,24 @@ auto sourcemeta::jsontoolkit::id(
       sourcemeta::jsontoolkit::base_dialect(schema, resolver, default_dialect)
           .get()};
   if (!maybe_base_dialect.has_value()) {
+
+    // Attempt to play a heuristic guessing game before giving up
+    if (strategy == IdentificationStrategy::Loose && schema.is_object()) {
+      if (schema.defines("$id") && schema.at("$id").is_string()) {
+        if (!schema.defines("id") ||
+            (schema.defines("id") && (!schema.at("id").is_string() ||
+                                      schema.at("$id") == schema.at("id")))) {
+          std::promise<std::optional<std::string>> promise;
+          promise.set_value(schema.at("$id").to_string());
+          return promise.get_future();
+        }
+      } else if (schema.defines("id") && schema.at("id").is_string()) {
+        std::promise<std::optional<std::string>> promise;
+        promise.set_value(schema.at("id").to_string());
+        return promise.get_future();
+      }
+    }
+
     std::promise<std::optional<std::string>> promise;
     promise.set_value(default_id);
     return promise.get_future();

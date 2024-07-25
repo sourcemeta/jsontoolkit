@@ -46,6 +46,7 @@ TEST(JSONSchema_id_2020_12, id_boolean_default_dialect) {
   std::optional<std::string> id{
       sourcemeta::jsontoolkit::id(
           document, sourcemeta::jsontoolkit::official_resolver,
+          sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
           "https://json-schema.org/draft/2020-12/schema")
           .get()};
   EXPECT_FALSE(id.has_value());
@@ -57,6 +58,7 @@ TEST(JSONSchema_id_2020_12, empty_object_default_dialect) {
   std::optional<std::string> id{
       sourcemeta::jsontoolkit::id(
           document, sourcemeta::jsontoolkit::official_resolver,
+          sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
           "https://json-schema.org/draft/2020-12/schema")
           .get()};
   EXPECT_FALSE(id.has_value());
@@ -96,9 +98,10 @@ TEST(JSONSchema_id_2020_12, default_dialect_precedence) {
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::id(document,
-                                  sourcemeta::jsontoolkit::official_resolver,
-                                  "http://json-schema.org/draft-04/schema#")
+      sourcemeta::jsontoolkit::id(
+          document, sourcemeta::jsontoolkit::official_resolver,
+          sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
+          "http://json-schema.org/draft-04/schema#")
           .get()};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
