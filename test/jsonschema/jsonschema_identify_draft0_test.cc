@@ -18,33 +18,33 @@ static auto test_resolver(std::string_view identifier)
   return promise.get_future();
 }
 
-TEST(JSONSchema_id_draft0, valid_one_hop) {
+TEST(JSONSchema_identify_draft0, valid_one_hop) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "id": "https://example.com/my-schema",
     "$schema": "https://sourcemeta.com/metaschema"
   })JSON");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::id(document, test_resolver).get()};
+      sourcemeta::jsontoolkit::identify(document, test_resolver).get()};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
 
-TEST(JSONSchema_id_draft0, new_one_hop) {
+TEST(JSONSchema_identify_draft0, new_one_hop) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://sourcemeta.com/metaschema"
   })JSON");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::id(document, test_resolver).get()};
+      sourcemeta::jsontoolkit::identify(document, test_resolver).get()};
   EXPECT_FALSE(id.has_value());
 }
 
-TEST(JSONSchema_id_draft0, id_boolean_default_dialect) {
+TEST(JSONSchema_identify_draft0, id_boolean_default_dialect) {
   const sourcemeta::jsontoolkit::JSON document{true};
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::id(
+      sourcemeta::jsontoolkit::identify(
           document, sourcemeta::jsontoolkit::official_resolver,
           sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
           "http://json-schema.org/draft-00/schema#")
@@ -52,11 +52,11 @@ TEST(JSONSchema_id_draft0, id_boolean_default_dialect) {
   EXPECT_FALSE(id.has_value());
 }
 
-TEST(JSONSchema_id_draft0, empty_object_default_dialect) {
+TEST(JSONSchema_identify_draft0, empty_object_default_dialect) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{}");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::id(
+      sourcemeta::jsontoolkit::identify(
           document, sourcemeta::jsontoolkit::official_resolver,
           sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
           "http://json-schema.org/draft-00/schema#")
@@ -64,41 +64,41 @@ TEST(JSONSchema_id_draft0, empty_object_default_dialect) {
   EXPECT_FALSE(id.has_value());
 }
 
-TEST(JSONSchema_id_draft0, valid_id) {
+TEST(JSONSchema_identify_draft0, valid_id) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "id": "https://example.com/my-schema",
     "$schema": "http://json-schema.org/draft-00/schema#"
   })JSON");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::id(document,
-                                  sourcemeta::jsontoolkit::official_resolver)
+      sourcemeta::jsontoolkit::identify(
+          document, sourcemeta::jsontoolkit::official_resolver)
           .get()};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
 
-TEST(JSONSchema_id_draft0, new_id) {
+TEST(JSONSchema_identify_draft0, new_id) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "http://json-schema.org/draft-00/schema#"
   })JSON");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::id(document,
-                                  sourcemeta::jsontoolkit::official_resolver)
+      sourcemeta::jsontoolkit::identify(
+          document, sourcemeta::jsontoolkit::official_resolver)
           .get()};
   EXPECT_FALSE(id.has_value());
 }
 
-TEST(JSONSchema_id_draft0, default_dialect_precedence) {
+TEST(JSONSchema_identify_draft0, default_dialect_precedence) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "id": "https://example.com/my-schema",
     "$schema": "http://json-schema.org/draft-00/schema#"
   })JSON");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::id(
+      sourcemeta::jsontoolkit::identify(
           document, sourcemeta::jsontoolkit::official_resolver,
           sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
           "https://json-schema.org/draft/2020-12/schema")
@@ -107,13 +107,13 @@ TEST(JSONSchema_id_draft0, default_dialect_precedence) {
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
 
-TEST(JSONSchema_id_draft0, base_dialect_shortcut) {
+TEST(JSONSchema_identify_draft0, base_dialect_shortcut) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "id": "https://example.com/my-schema",
     "$schema": "http://json-schema.org/draft-00/schema#"
   })JSON");
-  const std::optional<std::string> id{sourcemeta::jsontoolkit::id(
+  const std::optional<std::string> id{sourcemeta::jsontoolkit::identify(
       document, "http://json-schema.org/draft-00/hyper-schema#")};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");

@@ -95,7 +95,7 @@ enum class IdentificationStrategy {
 ///   "$id": "https://sourcemeta.com/example-schema"
 /// })JSON");
 ///
-/// std::optional<std::string> id{sourcemeta::jsontoolkit::id(
+/// std::optional<std::string> id{sourcemeta::jsontoolkit::identify(
 ///   document, sourcemeta::jsontoolkit::official_resolver).get()};
 /// assert(id.has_value());
 /// assert(id.value() == "https://sourcemeta.com/example-schema");
@@ -105,19 +105,20 @@ enum class IdentificationStrategy {
 /// guessing game. Often useful if you have a schema without a dialect and you
 /// want to at least try to get something.
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto id(const JSON &schema, const SchemaResolver &resolver,
-        const IdentificationStrategy strategy = IdentificationStrategy::Strict,
-        const std::optional<std::string> &default_dialect = std::nullopt,
-        const std::optional<std::string> &default_id = std::nullopt)
+auto identify(
+    const JSON &schema, const SchemaResolver &resolver,
+    const IdentificationStrategy strategy = IdentificationStrategy::Strict,
+    const std::optional<std::string> &default_dialect = std::nullopt,
+    const std::optional<std::string> &default_id = std::nullopt)
     -> std::future<std::optional<std::string>>;
 
 /// @ingroup jsonschema
 ///
-/// A shortcut to sourcemeta::jsontoolkit::id if you know the base dialect of
-/// the schema.
+/// A shortcut to sourcemeta::jsontoolkit::identify if you know the base dialect
+/// of the schema.
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto id(const JSON &schema, const std::string &base_dialect,
-        const std::optional<std::string> &default_id = std::nullopt)
+auto identify(const JSON &schema, const std::string &base_dialect,
+              const std::optional<std::string> &default_id = std::nullopt)
     -> std::optional<std::string>;
 
 /// @ingroup jsonschema

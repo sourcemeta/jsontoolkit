@@ -11,7 +11,7 @@
     const sourcemeta::jsontoolkit::JSON &document{result.value()};             \
     EXPECT_TRUE(sourcemeta::jsontoolkit::is_schema(document));                 \
     std::optional<std::string> id{                                             \
-        sourcemeta::jsontoolkit::id(                                           \
+        sourcemeta::jsontoolkit::identify(                                     \
             document, sourcemeta::jsontoolkit::official_resolver)              \
             .get()};                                                           \
     EXPECT_TRUE(id.has_value());                                               \

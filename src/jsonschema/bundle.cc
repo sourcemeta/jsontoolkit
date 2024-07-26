@@ -80,7 +80,8 @@ auto upsert_id(sourcemeta::jsontoolkit::JSON &target,
                   sourcemeta::jsontoolkit::JSON{identifier});
   }
 
-  assert(sourcemeta::jsontoolkit::id(target, base_dialect.value()).has_value());
+  assert(sourcemeta::jsontoolkit::identify(target, base_dialect.value())
+             .has_value());
 }
 
 auto embed_schema(sourcemeta::jsontoolkit::JSON &definitions,
