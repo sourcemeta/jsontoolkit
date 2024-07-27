@@ -30,7 +30,7 @@ static auto guess_identifier(const sourcemeta::jsontoolkit::JSON &schema)
   return std::nullopt;
 }
 
-auto sourcemeta::jsontoolkit::id(
+auto sourcemeta::jsontoolkit::identify(
     const sourcemeta::jsontoolkit::JSON &schema, const SchemaResolver &resolver,
     const IdentificationStrategy strategy,
     const std::optional<std::string> &default_dialect,
@@ -70,14 +70,14 @@ auto sourcemeta::jsontoolkit::id(
   }
 
   std::promise<std::optional<std::string>> promise;
-  promise.set_value(id(schema, maybe_base_dialect.value(), default_id));
+  promise.set_value(identify(schema, maybe_base_dialect.value(), default_id));
   return promise.get_future();
 }
 
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto sourcemeta::jsontoolkit::id(const JSON &schema,
-                                 const std::string &base_dialect,
-                                 const std::optional<std::string> &default_id)
+auto sourcemeta::jsontoolkit::identify(
+    const JSON &schema, const std::string &base_dialect,
+    const std::optional<std::string> &default_id)
     -> std::optional<std::string> {
   if (base_dialect == "http://json-schema.org/draft-00/hyper-schema#" ||
       base_dialect == "http://json-schema.org/draft-01/hyper-schema#" ||

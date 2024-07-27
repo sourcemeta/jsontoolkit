@@ -5,16 +5,16 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_anchor_draft7_test.cc
   jsonschema_anchor_draft6_test.cc
   jsonschema_anchor_draft4_test.cc
-  jsonschema_id_2020_12_test.cc
-  jsonschema_id_2019_09_test.cc
-  jsonschema_id_draft7_test.cc
-  jsonschema_id_draft6_test.cc
-  jsonschema_id_draft4_test.cc
-  jsonschema_id_draft3_test.cc
-  jsonschema_id_draft2_test.cc
-  jsonschema_id_draft1_test.cc
-  jsonschema_id_draft0_test.cc
-  jsonschema_id_test.cc
+  jsonschema_identify_2020_12_test.cc
+  jsonschema_identify_2019_09_test.cc
+  jsonschema_identify_draft7_test.cc
+  jsonschema_identify_draft6_test.cc
+  jsonschema_identify_draft4_test.cc
+  jsonschema_identify_draft3_test.cc
+  jsonschema_identify_draft2_test.cc
+  jsonschema_identify_draft1_test.cc
+  jsonschema_identify_draft0_test.cc
+  jsonschema_identify_test.cc
   jsonschema_is_schema_test.cc
   jsonschema_frame_2020_12_test.cc
   jsonschema_frame_2019_09_test.cc
