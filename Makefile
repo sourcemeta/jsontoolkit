@@ -14,7 +14,7 @@ configure: .always
 		-DCMAKE_BUILD_TYPE:STRING=$(PRESET) \
 		-DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON \
 		-DJSONTOOLKIT_TESTS:BOOL=ON \
-		-DJSONTOOLKIT_BENCHMARKS:BOOL=ON \
+		-DJSONTOOLKIT_BENCHMARK:BOOL=ON \
 		-DJSONTOOLKIT_DOCS:BOOL=ON \
 		-DBUILD_SHARED_LIBS:BOOL=$(SHARED)
 
@@ -35,7 +35,7 @@ test: .always
 			--output-on-failure --progress --parallel
 
 benchmark: .always
-	$(CMAKE) --build ./build --config $(PRESET) --target run_compiler_benchmark
+	$(CMAKE) --build ./build --config $(PRESET) --target run_benchmark
 
 doxygen: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target doxygen

@@ -92,7 +92,7 @@ jobs:
           cmake -S . -B ./build
           -DCMAKE_BUILD_TYPE:STRING=Release
           -DJSONTOOLKIT_TESTS:BOOL=ON
-          -DJSONTOOLKIT_BENCHMARKS:BOOL=ON
+          -DJSONTOOLKIT_BENCHMARK:BOOL=ON
           -DJSONTOOLKIT_DOCS:BOOL=OFF
           -DBUILD_SHARED_LIBS:BOOL=OFF
           -DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON
@@ -103,7 +103,7 @@ jobs:
           cmake -S . -B ./build
           -DCMAKE_BUILD_TYPE:STRING=Release
           -DJSONTOOLKIT_TESTS:BOOL=ON
-          -DJSONTOOLKIT_BENCHMARKS:BOOL=ON
+          -DJSONTOOLKIT_BENCHMARK:BOOL=ON
           -DJSONTOOLKIT_DOCS:BOOL=OFF
           -DBUILD_SHARED_LIBS:BOOL=ON
           -DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON
@@ -126,7 +126,7 @@ jobs:
           UBSAN_OPTIONS: print_stacktrace=1
 
       - name: Benchmarks
-        run: cmake --build ./build --config Release --verbose --target run_compiler_benchmark
+        run: cmake --build ./build --config Release --verbose --target run_benchmark
 
   unikraft:
     runs-on: ubuntu-latest
