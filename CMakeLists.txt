@@ -106,4 +106,6 @@ if(JSONTOOLKIT_TESTS)
       add_subdirectory(test/packaging)
     endif()
   endif()
+
+  find_package(benchmark REQUIRED)
 endif()

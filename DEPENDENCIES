@@ -14,3 +14,4 @@ jsonschema-draft0 https://github.com/json-schema-org/json-schema-spec 7ea575aef8
 referencing-suite https://github.com/python-jsonschema/referencing-suite 61c4cc202b1e96ed5adcaf4842a595f68d659212
 jsonschema-test-suite https://github.com/json-schema-org/JSON-Schema-Test-Suite c2badb1298a8698f86dadf1aea7b44b3a894e5ac
 uriparser https://github.com/uriparser/uriparser bfe94f6e54d0abb5afa7bb0411940b7242cb835a
+benchmark https://github.com/google/benchmark 378fe693a1ef51500db21b11ff05a8018c5f0e55
