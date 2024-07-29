@@ -109,7 +109,7 @@ if(JSONTOOLKIT_TESTS)
   endif()
 
   if(JSONTOOLKIT_BENCHMARKS)
-    find_package(benchmark REQUIRED)
+    find_package(Benchmark REQUIRED)
     add_subdirectory(benchmark/compiler)
   endif()
 
