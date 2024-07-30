@@ -50,6 +50,13 @@ TEST(URI_relative_to, absolute_absolute_base_false_3) {
   EXPECT_EQ(uri.recompose(), "https://www.example.com/foo");
 }
 
+TEST(URI_relative_to, absolute_absolute_base_false_4) {
+  const sourcemeta::jsontoolkit::URI base{"https://foo.com"};
+  sourcemeta::jsontoolkit::URI uri{"https://bar.com"};
+  uri.relative_to(base);
+  EXPECT_EQ(uri.recompose(), "https://bar.com");
+}
+
 TEST(URI_relative_to, absolute_relative_1) {
   const sourcemeta::jsontoolkit::URI base{"https://www.example.com"};
   sourcemeta::jsontoolkit::URI uri{"foo"};
