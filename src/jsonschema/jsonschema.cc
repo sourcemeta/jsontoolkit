@@ -15,19 +15,33 @@ auto sourcemeta::jsontoolkit::is_schema(
   return schema.is_object() || schema.is_boolean();
 }
 
-static auto guess_identifier(const sourcemeta::jsontoolkit::JSON &schema)
+static auto id_keyword_guess(const sourcemeta::jsontoolkit::JSON &schema)
     -> std::optional<std::string> {
   if (schema.defines("$id") && schema.at("$id").is_string()) {
     if (!schema.defines("id") ||
         (schema.defines("id") && (!schema.at("id").is_string() ||
                                   schema.at("$id") == schema.at("id")))) {
-      return schema.at("$id").to_string();
+      return "$id";
     }
   } else if (schema.defines("id") && schema.at("id").is_string()) {
-    return schema.at("id").to_string();
+    return "id";
   }
 
   return std::nullopt;
+}
+
+static auto id_keyword(const std::string &base_dialect) -> std::string {
+  if (base_dialect == "http://json-schema.org/draft-00/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-01/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-02/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-03/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-03/schema#" ||
+      base_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-04/schema#") {
+    return "id";
+  }
+
+  return "$id";
 }
 
 auto sourcemeta::jsontoolkit::identify(
@@ -47,8 +61,15 @@ auto sourcemeta::jsontoolkit::identify(
   } catch (const SchemaResolutionError &) {
     // Attempt to play a heuristic guessing game before giving up
     if (strategy == IdentificationStrategy::Loose && schema.is_object()) {
+      const auto keyword{id_keyword_guess(schema)};
       std::promise<std::optional<std::string>> promise;
-      promise.set_value(guess_identifier(schema));
+
+      if (keyword.has_value()) {
+        promise.set_value(schema.at(keyword.value()).to_string());
+      } else {
+        promise.set_value(std::nullopt);
+      }
+
       return promise.get_future();
     }
 
@@ -59,8 +80,15 @@ auto sourcemeta::jsontoolkit::identify(
 
     // Attempt to play a heuristic guessing game before giving up
     if (strategy == IdentificationStrategy::Loose && schema.is_object()) {
+      const auto keyword{id_keyword_guess(schema)};
       std::promise<std::optional<std::string>> promise;
-      promise.set_value(guess_identifier(schema));
+
+      if (keyword.has_value()) {
+        promise.set_value(schema.at(keyword.value()).to_string());
+      } else {
+        promise.set_value(std::nullopt);
+      }
+
       return promise.get_future();
     }
 
@@ -74,42 +102,27 @@ auto sourcemeta::jsontoolkit::identify(
   return promise.get_future();
 }
 
-SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto sourcemeta::jsontoolkit::identify(
     const JSON &schema, const std::string &base_dialect,
     const std::optional<std::string> &default_id)
     -> std::optional<std::string> {
-  if (base_dialect == "http://json-schema.org/draft-00/hyper-schema#" ||
-      base_dialect == "http://json-schema.org/draft-01/hyper-schema#" ||
-      base_dialect == "http://json-schema.org/draft-02/hyper-schema#" ||
-      base_dialect == "http://json-schema.org/draft-03/hyper-schema#" ||
-      base_dialect == "http://json-schema.org/draft-03/schema#" ||
-      base_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
-      base_dialect == "http://json-schema.org/draft-04/schema#") {
-    if (schema.is_object() && schema.defines("id")) {
-      const sourcemeta::jsontoolkit::JSON &id{schema.at("id")};
-      if (!id.is_string() || id.empty()) {
-        throw sourcemeta::jsontoolkit::SchemaError(
-            "The value of the id property is not valid");
-      }
-
-      return id.to_string();
-    } else {
-      return default_id;
-    }
+  if (!schema.is_object()) {
+    return default_id;
   }
 
-  if (schema.is_object() && schema.defines("$id")) {
-    const sourcemeta::jsontoolkit::JSON &id{schema.at("$id")};
-    if (!id.is_string() || id.empty()) {
-      throw sourcemeta::jsontoolkit::SchemaError(
-          "The value of the $id property is not valid");
-    }
-
-    return id.to_string();
+  const auto keyword{id_keyword(base_dialect)};
+  if (!schema.defines(keyword)) {
+    return default_id;
   }
 
-  return default_id;
+  const auto &identifier{schema.at(keyword)};
+  if (!identifier.is_string() || identifier.empty()) {
+    std::ostringstream error;
+    error << "The value of the " << keyword << " property is not valid";
+    throw sourcemeta::jsontoolkit::SchemaError(error.str());
+  }
+
+  return identifier.to_string();
 }
 
 auto sourcemeta::jsontoolkit::dialect(
