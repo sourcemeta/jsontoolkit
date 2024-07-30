@@ -283,3 +283,11 @@ TEST(JSONSchema_identify, anonymize_with_unknown_base_dialect) {
                    document, "https://www.sourcemeta.com/invalid-base-dialect"),
                sourcemeta::jsontoolkit::SchemaError);
 }
+
+TEST(JSONSchema_identify, reidentify_boolean) {
+  sourcemeta::jsontoolkit::JSON document{true};
+  EXPECT_THROW(sourcemeta::jsontoolkit::reidentify(
+                   document, "https://example.com/my-new-id",
+                   sourcemeta::jsontoolkit::official_resolver),
+               sourcemeta::jsontoolkit::SchemaError);
+}
