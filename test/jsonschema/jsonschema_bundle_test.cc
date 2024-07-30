@@ -187,7 +187,7 @@ TEST(JSONSchema_bundle, target_no_dialect) {
   EXPECT_THROW(sourcemeta::jsontoolkit::bundle(
                    document, sourcemeta::jsontoolkit::default_schema_walker,
                    test_resolver),
-               sourcemeta::jsontoolkit::SchemaError);
+               sourcemeta::jsontoolkit::SchemaResolutionError);
 }
 
 TEST(JSONSchema_bundle, target_array) {

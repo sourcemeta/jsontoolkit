@@ -110,6 +110,12 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
           identifier, "The JSON document is not a valid JSON Schema");
     }
 
+    const auto dialect{sourcemeta::jsontoolkit::dialect(copy, default_dialect)};
+    if (!dialect.has_value()) {
+      throw sourcemeta::jsontoolkit::SchemaResolutionError(
+          identifier, "The JSON document is not a valid JSON Schema");
+    }
+
     if (copy.is_object()) {
       // Always insert an identifier, as a schema might refer to another schema
       // using another URI (i.e. due to relying on HTTP re-directions, etc)
