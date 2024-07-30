@@ -31,17 +31,30 @@ static auto id_keyword_guess(const sourcemeta::jsontoolkit::JSON &schema)
 }
 
 static auto id_keyword(const std::string &base_dialect) -> std::string {
-  if (base_dialect == "http://json-schema.org/draft-00/hyper-schema#" ||
-      base_dialect == "http://json-schema.org/draft-01/hyper-schema#" ||
-      base_dialect == "http://json-schema.org/draft-02/hyper-schema#" ||
-      base_dialect == "http://json-schema.org/draft-03/hyper-schema#" ||
-      base_dialect == "http://json-schema.org/draft-03/schema#" ||
+  if (base_dialect == "https://json-schema.org/draft/2020-12/schema" ||
+      base_dialect == "https://json-schema.org/draft/2020-12/hyper-schema" ||
+      base_dialect == "https://json-schema.org/draft/2019-09/schema" ||
+      base_dialect == "https://json-schema.org/draft/2019-09/hyper-schema" ||
+      base_dialect == "http://json-schema.org/draft-07/schema#" ||
+      base_dialect == "http://json-schema.org/draft-07/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-06/schema#" ||
+      base_dialect == "http://json-schema.org/draft-06/hyper-schema#") {
+    return "$id";
+  }
+
+  if (base_dialect == "http://json-schema.org/draft-04/schema#" ||
       base_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
-      base_dialect == "http://json-schema.org/draft-04/schema#") {
+      base_dialect == "http://json-schema.org/draft-03/schema#" ||
+      base_dialect == "http://json-schema.org/draft-03/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-02/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-01/hyper-schema#" ||
+      base_dialect == "http://json-schema.org/draft-00/hyper-schema#") {
     return "id";
   }
 
-  return "$id";
+  std::ostringstream error;
+  error << "Unrecognized base dialect: " << base_dialect;
+  throw sourcemeta::jsontoolkit::SchemaError(error.str());
 }
 
 auto sourcemeta::jsontoolkit::identify(
@@ -123,6 +136,13 @@ auto sourcemeta::jsontoolkit::identify(
   }
 
   return identifier.to_string();
+}
+
+auto sourcemeta::jsontoolkit::anonymize(
+    JSON &schema, const std::string &base_dialect) -> void {
+  if (schema.is_object()) {
+    schema.erase(id_keyword(base_dialect));
+  }
 }
 
 auto sourcemeta::jsontoolkit::dialect(
