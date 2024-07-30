@@ -409,7 +409,8 @@ auto URI::resolve_from(const URI &base) -> URI & {
 }
 
 auto URI::relative_to(const URI &base) -> URI & {
-  if (!this->is_absolute() || !base.is_absolute()) {
+  if (!this->is_absolute() || !base.is_absolute() ||
+      this->host() != base.host()) {
     return *this;
   }
 
