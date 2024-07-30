@@ -188,7 +188,8 @@ auto remove_identifiers(sourcemeta::jsontoolkit::JSON &schema,
       continue;
     }
 
-    subschema.erase(id_keyword(entry.vocabularies));
+    assert(entry.base_dialect.has_value());
+    sourcemeta::jsontoolkit::anonymize(subschema, entry.base_dialect.value());
 
     if (entry.vocabularies.contains(
             "https://json-schema.org/draft/2020-12/vocab/core")) {
