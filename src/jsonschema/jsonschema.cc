@@ -145,6 +145,29 @@ auto sourcemeta::jsontoolkit::anonymize(
   }
 }
 
+auto sourcemeta::jsontoolkit::reidentify(
+    JSON &schema, const std::string &new_identifier,
+    const SchemaResolver &resolver,
+    const std::optional<std::string> &default_dialect) -> void {
+  const auto base_dialect{
+      sourcemeta::jsontoolkit::base_dialect(schema, resolver, default_dialect)
+          .get()};
+  if (!base_dialect.has_value()) {
+    throw sourcemeta::jsontoolkit::SchemaError("Cannot determine base dialect");
+  }
+
+  reidentify(schema, new_identifier, base_dialect.value());
+}
+
+auto sourcemeta::jsontoolkit::reidentify(
+    JSON &schema, const std::string &new_identifier,
+    const std::string &base_dialect) -> void {
+  assert(is_schema(schema));
+  assert(schema.is_object());
+  schema.assign(id_keyword(base_dialect), JSON{new_identifier});
+  assert(identify(schema, base_dialect).has_value());
+}
+
 auto sourcemeta::jsontoolkit::dialect(
     const sourcemeta::jsontoolkit::JSON &schema,
     const std::optional<std::string> &default_dialect)

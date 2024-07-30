@@ -161,3 +161,86 @@ TEST(JSONSchema_identify_draft7, anonymize_with_base_dialect_no_id) {
 
   EXPECT_EQ(document, expected);
 }
+
+TEST(JSONSchema_identify_draft7, reidentify_replace) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/my-schema",
+    "$schema": "http://json-schema.org/draft-07/schema#"
+  })JSON");
+
+  sourcemeta::jsontoolkit::reidentify(
+      document, "https://example.com/my-new-id",
+      sourcemeta::jsontoolkit::official_resolver);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/my-new-id",
+    "$schema": "http://json-schema.org/draft-07/schema#"
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_identify_draft7, reidentify_set) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#"
+  })JSON");
+
+  sourcemeta::jsontoolkit::reidentify(
+      document, "https://example.com/my-new-id",
+      sourcemeta::jsontoolkit::official_resolver);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/my-new-id",
+    "$schema": "http://json-schema.org/draft-07/schema#"
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_identify_draft7, reidentify_replace_default_dialect) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/my-schema"
+  })JSON");
+
+  sourcemeta::jsontoolkit::reidentify(
+      document, "https://example.com/my-new-id",
+      sourcemeta::jsontoolkit::official_resolver,
+      "http://json-schema.org/draft-07/schema#");
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/my-new-id"
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_identify_draft7, reidentify_replace_base_dialect_shortcut) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/my-schema",
+    "$schema": "http://json-schema.org/draft-07/schema#"
+  })JSON");
+
+  const auto base_dialect{
+      sourcemeta::jsontoolkit::base_dialect(
+          document, sourcemeta::jsontoolkit::official_resolver)
+          .get()};
+  EXPECT_TRUE(base_dialect.has_value());
+
+  sourcemeta::jsontoolkit::reidentify(document, "https://example.com/my-new-id",
+                                      base_dialect.value());
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/my-new-id",
+    "$schema": "http://json-schema.org/draft-07/schema#"
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
