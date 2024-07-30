@@ -17,6 +17,6 @@ pyproject.toml
 setup.py
 .clang-format
 .clang-tidy
-.pre-commit-config.yml
-.ymc_extra_conf.py
+.pre-commit-config.yaml
+.ycm_extra_conf.py
 README.md

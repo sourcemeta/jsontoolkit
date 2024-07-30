@@ -125,8 +125,7 @@ jobs:
           # See https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
           UBSAN_OPTIONS: print_stacktrace=1
 
-      - name: Benchmarks
-        run: cmake --build ./build --config Release --verbose --target run_benchmark
+      - run: cmake --build ./build --config Release --verbose --target run_benchmark
 
   unikraft:
     runs-on: ubuntu-latest
