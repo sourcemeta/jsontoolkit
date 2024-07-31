@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <sourcemeta/jsontoolkit/uri.h>
 
+// Getter
+
 TEST(URI_path_getter, https_example_url_no_path) {
   const sourcemeta::jsontoolkit::URI uri{"https://example.com"};
   EXPECT_FALSE(uri.path().has_value());
@@ -63,26 +65,40 @@ TEST(URI_path_getter, without_scheme) {
   EXPECT_EQ(uri.path().value(), "example.com/foo");
 }
 
-TEST(URI_path_setter, https_example_url_no_path) {
+// Setter
+
+TEST(URI_path_setter, no_path) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
   uri.path("/foo");
   EXPECT_EQ(uri.path().value(), "/foo");
 }
 
-TEST(URI_path_setter, https_example_url_slash) {
+TEST(URI_path_setter, url_slash) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com/"};
   uri.path("/foo");
   EXPECT_EQ(uri.path().value(), "/foo");
 }
 
-TEST(URI_path_setter, https_example_url_single) {
+TEST(URI_path_setter, url_path) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com/foo"};
   uri.path("/bar");
   EXPECT_EQ(uri.path().value(), "/bar");
 }
 
-TEST(URI_path_setter, https_example_url_multi) {
+TEST(URI_path_setter, set_empty) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com/foo/bar/baz"};
   uri.path("");
   EXPECT_EQ(uri.path().has_value(), false);
+}
+
+TEST(URI_path_setter, set_path_without_leading_slash) {
+  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+  uri.path("foo");
+  EXPECT_EQ(uri.path().value(), "/foo");
+}
+
+TEST(URI_path_setter, set_path_with_trailing_slash) {
+  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+  uri.path("/foo/");
+  EXPECT_EQ(uri.path().value(), "/foo/");
 }
