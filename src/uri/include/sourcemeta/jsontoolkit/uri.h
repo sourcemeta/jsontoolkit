@@ -157,6 +157,19 @@ public:
   /// ```
   [[nodiscard]] auto path() const -> std::optional<std::string>;
 
+  /// Set the path part of the URI. Foe example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// @include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::URI uri{"https://www.sourcemeta.com"};
+  /// uri.path("/foo/bar");
+  /// assert(uri.path().has_value());
+  /// assert(uri.path().value() == "/foo/bar");
+  /// ```
+  auto path(std::string_view path) -> URI &;
+
   /// Get the fragment part of the URI, if any. For example:
   ///
   /// ```cpp

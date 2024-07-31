@@ -62,3 +62,21 @@ TEST(URI_path_getter, without_scheme) {
   const sourcemeta::jsontoolkit::URI uri{"example.com/foo"};
   EXPECT_EQ(uri.path().value(), "example.com/foo");
 }
+
+TEST(URI_path_setter, https_example_url_no_path) {
+  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+  uri.path("/foo");
+  EXPECT_EQ(uri.path().value(), "/foo");
+}
+
+TEST(URI_path_setter, https_example_url_slash) {
+  sourcemeta::jsontoolkit::URI uri{"https://example.com/"};
+  uri.path("/foo");
+  EXPECT_EQ(uri.path().value(), "/foo");
+}
+
+TEST(URI_path_setter, https_example_url_single) {
+  sourcemeta::jsontoolkit::URI uri{"https://example.com/foo"};
+  uri.path("/bar");
+  EXPECT_EQ(uri.path().value(), "/bar");
+}

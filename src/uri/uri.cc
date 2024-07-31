@@ -249,6 +249,12 @@ auto URI::path() const -> std::optional<std::string> {
   return path_;
 }
 
+auto URI::path(std::string_view path) -> URI & {
+  const bool has_leading_slash = path.front() == '/';
+  this->path_ = has_leading_slash ? path.substr(1) : path;
+  return *this;
+}
+
 auto URI::fragment() const -> std::optional<std::string_view> {
   return this->fragment_;
 }
