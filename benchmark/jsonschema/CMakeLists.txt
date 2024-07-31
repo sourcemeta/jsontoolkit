@@ -1,0 +1,6 @@
+add_executable(sourcemeta_jsontoolkit_benchmark_jsonschema compiler_basic.cc)
+
+target_link_libraries(sourcemeta_jsontoolkit_benchmark_jsonschema PRIVATE benchmark::benchmark)
+target_link_libraries(sourcemeta_jsontoolkit_benchmark_jsonschema PRIVATE benchmark::benchmark_main)
+target_link_libraries(sourcemeta_jsontoolkit_benchmark_jsonschema PRIVATE sourcemeta::jsontoolkit::json)
+target_link_libraries(sourcemeta_jsontoolkit_benchmark_jsonschema PRIVATE sourcemeta::jsontoolkit::jsonschema)
