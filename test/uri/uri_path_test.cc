@@ -102,3 +102,9 @@ TEST(URI_path_setter, set_path_with_trailing_slash) {
   uri.path("/foo/");
   EXPECT_EQ(uri.path().value(), "/foo/");
 }
+
+TEST(URI_path_setter, set_path_with_special_characters) {
+  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+  uri.path("/foo%20bar?query=value#fragment");
+  EXPECT_EQ(uri.path().value(), "/foo%20bar");
+}
