@@ -261,6 +261,12 @@ auto URI::path(std::string_view path) -> URI & {
     path = path.substr(0, question_mark_pos);
   }
 
+  const auto fragment_pos = path.find('#');
+  if (fragment_pos != std::string::npos) {
+    // Keep only whast we have before #
+    path = path.substr(0, fragment_pos);
+  }
+
   const bool has_leading_slash = path.front() == '/';
   this->path_ = has_leading_slash ? path.substr(1) : path;
   return *this;
