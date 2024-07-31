@@ -123,6 +123,73 @@ auto identify(const JSON &schema, const std::string &base_dialect,
 
 /// @ingroup jsonschema
 ///
+/// This function removes the top-level URI identifier of the given schema, if
+/// any, given you know its base dialect. It is the caller responsibility to
+/// ensure the schema doesn't perform relative references that might have
+/// depended on such top-level identifier. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonschema.h>
+/// #include <cassert>
+///
+/// sourcemeta::jsontoolkit::JSON document =
+///     sourcemeta::jsontoolkit::parse(R"JSON({
+///   "$schema": "https://json-schema.org/draft/2020-12/schema",
+///   "$id": "https://sourcemeta.com/example-schema"
+/// })JSON");
+///
+/// sourcemeta::jsontoolkit::anonymize(document,
+///   "https://json-schema.org/draft/2020-12/schema");
+///
+/// std::optional<std::string> id{sourcemeta::jsontoolkit::identify(
+///   document, sourcemeta::jsontoolkit::official_resolver).get()};
+/// assert(!id.has_value());
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+auto anonymize(JSON &schema, const std::string &base_dialect) -> void;
+
+/// @ingroup jsonschema
+///
+/// This function sets the identifier of a schema, replacing the existing one,
+/// if any. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonschema.h>
+/// #include <cassert>
+///
+/// sourcemeta::jsontoolkit::JSON document =
+///     sourcemeta::jsontoolkit::parse(R"JSON({
+///   "$schema": "https://json-schema.org/draft/2020-12/schema",
+///   "$id": "https://sourcemeta.com/example-schema"
+/// })JSON");
+///
+/// sourcemeta::jsontoolkit::reidentify(document,
+///   "https://example.com/my-new-id",
+///   sourcemeta::jsontoolkit::official_resolver);
+///
+/// std::optional<std::string> id{sourcemeta::jsontoolkit::identify(
+///   document, sourcemeta::jsontoolkit::official_resolver).get()};
+/// assert(id.has_value());
+/// assert(id.value() == "https://example.com/my-new-id");
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+auto reidentify(
+    JSON &schema, const std::string &new_identifier,
+    const SchemaResolver &resolver,
+    const std::optional<std::string> &default_dialect = std::nullopt) -> void;
+
+/// @ingroup jsonschema
+///
+/// A shortcut to sourcemeta::jsontoolkit::reidentify if you know the base
+/// dialect of the schema.
+SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
+auto reidentify(JSON &schema, const std::string &new_identifier,
+                const std::string &base_dialect) -> void;
+
+/// @ingroup jsonschema
+///
 /// Get the dialect URI that corresponds to a JSON Schema instance.
 /// The result is empty if the dialect cannot be determined. For example:
 ///
