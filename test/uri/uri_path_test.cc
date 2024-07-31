@@ -122,3 +122,42 @@ TEST(URI_path_setter, set_path_with_query_and_fragment) {
   EXPECT_EQ(uri.path().value(), "/new");
   EXPECT_EQ(uri.recompose(), "https://example.com/new?query=value#fragment");
 }
+
+TEST(URI_path_setter_no_scheme, set_path_on_host_only) {
+  sourcemeta::jsontoolkit::URI uri{"example.com"};
+  uri.path("/foo");
+  EXPECT_EQ(uri.path().value(), "foo");
+  EXPECT_EQ(uri.recompose(), "foo");
+}
+
+TEST(URI_path_setter_no_scheme, replace_existing_path) {
+  sourcemeta::jsontoolkit::URI uri{"example.com/old"};
+  uri.path("/new");
+  EXPECT_EQ(uri.path().value(), "new");
+  EXPECT_EQ(uri.recompose(), "new");
+}
+
+TEST(URI_path_setter_no_scheme, set_empty_path) {
+  sourcemeta::jsontoolkit::URI uri{"example.com/foo"};
+  uri.path("");
+  EXPECT_EQ(uri.path().has_value(), false);
+  EXPECT_EQ(uri.recompose(), "");
+}
+
+TEST(URI_path_setter_no_scheme, set_path_on_ip_address) {
+  sourcemeta::jsontoolkit::URI uri{"192.168.0.1"};
+  uri.path("/admin");
+  EXPECT_EQ(uri.path().value(), "admin");
+  EXPECT_EQ(uri.recompose(), "admin");
+}
+
+// TODO: dig why scheme return example.com
+// TEST(URI_path_setter_no_scheme, set_path_with_port) {
+//   sourcemeta::jsontoolkit::URI uri{"example.com:8080"};
+//   std::cout << "urn : " << uri.is_urn() << std::endl;
+//   std::cout << "tag : " << uri.is_tag() << std::endl;
+//   std::cout << "scheme : " << uri.scheme().value() << std::endl;
+//
+//   uri.path("/test");
+//   EXPECT_EQ(uri.path().value(), "test");
+// }

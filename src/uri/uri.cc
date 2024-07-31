@@ -255,10 +255,10 @@ auto URI::path(std::string_view path) -> URI & {
     return *this;
   }
 
-  const auto question_mark_pos = path.find('?');
-  if (question_mark_pos != std::string::npos) {
+  const auto query_pos = path.find('?');
+  if (query_pos != std::string::npos) {
     // Keep only whast we have before ?
-    path = path.substr(0, question_mark_pos);
+    path = path.substr(0, query_pos);
   }
 
   const auto fragment_pos = path.find('#');
