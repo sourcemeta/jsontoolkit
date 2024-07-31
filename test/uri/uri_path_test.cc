@@ -114,3 +114,11 @@ TEST(URI_path_setter, set_path_with_fragment) {
   uri.path("/foo%20bar#fragment");
   EXPECT_EQ(uri.path().value(), "/foo%20bar");
 }
+
+TEST(URI_path_setter, set_path_with_query_and_fragment) {
+  sourcemeta::jsontoolkit::URI uri{
+      "https://example.com/old?query=value#fragment"};
+  uri.path("/new");
+  EXPECT_EQ(uri.path().value(), "/new");
+  EXPECT_EQ(uri.recompose(), "https://example.com/new?query=value#fragment");
+}
