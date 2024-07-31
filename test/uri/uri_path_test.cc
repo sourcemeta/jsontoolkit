@@ -80,3 +80,9 @@ TEST(URI_path_setter, https_example_url_single) {
   uri.path("/bar");
   EXPECT_EQ(uri.path().value(), "/bar");
 }
+
+TEST(URI_path_setter, https_example_url_multi) {
+  sourcemeta::jsontoolkit::URI uri{"https://example.com/foo/bar/baz"};
+  uri.path("");
+  EXPECT_EQ(uri.path().has_value(), false);
+}

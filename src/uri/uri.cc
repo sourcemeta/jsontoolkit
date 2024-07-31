@@ -250,6 +250,11 @@ auto URI::path() const -> std::optional<std::string> {
 }
 
 auto URI::path(std::string_view path) -> URI & {
+  if (path.empty()) {
+    this->path_ = std::nullopt;
+    return *this;
+  }
+
   const bool has_leading_slash = path.front() == '/';
   this->path_ = has_leading_slash ? path.substr(1) : path;
   return *this;
