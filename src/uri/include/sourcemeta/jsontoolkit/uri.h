@@ -157,11 +157,11 @@ public:
   /// ```
   [[nodiscard]] auto path() const -> std::optional<std::string>;
 
-  /// Set the path part of the URI. Foe example:
+  /// Set the path part of the URI. For example:
   ///
   /// ```cpp
   /// #include <sourcemeta/jsontoolkit/uri.h>
-  /// @include <cassert>
+  /// #include <cassert>
   ///
   /// sourcemeta::jsontoolkit::URI uri{"https://www.sourcemeta.com"};
   /// uri.path("/foo/bar");

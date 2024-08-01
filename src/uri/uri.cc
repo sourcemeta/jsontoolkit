@@ -257,13 +257,13 @@ auto URI::path(std::string_view path) -> URI & {
 
   const auto query_pos = path.find('?');
   if (query_pos != std::string::npos) {
-    // Keep only whast we have before ?
+    // Keep only what we have before ?
     path = path.substr(0, query_pos);
   }
 
   const auto fragment_pos = path.find('#');
   if (fragment_pos != std::string::npos) {
-    // Keep only whast we have before #
+    // Keep only what we have before #
     path = path.substr(0, fragment_pos);
   }
 
