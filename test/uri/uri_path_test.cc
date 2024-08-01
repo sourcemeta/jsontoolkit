@@ -71,42 +71,49 @@ TEST(URI_path_setter, no_path) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
   uri.path("/foo");
   EXPECT_EQ(uri.path().value(), "/foo");
+  EXPECT_EQ(uri.recompose(), "https://example.com/foo");
 }
 
 TEST(URI_path_setter, url_slash) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com/"};
   uri.path("/foo");
   EXPECT_EQ(uri.path().value(), "/foo");
+  EXPECT_EQ(uri.recompose(), "https://example.com/foo");
 }
 
 TEST(URI_path_setter, url_path) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com/foo"};
   uri.path("/bar");
   EXPECT_EQ(uri.path().value(), "/bar");
+  EXPECT_EQ(uri.recompose(), "https://example.com/bar");
 }
 
 TEST(URI_path_setter, set_empty) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com/foo/bar/baz"};
   uri.path("");
   EXPECT_EQ(uri.path().has_value(), false);
+  EXPECT_EQ(uri.recompose(), "https://example.com");
 }
 
 TEST(URI_path_setter, set_path_without_leading_slash) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
   uri.path("foo");
   EXPECT_EQ(uri.path().value(), "/foo");
+  EXPECT_EQ(uri.recompose(), "https://example.com/foo");
 }
 
 TEST(URI_path_setter, set_path_with_trailing_slash) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
   uri.path("/foo/");
   EXPECT_EQ(uri.path().value(), "/foo/");
+  EXPECT_EQ(uri.recompose(), "https://example.com/foo/");
 }
 
 TEST(URI_path_setter, set_path_with_query) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
   uri.path("/foo%20bar?query=value#fragment");
   EXPECT_EQ(uri.path().value(), "/foo%20bar");
+  EXPECT_EQ(uri.recompose(), "https://example.com/foo%20bar");
 }
 
 TEST(URI_path_setter, set_path_with_fragment) {
