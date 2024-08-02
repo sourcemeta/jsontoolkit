@@ -255,20 +255,11 @@ auto URI::path(std::string_view path) -> URI & {
     return *this;
   }
 
-  const auto query_pos = path.find('?');
-  if (query_pos != std::string::npos) {
-    // Keep only what we have before ?
-    path = path.substr(0, query_pos);
-  }
-
-  const auto fragment_pos = path.find('#');
-  if (fragment_pos != std::string::npos) {
-    // Keep only what we have before #
-    path = path.substr(0, fragment_pos);
-  }
-
+  const auto parsed_path = URI{std::string{path}};
   const bool has_leading_slash = path.front() == '/';
-  this->path_ = has_leading_slash ? path.substr(1) : path;
+  const std::string path_to_set = parsed_path.path().value();
+
+  this->path_ = has_leading_slash ? path_to_set.substr(1) : path_to_set;
   return *this;
 }
 
