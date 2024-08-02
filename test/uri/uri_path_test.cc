@@ -67,6 +67,9 @@ TEST(URI_path_getter, without_scheme) {
 }
 
 // Setter
+// NOTE: we test both std::string&& and std::string_view signatures
+// - for `std::string_view` we use `std::string_view{}`
+// - for `std::string&&` we use `std::string{}`
 
 TEST(URI_path_setter, no_path) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
@@ -223,6 +226,15 @@ TEST(URI_path_setter_no_scheme, set_path_on_ip_address) {
   uri.path(std::string{"/admin"});
   EXPECT_EQ(uri.path().value(), "admin");
   EXPECT_EQ(uri.recompose(), "admin");
+}
+
+TEST(URI_path_setter, with_move) {
+  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+
+  const std::string path{"/foo"};
+  uri.path(std::move(path));
+  EXPECT_EQ(uri.path().value(), "/foo");
+  EXPECT_EQ(uri.recompose(), "https://example.com/foo");
 }
 
 // TODO: dig why scheme return example.com
