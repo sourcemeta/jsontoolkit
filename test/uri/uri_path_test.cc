@@ -157,9 +157,11 @@ TEST(URI_path_setter, set_path_with_fragment) {
 
   uri.path(std::string_view{"/foo%20bar#fragment"});
   EXPECT_EQ(uri.path().value(), "/foo%20bar");
+  EXPECT_EQ(uri.recompose(), "https://example.com/foo%20bar");
 
   uri.path(std::string{"/foo%20bar#fragment"});
   EXPECT_EQ(uri.path().value(), "/foo%20bar");
+  EXPECT_EQ(uri.recompose(), "https://example.com/foo%20bar");
 }
 
 TEST(URI_path_setter, set_path_with_query_and_fragment) {
