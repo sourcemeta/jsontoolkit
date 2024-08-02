@@ -263,6 +263,8 @@ auto URI::path(std::string_view path) -> URI & {
   return *this;
 }
 
+auto URI::path(std::string &&path) -> URI & { return this->path(path); }
+
 auto URI::fragment() const -> std::optional<std::string_view> {
   return this->fragment_;
 }
