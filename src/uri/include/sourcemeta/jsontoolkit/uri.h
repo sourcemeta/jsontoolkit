@@ -170,6 +170,8 @@ public:
   /// ```
   auto path(std::string_view path) -> URI &;
 
+  auto path(std::string &&path) -> URI &;
+
   /// Get the fragment part of the URI, if any. For example:
   ///
   /// ```cpp

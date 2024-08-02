@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <sourcemeta/jsontoolkit/uri.h>
+#include <string_view>
 
 // Getter
 
@@ -69,91 +70,91 @@ TEST(URI_path_getter, without_scheme) {
 
 TEST(URI_path_setter, no_path) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
-  uri.path("/foo");
+  uri.path(std::string_view{"/foo"});
   EXPECT_EQ(uri.path().value(), "/foo");
   EXPECT_EQ(uri.recompose(), "https://example.com/foo");
 }
 
 TEST(URI_path_setter, url_slash) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com/"};
-  uri.path("/foo");
+  uri.path(std::string_view{"/foo"});
   EXPECT_EQ(uri.path().value(), "/foo");
   EXPECT_EQ(uri.recompose(), "https://example.com/foo");
 }
 
 TEST(URI_path_setter, url_path) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com/foo"};
-  uri.path("/bar");
+  uri.path(std::string_view{"/bar"});
   EXPECT_EQ(uri.path().value(), "/bar");
   EXPECT_EQ(uri.recompose(), "https://example.com/bar");
 }
 
 TEST(URI_path_setter, set_empty) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com/foo/bar/baz"};
-  uri.path("");
+  uri.path(std::string_view{""});
   EXPECT_EQ(uri.path().has_value(), false);
   EXPECT_EQ(uri.recompose(), "https://example.com");
 }
 
 TEST(URI_path_setter, set_path_without_leading_slash) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
-  uri.path("foo");
+  uri.path(std::string_view{"foo"});
   EXPECT_EQ(uri.path().value(), "/foo");
   EXPECT_EQ(uri.recompose(), "https://example.com/foo");
 }
 
 TEST(URI_path_setter, set_path_with_trailing_slash) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
-  uri.path("/foo/");
+  uri.path(std::string_view{"/foo/"});
   EXPECT_EQ(uri.path().value(), "/foo/");
   EXPECT_EQ(uri.recompose(), "https://example.com/foo/");
 }
 
 TEST(URI_path_setter, set_path_with_query) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
-  uri.path("/foo%20bar?query=value#fragment");
+  uri.path(std::string_view{"/foo%20bar?query=value#fragment"});
   EXPECT_EQ(uri.path().value(), "/foo%20bar");
   EXPECT_EQ(uri.recompose(), "https://example.com/foo%20bar");
 }
 
 TEST(URI_path_setter, set_path_with_fragment) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
-  uri.path("/foo%20bar#fragment");
+  uri.path(std::string_view{"/foo%20bar#fragment"});
   EXPECT_EQ(uri.path().value(), "/foo%20bar");
 }
 
 TEST(URI_path_setter, set_path_with_query_and_fragment) {
   sourcemeta::jsontoolkit::URI uri{
       "https://example.com/old?query=value#fragment"};
-  uri.path("/new");
+  uri.path(std::string_view{"/new"});
   EXPECT_EQ(uri.path().value(), "/new");
   EXPECT_EQ(uri.recompose(), "https://example.com/new?query=value#fragment");
 }
 
 TEST(URI_path_setter_no_scheme, set_path_on_host_only) {
   sourcemeta::jsontoolkit::URI uri{"example.com"};
-  uri.path("/foo");
+  uri.path(std::string_view{"/foo"});
   EXPECT_EQ(uri.path().value(), "foo");
   EXPECT_EQ(uri.recompose(), "foo");
 }
 
 TEST(URI_path_setter_no_scheme, replace_existing_path) {
   sourcemeta::jsontoolkit::URI uri{"example.com/old"};
-  uri.path("/new");
+  uri.path(std::string_view{"/new"});
   EXPECT_EQ(uri.path().value(), "new");
   EXPECT_EQ(uri.recompose(), "new");
 }
 
 TEST(URI_path_setter_no_scheme, set_empty_path) {
   sourcemeta::jsontoolkit::URI uri{"example.com/foo"};
-  uri.path("");
+  uri.path(std::string_view{""});
   EXPECT_EQ(uri.path().has_value(), false);
   EXPECT_EQ(uri.recompose(), "");
 }
 
 TEST(URI_path_setter_no_scheme, set_path_on_ip_address) {
   sourcemeta::jsontoolkit::URI uri{"192.168.0.1"};
-  uri.path("/admin");
+  uri.path(std::string_view{"/admin"});
   EXPECT_EQ(uri.path().value(), "admin");
   EXPECT_EQ(uri.recompose(), "admin");
 }
