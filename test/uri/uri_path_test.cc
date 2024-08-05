@@ -151,6 +151,21 @@ TEST(URI_path_setter, set_path_with_trailing_slash) {
   EXPECT_EQ(path, "");
 }
 
+TEST(URI_path_setter, set_relative_path) {
+  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+
+  EXPECT_THROW(uri.path("../foo"), sourcemeta::jsontoolkit::URIError);
+  EXPECT_THROW(uri.path("./foo"), sourcemeta::jsontoolkit::URIError);
+
+  auto path{"../foo"};
+  EXPECT_THROW(uri.path(std::move(path)), sourcemeta::jsontoolkit::URIError);
+  EXPECT_EQ(path, "../foo");
+
+  path = "./foo";
+  EXPECT_THROW(uri.path(std::move(path)), sourcemeta::jsontoolkit::URIError);
+  EXPECT_EQ(path, "./foo");
+}
+
 TEST(URI_path_setter, set_path_with_query) {
   sourcemeta::jsontoolkit::URI uri{"https://example.com"};
 
