@@ -164,7 +164,8 @@ public:
   /// #include <cassert>
   ///
   /// sourcemeta::jsontoolkit::URI uri{"https://www.sourcemeta.com"};
-  /// uri.path("/foo/bar");
+  /// const std::string path{"/foo/bar"};
+  /// uri.path(path);
   /// assert(uri.path().has_value());
   /// assert(uri.path().value() == "/foo/bar");
   /// ```
