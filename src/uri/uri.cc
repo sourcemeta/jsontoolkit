@@ -249,21 +249,33 @@ auto URI::path() const -> std::optional<std::string> {
   return path_;
 }
 
-auto URI::path(std::string_view path) -> URI & {
+auto URI::path(const std::string &path) -> URI & {
   if (path.empty()) {
     this->path_ = std::nullopt;
     return *this;
   }
 
   const auto parsed_path = URI{std::string{path}};
-  const bool has_leading_slash = path.front() == '/';
   const std::string path_to_set = parsed_path.path().value();
+  const bool has_leading_slash = path_to_set.front() == '/';
 
   this->path_ = has_leading_slash ? path_to_set.substr(1) : path_to_set;
   return *this;
 }
 
-auto URI::path(std::string &&path) -> URI & { return this->path(path); }
+auto URI::path(std::string &&path) -> URI & {
+  if (path.empty()) {
+    this->path_ = std::nullopt;
+    return *this;
+  }
+
+  const auto parsed_path = URI{std::move(path)};
+  const std::string path_to_set = parsed_path.path().value();
+  const bool has_leading_slash = path_to_set.front() == '/';
+
+  this->path_ = has_leading_slash ? path_to_set.substr(1) : path_to_set;
+  return *this;
+}
 
 auto URI::fragment() const -> std::optional<std::string_view> {
   return this->fragment_;

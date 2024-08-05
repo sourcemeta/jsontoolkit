@@ -168,16 +168,16 @@ public:
   /// assert(uri.path().has_value());
   /// assert(uri.path().value() == "/foo/bar");
   /// ```
-  auto path(std::string_view path) -> URI &;
+  auto path(const std::string &path) -> URI &;
 
-  /// Set the path part of the URI.
+  /// Set the path part of the URI with move semantics. For example:
   ///
   /// ```cpp
   /// #include <sourcemeta/jsontoolkit/uri.h>
   /// #include <cassert>
   ///
   /// sourcemeta::jsontoolkit::URI uri{"https://www.sourcemeta.com"};
-  /// const std::string path{"/foo/bar"};
+  /// std::string path{"/foo/bar"};
   /// uri.path(std::move(path));
   /// assert(uri.path().has_value());
   /// assert(uri.path().value() == "/foo/bar");
