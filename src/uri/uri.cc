@@ -255,11 +255,11 @@ auto URI::path(const std::string &path) -> URI & {
     return *this;
   }
 
-  const auto parsed_path = URI{std::string{path}};
-  const std::string path_to_set = parsed_path.path().value();
-  const bool has_leading_slash = path_to_set.front() == '/';
+  auto parsed_path = URI{std::string{path}};
+  const bool has_leading_slash = parsed_path.path().value().front() == '/';
 
-  this->path_ = has_leading_slash ? path_to_set.substr(1) : path_to_set;
+  this->path_ = has_leading_slash ? parsed_path.path().value().substr(1)
+                                  : parsed_path.path().value();
   return *this;
 }
 
