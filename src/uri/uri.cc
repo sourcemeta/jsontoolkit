@@ -256,8 +256,12 @@ auto URI::path(const std::string &path) -> URI & {
   }
 
   auto parsed_path = URI{std::string{path}};
-  const bool has_leading_slash = parsed_path.path().value().front() == '/';
+  if (!parsed_path.path().has_value()) {
+    this->path_ = std::nullopt;
+    return *this;
+  }
 
+  const bool has_leading_slash = parsed_path.path().value().front() == '/';
   this->path_ = has_leading_slash ? parsed_path.path().value().substr(1)
                                   : parsed_path.path().value();
   return *this;
@@ -270,8 +274,12 @@ auto URI::path(std::string &&path) -> URI & {
   }
 
   auto parsed_path = URI{std::move(path)};
-  const bool has_leading_slash = parsed_path.path().value().front() == '/';
+  if (!parsed_path.path().has_value()) {
+    this->path_ = std::nullopt;
+    return *this;
+  }
 
+  const bool has_leading_slash = parsed_path.path().value().front() == '/';
   this->path_ = has_leading_slash ? parsed_path.path().value().substr(1)
                                   : parsed_path.path().value();
   return *this;
