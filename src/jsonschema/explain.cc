@@ -2,13 +2,6 @@
 
 #include <cassert> // assert
 
-static auto constraint_badge_pattern(
-    sourcemeta::jsontoolkit::SchemaExplainerScalar &explanation,
-    const sourcemeta::jsontoolkit::JSON &value) -> void {
-  assert(value.is_string());
-  explanation.constraints.emplace("matches", value.to_string());
-}
-
 static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
                            const std::map<std::string, bool> &vocabularies)
     -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation> {
@@ -17,8 +10,32 @@ static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
   explanation.type = "string";
 
   if (vocabularies.contains("http://json-schema.org/draft-07/schema#")) {
-    static const std::set<std::string> IGNORE{"$id", "$schema", "$comment",
-                                              "type"};
+    static const std::set<std::string> IGNORE{"$id",  "$schema",   "$comment",
+                                              "type", "minLength", "maxLength"};
+
+    if (schema.defines("minLength") && schema.defines("maxLength")) {
+      if (schema.at("minLength") == schema.at("maxLength")) {
+        explanation.constraints.emplace(
+            "range", "exactly " +
+                         std::to_string(schema.at("minLength").to_integer()) +
+                         " characters");
+      } else {
+        explanation.constraints.emplace(
+            "range", std::to_string(schema.at("minLength").to_integer()) +
+                         " to " +
+                         std::to_string(schema.at("maxLength").to_integer()) +
+                         " characters");
+      }
+    } else if (schema.defines("minLength")) {
+      explanation.constraints.emplace(
+          "range", ">= " + std::to_string(schema.at("minLength").to_integer()) +
+                       " characters");
+    } else if (schema.defines("maxLength")) {
+      explanation.constraints.emplace(
+          "range", "<= " + std::to_string(schema.at("maxLength").to_integer()) +
+                       " characters");
+    }
+
     for (const auto &[keyword, value] : schema.as_object()) {
       if (IGNORE.contains(keyword)) {
         continue;
@@ -29,7 +46,8 @@ static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
         assert(value.is_string());
         explanation.description = value.to_string();
       } else if (keyword == "pattern") {
-        constraint_badge_pattern(explanation, value);
+        assert(value.is_string());
+        explanation.constraints.emplace("matches", value.to_string());
       } else if (keyword == "examples") {
         assert(value.is_array());
         for (const auto &item : value.as_array()) {

@@ -153,3 +153,77 @@ TEST(JSONSchema_explain_string, draft7_type_if_then) {
       schema, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_FALSE(result.has_value());
 }
+
+TEST(JSONSchema_explain_string, draft7_type_minlength) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "minLength": 2,
+    "type": "string"
+  })JSON")};
+
+  EXPLAIN_SCALAR(schema);
+
+  EXPECT_EQ(explanation.constraints.size(), 1);
+  EXPECT_TRUE(explanation.constraints.contains("range"));
+  EXPECT_EQ(explanation.constraints.at("range"), ">= 2 characters");
+  EXPECT_FALSE(explanation.title.has_value());
+  EXPECT_FALSE(explanation.description.has_value());
+  EXPECT_TRUE(explanation.examples.empty());
+}
+
+TEST(JSONSchema_explain_string, draft7_type_maxlength) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "maxLength": 3,
+    "type": "string"
+  })JSON")};
+
+  EXPLAIN_SCALAR(schema);
+
+  EXPECT_EQ(explanation.constraints.size(), 1);
+  EXPECT_TRUE(explanation.constraints.contains("range"));
+  EXPECT_EQ(explanation.constraints.at("range"), "<= 3 characters");
+  EXPECT_FALSE(explanation.title.has_value());
+  EXPECT_FALSE(explanation.description.has_value());
+  EXPECT_TRUE(explanation.examples.empty());
+}
+
+TEST(JSONSchema_explain_string, draft7_type_minlength_maxlength_different) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "minLength": 2,
+    "maxLength": 3,
+    "type": "string"
+  })JSON")};
+
+  EXPLAIN_SCALAR(schema);
+
+  EXPECT_EQ(explanation.constraints.size(), 1);
+  EXPECT_TRUE(explanation.constraints.contains("range"));
+  EXPECT_EQ(explanation.constraints.at("range"), "2 to 3 characters");
+  EXPECT_FALSE(explanation.title.has_value());
+  EXPECT_FALSE(explanation.description.has_value());
+  EXPECT_TRUE(explanation.examples.empty());
+}
+
+TEST(JSONSchema_explain_string, draft7_type_minlength_maxlength_equal) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "minLength": 3,
+    "maxLength": 3,
+    "type": "string"
+  })JSON")};
+
+  EXPLAIN_SCALAR(schema);
+
+  EXPECT_EQ(explanation.constraints.size(), 1);
+  EXPECT_TRUE(explanation.constraints.contains("range"));
+  EXPECT_EQ(explanation.constraints.at("range"), "exactly 3 characters");
+  EXPECT_FALSE(explanation.title.has_value());
+  EXPECT_FALSE(explanation.description.has_value());
+  EXPECT_TRUE(explanation.examples.empty());
+}
