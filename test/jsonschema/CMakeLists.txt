@@ -104,7 +104,8 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_transform_bundle_test.cc
   jsonschema_transform_rules.h
   jsonschema_format_test.cc
-  jsonschema_template_format_test.cc)
+  jsonschema_template_format_test.cc
+  jsonschema_explain_string_test.cc)
 noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_jsonschema_unit)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE GTest::gtest)
