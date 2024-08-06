@@ -4,6 +4,7 @@ assets
 Makefile
 README.markdown
 test
+benchmark
 patches
 unikraft
 vendor/jsonschema-2019-09.mask
@@ -21,6 +22,8 @@ vendor/vendorpull
 vendor/uriparser.mask
 vendor/googletest
 vendor/googletest.mask
+vendor/googlebenchmark
+vendor/googlebenchmark.mask
 vendor/referencing-suite
 vendor/referencing-suite.mask
 vendor/jsonschema-test-suite
