@@ -10,6 +10,7 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 
+#include <map>      // std::map
 #include <optional> // std::optional, std::nullopt
 #include <set>      // std::set
 #include <string>   // std::string
@@ -18,17 +19,18 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
-/// The explanation result of a schema that represents a single string value
-struct SchemaExplainerScalarString {
+/// The explanation result of a scalar value (non container and non enumeration)
+struct SchemaExplainerScalar {
+  std::string type;
+  std::map<std::string, std::string> constraints;
   std::optional<std::string> title;
   std::optional<std::string> description;
-  std::optional<std::string> regular_expression;
   std::set<std::string> examples;
 };
 
 /// @ingroup jsonschema
 /// The explanation result of a schema
-using SchemaExplanation = std::variant<SchemaExplainerScalarString>;
+using SchemaExplanation = std::variant<SchemaExplainerScalar>;
 
 /// @ingroup jsonschema
 ///
@@ -52,7 +54,7 @@ using SchemaExplanation = std::variant<SchemaExplainerScalarString>;
 ///
 /// assert(result.has_value());
 /// assert(std::holds_alternative<
-///   sourcemeta::jsontoolkit::SchemaExplainerScalarString>(result.value()));
+///   sourcemeta::jsontoolkit::SchemaExplainerScalar>(result.value()));
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 auto explain(const JSON &schema, const SchemaResolver &resolver,

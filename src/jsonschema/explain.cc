@@ -2,11 +2,19 @@
 
 #include <cassert> // assert
 
+static auto constraint_badge_pattern(
+    sourcemeta::jsontoolkit::SchemaExplainerScalar &explanation,
+    const sourcemeta::jsontoolkit::JSON &value) -> void {
+  assert(value.is_string());
+  explanation.constraints.emplace("matches", value.to_string());
+}
+
 static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
                            const std::map<std::string, bool> &vocabularies)
     -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation> {
   assert(schema.is_object());
-  sourcemeta::jsontoolkit::SchemaExplainerScalarString explanation;
+  sourcemeta::jsontoolkit::SchemaExplainerScalar explanation;
+  explanation.type = "string";
 
   if (vocabularies.contains("http://json-schema.org/draft-07/schema#")) {
     static const std::set<std::string> IGNORE{"$id", "$schema", "$comment",
@@ -21,8 +29,7 @@ static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
         assert(value.is_string());
         explanation.description = value.to_string();
       } else if (keyword == "pattern") {
-        assert(value.is_string());
-        explanation.regular_expression = value.to_string();
+        constraint_badge_pattern(explanation, value);
       } else if (keyword == "examples") {
         assert(value.is_array());
         for (const auto &item : value.as_array()) {
