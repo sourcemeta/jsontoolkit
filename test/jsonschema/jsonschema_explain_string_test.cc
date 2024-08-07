@@ -130,7 +130,7 @@ TEST(JSONSchema_explain_string, draft7_type_format) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
-  EXPECT_EQ(explanation.type, "IP Address v4 (String)");
+  EXPECT_EQ(explanation.type, "String (IP Address v4)");
   EXPECT_TRUE(explanation.constraints.empty());
   EXPECT_FALSE(explanation.title.has_value());
   EXPECT_FALSE(explanation.description.has_value());

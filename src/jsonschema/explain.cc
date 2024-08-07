@@ -141,7 +141,8 @@ static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
         explanation.constraints.emplace("matches", value.to_string());
       } else if (keyword == "format") {
         assert(value.is_string());
-        explanation.type = translate_format(value.to_string()) + " (String)";
+        explanation.type =
+            "String (" + translate_format(value.to_string()) + ")";
       } else if (keyword == "examples") {
         assert(value.is_array());
         for (const auto &item : value.as_array()) {
