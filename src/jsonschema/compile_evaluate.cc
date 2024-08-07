@@ -584,7 +584,15 @@ auto evaluate_step(
         const auto &keyword{schema_location.back()};
         if (keyword.is_property() &&
             assertion.data.contains(keyword.to_property()) &&
-            annotations.contains(value)) {
+            annotations.contains(value) &&
+            // Make sure its not a cousin annotation, which can
+            // never be seen
+            // TODO: Have a better function at Pointer to check
+            // for these "initial starts with" cases in a way
+            // that we don't have to copy pointers, which `.initial()`
+            // does.
+            schema_location.initial().starts_with(
+                context.evaluate_path().initial())) {
           result = false;
           break;
         }
