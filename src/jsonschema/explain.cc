@@ -64,11 +64,51 @@ explain_constant_from_value(const sourcemeta::jsontoolkit::JSON &schema,
                                                           description};
 }
 
+static auto translate_format(const std::string &type) -> std::string {
+  if (type == "date-time") {
+    return "Timestamp";
+  } else if (type == "date") {
+    return "Date";
+  } else if (type == "time") {
+    return "Time";
+  } else if (type == "email") {
+    return "Email Address";
+  } else if (type == "idn-email") {
+    return "Email Address";
+  } else if (type == "hostname") {
+    return "Hostname";
+  } else if (type == "idn-hostname") {
+    return "Hostname";
+  } else if (type == "ipv4") {
+    return "IP Address v4";
+  } else if (type == "ipv6") {
+    return "IP Address v6";
+  } else if (type == "uri") {
+    return "Absolute URI";
+  } else if (type == "uri-reference") {
+    return "URI";
+  } else if (type == "iri") {
+    return "Absolute URI";
+  } else if (type == "iri-reference") {
+    return "URI";
+  } else if (type == "uri-template") {
+    return "URI Template";
+  } else if (type == "json-pointer") {
+    return "JSON Pointer";
+  } else if (type == "relative-json-pointer") {
+    return "Relative JSON Pointer";
+  } else if (type == "regex") {
+    return "Regular Expression";
+  } else {
+    return type;
+  }
+}
+
 static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
                            const std::map<std::string, bool> &vocabularies)
     -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation> {
   sourcemeta::jsontoolkit::SchemaExplainerScalar explanation;
-  explanation.type = "string";
+  explanation.type = "String";
 
   if (vocabularies.contains("http://json-schema.org/draft-07/schema#")) {
     if (schema.defines("minLength") && schema.defines("maxLength")) {
@@ -99,6 +139,9 @@ static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
       } else if (keyword == "pattern") {
         assert(value.is_string());
         explanation.constraints.emplace("matches", value.to_string());
+      } else if (keyword == "format") {
+        assert(value.is_string());
+        explanation.type = translate_format(value.to_string()) + " (String)";
       } else if (keyword == "examples") {
         assert(value.is_array());
         for (const auto &item : value.as_array()) {

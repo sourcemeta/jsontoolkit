@@ -24,7 +24,7 @@ TEST(JSONSchema_explain_string, draft7_type) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
-  EXPECT_EQ(explanation.type, "string");
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
   EXPECT_FALSE(explanation.title.has_value());
   EXPECT_FALSE(explanation.description.has_value());
@@ -41,7 +41,7 @@ TEST(JSONSchema_explain_string, draft7_type_id) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
-  EXPECT_EQ(explanation.type, "string");
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
   EXPECT_FALSE(explanation.title.has_value());
   EXPECT_FALSE(explanation.description.has_value());
@@ -58,7 +58,7 @@ TEST(JSONSchema_explain_string, draft7_type_comment) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
-  EXPECT_EQ(explanation.type, "string");
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
   EXPECT_FALSE(explanation.title.has_value());
   EXPECT_FALSE(explanation.description.has_value());
@@ -75,7 +75,7 @@ TEST(JSONSchema_explain_string, draft7_type_title) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
-  EXPECT_EQ(explanation.type, "string");
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
   EXPECT_TRUE(explanation.title.has_value());
   EXPECT_EQ(explanation.title, "Foo Bar");
@@ -93,7 +93,7 @@ TEST(JSONSchema_explain_string, draft7_type_description) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
-  EXPECT_EQ(explanation.type, "string");
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
   EXPECT_FALSE(explanation.title.has_value());
   EXPECT_TRUE(explanation.description.has_value());
@@ -111,9 +111,27 @@ TEST(JSONSchema_explain_string, draft7_type_pattern) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
   EXPECT_TRUE(explanation.constraints.contains("matches"));
   EXPECT_EQ(explanation.constraints.at("matches"), "^[a-z]+$");
+  EXPECT_FALSE(explanation.title.has_value());
+  EXPECT_FALSE(explanation.description.has_value());
+  EXPECT_TRUE(explanation.examples.empty());
+}
+
+TEST(JSONSchema_explain_string, draft7_type_format) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "format": "ipv4",
+    "type": "string"
+  })JSON")};
+
+  EXPLAIN(schema, SchemaExplainerScalar);
+
+  EXPECT_EQ(explanation.type, "IP Address v4 (String)");
+  EXPECT_TRUE(explanation.constraints.empty());
   EXPECT_FALSE(explanation.title.has_value());
   EXPECT_FALSE(explanation.description.has_value());
   EXPECT_TRUE(explanation.examples.empty());
@@ -129,7 +147,7 @@ TEST(JSONSchema_explain_string, draft7_type_examples) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
-  EXPECT_EQ(explanation.type, "string");
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
   EXPECT_FALSE(explanation.title.has_value());
   EXPECT_FALSE(explanation.description.has_value());
@@ -166,6 +184,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
   EXPECT_TRUE(explanation.constraints.contains("range"));
   EXPECT_EQ(explanation.constraints.at("range"), ">= 2 characters");
@@ -184,6 +203,7 @@ TEST(JSONSchema_explain_string, draft7_type_maxlength) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
   EXPECT_TRUE(explanation.constraints.contains("range"));
   EXPECT_EQ(explanation.constraints.at("range"), "<= 3 characters");
@@ -203,6 +223,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_maxlength_different) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
   EXPECT_TRUE(explanation.constraints.contains("range"));
   EXPECT_EQ(explanation.constraints.at("range"), "2 to 3 characters");
@@ -222,6 +243,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_maxlength_equal) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
   EXPECT_TRUE(explanation.constraints.contains("range"));
   EXPECT_EQ(explanation.constraints.at("range"), "exactly 3 characters");
@@ -241,6 +263,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_maxlength_equal_1) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
   EXPECT_TRUE(explanation.constraints.contains("range"));
   EXPECT_EQ(explanation.constraints.at("range"), "exactly 1 character");
@@ -259,6 +282,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_1) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
   EXPECT_TRUE(explanation.constraints.contains("range"));
   EXPECT_EQ(explanation.constraints.at("range"), ">= 1 character");
@@ -277,6 +301,7 @@ TEST(JSONSchema_explain_string, draft7_type_maxlength_1) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
   EXPECT_TRUE(explanation.constraints.contains("range"));
   EXPECT_EQ(explanation.constraints.at("range"), "<= 1 character");
@@ -296,6 +321,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_0_maxlength) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
   EXPECT_TRUE(explanation.constraints.contains("range"));
   EXPECT_EQ(explanation.constraints.at("range"), "<= 3 characters");
@@ -314,6 +340,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_0) {
 
   EXPLAIN(schema, SchemaExplainerScalar);
 
+  EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
   EXPECT_FALSE(explanation.title.has_value());
   EXPECT_FALSE(explanation.description.has_value());
