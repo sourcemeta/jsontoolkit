@@ -27,7 +27,8 @@ struct SchemaExplanationConstant {
 };
 
 /// @ingroup jsonschema
-/// The explanation result of a scalar value (non container and non enumeration)
+/// The explanation result of a scalar schema (non container and non
+/// enumeration)
 struct SchemaExplanationScalar {
   std::string type;
   std::map<std::string, std::string> constraints;
@@ -37,9 +38,18 @@ struct SchemaExplanationScalar {
 };
 
 /// @ingroup jsonschema
+/// The explanation result of an enumeration schema
+struct SchemaExplanationEnumeration {
+  std::optional<std::string> title;
+  std::optional<std::string> description;
+  std::set<JSON> values;
+};
+
+/// @ingroup jsonschema
 /// The explanation result of a schema
 using SchemaExplanation =
-    std::variant<SchemaExplanationConstant, SchemaExplanationScalar>;
+    std::variant<SchemaExplanationConstant, SchemaExplanationScalar,
+                 SchemaExplanationEnumeration>;
 
 /// @ingroup jsonschema
 ///

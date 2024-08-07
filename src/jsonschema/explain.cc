@@ -158,6 +158,39 @@ static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
   return explanation;
 }
 
+static auto explain_enumeration(const sourcemeta::jsontoolkit::JSON &schema,
+                                const std::map<std::string, bool> &vocabularies)
+    -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation> {
+  sourcemeta::jsontoolkit::SchemaExplanationEnumeration explanation;
+  if (vocabularies.contains("http://json-schema.org/draft-07/schema#")) {
+    static const std::set<std::string> IGNORE{
+        "$id", "$schema", "$comment",
+        // We don't collect examples, as by definition
+        // the enumeration is a set of examples
+        "examples"};
+    for (const auto &[keyword, value] : schema.as_object()) {
+      if (IGNORE.contains(keyword)) {
+        continue;
+      } else if (keyword == "enum") {
+        assert(value.is_array());
+        for (const auto &item : value.as_array()) {
+          explanation.values.insert(item);
+        }
+      } else if (keyword == "title") {
+        assert(value.is_string());
+        explanation.title = value.to_string();
+      } else if (keyword == "description") {
+        assert(value.is_string());
+        explanation.description = value.to_string();
+      } else {
+        return std::nullopt;
+      }
+    }
+  }
+
+  return explanation;
+}
+
 namespace sourcemeta::jsontoolkit {
 
 auto explain(const JSON &schema, const SchemaResolver &resolver,
@@ -173,7 +206,8 @@ auto explain(const JSON &schema, const SchemaResolver &resolver,
       sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)
           .get()};
 
-  // TODO: Support strings in other dialects
+  // TODO: Support all dialects
+
   if (vocabularies.contains("http://json-schema.org/draft-07/schema#") &&
       schema.defines("type") && schema.at("type").is_string() &&
       schema.at("type").to_string() == "string") {
@@ -185,6 +219,12 @@ auto explain(const JSON &schema, const SchemaResolver &resolver,
     }
 
     return explain_string(schema, vocabularies);
+  }
+
+  if (vocabularies.contains("http://json-schema.org/draft-07/schema#") &&
+      schema.defines("enum") && schema.at("enum").is_array() &&
+      !schema.at("enum").empty()) {
+    return explain_enumeration(schema, vocabularies);
   }
 
   return std::nullopt;
