@@ -12,6 +12,40 @@ static auto quantify(const std::int64_t value, const std::string &singular,
 }
 
 static auto
+make_range_constraint(std::map<std::string, std::string> &constraints,
+                      const std::optional<std::int64_t> &minimum,
+                      const std::optional<std::int64_t> &maximum,
+                      const std::optional<std::int64_t> &lower_bound,
+                      const std::string &singular,
+                      const std::string &plural) -> void {
+  if (constraints.contains("range")) {
+    return;
+  } else if ((!minimum.has_value() ||
+              (lower_bound.has_value() &&
+               minimum.value() <= lower_bound.value())) &&
+             maximum.has_value()) {
+    constraints.emplace("range",
+                        "<= " + quantify(maximum.value(), singular, plural));
+  } else if (minimum.has_value() && maximum.has_value()) {
+    if (minimum.value() == maximum.value()) {
+      constraints.emplace(
+          "range", "exactly " + quantify(minimum.value(), singular, plural));
+    } else {
+      constraints.emplace("range",
+                          std::to_string(minimum.value()) + " to " +
+                              quantify(maximum.value(), singular, plural));
+    }
+  } else if (minimum.has_value()) {
+    if (lower_bound.has_value() && minimum.value() <= lower_bound.value()) {
+      return;
+    }
+
+    constraints.emplace("range",
+                        ">= " + quantify(minimum.value(), singular, plural));
+  }
+}
+
+static auto
 explain_constant_from_value(const sourcemeta::jsontoolkit::JSON &schema,
                             const sourcemeta::jsontoolkit::JSON &value)
     -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation> {
@@ -33,52 +67,18 @@ explain_constant_from_value(const sourcemeta::jsontoolkit::JSON &schema,
 static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
                            const std::map<std::string, bool> &vocabularies)
     -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation> {
-  assert(schema.is_object());
   sourcemeta::jsontoolkit::SchemaExplainerScalar explanation;
   explanation.type = "string";
 
   if (vocabularies.contains("http://json-schema.org/draft-07/schema#")) {
-    static const std::set<std::string> IGNORE{"$id",  "$schema",   "$comment",
-                                              "type", "minLength", "maxLength"};
-
-    // TODO: Extract into a range computation utility
     if (schema.defines("minLength") && schema.defines("maxLength")) {
-      if (schema.at("minLength") == schema.at("maxLength")) {
-        if (schema.at("maxLength").to_integer() == 0) {
-          return explain_constant_from_value(schema,
-                                             sourcemeta::jsontoolkit::JSON{""});
-        }
-
-        explanation.constraints.emplace(
-            "range", "exactly " + quantify(schema.at("minLength").to_integer(),
-                                           "character", "characters"));
-      } else if (schema.at("minLength").to_integer() <= 0) {
-        explanation.constraints.emplace(
-            "range", "<= " + quantify(schema.at("maxLength").to_integer(),
-                                      "character", "characters"));
-      } else {
-        explanation.constraints.emplace(
-            "range", std::to_string(schema.at("minLength").to_integer()) +
-                         " to " +
-                         quantify(schema.at("maxLength").to_integer(),
-                                  "character", "characters"));
-      }
-    } else if (schema.defines("minLength") &&
-               schema.at("minLength").to_integer() > 0) {
-      explanation.constraints.emplace(
-          "range", ">= " + quantify(schema.at("minLength").to_integer(),
-                                    "character", "characters"));
-    } else if (schema.defines("maxLength")) {
-      if (schema.at("maxLength").to_integer() == 0) {
-        return explain_constant_from_value(schema,
-                                           sourcemeta::jsontoolkit::JSON{""});
-      }
-
-      explanation.constraints.emplace(
-          "range", "<= " + quantify(schema.at("maxLength").to_integer(),
-                                    "character", "characters"));
+      make_range_constraint(
+          explanation.constraints, schema.at("minLength").to_integer(),
+          schema.at("maxLength").to_integer(), 0, "character", "characters");
     }
 
+    static const std::set<std::string> IGNORE{"$id", "$schema", "$comment",
+                                              "type"};
     for (const auto &[keyword, value] : schema.as_object()) {
       if (IGNORE.contains(keyword)) {
         continue;
@@ -88,6 +88,14 @@ static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
       } else if (keyword == "description") {
         assert(value.is_string());
         explanation.description = value.to_string();
+      } else if (keyword == "minLength") {
+        make_range_constraint(explanation.constraints,
+                              schema.at("minLength").to_integer(), std::nullopt,
+                              0, "character", "characters");
+      } else if (keyword == "maxLength") {
+        make_range_constraint(explanation.constraints, std::nullopt,
+                              schema.at("maxLength").to_integer(), 0,
+                              "character", "characters");
       } else if (keyword == "pattern") {
         assert(value.is_string());
         explanation.constraints.emplace("matches", value.to_string());
@@ -125,6 +133,13 @@ auto explain(const JSON &schema, const SchemaResolver &resolver,
   if (vocabularies.contains("http://json-schema.org/draft-07/schema#") &&
       schema.defines("type") && schema.at("type").is_string() &&
       schema.at("type").to_string() == "string") {
+
+    if (schema.defines("maxLength") && schema.at("maxLength").is_integer() &&
+        schema.at("maxLength").to_integer() == 0) {
+      return explain_constant_from_value(schema,
+                                         sourcemeta::jsontoolkit::JSON{""});
+    }
+
     return explain_string(schema, vocabularies);
   }
 
