@@ -65,8 +65,8 @@ static auto uri_parse(const std::string &data, UriUriA *uri) -> void {
   uri_normalize(uri);
 }
 
-static auto
-canonicalize_path(const std::string &path) -> std::optional<std::string> {
+static auto canonicalize_path(const std::string &path, const bool is_relative)
+    -> std::optional<std::string> {
   std::vector<std::string> segments;
   std::string segment;
 
@@ -93,7 +93,7 @@ canonicalize_path(const std::string &path) -> std::optional<std::string> {
 
   // Reconstruct the canonical path
   std::string canonical_path;
-  std::string separator = "";
+  std::string separator = is_relative ? "/" : "";
   for (const auto &seg : segments) {
     canonical_path += separator + seg;
     separator = "/";
@@ -156,6 +156,10 @@ auto URI::parse() -> void {
 
   uri_parse(this->data, &this->internal->uri);
 
+  if (this->data.starts_with(".")) {
+    this->is_relative_ = true;
+  }
+
   this->scheme_ = uri_text_range(&this->internal->uri.scheme);
   this->scheme_ = uri_text_range(&this->internal->uri.scheme);
   this->userinfo_ = uri_text_range(&this->internal->uri.userInfo);
@@ -200,6 +204,8 @@ auto URI::parse() -> void {
   this->parsed = true;
 }
 
+auto URI::is_relative() const -> bool { return this->is_relative_; }
+
 auto URI::is_absolute() const noexcept -> bool {
   // An absolute URI always contains a scheme component,
   return this->internal->uri.scheme.first != nullptr;
@@ -240,12 +246,6 @@ auto URI::path() const -> std::optional<std::string> {
     return "/" + this->path_.value();
   }
 
-  size_t path_pos = this->data.find(this->path_.value());
-  if (path_pos != std::string::npos && path_pos > 0 &&
-      this->data[path_pos - 1] == '/') {
-    return "/" + this->path_.value();
-  }
-
   return path_;
 }
 
@@ -266,9 +266,7 @@ auto URI::path(const std::string &path) -> URI & {
     return *this;
   }
 
-  const bool has_leading_slash = parsed_path.path().value().front() == '/';
-  this->path_ = has_leading_slash ? parsed_path.path().value().substr(1)
-                                  : parsed_path.path().value();
+  this->path_ = parsed_path.path().value();
   return *this;
 }
 
@@ -278,8 +276,8 @@ auto URI::path(std::string &&path) -> URI & {
     return *this;
   }
 
-  const auto is_relative = path.starts_with(".");
-  if (is_relative) {
+  const auto is_relative_path = path.starts_with(".");
+  if (is_relative_path) {
     throw URIError{"You cannot set a relative path"};
   }
 
@@ -289,9 +287,7 @@ auto URI::path(std::string &&path) -> URI & {
     return *this;
   }
 
-  const bool has_leading_slash = parsed_path.path().value().front() == '/';
-  this->path_ = has_leading_slash ? parsed_path.path().value().substr(1)
-                                  : parsed_path.path().value();
+  this->path_ = parsed_path.path().value();
   return *this;
 }
 
@@ -389,7 +385,8 @@ auto URI::canonicalize() -> URI & {
   // Clean Path form ".." and "."
   const auto result_path{this->path()};
   if (result_path.has_value()) {
-    const auto canonical_path{canonicalize_path(result_path.value())};
+    const auto canonical_path{
+        canonicalize_path(result_path.value(), this->is_relative())};
     if (canonical_path.has_value()) {
       this->path_ = canonical_path.value();
     }

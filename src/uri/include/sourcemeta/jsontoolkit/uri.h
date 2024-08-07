@@ -108,6 +108,17 @@ public:
   /// ```
   auto is_fragment_only() const -> bool;
 
+  /// Check if the URI is relative. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::URI uri{"./foo"};
+  /// assert(uri.is_relative());
+  /// ```
+  auto is_relative() const -> bool;
+
   /// Get the scheme part of the URI, if any. For example:
   ///
   /// ```cpp
@@ -365,6 +376,7 @@ private:
   // We keep this as const as this class is immutable
   std::string data;
 
+  bool is_relative_ = false;
   std::optional<std::string> path_;
   std::optional<std::string> userinfo_;
   std::optional<std::string> host_;
