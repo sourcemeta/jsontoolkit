@@ -245,12 +245,12 @@ int main(int argc, char **argv) {
                    // TODO: Enable all tests
                    {"defs", "maxContains", "minContains", "not", "recursiveRef",
                     "unevaluatedItems", "unevaluatedProperties"});
-    register_tests(std::filesystem::path{"draft2019-09"} / "optional",
-                   "JSONSchemaOfficialSuite_2019_09_Optional",
-                   "https://json-schema.org/draft/2019-09/schema",
-                   {// TODO: Enable all tests
-                    "bignum", "cross-draft", "ecmascript-regex",
-                    "non-bmp-regex", "refOfUnknownKeyword"});
+    register_tests(
+        std::filesystem::path{"draft2019-09"} / "optional",
+        "JSONSchemaOfficialSuite_2019_09_Optional",
+        "https://json-schema.org/draft/2019-09/schema",
+        {// TODO: Enable all tests
+         "bignum", "cross-draft", "ecmascript-regex", "non-bmp-regex"});
     register_tests(
         std::filesystem::path{"draft2019-09"} / "optional" / "format",
         "JSONSchemaOfficialSuite_2019_09_Optional_Format",
