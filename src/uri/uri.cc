@@ -201,8 +201,7 @@ auto URI::parse() -> void {
 }
 
 auto URI::is_relative() const -> bool {
-  return !this->scheme().has_value() &&
-         (!this->data.starts_with("/") || this->data.starts_with("."));
+  return !this->scheme().has_value() || this->data.starts_with(".");
 }
 
 auto URI::is_absolute() const noexcept -> bool {

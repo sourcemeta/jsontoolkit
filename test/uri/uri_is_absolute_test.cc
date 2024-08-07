@@ -16,7 +16,8 @@ TEST(URI_is_absolute, urn) {
   EXPECT_TRUE(uri.is_absolute());
 }
 
-// TEST(URI_is_absolute, slash) {
-//   const sourcemeta::jsontoolkit::URI uri{"/foo"};
-//   EXPECT_TRUE(uri.is_absolute());
-// }
+TEST(URI_is_absolute, slash) {
+  // The is a relative URI, even if the path is absolute.
+  const sourcemeta::jsontoolkit::URI uri{"/foo"};
+  EXPECT_FALSE(uri.is_absolute());
+}
