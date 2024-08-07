@@ -182,6 +182,25 @@ public:
     this->labels.try_emplace(id, children);
   }
 
+  // TODO: At least currently, we only need to mask if a schema
+  // makes use of `unevaluatedProperties` or `unevaluatedItems`
+  // Detect if a schema does need this so if not, we avoid
+  // an unnecessary copy
+  auto mask() -> void {
+    this->annotation_blacklist.insert(this->evaluate_path_);
+  }
+
+  auto masked(const Pointer &path) const -> bool {
+    for (const auto &masked : this->annotation_blacklist) {
+      if (path.starts_with(masked) &&
+          !this->evaluate_path_.starts_with(masked)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   auto jump(const std::size_t id) const -> const Template & {
     assert(this->labels.contains(id));
     return this->labels.at(id).get();
@@ -191,6 +210,7 @@ private:
   Pointer evaluate_path_;
   Pointer instance_location_;
   std::vector<std::pair<std::size_t, std::size_t>> frame_sizes;
+  std::set<Pointer> annotation_blacklist;
   // For efficiency, as we likely reference the same JSON values
   // over and over again
   std::set<JSON> values;
@@ -533,6 +553,8 @@ auto evaluate_step(
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical.condition, instance);
     CALLBACK_PRE(context.instance_location());
+    // Ignore annotations produced inside "not"
+    context.mask();
     result = false;
     for (const auto &child : logical.children) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
@@ -592,7 +614,10 @@ auto evaluate_step(
             // that we don't have to copy pointers, which `.initial()`
             // does.
             schema_location.initial().starts_with(
-                context.evaluate_path().initial())) {
+                context.evaluate_path().initial()) &&
+            // We want to ignore certain annotations, like the ones
+            // inside "not"
+            !context.masked(schema_location)) {
           result = false;
           break;
         }
