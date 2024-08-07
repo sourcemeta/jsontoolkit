@@ -134,9 +134,12 @@ TEST(JSONSchema_explain_string, draft7_type_examples) {
   EXPECT_FALSE(explanation.title.has_value());
   EXPECT_FALSE(explanation.description.has_value());
   EXPECT_EQ(explanation.examples.size(), 3);
-  EXPECT_TRUE(explanation.examples.contains("foo"));
-  EXPECT_TRUE(explanation.examples.contains("bar"));
-  EXPECT_TRUE(explanation.examples.contains("baz"));
+  EXPECT_TRUE(
+      explanation.examples.contains(sourcemeta::jsontoolkit::JSON{"foo"}));
+  EXPECT_TRUE(
+      explanation.examples.contains(sourcemeta::jsontoolkit::JSON{"bar"}));
+  EXPECT_TRUE(
+      explanation.examples.contains(sourcemeta::jsontoolkit::JSON{"baz"}));
 }
 
 TEST(JSONSchema_explain_string, draft7_type_if_then) {

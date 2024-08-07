@@ -33,7 +33,7 @@ struct SchemaExplainerScalar {
   std::map<std::string, std::string> constraints;
   std::optional<std::string> title;
   std::optional<std::string> description;
-  std::set<std::string> examples;
+  std::set<JSON> examples;
 };
 
 /// @ingroup jsonschema

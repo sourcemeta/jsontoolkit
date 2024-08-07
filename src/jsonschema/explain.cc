@@ -103,7 +103,7 @@ static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
         assert(value.is_array());
         for (const auto &item : value.as_array()) {
           assert(item.is_string());
-          explanation.examples.insert(item.to_string());
+          explanation.examples.insert(item);
         }
       } else {
         return std::nullopt;
