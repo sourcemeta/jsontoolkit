@@ -376,7 +376,6 @@ private:
   // We keep this as const as this class is immutable
   std::string data;
 
-  bool is_relative_ = false;
   std::optional<std::string> path_;
   std::optional<std::string> userinfo_;
   std::optional<std::string> host_;

@@ -156,10 +156,6 @@ auto URI::parse() -> void {
 
   uri_parse(this->data, &this->internal->uri);
 
-  if (this->data.starts_with(".")) {
-    this->is_relative_ = true;
-  }
-
   this->scheme_ = uri_text_range(&this->internal->uri.scheme);
   this->scheme_ = uri_text_range(&this->internal->uri.scheme);
   this->userinfo_ = uri_text_range(&this->internal->uri.userInfo);
@@ -204,7 +200,7 @@ auto URI::parse() -> void {
   this->parsed = true;
 }
 
-auto URI::is_relative() const -> bool { return this->is_relative_; }
+auto URI::is_relative() const -> bool { return this->data.starts_with("."); }
 
 auto URI::is_absolute() const noexcept -> bool {
   // An absolute URI always contains a scheme component,
