@@ -15,3 +15,8 @@ TEST(URI_is_absolute, urn) {
   const sourcemeta::jsontoolkit::URI uri{"urn:example:schema"};
   EXPECT_TRUE(uri.is_absolute());
 }
+
+// TEST(URI_is_absolute, slash) {
+//   const sourcemeta::jsontoolkit::URI uri{"/foo"};
+//   EXPECT_TRUE(uri.is_absolute());
+// }
