@@ -19,6 +19,14 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
+/// The explanation result of a constant value
+struct SchemaExplainerConstant {
+  JSON value;
+  std::optional<std::string> title;
+  std::optional<std::string> description;
+};
+
+/// @ingroup jsonschema
 /// The explanation result of a scalar value (non container and non enumeration)
 struct SchemaExplainerScalar {
   std::string type;
@@ -30,7 +38,8 @@ struct SchemaExplainerScalar {
 
 /// @ingroup jsonschema
 /// The explanation result of a schema
-using SchemaExplanation = std::variant<SchemaExplainerScalar>;
+using SchemaExplanation =
+    std::variant<SchemaExplainerConstant, SchemaExplainerScalar>;
 
 /// @ingroup jsonschema
 ///
