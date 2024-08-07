@@ -445,15 +445,17 @@ auto evaluate_step(
     }
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical.condition, instance);
     CALLBACK_PRE(context.instance_location());
+    // This boolean value controls whether we should still evaluate
+    // every disjunction even on fast mode
+    const auto value{context.resolve_value(logical.value, instance)};
     result = logical.children.empty();
     for (const auto &child : logical.children) {
       if (evaluate_step(child, instance, mode, callback, context)) {
         result = true;
-        if (mode == SchemaCompilerEvaluationMode::Fast) {
+        if (mode == SchemaCompilerEvaluationMode::Fast && !value) {
           break;
         }
       }
