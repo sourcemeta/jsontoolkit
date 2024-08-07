@@ -358,7 +358,7 @@ auto compiler_2019_09_applicator_unevaluateditems(
   }
 
   SchemaCompilerTemplate condition{make<SchemaCompilerAssertionTypeStrict>(
-      schema_context, dynamic_context, JSON::Type::Array, {},
+      schema_context, relative_dynamic_context, JSON::Type::Array, {},
       SchemaCompilerTargetType::Instance)};
   condition.push_back(make<SchemaCompilerInternalNoAnnotation>(
       schema_context, relative_dynamic_context, JSON{true}, {},

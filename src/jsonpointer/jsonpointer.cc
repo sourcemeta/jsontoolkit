@@ -36,6 +36,8 @@ auto traverse(V &document,
   // See https://www.rfc-editor.org/rfc/rfc6901#section-4
   for (auto iterator = begin; iterator != end; ++iterator) {
     if (iterator->is_property()) {
+      assert(current.get().is_object());
+
       // If the currently referenced value is a JSON object, the new
       // referenced value is the object member with the name identified by
       // the reference token.  The member name is equal to the token if it
@@ -45,6 +47,8 @@ auto traverse(V &document,
       // See https://www.rfc-editor.org/rfc/rfc6901#section-4
       current = current.get().at(iterator->to_property());
     } else {
+      assert(current.get().is_array());
+
       // If the currently referenced value is a JSON array, the reference
       // token MUST contain [...] characters comprised of digits (see ABNF
       // below; note that leading zeros are not allowed) that represent an
