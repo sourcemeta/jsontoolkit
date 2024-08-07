@@ -9,7 +9,7 @@ standards such as [JSON Schema](http://json-schema.org), [JSON
 Pointer](https://www.rfc-editor.org/rfc/rfc6901),
 [JSONL](https://jsonlines.org), and more.  It targets C++20 and supports the
 Clang, GCC, and MSVC compilers on macOS, GNU/Linux, FreeBSD, Windows, and
-Unikraft.
+Unikraft (through the ELF loader).
 
 Installation
 ------------
@@ -75,25 +75,6 @@ integration on the following package managers:
 ```sh
 # Homebrew
 $ brew install jsontoolkit
-```
-
-### Using Unikraft
-
-On your [`Kraftfile`](https://unikraft.org/docs/cli/reference/kraftfile/v0.5)
-libraries, declare JSON Toolkit as follows:
-
-```yml
-libraries:
-  ...
-  jsontoolkit:
-    source: https://github.com/sourcemeta/jsontoolkit.git
-    version: <sha-or-tag>
-```
-
-Then, on your target `kconfig` configuration, specify:
-
-```yml
-- CONFIG_LIBJSONTOOLKIT=y
 ```
 
 CMake

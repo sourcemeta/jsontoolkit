@@ -6,7 +6,6 @@ README.markdown
 test
 benchmark
 patches
-unikraft
 vendor/jsonschema-2019-09.mask
 vendor/jsonschema-2020-12.mask
 vendor/jsonschema-draft0.mask

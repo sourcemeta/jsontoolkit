@@ -126,14 +126,3 @@ jobs:
           UBSAN_OPTIONS: print_stacktrace=1
 
       - run: cmake --build ./build --config Release --verbose --target benchmark_all
-
-  unikraft:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: unikraft/kraftkit@stable
-        with:
-          workdir: .
-          run: |
-            kraft build --target development --jobs 4 --log-type=basic unikraft
-            kraft run --target development --disable-acceleration unikraft --memory 128Mi
