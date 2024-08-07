@@ -254,17 +254,12 @@ auto URI::path(const std::string &path) -> URI & {
     return *this;
   }
 
-  const auto is_relative = path.starts_with(".");
-  if (is_relative) {
+  const auto is_relative_path = path.starts_with(".");
+  if (is_relative_path) {
     throw URIError{"You cannot set a relative path"};
   }
 
   auto parsed_path = URI{std::string{path}};
-  if (!parsed_path.path().has_value()) {
-    this->path_ = std::nullopt;
-    return *this;
-  }
-
   this->path_ = parsed_path.path().value();
   return *this;
 }
@@ -281,11 +276,6 @@ auto URI::path(std::string &&path) -> URI & {
   }
 
   auto parsed_path = URI{std::move(path)};
-  if (!parsed_path.path().has_value()) {
-    this->path_ = std::nullopt;
-    return *this;
-  }
-
   this->path_ = parsed_path.path().value();
   return *this;
 }
