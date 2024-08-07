@@ -3,15 +3,7 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-// TODO: Extract into a common utility helper
-#define EXPLAIN(schema, kind)                                                  \
-  const auto result{sourcemeta::jsontoolkit::explain(                          \
-      (schema), sourcemeta::jsontoolkit::official_resolver)};                  \
-  EXPECT_TRUE(result.has_value());                                             \
-  EXPECT_TRUE(                                                                 \
-      std::holds_alternative<sourcemeta::jsontoolkit::kind>(result.value()));  \
-  const auto &explanation{                                                     \
-      std::get<sourcemeta::jsontoolkit::kind>(result.value())};
+#include "jsonschema_test_utils.h"
 
 // TODO: Test all other JSON Schema dialects
 
