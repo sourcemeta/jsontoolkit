@@ -106,6 +106,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_format_test.cc
   jsonschema_template_format_test.cc
   jsonschema_explain_string_test.cc
+  jsonschema_explain_object_test.cc
   jsonschema_explain_enumeration_test.cc)
 noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_jsonschema_unit)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit

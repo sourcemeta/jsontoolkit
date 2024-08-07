@@ -2,6 +2,10 @@
 
 #include <cassert> // assert
 
+static auto explain_schema(const sourcemeta::jsontoolkit::JSON &schema,
+                           const std::map<std::string, bool> &vocabularies)
+    -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation>;
+
 static auto quantify(const std::int64_t value, const std::string &singular,
                      const std::string &plural) -> std::string {
   std::ostringstream result;
@@ -191,6 +195,88 @@ static auto explain_enumeration(const sourcemeta::jsontoolkit::JSON &schema,
   return explanation;
 }
 
+static auto explain_object(const sourcemeta::jsontoolkit::JSON &schema,
+                           const std::map<std::string, bool> &vocabularies)
+    -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation> {
+  sourcemeta::jsontoolkit::SchemaExplanationComposite explanation;
+  explanation.type = "Object";
+  if (vocabularies.contains("http://json-schema.org/draft-07/schema#")) {
+    static const std::set<std::string> IGNORE{"$id", "$schema", "$comment",
+                                              "type"};
+    for (const auto &[keyword, value] : schema.as_object()) {
+      if (IGNORE.contains(keyword)) {
+        continue;
+      } else if (keyword == "title") {
+        assert(value.is_string());
+        explanation.title = value.to_string();
+      } else if (keyword == "description") {
+        assert(value.is_string());
+        explanation.description = value.to_string();
+      } else if (keyword == "properties") {
+        assert(value.is_object());
+        for (const auto &[property, subschema] : value.as_object()) {
+          // TODO: This is naive. The subschema might be following different
+          // vocabularies We need to re-check at every applicator
+          auto subexplanation{explain_schema(subschema, vocabularies)};
+          if (!subexplanation.has_value()) {
+            return std::nullopt;
+          }
+
+          sourcemeta::jsontoolkit::SchemaExplanationPath path{
+              {property, "property"}};
+          explanation.components.emplace(
+              std::move(path), std::make_pair(std::move(subexplanation).value(),
+                                              std::vector<std::string>{}));
+        }
+      } else {
+        return std::nullopt;
+      }
+    }
+  }
+
+  return explanation;
+}
+
+// TODO: Support all dialects
+static auto explain_schema(const sourcemeta::jsontoolkit::JSON &schema,
+                           const std::map<std::string, bool> &vocabularies)
+    -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation> {
+  if (vocabularies.contains("http://json-schema.org/draft-07/schema#") &&
+      schema.defines("type") && schema.at("type").is_string() &&
+      schema.at("type").to_string() == "string") {
+
+    if (schema.defines("maxLength") && schema.at("maxLength").is_integer() &&
+        schema.at("maxLength").to_integer() == 0) {
+      return explain_constant_from_value(schema,
+                                         sourcemeta::jsontoolkit::JSON{""});
+    }
+
+    return explain_string(schema, vocabularies);
+  }
+
+  if (vocabularies.contains("http://json-schema.org/draft-07/schema#") &&
+      schema.defines("type") && schema.at("type").is_string() &&
+      schema.at("type").to_string() == "object") {
+
+    if (schema.defines("maxProperties") &&
+        schema.at("maxProperties").is_integer() &&
+        schema.at("maxProperties").to_integer() == 0) {
+      return explain_constant_from_value(
+          schema, sourcemeta::jsontoolkit::JSON::make_object());
+    }
+
+    return explain_object(schema, vocabularies);
+  }
+
+  if (vocabularies.contains("http://json-schema.org/draft-07/schema#") &&
+      schema.defines("enum") && schema.at("enum").is_array() &&
+      !schema.at("enum").empty()) {
+    return explain_enumeration(schema, vocabularies);
+  }
+
+  return std::nullopt;
+}
+
 namespace sourcemeta::jsontoolkit {
 
 auto explain(const JSON &schema, const SchemaResolver &resolver,
@@ -206,28 +292,7 @@ auto explain(const JSON &schema, const SchemaResolver &resolver,
       sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)
           .get()};
 
-  // TODO: Support all dialects
-
-  if (vocabularies.contains("http://json-schema.org/draft-07/schema#") &&
-      schema.defines("type") && schema.at("type").is_string() &&
-      schema.at("type").to_string() == "string") {
-
-    if (schema.defines("maxLength") && schema.at("maxLength").is_integer() &&
-        schema.at("maxLength").to_integer() == 0) {
-      return explain_constant_from_value(schema,
-                                         sourcemeta::jsontoolkit::JSON{""});
-    }
-
-    return explain_string(schema, vocabularies);
-  }
-
-  if (vocabularies.contains("http://json-schema.org/draft-07/schema#") &&
-      schema.defines("enum") && schema.at("enum").is_array() &&
-      !schema.at("enum").empty()) {
-    return explain_enumeration(schema, vocabularies);
-  }
-
-  return std::nullopt;
+  return explain_schema(schema, vocabularies);
 }
 
 } // namespace sourcemeta::jsontoolkit

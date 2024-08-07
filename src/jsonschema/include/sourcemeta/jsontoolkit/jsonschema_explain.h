@@ -15,6 +15,7 @@
 #include <set>      // std::set
 #include <string>   // std::string
 #include <variant>  // std::variant
+#include <vector>   // std::vector
 
 namespace sourcemeta::jsontoolkit {
 
@@ -46,10 +47,34 @@ struct SchemaExplanationEnumeration {
 };
 
 /// @ingroup jsonschema
+/// A single object or array path component
+using SchemaExplanationPathComponent = std::pair<std::string, std::string>;
+
+/// @ingroup jsonschema
+/// A single object or array path
+using SchemaExplanationPath = std::vector<SchemaExplanationPathComponent>;
+
+/// @ingroup jsonschema
+/// The explanation result of an object or array schema
+struct SchemaExplanationComposite;
+
+/// @ingroup jsonschema
 /// The explanation result of a schema
 using SchemaExplanation =
     std::variant<SchemaExplanationConstant, SchemaExplanationScalar,
-                 SchemaExplanationEnumeration>;
+                 SchemaExplanationEnumeration, SchemaExplanationComposite>;
+
+#if !defined(DOXYGEN)
+struct SchemaExplanationComposite {
+  std::string type;
+  std::optional<std::string> title;
+  std::optional<std::string> description;
+  std::map<SchemaExplanationPath,
+           std::pair<SchemaExplanation, std::vector<std::string>>>
+      components;
+  std::map<std::string, std::string> constraints;
+};
+#endif
 
 /// @ingroup jsonschema
 ///
