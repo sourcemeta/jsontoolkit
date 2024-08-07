@@ -416,5 +416,33 @@ auto compiler_2019_09_core_recursiveref(
   return {};
 }
 
+auto compiler_2019_09_applicator_anyof(
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  assert(schema_context.schema.at(dynamic_context.keyword).is_array());
+  assert(!schema_context.schema.at(dynamic_context.keyword).empty());
+
+  SchemaCompilerTemplate disjunctors;
+  for (std::uint64_t index = 0;
+       index < schema_context.schema.at(dynamic_context.keyword).size();
+       index++) {
+    disjunctors.push_back(make<SchemaCompilerInternalContainer>(
+        schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+        compile(context, schema_context, relative_dynamic_context,
+                {static_cast<Pointer::Token::Index>(index)}),
+        SchemaCompilerTemplate{}));
+  }
+
+  return {make<SchemaCompilerLogicalOr>(
+      schema_context, dynamic_context,
+      // TODO: This set to true means that every disjunction of `anyOf`
+      // is always evaluated. In fact, we only need to enable this if
+      // the schema makes any use of `unevaluatedItems` or
+      // `unevaluatedProperties`
+      true, std::move(disjunctors), SchemaCompilerTemplate{})};
+}
+
 } // namespace internal
 #endif

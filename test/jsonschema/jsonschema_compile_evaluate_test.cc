@@ -187,7 +187,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_empty_no_condition) {
                               Pointer{},
                               Pointer{},
                               "#",
-                              SchemaCompilerValueNone{},
+                              false,
                               {},
                               {}}};
 
@@ -220,7 +220,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_true) {
                               Pointer{},
                               Pointer{},
                               "#",
-                              SchemaCompilerValueNone{},
+                              false,
                               children,
                               {}}};
 
@@ -253,7 +253,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_false) {
                               Pointer{},
                               Pointer{},
                               "#",
-                              SchemaCompilerValueNone{},
+                              false,
                               children,
                               {}}};
 
@@ -288,7 +288,7 @@ TEST(JSONSchema_compile_evaluate,
                               Pointer{},
                               Pointer{},
                               "#",
-                              SchemaCompilerValueNone{},
+                              false,
                               children,
                               {assertion_1}}};
 
@@ -355,7 +355,7 @@ TEST(JSONSchema_compile_evaluate,
                               Pointer{},
                               Pointer{},
                               "#",
-                              SchemaCompilerValueNone{},
+                              false,
                               children,
                               {assertion_1}}};
 

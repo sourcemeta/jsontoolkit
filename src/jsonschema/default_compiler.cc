@@ -75,6 +75,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator",
           "additionalProperties",
           compiler_2019_09_applicator_additionalproperties);
+  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator", "anyOf",
+          compiler_2019_09_applicator_anyof);
 
   // Same as Draft 7
 
@@ -109,8 +111,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
 
   COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator", "allOf",
           compiler_draft4_applicator_allof);
-  COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator", "anyOf",
-          compiler_draft4_applicator_anyof);
   COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator", "oneOf",
           compiler_draft4_applicator_oneof);
   COMPILE("https://json-schema.org/draft/2019-09/vocab/applicator", "not",

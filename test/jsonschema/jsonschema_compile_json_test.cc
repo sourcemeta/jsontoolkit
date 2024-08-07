@@ -209,7 +209,7 @@ TEST(JSONSchema_compile_json, or_empty) {
                               Pointer{},
                               Pointer{},
                               "#",
-                              SchemaCompilerValueNone{},
+                              false,
                               {},
                               {}}};
 
@@ -218,7 +218,11 @@ TEST(JSONSchema_compile_json, or_empty) {
     {
       "category": "logical",
       "type": "or",
-      "value": null,
+      "value": {
+        "category": "value",
+        "type": "boolean",
+        "value": false
+      },
       "target": {
         "category": "target",
         "location": "",
@@ -251,7 +255,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
                               Pointer{},
                               Pointer{},
                               "#",
-                              SchemaCompilerValueNone{},
+                              false,
                               children,
                               {}}};
 
@@ -260,7 +264,11 @@ TEST(JSONSchema_compile_json, or_single_child) {
     {
       "category": "logical",
       "type": "or",
-      "value": null,
+      "value": {
+        "category": "value",
+        "type": "boolean",
+        "value": false
+      },
       "target": {
         "category": "target",
         "location": "",
@@ -320,7 +328,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
                               Pointer{},
                               Pointer{},
                               "#",
-                              SchemaCompilerValueNone{},
+                              false,
                               children,
                               {}}};
 
@@ -329,7 +337,11 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
     {
       "category": "logical",
       "type": "or",
-      "value": null,
+      "value": {
+        "category": "value",
+        "type": "boolean",
+        "value": false
+      },
       "target": {
         "category": "target",
         "location": "",
@@ -399,7 +411,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
                               Pointer{},
                               Pointer{},
                               "#",
-                              SchemaCompilerValueNone{},
+                              false,
                               {},
                               condition}};
 
@@ -408,7 +420,11 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
     {
       "category": "logical",
       "type": "or",
-      "value": null,
+      "value": {
+        "category": "value",
+        "type": "boolean",
+        "value": false
+      },
       "target": {
         "category": "target",
         "location": "",
