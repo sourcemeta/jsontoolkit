@@ -92,25 +92,37 @@ auto compiler_2019_09_applicator_contains(
     -> SchemaCompilerTemplate {
 
   std::size_t minimum{1};
-  if (schema_context.schema.defines("minContains") &&
-      schema_context.schema.at("minContains").is_integer() &&
-      schema_context.schema.at("minContains").is_positive() &&
-      schema_context.schema.at("minContains").to_integer() > 0) {
-    minimum = static_cast<std::size_t>(
-        schema_context.schema.at("minContains").to_integer());
+  if (schema_context.schema.defines("minContains")) {
+    if (schema_context.schema.at("minContains").is_integer() &&
+        schema_context.schema.at("minContains").is_positive()) {
+      minimum = static_cast<std::size_t>(
+          schema_context.schema.at("minContains").to_integer());
+    } else if (schema_context.schema.at("minContains").is_real() &&
+               schema_context.schema.at("minContains").is_positive()) {
+      minimum = static_cast<std::size_t>(
+          schema_context.schema.at("minContains").as_integer());
+    }
   }
 
   std::optional<std::size_t> maximum;
-  if (schema_context.schema.defines("maxContains") &&
-      schema_context.schema.at("maxContains").is_integer() &&
-      schema_context.schema.at("maxContains").is_positive()) {
-    maximum = schema_context.schema.at("maxContains").to_integer();
+  if (schema_context.schema.defines("maxContains")) {
+    if (schema_context.schema.at("maxContains").is_integer() &&
+        schema_context.schema.at("maxContains").is_positive()) {
+      maximum = schema_context.schema.at("maxContains").to_integer();
+    } else if (schema_context.schema.at("maxContains").is_real() &&
+               schema_context.schema.at("maxContains").is_positive()) {
+      maximum = schema_context.schema.at("maxContains").as_integer();
+    }
   }
 
   if (maximum.has_value() && minimum > maximum.value()) {
     return {make<SchemaCompilerAssertionFail>(
         schema_context, dynamic_context, SchemaCompilerValueNone{}, {},
         SchemaCompilerTargetType::Instance)};
+  }
+
+  if (minimum == 0 && !maximum.has_value()) {
+    return {};
   }
 
   return {make<SchemaCompilerLoopContains>(

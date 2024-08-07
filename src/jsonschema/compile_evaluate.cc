@@ -848,11 +848,11 @@ auto evaluate_step(
     CALLBACK_PRE(context.instance_location());
     const auto &value{context.resolve_value(loop.value, instance)};
     const auto minimum{value.first};
-    assert(minimum > 0);
     const auto &maximum{value.second};
     assert(!maximum.has_value() || maximum.value() >= minimum);
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
     assert(target.is_array());
+    result = minimum == 0 && target.empty();
     const auto &array{target.as_array()};
     auto match_count{std::numeric_limits<decltype(minimum)>::min()};
     for (auto iterator = array.cbegin(); iterator != array.cend(); ++iterator) {

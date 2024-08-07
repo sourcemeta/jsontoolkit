@@ -243,8 +243,8 @@ int main(int argc, char **argv) {
     register_tests("draft2019-09", "JSONSchemaOfficialSuite_2019_09",
                    "https://json-schema.org/draft/2019-09/schema",
                    // TODO: Enable all tests
-                   {"defs", "maxContains", "minContains", "not", "recursiveRef",
-                    "unevaluatedItems", "unevaluatedProperties"});
+                   {"defs", "not", "recursiveRef", "unevaluatedItems",
+                    "unevaluatedProperties"});
     register_tests(
         std::filesystem::path{"draft2019-09"} / "optional",
         "JSONSchemaOfficialSuite_2019_09_Optional",
