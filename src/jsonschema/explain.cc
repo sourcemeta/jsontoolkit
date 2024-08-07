@@ -2,6 +2,34 @@
 
 #include <cassert> // assert
 
+static auto quantify(const std::int64_t value, const std::string &singular,
+                     const std::string &plural) -> std::string {
+  std::ostringstream result;
+  result << value;
+  result << ' ';
+  result << (value == 1 ? singular : plural);
+  return result.str();
+}
+
+static auto
+explain_constant_from_value(const sourcemeta::jsontoolkit::JSON &schema,
+                            const sourcemeta::jsontoolkit::JSON &value)
+    -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation> {
+  std::optional<std::string> title;
+  std::optional<std::string> description;
+
+  if (schema.defines("title")) {
+    assert(schema.at("title").is_string());
+    title = schema.at("title").to_string();
+  } else if (schema.defines("description")) {
+    assert(schema.at("description").is_string());
+    description = schema.at("description").to_string();
+  }
+
+  return sourcemeta::jsontoolkit::SchemaExplainerConstant{value, title,
+                                                          description};
+}
+
 static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
                            const std::map<std::string, bool> &vocabularies)
     -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation> {
@@ -13,27 +41,42 @@ static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
     static const std::set<std::string> IGNORE{"$id",  "$schema",   "$comment",
                                               "type", "minLength", "maxLength"};
 
+    // TODO: Extract into a range computation utility
     if (schema.defines("minLength") && schema.defines("maxLength")) {
       if (schema.at("minLength") == schema.at("maxLength")) {
+        if (schema.at("maxLength").to_integer() == 0) {
+          return explain_constant_from_value(schema,
+                                             sourcemeta::jsontoolkit::JSON{""});
+        }
+
         explanation.constraints.emplace(
-            "range", "exactly " +
-                         std::to_string(schema.at("minLength").to_integer()) +
-                         " characters");
+            "range", "exactly " + quantify(schema.at("minLength").to_integer(),
+                                           "character", "characters"));
+      } else if (schema.at("minLength").to_integer() <= 0) {
+        explanation.constraints.emplace(
+            "range", "<= " + quantify(schema.at("maxLength").to_integer(),
+                                      "character", "characters"));
       } else {
         explanation.constraints.emplace(
             "range", std::to_string(schema.at("minLength").to_integer()) +
                          " to " +
-                         std::to_string(schema.at("maxLength").to_integer()) +
-                         " characters");
+                         quantify(schema.at("maxLength").to_integer(),
+                                  "character", "characters"));
       }
-    } else if (schema.defines("minLength")) {
+    } else if (schema.defines("minLength") &&
+               schema.at("minLength").to_integer() > 0) {
       explanation.constraints.emplace(
-          "range", ">= " + std::to_string(schema.at("minLength").to_integer()) +
-                       " characters");
+          "range", ">= " + quantify(schema.at("minLength").to_integer(),
+                                    "character", "characters"));
     } else if (schema.defines("maxLength")) {
+      if (schema.at("maxLength").to_integer() == 0) {
+        return explain_constant_from_value(schema,
+                                           sourcemeta::jsontoolkit::JSON{""});
+      }
+
       explanation.constraints.emplace(
-          "range", "<= " + std::to_string(schema.at("maxLength").to_integer()) +
-                       " characters");
+          "range", "<= " + quantify(schema.at("maxLength").to_integer(),
+                                    "character", "characters"));
     }
 
     for (const auto &[keyword, value] : schema.as_object()) {
