@@ -60,8 +60,8 @@ explain_constant_from_value(const sourcemeta::jsontoolkit::JSON &schema,
     description = schema.at("description").to_string();
   }
 
-  return sourcemeta::jsontoolkit::SchemaExplainerConstant{value, title,
-                                                          description};
+  return sourcemeta::jsontoolkit::SchemaExplanationConstant{value, title,
+                                                            description};
 }
 
 static auto translate_format(const std::string &type) -> std::string {
@@ -107,7 +107,7 @@ static auto translate_format(const std::string &type) -> std::string {
 static auto explain_string(const sourcemeta::jsontoolkit::JSON &schema,
                            const std::map<std::string, bool> &vocabularies)
     -> std::optional<sourcemeta::jsontoolkit::SchemaExplanation> {
-  sourcemeta::jsontoolkit::SchemaExplainerScalar explanation;
+  sourcemeta::jsontoolkit::SchemaExplanationScalar explanation;
   explanation.type = "String";
 
   if (vocabularies.contains("http://json-schema.org/draft-07/schema#")) {

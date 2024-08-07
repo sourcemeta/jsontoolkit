@@ -22,7 +22,7 @@ TEST(JSONSchema_explain_string, draft7_type) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
@@ -39,7 +39,7 @@ TEST(JSONSchema_explain_string, draft7_type_id) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
@@ -56,7 +56,7 @@ TEST(JSONSchema_explain_string, draft7_type_comment) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
@@ -73,7 +73,7 @@ TEST(JSONSchema_explain_string, draft7_type_title) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
@@ -91,7 +91,7 @@ TEST(JSONSchema_explain_string, draft7_type_description) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
@@ -109,7 +109,7 @@ TEST(JSONSchema_explain_string, draft7_type_pattern) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
@@ -128,7 +128,7 @@ TEST(JSONSchema_explain_string, draft7_type_format) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String (IP Address v4)");
   EXPECT_TRUE(explanation.constraints.empty());
@@ -145,7 +145,7 @@ TEST(JSONSchema_explain_string, draft7_type_examples) {
     "examples": [ "foo", "bar", "baz" ]
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
@@ -182,7 +182,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
@@ -201,7 +201,7 @@ TEST(JSONSchema_explain_string, draft7_type_maxlength) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
@@ -221,7 +221,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_maxlength_different) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
@@ -241,7 +241,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_maxlength_equal) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
@@ -261,7 +261,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_maxlength_equal_1) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
@@ -280,7 +280,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_1) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
@@ -299,7 +299,7 @@ TEST(JSONSchema_explain_string, draft7_type_maxlength_1) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
@@ -319,7 +319,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_0_maxlength) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_EQ(explanation.constraints.size(), 1);
@@ -338,7 +338,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_0) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerScalar);
+  EXPLAIN(schema, SchemaExplanationScalar);
 
   EXPECT_EQ(explanation.type, "String");
   EXPECT_TRUE(explanation.constraints.empty());
@@ -355,7 +355,7 @@ TEST(JSONSchema_explain_string, draft7_type_maxlength_0) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerConstant);
+  EXPLAIN(schema, SchemaExplanationConstant);
 
   EXPECT_TRUE(explanation.value.is_string());
   EXPECT_EQ(explanation.value.to_string(), "");
@@ -372,7 +372,7 @@ TEST(JSONSchema_explain_string, draft7_type_minlength_0_maxlength_0) {
     "type": "string"
   })JSON")};
 
-  EXPLAIN(schema, SchemaExplainerConstant);
+  EXPLAIN(schema, SchemaExplanationConstant);
 
   EXPECT_TRUE(explanation.value.is_string());
   EXPECT_EQ(explanation.value.to_string(), "");
