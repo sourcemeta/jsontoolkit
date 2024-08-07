@@ -240,11 +240,11 @@ int main(int argc, char **argv) {
 
   try {
     // 2019-09
-    register_tests("draft2019-09", "JSONSchemaOfficialSuite_2019_09",
-                   "https://json-schema.org/draft/2019-09/schema",
-                   // TODO: Enable all tests
-                   {"defs", "not", "recursiveRef", "unevaluatedItems",
-                    "unevaluatedProperties"});
+    register_tests(
+        "draft2019-09", "JSONSchemaOfficialSuite_2019_09",
+        "https://json-schema.org/draft/2019-09/schema",
+        // TODO: Enable all tests
+        {"defs", "recursiveRef", "unevaluatedItems", "unevaluatedProperties"});
     register_tests(
         std::filesystem::path{"draft2019-09"} / "optional",
         "JSONSchemaOfficialSuite_2019_09_Optional",
