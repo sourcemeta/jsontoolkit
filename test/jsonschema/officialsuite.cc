@@ -60,6 +60,52 @@ static auto test_resolver(std::string_view identifier)
                    std::filesystem::path{"draft6"} / "detached-ref.json")
   READ_SCHEMA_FILE("http://localhost:1234/draft7/detached-ref.json",
                    std::filesystem::path{"draft7"} / "detached-ref.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2019-09/metaschema-no-validation.json",
+      std::filesystem::path{"draft2019-09"} / "metaschema-no-validation.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2019-09/metaschema-optional-vocabulary.json",
+      std::filesystem::path{"draft2019-09"} /
+          "metaschema-optional-vocabulary.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2019-09/integer.json",
+                   std::filesystem::path{"draft2019-09"} / "integer.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2019-09/subSchemas.json",
+                   std::filesystem::path{"draft2019-09"} / "subSchemas.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2019-09/locationIndependentIdentifier.json",
+      std::filesystem::path{"draft2019-09"} /
+          "locationIndependentIdentifier.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2019-09/baseUriChange/folderInteger.json",
+      std::filesystem::path{"draft2019-09"} / "baseUriChange" /
+          "folderInteger.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2019-09/baseUriChangeFolder/"
+                   "folderInteger.json",
+                   std::filesystem::path{"draft2019-09"} /
+                       "baseUriChangeFolder" / "folderInteger.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2019-09/baseUriChangeFolderInSubschema/"
+      "folderInteger.json",
+      std::filesystem::path{"draft2019-09"} / "baseUriChangeFolderInSubschema" /
+          "folderInteger.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2019-09/name-defs.json",
+                   std::filesystem::path{"draft2019-09"} / "name-defs.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2019-09/ref-and-defs.json",
+                   std::filesystem::path{"draft2019-09"} / "ref-and-defs.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2019-09/nested/foo-ref-string.json",
+      std::filesystem::path{"draft2019-09"} / "nested" / "foo-ref-string.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2019-09/nested/string.json",
+                   std::filesystem::path{"draft2019-09"} / "nested" /
+                       "string.json")
+  READ_SCHEMA_FILE("http://localhost:1234/different-id-ref-string.json",
+                   "different-id-ref-string.json")
+  READ_SCHEMA_FILE("http://localhost:1234/urn-ref-string.json",
+                   "urn-ref-string.json")
+  READ_SCHEMA_FILE("http://localhost:1234/nested-absolute-ref-to-string.json",
+                   "nested-absolute-ref-to-string.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2019-09/detached-ref.json",
+                   std::filesystem::path{"draft2019-09"} / "detached-ref.json")
 
 #undef READ_SCHEMA_FILE
 
@@ -193,6 +239,28 @@ int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
 
   try {
+    // 2019-09
+    register_tests(
+        "draft2019-09", "JSONSchemaOfficialSuite_2019_09",
+        "https://json-schema.org/draft/2019-09/schema",
+        // TODO: Enable all tests
+        {"defs", "recursiveRef", "unevaluatedItems", "unevaluatedProperties"});
+    register_tests(
+        std::filesystem::path{"draft2019-09"} / "optional",
+        "JSONSchemaOfficialSuite_2019_09_Optional",
+        "https://json-schema.org/draft/2019-09/schema",
+        {// TODO: Enable all tests
+         "bignum", "cross-draft", "ecmascript-regex", "non-bmp-regex"});
+    register_tests(
+        std::filesystem::path{"draft2019-09"} / "optional" / "format",
+        "JSONSchemaOfficialSuite_2019_09_Optional_Format",
+        "https://json-schema.org/draft/2019-09/schema",
+        // TODO: Enable all tests
+        {"date-time", "date", "duration", "email", "hostname", "idn-email",
+         "idn-hostname", "ipv4", "ipv6", "iri-reference", "iri", "json-pointer",
+         "regex", "relative-json-pointer", "time", "uri-reference",
+         "uri-template", "uri", "uuid"});
+
     // Draft 7
     register_tests("draft7", "JSONSchemaOfficialSuite_Draft7",
                    "http://json-schema.org/draft-07/schema#", {});
@@ -201,7 +269,7 @@ int main(int argc, char **argv) {
                    "http://json-schema.org/draft-07/schema#",
                    // TODO: Enable all tests
                    {"bignum", "content", "cross-draft", "ecmascript-regex",
-                    "id", "non-bmp-regex"});
+                    "non-bmp-regex"});
     register_tests(std::filesystem::path{"draft7"} / "optional" / "format",
                    "JSONSchemaOfficialSuite_Draft7_Optional_Format",
                    "http://json-schema.org/draft-07/schema#",

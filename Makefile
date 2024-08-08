@@ -40,12 +40,8 @@ benchmark: .always
 doxygen: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target doxygen
 
-unikraft: .always
-	$(KRAFT) build --target development --jobs 4 --log-type=basic unikraft
-	$(KRAFT) run --target development unikraft
-
 clean: .always
-	$(CMAKE) -E rm -R -f build unikraft/.unikraft unikraft/.config*
+	$(CMAKE) -E rm -R -f build
 
 # For NMake, which doesn't support .PHONY
 .always:

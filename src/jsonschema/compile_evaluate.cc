@@ -9,8 +9,8 @@
 #include <limits>      // std::numeric_limits
 #include <map>         // std::map
 #include <set>         // std::set
+#include <stack>       // std::stack
 #include <type_traits> // std::is_same_v
-#include <vector>      // std::vector
 
 namespace {
 
@@ -72,8 +72,8 @@ public:
 
   auto push(const Pointer &relative_evaluate_path,
             const Pointer &relative_instance_location) -> void {
-    this->frame_sizes.emplace_back(relative_evaluate_path.size(),
-                                   relative_instance_location.size());
+    this->frame_sizes.emplace(relative_evaluate_path.size(),
+                              relative_instance_location.size());
     this->evaluate_path_.push_back(relative_evaluate_path);
     this->instance_location_.push_back(relative_instance_location);
   }
@@ -84,10 +84,10 @@ public:
 
   auto pop() -> void {
     assert(!this->frame_sizes.empty());
-    const auto &sizes{this->frame_sizes.back()};
+    const auto &sizes{this->frame_sizes.top()};
     this->evaluate_path_.pop_back(sizes.first);
     this->instance_location_.pop_back(sizes.second);
-    this->frame_sizes.pop_back();
+    this->frame_sizes.pop();
   }
 
   auto evaluate_path() const -> const Pointer & { return this->evaluate_path_; }
@@ -182,6 +182,25 @@ public:
     this->labels.try_emplace(id, children);
   }
 
+  // TODO: At least currently, we only need to mask if a schema
+  // makes use of `unevaluatedProperties` or `unevaluatedItems`
+  // Detect if a schema does need this so if not, we avoid
+  // an unnecessary copy
+  auto mask() -> void {
+    this->annotation_blacklist.insert(this->evaluate_path_);
+  }
+
+  auto masked(const Pointer &path) const -> bool {
+    for (const auto &masked : this->annotation_blacklist) {
+      if (path.starts_with(masked) &&
+          !this->evaluate_path_.starts_with(masked)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   auto jump(const std::size_t id) const -> const Template & {
     assert(this->labels.contains(id));
     return this->labels.at(id).get();
@@ -190,7 +209,8 @@ public:
 private:
   Pointer evaluate_path_;
   Pointer instance_location_;
-  std::vector<std::pair<std::size_t, std::size_t>> frame_sizes;
+  std::stack<std::pair<std::size_t, std::size_t>> frame_sizes;
+  std::set<Pointer> annotation_blacklist;
   // For efficiency, as we likely reference the same JSON values
   // over and over again
   std::set<JSON> values;
@@ -445,15 +465,17 @@ auto evaluate_step(
     }
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical.condition, instance);
     CALLBACK_PRE(context.instance_location());
+    // This boolean value controls whether we should still evaluate
+    // every disjunction even on fast mode
+    const auto value{context.resolve_value(logical.value, instance)};
     result = logical.children.empty();
     for (const auto &child : logical.children) {
       if (evaluate_step(child, instance, mode, callback, context)) {
         result = true;
-        if (mode == SchemaCompilerEvaluationMode::Fast) {
+        if (mode == SchemaCompilerEvaluationMode::Fast && !value) {
           break;
         }
       }
@@ -531,6 +553,8 @@ auto evaluate_step(
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical.condition, instance);
     CALLBACK_PRE(context.instance_location());
+    // Ignore annotations produced inside "not"
+    context.mask();
     result = false;
     for (const auto &child : logical.children) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
@@ -582,7 +606,18 @@ auto evaluate_step(
         const auto &keyword{schema_location.back()};
         if (keyword.is_property() &&
             assertion.data.contains(keyword.to_property()) &&
-            annotations.contains(value)) {
+            annotations.contains(value) &&
+            // Make sure its not a cousin annotation, which can
+            // never be seen
+            // TODO: Have a better function at Pointer to check
+            // for these "initial starts with" cases in a way
+            // that we don't have to copy pointers, which `.initial()`
+            // does.
+            schema_location.initial().starts_with(
+                context.evaluate_path().initial()) &&
+            // We want to ignore certain annotations, like the ones
+            // inside "not"
+            !context.masked(schema_location)) {
           result = false;
           break;
         }
@@ -848,11 +883,11 @@ auto evaluate_step(
     CALLBACK_PRE(context.instance_location());
     const auto &value{context.resolve_value(loop.value, instance)};
     const auto minimum{value.first};
-    assert(minimum > 0);
     const auto &maximum{value.second};
     assert(!maximum.has_value() || maximum.value() >= minimum);
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
     assert(target.is_array());
+    result = minimum == 0 && target.empty();
     const auto &array{target.as_array()};
     auto match_count{std::numeric_limits<decltype(minimum)>::min()};
     for (auto iterator = array.cbegin(); iterator != array.cend(); ++iterator) {

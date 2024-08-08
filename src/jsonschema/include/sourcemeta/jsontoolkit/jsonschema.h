@@ -1,17 +1,14 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_H_
 
-#if defined(__EMSCRIPTEN__) || defined(__Unikraft__)
-#define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-#else
 #include "jsonschema_export.h"
-#endif
 
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema_anchor.h>
 #include <sourcemeta/jsontoolkit/jsonschema_bundle.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 #include <sourcemeta/jsontoolkit/jsonschema_error.h>
+#include <sourcemeta/jsontoolkit/jsonschema_explain.h>
 #include <sourcemeta/jsontoolkit/jsonschema_reference.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 #include <sourcemeta/jsontoolkit/jsonschema_transform_bundle.h>

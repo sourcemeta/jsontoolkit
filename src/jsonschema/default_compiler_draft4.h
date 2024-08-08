@@ -38,6 +38,10 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
 
   new_schema_context.labels.insert(label);
 
+  // TODO: It is possible to check framing/referencing information to detect
+  // whether a schema will recurse. If not, we can avoid the label wrapper
+  // altogether as a minor optimization
+
   // The idea to handle recursion is to expand the reference once, and when
   // doing so, create a "checkpoint" that we can jump back to in a subsequent
   // recursive reference. While unrolling the reference once may initially
@@ -238,9 +242,9 @@ auto compiler_draft4_applicator_anyof(
         SchemaCompilerTemplate{}));
   }
 
-  return {make<SchemaCompilerLogicalOr>(
-      schema_context, dynamic_context, SchemaCompilerValueNone{},
-      std::move(disjunctors), SchemaCompilerTemplate{})};
+  return {make<SchemaCompilerLogicalOr>(schema_context, dynamic_context, false,
+                                        std::move(disjunctors),
+                                        SchemaCompilerTemplate{})};
 }
 
 auto compiler_draft4_applicator_oneof(
@@ -819,7 +823,7 @@ auto compiler_draft4_validation_maximum(
   // TODO: As an optimization, avoid this condition if the subschema
   // declares `type` to `number` or `integer` already
   SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
-      schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+      schema_context, relative_dynamic_context, false,
       {make<SchemaCompilerAssertionTypeStrict>(
            schema_context, relative_dynamic_context, JSON::Type::Real, {},
            SchemaCompilerTargetType::Instance),
@@ -857,7 +861,7 @@ auto compiler_draft4_validation_minimum(
   // TODO: As an optimization, avoid this condition if the subschema
   // declares `type` to `number` or `integer` already
   SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
-      schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+      schema_context, relative_dynamic_context, false,
       {make<SchemaCompilerAssertionTypeStrict>(
            schema_context, relative_dynamic_context, JSON::Type::Real, {},
            SchemaCompilerTargetType::Instance),
@@ -896,7 +900,7 @@ auto compiler_draft4_validation_multipleof(
   // TODO: As an optimization, avoid this condition if the subschema
   // declares `type` to `number` or `integer` already
   SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
-      schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+      schema_context, relative_dynamic_context, false,
       {make<SchemaCompilerAssertionTypeStrict>(
            schema_context, relative_dynamic_context, JSON::Type::Real, {},
            SchemaCompilerTargetType::Instance),

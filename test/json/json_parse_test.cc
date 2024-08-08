@@ -1456,7 +1456,6 @@ TEST(JSON_parse, custom_line_column_from_string_stream) {
   EXPECT_TRUE(document.at(1).to_boolean());
 }
 
-#if !defined(__Unikraft__)
 TEST(JSON_parse, from_file) {
   const sourcemeta::jsontoolkit::JSON document{
       sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY} /
@@ -1478,4 +1477,3 @@ TEST(JSON_parse, read_file) {
   EXPECT_TRUE(document.at("foo").is_integer());
   EXPECT_EQ(document.at("foo").to_integer(), 1);
 }
-#endif

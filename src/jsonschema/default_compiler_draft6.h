@@ -143,7 +143,7 @@ auto compiler_draft6_validation_exclusivemaximum(
   // TODO: As an optimization, avoid this condition if the subschema
   // declares `type` to `number` or `integer` already
   SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
-      schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+      schema_context, relative_dynamic_context, false,
       {make<SchemaCompilerAssertionTypeStrict>(
            schema_context, relative_dynamic_context, JSON::Type::Real, {},
            SchemaCompilerTargetType::Instance),
@@ -168,7 +168,7 @@ auto compiler_draft6_validation_exclusiveminimum(
   // TODO: As an optimization, avoid this condition if the subschema
   // declares `type` to `number` or `integer` already
   SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
-      schema_context, relative_dynamic_context, SchemaCompilerValueNone{},
+      schema_context, relative_dynamic_context, false,
       {make<SchemaCompilerAssertionTypeStrict>(
            schema_context, relative_dynamic_context, JSON::Type::Real, {},
            SchemaCompilerTargetType::Instance),

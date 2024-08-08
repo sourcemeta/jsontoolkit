@@ -1,11 +1,7 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_COMPILE_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_COMPILE_H_
 
-#if defined(__EMSCRIPTEN__) || defined(__Unikraft__)
-#define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-#else
 #include "jsonschema_export.h"
-#endif
 
 #include <sourcemeta/jsontoolkit/jsonschema_reference.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
@@ -328,6 +324,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
+    const std::string schema_resource;                                         \
     const SchemaCompilerStepValue<type> value;                                 \
     const SchemaCompilerTemplate condition;                                    \
   };
@@ -338,6 +335,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
+    const std::string schema_resource;                                         \
     const SchemaCompilerStepValue<type> value;                                 \
     const SchemaCompilerTemplate condition;                                    \
     const data_type data;                                                      \
@@ -349,6 +347,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
+    const std::string schema_resource;                                         \
     const SchemaCompilerStepValue<type> value;                                 \
     const SchemaCompilerTemplate children;                                     \
     const SchemaCompilerTemplate condition;                                    \
@@ -359,6 +358,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
+    const std::string schema_resource;                                         \
     const std::size_t id;                                                      \
     const SchemaCompilerTemplate children;                                     \
   };
@@ -385,7 +385,7 @@ DEFINE_STEP_WITH_VALUE(Assertion, Unique, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Assertion, Divisible, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, StringType, SchemaCompilerValueStringType)
 DEFINE_STEP_WITH_VALUE(Annotation, Public, SchemaCompilerValueJSON)
-DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueBoolean)
 DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Try, SchemaCompilerValueNone)

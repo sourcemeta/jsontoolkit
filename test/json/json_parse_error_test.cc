@@ -629,7 +629,6 @@ TEST(JSON_parse_error, backspace_is_not_whitespace) {
   EXPECT_PARSE_ERROR(input, 1, 1);
 }
 
-#if !defined(__Unikraft__)
 TEST(JSON_parse_error, from_file_invalid) {
   try {
     sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY} /
@@ -643,9 +642,7 @@ TEST(JSON_parse_error, from_file_invalid) {
     FAIL() << "The parse function was expected to throw a file parse error";
   }
 }
-#endif
 
-#if !defined(__Unikraft__)
 TEST(JSON_parse_error, from_file_directory) {
   try {
     sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY});
@@ -656,9 +653,7 @@ TEST(JSON_parse_error, from_file_directory) {
     FAIL() << "The parse function was expected to throw a filesystem error";
   }
 }
-#endif
 
-#if !defined(__Unikraft__)
 TEST(JSON_parse_error, from_file_non_existent) {
   try {
     sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY} /
@@ -671,4 +666,3 @@ TEST(JSON_parse_error, from_file_non_existent) {
     FAIL() << "The parse function was expected to throw a filesystem error";
   }
 }
-#endif
