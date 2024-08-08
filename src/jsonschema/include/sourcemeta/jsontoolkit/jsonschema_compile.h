@@ -325,6 +325,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
     const std::string schema_resource;                                         \
+    const bool dynamic;                                                        \
     const SchemaCompilerStepValue<type> value;                                 \
     const SchemaCompilerTemplate condition;                                    \
   };
@@ -336,6 +337,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
     const std::string schema_resource;                                         \
+    const bool dynamic;                                                        \
     const SchemaCompilerStepValue<type> value;                                 \
     const SchemaCompilerTemplate condition;                                    \
     const data_type data;                                                      \
@@ -348,6 +350,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
     const std::string schema_resource;                                         \
+    const bool dynamic;                                                        \
     const SchemaCompilerStepValue<type> value;                                 \
     const SchemaCompilerTemplate children;                                     \
     const SchemaCompilerTemplate condition;                                    \
@@ -359,6 +362,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
     const std::string schema_resource;                                         \
+    const bool dynamic;                                                        \
     const std::size_t id;                                                      \
     const SchemaCompilerTemplate children;                                     \
   };
@@ -468,6 +472,8 @@ struct SchemaCompilerContext {
   const SchemaResolver &resolver;
   /// The schema compiler in use
   const SchemaCompiler &compiler;
+  /// Whether the schema makes use of dynamic scoping
+  const bool uses_dynamic_scopes;
 };
 
 /// @ingroup jsonschema

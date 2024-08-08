@@ -25,8 +25,8 @@ auto compile_subschema(
       return {};
     } else {
       return {make<SchemaCompilerAssertionFail>(
-          schema_context, dynamic_context, SchemaCompilerValueNone{}, {},
-          SchemaCompilerTargetType::Instance)};
+          context, schema_context, dynamic_context, SchemaCompilerValueNone{},
+          {}, SchemaCompilerTargetType::Instance)};
     }
   }
 
@@ -92,8 +92,19 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
   assert(frame.contains({ReferenceType::Static, base}));
   const auto root_frame_entry{frame.at({ReferenceType::Static, base})};
 
+  // Check whether dynamic referencing takes places in this schema. If not,
+  // we can avoid the overhead of keeping track of dynamics scopes, etc
+  bool uses_dynamic_scopes{false};
+  for (const auto &reference : references) {
+    if (reference.first.first == ReferenceType::Dynamic) {
+      uses_dynamic_scopes = true;
+      break;
+    }
+  }
+
   return compile_subschema(
-      {result, frame, references, walker, resolver, compiler},
+      {result, frame, references, walker, resolver, compiler,
+       uses_dynamic_scopes},
       {empty_pointer,
        result,
        vocabularies(schema, resolver, root_frame_entry.dialect).get(),
