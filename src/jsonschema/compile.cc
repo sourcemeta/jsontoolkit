@@ -117,6 +117,30 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
       relative_dynamic_context};
   sourcemeta::jsontoolkit::SchemaCompilerTemplate compiler_template;
 
+  if (uses_dynamic_scopes) {
+    for (const auto &entry : frame) {
+      // We are only trying to find dynamic anchors
+      if (entry.second.type != ReferenceEntryType::Anchor ||
+          entry.first.first != ReferenceType::Dynamic) {
+        continue;
+      }
+
+      const URI anchor_uri{entry.first.second};
+      assert(anchor_uri.is_absolute());
+      std::ostringstream name;
+      name << anchor_uri.recompose_without_fragment().value();
+      name << '#';
+      name << anchor_uri.fragment().value_or("");
+      const auto label{std::hash<std::string>{}(name.str())};
+      schema_context.labels.insert(label);
+      compiler_template.push_back(make<SchemaCompilerControlMark>(
+          context, schema_context, dynamic_context,
+          SchemaCompilerValueUnsignedInteger{label},
+          compile(context, schema_context, relative_dynamic_context,
+                  empty_pointer, empty_pointer, entry.first.second)));
+    }
+  }
+
   auto children{compile_subschema(context, schema_context, dynamic_context,
                                   root_frame_entry.dialect)};
   if (compiler_template.empty()) {
