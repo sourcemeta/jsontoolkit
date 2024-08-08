@@ -38,6 +38,10 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
 
   new_schema_context.labels.insert(label);
 
+  // TODO: It is possible to check framing/referencing information to detect
+  // whether a schema will recurse. If not, we can avoid the label wrapper
+  // altogether as a minor optimization
+
   // The idea to handle recursion is to expand the reference once, and when
   // doing so, create a "checkpoint" that we can jump back to in a subsequent
   // recursive reference. While unrolling the reference once may initially
