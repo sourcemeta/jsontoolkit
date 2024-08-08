@@ -300,6 +300,10 @@ struct SchemaCompilerControlMark;
 struct SchemaCompilerControlJump;
 
 /// @ingroup jsonschema
+/// Represents a compiler step that consists of jump to a dynamic anchor
+struct SchemaCompilerControlDynamicAnchorJump;
+
+/// @ingroup jsonschema
 /// Represents a schema compilation step that can be evaluated
 using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionFail, SchemaCompilerAssertionDefines,
@@ -322,7 +326,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerLoopKeys, SchemaCompilerLoopItems,
     SchemaCompilerLoopItemsFromAnnotationIndex, SchemaCompilerLoopContains,
     SchemaCompilerControlLabel, SchemaCompilerControlMark,
-    SchemaCompilerControlJump>>;
+    SchemaCompilerControlJump, SchemaCompilerControlDynamicAnchorJump>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -416,6 +420,7 @@ DEFINE_STEP_APPLICATOR(Loop, Contains, SchemaCompilerValueRange)
 DEFINE_CONTROL(Label, SchemaCompilerValueUnsignedInteger)
 DEFINE_CONTROL(Mark, SchemaCompilerValueUnsignedInteger)
 DEFINE_CONTROL(Jump, SchemaCompilerValueUnsignedInteger)
+DEFINE_CONTROL(DynamicAnchorJump, SchemaCompilerValueString)
 
 #undef DEFINE_STEP_WITH_VALUE
 #undef DEFINE_STEP_WITH_VALUE_AND_DATA

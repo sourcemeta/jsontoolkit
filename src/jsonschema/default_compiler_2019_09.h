@@ -428,8 +428,8 @@ auto compiler_2019_09_core_recursiveref(
     return compiler_draft4_core_ref(context, schema_context, dynamic_context);
   }
 
-  // TODO: Implement
-  return {};
+  return {make<SchemaCompilerControlDynamicAnchorJump>(
+      context, schema_context, dynamic_context, "", {})};
 }
 
 auto compiler_2019_09_applicator_anyof(

@@ -8,6 +8,7 @@
 #include <iterator>    // std::distance, std::advance
 #include <limits>      // std::numeric_limits
 #include <map>         // std::map
+#include <optional>    // std::optional
 #include <set>         // std::set
 #include <stack>       // std::stack
 #include <type_traits> // std::is_same_v
@@ -227,6 +228,22 @@ public:
     }
 
     return false;
+  }
+
+  auto find_dynamic_anchor(const std::string &anchor) const
+      -> std::optional<std::size_t> {
+    for (const auto &resource : this->resources()) {
+      std::ostringstream name;
+      name << resource;
+      name << '#';
+      name << anchor;
+      const auto label{std::hash<std::string>{}(name.str())};
+      if (this->labels.contains(label)) {
+        return label;
+      }
+    }
+
+    return std::nullopt;
   }
 
   auto jump(const std::size_t id) const -> const Template & {
@@ -764,6 +781,25 @@ auto evaluate_step(
         result = false;
         if (mode == SchemaCompilerEvaluationMode::Fast) {
           break;
+        }
+      }
+    }
+
+    CALLBACK_POST(control);
+  } else if (std::holds_alternative<SchemaCompilerControlDynamicAnchorJump>(
+                 step)) {
+    const auto &control{std::get<SchemaCompilerControlDynamicAnchorJump>(step)};
+    context.push(control);
+    CALLBACK_PRE(context.instance_location());
+    const auto id{context.find_dynamic_anchor(control.id)};
+    result = id.has_value();
+    if (id.has_value()) {
+      for (const auto &child : context.jump(id.value())) {
+        if (!evaluate_step(child, instance, mode, callback, context)) {
+          result = false;
+          if (mode == SchemaCompilerEvaluationMode::Fast) {
+            break;
+          }
         }
       }
     }
