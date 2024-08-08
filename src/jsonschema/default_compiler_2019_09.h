@@ -5,6 +5,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
 #include "compile_helpers.h"
+#include "default_compiler_draft4.h"
 
 namespace internal {
 using namespace sourcemeta::jsontoolkit;
@@ -410,8 +411,18 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
 }
 
 auto compiler_2019_09_core_recursiveref(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  const auto current{keyword_location(schema_context)};
+  assert(context.frame.contains({ReferenceType::Static, current}));
+  const auto &entry{context.frame.at({ReferenceType::Static, current})};
+  // In this case, just behave as a normal static reference
+  if (!context.references.contains({ReferenceType::Dynamic, entry.pointer})) {
+    return compiler_draft4_core_ref(context, schema_context, dynamic_context);
+  }
+
   // TODO: Implement
   return {};
 }
