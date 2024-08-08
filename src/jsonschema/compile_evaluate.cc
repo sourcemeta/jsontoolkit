@@ -9,8 +9,8 @@
 #include <limits>      // std::numeric_limits
 #include <map>         // std::map
 #include <set>         // std::set
+#include <stack>       // std::stack
 #include <type_traits> // std::is_same_v
-#include <vector>      // std::vector
 
 namespace {
 
@@ -72,8 +72,8 @@ public:
 
   auto push(const Pointer &relative_evaluate_path,
             const Pointer &relative_instance_location) -> void {
-    this->frame_sizes.emplace_back(relative_evaluate_path.size(),
-                                   relative_instance_location.size());
+    this->frame_sizes.emplace(relative_evaluate_path.size(),
+                              relative_instance_location.size());
     this->evaluate_path_.push_back(relative_evaluate_path);
     this->instance_location_.push_back(relative_instance_location);
   }
@@ -84,10 +84,10 @@ public:
 
   auto pop() -> void {
     assert(!this->frame_sizes.empty());
-    const auto &sizes{this->frame_sizes.back()};
+    const auto &sizes{this->frame_sizes.top()};
     this->evaluate_path_.pop_back(sizes.first);
     this->instance_location_.pop_back(sizes.second);
-    this->frame_sizes.pop_back();
+    this->frame_sizes.pop();
   }
 
   auto evaluate_path() const -> const Pointer & { return this->evaluate_path_; }
@@ -209,7 +209,7 @@ public:
 private:
   Pointer evaluate_path_;
   Pointer instance_location_;
-  std::vector<std::pair<std::size_t, std::size_t>> frame_sizes;
+  std::stack<std::pair<std::size_t, std::size_t>> frame_sizes;
   std::set<Pointer> annotation_blacklist;
   // For efficiency, as we likely reference the same JSON values
   // over and over again
