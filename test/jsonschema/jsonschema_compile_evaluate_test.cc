@@ -14,6 +14,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_true_no_condition) {
                                      Pointer{},
                                      Pointer{},
                                      "#",
+                                     "",
                                      SchemaCompilerValueString{"foo"},
                                      {}}};
 
@@ -29,6 +30,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_false_no_condition) {
                                      Pointer{},
                                      Pointer{},
                                      "#",
+                                     "",
                                      SchemaCompilerValueString{"bar"},
                                      {}}};
 
@@ -45,6 +47,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_true_with_condition) {
                                      Pointer{},
                                      Pointer{},
                                      "#",
+                                     "",
                                      SchemaCompilerValueString{"foo"},
                                      {}}};
 
@@ -53,6 +56,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_true_with_condition) {
                                      Pointer{},
                                      Pointer{},
                                      "#",
+                                     "",
                                      SchemaCompilerValueString{"bar"},
                                      condition}};
 
@@ -69,6 +73,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_false_with_condition) {
                                      Pointer{},
                                      Pointer{},
                                      "#",
+                                     "",
                                      SchemaCompilerValueString{"xxx"},
                                      {}}};
 
@@ -77,6 +82,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_false_with_condition) {
                                      Pointer{},
                                      Pointer{},
                                      "#",
+                                     "",
                                      SchemaCompilerValueString{"baz"},
                                      condition}};
 
@@ -94,6 +100,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_fail_no_condition) {
                                   Pointer{},
                                   Pointer{},
                                   "#",
+                                  "",
                                   SchemaCompilerValueNone{},
                                   {}}};
 
@@ -110,6 +117,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_fail_with_condition_true) {
                                      Pointer{},
                                      Pointer{},
                                      "#",
+                                     "",
                                      SchemaCompilerValueString{"foo"},
                                      {}}};
 
@@ -118,6 +126,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_fail_with_condition_true) {
                                   Pointer{},
                                   Pointer{},
                                   "#",
+                                  "",
                                   SchemaCompilerValueNone{},
                                   condition}};
 
@@ -134,6 +143,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_fail_with_condition_false) {
                                      Pointer{},
                                      Pointer{},
                                      "#",
+                                     "",
                                      SchemaCompilerValueString{"xxx"},
                                      {}}};
 
@@ -142,6 +152,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_fail_with_condition_false) {
                                   Pointer{},
                                   Pointer{},
                                   "#",
+                                  "",
                                   SchemaCompilerValueNone{},
                                   condition}};
 
@@ -157,6 +168,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_type_true_no_condition) {
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueType{JSON::Type::Object},
       {}}};
 
@@ -172,6 +184,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_type_false_no_condition) {
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -187,6 +200,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_empty_no_condition) {
                               Pointer{},
                               Pointer{},
                               "#",
+                              "",
                               false,
                               {},
                               {}}};
@@ -205,6 +219,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_true) {
           Pointer{},
           Pointer{},
           "#",
+          "",
           SchemaCompilerValueType{JSON::Type::String},
           {}},
       SchemaCompilerAssertionTypeStrict{
@@ -212,6 +227,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_true) {
           Pointer{},
           Pointer{},
           "#",
+          "",
           SchemaCompilerValueType{JSON::Type::Object},
           {}}};
 
@@ -220,6 +236,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_true) {
                               Pointer{},
                               Pointer{},
                               "#",
+                              "",
                               false,
                               children,
                               {}}};
@@ -238,6 +255,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_false) {
           Pointer{},
           Pointer{},
           "#",
+          "",
           SchemaCompilerValueType{JSON::Type::String},
           {}},
       SchemaCompilerAssertionTypeStrict{
@@ -245,6 +263,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_false) {
           Pointer{},
           Pointer{},
           "#",
+          "",
           SchemaCompilerValueType{JSON::Type::Array},
           {}}};
 
@@ -253,6 +272,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_no_condition_false) {
                               Pointer{},
                               Pointer{},
                               "#",
+                              "",
                               false,
                               children,
                               {}}};
@@ -271,6 +291,7 @@ TEST(JSONSchema_compile_evaluate,
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
   const auto assertion_2{SchemaCompilerAssertionTypeStrict{
@@ -278,6 +299,7 @@ TEST(JSONSchema_compile_evaluate,
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueType{JSON::Type::Object},
       {}}};
 
@@ -288,6 +310,7 @@ TEST(JSONSchema_compile_evaluate,
                               Pointer{},
                               Pointer{},
                               "#",
+                              "",
                               false,
                               children,
                               {assertion_1}}};
@@ -338,6 +361,7 @@ TEST(JSONSchema_compile_evaluate,
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
   const auto assertion_2{SchemaCompilerAssertionTypeStrict{
@@ -345,6 +369,7 @@ TEST(JSONSchema_compile_evaluate,
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueType{JSON::Type::Object},
       {}}};
 
@@ -355,6 +380,7 @@ TEST(JSONSchema_compile_evaluate,
                               Pointer{},
                               Pointer{},
                               "#",
+                              "",
                               false,
                               children,
                               {assertion_1}}};
@@ -410,6 +436,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_empty_no_condition) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               "",
                                SchemaCompilerValueNone{},
                                {},
                                {}}};
@@ -427,6 +454,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_true) {
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueType{JSON::Type::Object},
       {}}};
 
@@ -435,6 +463,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_true) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               "",
                                SchemaCompilerValueNone{},
                                children,
                                {}}};
@@ -453,6 +482,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_false) {
           Pointer{},
           Pointer{},
           "#",
+          "",
           SchemaCompilerValueType{JSON::Type::String},
           {}},
       SchemaCompilerAssertionTypeStrict{
@@ -460,6 +490,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_false) {
           Pointer{},
           Pointer{},
           "#",
+          "",
           SchemaCompilerValueType{JSON::Type::Array},
           {}}};
 
@@ -468,6 +499,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_no_condition_false) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               "",
                                SchemaCompilerValueNone{},
                                children,
                                {}}};
@@ -485,6 +517,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_empty) {
       Pointer{},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -493,6 +526,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_empty) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   "",
                                    true,
                                    children,
                                    {}}};
@@ -510,6 +544,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_true) {
       Pointer{"loop", "type"},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::Integer},
       {}}};
 
@@ -518,6 +553,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_true) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   "",
                                    true,
                                    children,
                                    {}}};
@@ -535,6 +571,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_false) {
       Pointer{"loop", "type"},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::Integer},
       {}}};
 
@@ -543,6 +580,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_false) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   "",
                                    true,
                                    children,
                                    {}}};
@@ -560,6 +598,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_true) {
       Pointer{"loop", "type"},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::Integer},
       {}}};
 
@@ -568,6 +607,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_true) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   "",
                                    true,
                                    children,
                                    {}}};
@@ -585,6 +625,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_false) {
       Pointer{"loop", "type"},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::Integer},
       {}}};
 
@@ -593,6 +634,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_false) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   "",
                                    true,
                                    children,
                                    {}}};
@@ -610,6 +652,7 @@ TEST(JSONSchema_compile_evaluate, fast_regex_true) {
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
       {}}};
 
@@ -626,6 +669,7 @@ TEST(JSONSchema_compile_evaluate, fast_regex_false) {
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
       {}}};
 
@@ -642,6 +686,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_regex_instance_basename_empty) {
       Pointer{"loop", "regex"},
       Pointer{},
       "#/loop/regex",
+      "",
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
       {}}};
 
@@ -650,6 +695,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_regex_instance_basename_empty) {
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   "",
                                    true,
                                    children,
                                    {}}};
@@ -668,6 +714,7 @@ TEST(JSONSchema_compile_evaluate,
       Pointer{"loop", "regex"},
       Pointer{},
       "#/loop/regex",
+      "",
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
       {}}};
 
@@ -676,6 +723,7 @@ TEST(JSONSchema_compile_evaluate,
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   "",
                                    true,
                                    children,
                                    {}}};
@@ -694,6 +742,7 @@ TEST(JSONSchema_compile_evaluate,
       Pointer{"loop", "regex"},
       Pointer{},
       "#/loop/regex",
+      "",
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
       {}}};
 
@@ -702,6 +751,7 @@ TEST(JSONSchema_compile_evaluate,
                                    {"loop"},
                                    {},
                                    "#/loop",
+                                   "",
                                    true,
                                    children,
                                    {}}};
@@ -718,6 +768,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_not_type_true) {
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueType{JSON::Type::Integer},
       {}}};
 
@@ -726,6 +777,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_not_type_true) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               "",
                                SchemaCompilerValueNone{},
                                std::move(children),
                                {}}};
@@ -742,6 +794,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_not_type_false) {
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueType{JSON::Type::Integer},
       {}}};
 
@@ -750,6 +803,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_not_type_false) {
                                Pointer{},
                                Pointer{},
                                "#",
+                               "",
                                SchemaCompilerValueNone{},
                                std::move(children),
                                {}}};
@@ -767,6 +821,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_empty) {
       Pointer{},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -775,6 +830,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_empty) {
                               {"loop"},
                               {},
                               "#/loop",
+                              "",
                               SchemaCompilerValueUnsignedInteger{0},
                               children,
                               {}}};
@@ -792,6 +848,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_true) {
       Pointer{},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -800,6 +857,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_true) {
                               {"loop"},
                               {},
                               "#/loop",
+                              "",
                               SchemaCompilerValueUnsignedInteger{0},
                               children,
                               {}}};
@@ -817,6 +875,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_false) {
       Pointer{},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -825,6 +884,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_false) {
                               {"loop"},
                               {},
                               "#/loop",
+                              "",
                               SchemaCompilerValueUnsignedInteger{0},
                               children,
                               {}}};
@@ -842,6 +902,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_true) {
       Pointer{},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -850,6 +911,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_true) {
                               {"loop"},
                               {},
                               "#/loop",
+                              "",
                               SchemaCompilerValueUnsignedInteger{0},
                               children,
                               {}}};
@@ -867,6 +929,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_false) {
       Pointer{},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -875,6 +938,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_false) {
                               {"loop"},
                               {},
                               "#/loop",
+                              "",
                               SchemaCompilerValueUnsignedInteger{0},
                               children,
                               {}}};
@@ -891,6 +955,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_size_greater_array_true) {
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueUnsignedInteger{2},
       {}}};
 
@@ -906,6 +971,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_size_greater_array_false) {
       Pointer{},
       Pointer{},
       "#",
+      "",
       SchemaCompilerValueUnsignedInteger{3},
       {}}};
 
@@ -922,6 +988,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_empty) {
       Pointer{},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -930,6 +997,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_empty) {
                               {"loop"},
                               {},
                               "#/loop",
+                              "",
                               SchemaCompilerValueUnsignedInteger{2},
                               children,
                               {}}};
@@ -947,6 +1015,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_less) {
       Pointer{},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -955,6 +1024,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_less) {
                               {"loop"},
                               {},
                               "#/loop",
+                              "",
                               SchemaCompilerValueUnsignedInteger{2},
                               children,
                               {}}};
@@ -972,6 +1042,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_match) {
       Pointer{},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -980,6 +1051,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_match) {
                               {"loop"},
                               {},
                               "#/loop",
+                              "",
                               SchemaCompilerValueUnsignedInteger{2},
                               children,
                               {}}};
@@ -997,6 +1069,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_no_match) {
       Pointer{},
       Pointer{},
       "#/loop/type",
+      "",
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -1005,6 +1078,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_no_match) {
                               {"loop"},
                               {},
                               "#/loop",
+                              "",
                               SchemaCompilerValueUnsignedInteger{2},
                               children,
                               {}}};
