@@ -1,8 +1,10 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
-#include <cassert> // assert
-#include <utility> // std::move
+#include <algorithm> // std::move
+#include <cassert>   // assert
+#include <iterator>  // std::back_inserter
+#include <utility>   // std::move
 
 #include "compile_helpers.h"
 
@@ -102,15 +104,29 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
     }
   }
 
-  return compile_subschema(
-      {result, frame, references, walker, resolver, compiler,
-       uses_dynamic_scopes},
-      {empty_pointer,
-       result,
-       vocabularies(schema, resolver, root_frame_entry.dialect).get(),
-       root_frame_entry.base,
-       {}},
-      relative_dynamic_context, root_frame_entry.dialect);
+  const sourcemeta::jsontoolkit::SchemaCompilerContext context{
+      result,   frame,    references,         walker,
+      resolver, compiler, uses_dynamic_scopes};
+  sourcemeta::jsontoolkit::SchemaCompilerSchemaContext schema_context{
+      empty_pointer,
+      result,
+      vocabularies(schema, resolver, root_frame_entry.dialect).get(),
+      root_frame_entry.base,
+      {}};
+  const sourcemeta::jsontoolkit::SchemaCompilerDynamicContext dynamic_context{
+      relative_dynamic_context};
+  sourcemeta::jsontoolkit::SchemaCompilerTemplate compiler_template;
+
+  auto children{compile_subschema(context, schema_context, dynamic_context,
+                                  root_frame_entry.dialect)};
+  if (compiler_template.empty()) {
+    return children;
+  } else {
+    compiler_template.reserve(compiler_template.size() + children.size());
+    std::move(children.begin(), children.end(),
+              std::back_inserter(compiler_template));
+    return compiler_template;
+  }
 }
 
 auto compile(const SchemaCompilerContext &context,
