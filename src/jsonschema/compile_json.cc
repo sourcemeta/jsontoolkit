@@ -264,6 +264,8 @@ struct StepVisitor {
   HANDLE_STEP("control", "label", SchemaCompilerControlLabel)
   HANDLE_STEP("control", "mark", SchemaCompilerControlMark)
   HANDLE_STEP("control", "jump", SchemaCompilerControlJump)
+  HANDLE_STEP("control", "dynamic-anchor-jump",
+              SchemaCompilerControlDynamicAnchorJump)
 
 #undef HANDLE_STEP
 };
