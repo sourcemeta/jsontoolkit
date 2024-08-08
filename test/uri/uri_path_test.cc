@@ -265,12 +265,16 @@ TEST(URI_path_setter_no_scheme, set_path_on_ip_address) {
 }
 
 // TODO: dig why scheme return example.com
-// TEST(URI_path_setter_no_scheme, set_path_with_port) {
-//   sourcemeta::jsontoolkit::URI uri{"example.com:8080"};
-//   std::cout << "urn : " << uri.is_urn() << std::endl;
-//   std::cout << "tag : " << uri.is_tag() << std::endl;
-//   std::cout << "scheme : " << uri.scheme().value() << std::endl;
-//
-//   uri.path("/test");
-//   EXPECT_EQ(uri.path().value(), "test");
-// }
+TEST(URI_path_setter_no_scheme, set_path_with_port) {
+  sourcemeta::jsontoolkit::URI uri{"http://example.com:8080"};
+
+  uri.path("/test");
+  EXPECT_EQ(uri.path().value(), "/test");
+  EXPECT_EQ(uri.recompose(), "http://example.com:8080/test");
+
+  std::string path{"/test2"};
+  uri.path(std::move(path));
+  EXPECT_EQ(uri.path().value(), "/test2");
+  EXPECT_EQ(uri.recompose(), "http://example.com:8080/test2");
+  EXPECT_EQ(path, "");
+}
