@@ -206,7 +206,7 @@ auto URI::is_relative() const -> bool {
 
 auto URI::is_absolute() const noexcept -> bool {
   // An absolute URI always contains a scheme component,
-  return this->internal->uri.scheme.first != nullptr;
+  return this->scheme_.has_value();
 }
 
 auto URI::is_urn() const -> bool {
