@@ -73,7 +73,7 @@ template <typename Step>
 auto make(const SchemaCompilerContext &context,
           const SchemaCompilerSchemaContext &schema_context,
           const SchemaCompilerDynamicContext &dynamic_context,
-          // Take the value type from the "type" property of the step struct
+          // Take the value type from the "value" property of the step struct
           decltype(std::declval<Step>().value) &&value,
           SchemaCompilerTemplate &&children,
           SchemaCompilerTemplate &&condition) -> Step {
