@@ -262,6 +262,7 @@ struct StepVisitor {
               SchemaCompilerLoopItemsFromAnnotationIndex)
   HANDLE_STEP("loop", "contains", SchemaCompilerLoopContains)
   HANDLE_STEP("control", "label", SchemaCompilerControlLabel)
+  HANDLE_STEP("control", "mark", SchemaCompilerControlMark)
   HANDLE_STEP("control", "jump", SchemaCompilerControlJump)
 
 #undef HANDLE_STEP
