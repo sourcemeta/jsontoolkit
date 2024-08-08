@@ -258,8 +258,7 @@ auto URI::path(const std::string &path) -> URI & {
     throw URIError{"You cannot set a relative path"};
   }
 
-  auto parsed_path = URI{std::string{path}};
-  this->path_ = parsed_path.path().value();
+  this->path_ = URI{path}.path_;
   return *this;
 }
 
@@ -274,8 +273,7 @@ auto URI::path(std::string &&path) -> URI & {
     throw URIError{"You cannot set a relative path"};
   }
 
-  auto parsed_path = URI{std::move(path)};
-  this->path_ = parsed_path.path().value();
+  this->path_ = URI{std::move(path)}.path_;
   return *this;
 }
 
