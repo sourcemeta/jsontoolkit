@@ -37,6 +37,7 @@ auto make(const SchemaCompilerSchemaContext &schema_context,
           relative_schema_location(context),
           context.base_instance_location,
           keyword_location(schema_context),
+          schema_context.base.recompose(),
           std::move(value),
           std::move(condition)};
 }
@@ -57,6 +58,7 @@ auto make(const SchemaCompilerSchemaContext &schema_context,
           relative_schema_location(context),
           context.base_instance_location,
           keyword_location(schema_context),
+          schema_context.base.recompose(),
           std::move(value),
           std::move(condition),
           std::move(data)};
@@ -74,6 +76,7 @@ auto make(const SchemaCompilerSchemaContext &schema_context,
           relative_schema_location(context),
           context.base_instance_location,
           keyword_location(schema_context),
+          schema_context.base.recompose(),
           std::move(value),
           std::move(children),
           std::move(condition)};
@@ -84,8 +87,12 @@ template <typename Step>
 auto make(const SchemaCompilerSchemaContext &schema_context,
           const SchemaCompilerDynamicContext &context, const std::size_t id,
           SchemaCompilerTemplate &&children) -> Step {
-  return {relative_schema_location(context), context.base_instance_location,
-          keyword_location(schema_context), id, std::move(children)};
+  return {relative_schema_location(context),
+          context.base_instance_location,
+          keyword_location(schema_context),
+          schema_context.base.recompose(),
+          id,
+          std::move(children)};
 }
 
 inline auto type_condition(const SchemaCompilerSchemaContext &schema_context,
