@@ -285,8 +285,14 @@ struct SchemaCompilerLoopItemsFromAnnotationIndex;
 struct SchemaCompilerLoopContains;
 
 /// @ingroup jsonschema
-/// Represents a compiler step that consists of a mark to jump to
+/// Represents a compiler step that consists of a mark to jump to while
+/// executing children instructions
 struct SchemaCompilerControlLabel;
+
+/// @ingroup jsonschema
+/// Represents a compiler step that consists of a mark to jump to, but without
+/// executing children instructions
+struct SchemaCompilerControlMark;
 
 /// @ingroup jsonschema
 /// Represents a compiler step that consists of jumping into a pre-registered
@@ -315,7 +321,8 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerInternalDefinesAll, SchemaCompilerLoopProperties,
     SchemaCompilerLoopKeys, SchemaCompilerLoopItems,
     SchemaCompilerLoopItemsFromAnnotationIndex, SchemaCompilerLoopContains,
-    SchemaCompilerControlLabel, SchemaCompilerControlJump>>;
+    SchemaCompilerControlLabel, SchemaCompilerControlMark,
+    SchemaCompilerControlJump>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -356,14 +363,14 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const SchemaCompilerTemplate condition;                                    \
   };
 
-#define DEFINE_CONTROL(name)                                                   \
+#define DEFINE_CONTROL(name, type)                                             \
   struct SchemaCompilerControl##name {                                         \
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
     const std::string schema_resource;                                         \
     const bool dynamic;                                                        \
-    const std::size_t id;                                                      \
+    const type id;                                                             \
     const SchemaCompilerTemplate children;                                     \
   };
 
@@ -406,8 +413,9 @@ DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_APPLICATOR(Loop, ItemsFromAnnotationIndex,
                        SchemaCompilerValueString)
 DEFINE_STEP_APPLICATOR(Loop, Contains, SchemaCompilerValueRange)
-DEFINE_CONTROL(Label)
-DEFINE_CONTROL(Jump)
+DEFINE_CONTROL(Label, SchemaCompilerValueUnsignedInteger)
+DEFINE_CONTROL(Mark, SchemaCompilerValueUnsignedInteger)
+DEFINE_CONTROL(Jump, SchemaCompilerValueUnsignedInteger)
 
 #undef DEFINE_STEP_WITH_VALUE
 #undef DEFINE_STEP_WITH_VALUE_AND_DATA

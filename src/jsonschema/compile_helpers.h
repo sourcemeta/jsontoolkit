@@ -93,13 +93,15 @@ template <typename Step>
 auto make(const SchemaCompilerContext &context,
           const SchemaCompilerSchemaContext &schema_context,
           const SchemaCompilerDynamicContext &dynamic_context,
-          const std::size_t id, SchemaCompilerTemplate &&children) -> Step {
+          // Take the value type from the "id" property of the step struct
+          decltype(std::declval<Step>().id) &&id,
+          SchemaCompilerTemplate &&children) -> Step {
   return {relative_schema_location(dynamic_context),
           dynamic_context.base_instance_location,
           keyword_location(schema_context),
           schema_context.base.recompose(),
           context.uses_dynamic_scopes,
-          id,
+          std::move(id),
           std::move(children)};
 }
 

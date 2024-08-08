@@ -29,8 +29,9 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
 
   // The label is already registered, so just jump to it
   if (schema_context.labels.contains(label)) {
-    return {make<SchemaCompilerControlJump>(context, schema_context,
-                                            dynamic_context, label, {})};
+    return {make<SchemaCompilerControlJump>(
+        context, schema_context, dynamic_context,
+        SchemaCompilerValueUnsignedInteger{label}, {})};
   }
 
   // TODO: Avoid this copy
@@ -49,7 +50,8 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
   // handler, without having to add logic to every single keyword to check
   // whether something points to them and add the "checkpoint" themselves.
   return {make<SchemaCompilerControlLabel>(
-      context, schema_context, dynamic_context, label,
+      context, schema_context, dynamic_context,
+      SchemaCompilerValueUnsignedInteger{label},
       compile(context, std::move(new_schema_context), relative_dynamic_context,
               empty_pointer, empty_pointer, reference.destination))};
 }

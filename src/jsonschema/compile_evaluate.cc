@@ -749,6 +749,10 @@ auto evaluate_step(
     }
 
     CALLBACK_POST(control);
+  } else if (std::holds_alternative<SchemaCompilerControlMark>(step)) {
+    const auto &control{std::get<SchemaCompilerControlMark>(step)};
+    context.mark(control.id, control.children);
+    return true;
   } else if (std::holds_alternative<SchemaCompilerControlJump>(step)) {
     const auto &control{std::get<SchemaCompilerControlJump>(step)};
     context.push(control);
