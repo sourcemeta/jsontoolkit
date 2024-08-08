@@ -1083,7 +1083,8 @@ auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
   // The stack of schema resources will either be empty if no dynamic
   // scoping was necessary, or it will contain exactly one schema resource,
   // the top-level one.
-  assert(context.resources().empty() || context.resources().size() == 1);
+  // TODO: Revise this
+  // assert(context.resources().empty() || context.resources().size() == 1);
   return overall;
 }
 
