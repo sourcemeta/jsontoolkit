@@ -11,7 +11,6 @@ tests/latest
 tests/draft-next
 tests/draft3
 remotes/draft-next
-remotes/draft2020-12
 remotes/locationIndependentIdentifier.json
 remotes/name-defs.json
 remotes/ref-and-defs.json
