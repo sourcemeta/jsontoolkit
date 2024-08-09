@@ -29,24 +29,6 @@
 /// ```cpp
 /// #include <sourcemeta/jsontoolkit/jsonschema.h>
 /// ```
-///
-/// Older JSON Schema versions might not be supported, but older JSON Schema
-/// documents can be automatically upgraded using a tool like
-/// [Alterschema](https://github.com/sourcemeta/alterschema).
-///
-/// Supported JSON Schema dialects:
-///
-/// | Dialect | Support |
-/// |---------|---------|
-/// | 2020-12 | Partial |
-/// | 2019-09 | Partial |
-/// | Draft 7 | Partial |
-/// | Draft 6 | Partial |
-/// | Draft 4 | Partial |
-/// | Draft 3 | Partial |
-/// | Draft 2 | Partial |
-/// | Draft 1 | Partial |
-/// | Draft 0 | Partial |
 
 namespace sourcemeta::jsontoolkit {
 
