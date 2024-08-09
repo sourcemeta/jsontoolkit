@@ -14,6 +14,8 @@
 #include <type_traits> // std::is_same_v
 #include <vector>      // std::vector
 
+#include <iostream> // TODO
+
 namespace {
 
 class EvaluationContext {
@@ -80,6 +82,14 @@ public:
     this->evaluate_path_.push_back(relative_evaluate_path);
     this->instance_location_.push_back(relative_instance_location);
 
+    // std::cerr << "-----------\n";
+    std::cerr << "EVALUATE PATH: ";
+    sourcemeta::jsontoolkit::stringify(this->evaluate_path_, std::cerr);
+    std::cerr << "\n";
+    // std::cerr << "INSTANCE LOCATION: ";
+    // sourcemeta::jsontoolkit::stringify(this->instance_location_, std::cerr);
+    // std::cerr << "\n";
+
     // TODO: Do schema resource management using hashes to avoid
     // expensive string comparisons
     if (step.dynamic && (this->resources_.empty() ||
@@ -100,6 +110,11 @@ public:
       assert(std::adjacent_find(this->resources_.cbegin(),
                                 this->resources_.cend()) ==
              this->resources_.cend());
+
+      std::cerr << "------ (PUSH) RESOURCES: \n";
+      for (const auto &resource : this->resources_) {
+        std::cerr << "  " << resource << "\n";
+      }
     }
   }
 
@@ -108,20 +123,27 @@ public:
                step.relative_instance_location);
   }
 
-  template <typename T> auto pop(const T &step) -> void {
+  template <typename T> auto pop(const T &) -> void {
     assert(!this->frame_sizes.empty());
     const auto &sizes{this->frame_sizes.top()};
     this->evaluate_path_.pop_back(sizes.first);
     this->instance_location_.pop_back(sizes.second);
     this->frame_sizes.pop();
 
-    // TODO: Do schema resource management using hashes to avoid
+    // TODO: looks like we shouldn't be pushing schema resources,
+    // just continuing to append them
+
     // expensive string comparisons
-    if (step.dynamic && !this->resources_.empty() &&
-        this->resources_.back() != step.schema_resource) {
-      assert(!this->resources_.empty());
-      this->resources_.pop_back();
-    }
+    // if (step.dynamic && !this->resources_.empty() &&
+    // this->resources_.back() != step.schema_resource) {
+    // assert(!this->resources_.empty());
+    // this->resources_.pop_back();
+
+    // std::cerr << "------ (POP) RESOURCES: \n";
+    // for (const auto &resource : this->resources_) {
+    // std::cerr << "  " << resource << "\n";
+    // }
+    // }
   }
 
   auto resources() const -> const std::vector<std::string> & {
@@ -243,6 +265,8 @@ public:
       -> std::optional<std::size_t> {
     std::optional<std::size_t> result;
 
+    std::cerr << "FIND ANCHOR: " << anchor << "\n";
+
     // We want to check every schema resource from the current one
     // backwards until the dynamic anchor chain is lost. The one
     // before its lost is the one we want to jump to
@@ -252,10 +276,14 @@ public:
       name << *iterator;
       name << '#';
       name << anchor;
+      std::cerr << "QUERYING: " << name.str() << "\n";
       const auto label{std::hash<std::string>{}(name.str())};
+      std::cerr << "  (LABEL IS): " << label << "\n";
       if (this->labels.contains(label)) {
+        std::cerr << "  -- MATCH\n";
         result = label;
       } else {
+        std::cerr << "  -- BREAK\n";
         break;
       }
     }
@@ -811,6 +839,7 @@ auto evaluate_step(
     const auto id{context.find_dynamic_anchor(control.id)};
     result = id.has_value();
     if (id.has_value()) {
+      std::cerr << "??? JUMPING TO " << id.value() << "\n";
       for (const auto &child : context.jump(id.value())) {
         if (!evaluate_step(child, instance, mode, callback, context)) {
           result = false;
@@ -1102,10 +1131,6 @@ auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
   // we are done, otherwise there was a frame push/pop mismatch
   assert(context.evaluate_path().empty());
   assert(context.instance_location().empty());
-  // The stack of schema resources will either be empty if no dynamic
-  // scoping was necessary, or it will contain exactly one schema resource,
-  // the top-level one.
-  assert(context.resources().empty() || context.resources().size() == 1);
   return overall;
 }
 

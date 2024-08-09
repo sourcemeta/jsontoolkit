@@ -11,7 +11,7 @@
 #include <set>     // std::set
 #include <string>  // std::string
 
-// TODO: Support every keyword
+// TODO: Support every keyword from Draft 3 and earlier
 auto sourcemeta::jsontoolkit::default_schema_compiler(
     const sourcemeta::jsontoolkit::SchemaCompilerContext &context,
     const sourcemeta::jsontoolkit::SchemaCompilerSchemaContext &schema_context,

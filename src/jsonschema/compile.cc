@@ -3,6 +3,7 @@
 
 #include <algorithm> // std::move
 #include <cassert>   // assert
+#include <iostream>  // TODO
 #include <iterator>  // std::back_inserter
 #include <utility>   // std::move
 
@@ -135,11 +136,16 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
       name << '#';
       name << anchor_uri.fragment().value_or("");
       const auto label{std::hash<std::string>{}(name.str())};
+
+      std::cerr << "PRECOMPILING: " << name.str() << " AS " << label << "\n";
+
       schema_context.labels.insert(label);
 
       // Configure a schema context that corresponds to the
       // schema resource that we are precompiling
       auto subschema{get(result, entry.second.pointer)};
+      sourcemeta::jsontoolkit::prettify(subschema, std::cerr);
+      std::cerr << "\n";
       auto nested_vocabularies{
           vocabularies(subschema, resolver, entry.second.dialect).get()};
       const sourcemeta::jsontoolkit::SchemaCompilerSchemaContext
