@@ -44,12 +44,5 @@ auto compiler_2020_12_unevaluated_unevaluateditems(
   return {};
 }
 
-auto compiler_2020_12_unevaluated_unevaluatedproperties(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
-  // TODO: Implement
-  return {};
-}
-
 } // namespace internal
 #endif
