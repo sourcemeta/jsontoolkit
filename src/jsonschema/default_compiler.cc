@@ -117,6 +117,10 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
 
   // Same as Draft 4
 
+  // As per compatibility optional test
+  COMPILE("https://json-schema.org/draft/2020-12/vocab/applicator",
+          "dependencies", compiler_draft4_applicator_dependencies);
+
   COMPILE("https://json-schema.org/draft/2020-12/vocab/core", "$ref",
           compiler_draft4_core_ref);
 
