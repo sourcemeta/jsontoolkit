@@ -20,6 +20,13 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   assert(!dynamic_context.keyword.empty());
 
   static std::set<std::string> SUPPORTED_VOCABULARIES{
+      "https://json-schema.org/draft/2020-12/vocab/core",
+      "https://json-schema.org/draft/2020-12/vocab/applicator",
+      "https://json-schema.org/draft/2020-12/vocab/validation",
+      "https://json-schema.org/draft/2020-12/vocab/meta-data",
+      "https://json-schema.org/draft/2020-12/vocab/unevaluated",
+      "https://json-schema.org/draft/2020-12/vocab/format-annotation",
+      "https://json-schema.org/draft/2020-12/vocab/content",
       "https://json-schema.org/draft/2019-09/vocab/core",
       "https://json-schema.org/draft/2019-09/vocab/applicator",
       "https://json-schema.org/draft/2019-09/vocab/validation",
