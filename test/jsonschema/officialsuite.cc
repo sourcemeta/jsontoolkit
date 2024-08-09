@@ -60,6 +60,9 @@ static auto test_resolver(std::string_view identifier)
                    std::filesystem::path{"draft6"} / "detached-ref.json")
   READ_SCHEMA_FILE("http://localhost:1234/draft7/detached-ref.json",
                    std::filesystem::path{"draft7"} / "detached-ref.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft7/ignore-dependentRequired.json",
+                   std::filesystem::path{"draft7"} /
+                       "ignore-dependentRequired.json")
   READ_SCHEMA_FILE(
       "http://localhost:1234/draft2019-09/metaschema-no-validation.json",
       std::filesystem::path{"draft2019-09"} / "metaschema-no-validation.json")
@@ -106,6 +109,11 @@ static auto test_resolver(std::string_view identifier)
                    "nested-absolute-ref-to-string.json")
   READ_SCHEMA_FILE("http://localhost:1234/draft2019-09/detached-ref.json",
                    std::filesystem::path{"draft2019-09"} / "detached-ref.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2019-09/dependentRequired.json",
+                   std::filesystem::path{"draft2019-09"} /
+                       "dependentRequired.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2020-12/prefixItems.json",
+                   std::filesystem::path{"draft2020-12"} / "prefixItems.json")
 
 #undef READ_SCHEMA_FILE
 
@@ -242,12 +250,11 @@ int main(int argc, char **argv) {
     // 2019-09
     register_tests("draft2019-09", "JSONSchemaOfficialSuite_2019_09",
                    "https://json-schema.org/draft/2019-09/schema", {});
-    register_tests(
-        std::filesystem::path{"draft2019-09"} / "optional",
-        "JSONSchemaOfficialSuite_2019_09_Optional",
-        "https://json-schema.org/draft/2019-09/schema",
-        {// TODO: Enable all tests
-         "bignum", "cross-draft", "ecmascript-regex", "non-bmp-regex"});
+    register_tests(std::filesystem::path{"draft2019-09"} / "optional",
+                   "JSONSchemaOfficialSuite_2019_09_Optional",
+                   "https://json-schema.org/draft/2019-09/schema",
+                   {// TODO: Enable all tests
+                    "bignum", "ecmascript-regex", "non-bmp-regex"});
     register_tests(
         std::filesystem::path{"draft2019-09"} / "optional" / "format",
         "JSONSchemaOfficialSuite_2019_09_Optional_Format",
@@ -265,8 +272,7 @@ int main(int argc, char **argv) {
                    "JSONSchemaOfficialSuite_Draft7_Optional",
                    "http://json-schema.org/draft-07/schema#",
                    // TODO: Enable all tests
-                   {"bignum", "content", "cross-draft", "ecmascript-regex",
-                    "non-bmp-regex"});
+                   {"bignum", "content", "ecmascript-regex", "non-bmp-regex"});
     register_tests(std::filesystem::path{"draft7"} / "optional" / "format",
                    "JSONSchemaOfficialSuite_Draft7_Optional_Format",
                    "http://json-schema.org/draft-07/schema#",
