@@ -126,17 +126,29 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
       }
 
       const URI anchor_uri{entry.first.second};
-      assert(anchor_uri.is_absolute());
       std::ostringstream name;
-      name << anchor_uri.recompose_without_fragment().value();
+      name << anchor_uri.recompose_without_fragment().value_or("");
       name << '#';
       name << anchor_uri.fragment().value_or("");
       const auto label{std::hash<std::string>{}(name.str())};
       schema_context.labels.insert(label);
+
+      // Configure a schema context that corresponds to the
+      // schema resource that we are precompiling
+      auto subschema{get(result, entry.second.pointer)};
+      auto nested_vocabularies{
+          vocabularies(subschema, resolver, entry.second.dialect).get()};
+      const sourcemeta::jsontoolkit::SchemaCompilerSchemaContext
+          nested_schema_context{entry.second.relative_pointer,
+                                std::move(subschema),
+                                std::move(nested_vocabularies),
+                                entry.second.base,
+                                {}};
+
       compiler_template.push_back(make<SchemaCompilerControlMark>(
-          context, schema_context, dynamic_context,
+          context, nested_schema_context, dynamic_context,
           SchemaCompilerValueUnsignedInteger{label},
-          compile(context, schema_context, relative_dynamic_context,
+          compile(context, nested_schema_context, relative_dynamic_context,
                   empty_pointer, empty_pointer, entry.first.second)));
     }
   }
