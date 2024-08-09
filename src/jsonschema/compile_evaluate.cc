@@ -84,6 +84,15 @@ public:
     // expensive string comparisons
     if (step.dynamic && (this->resources_.empty() ||
                          this->resources_.back() != step.schema_resource)) {
+      // Some keywords may operate under the previous schema resource. For
+      // example, `additionalProperties` will emit annotations at that level
+      // after evaluating the `additionalProperties` subschema.
+      if (this->resources_.size() > 1 &&
+          this->resources_[this->resources_.size() - 2] ==
+              step.schema_resource) {
+        return;
+      }
+
       this->resources_.push_back(step.schema_resource);
       // If we are doing things right, there should never be adjacent
       // equal schema resources on the stack, as we cannot jump from
@@ -1083,8 +1092,7 @@ auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
   // The stack of schema resources will either be empty if no dynamic
   // scoping was necessary, or it will contain exactly one schema resource,
   // the top-level one.
-  // TODO: Revise this
-  // assert(context.resources().empty() || context.resources().size() == 1);
+  assert(context.resources().empty() || context.resources().size() == 1);
   return overall;
 }
 

@@ -2307,3 +2307,154 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
   EVALUATE_TRACE_POST_DESCRIBE(5, "Loop over the items of the target array "
                                   "potentially bound by an annotation result");
 }
+
+TEST(JSONSchema_compile_2019_09, recursiveRef_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$recursiveAnchor": true,
+    "additionalProperties": {
+      "$recursiveRef": "#"
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+                     "https://example.com/schema#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(
+      1, ControlDynamicAnchorJump, "/additionalProperties/$recursiveRef",
+      "https://example.com/schema#/additionalProperties/$recursiveRef", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(
+      2, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(
+      0, ControlDynamicAnchorJump, "/additionalProperties/$recursiveRef",
+      "https://example.com/schema#/additionalProperties/$recursiveRef", "/foo");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
+      1, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "", "foo");
+  EVALUATE_TRACE_POST_SUCCESS(
+      2, LoopProperties, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(0, "Jump to a dynamic anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(2,
+                               "Loop over the properties of the target object");
+}
+
+TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$recursiveAnchor": true,
+    "minimum": 1,
+    "additionalProperties": {
+      "$recursiveRef": "#"
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+                     "https://example.com/schema#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(
+      1, ControlDynamicAnchorJump, "/additionalProperties/$recursiveRef",
+      "https://example.com/schema#/additionalProperties/$recursiveRef", "/foo");
+  EVALUATE_TRACE_PRE(2, AssertionGreaterEqual,
+                     "/additionalProperties/$recursiveRef/minimum",
+                     "https://example.com/schema#/minimum", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(
+      3, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreaterEqual,
+                              "/additionalProperties/$recursiveRef/minimum",
+                              "https://example.com/schema#/minimum", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(
+      1, ControlDynamicAnchorJump, "/additionalProperties/$recursiveRef",
+      "https://example.com/schema#/additionalProperties/$recursiveRef", "/foo");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
+      2, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "", "foo");
+  EVALUATE_TRACE_POST_SUCCESS(
+      3, LoopProperties, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(0, "The target number is expected to be greater "
+                                  "than or equal to the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Jump to a dynamic anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(3,
+                               "Loop over the properties of the target object");
+}
+
+TEST(JSONSchema_compile_2019_09, recursiveRef_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalProperties": {
+      "$id": "nested",
+      "$recursiveAnchor": true,
+      "minimum": 1,
+      "additionalProperties": {
+        "$recursiveRef": "#"
+      }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+                     "https://example.com/schema#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(1, AssertionGreaterEqual, "/additionalProperties/minimum",
+                     "https://example.com/nested#/minimum", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(
+      2, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreaterEqual,
+                              "/additionalProperties/minimum",
+                              "https://example.com/nested#/minimum", "/foo");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
+      1, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "", "foo");
+  EVALUATE_TRACE_POST_SUCCESS(
+      2, LoopProperties, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(0, "The target number is expected to be greater "
+                                  "than or equal to the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(2,
+                               "Loop over the properties of the target object");
+}
