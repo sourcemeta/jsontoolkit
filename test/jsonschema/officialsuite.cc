@@ -307,8 +307,7 @@ int main(int argc, char **argv) {
     register_tests("draft2020-12", "JSONSchemaOfficialSuite_2020_12",
                    "https://json-schema.org/draft/2020-12/schema",
                    {// TODO: Enable all tests
-                    "contains", "defs", "dynamicRef", "maxContains",
-                    "minContains", "not", "ref", "unevaluatedItems",
+                    "defs", "dynamicRef", "not", "ref", "unevaluatedItems",
                     "unevaluatedProperties"});
     register_tests(std::filesystem::path{"draft2020-12"} / "optional",
                    "JSONSchemaOfficialSuite_2020_12_Optional",

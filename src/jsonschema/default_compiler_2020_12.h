@@ -34,10 +34,12 @@ auto compiler_2020_12_applicator_items(
 }
 
 auto compiler_2020_12_applicator_contains(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
-  // TODO: Implement
-  return {};
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  return compiler_2019_09_applicator_contains_conditional_annotate(
+      context, schema_context, dynamic_context, true);
 }
 
 auto compiler_2020_12_core_dynamicref(
