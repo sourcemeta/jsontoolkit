@@ -49,12 +49,5 @@ auto compiler_2020_12_core_dynamicref(
   return {};
 }
 
-auto compiler_2020_12_unevaluated_unevaluateditems(
-    const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
-    const SchemaCompilerDynamicContext &) -> SchemaCompilerTemplate {
-  // TODO: Implement
-  return {};
-}
-
 } // namespace internal
 #endif

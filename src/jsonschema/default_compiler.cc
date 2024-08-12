@@ -73,9 +73,6 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   COMPILE("https://json-schema.org/draft/2020-12/vocab/applicator", "contains",
           compiler_2020_12_applicator_contains);
 
-  COMPILE("https://json-schema.org/draft/2020-12/vocab/unevaluated",
-          "unevaluatedItems", compiler_2020_12_unevaluated_unevaluateditems);
-
   // Same as 2019-09
 
   COMPILE("https://json-schema.org/draft/2020-12/vocab/validation",
@@ -91,6 +88,8 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   COMPILE("https://json-schema.org/draft/2020-12/vocab/unevaluated",
           "unevaluatedProperties",
           compiler_2019_09_applicator_unevaluatedproperties);
+  COMPILE("https://json-schema.org/draft/2020-12/vocab/unevaluated",
+          "unevaluatedItems", compiler_2019_09_applicator_unevaluateditems);
 
   // Same as Draft 7
 
