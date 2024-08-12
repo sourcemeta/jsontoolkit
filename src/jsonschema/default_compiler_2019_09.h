@@ -140,7 +140,13 @@ auto compiler_2019_09_applicator_contains_conditional_annotate(
 
   return {make<SchemaCompilerLoopContains>(
       context, schema_context, dynamic_context,
-      SchemaCompilerValueRange{minimum, maximum}, std::move(children),
+      SchemaCompilerValueRange{
+          minimum, maximum,
+          // TODO: We only need to be exhaustive here if `unevaluatedItems` is
+          // in use on the schema. Can we pre-determine that and speed things up
+          // if not?
+          annotate},
+      std::move(children),
       {make<SchemaCompilerAssertionTypeStrict>(
           context, schema_context, relative_dynamic_context, JSON::Type::Array,
           {}, SchemaCompilerTargetType::Instance)})};
