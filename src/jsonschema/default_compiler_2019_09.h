@@ -203,24 +203,59 @@ auto compiler_2019_09_applicator_unevaluateditems(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   SchemaCompilerValueStrings dependencies{"unevaluatedItems"};
+
   if (schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/applicator")) {
     dependencies.emplace("items");
     dependencies.emplace("additionalItems");
   }
 
-  SchemaCompilerTemplate children{compile(context, schema_context,
-                                          relative_dynamic_context,
-                                          empty_pointer, empty_pointer)};
-  children.push_back(make<SchemaCompilerAnnotationPublic>(
+  if (schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/applicator")) {
+    dependencies.emplace("prefixItems");
+    dependencies.emplace("items");
+    dependencies.emplace("contains");
+  }
+
+  SchemaCompilerTemplate children;
+
+  SchemaCompilerTemplate loop_children{compile(context, schema_context,
+                                               relative_dynamic_context,
+                                               empty_pointer, empty_pointer)};
+  loop_children.push_back(make<SchemaCompilerAnnotationPublic>(
       context, schema_context, relative_dynamic_context, JSON{true}, {},
       SchemaCompilerTargetType::InstanceParent));
 
+  if (schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/applicator")) {
+    SchemaCompilerTemplate subcondition{
+        make<SchemaCompilerInternalNoAnnotation>(
+            context, schema_context, relative_dynamic_context,
+            SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                                 empty_pointer},
+            {}, SchemaCompilerTargetType::ParentAnnotations, {"contains"})};
+    children.push_back(make<SchemaCompilerInternalContainer>(
+        context, schema_context, relative_dynamic_context,
+        SchemaCompilerValueNone{}, std::move(loop_children),
+        std::move(subcondition)));
+  } else {
+    children = std::move(loop_children);
+  }
+
   SchemaCompilerTemplate loop;
-  if (dependencies.contains("items")) {
+  if (schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2019-09/vocab/applicator") &&
+      dependencies.contains("items")) {
     loop.push_back(make<SchemaCompilerLoopItemsFromAnnotationIndex>(
         context, schema_context, relative_dynamic_context,
         SchemaCompilerValueString{"items"}, std::move(children),
+        SchemaCompilerTemplate{}));
+  } else if (schema_context.vocabularies.contains(
+                 "https://json-schema.org/draft/2020-12/vocab/applicator") &&
+             dependencies.contains("prefixItems")) {
+    loop.push_back(make<SchemaCompilerLoopItemsFromAnnotationIndex>(
+        context, schema_context, relative_dynamic_context,
+        SchemaCompilerValueString{"prefixItems"}, std::move(children),
         SchemaCompilerTemplate{}));
   } else {
     loop.push_back(make<SchemaCompilerLoopItems>(
