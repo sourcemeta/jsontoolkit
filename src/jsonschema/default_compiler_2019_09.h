@@ -247,8 +247,16 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   SchemaCompilerValueStrings dependencies{"unevaluatedProperties"};
+
   if (schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/applicator")) {
+    dependencies.emplace("properties");
+    dependencies.emplace("patternProperties");
+    dependencies.emplace("additionalProperties");
+  }
+
+  if (schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/applicator")) {
     dependencies.emplace("properties");
     dependencies.emplace("patternProperties");
     dependencies.emplace("additionalProperties");
