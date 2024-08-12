@@ -646,10 +646,10 @@ auto compiler_draft4_applicator_additionalitems_from_cursor(
     const SchemaCompilerDynamicContext &dynamic_context,
     const std::size_t cursor, const bool annotate) -> SchemaCompilerTemplate {
   SchemaCompilerTemplate condition{make<SchemaCompilerAssertionTypeStrict>(
-      context, schema_context, dynamic_context, JSON::Type::Array, {},
+      context, schema_context, relative_dynamic_context, JSON::Type::Array, {},
       SchemaCompilerTargetType::Instance)};
   condition.push_back(make<SchemaCompilerAssertionSizeGreater>(
-      context, schema_context, dynamic_context, cursor, {},
+      context, schema_context, relative_dynamic_context, cursor, {},
       SchemaCompilerTargetType::Instance));
 
   SchemaCompilerTemplate children{make<SchemaCompilerLoopItems>(
