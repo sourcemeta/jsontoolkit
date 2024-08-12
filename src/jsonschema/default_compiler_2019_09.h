@@ -135,7 +135,16 @@ auto compiler_2019_09_applicator_contains_conditional_annotate(
                                           empty_pointer, empty_pointer)};
 
   if (annotate) {
-    // TODO: Emit an annotation
+    children.push_back(make<SchemaCompilerAnnotationPublic>(
+        context, schema_context, relative_dynamic_context,
+        SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                             empty_pointer},
+        {}, SchemaCompilerTargetType::InstanceParent));
+
+    // TODO: If after emitting the above annotation, the number of annotations
+    // for the current schema location + instance location is equal to the
+    // array size (which means we annotated all of the items), then emit
+    // an annotation "true"
   }
 
   return {make<SchemaCompilerLoopContains>(
