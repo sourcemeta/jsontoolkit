@@ -112,8 +112,64 @@ static auto test_resolver(std::string_view identifier)
   READ_SCHEMA_FILE("http://localhost:1234/draft2019-09/dependentRequired.json",
                    std::filesystem::path{"draft2019-09"} /
                        "dependentRequired.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2019-09/ignore-prefixItems.json",
+                   std::filesystem::path{"draft2019-09"} /
+                       "ignore-prefixItems.json")
   READ_SCHEMA_FILE("http://localhost:1234/draft2020-12/prefixItems.json",
                    std::filesystem::path{"draft2020-12"} / "prefixItems.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2020-12/metaschema-no-validation.json",
+      std::filesystem::path{"draft2020-12"} / "metaschema-no-validation.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2020-12/metaschema-optional-vocabulary.json",
+      std::filesystem::path{"draft2020-12"} /
+          "metaschema-optional-vocabulary.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2020-12/integer.json",
+                   std::filesystem::path{"draft2020-12"} / "integer.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2020-12/detached-dynamicref.json",
+      std::filesystem::path{"draft2020-12"} / "detached-dynamicref.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2020-12/detached-ref.json",
+                   std::filesystem::path{"draft2020-12"} / "detached-ref.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2020-12/extendible-dynamic-ref.json",
+      std::filesystem::path{"draft2020-12"} / "extendible-dynamic-ref.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2020-12/format-assertion-false.json",
+      std::filesystem::path{"draft2020-12"} / "format-assertion-false.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2020-12/format-assertion-true.json",
+      std::filesystem::path{"draft2020-12"} / "format-assertion-true.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2020-12/locationIndependentIdentifier.json",
+      std::filesystem::path{"draft2020-12"} /
+          "locationIndependentIdentifier.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2020-12/name-defs.json",
+                   std::filesystem::path{"draft2020-12"} / "name-defs.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2020-12/ref-and-defs.json",
+                   std::filesystem::path{"draft2020-12"} / "ref-and-defs.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2020-12/subSchemas.json",
+                   std::filesystem::path{"draft2020-12"} / "subSchemas.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2020-12/tree.json",
+                   std::filesystem::path{"draft2020-12"} / "tree.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2020-12/baseUriChangeFolder/"
+                   "folderInteger.json",
+                   std::filesystem::path{"draft2020-12"} /
+                       "baseUriChangeFolder" / "folderInteger.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2020-12/"
+                   "baseUriChangeFolderInSubschema/folderInteger.json",
+                   std::filesystem::path{"draft2020-12"} /
+                       "baseUriChangeFolderInSubschema" / "folderInteger.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2020-12/baseUriChange/folderInteger.json",
+      std::filesystem::path{"draft2020-12"} / "baseUriChange" /
+          "folderInteger.json")
+  READ_SCHEMA_FILE(
+      "http://localhost:1234/draft2020-12/nested/foo-ref-string.json",
+      std::filesystem::path{"draft2020-12"} / "nested" / "foo-ref-string.json")
+  READ_SCHEMA_FILE("http://localhost:1234/draft2020-12/nested/string.json",
+                   std::filesystem::path{"draft2020-12"} / "nested" /
+                       "string.json")
 
 #undef READ_SCHEMA_FILE
 
@@ -251,76 +307,24 @@ int main(int argc, char **argv) {
     register_tests("draft2020-12", "JSONSchemaOfficialSuite_2020_12",
                    "https://json-schema.org/draft/2020-12/schema",
                    {// TODO: Enable all tests
-                    "additionalProperties",
-                    "allOf",
-                    "anchor",
-                    "anyOf",
-                    "boolean_schema",
-                    "const",
-                    "contains",
-                    "content",
-                    "default",
-                    "defs",
-                    "dependentRequired",
-                    "dependentSchemas",
-                    "dynamicRef",
-                    "enum",
-                    "exclusiveMaximum",
-                    "exclusiveMinimum",
-                    "format",
-                    "if-then-else",
-                    "infinite-loop-detection",
-                    "items",
-                    "maxContains",
-                    "maximum",
-                    "maxItems",
-                    "maxLength",
-                    "maxProperties",
-                    "minContains",
-                    "minimum",
-                    "minItems",
-                    "minLength",
-                    "minProperties",
-                    "multipleOf",
-                    "not",
-                    "oneOf",
-                    "pattern",
-                    "patternProperties",
-                    "prefixItems",
-                    "properties",
-                    "propertyNames",
-                    "ref",
-                    "refRemote",
-                    "required",
-                    "type",
-                    "unevaluatedItems",
-                    "unevaluatedProperties",
-                    "uniqueItems",
-                    "vocabulary"});
+                    "contains", "defs", "dynamicRef", "maxContains",
+                    "minContains", "not", "ref", "unevaluatedItems",
+                    "unevaluatedProperties"});
     register_tests(std::filesystem::path{"draft2020-12"} / "optional",
                    "JSONSchemaOfficialSuite_2020_12_Optional",
                    "https://json-schema.org/draft/2020-12/schema",
                    {// TODO: Enable all tests
-                    "anchor", "bignum", "cross-draft",
-                    "dependencies-compatibility", "dynamicRef",
-                    "ecmascript-regex", "float-overflow", "format-assertion",
-                    "id", "no-schema", "non-bmp-regex", "refOfUnknownKeyword",
-                    "unknownKeyword"});
-    register_tests(std::filesystem::path{"draft2020-12"} / "optional" /
-                       "format",
-                   "JSONSchemaOfficialSuite_2020_12_Optional_Format",
-                   "https://json-schema.org/draft/2020-12/schema",
-                   // TODO: Enable all tests
-                   {"date-time",     "date",
-                    "duration",      "email",
-                    "hostname",      "idn-email",
-                    "idn-hostname",  "ipv4",
-                    "ipv6",          "iri-reference",
-                    "iri",           "json-pointer",
-                    "regex",         "relative-json-pointer",
-                    "time",          "unknown",
-                    "uri-reference", "uri-template",
-                    "uri",           "uuid"});
+                    "bignum", "dynamicRef", "ecmascript-regex",
+                    "format-assertion", "non-bmp-regex"});
+    register_tests(
+        std::filesystem::path{"draft2020-12"} / "optional" / "format",
+        "JSONSchemaOfficialSuite_2020_12_Optional_Format",
+        "https://json-schema.org/draft/2020-12/schema",
+        // TODO: Enable all tests
+        {"date-time", "date", "duration", "email", "hostname", "idn-email",
+         "idn-hostname", "ipv4", "ipv6", "iri-reference", "iri", "json-pointer",
+         "regex", "relative-json-pointer", "time", "uri-reference",
+         "uri-template", "uri", "uuid"});
 
     // 2019-09
     register_tests("draft2019-09", "JSONSchemaOfficialSuite_2019_09",
