@@ -266,7 +266,7 @@ TEST(JSONSchema_default_walker_2020_12,
             std::inserter(vocabularies, vocabularies.end()));
   const auto result{default_schema_walker("unevaluatedItems", vocabularies)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
-  const std::set<std::string> expected{"prefixItems", "items"};
+  const std::set<std::string> expected{"prefixItems", "items", "contains"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
