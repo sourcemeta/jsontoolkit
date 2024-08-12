@@ -90,11 +90,11 @@ auto compiler_2019_09_core_annotation(
       SchemaCompilerTargetType::Instance)};
 }
 
-auto compiler_2019_09_applicator_contains(
+auto compiler_2019_09_applicator_contains_conditional_annotate(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context)
-    -> SchemaCompilerTemplate {
+    const SchemaCompilerDynamicContext &dynamic_context,
+    const bool annotate) -> SchemaCompilerTemplate {
 
   std::size_t minimum{1};
   if (schema_context.schema.defines("minContains")) {
@@ -130,14 +130,29 @@ auto compiler_2019_09_applicator_contains(
     return {};
   }
 
+  SchemaCompilerTemplate children{compile(context, schema_context,
+                                          relative_dynamic_context,
+                                          empty_pointer, empty_pointer)};
+
+  if (annotate) {
+    // TODO: Emit an annotation
+  }
+
   return {make<SchemaCompilerLoopContains>(
       context, schema_context, dynamic_context,
-      SchemaCompilerValueRange{minimum, maximum},
-      compile(context, schema_context, relative_dynamic_context, empty_pointer,
-              empty_pointer),
+      SchemaCompilerValueRange{minimum, maximum}, std::move(children),
       {make<SchemaCompilerAssertionTypeStrict>(
           context, schema_context, relative_dynamic_context, JSON::Type::Array,
           {}, SchemaCompilerTargetType::Instance)})};
+}
+
+auto compiler_2019_09_applicator_contains(
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  return compiler_2019_09_applicator_contains_conditional_annotate(
+      context, schema_context, dynamic_context, false);
 }
 
 auto compiler_2019_09_applicator_additionalproperties(
