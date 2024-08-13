@@ -800,6 +800,12 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_id) {
       },
       "anchor": {
         "$dynamicRef": "#baz"
+      },
+      "dynamic": {
+        "$dynamicAnchor": "dynamic"
+      },
+      "extra": {
+        "$dynamicRef": "#dynamic"
       }
     }
   })JSON");
@@ -811,25 +817,28 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(references.size(), 5);
+  EXPECT_EQ(references.size(), 6);
 
   EXPECT_STATIC_REFERENCE(
       references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
       "https://json-schema.org/draft/2020-12/schema", std::nullopt);
 
-  EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef",
-                           "https://www.sourcemeta.com/schema",
-                           "https://www.sourcemeta.com/schema", std::nullopt);
-  EXPECT_DYNAMIC_REFERENCE(references, "/properties/bar/$dynamicRef",
-                           "https://www.sourcemeta.com/schema#/properties/baz",
-                           "https://www.sourcemeta.com/schema",
-                           "/properties/baz");
-  EXPECT_DYNAMIC_REFERENCE(references, "/properties/qux/$dynamicRef",
-                           "https://www.sourcemeta.com/test",
-                           "https://www.sourcemeta.com/test", std::nullopt);
-  EXPECT_DYNAMIC_REFERENCE(references, "/properties/anchor/$dynamicRef",
-                           "https://www.sourcemeta.com/schema#baz",
-                           "https://www.sourcemeta.com/schema", "baz");
+  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$dynamicRef",
+                          "https://www.sourcemeta.com/schema",
+                          "https://www.sourcemeta.com/schema", std::nullopt);
+  EXPECT_STATIC_REFERENCE(references, "/properties/bar/$dynamicRef",
+                          "https://www.sourcemeta.com/schema#/properties/baz",
+                          "https://www.sourcemeta.com/schema",
+                          "/properties/baz");
+  EXPECT_STATIC_REFERENCE(references, "/properties/qux/$dynamicRef",
+                          "https://www.sourcemeta.com/test",
+                          "https://www.sourcemeta.com/test", std::nullopt);
+  EXPECT_STATIC_REFERENCE(references, "/properties/anchor/$dynamicRef",
+                          "https://www.sourcemeta.com/schema#baz",
+                          "https://www.sourcemeta.com/schema", "baz");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/extra/$dynamicRef",
+                           "https://www.sourcemeta.com/schema#dynamic",
+                           "https://www.sourcemeta.com/schema", "dynamic");
 }
 
 TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
@@ -849,6 +858,12 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
       },
       "anchor": {
         "$dynamicRef": "#baz"
+      },
+      "dynamic": {
+        "$dynamicAnchor": "dynamic"
+      },
+      "extra": {
+        "$dynamicRef": "#dynamic"
       }
     }
   })JSON");
@@ -860,21 +875,23 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(references.size(), 5);
+  EXPECT_EQ(references.size(), 6);
 
   EXPECT_STATIC_REFERENCE(
       references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
       "https://json-schema.org/draft/2020-12/schema", std::nullopt);
 
-  EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef", "",
-                           std::nullopt, std::nullopt);
-  EXPECT_DYNAMIC_REFERENCE(references, "/properties/bar/$dynamicRef",
-                           "#/properties/baz", std::nullopt, "/properties/baz");
-  EXPECT_DYNAMIC_REFERENCE(references, "/properties/qux/$dynamicRef",
-                           "https://www.example.com", "https://www.example.com",
-                           std::nullopt);
-  EXPECT_DYNAMIC_REFERENCE(references, "/properties/anchor/$dynamicRef", "#baz",
-                           std::nullopt, "baz");
+  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$dynamicRef", "",
+                          std::nullopt, std::nullopt);
+  EXPECT_STATIC_REFERENCE(references, "/properties/bar/$dynamicRef",
+                          "#/properties/baz", std::nullopt, "/properties/baz");
+  EXPECT_STATIC_REFERENCE(references, "/properties/qux/$dynamicRef",
+                          "https://www.example.com", "https://www.example.com",
+                          std::nullopt);
+  EXPECT_STATIC_REFERENCE(references, "/properties/anchor/$dynamicRef", "#baz",
+                          std::nullopt, "baz");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/extra/$dynamicRef",
+                           "#dynamic", std::nullopt, "dynamic");
 }
 
 TEST(JSONSchema_frame_2020_12, different_dynamic_and_refs_in_same_object) {
@@ -910,9 +927,9 @@ TEST(JSONSchema_frame_2020_12, different_dynamic_and_refs_in_same_object) {
                           "https://www.sourcemeta.com/schema#/properties/bar",
                           "https://www.sourcemeta.com/schema",
                           "/properties/bar");
-  EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef",
-                           "https://www.sourcemeta.com/schema",
-                           "https://www.sourcemeta.com/schema", std::nullopt);
+  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$dynamicRef",
+                          "https://www.sourcemeta.com/schema",
+                          "https://www.sourcemeta.com/schema", std::nullopt);
 }
 
 TEST(JSONSchema_frame_2020_12, same_dynamic_and_refs_in_same_object) {
@@ -948,10 +965,10 @@ TEST(JSONSchema_frame_2020_12, same_dynamic_and_refs_in_same_object) {
                           "https://www.sourcemeta.com/schema#/properties/bar",
                           "https://www.sourcemeta.com/schema",
                           "/properties/bar");
-  EXPECT_DYNAMIC_REFERENCE(references, "/properties/foo/$dynamicRef",
-                           "https://www.sourcemeta.com/schema#/properties/bar",
-                           "https://www.sourcemeta.com/schema",
-                           "/properties/bar");
+  EXPECT_STATIC_REFERENCE(references, "/properties/foo/$dynamicRef",
+                          "https://www.sourcemeta.com/schema#/properties/bar",
+                          "https://www.sourcemeta.com/schema",
+                          "/properties/bar");
 }
 
 TEST(JSONSchema_frame_2020_12, dynamic_anchor_with_id) {
