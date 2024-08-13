@@ -99,14 +99,17 @@ static auto store(sourcemeta::jsontoolkit::ReferenceFrame &frame,
                   const std::string &base_id,
                   const sourcemeta::jsontoolkit::Pointer &pointer_from_root,
                   const sourcemeta::jsontoolkit::Pointer &pointer_from_base,
-                  const std::string &dialect) -> void {
+                  const std::string &dialect,
+                  const bool ignore_if_present = false) -> void {
   const auto canonical{
       sourcemeta::jsontoolkit::URI{uri}.canonicalize().recompose()};
-  if (!frame
-           .insert({{type, canonical},
-                    {entry_type, root_id, base_id, pointer_from_root,
-                     pointer_from_base, dialect}})
-           .second) {
+  const auto inserted{
+      frame
+          .insert({{type, canonical},
+                   {entry_type, root_id, base_id, pointer_from_root,
+                    pointer_from_base, dialect}})
+          .second};
+  if (!ignore_if_present && !inserted) {
     std::ostringstream error;
     error << "Schema identifier already exists: " << uri;
     throw sourcemeta::jsontoolkit::SchemaError(error.str());
@@ -275,6 +278,15 @@ auto sourcemeta::jsontoolkit::frame(
                 relative_anchor_uri, root_id, "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
                 entry.common.dialect.value());
+
+          // Register a dynamic anchor as a static anchor if possible too
+          if (entry.common.vocabularies.contains(
+                  "https://json-schema.org/draft/2020-12/vocab/core")) {
+            store(frame, ReferenceType::Static, ReferenceEntryType::Anchor,
+                  relative_anchor_uri, root_id, "", entry.common.pointer,
+                  entry.common.pointer.resolve_from(bases.second),
+                  entry.common.dialect.value(), true);
+          }
         }
       } else {
         bool is_first = true;
@@ -313,6 +325,16 @@ auto sourcemeta::jsontoolkit::frame(
                   entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
                   entry.common.dialect.value());
+
+            // Register a dynamic anchor as a static anchor if possible too
+            if (entry.common.vocabularies.contains(
+                    "https://json-schema.org/draft/2020-12/vocab/core")) {
+              store(frame, sourcemeta::jsontoolkit::ReferenceType::Static,
+                    ReferenceEntryType::Anchor, anchor_uri, root_id,
+                    base_string, entry.common.pointer,
+                    entry.common.pointer.resolve_from(bases.second),
+                    entry.common.dialect.value(), true);
+            }
           }
 
           is_first = false;
@@ -417,11 +439,15 @@ auto sourcemeta::jsontoolkit::frame(
         // as the dynamic reference may point to a schema resource that
         // is not part of or bundled within the schema we are analyzing here.
 
+        const auto has_fragment{ref.fragment().has_value()};
         const auto maybe_static_frame{
             frame.find({ReferenceType::Static, ref_string})};
-        const auto behaves_as_static{
-            !ref.fragment().has_value() ||
-            (ref.fragment().has_value() && maybe_static_frame != frame.end())};
+        const auto maybe_dynamic_frame{
+            frame.find({ReferenceType::Dynamic, ref_string})};
+        const auto behaves_as_static{!has_fragment ||
+                                     (has_fragment &&
+                                      maybe_static_frame != frame.end() &&
+                                      maybe_dynamic_frame == frame.end())};
         references.insert(
             {{behaves_as_static ? ReferenceType::Static
                                 : ReferenceType::Dynamic,
