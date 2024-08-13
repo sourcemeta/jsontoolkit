@@ -806,6 +806,9 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_id) {
       },
       "extra": {
         "$dynamicRef": "#dynamic"
+      },
+      "unknown": {
+        "$dynamicRef": "foo#xxx"
       }
     }
   })JSON");
@@ -817,7 +820,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(references.size(), 6);
+  EXPECT_EQ(references.size(), 7);
 
   EXPECT_STATIC_REFERENCE(
       references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
@@ -839,6 +842,9 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_id) {
   EXPECT_DYNAMIC_REFERENCE(references, "/properties/extra/$dynamicRef",
                            "https://www.sourcemeta.com/schema#dynamic",
                            "https://www.sourcemeta.com/schema", "dynamic");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/unknown/$dynamicRef",
+                           "https://www.sourcemeta.com/foo#xxx",
+                           "https://www.sourcemeta.com/foo", "xxx");
 }
 
 TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
@@ -864,6 +870,9 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
       },
       "extra": {
         "$dynamicRef": "#dynamic"
+      },
+      "unknown": {
+        "$dynamicRef": "https://www.example.com/foo#xxx"
       }
     }
   })JSON");
@@ -875,7 +884,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(references.size(), 6);
+  EXPECT_EQ(references.size(), 7);
 
   EXPECT_STATIC_REFERENCE(
       references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
@@ -892,6 +901,38 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
                           std::nullopt, "baz");
   EXPECT_DYNAMIC_REFERENCE(references, "/properties/extra/$dynamicRef",
                            "#dynamic", std::nullopt, "dynamic");
+  EXPECT_DYNAMIC_REFERENCE(references, "/properties/unknown/$dynamicRef",
+                           "https://www.example.com/foo#xxx",
+                           "https://www.example.com/foo", "xxx");
+}
+
+TEST(JSONSchema_frame_2020_12, ref_to_dynamic_anchor) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": {
+        "$anchor": "foo"
+      },
+      "bar": {
+        "$ref": "#foo"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(references.size(), 2);
+
+  EXPECT_STATIC_REFERENCE(references, "/properties/bar/$ref",
+                          "https://www.sourcemeta.com/schema#foo",
+                          "https://www.sourcemeta.com/schema", "foo");
 }
 
 TEST(JSONSchema_frame_2020_12, different_dynamic_and_refs_in_same_object) {
@@ -996,7 +1037,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_anchor_with_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(frame.size(), 19);
+  EXPECT_EQ(frame.size(), 21);
 
   // Dynamic anchors
 
@@ -1015,6 +1056,14 @@ TEST(JSONSchema_frame_2020_12, dynamic_anchor_with_id) {
 
   // Static anchors
 
+  EXPECT_FRAME_STATIC_2020_12_ANCHOR(frame,
+                                     "https://www.sourcemeta.com/schema#foo",
+                                     "https://www.sourcemeta.com/schema", "",
+                                     "https://www.sourcemeta.com/schema", "");
+  EXPECT_FRAME_STATIC_2020_12_ANCHOR(
+      frame, "https://www.sourcemeta.com/schema#test",
+      "https://www.sourcemeta.com/schema", "/properties/foo",
+      "https://www.sourcemeta.com/schema", "/properties/foo");
   EXPECT_FRAME_STATIC_2020_12_ANCHOR(
       frame, "https://www.sourcemeta.com/bar#test",
       "https://www.sourcemeta.com/schema", "/properties/bar",
@@ -1113,11 +1162,14 @@ TEST(JSONSchema_frame_2020_12, dynamic_anchor_without_id) {
                                  sourcemeta::jsontoolkit::official_resolver)
       .wait();
 
-  EXPECT_EQ(frame.size(), 6);
+  EXPECT_EQ(frame.size(), 7);
 
   // Dynamic anchors
 
   EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
+      frame, "#test", "/properties/foo",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_ANCHOR(
       frame, "#test", "/properties/foo",
       "https://json-schema.org/draft/2020-12/schema");
 
