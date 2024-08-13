@@ -731,3 +731,39 @@ TEST(JSONSchema_compile_2020_12, reference_from_unknown_keyword) {
     throw;
   }
 }
+
+TEST(JSONSchema_compile_2020_12, dynamicRef_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$dynamicRef": "#foo",
+    "$defs": {
+      "string": {
+        "$dynamicAnchor": "foo",
+        "type": "string"
+      }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, ControlDynamicAnchorJump, "/$dynamicRef",
+                     "#/$dynamicRef", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/$dynamicRef/type",
+                     "#/$defs/string/type", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/$dynamicRef/type",
+                              "#/$defs/string/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, ControlDynamicAnchorJump, "/$dynamicRef",
+                              "#/$dynamicRef", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(1, "Jump to a dynamic anchor");
+}
