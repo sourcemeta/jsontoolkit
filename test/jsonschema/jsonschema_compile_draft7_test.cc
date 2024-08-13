@@ -432,3 +432,32 @@ TEST(JSONSchema_compile_draft7, unknown_2) {
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
+
+TEST(JSONSchema_compile_draft7, reference_from_unknown_keyword) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "properties": {
+      "foo": { "$ref": "#/$defs/bar" },
+      "baz": { "type": "string" }
+    },
+    "$defs": {
+      "bar": {
+        "$ref": "#/properties/baz"
+      }
+    }
+  })JSON")};
+
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+  } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
+    EXPECT_EQ(error.id(), "#/properties/baz");
+    EXPECT_EQ(error.location(),
+              sourcemeta::jsontoolkit::Pointer({"$defs", "bar", "$ref"}));
+  } catch (...) {
+    throw;
+  }
+}
