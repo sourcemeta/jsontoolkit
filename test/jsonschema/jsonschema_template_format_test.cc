@@ -9,6 +9,8 @@ TEST(JSONSchema_compiler_template_format, example_1) {
     "absoluteKeywordLocation": "#/properties",
     "category": "annotation",
     "condition": [],
+    "dynamic": true,
+    "id": 5,
     "target": {
       "category": "target",
       "location": "",
@@ -44,6 +46,8 @@ TEST(JSONSchema_compiler_template_format, example_1) {
     "type": "instance",
     "location": ""
   },
+  "id": 5,
+  "dynamic": true,
   "condition": []
 })JSON");
 }
