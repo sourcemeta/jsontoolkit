@@ -354,8 +354,6 @@ auto sourcemeta::jsontoolkit::frame(
     if (entry.common.value.is_object()) {
       const auto nearest_bases{
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
-
-      // TODO: Check that static destinations actually exist in the frame
       if (entry.common.value.defines("$ref")) {
         assert(entry.common.value.at("$ref").is_string());
         sourcemeta::jsontoolkit::URI ref{
@@ -413,11 +411,23 @@ auto sourcemeta::jsontoolkit::frame(
         }
 
         ref.canonicalize();
-        // TODO: Check bookending requirement
-        references.insert({{ReferenceType::Dynamic,
-                            entry.common.pointer.concat({"$dynamicRef"})},
-                           {ref.recompose(), ref.recompose_without_fragment(),
-                            fragment_string(ref)}});
+        auto ref_string{ref.recompose()};
+
+        // Note that here we cannot enforce the bookending requirement,
+        // as the dynamic reference may point to a schema resource that
+        // is not part of or bundled within the schema we are analyzing here.
+
+        const auto maybe_static_frame{
+            frame.find({ReferenceType::Static, ref_string})};
+        const auto behaves_as_static{
+            !ref.fragment().has_value() ||
+            (ref.fragment().has_value() && maybe_static_frame != frame.end())};
+        references.insert(
+            {{behaves_as_static ? ReferenceType::Static
+                                : ReferenceType::Dynamic,
+              entry.common.pointer.concat({"$dynamicRef"})},
+             {std::move(ref_string), ref.recompose_without_fragment(),
+              fragment_string(ref)}});
       }
     }
   }
