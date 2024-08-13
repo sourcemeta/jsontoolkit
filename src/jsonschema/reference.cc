@@ -279,21 +279,29 @@ auto sourcemeta::jsontoolkit::frame(
       } else {
         bool is_first = true;
         for (const auto &base_string : bases.first) {
-          auto anchor_uri{sourcemeta::jsontoolkit::URI::from_fragment(name)};
-          const sourcemeta::jsontoolkit::URI anchor_base{base_string};
-          anchor_uri.resolve_from_if_absolute(anchor_base);
-          const auto absolute_anchor_uri{anchor_uri.recompose()};
+          // TODO: All this dance is necessary because we don't have a
+          // URI::fragment setter
+          std::ostringstream anchor_uri_string;
+          anchor_uri_string << sourcemeta::jsontoolkit::URI{base_string}
+                                   .recompose_without_fragment()
+                                   .value_or("");
+          anchor_uri_string << '#';
+          anchor_uri_string << name;
+          const auto anchor_uri{
+              sourcemeta::jsontoolkit::URI{anchor_uri_string.str()}
+                  .canonicalize()
+                  .recompose()};
 
           if (!is_first &&
-              frame.contains({ReferenceType::Static, absolute_anchor_uri})) {
+              frame.contains({ReferenceType::Static, anchor_uri})) {
             continue;
           }
 
           if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
               type == sourcemeta::jsontoolkit::AnchorType::All) {
             store(frame, sourcemeta::jsontoolkit::ReferenceType::Static,
-                  ReferenceEntryType::Anchor, absolute_anchor_uri, root_id,
-                  base_string, entry.common.pointer,
+                  ReferenceEntryType::Anchor, anchor_uri, root_id, base_string,
+                  entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
                   entry.common.dialect.value());
           }
@@ -301,8 +309,8 @@ auto sourcemeta::jsontoolkit::frame(
           if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
               type == sourcemeta::jsontoolkit::AnchorType::All) {
             store(frame, sourcemeta::jsontoolkit::ReferenceType::Dynamic,
-                  ReferenceEntryType::Anchor, absolute_anchor_uri, root_id,
-                  base_string, entry.common.pointer,
+                  ReferenceEntryType::Anchor, anchor_uri, root_id, base_string,
+                  entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
                   entry.common.dialect.value());
           }

@@ -1715,3 +1715,68 @@ TEST(JSONSchema_frame_2019_09, invalid_recursive_ref) {
                    .wait(),
                sourcemeta::jsontoolkit::SchemaError);
 }
+
+TEST(JSONSchema_frame_2019_09, recursive_anchor_on_relative_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$recursiveAnchor": true,
+    "additionalItems": {
+      "$id": "middle",
+      "$recursiveAnchor": true
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 10);
+
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "", "", "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_RESOURCE(
+      frame, "/middle", "/additionalItems",
+      "https://json-schema.org/draft/2019-09/schema");
+
+  // JSON Pointers
+
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "", "", "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$schema", "/$schema",
+      "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$recursiveAnchor", "/$recursiveAnchor",
+      "https://json-schema.org/draft/2019-09/schema");
+
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/additionalItems", "/additionalItems",
+      "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/additionalItems/$id", "/additionalItems/$id",
+      "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/additionalItems/$recursiveAnchor",
+      "/additionalItems/$recursiveAnchor",
+      "https://json-schema.org/draft/2019-09/schema");
+
+  // Anchors
+
+  EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
+      frame, "", "", "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
+      frame, "/middle", "/additionalItems",
+      "https://json-schema.org/draft/2019-09/schema");
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
+}
