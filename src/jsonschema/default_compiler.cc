@@ -63,7 +63,7 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
   // 2020-12
   // ********************************************
 
-  COMPILE("https://json-schema.org/draft/2020-12/vocab/core", "$recursiveRef",
+  COMPILE("https://json-schema.org/draft/2020-12/vocab/core", "$dynamicRef",
           compiler_2020_12_core_dynamicref);
 
   COMPILE("https://json-schema.org/draft/2020-12/vocab/applicator",
