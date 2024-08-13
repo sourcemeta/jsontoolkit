@@ -3,6 +3,7 @@
 
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
+#include <sourcemeta/jsontoolkit/uri.h>
 
 #include "compile_helpers.h"
 #include "default_compiler_draft4.h"
@@ -55,8 +56,18 @@ auto compiler_2020_12_core_dynamicref(
     return compiler_draft4_core_ref(context, schema_context, dynamic_context);
   }
 
-  // TODO: Implement
-  return {};
+  assert(schema_context.schema.at(dynamic_context.keyword).is_string());
+  URI reference{schema_context.schema.at(dynamic_context.keyword).to_string()};
+  reference.resolve_from_if_absolute(schema_context.base);
+  reference.canonicalize();
+  // We handle the non-anchor variant by not treating it as a dynamic reference
+  assert(reference.fragment().has_value());
+
+  // TODO: Handle the reference potentially having a static part
+
+  return {make<SchemaCompilerControlDynamicAnchorJump>(
+      context, schema_context, dynamic_context,
+      std::string{reference.fragment().value()}, {})};
 }
 
 } // namespace internal
