@@ -2635,3 +2635,32 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_6) {
   EVALUATE_TRACE_POST_DESCRIBE(2,
                                "Loop over the properties of the target object");
 }
+
+TEST(JSONSchema_compile_2019_09, reference_from_unknown_keyword) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "properties": {
+      "foo": { "$ref": "#/definitions/bar" },
+      "baz": { "type": "string" }
+    },
+    "definitions": {
+      "bar": {
+        "$ref": "#/properties/baz"
+      }
+    }
+  })JSON")};
+
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+  } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
+    EXPECT_EQ(error.id(), "#/properties/baz");
+    EXPECT_EQ(error.location(),
+              sourcemeta::jsontoolkit::Pointer({"definitions", "bar", "$ref"}));
+  } catch (...) {
+    throw;
+  }
+}
