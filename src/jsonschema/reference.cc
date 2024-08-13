@@ -414,14 +414,10 @@ auto sourcemeta::jsontoolkit::frame(
 
         ref.canonicalize();
         // TODO: Check bookending requirement
-        const auto destination{ref.recompose()};
-        // TODO: We shouldn't need to reparse if the URI handled mutations
-        const sourcemeta::jsontoolkit::URI destination_uri{destination};
-        references.insert(
-            {{ReferenceType::Dynamic,
-              entry.common.pointer.concat({"$dynamicRef"})},
-             {destination, destination_uri.recompose_without_fragment(),
-              fragment_string(destination_uri)}});
+        references.insert({{ReferenceType::Dynamic,
+                            entry.common.pointer.concat({"$dynamicRef"})},
+                           {ref.recompose(), ref.recompose_without_fragment(),
+                            fragment_string(ref)}});
       }
     }
   }
