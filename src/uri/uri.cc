@@ -316,6 +316,11 @@ auto URI::recompose_without_fragment() const -> std::optional<std::string> {
     }
   }
 
+  const auto user_info{this->userinfo()};
+  if (user_info.has_value()) {
+    result << user_info.value() << "@";
+  }
+
   // Host
   const auto result_host{this->host()};
   if (result_host.has_value()) {
