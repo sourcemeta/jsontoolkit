@@ -228,26 +228,18 @@ public:
 
   auto find_dynamic_anchor(const std::string &anchor) const
       -> std::optional<std::size_t> {
-    std::optional<std::size_t> result;
-
-    // We want to check every schema resource from the current one
-    // backwards until the dynamic anchor chain is lost. The one
-    // before its lost is the one we want to jump to
-    for (auto iterator = this->resources().crbegin();
-         iterator < this->resources().crend(); ++iterator) {
+    for (const auto &resource : this->resources()) {
       std::ostringstream name;
-      name << *iterator;
+      name << resource;
       name << '#';
       name << anchor;
       const auto label{std::hash<std::string>{}(name.str())};
       if (this->labels.contains(label)) {
-        result = label;
-      } else {
-        break;
+        return label;
       }
     }
 
-    return result;
+    return std::nullopt;
   }
 
   auto jump(const std::size_t id) const -> const Template & {
