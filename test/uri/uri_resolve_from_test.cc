@@ -41,3 +41,42 @@ TEST(URI_resolve_from_if_absolute, relative_base) {
   relative.resolve_from_if_absolute(base);
   EXPECT_EQ(relative.recompose(), "../baz");
 }
+
+// RFC 3986, inspired from
+// https://cr.openjdk.org/~dfuchs/writeups/updating-uri/A Section "Resolutuon"
+// TODO: find better names for each case
+
+TEST(URI_resolve_from, rfc3986_1) {
+  const sourcemeta::jsontoolkit::URI base{"s://h/a/c"};
+  sourcemeta::jsontoolkit::URI relative{"../../b"};
+  relative.resolve_from(base);
+  EXPECT_EQ(relative.recompose(), "s://h/b");
+}
+
+TEST(URI_resolve_from, rfc3986_2) {
+  const sourcemeta::jsontoolkit::URI base{"s://h/a/c"};
+  sourcemeta::jsontoolkit::URI relative{""};
+  relative.resolve_from(base);
+  EXPECT_EQ(relative.recompose(), "s://h/a/c");
+}
+
+TEST(URI_resolve_from, rfc3986_3) {
+  const sourcemeta::jsontoolkit::URI base{"s://h/a/c"};
+  sourcemeta::jsontoolkit::URI relative{"?x=y"};
+  relative.resolve_from(base);
+  EXPECT_EQ(relative.recompose(), "s://h/a/c?x=y");
+}
+
+TEST(URI_resolve_from, rfc3986_4) {
+  const sourcemeta::jsontoolkit::URI base{"s://h/a/c"};
+  sourcemeta::jsontoolkit::URI relative{"#x=y"};
+  relative.resolve_from(base);
+  EXPECT_EQ(relative.recompose(), "s://h/a/c#x=y");
+}
+
+TEST(URI_resolve_from, rfc3986_5) {
+  const sourcemeta::jsontoolkit::URI base{"s://h/a/c"};
+  sourcemeta::jsontoolkit::URI relative{"/././x"};
+  relative.resolve_from(base);
+  EXPECT_EQ(relative.recompose(), "s://h/x");
+}
