@@ -322,13 +322,4 @@
   bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,       \
                sourcemeta::jsontoolkit::official_resolver);
 
-#define EXPLAIN(schema, kind)                                                  \
-  const auto result{sourcemeta::jsontoolkit::explain(                          \
-      (schema), sourcemeta::jsontoolkit::official_resolver)};                  \
-  EXPECT_TRUE(result.has_value());                                             \
-  EXPECT_TRUE(                                                                 \
-      std::holds_alternative<sourcemeta::jsontoolkit::kind>(result.value()));  \
-  const auto &explanation{                                                     \
-      std::get<sourcemeta::jsontoolkit::kind>(result.value())};
-
 #endif
