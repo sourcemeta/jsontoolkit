@@ -555,3 +555,55 @@ TEST(JSONSchema_frame_draft7, location_independent_identifier_anonymous) {
   EXPECT_STATIC_REFERENCE(references, "/definitions/bar/$ref", "#foo",
                           std::nullopt, "foo");
 }
+
+TEST(JSONSchema_frame_draft7, ref_with_id) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$ref": "#/definitions/string",
+    "definitions": {
+      "string": { "type": "string" }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver)
+      .wait();
+
+  EXPECT_EQ(frame.size(), 7);
+
+  // JSON Pointers
+
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "", "", "http://json-schema.org/draft-07/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$id", "/$id", "http://json-schema.org/draft-07/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$schema", "/$schema",
+      "http://json-schema.org/draft-07/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$ref", "/$ref", "http://json-schema.org/draft-07/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/definitions", "/definitions",
+      "http://json-schema.org/draft-07/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/definitions/string", "/definitions/string",
+      "http://json-schema.org/draft-07/schema#");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/definitions/string/type", "/definitions/string/type",
+      "http://json-schema.org/draft-07/schema#");
+
+  // References
+
+  EXPECT_EQ(references.size(), 2);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "http://json-schema.org/draft-07/schema",
+      "http://json-schema.org/draft-07/schema", std::nullopt);
+  EXPECT_STATIC_REFERENCE(references, "/$ref", "#/definitions/string",
+                          std::nullopt, "/definitions/string");
+}

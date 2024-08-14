@@ -162,6 +162,18 @@ TEST(JSONSchema_identify_draft3, anonymize_with_base_dialect_no_id) {
   EXPECT_EQ(document, expected);
 }
 
+TEST(JSONSchema_identify_draft3, sibling_ref) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "id": "https://example.com/my-schema",
+    "$schema": "http://json-schema.org/draft-03/schema#",
+    "$ref": "#"
+  })JSON");
+  std::optional<std::string> id{
+      sourcemeta::jsontoolkit::identify(document, test_resolver).get()};
+  EXPECT_FALSE(id.has_value());
+}
+
 TEST(JSONSchema_identify_draft3, reidentify_replace) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
