@@ -98,9 +98,8 @@ TEST(JSONSchema_compile_draft4, type_3) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_PRE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrictAny, "/type", "#/type", "");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target document is expected to be of one of the given types");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type number");
 }
 
 TEST(JSONSchema_compile_draft4, type_4) {
@@ -119,9 +118,8 @@ TEST(JSONSchema_compile_draft4, type_4) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_PRE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrictAny, "/type", "#/type", "");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target document is expected to be of one of the given types");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type number");
 }
 
 TEST(JSONSchema_compile_draft4, type_5) {
@@ -142,7 +140,7 @@ TEST(JSONSchema_compile_draft4, type_5) {
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target document is expected to be of one of the given types");
+      "The value was expected to be of type number but it was of type string");
 }
 
 TEST(JSONSchema_compile_draft4, type_6) {
@@ -202,9 +200,9 @@ TEST(JSONSchema_compile_draft4, type_8) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_PRE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrictAny, "/type", "#/type", "");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target document is expected to be of one of the given types");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type number, "
+                               "string, or object and it was of type number");
 }
 
 TEST(JSONSchema_compile_draft4, type_9) {
@@ -223,9 +221,9 @@ TEST(JSONSchema_compile_draft4, type_9) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_PRE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrictAny, "/type", "#/type", "");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target document is expected to be of one of the given types");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type number, "
+                               "string, or object but it was of type boolean");
 }
 
 TEST(JSONSchema_compile_draft4, required_1) {
@@ -2232,7 +2230,7 @@ TEST(JSONSchema_compile_draft4, anyOf_2) {
                                "but it was of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target document is expected to be of one of the given types");
+      "The value was expected to be of type number but it was of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The target is expected to match at least one of the given assertions");
@@ -2316,9 +2314,8 @@ TEST(JSONSchema_compile_draft4, oneOf_2) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The value was expected to be an integer but it was a real number");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The target document is expected to be of one of the given types");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type number");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The target is expected to match one and only one "
@@ -2370,9 +2367,8 @@ TEST(JSONSchema_compile_draft4, oneOf_3) {
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The target document is expected to be of one of the given types");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type number");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type boolean "
                                "but it was of type integer");

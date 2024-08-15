@@ -40,6 +40,43 @@ auto describe_type_check(const bool valid, const JSON::Type current,
   }
 }
 
+auto describe_types_check(const bool valid, const JSON::Type current,
+                          const std::set<JSON::Type> &expected,
+                          std::ostringstream &message) -> void {
+  assert(expected.size() > 1);
+  auto copy = expected;
+  if (copy.contains(JSON::Type::Real) && copy.contains(JSON::Type::Integer)) {
+    copy.erase(JSON::Type::Integer);
+  }
+
+  if (copy.size() == 1) {
+    describe_type_check(valid, current, *(copy.cbegin()), message);
+    return;
+  }
+
+  message << "The value was expected to be of type ";
+  for (auto iterator = copy.cbegin(); iterator != copy.cend(); ++iterator) {
+    if (std::next(iterator) == copy.cend()) {
+      message << "or " << to_string(*iterator);
+    } else {
+      message << to_string(*iterator) << ", ";
+    }
+  }
+
+  if (valid) {
+    message << " and it was of type ";
+  } else {
+    message << " but it was of type ";
+  }
+
+  if (valid && current == JSON::Type::Integer &&
+      copy.contains(JSON::Type::Real)) {
+    message << "number";
+  } else {
+    message << to_string(current);
+  }
+}
+
 struct DescribeVisitor {
   const bool valid;
   const Pointer &evaluate_path;
@@ -159,13 +196,22 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto operator()(const SchemaCompilerAssertionTypeAny &) const -> std::string {
-    return "The target document is expected to be of one of the given types";
+  auto
+  operator()(const SchemaCompilerAssertionTypeAny &step) const -> std::string {
+    std::ostringstream message;
+    describe_types_check(this->valid, this->target.type(), step_value(step),
+                         message);
+    return message.str();
   }
-  auto operator()(const SchemaCompilerAssertionTypeStrictAny &) const
+
+  auto operator()(const SchemaCompilerAssertionTypeStrictAny &step) const
       -> std::string {
-    return "The target document is expected to be of one of the given types";
+    std::ostringstream message;
+    describe_types_check(this->valid, this->target.type(), step_value(step),
+                         message);
+    return message.str();
   }
+
   auto operator()(const SchemaCompilerAssertionRegex &) const -> std::string {
     return "The target string is expected to match the given regular "
            "expression";
