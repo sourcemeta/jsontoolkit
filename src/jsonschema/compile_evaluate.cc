@@ -269,7 +269,6 @@ auto callback_noop(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
     const sourcemeta::jsontoolkit::Pointer &,
     const sourcemeta::jsontoolkit::Pointer &,
-    const sourcemeta::jsontoolkit::JSON &,
     const sourcemeta::jsontoolkit::JSON &) noexcept -> void {}
 
 auto evaluate_step(
@@ -283,12 +282,12 @@ auto evaluate_step(
 
 #define CALLBACK_PRE(current_instance_location)                                \
   callback(SchemaCompilerEvaluationType::Pre, true, step,                      \
-           context.evaluate_path(), current_instance_location, instance,       \
+           context.evaluate_path(), current_instance_location,                 \
            context.value(nullptr));
 
 #define CALLBACK_POST(current_step)                                            \
   callback(SchemaCompilerEvaluationType::Post, result, step,                   \
-           context.evaluate_path(), context.instance_location(), instance,     \
+           context.evaluate_path(), context.instance_location(),               \
            context.value(nullptr));                                            \
   context.pop(current_step);                                                   \
   return result;
@@ -817,8 +816,7 @@ auto evaluate_step(
     if (value.second) {
       CALLBACK_PRE(current_instance_location);
       callback(SchemaCompilerEvaluationType::Post, result, step,
-               context.evaluate_path(), current_instance_location, instance,
-               value.first);
+               context.evaluate_path(), current_instance_location, value.first);
     }
 
     context.pop(annotation);
