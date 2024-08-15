@@ -55,8 +55,8 @@ TEST(JSONSchema_compile_draft4, type_1) {
   EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
 }
 
 TEST(JSONSchema_compile_draft4, type_2) {
@@ -77,8 +77,9 @@ TEST(JSONSchema_compile_draft4, type_2) {
   EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/type", "#/type", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string "
+                               "but it was of type integer");
 }
 
 TEST(JSONSchema_compile_draft4, type_3) {
@@ -160,8 +161,8 @@ TEST(JSONSchema_compile_draft4, type_6) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
 }
 
 TEST(JSONSchema_compile_draft4, type_7) {
@@ -181,7 +182,8 @@ TEST(JSONSchema_compile_draft4, type_7) {
   EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      instance, 0,
+      "The value was expected to be of type string but it was of type integer");
 }
 
 TEST(JSONSchema_compile_draft4, type_8) {
@@ -311,8 +313,8 @@ TEST(JSONSchema_compile_draft4, required_4) {
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionDefinesAll, "/required", "#/required",
                               "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type object");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The target object is expected to define all of the given properties");
@@ -350,8 +352,8 @@ TEST(JSONSchema_compile_draft4, allOf_1) {
                               "#/allOf/1/required", "");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/allOf", "#/allOf", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type object");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The target object is expected to define all of the given properties");
@@ -392,8 +394,8 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
                               "#/allOf/1/required", "");
   EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/allOf", "#/allOf", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type object");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The target object is expected to define all of the given properties");
@@ -432,7 +434,8 @@ TEST(JSONSchema_compile_draft4, ref_1) {
   EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/allOf", "#/allOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      instance, 0,
+      "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "Mark the current position of the evaluation process for future jumps");
@@ -471,8 +474,8 @@ TEST(JSONSchema_compile_draft4, ref_2) {
                               "#/allOf/0/$ref", "");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/allOf", "#/allOf", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "Mark the current position of the evaluation process for future jumps");
@@ -532,10 +535,10 @@ TEST(JSONSchema_compile_draft4, ref_3) {
   EVALUATE_TRACE_POST_SUCCESS(5, LogicalAnd, "/properties",
                               "https://example.com#/properties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type object");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type object");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
@@ -621,12 +624,12 @@ TEST(JSONSchema_compile_draft4, ref_4) {
   EVALUATE_TRACE_POST_SUCCESS(9, LogicalAnd, "/properties",
                               "https://example.com#/properties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type object");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type object");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type object");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The target is expected to match all of the given assertions");
@@ -703,12 +706,13 @@ TEST(JSONSchema_compile_draft4, ref_5) {
   EVALUATE_TRACE_POST_FAILURE(6, LogicalAnd, "/properties",
                               "https://example.com#/properties", "");
 
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type object");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type object");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
+      instance, 2,
+      "The value was expected to be of type object but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3, "Jump to another point of the evaluation process");
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -764,10 +768,10 @@ TEST(JSONSchema_compile_draft4, ref_6) {
   EVALUATE_TRACE_POST_ANNOTATION(4, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(5, LogicalAnd, "/properties", "#/properties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type object");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type object");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
@@ -844,11 +848,12 @@ TEST(JSONSchema_compile_draft4, properties_1) {
                               "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_POST_FAILURE(3, LogicalAnd, "/properties", "#/properties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
+      instance, 2,
+      "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The target is expected to match all of the given assertions");
@@ -890,11 +895,11 @@ TEST(JSONSchema_compile_draft4, properties_2) {
   EVALUATE_TRACE_POST_ANNOTATION(3, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/properties", "#/properties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
@@ -972,8 +977,8 @@ TEST(JSONSchema_compile_draft4, properties_4) {
   EVALUATE_TRACE_POST_ANNOTATION(3, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/properties", "#/properties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
@@ -1161,8 +1166,8 @@ TEST(JSONSchema_compile_draft4, patternProperties_4) {
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/patternProperties",
                               "#/patternProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
@@ -1202,7 +1207,8 @@ TEST(JSONSchema_compile_draft4, patternProperties_5) {
                               "#/patternProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      instance, 0,
+      "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The target is expected to match all of the given assertions");
@@ -1250,11 +1256,11 @@ TEST(JSONSchema_compile_draft4, patternProperties_6) {
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/patternProperties",
                               "#/patternProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The target is expected to match all of the given assertions");
@@ -1310,8 +1316,8 @@ TEST(JSONSchema_compile_draft4, patternProperties_7) {
   EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/patternProperties",
                               "#/patternProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
@@ -1357,10 +1363,10 @@ TEST(JSONSchema_compile_draft4, additionalProperties_1) {
   EVALUATE_TRACE_POST_SUCCESS(2, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "Loop over the properties of the target object");
 }
@@ -1408,14 +1414,14 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
   EVALUATE_TRACE_POST_SUCCESS(4, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "Loop over the properties of the target object");
 }
@@ -1465,10 +1471,10 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "Loop over the properties of the target object");
 }
@@ -1537,20 +1543,20 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
   EVALUATE_TRACE_POST_SUCCESS(7, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 5,
       "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 6, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 7,
                                "Loop over the properties of the target object");
 }
@@ -1580,7 +1586,8 @@ TEST(JSONSchema_compile_draft4, not_1) {
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalNot, "/not", "#/not", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      instance, 0,
+      "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1, "The given schema is expected to not validate successfully");
 }
@@ -1609,8 +1616,8 @@ TEST(JSONSchema_compile_draft4, not_2) {
                               "");
   EVALUATE_TRACE_POST_FAILURE(1, LogicalNot, "/not", "#/not", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1, "The given schema is expected to not validate successfully");
 }
@@ -1665,14 +1672,15 @@ TEST(JSONSchema_compile_draft4, not_3) {
                               "#/not/additionalProperties", "");
   EVALUATE_TRACE_POST_SUCCESS(5, LogicalNot, "/not", "#/not", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The value was expected to be of type integer "
+                               "but it was of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "Loop over the properties of the target object");
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -1731,12 +1739,12 @@ TEST(JSONSchema_compile_draft4, items_2) {
                               "#/items/type", "/2");
   EVALUATE_TRACE_POST_SUCCESS(3, LoopItems, "/items", "#/items", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "Loop over the items of the target array");
 }
@@ -1771,10 +1779,11 @@ TEST(JSONSchema_compile_draft4, items_3) {
                               "#/items/type", "/1");
   EVALUATE_TRACE_POST_FAILURE(2, LoopItems, "/items", "#/items", "");
 
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+      instance, 1,
+      "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "Loop over the items of the target array");
 }
@@ -1843,8 +1852,8 @@ TEST(JSONSchema_compile_draft4, items_6) {
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/items", "#/items", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The target is expected to match all of the given assertions");
@@ -1878,10 +1887,10 @@ TEST(JSONSchema_compile_draft4, items_7) {
                               "#/items/1/type", "/1");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
@@ -1915,10 +1924,11 @@ TEST(JSONSchema_compile_draft4, items_8) {
                               "#/items/1/type", "/1");
   EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/items", "#/items", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type boolean "
+                               "but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
@@ -1976,12 +1986,12 @@ TEST(JSONSchema_compile_draft4, additionalItems_2) {
                               "#/items/type", "/2");
   EVALUATE_TRACE_POST_SUCCESS(3, LoopItems, "/items", "#/items", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "Loop over the items of the target array");
 }
@@ -2018,10 +2028,10 @@ TEST(JSONSchema_compile_draft4, additionalItems_3) {
                               "#/items/1/type", "/1");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
@@ -2070,17 +2080,17 @@ TEST(JSONSchema_compile_draft4, additionalItems_4) {
   EVALUATE_TRACE_POST_SUCCESS(5, LoopItems, "/additionalItems",
                               "#/additionalItems", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "Loop over the items of the target array");
 }
@@ -2124,15 +2134,16 @@ TEST(JSONSchema_compile_draft4, additionalItems_5) {
   EVALUATE_TRACE_POST_FAILURE(4, LoopItems, "/additionalItems",
                               "#/additionalItems", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3, "The target document is expected to be of the given type");
+      instance, 3,
+      "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "Loop over the items of the target array");
 }
@@ -2169,9 +2180,10 @@ TEST(JSONSchema_compile_draft4, anyOf_1) {
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalOr, "/anyOf", "#/anyOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+      instance, 0,
+      "The value was expected to be of type string but it was of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match at least one of the given assertions");
@@ -2213,9 +2225,11 @@ TEST(JSONSchema_compile_draft4, anyOf_2) {
   EVALUATE_TRACE_POST_FAILURE(3, LogicalOr, "/anyOf", "#/anyOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+      instance, 0,
+      "The value was expected to be of type string but it was of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer "
+                               "but it was of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target document is expected to be of one of the given types");
@@ -2252,8 +2266,8 @@ TEST(JSONSchema_compile_draft4, oneOf_1) {
                               "#/oneOf/0/type", "");
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalXor, "/oneOf", "#/oneOf", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The target is expected to match one and only one "
@@ -2297,9 +2311,11 @@ TEST(JSONSchema_compile_draft4, oneOf_2) {
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalXor, "/oneOf", "#/oneOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      instance, 0,
+      "The value was expected to be of type string but it was of type number");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+      instance, 1,
+      "The value was expected to be an integer but it was a real number");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target document is expected to be of one of the given types");
@@ -2350,14 +2366,16 @@ TEST(JSONSchema_compile_draft4, oneOf_3) {
   EVALUATE_TRACE_POST_FAILURE(4, LogicalXor, "/oneOf", "#/oneOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+      instance, 0,
+      "The value was expected to be of type string but it was of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target document is expected to be of one of the given types");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The value was expected to be of type boolean "
+                               "but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The target is expected to match one and only one "

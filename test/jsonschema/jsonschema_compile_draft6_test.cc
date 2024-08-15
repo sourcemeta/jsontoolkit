@@ -214,9 +214,10 @@ TEST(JSONSchema_compile_draft6, contains_2) {
   EVALUATE_TRACE_POST_SUCCESS(2, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+      instance, 0,
+      "The value was expected to be of type string but it was of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "A certain number of array items must satisfy the given constraints");
@@ -255,11 +256,14 @@ TEST(JSONSchema_compile_draft6, contains_3) {
   EVALUATE_TRACE_POST_FAILURE(3, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      instance, 0,
+      "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+      instance, 1,
+      "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
+      instance, 2,
+      "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "A certain number of array items must satisfy the given constraints");
@@ -289,8 +293,8 @@ TEST(JSONSchema_compile_draft6, contains_4) {
                               "#/contains/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, LoopContains, "/contains", "#/contains", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "A certain number of array items must satisfy the given constraints");
