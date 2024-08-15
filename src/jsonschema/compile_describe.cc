@@ -1,15 +1,49 @@
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
+#include <cassert> // assert
+#include <sstream> // std::ostringstream
 #include <variant> // std::visit
 
 namespace {
 using namespace sourcemeta::jsontoolkit;
 
+template <typename T>
+auto step_value(const SchemaCompilerStepValue<T> &value) -> const T & {
+  assert(std::holds_alternative<T>(value));
+  return std::get<T>(value);
+}
+
+template <typename T> auto step_value(const T &step) -> decltype(auto) {
+  return step_value(step.value);
+}
+
+auto to_string(const JSON::Type type) -> std::string {
+  // Otherwise the type "real" might not make a lot
+  // of sense to JSON Schema users
+  if (type == JSON::Type::Real) {
+    return "number";
+  } else {
+    std::ostringstream result;
+    result << type;
+    return result.str();
+  }
+}
+
+auto describe_type_check(const bool valid, const JSON::Type current,
+                         const JSON::Type expected,
+                         std::ostringstream &message) -> void {
+  message << "The value was expected to be of type ";
+  message << to_string(expected);
+  if (!valid) {
+    message << " but it was of type ";
+    message << to_string(current);
+  }
+}
+
 struct DescribeVisitor {
   const bool valid;
   const Pointer &evaluate_path;
-  const Pointer &instance_location;
-  const JSON &instance;
+  const JSON &target;
   const JSON &annotation;
 
   auto operator()(const SchemaCompilerLogicalOr &) const -> std::string {
@@ -97,15 +131,36 @@ struct DescribeVisitor {
     return "The target object is expected to define all of the given "
            "properties";
   }
-  auto operator()(const SchemaCompilerAssertionType &) const -> std::string {
-    return "The target document is expected to be of the given type";
+
+  auto
+  operator()(const SchemaCompilerAssertionType &step) const -> std::string {
+    std::ostringstream message;
+    describe_type_check(this->valid, this->target.type(), step_value(step),
+                        message);
+    return message.str();
   }
+
+  auto operator()(const SchemaCompilerAssertionTypeStrict &step) const
+      -> std::string {
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    if (!this->valid && value == JSON::Type::Real &&
+        this->target.type() == JSON::Type::Integer) {
+      message
+          << "The value was expected to be a real number but it was an integer";
+    } else if (!this->valid && value == JSON::Type::Integer &&
+               this->target.type() == JSON::Type::Real) {
+      message
+          << "The value was expected to be an integer but it was a real number";
+    } else {
+      describe_type_check(this->valid, this->target.type(), value, message);
+    }
+
+    return message.str();
+  }
+
   auto operator()(const SchemaCompilerAssertionTypeAny &) const -> std::string {
     return "The target document is expected to be of one of the given types";
-  }
-  auto
-  operator()(const SchemaCompilerAssertionTypeStrict &) const -> std::string {
-    return "The target document is expected to be of the given type";
   }
   auto operator()(const SchemaCompilerAssertionTypeStrictAny &) const
       -> std::string {
@@ -170,10 +225,10 @@ namespace sourcemeta::jsontoolkit {
 auto describe(const bool valid, const SchemaCompilerTemplate::value_type &step,
               const Pointer &evaluate_path, const Pointer &instance_location,
               const JSON &instance, const JSON &annotation) -> std::string {
-  return std::visit<std::string>(DescribeVisitor{valid, evaluate_path,
-                                                 instance_location, instance,
-                                                 annotation},
-                                 step);
+  return std::visit<std::string>(
+      DescribeVisitor{valid, evaluate_path, get(instance, instance_location),
+                      annotation},
+      step);
 }
 
 } // namespace sourcemeta::jsontoolkit
