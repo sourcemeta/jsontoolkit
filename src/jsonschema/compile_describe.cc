@@ -169,10 +169,49 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionDefinesAll &) const -> std::string {
-    return "The target object is expected to define all of the given "
-           "properties";
+  auto operator()(const SchemaCompilerAssertionDefinesAll &step) const
+      -> std::string {
+    const auto &value{step_value(step)};
+    assert(value.size() > 1);
+    std::ostringstream message;
+    message << "The object value was expected to define properties ";
+    for (auto iterator = value.cbegin(); iterator != value.cend(); ++iterator) {
+      if (std::next(iterator) == value.cend()) {
+        message << "and \"" << *iterator << "\"";
+      } else {
+        message << "\"" << *iterator << "\", ";
+      }
+    }
+
+    if (this->valid) {
+      return message.str();
+    }
+
+    assert(this->target.is_object());
+    std::set<std::string> missing;
+    for (const auto &property : value) {
+      if (!this->target.defines(property)) {
+        missing.insert(property);
+      }
+    }
+
+    assert(!missing.empty());
+    if (missing.size() == 1) {
+      message << " but did not define the property \"" << *(missing.cbegin())
+              << "\"";
+    } else {
+      message << " but did not define properties ";
+      for (auto iterator = missing.cbegin(); iterator != missing.cend();
+           ++iterator) {
+        if (std::next(iterator) == value.cend()) {
+          message << "and \"" << *iterator << "\"";
+        } else {
+          message << "\"" << *iterator << "\", ";
+        }
+      }
+    }
+
+    return message.str();
   }
 
   auto
