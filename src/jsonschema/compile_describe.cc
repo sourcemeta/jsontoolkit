@@ -160,9 +160,15 @@ struct DescribeVisitor {
   auto operator()(const SchemaCompilerAssertionFail &) const -> std::string {
     return "Abort evaluation on failure";
   }
-  auto operator()(const SchemaCompilerAssertionDefines &) const -> std::string {
-    return "The target object is expected to define the given property";
+
+  auto
+  operator()(const SchemaCompilerAssertionDefines &step) const -> std::string {
+    std::ostringstream message;
+    message << "The object value was expected to define the property \""
+            << step_value(step) << "\"";
+    return message.str();
   }
+
   auto
   operator()(const SchemaCompilerAssertionDefinesAll &) const -> std::string {
     return "The target object is expected to define all of the given "

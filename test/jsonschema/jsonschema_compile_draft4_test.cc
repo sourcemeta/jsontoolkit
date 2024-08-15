@@ -262,7 +262,7 @@ TEST(JSONSchema_compile_draft4, required_2) {
                               "");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target object is expected to define the given property");
+      "The object value was expected to define the property \"foo\"");
 }
 
 TEST(JSONSchema_compile_draft4, required_3) {
@@ -2481,7 +2481,7 @@ TEST(JSONSchema_compile_draft4, dependencies_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target object is expected to define the given property");
+      "The object value was expected to define the property \"extra\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The target is expected to match all of the given assertions");
@@ -2517,7 +2517,7 @@ TEST(JSONSchema_compile_draft4, dependencies_5) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target object is expected to define the given property");
+      "The object value was expected to define the property \"extra\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The target is expected to match all of the given assertions");
