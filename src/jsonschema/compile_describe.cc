@@ -6,6 +6,7 @@ namespace {
 using namespace sourcemeta::jsontoolkit;
 
 struct DescribeVisitor {
+  const JSON &schema;
   const bool valid;
   const Pointer &evaluate_path;
   const Pointer &instance_location;
@@ -167,10 +168,11 @@ struct DescribeVisitor {
 
 namespace sourcemeta::jsontoolkit {
 
-auto describe(const bool valid, const SchemaCompilerTemplate::value_type &step,
+auto describe(const JSON &schema, const bool valid,
+              const SchemaCompilerTemplate::value_type &step,
               const Pointer &evaluate_path, const Pointer &instance_location,
               const JSON &instance, const JSON &annotation) -> std::string {
-  return std::visit<std::string>(DescribeVisitor{valid, evaluate_path,
+  return std::visit<std::string>(DescribeVisitor{schema, valid, evaluate_path,
                                                  instance_location, instance,
                                                  annotation},
                                  step);

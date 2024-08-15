@@ -45,10 +45,12 @@ TEST(JSONSchema_compile_draft7, if_1) {
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+      schema, instance, 0,
+      "The target is expected to be equal to the given value");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target might match all of the given assertions");
+      schema, instance, 2,
+      "The target might match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft7, if_2) {
@@ -73,9 +75,11 @@ TEST(JSONSchema_compile_draft7, if_2) {
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      schema, instance, 0,
+      "The target is expected to be equal to the given value");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target might match all of the given assertions");
+      schema, instance, 1,
+      "The target might match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft7, then_1) {
@@ -125,15 +129,17 @@ TEST(JSONSchema_compile_draft7, then_2) {
   EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/then", "#/then", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+      schema, instance, 0,
+      "The target is expected to be equal to the given value");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target might match all of the given assertions");
+      schema, instance, 2,
+      "The target might match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      schema, instance, 3,
       "The target number is expected to be divisible by the given number");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4,
+      schema, instance, 4,
       "The target is expected to match all of the given assertions");
 }
 
@@ -160,9 +166,11 @@ TEST(JSONSchema_compile_draft7, then_3) {
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      schema, instance, 0,
+      "The target is expected to be equal to the given value");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target might match all of the given assertions");
+      schema, instance, 1,
+      "The target might match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft7, else_1) {
@@ -206,10 +214,12 @@ TEST(JSONSchema_compile_draft7, else_2) {
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+      schema, instance, 0,
+      "The target is expected to be equal to the given value");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target might match all of the given assertions");
+      schema, instance, 2,
+      "The target might match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft7, else_3) {
@@ -241,14 +251,16 @@ TEST(JSONSchema_compile_draft7, else_3) {
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/else", "#/else", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      schema, instance, 0,
+      "The target is expected to be equal to the given value");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target might match all of the given assertions");
+      schema, instance, 1,
+      "The target might match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
+      schema, instance, 2,
       "The target number is expected to be divisible by the given number");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      schema, instance, 3,
       "The target is expected to match all of the given assertions");
 }
 
@@ -281,14 +293,16 @@ TEST(JSONSchema_compile_draft7, else_4) {
   EVALUATE_TRACE_POST_FAILURE(3, LogicalAnd, "/else", "#/else", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      schema, instance, 0,
+      "The target is expected to be equal to the given value");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target might match all of the given assertions");
+      schema, instance, 1,
+      "The target might match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
+      schema, instance, 2,
       "The target number is expected to be divisible by the given number");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      schema, instance, 3,
       "The target is expected to match all of the given assertions");
 }
 

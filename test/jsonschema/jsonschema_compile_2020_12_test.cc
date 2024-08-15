@@ -23,7 +23,7 @@ TEST(JSONSchema_compile_2020_12, unknown_1) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "", "baz");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 0, "Emit an annotation");
 }
 
 TEST(JSONSchema_compile_2020_12, unknown_2) {
@@ -44,7 +44,7 @@ TEST(JSONSchema_compile_2020_12, unknown_2) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "", 1);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 0, "Emit an annotation");
 }
 
 TEST(JSONSchema_compile_2020_12, items_1) {
@@ -102,14 +102,17 @@ TEST(JSONSchema_compile_2020_12, items_2) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(4, "/items", "#/items", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+      schema, instance, 1,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+      schema, instance, 2,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 3,
                                "Loop over the items of the target array");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 4, "Emit an annotation");
 }
 
 TEST(JSONSchema_compile_2020_12, items_3) {
@@ -143,10 +146,12 @@ TEST(JSONSchema_compile_2020_12, items_3) {
   EVALUATE_TRACE_POST_FAILURE(2, LoopItems, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+      schema, instance, 1,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 2,
                                "Loop over the items of the target array");
 }
 
@@ -187,12 +192,14 @@ TEST(JSONSchema_compile_2020_12, items_4) {
                               "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+      schema, instance, 1,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 2, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      schema, instance, 3,
       "The target is expected to match all of the given assertions");
 }
 
@@ -245,20 +252,24 @@ TEST(JSONSchema_compile_2020_12, items_5) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(7, "/items", "#/items", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+      schema, instance, 1,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 2, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      schema, instance, 3,
       "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4, "The target document is expected to be of the given type");
+      schema, instance, 4,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 5, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
+      schema, instance, 5,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 6,
                                "Loop over the items of the target array");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 7, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 7, "Emit an annotation");
 }
 
 TEST(JSONSchema_compile_2020_12, items_6) {
@@ -304,16 +315,19 @@ TEST(JSONSchema_compile_2020_12, items_6) {
   EVALUATE_TRACE_POST_FAILURE(5, LoopItems, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+      schema, instance, 1,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 2, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      schema, instance, 3,
       "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
+      schema, instance, 4,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 5,
                                "Loop over the items of the target array");
 }
 
@@ -354,7 +368,7 @@ TEST(JSONSchema_compile_2020_12, prefixItems_2) {
                               "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
+      schema, instance, 0,
       "The target is expected to match all of the given assertions");
 }
 
@@ -387,10 +401,11 @@ TEST(JSONSchema_compile_2020_12, prefixItems_3) {
                               "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
+      schema, instance, 2,
       "The target is expected to match all of the given assertions");
 }
 
@@ -427,12 +442,14 @@ TEST(JSONSchema_compile_2020_12, prefixItems_4) {
                               "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+      schema, instance, 1,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 2, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      schema, instance, 3,
       "The target is expected to match all of the given assertions");
 }
 
@@ -466,11 +483,13 @@ TEST(JSONSchema_compile_2020_12, prefixItems_5) {
                               "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+      schema, instance, 1,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
+      schema, instance, 2,
       "The target is expected to match all of the given assertions");
 }
 
@@ -507,12 +526,14 @@ TEST(JSONSchema_compile_2020_12, prefixItems_6) {
                               "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+      schema, instance, 1,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 2, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      schema, instance, 3,
       "The target is expected to match all of the given assertions");
 }
 
@@ -567,14 +588,17 @@ TEST(JSONSchema_compile_2020_12, contains_2) {
   EVALUATE_TRACE_POST_SUCCESS(4, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+      schema, instance, 1,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 2, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3, "The target document is expected to be of the given type");
+      schema, instance, 3,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4,
+      schema, instance, 4,
       "A certain number of array items must satisfy the given constraints");
 }
 
@@ -611,13 +635,16 @@ TEST(JSONSchema_compile_2020_12, contains_3) {
   EVALUATE_TRACE_POST_FAILURE(3, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The target document is expected to be of the given type");
+      schema, instance, 1,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
+      schema, instance, 2,
+      "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      schema, instance, 3,
       "A certain number of array items must satisfy the given constraints");
 }
 
@@ -662,16 +689,19 @@ TEST(JSONSchema_compile_2020_12, contains_4) {
   EVALUATE_TRACE_POST_SUCCESS(6, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
+      schema, instance, 2,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 3, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5, "Emit an annotation");
+      schema, instance, 4,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 5, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 6,
+      schema, instance, 6,
       "A certain number of array items must satisfy the given constraints");
 }
 
@@ -709,13 +739,15 @@ TEST(JSONSchema_compile_2020_12, contains_5) {
   EVALUATE_TRACE_POST_FAILURE(4, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
+      schema, instance, 2,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 3, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4,
+      schema, instance, 4,
       "A certain number of array items must satisfy the given constraints");
 }
 
@@ -780,6 +812,7 @@ TEST(JSONSchema_compile_2020_12, dynamicRef_1) {
                               "#/$dynamicRef", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target document is expected to be of the given type");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Jump to a dynamic anchor");
+      schema, instance, 0,
+      "The target document is expected to be of the given type");
+  EVALUATE_TRACE_POST_DESCRIBE(schema, instance, 1, "Jump to a dynamic anchor");
 }

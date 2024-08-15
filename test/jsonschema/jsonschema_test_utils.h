@@ -303,13 +303,13 @@
                       instance_location);                                      \
   EXPECT_TRUE(std::get<4>(trace_post.at(index)).is_null());
 
-#define EVALUATE_TRACE_POST_DESCRIBE(instance, index, message)                 \
+#define EVALUATE_TRACE_POST_DESCRIBE(schema, instance, index, message)         \
   EXPECT_EQ(sourcemeta::jsontoolkit::describe(                                 \
-                std::get<0>(trace_post.at(index)),                             \
+                schema, std::get<0>(trace_post.at(index)),                     \
                 std::get<3>(trace_post.at(index)),                             \
                 std::get<1>(trace_post.at(index)),                             \
-                std::get<2>(trace_post.at(index)),                             \
-                std::get<4>(trace_post.at(index)), instance),                  \
+                std::get<2>(trace_post.at(index)), instance,                   \
+                std::get<4>(trace_post.at(index))),                            \
             (message));
 
 #define LINT_AND_FIX(document)                                                 \
