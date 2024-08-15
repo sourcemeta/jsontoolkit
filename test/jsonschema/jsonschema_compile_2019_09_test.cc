@@ -153,7 +153,7 @@ TEST(JSONSchema_compile_2019_09, dependentSchemas_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target object is expected to define the given property");
+      "The object value was expected to define the property \"extra\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The target is expected to match all of the given assertions");
