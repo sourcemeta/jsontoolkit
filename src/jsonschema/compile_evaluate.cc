@@ -356,6 +356,8 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD(assertion, instance);
     CALLBACK_PRE(context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
+    // Otherwise we are we even emitting this instruction?
+    assert(value.size() > 1);
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     // In non-strict mode, we consider a real number that represents an
@@ -381,6 +383,8 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD(assertion, instance);
     CALLBACK_PRE(context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
+    // Otherwise we are we even emitting this instruction?
+    assert(value.size() > 1);
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     result = value.contains(target.type());
