@@ -6,6 +6,12 @@ namespace {
 using namespace sourcemeta::jsontoolkit;
 
 struct DescribeVisitor {
+  const bool valid;
+  const Pointer &evaluate_path;
+  const Pointer &instance_location;
+  const JSON &instance;
+  const JSON &annotation;
+
   auto operator()(const SchemaCompilerLogicalOr &) const -> std::string {
     return "The target is expected to match at least one of the given "
            "assertions";
@@ -161,8 +167,13 @@ struct DescribeVisitor {
 
 namespace sourcemeta::jsontoolkit {
 
-auto describe(const SchemaCompilerTemplate::value_type &step) -> std::string {
-  return std::visit<std::string>(DescribeVisitor{}, step);
+auto describe(const bool valid, const SchemaCompilerTemplate::value_type &step,
+              const Pointer &evaluate_path, const Pointer &instance_location,
+              const JSON &instance, const JSON &annotation) -> std::string {
+  return std::visit<std::string>(DescribeVisitor{valid, evaluate_path,
+                                                 instance_location, instance,
+                                                 annotation},
+                                 step);
 }
 
 } // namespace sourcemeta::jsontoolkit

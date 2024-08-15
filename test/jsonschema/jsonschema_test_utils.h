@@ -193,7 +193,6 @@
               &step,                                                           \
           const sourcemeta::jsontoolkit::Pointer &evaluate_path,               \
           const sourcemeta::jsontoolkit::Pointer &instance_location,           \
-          const sourcemeta::jsontoolkit::JSON &,                               \
           const sourcemeta::jsontoolkit::JSON &annotation) {                   \
         if (type ==                                                            \
             sourcemeta::jsontoolkit::SchemaCompilerEvaluationType::Pre) {      \
@@ -304,10 +303,14 @@
                       instance_location);                                      \
   EXPECT_TRUE(std::get<4>(trace_post.at(index)).is_null());
 
-#define EVALUATE_TRACE_POST_DESCRIBE(index, message)                           \
-  EXPECT_EQ(                                                                   \
-      sourcemeta::jsontoolkit::describe(std::get<3>(trace_post.at(index))),    \
-      (message));
+#define EVALUATE_TRACE_POST_DESCRIBE(instance, index, message)                 \
+  EXPECT_EQ(sourcemeta::jsontoolkit::describe(                                 \
+                std::get<0>(trace_post.at(index)),                             \
+                std::get<3>(trace_post.at(index)),                             \
+                std::get<1>(trace_post.at(index)),                             \
+                std::get<2>(trace_post.at(index)),                             \
+                std::get<4>(trace_post.at(index)), instance),                  \
+            (message));
 
 #define LINT_AND_FIX(document)                                                 \
   sourcemeta::jsontoolkit::SchemaTransformBundle bundle;                       \
