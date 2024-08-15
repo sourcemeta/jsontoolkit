@@ -63,8 +63,9 @@ auto compiler_2020_12_core_dynamicref(
   // We handle the non-anchor variant by not treating it as a dynamic reference
   assert(reference.fragment().has_value());
 
-  // TODO: Handle the reference potentially having a static part
-
+  // Note we don't need to even care about the static part of the dynamic
+  // reference (if any), as even if we jump first there, we will still
+  // look for the oldest dynamic anchor in the schema resource chain.
   return {make<SchemaCompilerControlDynamicAnchorJump>(
       context, schema_context, dynamic_context,
       std::string{reference.fragment().value()}, {})};

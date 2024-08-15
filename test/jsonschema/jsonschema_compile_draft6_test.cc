@@ -93,7 +93,8 @@ TEST(JSONSchema_compile_draft6, exclusiveMinimum_1) {
                               "#/exclusiveMinimum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      0, "The target number is expected to be greater than the given number");
+      instance, 0,
+      "The target number is expected to be greater than the given number");
 }
 
 TEST(JSONSchema_compile_draft6, exclusiveMinimum_2) {
@@ -116,7 +117,8 @@ TEST(JSONSchema_compile_draft6, exclusiveMinimum_2) {
                               "#/exclusiveMinimum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      0, "The target number is expected to be greater than the given number");
+      instance, 0,
+      "The target number is expected to be greater than the given number");
 }
 
 TEST(JSONSchema_compile_draft6, exclusiveMaximum_1) {
@@ -139,7 +141,8 @@ TEST(JSONSchema_compile_draft6, exclusiveMaximum_1) {
                               "#/exclusiveMaximum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      0, "The target number is expected to be less than the given number");
+      instance, 0,
+      "The target number is expected to be less than the given number");
 }
 
 TEST(JSONSchema_compile_draft6, exclusiveMaximum_2) {
@@ -162,7 +165,8 @@ TEST(JSONSchema_compile_draft6, exclusiveMaximum_2) {
                               "#/exclusiveMaximum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      0, "The target number is expected to be less than the given number");
+      instance, 0,
+      "The target number is expected to be less than the given number");
 }
 
 TEST(JSONSchema_compile_draft6, contains_1) {
@@ -210,11 +214,12 @@ TEST(JSONSchema_compile_draft6, contains_2) {
   EVALUATE_TRACE_POST_SUCCESS(2, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      0, "The target document is expected to be of the given type");
+      instance, 0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      1, "The target document is expected to be of the given type");
+      instance, 1, "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      2, "A certain number of array items must satisfy the given constraints");
+      instance, 2,
+      "A certain number of array items must satisfy the given constraints");
 }
 
 TEST(JSONSchema_compile_draft6, contains_3) {
@@ -250,13 +255,14 @@ TEST(JSONSchema_compile_draft6, contains_3) {
   EVALUATE_TRACE_POST_FAILURE(3, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      0, "The target document is expected to be of the given type");
+      instance, 0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      1, "The target document is expected to be of the given type");
+      instance, 1, "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      2, "The target document is expected to be of the given type");
+      instance, 2, "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      3, "A certain number of array items must satisfy the given constraints");
+      instance, 3,
+      "A certain number of array items must satisfy the given constraints");
 }
 
 TEST(JSONSchema_compile_draft6, contains_4) {
@@ -284,9 +290,10 @@ TEST(JSONSchema_compile_draft6, contains_4) {
   EVALUATE_TRACE_POST_SUCCESS(1, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      0, "The target document is expected to be of the given type");
+      instance, 0, "The target document is expected to be of the given type");
   EVALUATE_TRACE_POST_DESCRIBE(
-      1, "A certain number of array items must satisfy the given constraints");
+      instance, 1,
+      "A certain number of array items must satisfy the given constraints");
 }
 
 TEST(JSONSchema_compile_draft6, propertyNames_1) {
@@ -342,13 +349,16 @@ TEST(JSONSchema_compile_draft6, propertyNames_2) {
                               "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      0, "The target size is expected to be greater than the given number");
+      instance, 0,
+      "The target size is expected to be greater than the given number");
   EVALUATE_TRACE_POST_DESCRIBE(
-      1, "The target size is expected to be greater than the given number");
+      instance, 1,
+      "The target size is expected to be greater than the given number");
   EVALUATE_TRACE_POST_DESCRIBE(
-      2, "The target size is expected to be greater than the given number");
+      instance, 2,
+      "The target size is expected to be greater than the given number");
   EVALUATE_TRACE_POST_DESCRIBE(
-      3, "Loop over the property keys of the target object");
+      instance, 3, "Loop over the property keys of the target object");
 }
 
 TEST(JSONSchema_compile_draft6, propertyNames_3) {
@@ -383,11 +393,13 @@ TEST(JSONSchema_compile_draft6, propertyNames_3) {
                               "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      0, "The target size is expected to be greater than the given number");
+      instance, 0,
+      "The target size is expected to be greater than the given number");
   EVALUATE_TRACE_POST_DESCRIBE(
-      1, "The target size is expected to be greater than the given number");
+      instance, 1,
+      "The target size is expected to be greater than the given number");
   EVALUATE_TRACE_POST_DESCRIBE(
-      2, "Loop over the property keys of the target object");
+      instance, 2, "Loop over the property keys of the target object");
 }
 
 TEST(JSONSchema_compile_draft6, property_names_4) {
@@ -424,10 +436,11 @@ TEST(JSONSchema_compile_draft6, property_names_4) {
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      0, "Loop over the property keys of the target object");
-  EVALUATE_TRACE_POST_DESCRIBE(1, "Emit an annotation");
+      instance, 0, "Loop over the property keys of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
-      2, "The target is expected to match all of the given assertions");
+      instance, 2,
+      "The target is expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft6, invalid_ref_top_level) {

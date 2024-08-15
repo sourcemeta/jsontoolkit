@@ -193,7 +193,6 @@
               &step,                                                           \
           const sourcemeta::jsontoolkit::Pointer &evaluate_path,               \
           const sourcemeta::jsontoolkit::Pointer &instance_location,           \
-          const sourcemeta::jsontoolkit::JSON &,                               \
           const sourcemeta::jsontoolkit::JSON &annotation) {                   \
         if (type ==                                                            \
             sourcemeta::jsontoolkit::SchemaCompilerEvaluationType::Pre) {      \
@@ -304,10 +303,14 @@
                       instance_location);                                      \
   EXPECT_TRUE(std::get<4>(trace_post.at(index)).is_null());
 
-#define EVALUATE_TRACE_POST_DESCRIBE(index, message)                           \
-  EXPECT_EQ(                                                                   \
-      sourcemeta::jsontoolkit::describe(std::get<3>(trace_post.at(index))),    \
-      (message));
+#define EVALUATE_TRACE_POST_DESCRIBE(instance, index, message)                 \
+  EXPECT_EQ(sourcemeta::jsontoolkit::describe(                                 \
+                std::get<0>(trace_post.at(index)),                             \
+                std::get<3>(trace_post.at(index)),                             \
+                std::get<1>(trace_post.at(index)),                             \
+                std::get<2>(trace_post.at(index)),                             \
+                std::get<4>(trace_post.at(index)), instance),                  \
+            (message));
 
 #define LINT_AND_FIX(document)                                                 \
   sourcemeta::jsontoolkit::SchemaTransformBundle bundle;                       \
@@ -321,14 +324,5 @@
       sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Redundant);    \
   bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,       \
                sourcemeta::jsontoolkit::official_resolver);
-
-#define EXPLAIN(schema, kind)                                                  \
-  const auto result{sourcemeta::jsontoolkit::explain(                          \
-      (schema), sourcemeta::jsontoolkit::official_resolver)};                  \
-  EXPECT_TRUE(result.has_value());                                             \
-  EXPECT_TRUE(                                                                 \
-      std::holds_alternative<sourcemeta::jsontoolkit::kind>(result.value()));  \
-  const auto &explanation{                                                     \
-      std::get<sourcemeta::jsontoolkit::kind>(result.value())};
 
 #endif
