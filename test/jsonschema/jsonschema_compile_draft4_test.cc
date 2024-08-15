@@ -286,7 +286,8 @@ TEST(JSONSchema_compile_draft4, required_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target object is expected to define all of the given properties");
+      "The object value was expected to define properties \"baz\", and \"foo\" "
+      "but did not define the property \"baz\"");
 }
 
 TEST(JSONSchema_compile_draft4, required_4) {
@@ -313,9 +314,9 @@ TEST(JSONSchema_compile_draft4, required_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type object");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "The target object is expected to define all of the given properties");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object value was expected to define "
+                               "properties \"bar\", and \"foo\"");
 }
 
 TEST(JSONSchema_compile_draft4, allOf_1) {
@@ -352,9 +353,9 @@ TEST(JSONSchema_compile_draft4, allOf_1) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type object");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "The target object is expected to define all of the given properties");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object value was expected to define "
+                               "properties \"bar\", and \"foo\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
@@ -396,7 +397,8 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
                                "The value was expected to be of type object");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target object is expected to define all of the given properties");
+      "The object value was expected to define properties \"bar\", and \"foo\" "
+      "but did not define the property \"bar\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
