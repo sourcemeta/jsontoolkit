@@ -32,7 +32,7 @@ auto main() -> int {
   sourcemeta::jsontoolkit::prettify(document, std::cout);
   std::cout << "\n";
 
-  return EXIT_SUCCESS:
+  return EXIT_SUCCESS;
 }
 ```
 
