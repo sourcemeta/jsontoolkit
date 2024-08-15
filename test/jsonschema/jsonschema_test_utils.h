@@ -308,8 +308,8 @@
                 std::get<0>(trace_post.at(index)),                             \
                 std::get<3>(trace_post.at(index)),                             \
                 std::get<1>(trace_post.at(index)),                             \
-                std::get<2>(trace_post.at(index)),                             \
-                std::get<4>(trace_post.at(index)), instance),                  \
+                std::get<2>(trace_post.at(index)), instance,                   \
+                std::get<4>(trace_post.at(index))),                            \
             (message));
 
 #define LINT_AND_FIX(document)                                                 \
