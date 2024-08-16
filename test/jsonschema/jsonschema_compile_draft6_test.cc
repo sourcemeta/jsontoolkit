@@ -376,7 +376,9 @@ TEST(JSONSchema_compile_draft6, propertyNames_2) {
       "The object property name \"foo\" was expected to consist of at least 3 "
       "characters and it consisted of 3 characters");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3, "Loop over the property keys of the target object");
+      instance, 3,
+      "The object properties \"bar\", \"baz\", and \"foo\" are expected to "
+      "validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft6, propertyNames_3) {
@@ -419,7 +421,9 @@ TEST(JSONSchema_compile_draft6, propertyNames_3) {
       "The object property name \"fo\" was expected to consist of at least 3 "
       "characters but it consisted of 2 characters");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2, "Loop over the property keys of the target object");
+      instance, 2,
+      "The object properties \"bar\", and \"fo\" are expected to validate "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft6, property_names_4) {
@@ -456,7 +460,9 @@ TEST(JSONSchema_compile_draft6, property_names_4) {
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "Loop over the property keys of the target object");
+      instance, 0,
+      "The object is empty and no properties are expected to validate against "
+      "the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
