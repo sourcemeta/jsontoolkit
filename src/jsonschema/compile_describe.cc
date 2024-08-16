@@ -118,7 +118,7 @@ struct DescribeVisitor {
       assert(!step.children.empty());
       std::ostringstream message;
       message << "The " << to_string(this->target.type())
-              << " target was expected to validate against the ";
+              << " value was expected to validate against the ";
       if (step.children.size() > 1) {
         message << step.children.size() << " given subschemas";
       } else {
