@@ -356,9 +356,9 @@ TEST(JSONSchema_compile_draft4, allOf_1) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The object value was expected to define "
                                "properties \"bar\", and \"foo\"");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object target was expected to validate "
+                               "against the 2 given subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, allOf_2) {
@@ -399,9 +399,9 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
       instance, 1,
       "The object value was expected to define properties \"bar\", and \"foo\" "
       "but did not define the property \"bar\"");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object target was expected to validate "
+                               "against the 2 given subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, ref_1) {
@@ -439,9 +439,9 @@ TEST(JSONSchema_compile_draft4, ref_1) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "Mark the current position of the evaluation process for future jumps");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The integer target was expected to validate "
+                               "against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft4, ref_2) {
@@ -481,7 +481,7 @@ TEST(JSONSchema_compile_draft4, ref_2) {
       "Mark the current position of the evaluation process for future jumps");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The string target was expected to validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft4, ref_3) {

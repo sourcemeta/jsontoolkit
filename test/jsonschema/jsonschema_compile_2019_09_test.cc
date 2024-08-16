@@ -1937,7 +1937,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
       "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The object target was expected to validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5, "Emit an annotation");
@@ -2003,7 +2003,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
       "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The object target was expected to validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean "
                                "but it was of type integer");
@@ -2305,7 +2305,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
       "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The array target was expected to validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5, "Emit an annotation");
@@ -2365,7 +2365,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
       "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The array target was expected to validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean "
                                "but it was of type integer");
