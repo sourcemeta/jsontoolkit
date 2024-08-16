@@ -53,6 +53,10 @@ TEST(JSONSchema_compile_draft6, const_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_PRE(0, AssertionEqual, "/const", "#/const", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/const", "#/const", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value 1 was expected to equal the integer constant 1");
 }
 
 TEST(JSONSchema_compile_draft6, const_2) {
@@ -71,6 +75,10 @@ TEST(JSONSchema_compile_draft6, const_2) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_PRE(0, AssertionEqual, "/const", "#/const", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/const", "#/const", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The string value \"foo\" was expected to equal the integer constant 1");
 }
 
 TEST(JSONSchema_compile_draft6, exclusiveMinimum_1) {
@@ -94,7 +102,7 @@ TEST(JSONSchema_compile_draft6, exclusiveMinimum_1) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target number is expected to be greater than the given number");
+      "The number value 2.1 was expected to be greater than the integer 2");
 }
 
 TEST(JSONSchema_compile_draft6, exclusiveMinimum_2) {
@@ -116,9 +124,9 @@ TEST(JSONSchema_compile_draft6, exclusiveMinimum_2) {
   EVALUATE_TRACE_POST_FAILURE(0, AssertionGreater, "/exclusiveMinimum",
                               "#/exclusiveMinimum", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be greater than the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The integer value 2 was expected to be greater "
+                               "than the integer 2, but they were equal");
 }
 
 TEST(JSONSchema_compile_draft6, exclusiveMaximum_1) {
@@ -142,7 +150,7 @@ TEST(JSONSchema_compile_draft6, exclusiveMaximum_1) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target number is expected to be less than the given number");
+      "The number value 1.9 was expected to be less than the integer 2");
 }
 
 TEST(JSONSchema_compile_draft6, exclusiveMaximum_2) {
@@ -164,9 +172,9 @@ TEST(JSONSchema_compile_draft6, exclusiveMaximum_2) {
   EVALUATE_TRACE_POST_FAILURE(0, AssertionLess, "/exclusiveMaximum",
                               "#/exclusiveMaximum", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be less than the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The integer value 2 was expected to be less "
+                               "than the integer 2, but they were equal");
 }
 
 TEST(JSONSchema_compile_draft6, contains_1) {

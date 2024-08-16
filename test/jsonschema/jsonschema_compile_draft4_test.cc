@@ -357,7 +357,7 @@ TEST(JSONSchema_compile_draft4, allOf_1) {
                                "The object value was expected to define "
                                "properties \"bar\", and \"foo\"");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "The object target was expected to validate "
+                               "The object value was expected to validate "
                                "against the 2 given subschemas");
 }
 
@@ -400,7 +400,7 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
       "The object value was expected to define properties \"bar\", and \"foo\" "
       "but did not define the property \"bar\"");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "The object target was expected to validate "
+                               "The object value was expected to validate "
                                "against the 2 given subschemas");
 }
 
@@ -440,7 +440,7 @@ TEST(JSONSchema_compile_draft4, ref_1) {
                                "The integer value was expected to validate "
                                "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "The integer target was expected to validate "
+                               "The integer value was expected to validate "
                                "against the given subschema");
 }
 
@@ -481,7 +481,7 @@ TEST(JSONSchema_compile_draft4, ref_2) {
                                "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The string target was expected to validate against the given subschema");
+      "The string value was expected to validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft4, ref_3) {
@@ -3302,7 +3302,7 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_1) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target number is expected to be greater than the given number");
+      "The number value 2.1 was expected to be greater than the integer 2");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMinimum_2) {
@@ -3324,9 +3324,9 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_2) {
   EVALUATE_TRACE_PRE(0, AssertionGreater, "/minimum", "#/minimum", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionGreater, "/minimum", "#/minimum", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be greater than the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The integer value 2 was expected to be greater "
+                               "than the integer 2, but they were equal");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMinimum_3) {
@@ -3376,7 +3376,7 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_1) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target number is expected to be less than the given number");
+      "The number value 1.9 was expected to be less than the integer 2");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMaximum_2) {
@@ -3398,9 +3398,9 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_2) {
   EVALUATE_TRACE_PRE(0, AssertionLess, "/maximum", "#/maximum", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionLess, "/maximum", "#/maximum", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be less than the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The integer value 2 was expected to be less "
+                               "than the integer 2, but they were equal");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMaximum_3) {
@@ -3466,7 +3466,7 @@ TEST(JSONSchema_compile_draft4, multipleOf_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target number is expected to be divisible by the given number");
+      "The integer value 6 was expected to be divisible by the integer 3");
 }
 
 TEST(JSONSchema_compile_draft4, multipleOf_3) {
@@ -3490,7 +3490,7 @@ TEST(JSONSchema_compile_draft4, multipleOf_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target number is expected to be divisible by the given number");
+      "The integer value 7 was expected to be divisible by the integer 3");
 }
 
 TEST(JSONSchema_compile_draft4, multipleOf_4) {
@@ -3514,7 +3514,7 @@ TEST(JSONSchema_compile_draft4, multipleOf_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target number is expected to be divisible by the given number");
+      "The number value 6.4 was expected to be divisible by the number 3.2");
 }
 
 TEST(JSONSchema_compile_draft4, multipleOf_5) {
@@ -3538,7 +3538,7 @@ TEST(JSONSchema_compile_draft4, multipleOf_5) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target number is expected to be divisible by the given number");
+      "The number value 6 was expected to be divisible by the number 3.2");
 }
 
 TEST(JSONSchema_compile_draft4, invalid_ref_top_level) {

@@ -118,7 +118,22 @@ struct DescribeVisitor {
       assert(!step.children.empty());
       std::ostringstream message;
       message << "The " << to_string(this->target.type())
-              << " target was expected to validate against the ";
+              << " value was expected to validate against the ";
+      if (step.children.size() > 1) {
+        message << step.children.size() << " given subschemas";
+      } else {
+        message << "given subschema";
+      }
+
+      return message.str();
+    }
+
+    if (this->keyword == "then" || this->keyword == "else") {
+      assert(!step.children.empty());
+      std::ostringstream message;
+      message << "Because of the conditional outcome, the "
+              << to_string(this->target.type())
+              << " value was expected to validate against the ";
       if (step.children.size() > 1) {
         message << step.children.size() << " given subschemas";
       } else {
@@ -150,6 +165,13 @@ struct DescribeVisitor {
            "assertions";
   }
   auto operator()(const SchemaCompilerLogicalTry &) const -> std::string {
+    if (this->keyword == "if") {
+      std::ostringstream message;
+      message << "The " << to_string(this->target.type())
+              << " value was tested against the conditional subschema";
+      return message.str();
+    }
+
     return "The target might match all of the given assertions";
   }
   auto operator()(const SchemaCompilerLogicalNot &) const -> std::string {
@@ -196,8 +218,18 @@ struct DescribeVisitor {
   }
 
   auto operator()(const SchemaCompilerAnnotationPublic &) const -> std::string {
+    if (this->keyword == "if") {
+      assert(this->annotation == JSON{true});
+      std::ostringstream message;
+      message
+          << "The " << to_string(this->target.type())
+          << " value successfully validated against the conditional subschema";
+      return message.str();
+    }
+
     return "Emit an annotation";
   }
+
   auto operator()(const SchemaCompilerLoopProperties &) const -> std::string {
     return "Loop over the properties of the target object";
   }
@@ -363,19 +395,55 @@ struct DescribeVisitor {
     return "The target number is expected to be less than or equal to the "
            "given number";
   }
-  auto operator()(const SchemaCompilerAssertionGreater &) const -> std::string {
-    return "The target number is expected to be greater than the given number";
+
+  auto
+  operator()(const SchemaCompilerAssertionGreater &step) const -> std::string {
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    message << "The " << to_string(this->target.type()) << " value ";
+    stringify(this->target, message);
+    message << " was expected to be greater than the "
+            << to_string(value.type()) << " ";
+    stringify(value, message);
+    if (!this->valid && value == this->target) {
+      message << ", but they were equal";
+    }
+
+    return message.str();
   }
-  auto operator()(const SchemaCompilerAssertionLess &) const -> std::string {
-    return "The target number is expected to be less than the given number";
+
+  auto
+  operator()(const SchemaCompilerAssertionLess &step) const -> std::string {
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    message << "The " << to_string(this->target.type()) << " value ";
+    stringify(this->target, message);
+    message << " was expected to be less than the " << to_string(value.type())
+            << " ";
+    stringify(value, message);
+    if (!this->valid && value == this->target) {
+      message << ", but they were equal";
+    }
+
+    return message.str();
   }
+
   auto operator()(const SchemaCompilerAssertionUnique &) const -> std::string {
     return "The target array is expected to not contain duplicates";
   }
-  auto
-  operator()(const SchemaCompilerAssertionDivisible &) const -> std::string {
-    return "The target number is expected to be divisible by the given number";
+
+  auto operator()(const SchemaCompilerAssertionDivisible &step) const
+      -> std::string {
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    message << "The " << to_string(this->target.type()) << " value ";
+    stringify(this->target, message);
+    message << " was expected to be divisible by the "
+            << to_string(value.type()) << " ";
+    stringify(value, message);
+    return message.str();
   }
+
   auto
   operator()(const SchemaCompilerAssertionStringType &) const -> std::string {
     return "The target string is expected to match the given logical type";
