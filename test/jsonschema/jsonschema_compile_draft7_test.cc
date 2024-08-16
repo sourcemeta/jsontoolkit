@@ -141,7 +141,7 @@ TEST(JSONSchema_compile_draft7, then_2) {
       "The integer value was tested against the conditional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target number is expected to be divisible by the given number");
+      "The integer value 10 was expected to be divisible by the integer 5");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The target is expected to match all of the given assertions");
@@ -264,7 +264,7 @@ TEST(JSONSchema_compile_draft7, else_3) {
       "The integer value was tested against the conditional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target number is expected to be divisible by the given number");
+      "The integer value 10 was expected to be divisible by the integer 5");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The target is expected to match all of the given assertions");
@@ -306,7 +306,7 @@ TEST(JSONSchema_compile_draft7, else_4) {
       "The integer value was tested against the conditional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target number is expected to be divisible by the given number");
+      "The integer value 8 was expected to be divisible by the integer 5");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The target is expected to match all of the given assertions");
