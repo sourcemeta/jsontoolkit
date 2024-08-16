@@ -150,6 +150,13 @@ struct DescribeVisitor {
            "assertions";
   }
   auto operator()(const SchemaCompilerLogicalTry &) const -> std::string {
+    if (this->keyword == "if") {
+      std::ostringstream message;
+      message << "The " << to_string(this->target.type())
+              << " value was tested against the conditional subschema";
+      return message.str();
+    }
+
     return "The target might match all of the given assertions";
   }
   auto operator()(const SchemaCompilerLogicalNot &) const -> std::string {
@@ -196,8 +203,18 @@ struct DescribeVisitor {
   }
 
   auto operator()(const SchemaCompilerAnnotationPublic &) const -> std::string {
+    if (this->keyword == "if") {
+      assert(this->annotation == JSON{true});
+      std::ostringstream message;
+      message
+          << "The " << to_string(this->target.type())
+          << " value successfully validated against the conditional subschema";
+      return message.str();
+    }
+
     return "Emit an annotation";
   }
+
   auto operator()(const SchemaCompilerLoopProperties &) const -> std::string {
     return "Loop over the properties of the target object";
   }
