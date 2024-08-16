@@ -128,6 +128,21 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "then" || this->keyword == "else") {
+      assert(!step.children.empty());
+      std::ostringstream message;
+      message << "Because of the conditional outcome, the "
+              << to_string(this->target.type())
+              << " value was expected to validate against the ";
+      if (step.children.size() > 1) {
+        message << step.children.size() << " given subschemas";
+      } else {
+        message << "given subschema";
+      }
+
+      return message.str();
+    }
+
     if (this->keyword == "properties") {
       assert(!step.children.empty());
       assert(this->target.is_object());
