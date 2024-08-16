@@ -357,7 +357,7 @@ TEST(JSONSchema_compile_draft4, allOf_1) {
                                "The object value was expected to define "
                                "properties \"bar\", and \"foo\"");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "The object target was expected to validate "
+                               "The object value was expected to validate "
                                "against the 2 given subschemas");
 }
 
@@ -400,7 +400,7 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
       "The object value was expected to define properties \"bar\", and \"foo\" "
       "but did not define the property \"bar\"");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "The object target was expected to validate "
+                               "The object value was expected to validate "
                                "against the 2 given subschemas");
 }
 
@@ -440,7 +440,7 @@ TEST(JSONSchema_compile_draft4, ref_1) {
                                "The integer value was expected to validate "
                                "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "The integer target was expected to validate "
+                               "The integer value was expected to validate "
                                "against the given subschema");
 }
 
@@ -481,7 +481,7 @@ TEST(JSONSchema_compile_draft4, ref_2) {
                                "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The string target was expected to validate against the given subschema");
+      "The string value was expected to validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft4, ref_3) {
