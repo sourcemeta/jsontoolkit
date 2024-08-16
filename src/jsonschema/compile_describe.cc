@@ -244,9 +244,40 @@ struct DescribeVisitor {
   auto operator()(const SchemaCompilerLoopProperties &) const -> std::string {
     return "Loop over the properties of the target object";
   }
+
   auto operator()(const SchemaCompilerLoopKeys &) const -> std::string {
+    if (this->keyword == "propertyNames") {
+      assert(this->target.is_object());
+      std::ostringstream message;
+
+      if (this->target.size() == 0) {
+        assert(this->valid);
+        message << "The object is empty and no properties are expected to "
+                   "validate against the given subschema";
+      } else if (this->target.size() == 1) {
+        message << "The object property ";
+        message << escape_string(this->target.as_object().cbegin()->first);
+        message << " is expected to validate against the given subschema";
+      } else {
+        message << "The object properties ";
+        for (auto iterator = this->target.as_object().cbegin();
+             iterator != this->target.as_object().cend(); ++iterator) {
+          if (std::next(iterator) == this->target.as_object().cend()) {
+            message << "and " << escape_string(iterator->first);
+          } else {
+            message << escape_string(iterator->first) << ", ";
+          }
+        }
+
+        message << " are expected to validate against the given subschema";
+      }
+
+      return message.str();
+    }
+
     return "Loop over the property keys of the target object";
   }
+
   auto operator()(const SchemaCompilerLoopItems &) const -> std::string {
     return "Loop over the items of the target array";
   }
