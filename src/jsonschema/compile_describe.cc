@@ -104,6 +104,7 @@ auto describe_reference(const JSON &target) -> std::string {
 struct DescribeVisitor {
   const bool valid;
   const Pointer &evaluate_path;
+  const std::string &keyword;
   const JSON &target;
   const JSON &annotation;
 
@@ -113,8 +114,7 @@ struct DescribeVisitor {
   }
 
   auto operator()(const SchemaCompilerLogicalAnd &step) const -> std::string {
-    if (this->evaluate_path.back().is_property() &&
-        this->evaluate_path.back().to_property() == "allOf") {
+    if (this->keyword == "allOf") {
       assert(!step.children.empty());
       std::ostringstream message;
       message << "The " << to_string(this->target.type())
@@ -128,8 +128,7 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    if (this->evaluate_path.back().is_property() &&
-        this->evaluate_path.back().to_property() == "properties") {
+    if (this->keyword == "properties") {
       assert(!step.children.empty());
       assert(this->target.is_object());
       std::ostringstream message;
@@ -339,9 +338,22 @@ struct DescribeVisitor {
     return "The target size is expected to be equal to the given number";
   }
 
-  auto operator()(const SchemaCompilerAssertionEqual &) const -> std::string {
+  auto
+  operator()(const SchemaCompilerAssertionEqual &step) const -> std::string {
+    if (this->keyword == "const") {
+      std::ostringstream message;
+      const auto &value{step_value(step)};
+      message << "The " << to_string(this->target.type()) << " value ";
+      stringify(this->target, message);
+      message << " was expected to equal the " << to_string(value.type())
+              << " constant ";
+      stringify(value, message);
+      return message.str();
+    }
+
     return "The target is expected to be equal to the given value";
   }
+
   auto operator()(const SchemaCompilerAssertionGreaterEqual &) const {
     return "The target number is expected to be greater than or equal to the "
            "given number";
@@ -381,9 +393,10 @@ namespace sourcemeta::jsontoolkit {
 auto describe(const bool valid, const SchemaCompilerTemplate::value_type &step,
               const Pointer &evaluate_path, const Pointer &instance_location,
               const JSON &instance, const JSON &annotation) -> std::string {
+  assert(evaluate_path.back().is_property());
   return std::visit<std::string>(
-      DescribeVisitor{valid, evaluate_path, get(instance, instance_location),
-                      annotation},
+      DescribeVisitor{valid, evaluate_path, evaluate_path.back().to_property(),
+                      get(instance, instance_location), annotation},
       step);
 }
 

@@ -45,7 +45,8 @@ TEST(JSONSchema_compile_draft7, if_1) {
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      instance, 0,
+      "The integer value 1 was expected to equal the integer constant 1");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2, "The target might match all of the given assertions");
@@ -73,7 +74,8 @@ TEST(JSONSchema_compile_draft7, if_2) {
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      instance, 0,
+      "The integer value 2 was expected to equal the integer constant 1");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1, "The target might match all of the given assertions");
 }
@@ -125,7 +127,8 @@ TEST(JSONSchema_compile_draft7, then_2) {
   EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/then", "#/then", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      instance, 0,
+      "The integer value 10 was expected to equal the integer constant 10");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2, "The target might match all of the given assertions");
@@ -160,7 +163,8 @@ TEST(JSONSchema_compile_draft7, then_3) {
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      instance, 0,
+      "The integer value 5 was expected to equal the integer constant 10");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1, "The target might match all of the given assertions");
 }
@@ -206,7 +210,8 @@ TEST(JSONSchema_compile_draft7, else_2) {
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      instance, 0,
+      "The integer value 1 was expected to equal the integer constant 1");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2, "The target might match all of the given assertions");
@@ -241,7 +246,8 @@ TEST(JSONSchema_compile_draft7, else_3) {
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/else", "#/else", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      instance, 0,
+      "The integer value 10 was expected to equal the integer constant 1");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1, "The target might match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -281,7 +287,8 @@ TEST(JSONSchema_compile_draft7, else_4) {
   EVALUATE_TRACE_POST_FAILURE(3, LogicalAnd, "/else", "#/else", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      instance, 0,
+      "The integer value 8 was expected to equal the integer constant 1");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1, "The target might match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(
