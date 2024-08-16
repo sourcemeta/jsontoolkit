@@ -389,10 +389,19 @@ struct DescribeVisitor {
   auto operator()(const SchemaCompilerAssertionUnique &) const -> std::string {
     return "The target array is expected to not contain duplicates";
   }
-  auto
-  operator()(const SchemaCompilerAssertionDivisible &) const -> std::string {
-    return "The target number is expected to be divisible by the given number";
+
+  auto operator()(const SchemaCompilerAssertionDivisible &step) const
+      -> std::string {
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    message << "The " << to_string(this->target.type()) << " value ";
+    stringify(this->target, message);
+    message << " was expected to be divisible by the "
+            << to_string(value.type()) << " ";
+    stringify(value, message);
+    return message.str();
   }
+
   auto
   operator()(const SchemaCompilerAssertionStringType &) const -> std::string {
     return "The target string is expected to match the given logical type";
