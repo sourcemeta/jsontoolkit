@@ -442,9 +442,9 @@ TEST(JSONSchema_compile_draft6, property_names_4) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0, "Loop over the property keys of the target object");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The target is expected to match all of the given assertions");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the single defined property subschema");
 }
 
 TEST(JSONSchema_compile_draft6, invalid_ref_top_level) {
