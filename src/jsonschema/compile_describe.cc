@@ -395,12 +395,39 @@ struct DescribeVisitor {
     return "The target number is expected to be less than or equal to the "
            "given number";
   }
-  auto operator()(const SchemaCompilerAssertionGreater &) const -> std::string {
-    return "The target number is expected to be greater than the given number";
+
+  auto
+  operator()(const SchemaCompilerAssertionGreater &step) const -> std::string {
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    message << "The " << to_string(this->target.type()) << " value ";
+    stringify(this->target, message);
+    message << " was expected to be greater than the "
+            << to_string(value.type()) << " ";
+    stringify(value, message);
+    if (!this->valid && value == this->target) {
+      message << ", but they were equal";
+    }
+
+    return message.str();
   }
-  auto operator()(const SchemaCompilerAssertionLess &) const -> std::string {
-    return "The target number is expected to be less than the given number";
+
+  auto
+  operator()(const SchemaCompilerAssertionLess &step) const -> std::string {
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    message << "The " << to_string(this->target.type()) << " value ";
+    stringify(this->target, message);
+    message << " was expected to be less than the " << to_string(value.type())
+            << " ";
+    stringify(value, message);
+    if (!this->valid && value == this->target) {
+      message << ", but they were equal";
+    }
+
+    return message.str();
   }
+
   auto operator()(const SchemaCompilerAssertionUnique &) const -> std::string {
     return "The target array is expected to not contain duplicates";
   }
