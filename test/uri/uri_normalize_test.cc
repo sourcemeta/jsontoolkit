@@ -88,3 +88,46 @@ TEST(URI_normalize, relative_path_9) {
   const sourcemeta::jsontoolkit::URI uri{"./abc:def"};
   EXPECT_EQ(uri.recompose(), "./abc:def");
 }
+
+// Inspired from
+// https://github.com/uriparser/uriparser/blob/master/test/test.cpp#L1531
+
+TEST(URI_normalize, path_1) {
+  const sourcemeta::jsontoolkit::URI uri{"http://a/b/c/../../.."};
+  EXPECT_EQ(uri.recompose(), "http://a/");
+}
+
+TEST(URI_normalize, path_2) {
+  const sourcemeta::jsontoolkit::URI uri{"http://a/b/../c/../.."};
+  EXPECT_EQ(uri.recompose(), "http://a/");
+}
+
+TEST(URI_normalize, path_3) {
+  const sourcemeta::jsontoolkit::URI uri{"http://a/.."};
+  EXPECT_EQ(uri.recompose(), "http://a/");
+}
+
+TEST(URI_normalize, path_4) {
+  const sourcemeta::jsontoolkit::URI uri{"/.."};
+  EXPECT_EQ(uri.recompose(), "/");
+}
+
+TEST(URI_normalize, path_5) {
+  const sourcemeta::jsontoolkit::URI uri{"http://a/..///"};
+  EXPECT_EQ(uri.recompose(), "http://a///");
+}
+
+TEST(URI_normalize, path_6) {
+  const sourcemeta::jsontoolkit::URI uri{"http://a/..///.."};
+  EXPECT_EQ(uri.recompose(), "http://a//");
+}
+
+TEST(URI_normalize, path_7) {
+  const sourcemeta::jsontoolkit::URI uri{"a/b/c/../../.."};
+  EXPECT_EQ(uri.recompose(), "");
+}
+
+TEST(URI_normalize, path_8) {
+  const sourcemeta::jsontoolkit::URI uri{"a/b/../../c/.."};
+  EXPECT_EQ(uri.recompose(), "");
+}
