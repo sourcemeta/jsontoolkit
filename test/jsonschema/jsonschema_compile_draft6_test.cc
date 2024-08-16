@@ -365,13 +365,16 @@ TEST(JSONSchema_compile_draft6, propertyNames_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target size is expected to be greater than the given number");
+      "The object property name \"bar\" was expected to consist of at least 3 "
+      "characters and it consisted of 3 characters");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target size is expected to be greater than the given number");
+      "The object property name \"baz\" was expected to consist of at least 3 "
+      "characters and it consisted of 3 characters");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target size is expected to be greater than the given number");
+      "The object property name \"foo\" was expected to consist of at least 3 "
+      "characters and it consisted of 3 characters");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3, "Loop over the property keys of the target object");
 }
@@ -409,10 +412,12 @@ TEST(JSONSchema_compile_draft6, propertyNames_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target size is expected to be greater than the given number");
+      "The object property name \"bar\" was expected to consist of at least 3 "
+      "characters and it consisted of 3 characters");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target size is expected to be greater than the given number");
+      "The object property name \"fo\" was expected to consist of at least 3 "
+      "characters but it consisted of 2 characters");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2, "Loop over the property keys of the target object");
 }

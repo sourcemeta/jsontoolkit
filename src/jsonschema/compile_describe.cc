@@ -1,8 +1,9 @@
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
-#include <cassert> // assert
-#include <sstream> // std::ostringstream
-#include <variant> // std::visit
+#include <algorithm> // std::any_of
+#include <cassert>   // assert
+#include <sstream>   // std::ostringstream
+#include <variant>   // std::visit
 
 namespace {
 using namespace sourcemeta::jsontoolkit;
@@ -101,10 +102,20 @@ auto describe_reference(const JSON &target) -> std::string {
   return message.str();
 }
 
+auto is_within_keyword(const Pointer &evaluate_path,
+                       const std::string &keyword) -> bool {
+  return std::any_of(evaluate_path.cbegin(), evaluate_path.cend(),
+                     [&keyword](const auto &token) {
+                       return token.is_property() &&
+                              token.to_property() == keyword;
+                     });
+}
+
 struct DescribeVisitor {
   const bool valid;
   const Pointer &evaluate_path;
   const std::string &keyword;
+  const Pointer &instance_location;
   const JSON &target;
   const JSON &annotation;
 
@@ -399,14 +410,90 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionSizeGreater &) const -> std::string {
+  auto operator()(const SchemaCompilerAssertionSizeGreater &step) const
+      -> std::string {
+    if (this->keyword == "minLength") {
+      std::ostringstream message;
+      const auto minimum{step_value(step) + 1};
+
+      if (is_within_keyword(this->evaluate_path, "propertyNames")) {
+        assert(this->instance_location.back().is_property());
+        message << "The object property name "
+                << escape_string(this->instance_location.back().to_property());
+      } else {
+        message << "The string value ";
+        stringify(this->target, message);
+      }
+
+      message << " was expected to consist of at least " << minimum
+              << (minimum == 1 ? " character" : " characters");
+
+      if (this->valid) {
+        message << " and";
+      } else {
+        message << " but";
+      }
+
+      message << " it consisted of ";
+
+      if (is_within_keyword(this->evaluate_path, "propertyNames")) {
+        message << this->instance_location.back().to_property().size();
+        message << (this->instance_location.back().to_property().size() == 1
+                        ? " character"
+                        : " characters");
+      } else {
+        message << this->target.size();
+        message << (this->target.size() == 1 ? " character" : " characters");
+      }
+
+      return message.str();
+    }
+
     return "The target size is expected to be greater than the given number";
   }
+
   auto
-  operator()(const SchemaCompilerAssertionSizeLess &) const -> std::string {
+  operator()(const SchemaCompilerAssertionSizeLess &step) const -> std::string {
+    if (this->keyword == "maxLength") {
+      std::ostringstream message;
+      const auto maximum{step_value(step) - 1};
+
+      if (is_within_keyword(this->evaluate_path, "propertyNames")) {
+        assert(this->instance_location.back().is_property());
+        message << "The object property name "
+                << escape_string(this->instance_location.back().to_property());
+      } else {
+        message << "The string value ";
+        stringify(this->target, message);
+      }
+
+      message << " was expected to consist of at most " << maximum
+              << (maximum == 1 ? " character" : " characters");
+
+      if (this->valid) {
+        message << " and";
+      } else {
+        message << " but";
+      }
+
+      message << " it consisted of ";
+
+      if (is_within_keyword(this->evaluate_path, "propertyNames")) {
+        message << this->instance_location.back().to_property().size();
+        message << (this->instance_location.back().to_property().size() == 1
+                        ? " character"
+                        : " characters");
+      } else {
+        message << this->target.size();
+        message << (this->target.size() == 1 ? " character" : " characters");
+      }
+
+      return message.str();
+    }
+
     return "The target size is expected to be less than the given number";
   }
+
   auto
   operator()(const SchemaCompilerAssertionSizeEqual &) const -> std::string {
     return "The target size is expected to be equal to the given number";
@@ -506,7 +593,8 @@ auto describe(const bool valid, const SchemaCompilerTemplate::value_type &step,
   assert(evaluate_path.back().is_property());
   return std::visit<std::string>(
       DescribeVisitor{valid, evaluate_path, evaluate_path.back().to_property(),
-                      get(instance, instance_location), annotation},
+                      instance_location, get(instance, instance_location),
+                      annotation},
       step);
 }
 
