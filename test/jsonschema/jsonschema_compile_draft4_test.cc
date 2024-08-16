@@ -2740,7 +2740,8 @@ TEST(JSONSchema_compile_draft4, minLength_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target size is expected to be greater than the given number");
+      "The string value \"xx\" was expected to consist of at least 2 "
+      "characters and it consisted of 2 characters");
 }
 
 TEST(JSONSchema_compile_draft4, minLength_3) {
@@ -2764,7 +2765,8 @@ TEST(JSONSchema_compile_draft4, minLength_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target size is expected to be greater than the given number");
+      "The string value \"x\" was expected to consist of at least 2 characters "
+      "but it consisted of 1 character");
 }
 
 TEST(JSONSchema_compile_draft4, maxLength_1) {
@@ -2804,7 +2806,8 @@ TEST(JSONSchema_compile_draft4, maxLength_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target size is expected to be less than the given number");
+      "The string value \"xx\" was expected to consist of at most 2 characters "
+      "and it consisted of 2 characters");
 }
 
 TEST(JSONSchema_compile_draft4, maxLength_3) {
@@ -2828,7 +2831,8 @@ TEST(JSONSchema_compile_draft4, maxLength_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target size is expected to be less than the given number");
+      "The string value \"xxx\" was expected to consist of at most 2 "
+      "characters but it consisted of 3 characters");
 }
 
 TEST(JSONSchema_compile_draft4, minItems_1) {
