@@ -244,9 +244,51 @@ struct DescribeVisitor {
     return "Loop over the items of the target array potentially bound by an "
            "annotation result";
   }
-  auto operator()(const SchemaCompilerLoopContains &) const -> std::string {
-    return "A certain number of array items must satisfy the given constraints";
+
+  auto operator()(const SchemaCompilerLoopContains &step) const -> std::string {
+    assert(this->target.is_array());
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    const auto minimum{std::get<0>(value)};
+    const auto maximum{std::get<1>(value)};
+    bool plural{true};
+
+    message << "The array value was expected to contain ";
+    if (maximum.has_value()) {
+      if (minimum == maximum.value() && minimum == 0) {
+        message << "any number of";
+      } else if (minimum == maximum.value()) {
+        message << "exactly " << minimum;
+        if (minimum == 1) {
+          plural = false;
+        }
+      } else if (minimum == 0) {
+        message << "up to " << maximum.value();
+        if (maximum.value() == 1) {
+          plural = false;
+        }
+      } else {
+        message << minimum << " to " << maximum.value();
+        if (maximum.value() == 1) {
+          plural = false;
+        }
+      }
+    } else {
+      message << "at least " << minimum;
+      if (minimum == 1) {
+        plural = false;
+      }
+    }
+
+    if (plural) {
+      message << " items that validate against the given subschema";
+    } else {
+      message << " item that validates against the given subschema";
+    }
+
+    return message.str();
   }
+
   auto operator()(const SchemaCompilerAssertionFail &) const -> std::string {
     return "Abort evaluation on failure";
   }

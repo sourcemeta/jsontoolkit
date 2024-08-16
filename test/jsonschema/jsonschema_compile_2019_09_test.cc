@@ -515,7 +515,8 @@ TEST(JSONSchema_compile_2019_09, contains_2) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 1 item that validates "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_3) {
@@ -561,7 +562,8 @@ TEST(JSONSchema_compile_2019_09, contains_3) {
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 1 item that validates "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_4) {
@@ -592,7 +594,8 @@ TEST(JSONSchema_compile_2019_09, contains_4) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 1 item that validates "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_5) {
@@ -637,7 +640,8 @@ TEST(JSONSchema_compile_2019_09, contains_5) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 2 items that validate "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_6) {
@@ -682,7 +686,8 @@ TEST(JSONSchema_compile_2019_09, contains_6) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 2 items that validate "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_7) {
@@ -728,7 +733,8 @@ TEST(JSONSchema_compile_2019_09, contains_7) {
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 2 items that validate "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_8) {
@@ -773,7 +779,8 @@ TEST(JSONSchema_compile_2019_09, contains_8) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain 1 to 2 items that validate "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_9) {
@@ -817,7 +824,8 @@ TEST(JSONSchema_compile_2019_09, contains_9) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain 1 to 2 items that validate "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_10) {
@@ -863,7 +871,8 @@ TEST(JSONSchema_compile_2019_09, contains_10) {
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain exactly 2 items that validate "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_11) {
@@ -908,7 +917,8 @@ TEST(JSONSchema_compile_2019_09, contains_11) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain exactly 2 items that validate "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_12) {

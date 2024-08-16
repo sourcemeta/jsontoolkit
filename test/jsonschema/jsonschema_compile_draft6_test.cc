@@ -228,7 +228,8 @@ TEST(JSONSchema_compile_draft6, contains_2) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 1 item that validates "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft6, contains_3) {
@@ -274,7 +275,8 @@ TEST(JSONSchema_compile_draft6, contains_3) {
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 1 item that validates "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft6, contains_4) {
@@ -305,7 +307,8 @@ TEST(JSONSchema_compile_draft6, contains_4) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 1 item that validates "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft6, propertyNames_1) {
