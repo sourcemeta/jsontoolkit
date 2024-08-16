@@ -436,9 +436,9 @@ TEST(JSONSchema_compile_draft4, ref_1) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The value was expected to be of type string but it was of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "Mark the current position of the evaluation process for future jumps");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The integer value was expected to validate "
+                               "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The integer target was expected to validate "
                                "against the given subschema");
@@ -476,9 +476,9 @@ TEST(JSONSchema_compile_draft4, ref_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "Mark the current position of the evaluation process for future jumps");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The string value was expected to validate "
+                               "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The string target was expected to validate against the given subschema");
@@ -542,9 +542,9 @@ TEST(JSONSchema_compile_draft4, ref_3) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
-      "Mark the current position of the evaluation process for future jumps");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The object value was expected to validate "
+                               "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 5,
@@ -633,15 +633,16 @@ TEST(JSONSchema_compile_draft4, ref_4) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4, "Jump to another point of the evaluation process");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The object value was expected to validate "
+                               "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 6,
       "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 7,
-      "Mark the current position of the evaluation process for future jumps");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 7,
+                               "The object value was expected to validate "
+                               "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 8, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 9,
@@ -713,14 +714,15 @@ TEST(JSONSchema_compile_draft4, ref_5) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The value was expected to be of type object but it was of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3, "Jump to another point of the evaluation process");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The integer value was expected to validate "
+                               "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 5,
-      "Mark the current position of the evaluation process for future jumps");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
+                               "The object value was expected to validate "
+                               "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 6,
       "The target is expected to match all of the given assertions");
@@ -775,9 +777,9 @@ TEST(JSONSchema_compile_draft4, ref_6) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
-      "Mark the current position of the evaluation process for future jumps");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The object value was expected to validate "
+                               "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 5,

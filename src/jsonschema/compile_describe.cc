@@ -93,6 +93,14 @@ auto describe_types_check(const bool valid, const JSON::Type current,
   }
 }
 
+auto describe_reference(const JSON &target) -> std::string {
+  std::ostringstream message;
+  message << "The " << to_string(target.type())
+          << " value was expected to validate against the statically "
+             "referenced schema";
+  return message.str();
+}
+
 struct DescribeVisitor {
   const bool valid;
   const Pointer &evaluate_path;
@@ -153,21 +161,24 @@ struct DescribeVisitor {
     return "The target object is expected to define all of the given "
            "properties";
   }
+
   auto operator()(const SchemaCompilerControlLabel &) const -> std::string {
-    return "Mark the current position of the evaluation process for future "
-           "jumps";
+    return describe_reference(this->target);
   }
+
   auto operator()(const SchemaCompilerControlMark &) const -> std::string {
-    return "Mark the current position of the evaluation process for future "
-           "jumps";
+    return describe_reference(this->target);
   }
+
   auto operator()(const SchemaCompilerControlJump &) const -> std::string {
-    return "Jump to another point of the evaluation process";
+    return describe_reference(this->target);
   }
+
   auto operator()(const SchemaCompilerControlDynamicAnchorJump &) const
       -> std::string {
     return "Jump to a dynamic anchor";
   }
+
   auto operator()(const SchemaCompilerAnnotationPublic &) const -> std::string {
     return "Emit an annotation";
   }
