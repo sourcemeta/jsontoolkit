@@ -580,7 +580,8 @@ TEST(JSONSchema_compile_2020_12, contains_2) {
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 1 item that validates "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2020_12, contains_3) {
@@ -626,7 +627,8 @@ TEST(JSONSchema_compile_2020_12, contains_3) {
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 1 item that validates "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2020_12, contains_4) {
@@ -680,7 +682,8 @@ TEST(JSONSchema_compile_2020_12, contains_4) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 6,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain at least 1 item that validates "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2020_12, contains_5) {
@@ -724,7 +727,8 @@ TEST(JSONSchema_compile_2020_12, contains_5) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
-      "A certain number of array items must satisfy the given constraints");
+      "The array value was expected to contain exactly 1 item that validates "
+      "against the given subschema");
 }
 
 TEST(JSONSchema_compile_2020_12, reference_from_unknown_keyword) {
