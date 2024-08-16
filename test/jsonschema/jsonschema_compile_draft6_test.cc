@@ -53,6 +53,10 @@ TEST(JSONSchema_compile_draft6, const_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
   EVALUATE_TRACE_PRE(0, AssertionEqual, "/const", "#/const", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/const", "#/const", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value 1 was expected to equal the integer constant 1");
 }
 
 TEST(JSONSchema_compile_draft6, const_2) {
@@ -71,6 +75,10 @@ TEST(JSONSchema_compile_draft6, const_2) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
   EVALUATE_TRACE_PRE(0, AssertionEqual, "/const", "#/const", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/const", "#/const", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The string value \"foo\" was expected to equal the integer constant 1");
 }
 
 TEST(JSONSchema_compile_draft6, exclusiveMinimum_1) {
