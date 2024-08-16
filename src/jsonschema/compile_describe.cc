@@ -29,6 +29,22 @@ auto to_string(const JSON::Type type) -> std::string {
   }
 }
 
+auto escape_string(const std::string &input) -> std::string {
+  std::ostringstream result;
+  result << '"';
+
+  for (const auto character : input) {
+    if (character == '"') {
+      result << "\\\"";
+    } else {
+      result << character;
+    }
+  }
+
+  result << '"';
+  return result.str();
+}
+
 auto describe_type_check(const bool valid, const JSON::Type current,
                          const JSON::Type expected,
                          std::ostringstream &message) -> void {
@@ -164,8 +180,8 @@ struct DescribeVisitor {
   auto
   operator()(const SchemaCompilerAssertionDefines &step) const -> std::string {
     std::ostringstream message;
-    message << "The object value was expected to define the property \""
-            << step_value(step) << "\"";
+    message << "The object value was expected to define the property "
+            << escape_string(step_value(step));
     return message.str();
   }
 
@@ -177,9 +193,9 @@ struct DescribeVisitor {
     message << "The object value was expected to define properties ";
     for (auto iterator = value.cbegin(); iterator != value.cend(); ++iterator) {
       if (std::next(iterator) == value.cend()) {
-        message << "and \"" << *iterator << "\"";
+        message << "and " << escape_string(*iterator);
       } else {
-        message << "\"" << *iterator << "\", ";
+        message << escape_string(*iterator) << ", ";
       }
     }
 
@@ -197,16 +213,16 @@ struct DescribeVisitor {
 
     assert(!missing.empty());
     if (missing.size() == 1) {
-      message << " but did not define the property \"" << *(missing.cbegin())
-              << "\"";
+      message << " but did not define the property "
+              << escape_string(*(missing.cbegin()));
     } else {
       message << " but did not define properties ";
       for (auto iterator = missing.cbegin(); iterator != missing.cend();
            ++iterator) {
         if (std::next(iterator) == value.cend()) {
-          message << "and \"" << *iterator << "\"";
+          message << "and " << escape_string(*iterator);
         } else {
-          message << "\"" << *iterator << "\", ";
+          message << escape_string(*iterator) << ", ";
         }
       }
     }
@@ -257,10 +273,16 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto operator()(const SchemaCompilerAssertionRegex &) const -> std::string {
-    return "The target string is expected to match the given regular "
-           "expression";
+  auto
+  operator()(const SchemaCompilerAssertionRegex &step) const -> std::string {
+    assert(this->target.is_string());
+    std::ostringstream message;
+    message << "The string value " << escape_string(this->target.to_string())
+            << " was expected to match the regular expression "
+            << escape_string(step_value(step).second);
+    return message.str();
   }
+
   auto
   operator()(const SchemaCompilerAssertionSizeGreater &) const -> std::string {
     return "The target size is expected to be greater than the given number";

@@ -1006,9 +1006,9 @@ TEST(JSONSchema_compile_draft4, pattern_1) {
   EVALUATE_TRACE_PRE(0, AssertionRegex, "/pattern", "#/pattern", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionRegex, "/pattern", "#/pattern", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target string is expected to match the given regular expression");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The string value \"xxx\" was expected to match "
+                               "the regular expression \"^x\"");
 }
 
 TEST(JSONSchema_compile_draft4, pattern_2) {
@@ -1028,9 +1028,9 @@ TEST(JSONSchema_compile_draft4, pattern_2) {
   EVALUATE_TRACE_PRE(0, AssertionRegex, "/pattern", "#/pattern", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionRegex, "/pattern", "#/pattern", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target string is expected to match the given regular expression");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The string value \"aaa\" was expected to match "
+                               "the regular expression \"^x\"");
 }
 
 TEST(JSONSchema_compile_draft4, pattern_3) {
