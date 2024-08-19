@@ -23,5 +23,3 @@ static void Compiler_Basic(benchmark::State &state) {
 }
 
 BENCHMARK(Compiler_Basic);
-
-BENCHMARK_MAIN();
