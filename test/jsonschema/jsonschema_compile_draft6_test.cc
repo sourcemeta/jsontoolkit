@@ -464,7 +464,7 @@ TEST(JSONSchema_compile_draft6, propertyNames_4) {
       "The object is empty and no properties are expected to validate against "
       "the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The \"foo\" object property successfully "
+                               "The object property \"foo\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
