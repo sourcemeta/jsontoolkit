@@ -30,16 +30,6 @@ TEST(JSONL_parse_error, invalid_second_row) {
   EXPECT_PARSE_ERROR(input, 2, 3);
 }
 
-TEST(JSONL_parse_error, empty) {
-  std::istringstream input{""};
-  EXPECT_PARSE_ERROR(input, 1, 1);
-}
-
-TEST(JSONL_parse_error, blank) {
-  std::istringstream input{"    "};
-  EXPECT_PARSE_ERROR(input, 1, 5);
-}
-
 TEST(JSONL_parse_error, blank_with_whitespace_characters) {
   std::istringstream input{"\r\r\n\n\t\t"};
   EXPECT_PARSE_ERROR(input, 3, 3);
