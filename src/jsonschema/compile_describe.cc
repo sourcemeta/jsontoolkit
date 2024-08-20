@@ -238,6 +238,15 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "properties") {
+      assert(this->annotation.is_string());
+      std::ostringstream message;
+      message << "The " << escape_string(this->annotation.to_string())
+              << " object property successfully validated against its property "
+                 "subschema";
+      return message.str();
+    }
+
     return "Emit an annotation";
   }
 

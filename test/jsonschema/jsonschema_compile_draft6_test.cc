@@ -426,7 +426,7 @@ TEST(JSONSchema_compile_draft6, propertyNames_3) {
       "against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft6, property_names_4) {
+TEST(JSONSchema_compile_draft6, propertyNames_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -463,7 +463,9 @@ TEST(JSONSchema_compile_draft6, property_names_4) {
       instance, 0,
       "The object is empty and no properties are expected to validate against "
       "the given subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The \"foo\" object property successfully "
+                               "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
                                "against the single defined property subschema");
