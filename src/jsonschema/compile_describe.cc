@@ -168,6 +168,21 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "patternProperties") {
+      assert(!step.children.empty());
+      assert(this->target.is_object());
+      std::ostringstream message;
+      message << "The object value was expected to validate against the ";
+      if (step.children.size() == 1) {
+        message << "single defined pattern property subschema";
+      } else {
+        message << step.children.size()
+                << " defined pattern properties subschemas";
+      }
+
+      return message.str();
+    }
+
     return "The target is expected to match all of the given assertions";
   }
 
@@ -241,8 +256,19 @@ struct DescribeVisitor {
     if (this->keyword == "properties") {
       assert(this->annotation.is_string());
       std::ostringstream message;
-      message << "The " << escape_string(this->annotation.to_string())
-              << " object property successfully validated against its property "
+      message << "The object property "
+              << escape_string(this->annotation.to_string())
+              << " successfully validated against its property "
+                 "subschema";
+      return message.str();
+    }
+
+    if (this->keyword == "patternProperties") {
+      assert(this->annotation.is_string());
+      std::ostringstream message;
+      message << "The object property "
+              << escape_string(this->annotation.to_string())
+              << " successfully validated against its pattern property "
                  "subschema";
       return message.str();
     }

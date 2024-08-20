@@ -546,7 +546,7 @@ TEST(JSONSchema_compile_draft4, ref_3) {
                                "The object value was expected to validate "
                                "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
-                               "The \"foo\" object property successfully "
+                               "The object property \"foo\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The object value was expected to validate "
@@ -639,7 +639,7 @@ TEST(JSONSchema_compile_draft4, ref_4) {
                                "The object value was expected to validate "
                                "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "The \"foo\" object property successfully "
+                               "The object property \"foo\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
                                "The object value was expected to validate "
@@ -648,7 +648,7 @@ TEST(JSONSchema_compile_draft4, ref_4) {
                                "The object value was expected to validate "
                                "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 8,
-                               "The \"foo\" object property successfully "
+                               "The object property \"foo\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 9,
                                "The object value was expected to validate "
@@ -787,7 +787,7 @@ TEST(JSONSchema_compile_draft4, ref_6) {
                                "The object value was expected to validate "
                                "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
-                               "The \"foo\" object property successfully "
+                               "The object property \"foo\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The object value was expected to validate "
@@ -861,7 +861,7 @@ TEST(JSONSchema_compile_draft4, properties_1) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The \"bar\" object property successfully "
+                               "The object property \"bar\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
@@ -910,12 +910,12 @@ TEST(JSONSchema_compile_draft4, properties_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The \"bar\" object property successfully "
+                               "The object property \"bar\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "The \"foo\" object property successfully "
+                               "The object property \"foo\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The object value was expected to validate "
@@ -996,13 +996,13 @@ TEST(JSONSchema_compile_draft4, properties_4) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The \"bar\" object property successfully "
+                               "The object property \"bar\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
                                "against the single defined property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "The \"foo\" object property successfully "
+                               "The object property \"foo\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The object value was expected to validate "
@@ -1112,7 +1112,8 @@ TEST(JSONSchema_compile_draft4, patternProperties_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target is expected to match all of the given assertions");
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_3) {
@@ -1144,10 +1145,14 @@ TEST(JSONSchema_compile_draft4, patternProperties_3) {
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/patternProperties",
                               "#/patternProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The object property \"foo\" successfully validated against its pattern "
+      "property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target is expected to match all of the given assertions");
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_4) {
@@ -1188,10 +1193,14 @@ TEST(JSONSchema_compile_draft4, patternProperties_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"foo\" successfully validated against its pattern "
+      "property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_5) {
@@ -1231,7 +1240,8 @@ TEST(JSONSchema_compile_draft4, patternProperties_5) {
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target is expected to match all of the given assertions");
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_6) {
@@ -1278,12 +1288,16 @@ TEST(JSONSchema_compile_draft4, patternProperties_6) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"foo\" successfully validated against its pattern "
+      "property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The object value was expected to validate against the 2 defined pattern "
+      "properties subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_7) {
@@ -1338,14 +1352,22 @@ TEST(JSONSchema_compile_draft4, patternProperties_7) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"bar\" successfully validated against its pattern "
+      "property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object property \"foo\" successfully validated against its pattern "
+      "property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
-      "The target is expected to match all of the given assertions");
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_1) {
@@ -1437,7 +1459,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The \"foo\" object property successfully "
+                               "The object property \"foo\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
@@ -1567,14 +1589,18 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"bar\" successfully validated against its pattern "
+      "property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
-                               "The \"foo\" object property successfully "
+                               "The object property \"foo\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The object value was expected to validate "
@@ -1699,7 +1725,7 @@ TEST(JSONSchema_compile_draft4, not_3) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The \"foo\" object property successfully "
+                               "The object property \"foo\" successfully "
                                "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
