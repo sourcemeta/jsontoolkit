@@ -1068,7 +1068,9 @@ TEST(JSONSchema_compile_2019_09, contains_12) {
   EVALUATE_TRACE_PRE(0, AssertionFail, "/contains", "#/contains", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionFail, "/contains", "#/contains", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Abort evaluation on failure");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The constraints declared for this keyword are not satisfiable");
 }
 
 TEST(JSONSchema_compile_2019_09, title) {
