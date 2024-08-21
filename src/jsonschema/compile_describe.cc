@@ -551,7 +551,11 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    return "Emit an annotation";
+    std::ostringstream message;
+    message << "The unrecognized keyword " << escape_string(this->keyword)
+            << " was collected as the annotation ";
+    stringify(this->annotation, message);
+    return message.str();
   }
 
   auto operator()(const SchemaCompilerLoopProperties &) const -> std::string {
