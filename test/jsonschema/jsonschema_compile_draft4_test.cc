@@ -2593,7 +2593,8 @@ TEST(JSONSchema_compile_draft4, dependencies_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target was expected to match all of the given assertions");
+      "Because the object value defined the property \"foo\", it was also "
+      "expected to define the properties \"bar\", and \"baz\"");
 }
 
 TEST(JSONSchema_compile_draft4, dependencies_3) {
@@ -2619,7 +2620,8 @@ TEST(JSONSchema_compile_draft4, dependencies_3) {
                               "");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target was expected to match all of the given assertions");
+      "Because the object value defined the property \"foo\", it was also "
+      "expected to define the property \"bar\"");
 }
 
 TEST(JSONSchema_compile_draft4, dependencies_4) {
@@ -2655,7 +2657,9 @@ TEST(JSONSchema_compile_draft4, dependencies_4) {
       "The object value was expected to define the property \"extra\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target was expected to match all of the given assertions");
+      "Because the object value defined the property \"qux\", it was also "
+      "expected to successfully validate against the corresponding \"qux\" "
+      "subschema");
 }
 
 TEST(JSONSchema_compile_draft4, dependencies_5) {
@@ -2691,7 +2695,88 @@ TEST(JSONSchema_compile_draft4, dependencies_5) {
       "The object value was expected to define the property \"extra\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target was expected to match all of the given assertions");
+      "Because the object value defined the property \"qux\", it was also "
+      "expected to successfully validate against the corresponding \"qux\" "
+      "subschema");
+}
+
+TEST(JSONSchema_compile_draft4, dependencies_6) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "dependencies": {
+      "foo": [ "bar", "baz" ],
+      "qux": { "required": [ "extra" ] }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"none\": 1 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependencies", "#/dependencies", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependencies", "#/dependencies",
+                              "");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The object value did not define the properties \"foo\", or \"qux\"");
+}
+
+TEST(JSONSchema_compile_draft4, dependencies_7) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "dependencies": {
+      "foo": [ "bar", "baz" ]
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"none\": 1 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependencies", "#/dependencies", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependencies", "#/dependencies",
+                              "");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0, "The object value did not define the property \"foo\"");
+}
+
+TEST(JSONSchema_compile_draft4, dependencies_8) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "dependencies": {
+      "foo": [ "bar", "baz" ],
+      "qux": { "required": [ "extra" ] }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"qux\": 2 }")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependencies", "#/dependencies", "");
+  EVALUATE_TRACE_POST_FAILURE(0, LogicalAnd, "/dependencies", "#/dependencies",
+                              "");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "Because the object value defined the properties \"foo\", and \"qux\", "
+      "it was also expected to define the properties \"bar\", and \"baz\", and "
+      "it was also expected to successfully validate against the corresponding "
+      "\"qux\" subschema");
 }
 
 TEST(JSONSchema_compile_draft4, enum_1) {
