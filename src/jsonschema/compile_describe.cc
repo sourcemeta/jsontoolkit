@@ -368,6 +368,121 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "title" || this->keyword == "description") {
+      assert(this->annotation.is_string());
+      std::ostringstream message;
+      message << "The " << this->keyword << " of the";
+      if (this->instance_location.empty()) {
+        message << " instance";
+      } else {
+        message << " instance location \"";
+        stringify(this->instance_location, message);
+        message << "\"";
+      }
+
+      message << " is " << escape_string(this->annotation.to_string());
+      return message.str();
+    }
+
+    if (this->keyword == "default") {
+      std::ostringstream message;
+      message << "The default value of the";
+      if (this->instance_location.empty()) {
+        message << " instance";
+      } else {
+        message << " instance location \"";
+        stringify(this->instance_location, message);
+        message << "\"";
+      }
+
+      message << " is ";
+      stringify(this->annotation, message);
+      return message.str();
+    }
+
+    if (this->keyword == "deprecated" && this->annotation.is_boolean()) {
+      std::ostringstream message;
+      if (this->instance_location.empty()) {
+        message << "The instance";
+      } else {
+        message << "The instance location \"";
+        stringify(this->instance_location, message);
+        message << "\"";
+      }
+
+      if (this->annotation.to_boolean()) {
+        message << " is considered deprecated";
+      } else {
+        message << " is not considered deprecated";
+      }
+
+      return message.str();
+    }
+
+    if (this->keyword == "readOnly" && this->annotation.is_boolean()) {
+      std::ostringstream message;
+      if (this->instance_location.empty()) {
+        message << "The instance";
+      } else {
+        message << "The instance location \"";
+        stringify(this->instance_location, message);
+        message << "\"";
+      }
+
+      if (this->annotation.to_boolean()) {
+        message << " is considered read-only";
+      } else {
+        message << " is not considered read-only";
+      }
+
+      return message.str();
+    }
+
+    if (this->keyword == "writeOnly" && this->annotation.is_boolean()) {
+      std::ostringstream message;
+      if (this->instance_location.empty()) {
+        message << "The instance";
+      } else {
+        message << "The instance location \"";
+        stringify(this->instance_location, message);
+        message << "\"";
+      }
+
+      if (this->annotation.to_boolean()) {
+        message << " is considered write-only";
+      } else {
+        message << " is not considered write-only";
+      }
+
+      return message.str();
+    }
+
+    if (this->keyword == "examples") {
+      assert(this->annotation.is_array());
+      std::ostringstream message;
+      if (this->instance_location.empty()) {
+        message << "Examples of the instance";
+      } else {
+        message << "Examples of the instance location \"";
+        stringify(this->instance_location, message);
+        message << "\"";
+      }
+
+      message << " are ";
+      for (auto iterator = this->annotation.as_array().cbegin();
+           iterator != this->annotation.as_array().cend(); ++iterator) {
+        if (std::next(iterator) == this->annotation.as_array().cend()) {
+          message << "and ";
+          stringify(*iterator, message);
+        } else {
+          stringify(*iterator, message);
+          message << ", ";
+        }
+      }
+
+      return message.str();
+    }
+
     return "Emit an annotation";
   }
 
