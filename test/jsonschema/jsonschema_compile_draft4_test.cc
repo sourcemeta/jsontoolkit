@@ -2593,7 +2593,7 @@ TEST(JSONSchema_compile_draft4, dependencies_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target is expected to match all of the given assertions");
+      "The target was expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, dependencies_3) {
@@ -2619,7 +2619,7 @@ TEST(JSONSchema_compile_draft4, dependencies_3) {
                               "");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target is expected to match all of the given assertions");
+      "The target was expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, dependencies_4) {
@@ -2655,7 +2655,7 @@ TEST(JSONSchema_compile_draft4, dependencies_4) {
       "The object value was expected to define the property \"extra\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target is expected to match all of the given assertions");
+      "The target was expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, dependencies_5) {
@@ -2691,7 +2691,7 @@ TEST(JSONSchema_compile_draft4, dependencies_5) {
       "The object value was expected to define the property \"extra\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target is expected to match all of the given assertions");
+      "The target was expected to match all of the given assertions");
 }
 
 TEST(JSONSchema_compile_draft4, enum_1) {

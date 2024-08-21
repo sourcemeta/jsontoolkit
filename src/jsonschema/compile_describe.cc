@@ -131,7 +131,7 @@ struct DescribeVisitor {
 
   auto operator()(const SchemaCompilerAssertionFail &) const -> std::string {
     if (this->keyword == "contains") {
-      return "The constraints declared for this keyword are not satisfiable";
+      return "The constraints declared for this keyword were not satisfiable";
     }
 
     if (this->keyword == "additionalProperties" ||
@@ -288,10 +288,10 @@ struct DescribeVisitor {
 
         return message.str();
       } else if (present.size() == 1) {
-        message << "Because the object value defines the";
+        message << "Because the object value defined the";
         message << " property " << escape_string(*(present.cbegin()));
       } else {
-        message << "Because the object value defines the";
+        message << "Because the object value defined the";
         message << " properties ";
         for (auto iterator = present.cbegin(); iterator != present.cend();
              ++iterator) {
@@ -364,13 +364,13 @@ struct DescribeVisitor {
           }
         }
       } else if (present.size() == 1) {
-        message << "Because the object value defines the";
+        message << "Because the object value defined the";
         message << " property " << escape_string(*(present.cbegin()));
         message
             << ", it was also expected to validate against the corresponding "
                "subschema";
       } else {
-        message << "Because the object value defines the";
+        message << "Because the object value defined the";
         message << " properties ";
         for (auto iterator = present.cbegin(); iterator != present.cend();
              ++iterator) {
@@ -389,7 +389,7 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    return "The target is expected to match all of the given assertions";
+    return "The target was expected to match all of the given assertions";
   }
 
   auto operator()(const SchemaCompilerLogicalXor &step) const -> std::string {
@@ -577,7 +577,7 @@ struct DescribeVisitor {
         message << "\"";
       }
 
-      message << " is " << escape_string(this->annotation.to_string());
+      message << " was " << escape_string(this->annotation.to_string());
       return message.str();
     }
 
@@ -592,7 +592,7 @@ struct DescribeVisitor {
         message << "\"";
       }
 
-      message << " is ";
+      message << " was ";
       stringify(this->annotation, message);
       return message.str();
     }
@@ -608,9 +608,9 @@ struct DescribeVisitor {
       }
 
       if (this->annotation.to_boolean()) {
-        message << " is considered deprecated";
+        message << " was considered deprecated";
       } else {
-        message << " is not considered deprecated";
+        message << " was not considered deprecated";
       }
 
       return message.str();
@@ -627,9 +627,9 @@ struct DescribeVisitor {
       }
 
       if (this->annotation.to_boolean()) {
-        message << " is considered read-only";
+        message << " was considered read-only";
       } else {
-        message << " is not considered read-only";
+        message << " was not considered read-only";
       }
 
       return message.str();
@@ -646,9 +646,9 @@ struct DescribeVisitor {
       }
 
       if (this->annotation.to_boolean()) {
-        message << " is considered write-only";
+        message << " was considered write-only";
       } else {
-        message << " is not considered write-only";
+        message << " was not considered write-only";
       }
 
       return message.str();
@@ -665,7 +665,7 @@ struct DescribeVisitor {
         message << "\"";
       }
 
-      message << " are ";
+      message << " were ";
       for (auto iterator = this->annotation.as_array().cbegin();
            iterator != this->annotation.as_array().cend(); ++iterator) {
         if (std::next(iterator) == this->annotation.as_array().cend()) {
@@ -692,7 +692,7 @@ struct DescribeVisitor {
         message << "\"";
       }
 
-      message << " is " << escape_string(this->annotation.to_string());
+      message << " was " << escape_string(this->annotation.to_string());
       return message.str();
     }
 
@@ -708,7 +708,7 @@ struct DescribeVisitor {
         message << "\"";
       }
 
-      message << " is " << escape_string(this->annotation.to_string());
+      message << " was " << escape_string(this->annotation.to_string());
       return message.str();
     }
 
@@ -723,7 +723,7 @@ struct DescribeVisitor {
         message << "\"";
       }
 
-      message << " is expected to validate against the schema ";
+      message << " was expected to validate against the schema ";
       stringify(this->annotation, message);
       return message.str();
     }
@@ -780,12 +780,12 @@ struct DescribeVisitor {
 
     if (this->target.size() == 0) {
       assert(this->valid);
-      message << "The object is empty and no properties are expected to "
+      message << "The object is empty and no properties were expected to "
                  "validate against the given subschema";
     } else if (this->target.size() == 1) {
       message << "The object property ";
       message << escape_string(this->target.as_object().cbegin()->first);
-      message << " is expected to validate against the given subschema";
+      message << " was expected to validate against the given subschema";
     } else {
       message << "The object properties ";
       for (auto iterator = this->target.as_object().cbegin();
@@ -797,7 +797,7 @@ struct DescribeVisitor {
         }
       }
 
-      message << " are expected to validate against the given subschema";
+      message << " were expected to validate against the given subschema";
     }
 
     return message.str();
