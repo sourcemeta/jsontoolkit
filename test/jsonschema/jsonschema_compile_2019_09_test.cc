@@ -1002,7 +1002,8 @@ TEST(JSONSchema_compile_2019_09, title) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/title", "#/title", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/title", "#/title", "", "My title");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The title of the instance is \"My title\"");
 }
 
 TEST(JSONSchema_compile_2019_09, title_with_core_keywords) {
@@ -1028,7 +1029,8 @@ TEST(JSONSchema_compile_2019_09, title_with_core_keywords) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
       0, "/title", "https://example.com#/title", "", "My title");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The title of the instance is \"My title\"");
 }
 
 TEST(JSONSchema_compile_2019_09, description) {
@@ -1050,7 +1052,8 @@ TEST(JSONSchema_compile_2019_09, description) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/description", "#/description", "",
                                         "My description");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0, "The description of the instance is \"My description\"");
 }
 
 TEST(JSONSchema_compile_2019_09, default) {
@@ -1071,7 +1074,8 @@ TEST(JSONSchema_compile_2019_09, default) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/default", "#/default", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/default", "#/default", "", 1);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The default value of the instance is 1");
 }
 
 TEST(JSONSchema_compile_2019_09, deprecated_1) {
@@ -1093,7 +1097,8 @@ TEST(JSONSchema_compile_2019_09, deprecated_1) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/deprecated", "#/deprecated", "",
                                         true);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance is considered deprecated");
 }
 
 TEST(JSONSchema_compile_2019_09, deprecated_2) {
@@ -1115,7 +1120,8 @@ TEST(JSONSchema_compile_2019_09, deprecated_2) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/deprecated", "#/deprecated", "",
                                         false);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance is not considered deprecated");
 }
 
 TEST(JSONSchema_compile_2019_09, readOnly_1) {
@@ -1137,7 +1143,8 @@ TEST(JSONSchema_compile_2019_09, readOnly_1) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/readOnly", "#/readOnly", "",
                                         false);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance is not considered read-only");
 }
 
 TEST(JSONSchema_compile_2019_09, readOnly_2) {
@@ -1158,7 +1165,8 @@ TEST(JSONSchema_compile_2019_09, readOnly_2) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/readOnly", "#/readOnly", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/readOnly", "#/readOnly", "", true);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance is considered read-only");
 }
 
 TEST(JSONSchema_compile_2019_09, writeOnly_1) {
@@ -1180,7 +1188,8 @@ TEST(JSONSchema_compile_2019_09, writeOnly_1) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/writeOnly", "#/writeOnly", "",
                                         false);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance is not considered write-only");
 }
 
 TEST(JSONSchema_compile_2019_09, writeOnly_2) {
@@ -1202,7 +1211,8 @@ TEST(JSONSchema_compile_2019_09, writeOnly_2) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/writeOnly", "#/writeOnly", "",
                                         true);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance is considered write-only");
 }
 
 TEST(JSONSchema_compile_2019_09, examples) {
@@ -1229,7 +1239,8 @@ TEST(JSONSchema_compile_2019_09, examples) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/examples", "#/examples", "",
                                         examples);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "Examples of the instance are 1, 2, and 3");
 }
 
 TEST(JSONSchema_compile_2019_09, contentEncoding) {
