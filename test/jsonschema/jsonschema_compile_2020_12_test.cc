@@ -799,5 +799,8 @@ TEST(JSONSchema_compile_2020_12, dynamicRef_1) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Jump to a dynamic anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The string value was expected to validate against the first subschema "
+      "in scope that declared the dynamic anchor \"foo\"");
 }

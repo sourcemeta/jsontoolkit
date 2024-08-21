@@ -15,7 +15,11 @@ auto step_value(const SchemaCompilerStepValue<T> &value) -> const T & {
 }
 
 template <typename T> auto step_value(const T &step) -> decltype(auto) {
-  return step_value(step.value);
+  if constexpr (requires { step.value; }) {
+    return step_value(step.value);
+  } else {
+    return step.id;
+  }
 }
 
 auto to_string(const JSON::Type type) -> std::string {
@@ -248,8 +252,18 @@ struct DescribeVisitor {
     return describe_reference(this->target);
   }
 
-  auto operator()(const SchemaCompilerControlDynamicAnchorJump &) const
+  auto operator()(const SchemaCompilerControlDynamicAnchorJump &step) const
       -> std::string {
+    if (this->keyword == "$dynamicRef") {
+      const auto &value{step_value(step)};
+      std::ostringstream message;
+      message << "The " << to_string(target.type())
+              << " value was expected to validate against the first subschema "
+                 "in scope that declared the dynamic anchor "
+              << escape_string(value);
+      return message.str();
+    }
+
     return "Jump to a dynamic anchor";
   }
 
