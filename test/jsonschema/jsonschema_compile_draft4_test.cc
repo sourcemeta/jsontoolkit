@@ -3083,7 +3083,8 @@ TEST(JSONSchema_compile_draft4, minProperties_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target size is expected to be greater than the given number");
+      "The object value was expected to contain at least 2 properties and it "
+      "contained 2 properties: \"bar\", and \"foo\"");
 }
 
 TEST(JSONSchema_compile_draft4, minProperties_3) {
@@ -3109,7 +3110,8 @@ TEST(JSONSchema_compile_draft4, minProperties_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target size is expected to be greater than the given number");
+      "The object value was expected to contain at least 2 properties but it "
+      "contained 1 property: \"foo\"");
 }
 
 TEST(JSONSchema_compile_draft4, maxProperties_1) {
@@ -3151,7 +3153,8 @@ TEST(JSONSchema_compile_draft4, maxProperties_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target size is expected to be less than the given number");
+      "The object value was expected to contain at most 2 properties and it "
+      "contained 2 properties: \"bar\", and \"foo\"");
 }
 
 TEST(JSONSchema_compile_draft4, maxProperties_3) {
@@ -3177,7 +3180,8 @@ TEST(JSONSchema_compile_draft4, maxProperties_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target size is expected to be less than the given number");
+      "The object value was expected to contain at most 2 properties but it "
+      "contained 3 properties: \"bar\", \"baz\", and \"foo\"");
 }
 
 TEST(JSONSchema_compile_draft4, minimum_1) {

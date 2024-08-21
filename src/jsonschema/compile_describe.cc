@@ -1020,6 +1020,44 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "minProperties") {
+      assert(this->target.is_object());
+      std::ostringstream message;
+      const auto minimum{step_value(step) + 1};
+      message << "The object value was expected to contain at least "
+              << minimum;
+      assert(minimum > 0);
+      if (minimum == 1) {
+        message << " property";
+      } else {
+        message << " properties";
+      }
+
+      if (this->valid) {
+        message << " and";
+      } else {
+        message << " but";
+      }
+
+      message << " it contained " << this->target.size();
+      if (this->target.size() == 1) {
+        message << " property: ";
+        message << escape_string(this->target.as_object().cbegin()->first);
+      } else {
+        message << " properties: ";
+        for (auto iterator = this->target.as_object().cbegin();
+             iterator != this->target.as_object().cend(); ++iterator) {
+          if (std::next(iterator) == this->target.as_object().cend()) {
+            message << "and " << escape_string(iterator->first);
+          } else {
+            message << escape_string(iterator->first) << ", ";
+          }
+        }
+      }
+
+      return message.str();
+    }
+
     return "The target size is expected to be greater than the given number";
   }
 
@@ -1085,6 +1123,43 @@ struct DescribeVisitor {
         message << " item";
       } else {
         message << " items";
+      }
+
+      return message.str();
+    }
+
+    if (this->keyword == "maxProperties") {
+      assert(this->target.is_object());
+      std::ostringstream message;
+      const auto maximum{step_value(step) - 1};
+      message << "The object value was expected to contain at most " << maximum;
+      assert(maximum > 0);
+      if (maximum == 1) {
+        message << " property";
+      } else {
+        message << " properties";
+      }
+
+      if (this->valid) {
+        message << " and";
+      } else {
+        message << " but";
+      }
+
+      message << " it contained " << this->target.size();
+      if (this->target.size() == 1) {
+        message << " property: ";
+        message << escape_string(this->target.as_object().cbegin()->first);
+      } else {
+        message << " properties: ";
+        for (auto iterator = this->target.as_object().cbegin();
+             iterator != this->target.as_object().cend(); ++iterator) {
+          if (std::next(iterator) == this->target.as_object().cend()) {
+            message << "and " << escape_string(iterator->first);
+          } else {
+            message << escape_string(iterator->first) << ", ";
+          }
+        }
       }
 
       return message.str();
