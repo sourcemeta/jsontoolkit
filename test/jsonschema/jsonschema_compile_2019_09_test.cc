@@ -1410,7 +1410,10 @@ TEST(JSONSchema_compile_2019_09, items_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "Every item in the array value was expected to "
                                "validate against the given subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, items_3) {
@@ -1639,7 +1642,10 @@ TEST(JSONSchema_compile_2019_09, items_9) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The first 2 items of the array value were expected to validate against "
@@ -1709,7 +1715,10 @@ TEST(JSONSchema_compile_2019_09, additionalItems_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "Every item in the array value was expected to "
                                "validate against the given subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalItems_3) {
@@ -1749,7 +1758,10 @@ TEST(JSONSchema_compile_2019_09, additionalItems_3) {
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The first 2 items of the array value were expected to validate against "
@@ -2185,7 +2197,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_3) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "Every item in the array value was expected to "
                                "validate against the given subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_4) {
@@ -2262,7 +2277,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_5) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The first item of the array value was expected to validate against the "
@@ -2757,7 +2775,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
       4, "/items", "https://example.com/schema#/items", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Jump to a dynamic anchor");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The first item of the array value was expected to validate against the "
@@ -2765,7 +2786,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "Every item in the array value was expected to "
                                "validate against the given subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_6) {
