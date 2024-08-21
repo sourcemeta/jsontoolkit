@@ -123,9 +123,19 @@ struct DescribeVisitor {
   const JSON &target;
   const JSON &annotation;
 
-  auto operator()(const SchemaCompilerLogicalOr &) const -> std::string {
-    return "The target is expected to match at least one of the given "
-           "assertions";
+  auto operator()(const SchemaCompilerLogicalOr &step) const -> std::string {
+    assert(!step.children.empty());
+    std::ostringstream message;
+    message << "The " << to_string(this->target.type())
+            << " value was expected to validate against ";
+    if (step.children.size() > 1) {
+      message << "at least one of the " << step.children.size()
+              << " given subschemas";
+    } else {
+      message << "the given subschema";
+    }
+
+    return message.str();
   }
 
   auto operator()(const SchemaCompilerLogicalAnd &step) const -> std::string {
