@@ -1263,7 +1263,8 @@ TEST(JSONSchema_compile_2019_09, contentEncoding) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/contentEncoding",
                                         "#/contentEncoding", "", "base64");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0, "The content encoding of the instance is \"base64\"");
 }
 
 TEST(JSONSchema_compile_2019_09, contentMediaType) {
@@ -1286,7 +1287,9 @@ TEST(JSONSchema_compile_2019_09, contentMediaType) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
       0, "/contentMediaType", "#/contentMediaType", "", "application/json");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The content media type of the instance is \"application/json\"");
 }
 
 TEST(JSONSchema_compile_2019_09, contentSchema) {
@@ -1313,7 +1316,10 @@ TEST(JSONSchema_compile_2019_09, contentSchema) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/contentSchema", "#/contentSchema",
                                         "", content_schema);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "When decoded, the instance is expected to validate against the schema "
+      "{\"type\":\"string\"}");
 }
 
 TEST(JSONSchema_compile_2019_09, unknown_1) {

@@ -483,6 +483,54 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "contentEncoding") {
+      assert(this->annotation.is_string());
+      std::ostringstream message;
+      message << "The content encoding of the";
+      if (this->instance_location.empty()) {
+        message << " instance";
+      } else {
+        message << " instance location \"";
+        stringify(this->instance_location, message);
+        message << "\"";
+      }
+
+      message << " is " << escape_string(this->annotation.to_string());
+      return message.str();
+    }
+
+    if (this->keyword == "contentMediaType") {
+      assert(this->annotation.is_string());
+      std::ostringstream message;
+      message << "The content media type of the";
+      if (this->instance_location.empty()) {
+        message << " instance";
+      } else {
+        message << " instance location \"";
+        stringify(this->instance_location, message);
+        message << "\"";
+      }
+
+      message << " is " << escape_string(this->annotation.to_string());
+      return message.str();
+    }
+
+    if (this->keyword == "contentSchema") {
+      std::ostringstream message;
+      message << "When decoded, the";
+      if (this->instance_location.empty()) {
+        message << " instance";
+      } else {
+        message << " instance location \"";
+        stringify(this->instance_location, message);
+        message << "\"";
+      }
+
+      message << " is expected to validate against the schema ";
+      stringify(this->annotation, message);
+      return message.str();
+    }
+
     return "Emit an annotation";
   }
 
