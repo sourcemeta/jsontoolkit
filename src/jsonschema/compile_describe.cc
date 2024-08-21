@@ -367,10 +367,21 @@ struct DescribeVisitor {
     return "The target is expected to match all of the given assertions";
   }
 
-  auto operator()(const SchemaCompilerLogicalXor &) const -> std::string {
-    return "The target is expected to match one and only one of the given "
-           "assertions";
+  auto operator()(const SchemaCompilerLogicalXor &step) const -> std::string {
+    assert(!step.children.empty());
+    std::ostringstream message;
+    message << "The " << to_string(this->target.type())
+            << " value was expected to validate against ";
+    if (step.children.size() > 1) {
+      message << "one and only one of the " << step.children.size()
+              << " given subschemas";
+    } else {
+      message << "the given subschema";
+    }
+
+    return message.str();
   }
+
   auto operator()(const SchemaCompilerLogicalTry &) const -> std::string {
     if (this->keyword == "if") {
       std::ostringstream message;

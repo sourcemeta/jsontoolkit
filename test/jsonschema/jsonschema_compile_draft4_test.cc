@@ -2351,8 +2351,8 @@ TEST(JSONSchema_compile_draft4, oneOf_1) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target is expected to match one and only one "
-      "of the given assertions");
+      "The string value was expected to validate against one and only one of "
+      "the 4 given subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, oneOf_2) {
@@ -2401,8 +2401,8 @@ TEST(JSONSchema_compile_draft4, oneOf_2) {
                                "The value was expected to be of type number");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match one and only one "
-      "of the given assertions");
+      "The number value was expected to validate against one and only one of "
+      "the 4 given subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, oneOf_3) {
@@ -2457,8 +2457,40 @@ TEST(JSONSchema_compile_draft4, oneOf_3) {
                                "but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
-      "The target is expected to match one and only one "
-      "of the given assertions");
+      "The integer value was expected to validate against one and only one of "
+      "the 4 given subschemas");
+}
+
+TEST(JSONSchema_compile_draft4, oneOf_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "oneOf": [
+      { "type": "number" }
+    ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{3.14};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalXor, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrictAny, "/oneOf/0/type",
+                     "#/oneOf/0/type", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrictAny, "/oneOf/0/type",
+                              "#/oneOf/0/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalXor, "/oneOf", "#/oneOf", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type number");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The number value was expected to validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft4, dependencies_1) {
