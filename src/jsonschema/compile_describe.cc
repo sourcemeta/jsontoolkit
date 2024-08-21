@@ -364,6 +364,14 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "$recursiveRef") {
+      std::ostringstream message;
+      message << "The " << to_string(target.type())
+              << " value was expected to validate against the first subschema "
+                 "in scope that declared a recursive anchor";
+      return message.str();
+    }
+
     return "Jump to a dynamic anchor";
   }
 
