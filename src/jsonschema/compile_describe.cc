@@ -331,6 +331,33 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "prefixItems" && this->annotation.is_boolean() &&
+        this->annotation.to_boolean()) {
+      assert(this->target.is_array());
+      std::ostringstream message;
+      message << "Every item of the array value validated against the given "
+                 "positional subschemas";
+      return message.str();
+    }
+
+    if (this->keyword == "prefixItems" && this->annotation.is_integer()) {
+      assert(this->target.is_array());
+      assert(this->annotation.is_positive());
+      std::ostringstream message;
+      if (this->annotation.to_integer() == 0) {
+        message << "The first item of the array value successfully validated "
+                   "against the first "
+                   "positional subschema";
+      } else {
+        message << "The first " << this->annotation.to_integer() + 1
+                << " items of the array value successfully validated against "
+                   "the given "
+                   "positional subschemas";
+      }
+
+      return message.str();
+    }
+
     return "Emit an annotation";
   }
 
