@@ -3303,10 +3303,9 @@ TEST(JSONSchema_compile_draft4, maximum_2) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionLessEqual, "/maximum", "#/maximum",
                               "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be less than or "
-      "equal to the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The number value 1.9 was expected to be less "
+                               "than or equal to the integer 2");
 }
 
 TEST(JSONSchema_compile_draft4, maximum_3) {
@@ -3328,10 +3327,9 @@ TEST(JSONSchema_compile_draft4, maximum_3) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionLessEqual, "/maximum", "#/maximum",
                               "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be less than or "
-      "equal to the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The integer value 2 was expected to be less "
+                               "than or equal to the integer 2");
 }
 
 TEST(JSONSchema_compile_draft4, maximum_4) {
@@ -3353,10 +3351,9 @@ TEST(JSONSchema_compile_draft4, maximum_4) {
   EVALUATE_TRACE_POST_FAILURE(0, AssertionLessEqual, "/maximum", "#/maximum",
                               "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be less than or "
-      "equal to the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The number value 2.1 was expected to be less "
+                               "than or equal to the integer 2");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMinimum_1) {
@@ -3500,10 +3497,9 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_3) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionLessEqual, "/maximum", "#/maximum",
                               "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be less than or "
-      "equal to the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The integer value 2 was expected to be less "
+                               "than or equal to the integer 2");
 }
 
 TEST(JSONSchema_compile_draft4, multipleOf_1) {
