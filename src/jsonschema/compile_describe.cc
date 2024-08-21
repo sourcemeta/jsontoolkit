@@ -1348,11 +1348,21 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  // TODO: Revise these defaults
+  auto operator()(const SchemaCompilerAssertionStringType &step) const
+      -> std::string {
+    assert(this->target.is_string());
+    std::ostringstream message;
+    message << "The string value " << escape_string(this->target.to_string())
+            << " was expected to represent a valid";
+    switch (step_value(step)) {
+      case SchemaCompilerValueStringType::URI:
+        message << " URI";
+        break;
+      default:
+        return unknown();
+    }
 
-  auto
-  operator()(const SchemaCompilerAssertionStringType &) const -> std::string {
-    return "The target string is expected to match the given logical type";
+    return message.str();
   }
 
   // Internal steps that should never be described
