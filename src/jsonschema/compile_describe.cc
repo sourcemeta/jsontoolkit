@@ -115,6 +115,12 @@ auto is_within_keyword(const Pointer &evaluate_path,
                      });
 }
 
+auto unknown() -> std::string {
+  // In theory we should never get here
+  assert(false);
+  return "<unknown>";
+}
+
 struct DescribeVisitor {
   const bool valid;
   const Pointer &evaluate_path;
@@ -383,14 +389,11 @@ struct DescribeVisitor {
   }
 
   auto operator()(const SchemaCompilerLogicalTry &) const -> std::string {
-    if (this->keyword == "if") {
-      std::ostringstream message;
-      message << "The " << to_string(this->target.type())
-              << " value was tested against the conditional subschema";
-      return message.str();
-    }
-
-    return "The target might match all of the given assertions";
+    assert(this->keyword == "if");
+    std::ostringstream message;
+    message << "The " << to_string(this->target.type())
+            << " value was tested against the conditional subschema";
+    return message.str();
   }
 
   auto operator()(const SchemaCompilerLogicalNot &) const -> std::string {
@@ -403,29 +406,6 @@ struct DescribeVisitor {
     }
 
     return message.str();
-  }
-
-  auto
-  operator()(const SchemaCompilerInternalContainer &) const -> std::string {
-    return "Internal";
-  }
-  auto
-  operator()(const SchemaCompilerInternalAnnotation &) const -> std::string {
-    return "The target was annotated with the given value";
-  }
-  auto operator()(const SchemaCompilerInternalNoAdjacentAnnotation &) const
-      -> std::string {
-    return "The target was not annotated with the given value at the same "
-           "schema location";
-  }
-  auto
-  operator()(const SchemaCompilerInternalNoAnnotation &) const -> std::string {
-    return "The target was not annotated with the given value";
-  }
-  auto
-  operator()(const SchemaCompilerInternalDefinesAll &) const -> std::string {
-    return "The target object is expected to define all of the given "
-           "properties";
   }
 
   auto operator()(const SchemaCompilerControlLabel &) const -> std::string {
@@ -452,15 +432,12 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    if (this->keyword == "$recursiveRef") {
-      std::ostringstream message;
-      message << "The " << to_string(target.type())
-              << " value was expected to validate against the first subschema "
-                 "in scope that declared a recursive anchor";
-      return message.str();
-    }
-
-    return "Jump to a dynamic anchor";
+    assert(this->keyword == "$recursiveRef");
+    std::ostringstream message;
+    message << "The " << to_string(target.type())
+            << " value was expected to validate against the first subschema "
+               "in scope that declared a recursive anchor";
+    return message.str();
   }
 
   auto operator()(const SchemaCompilerAnnotationPublic &) const -> std::string {
@@ -740,13 +717,6 @@ struct DescribeVisitor {
   }
 
   auto operator()(const SchemaCompilerLoopProperties &) const -> std::string {
-    if (this->keyword == "additionalProperties") {
-      std::ostringstream message;
-      message << "The object properties not covered by other adjacent object "
-                 "keywords were expected to validate against this subschema";
-      return message.str();
-    }
-
     if (this->keyword == "unevaluatedProperties") {
       std::ostringstream message;
       message << "The object properties not covered by other object "
@@ -754,40 +724,41 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    return "Loop over the properties of the target object";
+    assert(this->keyword == "additionalProperties");
+    std::ostringstream message;
+    message << "The object properties not covered by other adjacent object "
+               "keywords were expected to validate against this subschema";
+    return message.str();
   }
 
   auto operator()(const SchemaCompilerLoopKeys &) const -> std::string {
-    if (this->keyword == "propertyNames") {
-      assert(this->target.is_object());
-      std::ostringstream message;
+    assert(this->keyword == "propertyNames");
+    assert(this->target.is_object());
+    std::ostringstream message;
 
-      if (this->target.size() == 0) {
-        assert(this->valid);
-        message << "The object is empty and no properties are expected to "
-                   "validate against the given subschema";
-      } else if (this->target.size() == 1) {
-        message << "The object property ";
-        message << escape_string(this->target.as_object().cbegin()->first);
-        message << " is expected to validate against the given subschema";
-      } else {
-        message << "The object properties ";
-        for (auto iterator = this->target.as_object().cbegin();
-             iterator != this->target.as_object().cend(); ++iterator) {
-          if (std::next(iterator) == this->target.as_object().cend()) {
-            message << "and " << escape_string(iterator->first);
-          } else {
-            message << escape_string(iterator->first) << ", ";
-          }
+    if (this->target.size() == 0) {
+      assert(this->valid);
+      message << "The object is empty and no properties are expected to "
+                 "validate against the given subschema";
+    } else if (this->target.size() == 1) {
+      message << "The object property ";
+      message << escape_string(this->target.as_object().cbegin()->first);
+      message << " is expected to validate against the given subschema";
+    } else {
+      message << "The object properties ";
+      for (auto iterator = this->target.as_object().cbegin();
+           iterator != this->target.as_object().cend(); ++iterator) {
+        if (std::next(iterator) == this->target.as_object().cend()) {
+          message << "and " << escape_string(iterator->first);
+        } else {
+          message << escape_string(iterator->first) << ", ";
         }
-
-        message << " are expected to validate against the given subschema";
       }
 
-      return message.str();
+      message << " are expected to validate against the given subschema";
     }
 
-    return "Loop over the property keys of the target object";
+    return message.str();
   }
 
   auto operator()(const SchemaCompilerLoopItems &step) const -> std::string {
@@ -858,14 +829,6 @@ struct DescribeVisitor {
     }
 
     return message.str();
-  }
-
-  auto operator()(const SchemaCompilerAssertionFail &) const -> std::string {
-    if (this->keyword == "contains") {
-      return "The constraints declared for this keyword are not satisfiable";
-    }
-
-    return "Abort evaluation on failure";
   }
 
   auto
@@ -1079,7 +1042,7 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    return "The target size is expected to be greater than the given number";
+    return unknown();
   }
 
   auto
@@ -1186,12 +1149,7 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    return "The target size is expected to be less than the given number";
-  }
-
-  auto
-  operator()(const SchemaCompilerAssertionSizeEqual &) const -> std::string {
-    return "The target size is expected to be equal to the given number";
+    return unknown();
   }
 
   auto
@@ -1314,11 +1272,6 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionStringType &) const -> std::string {
-    return "The target string is expected to match the given logical type";
-  }
-
   auto operator()(const SchemaCompilerAssertionEqualsAny &step) const
       -> std::string {
     std::ostringstream message;
@@ -1351,6 +1304,50 @@ struct DescribeVisitor {
     }
 
     return message.str();
+  }
+
+  // TODO: Revise these defaults
+
+  auto operator()(const SchemaCompilerAssertionFail &) const -> std::string {
+    if (this->keyword == "contains") {
+      return "The constraints declared for this keyword are not satisfiable";
+    }
+
+    return "Abort evaluation on failure";
+  }
+
+  auto
+  operator()(const SchemaCompilerAssertionStringType &) const -> std::string {
+    return "The target string is expected to match the given logical type";
+  }
+
+  auto
+  operator()(const SchemaCompilerAssertionSizeEqual &) const -> std::string {
+    return "The target size is expected to be equal to the given number";
+  }
+
+  // Internal steps that should never be described
+  // TODO: Can we get rid of these somehow?
+
+  auto
+  operator()(const SchemaCompilerInternalContainer &) const -> std::string {
+    return unknown();
+  }
+  auto
+  operator()(const SchemaCompilerInternalAnnotation &) const -> std::string {
+    return unknown();
+  }
+  auto operator()(const SchemaCompilerInternalNoAdjacentAnnotation &) const
+      -> std::string {
+    return unknown();
+  }
+  auto
+  operator()(const SchemaCompilerInternalNoAnnotation &) const -> std::string {
+    return unknown();
+  }
+  auto
+  operator()(const SchemaCompilerInternalDefinesAll &) const -> std::string {
+    return unknown();
   }
 };
 
