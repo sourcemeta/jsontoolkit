@@ -655,7 +655,14 @@ struct DescribeVisitor {
     if (this->keyword == "additionalProperties") {
       std::ostringstream message;
       message << "The object properties not covered by other adjacent object "
-                 "keywords are expected to validated against this subschema";
+                 "keywords were expected to validated against this subschema";
+      return message.str();
+    }
+
+    if (this->keyword == "unevaluatedProperties") {
+      std::ostringstream message;
+      message << "The object properties not covered by other object "
+                 "keywords were expected to validated against this subschema";
       return message.str();
     }
 

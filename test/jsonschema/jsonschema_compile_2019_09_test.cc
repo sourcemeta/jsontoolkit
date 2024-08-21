@@ -301,10 +301,10 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_1_fast) {
       instance, 3,
       "The object property \"foo\" successfully validated against the "
       "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_1_exhaustive) {
@@ -360,10 +360,10 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_1_exhaustive) {
       instance, 3,
       "The object property \"foo\" successfully validated against the "
       "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_2_fast) {
@@ -427,10 +427,10 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_fast) {
       instance, 4,
       "The object property \"bar\" successfully validated against the "
       "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 5,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_2_exhaustive) {
@@ -494,10 +494,10 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_exhaustive) {
       instance, 4,
       "The object property \"bar\" successfully validated against the "
       "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 5,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_3_fast) {
@@ -532,10 +532,10 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_3_fast) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The value was expected to be of type integer but it was of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_3_exhaustive) {
@@ -584,10 +584,10 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_3_exhaustive) {
       instance, 2,
       "The object property \"foo\" successfully validated against the "
       "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_1) {
@@ -2077,8 +2077,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_1) {
       instance, 4,
       "The object property \"bar\" successfully validated against the "
       "subschema for unevaluated properties");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object properties not covered by other object keywords were "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
@@ -2152,8 +2154,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
       instance, 5,
       "The object property \"bar\" successfully validated against the "
       "subschema for unevaluated properties");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 6,
+      "The object properties not covered by other object keywords were "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
@@ -2220,8 +2224,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean "
                                "but it was of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object properties not covered by other object keywords were "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_1) {
@@ -2668,10 +2674,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_1) {
       instance, 1,
       "The object property \"foo\" successfully validated against the "
       "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
@@ -2732,10 +2738,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
       instance, 2,
       "The object property \"foo\" successfully validated against the "
       "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_3) {
@@ -2788,10 +2794,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_3) {
       instance, 1,
       "The object property \"foo\" successfully validated against the "
       "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
@@ -2873,18 +2879,18 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
       instance, 2,
       "The object property \"bar\" successfully validated against the "
       "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The object property \"foo\" successfully validated against the "
       "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 5,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
@@ -3000,10 +3006,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_6) {
       instance, 1,
       "The object property \"foo\" successfully validated against the "
       "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, reference_from_unknown_keyword) {
