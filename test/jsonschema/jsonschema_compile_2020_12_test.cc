@@ -108,7 +108,8 @@ TEST(JSONSchema_compile_2020_12, items_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
 }
 
@@ -148,7 +149,8 @@ TEST(JSONSchema_compile_2020_12, items_3) {
       instance, 1,
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "Loop over the items of the target array");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_2020_12, items_4) {
@@ -257,8 +259,10 @@ TEST(JSONSchema_compile_2020_12, items_5) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
-                               "Loop over the items of the target array");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 6,
+      "Every item in the array value except for the first 2 was expected to "
+      "validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 7, "Emit an annotation");
 }
 
@@ -315,8 +319,10 @@ TEST(JSONSchema_compile_2020_12, items_6) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The value was expected to be of type string but it was of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the items of the target array");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "Every item in the array value except for the first 2 was expected to "
+      "validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_2020_12, prefixItems_1) {
