@@ -761,6 +761,10 @@ struct DescribeVisitor {
   }
 
   auto operator()(const SchemaCompilerAssertionFail &) const -> std::string {
+    if (this->keyword == "contains") {
+      return "The constraints declared for this keyword are not satisfiable";
+    }
+
     return "Abort evaluation on failure";
   }
 
