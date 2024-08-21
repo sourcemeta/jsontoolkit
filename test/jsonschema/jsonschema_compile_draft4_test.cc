@@ -2625,7 +2625,7 @@ TEST(JSONSchema_compile_draft4, enum_1) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target document is expected to be one of the given values");
+      "The object value {} was expected to equal one of the 3 declared values");
 }
 
 TEST(JSONSchema_compile_draft4, enum_2) {
@@ -2649,7 +2649,8 @@ TEST(JSONSchema_compile_draft4, enum_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target document is expected to be one of the given values");
+      "The object value {\"foo\":1} was expected to equal one of the following "
+      "values: 1, \"foo\", and {}");
 }
 
 TEST(JSONSchema_compile_draft4, enum_3) {
@@ -2671,7 +2672,8 @@ TEST(JSONSchema_compile_draft4, enum_3) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/enum", "#/enum", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target is expected to be equal to the given value");
+      instance, 0,
+      "The integer value 1 was expected to equal the integer constant 1");
 }
 
 TEST(JSONSchema_compile_draft4, uniqueItems_1) {
