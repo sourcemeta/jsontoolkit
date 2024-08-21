@@ -1321,14 +1321,13 @@ struct DescribeVisitor {
     return "The target string is expected to match the given logical type";
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionSizeEqual &) const -> std::string {
-    return "The target size is expected to be equal to the given number";
-  }
-
   // Internal steps that should never be described
   // TODO: Can we get rid of these somehow?
 
+  auto
+  operator()(const SchemaCompilerInternalSizeEqual &) const -> std::string {
+    return unknown();
+  }
   auto
   operator()(const SchemaCompilerInternalContainer &) const -> std::string {
     return unknown();
