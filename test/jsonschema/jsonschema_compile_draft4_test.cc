@@ -2265,7 +2265,8 @@ TEST(JSONSchema_compile_draft4, anyOf_1) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match at least one of the given assertions");
+      "The integer value was expected to validate against at least one of the "
+      "3 given subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, anyOf_2) {
@@ -2314,7 +2315,8 @@ TEST(JSONSchema_compile_draft4, anyOf_2) {
       "The value was expected to be of type number but it was of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match at least one of the given assertions");
+      "The boolean value was expected to validate against at least one of the "
+      "3 given subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, oneOf_1) {
