@@ -322,6 +322,15 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "items" && this->annotation.is_boolean() &&
+        this->annotation.to_boolean()) {
+      assert(this->target.is_array());
+      std::ostringstream message;
+      message << "At least one item of the array value successfully validated "
+                 "against the given subschema";
+      return message.str();
+    }
+
     return "Emit an annotation";
   }
 
