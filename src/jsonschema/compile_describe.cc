@@ -202,6 +202,91 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "dependentRequired") {
+      assert(!step.children.empty());
+      assert(this->target.is_object());
+      std::set<std::string> present;
+      std::set<std::string> all_dependencies;
+      std::set<std::string> required;
+      for (const auto &child : step.children) {
+        assert(std::holds_alternative<SchemaCompilerInternalDefinesAll>(child));
+        const auto &substep{std::get<SchemaCompilerInternalDefinesAll>(child)};
+        assert(substep.condition.size() == 1);
+        assert(std::holds_alternative<SchemaCompilerAssertionDefines>(
+            substep.condition.front()));
+        const auto &define{std::get<SchemaCompilerAssertionDefines>(
+            substep.condition.front())};
+        const auto &property{step_value(define)};
+        all_dependencies.insert(property);
+        if (!this->target.defines(property)) {
+          continue;
+        }
+
+        present.insert(property);
+        const auto &requirements{step_value(substep)};
+        for (const auto &requirement : requirements) {
+          if (this->valid || !this->target.defines(requirement)) {
+            required.insert(requirement);
+          }
+        }
+      }
+
+      std::ostringstream message;
+
+      if (present.empty()) {
+        message << "The object value did not define the";
+        assert(!all_dependencies.empty());
+        if (all_dependencies.size() == 1) {
+          message << " property "
+                  << escape_string(*(all_dependencies.cbegin()));
+        } else {
+          message << " properties ";
+          for (auto iterator = all_dependencies.cbegin();
+               iterator != all_dependencies.cend(); ++iterator) {
+            if (std::next(iterator) == all_dependencies.cend()) {
+              message << "or " << escape_string(*iterator);
+            } else {
+              message << escape_string(*iterator) << ", ";
+            }
+          }
+        }
+
+        return message.str();
+      } else if (present.size() == 1) {
+        message << "Because the object value defines the";
+        message << " property " << escape_string(*(present.cbegin()));
+      } else {
+        message << "Because the object value defines the";
+        message << " properties ";
+        for (auto iterator = present.cbegin(); iterator != present.cend();
+             ++iterator) {
+          if (std::next(iterator) == present.cend()) {
+            message << "and " << escape_string(*iterator);
+          } else {
+            message << escape_string(*iterator) << ", ";
+          }
+        }
+      }
+
+      assert(!required.empty());
+      message << ", it was also expected to define the";
+      if (required.size() == 1) {
+        message << " property " << escape_string(*(required.cbegin()));
+      } else {
+        message << " properties ";
+        for (auto iterator = required.cbegin(); iterator != required.cend();
+             ++iterator) {
+          if (std::next(iterator) == required.cend()) {
+            message << "and " << escape_string(*iterator);
+          } else {
+            message << escape_string(*iterator) << ", ";
+          }
+        }
+      }
+
+      return message.str();
+    }
+
     return "The target is expected to match all of the given assertions";
   }
 
@@ -954,6 +1039,8 @@ struct DescribeVisitor {
 
 namespace sourcemeta::jsontoolkit {
 
+// TODO: What will unlock even better error messages is being able to
+// get the subschema being evaluated along with the keyword
 auto describe(const bool valid, const SchemaCompilerTemplate::value_type &step,
               const Pointer &evaluate_path, const Pointer &instance_location,
               const JSON &instance, const JSON &annotation) -> std::string {

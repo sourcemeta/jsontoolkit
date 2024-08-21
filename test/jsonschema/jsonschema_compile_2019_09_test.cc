@@ -101,7 +101,94 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target is expected to match all of the given assertions");
+      "Because the object value defines the property \"foo\", it was also "
+      "expected to define the properties \"bar\", and \"baz\"");
+}
+
+TEST(JSONSchema_compile_2019_09, dependentRequired_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "dependentRequired": {
+      "foo": [ "bar", "baz" ],
+      "qux": [ "extra" ]
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentRequired", "#/dependentRequired",
+                     "");
+  EVALUATE_TRACE_POST_FAILURE(0, LogicalAnd, "/dependentRequired",
+                              "#/dependentRequired", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "Because the object value defines the property \"foo\", it was also "
+      "expected to define the property \"baz\"");
+}
+
+TEST(JSONSchema_compile_2019_09, dependentRequired_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "dependentRequired": {
+      "foo": [ "bar", "baz" ],
+      "qux": [ "extra" ]
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"none\": true }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentRequired", "#/dependentRequired",
+                     "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependentRequired",
+                              "#/dependentRequired", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The object value did not define the properties \"foo\", or \"qux\"");
+}
+
+TEST(JSONSchema_compile_2019_09, dependentRequired_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "dependentRequired": {
+      "foo": [ "bar", "baz" ]
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"none\": true }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentRequired", "#/dependentRequired",
+                     "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependentRequired",
+                              "#/dependentRequired", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0, "The object value did not define the property \"foo\"");
 }
 
 TEST(JSONSchema_compile_2019_09, dependentSchemas_1) {
