@@ -204,12 +204,20 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_1_fast) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"bar\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_1_exhaustive) {
@@ -255,12 +263,20 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_1_exhaustive) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"bar\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_2_fast) {
@@ -320,9 +336,14 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_fast) {
                                "against the single defined property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object property \"bar\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_2_exhaustive) {
@@ -382,9 +403,14 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_exhaustive) {
                                "against the single defined property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object property \"bar\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_3_fast) {
@@ -419,8 +445,10 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_3_fast) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The value was expected to be of type integer but it was of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_3_exhaustive) {
@@ -465,9 +493,14 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_3_exhaustive) {
       "The value was expected to be of type integer but it was of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_1) {
@@ -2437,9 +2470,14 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_1) {
       "https://example.com/schema#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Jump to a dynamic anchor");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
@@ -2493,9 +2531,14 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
                                "The target number is expected to be greater "
                                "than or equal to the given number");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Jump to a dynamic anchor");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_3) {
@@ -2544,9 +2587,14 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_3) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The target number is expected to be greater "
                                "than or equal to the given number");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
@@ -2621,12 +2669,22 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
                                "The target number is expected to be greater "
                                "than or equal to the given number");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Jump to a dynamic anchor");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the properties of the target object");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object property \"bar\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
@@ -2724,9 +2782,14 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_6) {
                               "#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Jump to a dynamic anchor");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object properties not covered by other adjacent object keywords are "
+      "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, reference_from_unknown_keyword) {
