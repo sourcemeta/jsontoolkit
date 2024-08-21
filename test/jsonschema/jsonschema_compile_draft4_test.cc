@@ -1892,7 +1892,8 @@ TEST(JSONSchema_compile_draft4, items_5) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, items_6) {
@@ -1923,7 +1924,8 @@ TEST(JSONSchema_compile_draft4, items_6) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, items_7) {
@@ -1960,7 +1962,8 @@ TEST(JSONSchema_compile_draft4, items_7) {
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, items_8) {
@@ -1998,7 +2001,8 @@ TEST(JSONSchema_compile_draft4, items_8) {
                                "but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, additionalItems_1) {
@@ -2102,7 +2106,8 @@ TEST(JSONSchema_compile_draft4, additionalItems_3) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, additionalItems_4) {
@@ -2154,7 +2159,8 @@ TEST(JSONSchema_compile_draft4, additionalItems_4) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
@@ -2210,7 +2216,8 @@ TEST(JSONSchema_compile_draft4, additionalItems_5) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The value was expected to be of type string but it was of type integer");
