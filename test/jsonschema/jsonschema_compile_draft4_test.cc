@@ -1409,10 +1409,10 @@ TEST(JSONSchema_compile_draft4, additionalProperties_1) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_2) {
@@ -1468,10 +1468,10 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
                                "against the single defined property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema")
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema")
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_3) {
@@ -1523,10 +1523,10 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_4) {
@@ -1613,10 +1613,10 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
                                "against the single defined property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 7,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 7,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validated against this subschema");
 }
 
 TEST(JSONSchema_compile_draft4, not_1) {
@@ -1745,8 +1745,8 @@ TEST(JSONSchema_compile_draft4, not_3) {
                                "but it was of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
-      "The object properties not covered by other adjacent object keywords are "
-      "expected to validated against this subschema");
+      "The object properties not covered by other adjacent object keywords "
+      "were expected to validated against this subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The object value was expected to not validate "
                                "against the given subschema");
