@@ -1541,7 +1541,10 @@ TEST(JSONSchema_compile_2019_09, items_6) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The first 2 items of the array value were expected to validate against "
@@ -1581,7 +1584,10 @@ TEST(JSONSchema_compile_2019_09, items_7) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value successfully validated against the "
+      "given positional subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The first 2 items of the array value were expected to validate against "
@@ -1837,7 +1843,10 @@ TEST(JSONSchema_compile_2019_09, additionalItems_4) {
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value successfully validated against the "
+      "given positional subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The first 2 items of the array value were expected to validate against "
@@ -1850,7 +1859,10 @@ TEST(JSONSchema_compile_2019_09, additionalItems_4) {
       instance, 6,
       "Every item in the array value except for the first 2 was expected to "
       "validate against the given subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 7, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 7,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalItems_5) {
@@ -1897,7 +1909,10 @@ TEST(JSONSchema_compile_2019_09, additionalItems_5) {
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value successfully validated against the "
+      "given positional subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The first 2 items of the array value were expected to validate against "
@@ -2263,7 +2278,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The first 2 items of the array value were expected to validate against "
@@ -2355,7 +2373,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_6) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The first item of the array value was expected to validate against the "
@@ -2420,7 +2441,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The first item of the array value was expected to validate against the "
@@ -2484,7 +2508,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The first item of the array value was expected to validate against the "

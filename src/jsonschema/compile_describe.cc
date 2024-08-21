@@ -332,8 +332,8 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    if (this->keyword == "items" && this->annotation.is_boolean() &&
-        this->annotation.to_boolean()) {
+    if ((this->keyword == "items" || this->keyword == "additionalItems") &&
+        this->annotation.is_boolean() && this->annotation.to_boolean()) {
       assert(this->target.is_array());
       std::ostringstream message;
       message << "At least one item of the array value successfully validated "
@@ -359,7 +359,8 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    if (this->keyword == "prefixItems" && this->annotation.is_integer()) {
+    if ((this->keyword == "prefixItems" || this->keyword == "items") &&
+        this->annotation.is_integer()) {
       assert(this->target.is_array());
       assert(this->annotation.is_positive());
       std::ostringstream message;
