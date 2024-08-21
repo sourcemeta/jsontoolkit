@@ -655,14 +655,14 @@ struct DescribeVisitor {
     if (this->keyword == "additionalProperties") {
       std::ostringstream message;
       message << "The object properties not covered by other adjacent object "
-                 "keywords were expected to validated against this subschema";
+                 "keywords were expected to validate against this subschema";
       return message.str();
     }
 
     if (this->keyword == "unevaluatedProperties") {
       std::ostringstream message;
       message << "The object properties not covered by other object "
-                 "keywords were expected to validated against this subschema";
+                 "keywords were expected to validate against this subschema";
       return message.str();
     }
 
@@ -717,10 +717,15 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto operator()(const SchemaCompilerLoopItemsFromAnnotationIndex &) const
+  auto operator()(const SchemaCompilerLoopItemsFromAnnotationIndex &step) const
       -> std::string {
-    return "Loop over the items of the target array potentially bound by an "
-           "annotation result";
+    assert(this->keyword == "unevaluatedItems");
+    const auto &value{step_value(step)};
+    std::ostringstream message;
+    message << "The array items not evaluated by the keyword "
+            << escape_string(value)
+            << ", if any, were expected to validate against this subschema";
+    return message.str();
   }
 
   auto operator()(const SchemaCompilerLoopContains &step) const -> std::string {
