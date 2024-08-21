@@ -2658,7 +2658,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_1) {
       2, LoopProperties, "/additionalProperties",
       "https://example.com/schema#/additionalProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Jump to a dynamic anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The object property \"foo\" successfully validated against the "
@@ -2719,7 +2722,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The target number is expected to be greater "
                                "than or equal to the given number");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Jump to a dynamic anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The object property \"foo\" successfully validated against the "
@@ -2857,7 +2863,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The target number is expected to be greater "
                                "than or equal to the given number");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Jump to a dynamic anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The object property \"bar\" successfully validated against the "
@@ -2924,7 +2933,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
       4, "/items", "https://example.com/schema#/items", "", true);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Jump to a dynamic anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "At least one item of the array value successfully validated against the "
@@ -2978,7 +2990,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_6) {
   EVALUATE_TRACE_POST_SUCCESS(2, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Jump to a dynamic anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The object property \"foo\" successfully validated against the "
