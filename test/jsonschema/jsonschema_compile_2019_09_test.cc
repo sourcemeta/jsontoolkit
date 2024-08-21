@@ -2307,6 +2307,61 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
       "expected to validate against this subschema");
 }
 
+TEST(JSONSchema_compile_2019_09, unevaluatedProperties_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedProperties": false,
+    "properties": {
+      "foo": { "type": "string" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"baz\", \"bar\": true }")};
+
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(3, LoopProperties, "/unevaluatedProperties",
+                     "#/unevaluatedProperties", "");
+  EVALUATE_TRACE_PRE(4, AssertionFail, "/unevaluatedProperties",
+                     "#/unevaluatedProperties", "/bar");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
+                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/properties", "#/properties", "",
+                                        "foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_POST_FAILURE(3, AssertionFail, "/unevaluatedProperties",
+                              "#/unevaluatedProperties", "/bar");
+  EVALUATE_TRACE_POST_FAILURE(4, LoopProperties, "/unevaluatedProperties",
+                              "#/unevaluatedProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the single defined property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object value was not expected to define the property \"bar\"");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object value was not expected to define unevaluated properties");
+}
+
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
