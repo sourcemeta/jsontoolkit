@@ -1646,8 +1646,9 @@ TEST(JSONSchema_compile_draft4, not_1) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The value was expected to be of type string but it was of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The given schema is expected to not validate successfully");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The integer value was expected to not validate "
+                               "against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft4, not_2) {
@@ -1676,8 +1677,9 @@ TEST(JSONSchema_compile_draft4, not_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1, "The given schema is expected to not validate successfully");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The string value was expected to not validate "
+                               "against the given subschema, but it did");
 }
 
 TEST(JSONSchema_compile_draft4, not_3) {
@@ -1745,8 +1747,9 @@ TEST(JSONSchema_compile_draft4, not_3) {
       instance, 4,
       "The object properties not covered by other adjacent object keywords are "
       "expected to validated against this subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 5, "The given schema is expected to not validate successfully");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
+                               "The object value was expected to not validate "
+                               "against the given subschema");
 }
 
 TEST(JSONSchema_compile_draft4, items_1) {
