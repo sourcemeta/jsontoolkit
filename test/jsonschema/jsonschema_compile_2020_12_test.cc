@@ -610,7 +610,10 @@ TEST(JSONSchema_compile_2020_12, contains_2) {
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The item at index 1 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The value was expected to be of type string but it was of type integer");
@@ -709,13 +712,22 @@ TEST(JSONSchema_compile_2020_12, contains_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The item at index 0 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The item at index 1 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The item at index 2 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 6,
       "The array value was expected to contain at least 1 item that validates "
@@ -757,10 +769,16 @@ TEST(JSONSchema_compile_2020_12, contains_5) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The item at index 0 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The item at index 1 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The array value was expected to contain exactly 1 item that validates "

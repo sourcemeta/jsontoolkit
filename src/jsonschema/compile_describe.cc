@@ -358,6 +358,16 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "contains" && this->annotation.is_integer()) {
+      assert(this->target.is_array());
+      assert(this->annotation.is_positive());
+      std::ostringstream message;
+      message << "The item at index " << this->annotation.to_integer()
+              << " of the array value successfully validated against the "
+                 "containment check subschema";
+      return message.str();
+    }
+
     return "Emit an annotation";
   }
 
