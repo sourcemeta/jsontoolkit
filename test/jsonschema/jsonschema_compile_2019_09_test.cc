@@ -101,7 +101,7 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "Because the object value defines the property \"foo\", it was also "
+      "Because the object value defined the property \"foo\", it was also "
       "expected to define the properties \"bar\", and \"baz\"");
 }
 
@@ -131,7 +131,7 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "Because the object value defines the property \"foo\", it was also "
+      "Because the object value defined the property \"foo\", it was also "
       "expected to define the property \"baz\"");
 }
 
@@ -245,7 +245,7 @@ TEST(JSONSchema_compile_2019_09, dependentSchemas_2) {
       "The object value was expected to define the property \"extra\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "Because the object value defines the property \"qux\", it was also "
+      "Because the object value defined the property \"qux\", it was also "
       "expected to validate against the corresponding subschema");
 }
 
@@ -321,7 +321,7 @@ TEST(JSONSchema_compile_2019_09, dependentSchemas_4) {
       "The object value was expected to define the property \"bar\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "Because the object value defines the properties \"baz\", and \"foo\", "
+      "Because the object value defined the properties \"baz\", and \"foo\", "
       "it was also expected to validate against the corresponding subschemas");
 }
 
@@ -1147,7 +1147,7 @@ TEST(JSONSchema_compile_2019_09, contains_12) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The constraints declared for this keyword are not satisfiable");
+      "The constraints declared for this keyword were not satisfiable");
 }
 
 TEST(JSONSchema_compile_2019_09, title) {
@@ -1169,7 +1169,7 @@ TEST(JSONSchema_compile_2019_09, title) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/title", "#/title", "", "My title");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The title of the instance is \"My title\"");
+                               "The title of the instance was \"My title\"");
 }
 
 TEST(JSONSchema_compile_2019_09, title_with_core_keywords) {
@@ -1196,7 +1196,7 @@ TEST(JSONSchema_compile_2019_09, title_with_core_keywords) {
       0, "/title", "https://example.com#/title", "", "My title");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The title of the instance is \"My title\"");
+                               "The title of the instance was \"My title\"");
 }
 
 TEST(JSONSchema_compile_2019_09, description) {
@@ -1219,7 +1219,7 @@ TEST(JSONSchema_compile_2019_09, description) {
                                         "My description");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The description of the instance is \"My description\"");
+      instance, 0, "The description of the instance was \"My description\"");
 }
 
 TEST(JSONSchema_compile_2019_09, default) {
@@ -1241,7 +1241,7 @@ TEST(JSONSchema_compile_2019_09, default) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/default", "#/default", "", 1);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The default value of the instance is 1");
+                               "The default value of the instance was 1");
 }
 
 TEST(JSONSchema_compile_2019_09, deprecated_1) {
@@ -1264,7 +1264,7 @@ TEST(JSONSchema_compile_2019_09, deprecated_1) {
                                         true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The instance is considered deprecated");
+                               "The instance was considered deprecated");
 }
 
 TEST(JSONSchema_compile_2019_09, deprecated_2) {
@@ -1287,7 +1287,7 @@ TEST(JSONSchema_compile_2019_09, deprecated_2) {
                                         false);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The instance is not considered deprecated");
+                               "The instance was not considered deprecated");
 }
 
 TEST(JSONSchema_compile_2019_09, readOnly_1) {
@@ -1310,7 +1310,7 @@ TEST(JSONSchema_compile_2019_09, readOnly_1) {
                                         false);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The instance is not considered read-only");
+                               "The instance was not considered read-only");
 }
 
 TEST(JSONSchema_compile_2019_09, readOnly_2) {
@@ -1332,7 +1332,7 @@ TEST(JSONSchema_compile_2019_09, readOnly_2) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/readOnly", "#/readOnly", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The instance is considered read-only");
+                               "The instance was considered read-only");
 }
 
 TEST(JSONSchema_compile_2019_09, writeOnly_1) {
@@ -1355,7 +1355,7 @@ TEST(JSONSchema_compile_2019_09, writeOnly_1) {
                                         false);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The instance is not considered write-only");
+                               "The instance was not considered write-only");
 }
 
 TEST(JSONSchema_compile_2019_09, writeOnly_2) {
@@ -1378,7 +1378,7 @@ TEST(JSONSchema_compile_2019_09, writeOnly_2) {
                                         true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The instance is considered write-only");
+                               "The instance was considered write-only");
 }
 
 TEST(JSONSchema_compile_2019_09, examples) {
@@ -1406,7 +1406,7 @@ TEST(JSONSchema_compile_2019_09, examples) {
                                         examples);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "Examples of the instance are 1, 2, and 3");
+                               "Examples of the instance were 1, 2, and 3");
 }
 
 TEST(JSONSchema_compile_2019_09, contentEncoding) {
@@ -1430,7 +1430,7 @@ TEST(JSONSchema_compile_2019_09, contentEncoding) {
                                         "#/contentEncoding", "", "base64");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The content encoding of the instance is \"base64\"");
+      instance, 0, "The content encoding of the instance was \"base64\"");
 }
 
 TEST(JSONSchema_compile_2019_09, contentMediaType) {
@@ -1455,7 +1455,7 @@ TEST(JSONSchema_compile_2019_09, contentMediaType) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The content media type of the instance is \"application/json\"");
+      "The content media type of the instance was \"application/json\"");
 }
 
 TEST(JSONSchema_compile_2019_09, contentSchema) {
@@ -1484,7 +1484,7 @@ TEST(JSONSchema_compile_2019_09, contentSchema) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "When decoded, the instance is expected to validate against the schema "
+      "When decoded, the instance was expected to validate against the schema "
       "{\"type\":\"string\"}");
 }
 
