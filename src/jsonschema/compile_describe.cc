@@ -134,7 +134,8 @@ struct DescribeVisitor {
       return "The constraints declared for this keyword are not satisfiable";
     }
 
-    if (this->keyword == "additionalProperties") {
+    if (this->keyword == "additionalProperties" ||
+        this->keyword == "unevaluatedProperties") {
       std::ostringstream message;
       assert(!this->instance_location.empty());
       assert(this->instance_location.back().is_property());
@@ -738,8 +739,19 @@ struct DescribeVisitor {
   operator()(const SchemaCompilerLoopProperties &step) const -> std::string {
     if (this->keyword == "unevaluatedProperties") {
       std::ostringstream message;
-      message << "The object properties not covered by other object "
-                 "keywords were expected to validate against this subschema";
+      if (step.children.size() == 1 &&
+          std::holds_alternative<SchemaCompilerInternalContainer>(
+              step.children.front()) &&
+          std::holds_alternative<SchemaCompilerAssertionFail>(
+              std::get<SchemaCompilerInternalContainer>(step.children.front())
+                  .children.front())) {
+        message << "The object value was not expected to define unevaluated "
+                   "properties";
+      } else {
+        message << "The object properties not covered by other object "
+                   "keywords were expected to validate against this subschema";
+      }
+
       return message.str();
     }
 
