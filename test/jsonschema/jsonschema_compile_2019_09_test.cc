@@ -1408,7 +1408,8 @@ TEST(JSONSchema_compile_2019_09, items_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
 }
 
@@ -1448,7 +1449,8 @@ TEST(JSONSchema_compile_2019_09, items_3) {
       instance, 1,
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "Loop over the items of the target array");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, items_4) {
@@ -1700,7 +1702,8 @@ TEST(JSONSchema_compile_2019_09, additionalItems_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
 }
 
@@ -1807,8 +1810,10 @@ TEST(JSONSchema_compile_2019_09, additionalItems_4) {
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
-                               "Loop over the items of the target array");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 6,
+      "Every item in the array value except for the first 2 was expected to "
+      "validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 7, "Emit an annotation");
 }
 
@@ -1863,8 +1868,10 @@ TEST(JSONSchema_compile_2019_09, additionalItems_5) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The value was expected to be of type string but it was of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the items of the target array");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "Every item in the array value except for the first 2 was expected to "
+      "validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedProperties_1) {
@@ -2168,7 +2175,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_3) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "Loop over the items of the target array");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
 }
 
@@ -2741,7 +2749,8 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
       instance, 2,
       "The target is expected to match all of the given assertions");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
 }
 

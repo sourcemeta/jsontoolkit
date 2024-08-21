@@ -340,9 +340,21 @@ struct DescribeVisitor {
     return "Loop over the property keys of the target object";
   }
 
-  auto operator()(const SchemaCompilerLoopItems &) const -> std::string {
-    return "Loop over the items of the target array";
+  auto operator()(const SchemaCompilerLoopItems &step) const -> std::string {
+    assert(this->target.is_array());
+    const auto &value{step_value(step)};
+    std::ostringstream message;
+    message << "Every item in the array value";
+    if (value == 1) {
+      message << " except for the first one";
+    } else if (value > 0) {
+      message << " except for the first " << value;
+    }
+
+    message << " was expected to validate against the given subschema";
+    return message.str();
   }
+
   auto operator()(const SchemaCompilerLoopItemsFromAnnotationIndex &) const
       -> std::string {
     return "Loop over the items of the target array potentially bound by an "
