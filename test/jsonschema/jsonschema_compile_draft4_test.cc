@@ -3215,10 +3215,9 @@ TEST(JSONSchema_compile_draft4, minimum_2) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreaterEqual, "/minimum", "#/minimum",
                               "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be greater than "
-      "or equal to the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The number value 2.1 was expected to be "
+                               "greater than or equal to the integer 2");
 }
 
 TEST(JSONSchema_compile_draft4, minimum_3) {
@@ -3240,10 +3239,9 @@ TEST(JSONSchema_compile_draft4, minimum_3) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreaterEqual, "/minimum", "#/minimum",
                               "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be greater than "
-      "or equal to the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The integer value 2 was expected to be greater "
+                               "than or equal to the integer 2");
 }
 
 TEST(JSONSchema_compile_draft4, minimum_4) {
@@ -3265,10 +3263,9 @@ TEST(JSONSchema_compile_draft4, minimum_4) {
   EVALUATE_TRACE_POST_FAILURE(0, AssertionGreaterEqual, "/minimum", "#/minimum",
                               "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be greater than "
-      "or equal to the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The number value 1.8 was expected to be "
+                               "greater than or equal to the integer 2");
 }
 
 TEST(JSONSchema_compile_draft4, maximum_1) {
@@ -3430,10 +3427,9 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_3) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreaterEqual, "/minimum", "#/minimum",
                               "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target number is expected to be greater than "
-      "or equal to the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The integer value 2 was expected to be greater "
+                               "than or equal to the integer 2");
 }
 
 TEST(JSONSchema_compile_draft4, exclusiveMaximum_1) {
