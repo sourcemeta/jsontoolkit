@@ -1340,7 +1340,9 @@ TEST(JSONSchema_compile_2019_09, unknown_1) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "", "baz");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The unrecognized keyword \"fooBar\" was "
+                               "collected as the annotation \"baz\"");
 }
 
 TEST(JSONSchema_compile_2019_09, unknown_2) {
@@ -1361,7 +1363,9 @@ TEST(JSONSchema_compile_2019_09, unknown_2) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "", 1);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The unrecognized keyword \"x-test\" was collected as the annotation 1");
 }
 
 TEST(JSONSchema_compile_2019_09, items_1) {
