@@ -129,6 +129,24 @@ struct DescribeVisitor {
   const JSON &target;
   const JSON &annotation;
 
+  auto operator()(const SchemaCompilerAssertionFail &) const -> std::string {
+    if (this->keyword == "contains") {
+      return "The constraints declared for this keyword are not satisfiable";
+    }
+
+    if (this->keyword == "additionalProperties") {
+      std::ostringstream message;
+      assert(!this->instance_location.empty());
+      assert(this->instance_location.back().is_property());
+      message << "The object value was not expected to define the property "
+              << escape_string(this->instance_location.back().to_property());
+      return message.str();
+    }
+
+    assert(this->keyword.empty());
+    return "No instance is expected to succeed against the false schema";
+  }
+
   auto operator()(const SchemaCompilerLogicalOr &step) const -> std::string {
     assert(!step.children.empty());
     std::ostringstream message;
@@ -716,7 +734,8 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto operator()(const SchemaCompilerLoopProperties &) const -> std::string {
+  auto
+  operator()(const SchemaCompilerLoopProperties &step) const -> std::string {
     if (this->keyword == "unevaluatedProperties") {
       std::ostringstream message;
       message << "The object properties not covered by other object "
@@ -726,8 +745,19 @@ struct DescribeVisitor {
 
     assert(this->keyword == "additionalProperties");
     std::ostringstream message;
-    message << "The object properties not covered by other adjacent object "
-               "keywords were expected to validate against this subschema";
+    if (step.children.size() == 1 &&
+        std::holds_alternative<SchemaCompilerInternalContainer>(
+            step.children.front()) &&
+        std::holds_alternative<SchemaCompilerAssertionFail>(
+            std::get<SchemaCompilerInternalContainer>(step.children.front())
+                .children.front())) {
+      message << "The object value was not expected to define additional "
+                 "properties";
+    } else {
+      message << "The object properties not covered by other adjacent object "
+                 "keywords were expected to validate against this subschema";
+    }
+
     return message.str();
   }
 
@@ -1308,14 +1338,6 @@ struct DescribeVisitor {
 
   // TODO: Revise these defaults
 
-  auto operator()(const SchemaCompilerAssertionFail &) const -> std::string {
-    if (this->keyword == "contains") {
-      return "The constraints declared for this keyword are not satisfiable";
-    }
-
-    return "Abort evaluation on failure";
-  }
-
   auto
   operator()(const SchemaCompilerAssertionStringType &) const -> std::string {
     return "The target string is expected to match the given logical type";
@@ -1359,11 +1381,12 @@ namespace sourcemeta::jsontoolkit {
 auto describe(const bool valid, const SchemaCompilerTemplate::value_type &step,
               const Pointer &evaluate_path, const Pointer &instance_location,
               const JSON &instance, const JSON &annotation) -> std::string {
-  assert(evaluate_path.back().is_property());
+  assert(evaluate_path.empty() || evaluate_path.back().is_property());
   return std::visit<std::string>(
-      DescribeVisitor{valid, evaluate_path, evaluate_path.back().to_property(),
-                      instance_location, get(instance, instance_location),
-                      annotation},
+      DescribeVisitor{
+          valid, evaluate_path,
+          evaluate_path.empty() ? "" : evaluate_path.back().to_property(),
+          instance_location, get(instance, instance_location), annotation},
       step);
 }
 
