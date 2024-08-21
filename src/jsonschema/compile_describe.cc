@@ -1185,18 +1185,14 @@ struct DescribeVisitor {
 
   auto
   operator()(const SchemaCompilerAssertionEqual &step) const -> std::string {
-    if (this->keyword == "const") {
-      std::ostringstream message;
-      const auto &value{step_value(step)};
-      message << "The " << to_string(this->target.type()) << " value ";
-      stringify(this->target, message);
-      message << " was expected to equal the " << to_string(value.type())
-              << " constant ";
-      stringify(value, message);
-      return message.str();
-    }
-
-    return "The target is expected to be equal to the given value";
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    message << "The " << to_string(this->target.type()) << " value ";
+    stringify(this->target, message);
+    message << " was expected to equal the " << to_string(value.type())
+            << " constant ";
+    stringify(value, message);
+    return message.str();
   }
 
   auto operator()(const SchemaCompilerAssertionGreaterEqual &step) const {
@@ -1311,9 +1307,39 @@ struct DescribeVisitor {
   operator()(const SchemaCompilerAssertionStringType &) const -> std::string {
     return "The target string is expected to match the given logical type";
   }
-  auto
-  operator()(const SchemaCompilerAssertionEqualsAny &) const -> std::string {
-    return "The target document is expected to be one of the given values";
+
+  auto operator()(const SchemaCompilerAssertionEqualsAny &step) const
+      -> std::string {
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    message << "The " << to_string(this->target.type()) << " value ";
+    stringify(this->target, message);
+    assert(!value.empty());
+
+    if (value.size() == 1) {
+      message << " was expected to equal the "
+              << to_string(value.cbegin()->type()) << " constant ";
+      stringify(*(value.cbegin()), message);
+    } else {
+      if (this->valid) {
+        message << " was expected to equal one of the " << value.size()
+                << " declared values";
+      } else {
+        message << " was expected to equal one of the following values: ";
+        for (auto iterator = value.cbegin(); iterator != value.cend();
+             ++iterator) {
+          if (std::next(iterator) == value.cend()) {
+            message << "and ";
+            stringify(*iterator, message);
+          } else {
+            stringify(*iterator, message);
+            message << ", ";
+          }
+        }
+      }
+    }
+
+    return message.str();
   }
 };
 
