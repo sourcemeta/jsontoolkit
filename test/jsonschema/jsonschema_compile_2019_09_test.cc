@@ -2728,8 +2728,8 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
       "https://example.com/schema#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The target number is expected to be greater "
-                               "than or equal to the given number");
+                               "The integer value 1 was expected to be greater "
+                               "than or equal to the integer 1");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The integer value was expected to validate against the first subschema "
@@ -2788,8 +2788,8 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_3) {
       "https://example.com/schema#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The target number is expected to be greater "
-                               "than or equal to the given number");
+                               "The integer value 1 was expected to be greater "
+                               "than or equal to the integer 1");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The object property \"foo\" successfully validated against the "
@@ -2869,8 +2869,8 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
       "https://example.com/schema#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The target number is expected to be greater "
-                               "than or equal to the given number");
+                               "The integer value 1 was expected to be greater "
+                               "than or equal to the integer 1");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
       "The integer value was expected to validate against the first subschema "

@@ -986,10 +986,17 @@ struct DescribeVisitor {
     return "The target is expected to be equal to the given value";
   }
 
-  auto operator()(const SchemaCompilerAssertionGreaterEqual &) const {
-    return "The target number is expected to be greater than or equal to the "
-           "given number";
+  auto operator()(const SchemaCompilerAssertionGreaterEqual &step) const {
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    message << "The " << to_string(this->target.type()) << " value ";
+    stringify(this->target, message);
+    message << " was expected to be greater than or equal to the "
+            << to_string(value.type()) << " ";
+    stringify(value, message);
+    return message.str();
   }
+
   auto
   operator()(const SchemaCompilerAssertionLessEqual &) const -> std::string {
     return "The target number is expected to be less than or equal to the "
