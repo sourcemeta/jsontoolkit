@@ -302,6 +302,16 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "unevaluatedProperties") {
+      assert(this->annotation.is_string());
+      std::ostringstream message;
+      message << "The object property "
+              << escape_string(this->annotation.to_string())
+              << " successfully validated against the subschema for "
+                 "unevaluated properties";
+      return message.str();
+    }
+
     if (this->keyword == "patternProperties") {
       assert(this->annotation.is_string());
       std::ostringstream message;
@@ -328,6 +338,15 @@ struct DescribeVisitor {
       std::ostringstream message;
       message << "At least one item of the array value successfully validated "
                  "against the given subschema";
+      return message.str();
+    }
+
+    if (this->keyword == "unevaluatedItems" && this->annotation.is_boolean() &&
+        this->annotation.to_boolean()) {
+      assert(this->target.is_array());
+      std::ostringstream message;
+      message << "At least one item of the array value successfully validated "
+                 "against the subschema for unevaluated items";
       return message.str();
     }
 
