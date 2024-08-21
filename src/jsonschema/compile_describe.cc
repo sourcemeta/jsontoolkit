@@ -992,6 +992,34 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "minItems") {
+      assert(this->target.is_array());
+      std::ostringstream message;
+      const auto minimum{step_value(step) + 1};
+      message << "The array value was expected to contain at least " << minimum;
+      assert(minimum > 0);
+      if (minimum == 1) {
+        message << " item";
+      } else {
+        message << " items";
+      }
+
+      if (this->valid) {
+        message << " and";
+      } else {
+        message << " but";
+      }
+
+      message << " it contained " << this->target.size();
+      if (this->target.size() == 1) {
+        message << " item";
+      } else {
+        message << " items";
+      }
+
+      return message.str();
+    }
+
     return "The target size is expected to be greater than the given number";
   }
 
@@ -1029,6 +1057,34 @@ struct DescribeVisitor {
       } else {
         message << this->target.size();
         message << (this->target.size() == 1 ? " character" : " characters");
+      }
+
+      return message.str();
+    }
+
+    if (this->keyword == "maxItems") {
+      assert(this->target.is_array());
+      std::ostringstream message;
+      const auto maximum{step_value(step) - 1};
+      message << "The array value was expected to contain at most " << maximum;
+      assert(maximum > 0);
+      if (maximum == 1) {
+        message << " item";
+      } else {
+        message << " items";
+      }
+
+      if (this->valid) {
+        message << " and";
+      } else {
+        message << " but";
+      }
+
+      message << " it contained " << this->target.size();
+      if (this->target.size() == 1) {
+        message << " item";
+      } else {
+        message << " items";
       }
 
       return message.str();

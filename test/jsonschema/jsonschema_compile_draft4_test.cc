@@ -2948,9 +2948,9 @@ TEST(JSONSchema_compile_draft4, minItems_2) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeGreater, "/minItems",
                               "#/minItems", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target size is expected to be greater than the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The array value was expected to contain at "
+                               "least 2 items and it contained 2 items");
 }
 
 TEST(JSONSchema_compile_draft4, minItems_3) {
@@ -2973,9 +2973,9 @@ TEST(JSONSchema_compile_draft4, minItems_3) {
   EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeGreater, "/minItems",
                               "#/minItems", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target size is expected to be greater than the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The array value was expected to contain at "
+                               "least 2 items but it contained 1 item");
 }
 
 TEST(JSONSchema_compile_draft4, maxItems_1) {
@@ -3014,9 +3014,9 @@ TEST(JSONSchema_compile_draft4, maxItems_2) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeLess, "/maxItems", "#/maxItems",
                               "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target size is expected to be less than the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The array value was expected to contain at "
+                               "most 2 items and it contained 2 items");
 }
 
 TEST(JSONSchema_compile_draft4, maxItems_3) {
@@ -3039,9 +3039,9 @@ TEST(JSONSchema_compile_draft4, maxItems_3) {
   EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeLess, "/maxItems", "#/maxItems",
                               "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The target size is expected to be less than the given number");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The array value was expected to contain at "
+                               "most 2 items but it contained 3 items");
 }
 
 TEST(JSONSchema_compile_draft4, minProperties_1) {
