@@ -304,7 +304,7 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_1_fast) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_1_exhaustive) {
@@ -363,7 +363,7 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_1_exhaustive) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_2_fast) {
@@ -430,7 +430,7 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_fast) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_2_exhaustive) {
@@ -497,7 +497,7 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_exhaustive) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_3_fast) {
@@ -535,7 +535,7 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_3_fast) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_3_exhaustive) {
@@ -587,7 +587,7 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_3_exhaustive) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_1) {
@@ -2080,7 +2080,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_1) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 5,
       "The object properties not covered by other object keywords were "
-      "expected to validated against this subschema");
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
@@ -2157,7 +2157,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 6,
       "The object properties not covered by other object keywords were "
-      "expected to validated against this subschema");
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
@@ -2227,7 +2227,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 5,
       "The object properties not covered by other object keywords were "
-      "expected to validated against this subschema");
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_1) {
@@ -2252,9 +2252,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_1) {
   EVALUATE_TRACE_POST_SUCCESS(0, LoopItemsFromAnnotationIndex,
                               "/unevaluatedItems", "#/unevaluatedItems", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_2) {
@@ -2299,9 +2300,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_2) {
       "subschema for unevaluated items");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_3) {
@@ -2385,9 +2387,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_4) {
       instance, 2,
       "The first 2 items of the array value were expected to validate against "
       "the corresponding subschemas");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_5) {
@@ -2486,9 +2489,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_6) {
       instance, 4,
       "At least one item of the array value successfully validated against the "
       "subschema for unevaluated items");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
@@ -2557,9 +2561,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
       instance, 5,
       "At least one item of the array value successfully validated against the "
       "subschema for unevaluated items");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 6,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
@@ -2621,9 +2626,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean "
                                "but it was of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_1) {
@@ -2677,7 +2683,7 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_1) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
@@ -2741,7 +2747,7 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_3) {
@@ -2797,7 +2803,7 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_3) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
@@ -2882,7 +2888,7 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The object property \"foo\" successfully validated against the "
@@ -2890,7 +2896,7 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
@@ -3009,7 +3015,7 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_6) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, reference_from_unknown_keyword) {

@@ -1412,7 +1412,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_1) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_2) {
@@ -1471,7 +1471,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema")
+                               "expected to validate against this subschema")
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_3) {
@@ -1526,7 +1526,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_4) {
@@ -1616,7 +1616,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 7,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
-                               "expected to validated against this subschema");
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_draft4, not_1) {
@@ -1746,7 +1746,7 @@ TEST(JSONSchema_compile_draft4, not_3) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The object properties not covered by other adjacent object keywords "
-      "were expected to validated against this subschema");
+      "were expected to validate against this subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The object value was expected to not validate "
                                "against the given subschema");
