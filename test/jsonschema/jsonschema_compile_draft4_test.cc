@@ -2695,7 +2695,8 @@ TEST(JSONSchema_compile_draft4, uniqueItems_1) {
                               "#/uniqueItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target array is expected to not contain duplicates");
+      instance, 0,
+      "The array value was expected to not contain duplicate items");
 }
 
 TEST(JSONSchema_compile_draft4, uniqueItems_2) {
@@ -2736,7 +2737,8 @@ TEST(JSONSchema_compile_draft4, uniqueItems_3) {
                               "#/uniqueItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target array is expected to not contain duplicates");
+      instance, 0,
+      "The array value was expected to not contain duplicate items");
 }
 
 TEST(JSONSchema_compile_draft4, uniqueItems_4) {
@@ -2760,7 +2762,7 @@ TEST(JSONSchema_compile_draft4, uniqueItems_4) {
                               "#/uniqueItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0, "The target array is expected to not contain duplicates");
+      instance, 0, "The array value contained the following duplicate item: 2");
 }
 
 TEST(JSONSchema_compile_draft4, uniqueItems_5) {
@@ -2778,6 +2780,55 @@ TEST(JSONSchema_compile_draft4, uniqueItems_5) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 2, 1, 2 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
+TEST(JSONSchema_compile_draft4, uniqueItems_6) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "uniqueItems": true
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 2, 1, 2, 3, 2, 2, 2 ]")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionUnique, "/uniqueItems", "#/uniqueItems", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionUnique, "/uniqueItems",
+                              "#/uniqueItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0, "The array value contained the following duplicate item: 2");
+}
+
+TEST(JSONSchema_compile_draft4, uniqueItems_7) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "uniqueItems": true
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 2, 1, 2, 3, 2, 2, 1, 2 ]")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionUnique, "/uniqueItems", "#/uniqueItems", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionUnique, "/uniqueItems",
+                              "#/uniqueItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The array value contained the following duplicate items: 1, and 2");
 }
 
 TEST(JSONSchema_compile_draft4, minLength_1) {

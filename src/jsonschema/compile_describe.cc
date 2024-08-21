@@ -1245,7 +1245,44 @@ struct DescribeVisitor {
   }
 
   auto operator()(const SchemaCompilerAssertionUnique &) const -> std::string {
-    return "The target array is expected to not contain duplicates";
+    assert(this->target.is_array());
+    auto array{this->target.as_array()};
+    std::ostringstream message;
+    if (this->valid) {
+      message << "The array value was expected to not contain duplicate items";
+    } else {
+      std::set<JSON> duplicates;
+      for (auto iterator = array.cbegin(); iterator != array.cend();
+           ++iterator) {
+        for (auto subiterator = std::next(iterator);
+             subiterator != array.cend(); ++subiterator) {
+          if (*iterator == *subiterator) {
+            duplicates.insert(*iterator);
+          }
+        }
+      }
+
+      assert(!duplicates.empty());
+      message << "The array value contained the following duplicate";
+      if (duplicates.size() == 1) {
+        message << " item: ";
+        stringify(*(duplicates.cbegin()), message);
+      } else {
+        message << " items: ";
+        for (auto subiterator = duplicates.cbegin();
+             subiterator != duplicates.cend(); ++subiterator) {
+          if (std::next(subiterator) == duplicates.cend()) {
+            message << "and ";
+            stringify(*subiterator, message);
+          } else {
+            stringify(*subiterator, message);
+            message << ", ";
+          }
+        }
+      }
+    }
+
+    return message.str();
   }
 
   auto operator()(const SchemaCompilerAssertionDivisible &step) const
