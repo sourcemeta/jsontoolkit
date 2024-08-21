@@ -273,10 +273,27 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "additionalProperties") {
+      assert(this->annotation.is_string());
+      std::ostringstream message;
+      message << "The object property "
+              << escape_string(this->annotation.to_string())
+              << " successfully validated against the additional properties "
+                 "subschema";
+      return message.str();
+    }
+
     return "Emit an annotation";
   }
 
   auto operator()(const SchemaCompilerLoopProperties &) const -> std::string {
+    if (this->keyword == "additionalProperties") {
+      std::ostringstream message;
+      message << "The object properties not covered by other adjacent object "
+                 "keywords are expected to validated against this subschema";
+      return message.str();
+    }
+
     return "Loop over the properties of the target object";
   }
 
