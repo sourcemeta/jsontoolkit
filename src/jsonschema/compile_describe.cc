@@ -287,6 +287,73 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "dependentSchemas") {
+      assert(this->target.is_object());
+      assert(!step.children.empty());
+      std::set<std::string> present;
+      std::set<std::string> all_dependencies;
+      for (const auto &child : step.children) {
+        assert(std::holds_alternative<SchemaCompilerInternalContainer>(child));
+        const auto &substep{std::get<SchemaCompilerInternalContainer>(child)};
+        assert(substep.condition.size() == 1);
+        assert(std::holds_alternative<SchemaCompilerAssertionDefines>(
+            substep.condition.front()));
+        const auto &define{std::get<SchemaCompilerAssertionDefines>(
+            substep.condition.front())};
+        const auto &property{step_value(define)};
+        all_dependencies.insert(property);
+        if (!this->target.defines(property)) {
+          continue;
+        }
+
+        present.insert(property);
+      }
+
+      std::ostringstream message;
+
+      if (present.empty()) {
+        message << "The object value did not define the";
+        assert(!all_dependencies.empty());
+        if (all_dependencies.size() == 1) {
+          message << " property "
+                  << escape_string(*(all_dependencies.cbegin()));
+        } else {
+          message << " properties ";
+          for (auto iterator = all_dependencies.cbegin();
+               iterator != all_dependencies.cend(); ++iterator) {
+            if (std::next(iterator) == all_dependencies.cend()) {
+              message << "or " << escape_string(*iterator);
+            } else {
+              message << escape_string(*iterator) << ", ";
+            }
+          }
+        }
+      } else if (present.size() == 1) {
+        message << "Because the object value defines the";
+        message << " property " << escape_string(*(present.cbegin()));
+        message
+            << ", it was also expected to validate against the corresponding "
+               "subschema";
+      } else {
+        message << "Because the object value defines the";
+        message << " properties ";
+        for (auto iterator = present.cbegin(); iterator != present.cend();
+             ++iterator) {
+          if (std::next(iterator) == present.cend()) {
+            message << "and " << escape_string(*iterator);
+          } else {
+            message << escape_string(*iterator) << ", ";
+          }
+        }
+
+        message
+            << ", it was also expected to validate against the corresponding "
+               "subschemas";
+      }
+
+      return message.str();
+    }
+
     return "The target is expected to match all of the given assertions";
   }
 
