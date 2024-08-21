@@ -1965,7 +1965,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_1) {
                                "against the single defined property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object property \"bar\" successfully validated against the "
+      "subschema for unevaluated properties");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "Loop over the properties of the target object");
 }
@@ -2037,7 +2040,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
       "The object value was expected to validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object property \"bar\" successfully validated against the "
+      "subschema for unevaluated properties");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
                                "Loop over the properties of the target object");
 }
@@ -2173,7 +2179,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "At least one item of the array value successfully validated against the "
+      "subschema for unevaluated items");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
@@ -2353,7 +2362,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_6) {
       "corresponding subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "At least one item of the array value successfully validated against the "
+      "subschema for unevaluated items");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "Loop over the items of the target array "
                                "potentially bound by an annotation result");
@@ -2418,7 +2430,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
       "The array value was expected to validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "At least one item of the array value successfully validated against the "
+      "subschema for unevaluated items");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
                                "Loop over the items of the target array "
                                "potentially bound by an annotation result");
