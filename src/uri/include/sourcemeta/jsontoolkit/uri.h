@@ -93,7 +93,7 @@ public:
   /// ```
   auto is_tag() const -> bool;
 
-  /// Check if the URI has `mailto` scheme. For example:
+  /// Check if the URI has the `mailto` scheme. For example:
   ///
   /// ```cpp
   /// #include <sourcemeta/jsontoolkit/uri.h>
