@@ -35,45 +35,75 @@ TEST(URI_parse, syntax_error_4) {
 // https://github.com/uriparser/uriparser/blob/bf0174e83164a4659c51c135399478bec389eafa/test/test.cpp#L315
 
 TEST(URI_parse, success_1) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{
-      "//user:pass@[::1]:80/segment/index.html?query#frag"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{
+        "//user:pass@[::1]:80/segment/index.html?query#frag"};
+    EXPECT_EQ(uri.recompose(),
+              "user:pass@::1:80/segment/index.html?query#frag");
+  });
 }
 
 TEST(URI_parse, success_2) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{
-      "http://[::1]:80/segment/index.html?query#frag"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{
+        "http://[::1]:80/segment/index.html?query#frag"};
+    EXPECT_EQ(uri.recompose(), "http://::1:80/segment/index.html?query#frag");
+  });
 }
 
 TEST(URI_parse, success_3) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{
-      "http://user:pass@[::1]/segment/index.html?query#frag"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{
+        "http://user:pass@[::1]/segment/index.html?query#frag"};
+    EXPECT_EQ(uri.recompose(),
+              "http://user:pass@::1/segment/index.html?query#frag");
+  });
 }
 
 TEST(URI_parse, success_4) {
-  EXPECT_NO_THROW(
-      sourcemeta::jsontoolkit::URI uri{"http://user:pass@[::1]:80?query#frag"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{"http://user:pass@[::1]:80?query#frag"};
+    EXPECT_EQ(uri.recompose(), "http://user:pass@::1:80?query#frag");
+  });
 }
 
 TEST(URI_parse, success_5) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{
-      "http://user:pass@[::1]:80/segment/index.html#frag"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{
+        "http://user:pass@[::1]:80/segment/index.html#frag"};
+    EXPECT_EQ(uri.recompose(),
+              "http://user:pass@::1:80/segment/index.html#frag");
+  });
 }
 
 TEST(URI_parse, success_6) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{
-      "http://user:pass@[::1]:80/segment/index.html?query"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{
+        "http://user:pass@[::1]:80/segment/index.html?query"};
+    EXPECT_EQ(uri.recompose(),
+              "http://user:pass@::1:80/segment/index.html?query");
+  });
 }
 
 TEST(URI_parse, success_7) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{"ftp://host:21/gnu/"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{"ftp://host:21/gnu/"};
+    EXPECT_EQ(uri.recompose(), "ftp://host:21/gnu/");
+  });
 }
 
 TEST(URI_parse, relative_1) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{"one/two/three"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{"one/two/three"};
+    EXPECT_EQ(uri.recompose(), "one/two/three");
+  });
 }
 
 TEST(URI_parse, relative_2) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{"/one/two/three"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{"/one/two/three"};
+    EXPECT_EQ(uri.recompose(), "one/two/three");
+  });
 }
 
 TEST(URI_parse, relative_3) {
@@ -92,7 +122,9 @@ TEST(URI_parse, real_life_2) {
 }
 
 TEST(URI_parse, real_life_3) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{"mailto:test@example.com"});
+  sourcemeta::jsontoolkit::URI uri{"mailto:test@example.com"};
+  auto result = uri.recompose();
+  EXPECT_EQ(uri.recompose(), "mailto:test@example.com");
 }
 
 TEST(URI_parse, relative_4) {

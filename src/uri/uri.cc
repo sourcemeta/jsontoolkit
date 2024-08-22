@@ -219,6 +219,11 @@ auto URI::is_tag() const -> bool {
   return scheme.has_value() && scheme.value() == "tag";
 }
 
+auto URI::is_mailto() const -> bool {
+  const auto scheme{this->scheme()};
+  return scheme.has_value() && scheme.value() == "mailto";
+}
+
 auto URI::is_fragment_only() const -> bool {
   return !this->scheme().has_value() && !this->host().has_value() &&
          !this->port().has_value() && !this->path().has_value() &&
@@ -246,7 +251,12 @@ auto URI::path() const -> std::optional<std::string> {
     return std::nullopt;
   }
 
-  if (!this->is_urn() && !this->is_tag() && this->scheme().has_value()) {
+  if (!this->is_urn() && !this->is_tag() && !this->is_mailto() &&
+      this->scheme().has_value()) {
+    return "/" + this->path_.value();
+  }
+
+  if (this->port().has_value()) {
     return "/" + this->path_.value();
   }
 
@@ -315,7 +325,7 @@ auto URI::recompose_without_fragment() const -> std::optional<std::string> {
   const auto result_scheme{this->scheme()};
   if (result_scheme.has_value()) {
     result << result_scheme.value();
-    if (this->is_urn() || this->is_tag()) {
+    if (this->is_urn() || this->is_tag() || this->is_mailto()) {
       result << ":";
     } else {
       result << "://";

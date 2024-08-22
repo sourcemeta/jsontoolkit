@@ -93,6 +93,17 @@ public:
   /// ```
   auto is_tag() const -> bool;
 
+  /// Check if the URI has `mailto` scheme. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::URI uri{"mailto:joe@example.com"};
+  /// assert(uri.is_mailto());
+  /// ```
+  auto is_mailto() const -> bool;
+
   /// Check if the URI only consists of a fragment. For example:
   ///
   /// ```cpp
