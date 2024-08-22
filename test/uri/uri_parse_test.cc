@@ -112,19 +112,28 @@ TEST(URI_parse, relative_3) {
 }
 
 TEST(URI_parse, real_life_1) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{
-      "http://sourceforge.net/projects/uriparser/"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{
+        "http://sourceforge.net/projects/uriparser/"};
+    EXPECT_EQ(uri.recompose(), "http://sourceforge.net/projects/uriparser/");
+  });
 }
 
 TEST(URI_parse, real_life_2) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{
-      "http://sourceforge.net/project/platformdownload.php?group_id=182840"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{
+        "http://sourceforge.net/project/platformdownload.php?group_id=182840"};
+    EXPECT_EQ(
+        uri.recompose(),
+        "http://sourceforge.net/project/platformdownload.php?group_id=182840");
+  });
 }
 
-TEST(URI_parse, real_life_3) {
-  sourcemeta::jsontoolkit::URI uri{"mailto:test@example.com"};
-  auto result = uri.recompose();
-  EXPECT_EQ(uri.recompose(), "mailto:test@example.com");
+TEST(URI_parse, mailto) {
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{"mailto:test@example.com"};
+    EXPECT_EQ(uri.recompose(), "mailto:test@example.com");
+  });
 }
 
 TEST(URI_parse, relative_4) {
