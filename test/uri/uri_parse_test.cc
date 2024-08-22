@@ -87,8 +87,8 @@ TEST(URI_parse, relative_2) {
 }
 
 TEST(URI_parse, relative_3) {
-  EXPECT_NO_THROW(
-      sourcemeta::jsontoolkit::URI uri{"//user:pass@localhost/one/two/three"});
+  sourcemeta::jsontoolkit::URI uri{"//user:pass@localhost/one/two/three"};
+  EXPECT_EQ(uri.recompose(), "user:pass@localhost/one/two/three");
 }
 
 TEST(URI_parse, real_life_1) {

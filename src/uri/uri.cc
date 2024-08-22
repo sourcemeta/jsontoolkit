@@ -256,7 +256,7 @@ auto URI::path() const -> std::optional<std::string> {
     return "/" + this->path_.value();
   }
 
-  if (this->port().has_value()) {
+  if (this->port().has_value() || this->host().has_value()) {
     return "/" + this->path_.value();
   }
 
