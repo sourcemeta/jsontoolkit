@@ -137,22 +137,37 @@ TEST(URI_parse, mailto) {
 }
 
 TEST(URI_parse, relative_4) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{"../../"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{"../../"};
+    EXPECT_EQ(uri.recompose(), "../../");
+  });
 }
 
 TEST(URI_parse, root_path) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{"/"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{"/"};
+    EXPECT_EQ(uri.recompose(), "");
+  });
 }
 
 TEST(URI_parse, empty_uri) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{""});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{""};
+    EXPECT_EQ(uri.recompose(), "");
+  });
 }
 
 TEST(URI_parse, file_uri) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{"file:///bin/bash"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{"file:///bin/bash"};
+    EXPECT_EQ(uri.recompose(), "file:///bin/bash");
+  });
 }
 
 TEST(URI_parse, percent_encoding) {
-  EXPECT_NO_THROW(sourcemeta::jsontoolkit::URI uri{
-      "http://www.example.com/name%20with%20spaces/"});
+  EXPECT_NO_THROW({
+    sourcemeta::jsontoolkit::URI uri{
+        "http://www.example.com/name%20with%20spaces/"};
+    EXPECT_EQ(uri.recompose(), "http://www.example.com/name%20with%20spaces/");
+  });
 }
