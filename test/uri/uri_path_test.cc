@@ -66,6 +66,11 @@ TEST(URI_path_getter, without_scheme) {
   EXPECT_EQ(uri.path().value(), "example.com/foo");
 }
 
+TEST(URI_path_getter, mailto) {
+  const sourcemeta::jsontoolkit::URI uri{"mailto:jdoe@woo.com"};
+  EXPECT_EQ(uri.path().value(), "jdoe@woo.com");
+}
+
 // Setter
 
 TEST(URI_path_setter, no_path) {
