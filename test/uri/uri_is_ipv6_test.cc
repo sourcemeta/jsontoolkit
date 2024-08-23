@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <sourcemeta/jsontoolkit/uri.h>
 
+// Insipred from https://datatracker.ietf.org/doc/html/rfc2732#section-2
+
 TEST(URI_is_ipv6, ipv6_1) {
   const sourcemeta::jsontoolkit::URI uri{
       "http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]:80/index.html"};
@@ -54,21 +56,21 @@ TEST(URI_is_ipv6, ipv6_7) {
   EXPECT_EQ(uri.recompose(), "http://[2010:836B:4179::836B:4179]");
 }
 
-TEST(URI_is_ipv6, ipv4_1) {
+TEST(URI_is_ipv6, ipv4) {
   const sourcemeta::jsontoolkit::URI uri{"http://192.168.1.1/index.html"};
   EXPECT_FALSE(uri.is_ipv6());
   EXPECT_EQ(uri.host().value(), "192.168.1.1");
   EXPECT_EQ(uri.recompose(), "http://192.168.1.1/index.html");
 }
 
-TEST(URI_is_ipv6, ipv4_2) {
+TEST(URI_is_ipv6, ipv4_with_port) {
   const sourcemeta::jsontoolkit::URI uri{"http://203.0.113.1:8080/api/data"};
   EXPECT_FALSE(uri.is_ipv6());
   EXPECT_EQ(uri.host().value(), "203.0.113.1");
   EXPECT_EQ(uri.recompose(), "http://203.0.113.1:8080/api/data");
 }
 
-TEST(URI_is_ipv6, ipv4_3) {
+TEST(URI_is_ipv6, ipv4_one_subdomain) {
   const sourcemeta::jsontoolkit::URI uri{
       "http://server.198.51.100.1.example.com/page"};
   EXPECT_FALSE(uri.is_ipv6());
@@ -76,14 +78,14 @@ TEST(URI_is_ipv6, ipv4_3) {
   EXPECT_EQ(uri.recompose(), "http://server.198.51.100.1.example.com/page");
 }
 
-TEST(URI_is_ipv6, ipv4_4) {
+TEST(URI_is_ipv6, ipv4_with_userinfo) {
   const sourcemeta::jsontoolkit::URI uri{"http://user:pass@192.0.2.1/secure"};
   EXPECT_FALSE(uri.is_ipv6());
   EXPECT_EQ(uri.host().value(), "192.0.2.1");
   EXPECT_EQ(uri.recompose(), "http://user:pass@192.0.2.1/secure");
 }
 
-TEST(URI_is_ipv6, ipv4_5) {
+TEST(URI_is_ipv6, ipv4_with_query) {
   const sourcemeta::jsontoolkit::URI uri{
       "http://198.51.100.42/search?q=test&page=1"};
   EXPECT_FALSE(uri.is_ipv6());
@@ -91,10 +93,18 @@ TEST(URI_is_ipv6, ipv4_5) {
   EXPECT_EQ(uri.recompose(), "http://198.51.100.42/search?q=test&page=1");
 }
 
-TEST(URI_is_ipv6, ipv4_6) {
+TEST(URI_is_ipv6, ipv4_with_fragment) {
   const sourcemeta::jsontoolkit::URI uri{
       "http://203.0.113.53/document#section-2"};
   EXPECT_FALSE(uri.is_ipv6());
   EXPECT_EQ(uri.host().value(), "203.0.113.53");
   EXPECT_EQ(uri.recompose(), "http://203.0.113.53/document#section-2");
+}
+
+TEST(URI_is_ipv6, ipv4_multiple_subdomains) {
+  const sourcemeta::jsontoolkit::URI uri{
+      "http://api.v1.198.51.100.5.example.com/endpoint"};
+  EXPECT_FALSE(uri.is_ipv6());
+  EXPECT_EQ(uri.host().value(), "api.v1.198.51.100.5.example.com");
+  EXPECT_EQ(uri.recompose(), "http://api.v1.198.51.100.5.example.com/endpoint");
 }
