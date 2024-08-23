@@ -1,7 +1,6 @@
 # Programs
 CMAKE = cmake
 CTEST = ctest
-KRAFT = kraft
 
 # Options
 PRESET = Debug
