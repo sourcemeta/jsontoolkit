@@ -45,7 +45,9 @@ TEST(JSONSchema_compile_2019_09, properties_1_exhaustive) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"bar\" successfully "
+                               "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
       "The value was expected to be of type string but it was of type integer");
@@ -99,7 +101,94 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target is expected to match all of the given assertions");
+      "Because the object value defined the property \"foo\", it was also "
+      "expected to define the properties \"bar\", and \"baz\"");
+}
+
+TEST(JSONSchema_compile_2019_09, dependentRequired_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "dependentRequired": {
+      "foo": [ "bar", "baz" ],
+      "qux": [ "extra" ]
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentRequired", "#/dependentRequired",
+                     "");
+  EVALUATE_TRACE_POST_FAILURE(0, LogicalAnd, "/dependentRequired",
+                              "#/dependentRequired", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "Because the object value defined the property \"foo\", it was also "
+      "expected to define the property \"baz\"");
+}
+
+TEST(JSONSchema_compile_2019_09, dependentRequired_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "dependentRequired": {
+      "foo": [ "bar", "baz" ],
+      "qux": [ "extra" ]
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"none\": true }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentRequired", "#/dependentRequired",
+                     "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependentRequired",
+                              "#/dependentRequired", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The object value did not define the properties \"foo\", or \"qux\"");
+}
+
+TEST(JSONSchema_compile_2019_09, dependentRequired_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "dependentRequired": {
+      "foo": [ "bar", "baz" ]
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"none\": true }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentRequired", "#/dependentRequired",
+                     "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependentRequired",
+                              "#/dependentRequired", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0, "The object value did not define the property \"foo\"");
 }
 
 TEST(JSONSchema_compile_2019_09, dependentSchemas_1) {
@@ -156,7 +245,84 @@ TEST(JSONSchema_compile_2019_09, dependentSchemas_2) {
       "The object value was expected to define the property \"extra\"");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The target is expected to match all of the given assertions");
+      "Because the object value defined the property \"qux\", it was also "
+      "expected to validate against the corresponding subschema");
+}
+
+TEST(JSONSchema_compile_2019_09, dependentSchemas_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "dependentSchemas": {
+      "foo": { "required": [ "bar", "baz" ] },
+      "qux": { "required": [ "extra" ] }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"none\": 1 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentSchemas", "#/dependentSchemas",
+                     "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependentSchemas",
+                              "#/dependentSchemas", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The object value did not define the properties \"foo\", or \"qux\"");
+}
+
+TEST(JSONSchema_compile_2019_09, dependentSchemas_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "dependentSchemas": {
+      "foo": { "required": [ "bar" ] },
+      "baz": { "required": [ "qux" ] }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{sourcemeta::jsontoolkit::parse(
+      "{ \"foo\": 1, \"bar\": 2, \"baz\": 3, \"qux\": 4 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentSchemas", "#/dependentSchemas",
+                     "");
+  EVALUATE_TRACE_PRE(1, AssertionDefines, "/dependentSchemas/baz/required",
+                     "#/dependentSchemas/baz/required", "");
+  EVALUATE_TRACE_PRE(2, AssertionDefines, "/dependentSchemas/foo/required",
+                     "#/dependentSchemas/foo/required", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionDefines,
+                              "/dependentSchemas/baz/required",
+                              "#/dependentSchemas/baz/required", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionDefines,
+                              "/dependentSchemas/foo/required",
+                              "#/dependentSchemas/foo/required", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/dependentSchemas",
+                              "#/dependentSchemas", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The object value was expected to define the property \"qux\"");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object value was expected to define the property \"bar\"");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "Because the object value defined the properties \"baz\", and \"foo\", "
+      "it was also expected to validate against the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_1_fast) {
@@ -202,12 +368,20 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_1_fast) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"bar\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
-                               "Loop over the properties of the target object");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_1_exhaustive) {
@@ -253,12 +427,20 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_1_exhaustive) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"bar\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
-                               "Loop over the properties of the target object");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_2_fast) {
@@ -310,15 +492,22 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_fast) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
                                "against the single defined property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object property \"bar\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the properties of the target object");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_2_exhaustive) {
@@ -370,15 +559,22 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_exhaustive) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
                                "against the single defined property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object property \"bar\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the properties of the target object");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_3_fast) {
@@ -414,7 +610,9 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_3_fast) {
       instance, 0,
       "The value was expected to be of type integer but it was of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "Loop over the properties of the target object");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalProperties_3_exhaustive) {
@@ -459,9 +657,14 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_3_exhaustive) {
       "The value was expected to be of type integer but it was of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the properties of the target object");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, contains_1) {
@@ -942,7 +1145,9 @@ TEST(JSONSchema_compile_2019_09, contains_12) {
   EVALUATE_TRACE_PRE(0, AssertionFail, "/contains", "#/contains", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionFail, "/contains", "#/contains", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Abort evaluation on failure");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The constraints declared for this keyword were not satisfiable");
 }
 
 TEST(JSONSchema_compile_2019_09, title) {
@@ -963,7 +1168,8 @@ TEST(JSONSchema_compile_2019_09, title) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/title", "#/title", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/title", "#/title", "", "My title");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The title of the instance was \"My title\"");
 }
 
 TEST(JSONSchema_compile_2019_09, title_with_core_keywords) {
@@ -989,7 +1195,8 @@ TEST(JSONSchema_compile_2019_09, title_with_core_keywords) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
       0, "/title", "https://example.com#/title", "", "My title");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The title of the instance was \"My title\"");
 }
 
 TEST(JSONSchema_compile_2019_09, description) {
@@ -1011,7 +1218,8 @@ TEST(JSONSchema_compile_2019_09, description) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/description", "#/description", "",
                                         "My description");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0, "The description of the instance was \"My description\"");
 }
 
 TEST(JSONSchema_compile_2019_09, default) {
@@ -1032,7 +1240,8 @@ TEST(JSONSchema_compile_2019_09, default) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/default", "#/default", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/default", "#/default", "", 1);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The default value of the instance was 1");
 }
 
 TEST(JSONSchema_compile_2019_09, deprecated_1) {
@@ -1054,7 +1263,8 @@ TEST(JSONSchema_compile_2019_09, deprecated_1) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/deprecated", "#/deprecated", "",
                                         true);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance was considered deprecated");
 }
 
 TEST(JSONSchema_compile_2019_09, deprecated_2) {
@@ -1076,7 +1286,8 @@ TEST(JSONSchema_compile_2019_09, deprecated_2) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/deprecated", "#/deprecated", "",
                                         false);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance was not considered deprecated");
 }
 
 TEST(JSONSchema_compile_2019_09, readOnly_1) {
@@ -1098,7 +1309,8 @@ TEST(JSONSchema_compile_2019_09, readOnly_1) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/readOnly", "#/readOnly", "",
                                         false);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance was not considered read-only");
 }
 
 TEST(JSONSchema_compile_2019_09, readOnly_2) {
@@ -1119,7 +1331,8 @@ TEST(JSONSchema_compile_2019_09, readOnly_2) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/readOnly", "#/readOnly", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/readOnly", "#/readOnly", "", true);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance was considered read-only");
 }
 
 TEST(JSONSchema_compile_2019_09, writeOnly_1) {
@@ -1141,7 +1354,8 @@ TEST(JSONSchema_compile_2019_09, writeOnly_1) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/writeOnly", "#/writeOnly", "",
                                         false);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance was not considered write-only");
 }
 
 TEST(JSONSchema_compile_2019_09, writeOnly_2) {
@@ -1163,7 +1377,8 @@ TEST(JSONSchema_compile_2019_09, writeOnly_2) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/writeOnly", "#/writeOnly", "",
                                         true);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The instance was considered write-only");
 }
 
 TEST(JSONSchema_compile_2019_09, examples) {
@@ -1190,7 +1405,8 @@ TEST(JSONSchema_compile_2019_09, examples) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/examples", "#/examples", "",
                                         examples);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "Examples of the instance were 1, 2, and 3");
 }
 
 TEST(JSONSchema_compile_2019_09, contentEncoding) {
@@ -1213,7 +1429,8 @@ TEST(JSONSchema_compile_2019_09, contentEncoding) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/contentEncoding",
                                         "#/contentEncoding", "", "base64");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0, "The content encoding of the instance was \"base64\"");
 }
 
 TEST(JSONSchema_compile_2019_09, contentMediaType) {
@@ -1236,7 +1453,9 @@ TEST(JSONSchema_compile_2019_09, contentMediaType) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
       0, "/contentMediaType", "#/contentMediaType", "", "application/json");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The content media type of the instance was \"application/json\"");
 }
 
 TEST(JSONSchema_compile_2019_09, contentSchema) {
@@ -1263,7 +1482,10 @@ TEST(JSONSchema_compile_2019_09, contentSchema) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/contentSchema", "#/contentSchema",
                                         "", content_schema);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "When decoded, the instance was expected to validate against the schema "
+      "{\"type\":\"string\"}");
 }
 
 TEST(JSONSchema_compile_2019_09, unknown_1) {
@@ -1284,7 +1506,9 @@ TEST(JSONSchema_compile_2019_09, unknown_1) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "", "baz");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The unrecognized keyword \"fooBar\" was "
+                               "collected as the annotation \"baz\"");
 }
 
 TEST(JSONSchema_compile_2019_09, unknown_2) {
@@ -1305,7 +1529,9 @@ TEST(JSONSchema_compile_2019_09, unknown_2) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "", 1);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The unrecognized keyword \"x-test\" was collected as the annotation 1");
 }
 
 TEST(JSONSchema_compile_2019_09, items_1) {
@@ -1369,8 +1595,12 @@ TEST(JSONSchema_compile_2019_09, items_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, items_3) {
@@ -1409,7 +1639,8 @@ TEST(JSONSchema_compile_2019_09, items_3) {
       instance, 1,
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "Loop over the items of the target array");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, items_4) {
@@ -1449,7 +1680,8 @@ TEST(JSONSchema_compile_2019_09, items_5) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2019_09, items_6) {
@@ -1479,10 +1711,14 @@ TEST(JSONSchema_compile_2019_09, items_6) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2019_09, items_7) {
@@ -1518,10 +1754,14 @@ TEST(JSONSchema_compile_2019_09, items_7) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value successfully validated against the "
+      "given positional subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2019_09, items_8) {
@@ -1558,7 +1798,8 @@ TEST(JSONSchema_compile_2019_09, items_8) {
                                "but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2019_09, items_9) {
@@ -1594,10 +1835,14 @@ TEST(JSONSchema_compile_2019_09, items_9) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalItems_1) {
@@ -1661,8 +1906,12 @@ TEST(JSONSchema_compile_2019_09, additionalItems_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalItems_3) {
@@ -1702,10 +1951,14 @@ TEST(JSONSchema_compile_2019_09, additionalItems_3) {
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalItems_4) {
@@ -1760,17 +2013,26 @@ TEST(JSONSchema_compile_2019_09, additionalItems_4) {
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value successfully validated against the "
+      "given positional subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
-                               "Loop over the items of the target array");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 7, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 6,
+      "Every item in the array value except for the first 2 was expected to "
+      "validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 7,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, additionalItems_5) {
@@ -1817,15 +2079,21 @@ TEST(JSONSchema_compile_2019_09, additionalItems_5) {
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value successfully validated against the "
+      "given positional subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The value was expected to be of type string but it was of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the items of the target array");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "Every item in the array value except for the first 2 was expected to "
+      "validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedProperties_1) {
@@ -1874,15 +2142,22 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_1) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
                                "against the single defined property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object property \"bar\" successfully validated against the "
+      "subschema for unevaluated properties");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object properties not covered by other object keywords were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
@@ -1941,7 +2216,9 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
                                "against the single defined property subschema");
@@ -1950,9 +2227,14 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
       "The object value was expected to validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object property \"bar\" successfully validated against the "
+      "subschema for unevaluated properties");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 6,
+      "The object properties not covered by other object keywords were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
@@ -2007,7 +2289,9 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
                                "against the single defined property subschema");
@@ -2017,8 +2301,65 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean "
                                "but it was of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the properties of the target object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object properties not covered by other object keywords were "
+      "expected to validate against this subschema");
+}
+
+TEST(JSONSchema_compile_2019_09, unevaluatedProperties_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedProperties": false,
+    "properties": {
+      "foo": { "type": "string" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"baz\", \"bar\": true }")};
+
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(3, LoopProperties, "/unevaluatedProperties",
+                     "#/unevaluatedProperties", "");
+  EVALUATE_TRACE_PRE(4, AssertionFail, "/unevaluatedProperties",
+                     "#/unevaluatedProperties", "/bar");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
+                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/properties", "#/properties", "",
+                                        "foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_POST_FAILURE(3, AssertionFail, "/unevaluatedProperties",
+                              "#/unevaluatedProperties", "/bar");
+  EVALUATE_TRACE_POST_FAILURE(4, LoopProperties, "/unevaluatedProperties",
+                              "#/unevaluatedProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the single defined property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object value was not expected to define the property \"bar\"");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object value was not expected to define unevaluated properties");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_1) {
@@ -2043,9 +2384,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_1) {
   EVALUATE_TRACE_POST_SUCCESS(0, LoopItemsFromAnnotationIndex,
                               "/unevaluatedItems", "#/unevaluatedItems", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_2) {
@@ -2084,12 +2426,16 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "At least one item of the array value successfully validated against the "
+      "subschema for unevaluated items");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_3) {
@@ -2123,8 +2469,12 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_3) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "Loop over the items of the target array");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_4) {
@@ -2161,13 +2511,18 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_5) {
@@ -2200,10 +2555,14 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_5) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first item of the array value was expected to validate against the "
+      "corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_6) {
@@ -2248,16 +2607,24 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_6) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first item of the array value was expected to validate against the "
+      "corresponding subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "At least one item of the array value successfully validated against the "
+      "subschema for unevaluated items");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
@@ -2309,19 +2676,27 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first item of the array value was expected to validate against the "
+      "corresponding subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The array value was expected to validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5, "Emit an annotation");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "At least one item of the array value successfully validated against the "
+      "subschema for unevaluated items");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 6,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
@@ -2369,19 +2744,24 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first item of the array value was expected to validate against the "
+      "corresponding subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The array value was expected to validate against the given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type boolean "
                                "but it was of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the items of the target array "
-                               "potentially bound by an annotation result");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_1) {
@@ -2424,10 +2804,18 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_1) {
       2, LoopProperties, "/additionalProperties",
       "https://example.com/schema#/additionalProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Jump to a dynamic anchor");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "Loop over the properties of the target object");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
@@ -2478,12 +2866,20 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
       "https://example.com/schema#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The target number is expected to be greater "
-                               "than or equal to the given number");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Jump to a dynamic anchor");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+                               "The integer value 1 was expected to be greater "
+                               "than or equal to the integer 1");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the properties of the target object");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_3) {
@@ -2530,11 +2926,16 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_3) {
       "https://example.com/schema#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The target number is expected to be greater "
-                               "than or equal to the given number");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+                               "The integer value 1 was expected to be greater "
+                               "than or equal to the integer 1");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "Loop over the properties of the target object");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
@@ -2606,15 +3007,28 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
       "https://example.com/schema#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The target number is expected to be greater "
-                               "than or equal to the given number");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Jump to a dynamic anchor");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+                               "The integer value 1 was expected to be greater "
+                               "than or equal to the integer 1");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object property \"bar\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the properties of the target object");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the properties of the target object");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
@@ -2665,14 +3079,25 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
       4, "/items", "https://example.com/schema#/items", "", true);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Jump to a dynamic anchor");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first item of the array value was expected to validate against the "
+      "corresponding subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, recursiveRef_6) {
@@ -2711,10 +3136,18 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_6) {
   EVALUATE_TRACE_POST_SUCCESS(2, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Jump to a dynamic anchor");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object property \"foo\" successfully validated against the "
+      "additional properties subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "Loop over the properties of the target object");
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_2019_09, reference_from_unknown_keyword) {

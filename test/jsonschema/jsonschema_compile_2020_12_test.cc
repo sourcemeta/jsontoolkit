@@ -23,7 +23,9 @@ TEST(JSONSchema_compile_2020_12, unknown_1) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "", "baz");
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The unrecognized keyword \"fooBar\" was "
+                               "collected as the annotation \"baz\"");
 }
 
 TEST(JSONSchema_compile_2020_12, unknown_2) {
@@ -44,7 +46,9 @@ TEST(JSONSchema_compile_2020_12, unknown_2) {
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "", 1);
 
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The unrecognized keyword \"x-test\" was collected as the annotation 1");
 }
 
 TEST(JSONSchema_compile_2020_12, items_1) {
@@ -108,8 +112,12 @@ TEST(JSONSchema_compile_2020_12, items_2) {
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "Loop over the items of the target array");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 4, "Emit an annotation");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2020_12, items_3) {
@@ -148,7 +156,8 @@ TEST(JSONSchema_compile_2020_12, items_3) {
       instance, 1,
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "Loop over the items of the target array");
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_2020_12, items_4) {
@@ -191,10 +200,13 @@ TEST(JSONSchema_compile_2020_12, items_4) {
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "Every item of the array value validated "
+                               "against the given positional subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2020_12, items_5) {
@@ -249,17 +261,26 @@ TEST(JSONSchema_compile_2020_12, items_5) {
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value successfully validated against the "
+      "given positional subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
-                               "Loop over the items of the target array");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 7, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 6,
+      "Every item in the array value except for the first 2 was expected to "
+      "validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 7,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
 }
 
 TEST(JSONSchema_compile_2020_12, items_6) {
@@ -308,15 +329,21 @@ TEST(JSONSchema_compile_2020_12, items_6) {
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value successfully validated against the "
+      "given positional subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The value was expected to be of type string but it was of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
-                               "Loop over the items of the target array");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "Every item in the array value except for the first 2 was expected to "
+      "validate against the given subschema");
 }
 
 TEST(JSONSchema_compile_2020_12, prefixItems_1) {
@@ -357,7 +384,8 @@ TEST(JSONSchema_compile_2020_12, prefixItems_2) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2020_12, prefixItems_3) {
@@ -390,10 +418,14 @@ TEST(JSONSchema_compile_2020_12, prefixItems_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2020_12, prefixItems_4) {
@@ -432,10 +464,14 @@ TEST(JSONSchema_compile_2020_12, prefixItems_4) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value successfully validated against the "
+      "given positional subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2020_12, prefixItems_5) {
@@ -474,7 +510,8 @@ TEST(JSONSchema_compile_2020_12, prefixItems_5) {
                                "but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2020_12, prefixItems_6) {
@@ -513,10 +550,13 @@ TEST(JSONSchema_compile_2020_12, prefixItems_6) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "Every item of the array value validated "
+                               "against the given positional subschemas");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The target is expected to match all of the given assertions");
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
 }
 
 TEST(JSONSchema_compile_2020_12, contains_1) {
@@ -574,7 +614,10 @@ TEST(JSONSchema_compile_2020_12, contains_2) {
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The item at index 1 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
       "The value was expected to be of type string but it was of type integer");
@@ -673,13 +716,22 @@ TEST(JSONSchema_compile_2020_12, contains_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The item at index 0 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The item at index 1 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The item at index 2 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 6,
       "The array value was expected to contain at least 1 item that validates "
@@ -721,10 +773,16 @@ TEST(JSONSchema_compile_2020_12, contains_5) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The item at index 0 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The item at index 1 of the array value successfully validated against "
+      "the containment check subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 4,
       "The array value was expected to contain exactly 1 item that validates "
@@ -793,5 +851,8 @@ TEST(JSONSchema_compile_2020_12, dynamicRef_1) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Jump to a dynamic anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The string value was expected to validate against the first subschema "
+      "in scope that declared the dynamic anchor \"foo\"");
 }

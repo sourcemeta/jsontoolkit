@@ -3,6 +3,8 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
+#include "jsonschema_test_utils.h"
+
 static auto test_resolver(std::string_view identifier)
     -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
   std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
@@ -40,4 +42,37 @@ TEST(JSONSchema_compile, unknown_vocabulary_required) {
   } catch (const std::exception &) {
     FAIL() << "The compile function was expected to throw a vocabulary error";
   }
+}
+
+TEST(JSONSchema_compile, boolean_true) {
+  const sourcemeta::jsontoolkit::JSON schema{true};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler,
+      "https://json-schema.org/draft/2020-12/schema")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+}
+
+TEST(JSONSchema_compile, boolean_false) {
+  const sourcemeta::jsontoolkit::JSON schema{false};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler,
+      "https://json-schema.org/draft/2020-12/schema")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionFail, "", "", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionFail, "", "", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "No instance is expected to succeed against the false schema");
 }

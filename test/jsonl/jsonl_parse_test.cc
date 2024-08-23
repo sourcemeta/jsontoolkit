@@ -5,6 +5,26 @@
 
 #include <sourcemeta/jsontoolkit/jsonl.h>
 
+TEST(JSONL_parse, empty) {
+  std::istringstream stream{""};
+  std::vector<sourcemeta::jsontoolkit::JSON> result;
+  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+    result.push_back(document);
+  }
+
+  EXPECT_TRUE(result.empty());
+}
+
+TEST(JSONL_parse, blank) {
+  std::istringstream stream{"    "};
+  std::vector<sourcemeta::jsontoolkit::JSON> result;
+  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+    result.push_back(document);
+  }
+
+  EXPECT_TRUE(result.empty());
+}
+
 TEST(JSONL_parse, integers_n) {
   std::string input{"1\n2\n3\n4"};
   std::istringstream stream{input};

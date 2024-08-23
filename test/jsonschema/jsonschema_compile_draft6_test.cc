@@ -377,7 +377,7 @@ TEST(JSONSchema_compile_draft6, propertyNames_2) {
       "characters and it consisted of 3 characters");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
-      "The object properties \"bar\", \"baz\", and \"foo\" are expected to "
+      "The object properties \"bar\", \"baz\", and \"foo\" were expected to "
       "validate against the given subschema");
 }
 
@@ -422,11 +422,11 @@ TEST(JSONSchema_compile_draft6, propertyNames_3) {
       "characters but it consisted of 2 characters");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 2,
-      "The object properties \"bar\", and \"fo\" are expected to validate "
+      "The object properties \"bar\", and \"fo\" were expected to validate "
       "against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft6, property_names_4) {
+TEST(JSONSchema_compile_draft6, propertyNames_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -461,9 +461,11 @@ TEST(JSONSchema_compile_draft6, property_names_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The object is empty and no properties are expected to validate against "
+      "The object is empty and no properties were expected to validate against "
       "the given subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1, "Emit an annotation");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
                                "against the single defined property subschema");
