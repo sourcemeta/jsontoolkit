@@ -126,6 +126,17 @@ public:
   /// ```
   auto is_relative() const -> bool;
 
+  /// Check if the host is an ipv6 address. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/uri.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::URI uri{"http://[::1]"};
+  /// assert(uri.is_ipv6());
+  /// ```
+  auto is_ipv6() const -> bool;
+
   /// Get the scheme part of the URI, if any. For example:
   ///
   /// ```cpp
@@ -390,6 +401,7 @@ private:
   std::optional<std::string> scheme_;
   std::optional<std::string> fragment_;
   std::optional<std::string> query_;
+  bool is_ipv6_ = false;
 
   // Use PIMPL idiom to hide `urlparser`
   struct Internal;

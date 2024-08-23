@@ -37,38 +37,40 @@ TEST(URI_parse, syntax_error_4) {
 TEST(URI_parse, success_1) {
   sourcemeta::jsontoolkit::URI uri{
       "//user:pass@[::1]:80/segment/index.html?query#frag"};
-  EXPECT_EQ(uri.recompose(), "user:pass@::1:80/segment/index.html?query#frag");
+  EXPECT_EQ(uri.recompose(),
+            "user:pass@[::1]:80/segment/index.html?query#frag");
 }
 
 TEST(URI_parse, success_2) {
   sourcemeta::jsontoolkit::URI uri{
       "http://[::1]:80/segment/index.html?query#frag"};
-  EXPECT_EQ(uri.recompose(), "http://::1:80/segment/index.html?query#frag");
+  EXPECT_EQ(uri.recompose(), "http://[::1]:80/segment/index.html?query#frag");
 }
 
 TEST(URI_parse, success_3) {
   sourcemeta::jsontoolkit::URI uri{
       "http://user:pass@[::1]/segment/index.html?query#frag"};
   EXPECT_EQ(uri.recompose(),
-            "http://user:pass@::1/segment/index.html?query#frag");
+            "http://user:pass@[::1]/segment/index.html?query#frag");
 }
 
 TEST(URI_parse, success_4) {
   sourcemeta::jsontoolkit::URI uri{"http://user:pass@[::1]:80?query#frag"};
-  EXPECT_EQ(uri.recompose(), "http://user:pass@::1:80?query#frag");
+  EXPECT_EQ(uri.recompose(), "http://user:pass@[::1]:80?query#frag");
 }
 
 TEST(URI_parse, success_5) {
   sourcemeta::jsontoolkit::URI uri{
       "http://user:pass@[::1]:80/segment/index.html#frag"};
-  EXPECT_EQ(uri.recompose(), "http://user:pass@::1:80/segment/index.html#frag");
+  EXPECT_EQ(uri.recompose(),
+            "http://user:pass@[::1]:80/segment/index.html#frag");
 }
 
 TEST(URI_parse, success_6) {
   sourcemeta::jsontoolkit::URI uri{
       "http://user:pass@[::1]:80/segment/index.html?query"};
   EXPECT_EQ(uri.recompose(),
-            "http://user:pass@::1:80/segment/index.html?query");
+            "http://user:pass@[::1]:80/segment/index.html?query");
 }
 
 TEST(URI_parse, success_7) {
