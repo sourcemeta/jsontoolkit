@@ -12,6 +12,7 @@ add_executable(sourcemeta_jsontoolkit_uri_unit
   uri_is_urn_test.cc
   uri_is_tag_test.cc
   uri_is_mailto_test.cc
+  uri_is_ipv6_test.cc
   uri_recompose_test.cc
   uri_recompose_without_fragment_test.cc
   uri_normalize_test.cc
