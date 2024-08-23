@@ -26,15 +26,6 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_frame_draft1_test.cc
   jsonschema_frame_draft0_test.cc
   jsonschema_frame_test.cc
-  jsonschema_lint_2020_12_test.cc
-  jsonschema_lint_2019_09_test.cc
-  jsonschema_lint_draft7_test.cc
-  jsonschema_lint_draft6_test.cc
-  jsonschema_lint_draft4_test.cc
-  jsonschema_lint_draft3_test.cc
-  jsonschema_lint_draft2_test.cc
-  jsonschema_lint_draft1_test.cc
-  jsonschema_lint_draft0_test.cc
   jsonschema_bundle_2020_12_test.cc
   jsonschema_bundle_2019_09_test.cc
   jsonschema_bundle_draft7_test.cc
@@ -100,10 +91,6 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_keyword_iterator_test.cc
   jsonschema_official_resolver_test.cc
   jsonschema_map_resolver_test.cc
-  jsonschema_transformer_test.cc
-  jsonschema_transform_rule_test.cc
-  jsonschema_transform_bundle_test.cc
-  jsonschema_transform_rules.h
   jsonschema_format_test.cc
   jsonschema_template_format_test.cc
   jsonschema_output_error_trace_test.cc)
