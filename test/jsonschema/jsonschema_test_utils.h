@@ -312,17 +312,4 @@
                 std::get<4>(trace_post.at(index))),                            \
             (message));
 
-#define LINT_AND_FIX(document)                                                 \
-  sourcemeta::jsontoolkit::SchemaTransformBundle bundle;                       \
-  bundle.add(                                                                  \
-      sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Modernize);    \
-  bundle.add(                                                                  \
-      sourcemeta::jsontoolkit::SchemaTransformBundle::Category::AntiPattern);  \
-  bundle.add(                                                                  \
-      sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Simplify);     \
-  bundle.add(                                                                  \
-      sourcemeta::jsontoolkit::SchemaTransformBundle::Category::Redundant);    \
-  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,       \
-               sourcemeta::jsontoolkit::official_resolver);
-
 #endif
