@@ -53,3 +53,48 @@ TEST(URI_is_ipv6, ipv6_7) {
   EXPECT_EQ(uri.host().value(), "2010:836B:4179::836B:4179");
   EXPECT_EQ(uri.recompose(), "http://[2010:836B:4179::836B:4179]");
 }
+
+TEST(URI_is_ipv6, ipv4_1) {
+  const sourcemeta::jsontoolkit::URI uri{"http://192.168.1.1/index.html"};
+  EXPECT_FALSE(uri.is_ipv6());
+  EXPECT_EQ(uri.host().value(), "192.168.1.1");
+  EXPECT_EQ(uri.recompose(), "http://192.168.1.1/index.html");
+}
+
+TEST(URI_is_ipv6, ipv4_2) {
+  const sourcemeta::jsontoolkit::URI uri{"http://203.0.113.1:8080/api/data"};
+  EXPECT_FALSE(uri.is_ipv6());
+  EXPECT_EQ(uri.host().value(), "203.0.113.1");
+  EXPECT_EQ(uri.recompose(), "http://203.0.113.1:8080/api/data");
+}
+
+TEST(URI_is_ipv6, ipv4_3) {
+  const sourcemeta::jsontoolkit::URI uri{
+      "http://server.198.51.100.1.example.com/page"};
+  EXPECT_FALSE(uri.is_ipv6());
+  EXPECT_EQ(uri.host().value(), "server.198.51.100.1.example.com");
+  EXPECT_EQ(uri.recompose(), "http://server.198.51.100.1.example.com/page");
+}
+
+TEST(URI_is_ipv6, ipv4_4) {
+  const sourcemeta::jsontoolkit::URI uri{"http://user:pass@192.0.2.1/secure"};
+  EXPECT_FALSE(uri.is_ipv6());
+  EXPECT_EQ(uri.host().value(), "192.0.2.1");
+  EXPECT_EQ(uri.recompose(), "http://user:pass@192.0.2.1/secure");
+}
+
+TEST(URI_is_ipv6, ipv4_5) {
+  const sourcemeta::jsontoolkit::URI uri{
+      "http://198.51.100.42/search?q=test&page=1"};
+  EXPECT_FALSE(uri.is_ipv6());
+  EXPECT_EQ(uri.host().value(), "198.51.100.42");
+  EXPECT_EQ(uri.recompose(), "http://198.51.100.42/search?q=test&page=1");
+}
+
+TEST(URI_is_ipv6, ipv4_6) {
+  const sourcemeta::jsontoolkit::URI uri{
+      "http://203.0.113.53/document#section-2"};
+  EXPECT_FALSE(uri.is_ipv6());
+  EXPECT_EQ(uri.host().value(), "203.0.113.53");
+  EXPECT_EQ(uri.recompose(), "http://203.0.113.53/document#section-2");
+}
