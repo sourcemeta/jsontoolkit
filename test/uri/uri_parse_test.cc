@@ -117,7 +117,7 @@ TEST(URI_parse, relative_4) {
 
 TEST(URI_parse, root_path) {
   sourcemeta::jsontoolkit::URI uri{"/"};
-  EXPECT_EQ(uri.recompose(), "");
+  EXPECT_EQ(uri.recompose(), "/");
 }
 
 TEST(URI_parse, empty_uri) {

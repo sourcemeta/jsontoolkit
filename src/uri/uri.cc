@@ -154,9 +154,24 @@ auto URI::parse() -> void {
     uriFreeUriMembersA(&this->internal->uri);
   }
 
+  // NOTE: we don't skip this line for fast path
+  // as the internal structure of uriparser could still
+  // be used by resolve_from and relative_to methods
   uri_parse(this->data, &this->internal->uri);
 
-  this->scheme_ = uri_text_range(&this->internal->uri.scheme);
+  // Fast path for the root path
+  if (this->data == "/") {
+    this->path_ = "/";
+    this->parsed = true;
+    return;
+  }
+
+  // Fast path for empty URI
+  if (this->data.empty()) {
+    this->parsed = true;
+    return;
+  };
+
   this->scheme_ = uri_text_range(&this->internal->uri.scheme);
   this->userinfo_ = uri_text_range(&this->internal->uri.userInfo);
   this->host_ = uri_text_range(&this->internal->uri.hostText);
