@@ -280,15 +280,19 @@ auto evaluate_step(
   using namespace sourcemeta::jsontoolkit;
   bool result{false};
 
-#define CALLBACK_PRE(current_instance_location)                                \
-  callback(SchemaCompilerEvaluationType::Pre, true, step,                      \
-           context.evaluate_path(), current_instance_location,                 \
-           context.value(nullptr));
+#define CALLBACK_PRE(current_step, current_instance_location)                  \
+  if (current_step.report) {                                                   \
+    callback(SchemaCompilerEvaluationType::Pre, true, step,                    \
+             context.evaluate_path(), current_instance_location,               \
+             context.value(nullptr));                                          \
+  }
 
 #define CALLBACK_POST(current_step)                                            \
-  callback(SchemaCompilerEvaluationType::Post, result, step,                   \
-           context.evaluate_path(), context.instance_location(),               \
-           context.value(nullptr));                                            \
+  if (current_step.report) {                                                   \
+    callback(SchemaCompilerEvaluationType::Post, result, step,                 \
+             context.evaluate_path(), context.instance_location(),             \
+             context.value(nullptr));                                          \
+  }                                                                            \
   context.pop(current_step);                                                   \
   return result;
 
@@ -306,13 +310,13 @@ auto evaluate_step(
     context.push(assertion);
     assert(std::holds_alternative<SchemaCompilerValueNone>(assertion.value));
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     CALLBACK_POST(assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionDefines>(step)) {
     const auto &assertion{std::get<SchemaCompilerAssertionDefines>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -322,7 +326,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionDefinesAll>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     // Otherwise we are we even emitting this instruction?
     assert(value.size() > 1);
@@ -342,7 +346,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionType>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -356,7 +360,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionTypeAny>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     // Otherwise we are we even emitting this instruction?
     assert(value.size() > 1);
@@ -372,7 +376,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionTypeStrict>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -383,7 +387,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionTypeStrictAny>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     // Otherwise we are we even emitting this instruction?
     assert(value.size() > 1);
@@ -395,7 +399,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionRegex>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -406,7 +410,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionSizeGreater>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -417,18 +421,18 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionSizeLess>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     result = (target.is_array() || target.is_object() || target.is_string()) &&
              (target.size() < value);
     CALLBACK_POST(assertion);
-  } else if (std::holds_alternative<SchemaCompilerInternalSizeEqual>(step)) {
-    const auto &assertion{std::get<SchemaCompilerInternalSizeEqual>(step)};
+  } else if (std::holds_alternative<SchemaCompilerAssertionSizeEqual>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionSizeEqual>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -439,7 +443,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionEqual>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -449,7 +453,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionEqualsAny>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -460,7 +464,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionGreaterEqual>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -470,7 +474,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionLessEqual>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -480,7 +484,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionGreater>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -490,7 +494,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionLess>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -501,7 +505,7 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueNone>(assertion.value));
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
     result = target.is_array() && target.unique();
@@ -510,7 +514,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionDivisible>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -522,7 +526,7 @@ auto evaluate_step(
     const auto &assertion{std::get<SchemaCompilerAssertionStringType>(step)};
     context.push(assertion);
     EVALUATE_CONDITION_GUARD(assertion, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(assertion, context.instance_location());
     const auto value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
@@ -542,11 +546,70 @@ auto evaluate_step(
     }
 
     CALLBACK_POST(assertion);
+  } else if (std::holds_alternative<SchemaCompilerAssertionAnnotation>(step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionAnnotation>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion, instance);
+    CALLBACK_PRE(assertion, context.instance_location());
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<std::set<JSON>>(assertion.target, instance)};
+    result = target.contains(value);
+    CALLBACK_POST(assertion);
+  } else if (std::holds_alternative<
+                 SchemaCompilerAssertionNoAdjacentAnnotation>(step)) {
+    const auto &assertion{
+        std::get<SchemaCompilerAssertionNoAdjacentAnnotation>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion, instance);
+    CALLBACK_PRE(assertion, context.instance_location());
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<std::set<JSON>>(assertion.target, instance)};
+    result = !target.contains(value);
+    CALLBACK_POST(assertion);
+  } else if (std::holds_alternative<SchemaCompilerAssertionNoAnnotation>(
+                 step)) {
+    const auto &assertion{std::get<SchemaCompilerAssertionNoAnnotation>(step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(assertion, instance);
+    CALLBACK_PRE(assertion, context.instance_location());
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &target{
+        context.resolve_target<EvaluationContext::InstanceAnnotations>(
+            assertion.target, instance)};
+    result = true;
+
+    if (!assertion.data.empty()) {
+      for (const auto &[schema_location, annotations] : target) {
+        assert(!schema_location.empty());
+        const auto &keyword{schema_location.back()};
+        if (keyword.is_property() &&
+            assertion.data.contains(keyword.to_property()) &&
+            annotations.contains(value) &&
+            // Make sure its not a cousin annotation, which can
+            // never be seen
+            // TODO: Have a better function at Pointer to check
+            // for these "initial starts with" cases in a way
+            // that we don't have to copy pointers, which `.initial()`
+            // does.
+            schema_location.initial().starts_with(
+                context.evaluate_path().initial()) &&
+            // We want to ignore certain annotations, like the ones
+            // inside "not"
+            !context.masked(schema_location)) {
+          result = false;
+          break;
+        }
+      }
+    }
+
+    CALLBACK_POST(assertion);
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(logical, context.instance_location());
     // This boolean value controls whether we should still evaluate
     // every disjunction even on fast mode
     const auto value{context.resolve_value(logical.value, instance)};
@@ -566,12 +629,12 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(logical, context.instance_location());
     result = true;
     for (const auto &child : logical.children) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
         result = false;
-        if (mode == SchemaCompilerEvaluationMode::Fast) {
+        if (!logical.report || mode == SchemaCompilerEvaluationMode::Fast) {
           break;
         }
       }
@@ -583,7 +646,7 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(logical, context.instance_location());
     result = false;
 
     // TODO: Cache results of a given branch so we can avoid
@@ -625,7 +688,7 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(logical, context.instance_location());
     result = true;
     for (const auto &child : logical.children) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
@@ -639,7 +702,7 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD(logical, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(logical, context.instance_location());
     // Ignore annotations produced inside "not"
     context.mask();
     result = false;
@@ -653,109 +716,11 @@ auto evaluate_step(
     }
 
     CALLBACK_POST(logical);
-  } else if (std::holds_alternative<SchemaCompilerInternalAnnotation>(step)) {
-    const auto &assertion{std::get<SchemaCompilerInternalAnnotation>(step)};
-    context.push(assertion);
-    EVALUATE_CONDITION_GUARD(assertion, instance);
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<std::set<JSON>>(assertion.target, instance)};
-    result = target.contains(value);
-
-    // We treat this step as transparent to the consumer
-    context.pop(assertion);
-    return result;
-  } else if (std::holds_alternative<SchemaCompilerInternalNoAdjacentAnnotation>(
-                 step)) {
-    const auto &assertion{
-        std::get<SchemaCompilerInternalNoAdjacentAnnotation>(step)};
-    context.push(assertion);
-    EVALUATE_CONDITION_GUARD(assertion, instance);
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<std::set<JSON>>(assertion.target, instance)};
-    result = !target.contains(value);
-
-    // We treat this step as transparent to the consumer
-    context.pop(assertion);
-    return result;
-  } else if (std::holds_alternative<SchemaCompilerInternalNoAnnotation>(step)) {
-    const auto &assertion{std::get<SchemaCompilerInternalNoAnnotation>(step)};
-    context.push(assertion);
-    EVALUATE_CONDITION_GUARD(assertion, instance);
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<EvaluationContext::InstanceAnnotations>(
-            assertion.target, instance)};
-    result = true;
-
-    if (!assertion.data.empty()) {
-      for (const auto &[schema_location, annotations] : target) {
-        assert(!schema_location.empty());
-        const auto &keyword{schema_location.back()};
-        if (keyword.is_property() &&
-            assertion.data.contains(keyword.to_property()) &&
-            annotations.contains(value) &&
-            // Make sure its not a cousin annotation, which can
-            // never be seen
-            // TODO: Have a better function at Pointer to check
-            // for these "initial starts with" cases in a way
-            // that we don't have to copy pointers, which `.initial()`
-            // does.
-            schema_location.initial().starts_with(
-                context.evaluate_path().initial()) &&
-            // We want to ignore certain annotations, like the ones
-            // inside "not"
-            !context.masked(schema_location)) {
-          result = false;
-          break;
-        }
-      }
-    }
-
-    // We treat this step as transparent to the consumer
-    context.pop(assertion);
-    return result;
-  } else if (std::holds_alternative<SchemaCompilerInternalContainer>(step)) {
-    const auto &container{std::get<SchemaCompilerInternalContainer>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueNone>(container.value));
-    context.push(container);
-    EVALUATE_CONDITION_GUARD(container, instance);
-    result = true;
-    for (const auto &child : container.children) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
-        result = false;
-        break;
-      }
-    }
-
-    // We treat this step as transparent to the consumer
-    context.pop(container);
-    return result;
-  } else if (std::holds_alternative<SchemaCompilerInternalDefinesAll>(step)) {
-    const auto &assertion{std::get<SchemaCompilerInternalDefinesAll>(step)};
-    context.push(assertion);
-    EVALUATE_CONDITION_GUARD(assertion, instance);
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
-    assert(target.is_object());
-    result = true;
-    for (const auto &property : value) {
-      if (!target.defines(property)) {
-        result = false;
-        break;
-      }
-    }
-
-    // We treat this step as transparent to the consumer
-    context.pop(assertion);
-    return result;
   } else if (std::holds_alternative<SchemaCompilerControlLabel>(step)) {
     const auto &control{std::get<SchemaCompilerControlLabel>(step)};
     context.mark(control.id, control.children);
     context.push(control);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(control, context.instance_location());
     result = true;
     for (const auto &child : control.children) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
@@ -774,7 +739,7 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerControlJump>(step)) {
     const auto &control{std::get<SchemaCompilerControlJump>(step)};
     context.push(control);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(control, context.instance_location());
     assert(control.children.empty());
     result = true;
     for (const auto &child : context.jump(control.id)) {
@@ -791,7 +756,7 @@ auto evaluate_step(
                  step)) {
     const auto &control{std::get<SchemaCompilerControlDynamicAnchorJump>(step)};
     context.push(control);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(control, context.instance_location());
     const auto id{context.find_dynamic_anchor(control.id)};
     result = id.has_value();
     if (id.has_value()) {
@@ -806,8 +771,8 @@ auto evaluate_step(
     }
 
     CALLBACK_POST(control);
-  } else if (std::holds_alternative<SchemaCompilerAnnotationPublic>(step)) {
-    const auto &annotation{std::get<SchemaCompilerAnnotationPublic>(step)};
+  } else if (std::holds_alternative<SchemaCompilerAnnotationEmit>(step)) {
+    const auto &annotation{std::get<SchemaCompilerAnnotationEmit>(step)};
     context.push(annotation);
     EVALUATE_CONDITION_GUARD(annotation, instance);
     const auto current_instance_location{context.instance_location(annotation)};
@@ -820,7 +785,7 @@ auto evaluate_step(
     // As a safety guard, only emit the annotation if it didn't exist already.
     // Otherwise we risk confusing consumers
     if (value.second) {
-      CALLBACK_PRE(current_instance_location);
+      CALLBACK_PRE(annotation, current_instance_location);
       callback(SchemaCompilerEvaluationType::Post, result, step,
                context.evaluate_path(), current_instance_location, value.first);
     }
@@ -831,13 +796,8 @@ auto evaluate_step(
     const auto &loop{std::get<SchemaCompilerLoopProperties>(step)};
     context.push(loop);
     EVALUATE_CONDITION_GUARD(loop, instance);
-    const auto value{context.resolve_value(loop.value, instance)};
-
-    // Setting the value to false means "don't report it"
-    if (value) {
-      CALLBACK_PRE(context.instance_location());
-    }
-
+    assert(std::holds_alternative<SchemaCompilerValueNone>(loop.value));
+    CALLBACK_PRE(loop, context.instance_location());
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
     assert(target.is_object());
     result = true;
@@ -860,18 +820,12 @@ auto evaluate_step(
     }
 
   evaluate_loop_properties_end:
-    // Setting the value to false means "don't report it"
-    if (!value) {
-      context.pop(loop);
-      return result;
-    }
-
     CALLBACK_POST(loop);
   } else if (std::holds_alternative<SchemaCompilerLoopKeys>(step)) {
     const auto &loop{std::get<SchemaCompilerLoopKeys>(step)};
     context.push(loop);
     EVALUATE_CONDITION_GUARD(loop, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(loop, context.instance_location());
     assert(std::holds_alternative<SchemaCompilerValueNone>(loop.value));
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
     assert(target.is_object());
@@ -901,7 +855,7 @@ auto evaluate_step(
     const auto &loop{std::get<SchemaCompilerLoopItems>(step)};
     context.push(loop);
     EVALUATE_CONDITION_GUARD(loop, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(loop, context.instance_location());
     const auto value{context.resolve_value(loop.value, instance)};
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
     assert(target.is_array());
@@ -942,7 +896,7 @@ auto evaluate_step(
         std::get<SchemaCompilerLoopItemsFromAnnotationIndex>(step)};
     context.push(loop);
     EVALUATE_CONDITION_GUARD(loop, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(loop, context.instance_location());
     const auto &value{context.resolve_value(loop.value, instance)};
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
     assert(target.is_array());
@@ -1002,7 +956,7 @@ auto evaluate_step(
     const auto &loop{std::get<SchemaCompilerLoopContains>(step)};
     context.push(loop);
     EVALUATE_CONDITION_GUARD(loop, instance);
-    CALLBACK_PRE(context.instance_location());
+    CALLBACK_PRE(loop, context.instance_location());
     const auto &value{context.resolve_value(loop.value, instance)};
     const auto minimum{std::get<0>(value)};
     const auto &maximum{std::get<1>(value)};

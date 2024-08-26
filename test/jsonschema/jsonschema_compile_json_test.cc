@@ -12,6 +12,7 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
                                      "#",
                                      "",
                                      true,
+                                     true,
                                      SchemaCompilerValueString{"foo"},
                                      {}}};
 
@@ -24,6 +25,7 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -51,6 +53,7 @@ TEST(JSONSchema_compile_json, defines_basic_nested) {
       "#/foo/bar",
       "",
       true,
+      true,
       SchemaCompilerValueString{"foo"},
       {}}};
 
@@ -63,6 +66,7 @@ TEST(JSONSchema_compile_json, defines_basic_nested) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#/foo/bar",
       "target": {
         "category": "target",
@@ -91,6 +95,7 @@ TEST(JSONSchema_compile_json, defines_with_condition) {
                                      "#",
                                      "",
                                      true,
+                                     true,
                                      SchemaCompilerValueString{"xxx"},
                                      {}}};
 
@@ -100,6 +105,7 @@ TEST(JSONSchema_compile_json, defines_with_condition) {
                                      Pointer{},
                                      "#",
                                      "",
+                                     true,
                                      true,
                                      SchemaCompilerValueString{"baz"},
                                      condition}};
@@ -113,6 +119,7 @@ TEST(JSONSchema_compile_json, defines_with_condition) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -132,6 +139,7 @@ TEST(JSONSchema_compile_json, defines_with_condition) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -161,6 +169,7 @@ TEST(JSONSchema_compile_json, fail_basic_root) {
                                   "#",
                                   "",
                                   true,
+                                  true,
                                   SchemaCompilerValueNone{},
                                   {}}};
 
@@ -173,6 +182,7 @@ TEST(JSONSchema_compile_json, fail_basic_root) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -196,6 +206,7 @@ TEST(JSONSchema_compile_json, type_basic_root) {
       "#",
       "",
       true,
+      true,
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -208,6 +219,7 @@ TEST(JSONSchema_compile_json, type_basic_root) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -235,6 +247,7 @@ TEST(JSONSchema_compile_json, or_empty) {
                               "#",
                               "",
                               true,
+                              true,
                               false,
                               {},
                               {}}};
@@ -258,6 +271,7 @@ TEST(JSONSchema_compile_json, or_empty) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": []
@@ -277,6 +291,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
       "#",
       "",
       true,
+      true,
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -286,6 +301,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
                               Pointer{},
                               "#",
                               "",
+                              true,
                               true,
                               false,
                               children,
@@ -310,6 +326,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "children": [
         {
@@ -319,6 +336,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -351,6 +369,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
           "#",
           "",
           true,
+          true,
           SchemaCompilerValueType{JSON::Type::String},
           {}},
       SchemaCompilerAssertionTypeStrict{
@@ -359,6 +378,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
           Pointer{},
           "#",
           "",
+          true,
           true,
           SchemaCompilerValueType{JSON::Type::Array},
           {}}};
@@ -369,6 +389,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
                               Pointer{},
                               "#",
                               "",
+                              true,
                               true,
                               false,
                               children,
@@ -393,6 +414,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "children": [
         {
@@ -402,6 +424,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -422,6 +445,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -453,6 +477,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
       "#",
       "",
       true,
+      true,
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -462,6 +487,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
                               Pointer{},
                               "#",
                               "",
+                              true,
                               true,
                               false,
                               {},
@@ -486,6 +512,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": [
@@ -496,6 +523,7 @@ TEST(JSONSchema_compile_json, or_empty_single_condition) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -525,6 +553,7 @@ TEST(JSONSchema_compile_json, and_empty) {
                                "#",
                                "",
                                true,
+                               true,
                                SchemaCompilerValueNone{},
                                {},
                                {}}};
@@ -544,6 +573,7 @@ TEST(JSONSchema_compile_json, and_empty) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": []
@@ -563,6 +593,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
       "#",
       "",
       true,
+      true,
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -572,6 +603,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
                                Pointer{},
                                "#",
                                "",
+                               true,
                                true,
                                SchemaCompilerValueNone{},
                                children,
@@ -592,6 +624,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "children": [
         {
@@ -601,6 +634,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -633,6 +667,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
           "#",
           "",
           true,
+          true,
           SchemaCompilerValueType{JSON::Type::String},
           {}},
       SchemaCompilerAssertionTypeStrict{
@@ -641,6 +676,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
           Pointer{},
           "#",
           "",
+          true,
           true,
           SchemaCompilerValueType{JSON::Type::Array},
           {}}};
@@ -651,6 +687,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
                                Pointer{},
                                "#",
                                "",
+                               true,
                                true,
                                SchemaCompilerValueNone{},
                                children,
@@ -671,6 +708,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "children": [
         {
@@ -680,6 +718,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -700,6 +739,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -731,6 +771,7 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
       "#",
       "",
       true,
+      true,
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -740,6 +781,7 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
                                Pointer{},
                                "#",
                                "",
+                               true,
                                true,
                                SchemaCompilerValueNone{},
                                {},
@@ -760,6 +802,7 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "children": [],
       "condition": [
@@ -770,6 +813,7 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -793,12 +837,13 @@ TEST(JSONSchema_compile_json, and_empty_single_condition) {
 TEST(JSONSchema_compile_json, public_annotation_without_condition) {
   using namespace sourcemeta::jsontoolkit;
 
-  const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPublic{
+  const SchemaCompilerTemplate steps{SchemaCompilerAnnotationEmit{
       {SchemaCompilerTargetType::Instance, {"foo"}},
       Pointer{"test"},
       Pointer{},
       "#/test",
       "",
+      true,
       true,
       JSON{5},
       {}}};
@@ -807,11 +852,12 @@ TEST(JSONSchema_compile_json, public_annotation_without_condition) {
   const JSON expected{parse(R"EOF([
     {
       "category": "annotation",
-      "type": "public",
+      "type": "emit",
       "relativeSchemaLocation": "/test",
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#/test",
       "target": {
         "category": "target",
@@ -840,15 +886,17 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
       "#",
       "",
       true,
+      true,
       SchemaCompilerValueType{JSON::Type::Object},
       {}}};
 
-  const SchemaCompilerTemplate steps{SchemaCompilerAnnotationPublic{
+  const SchemaCompilerTemplate steps{SchemaCompilerAnnotationEmit{
       {SchemaCompilerTargetType::Instance, {"foo"}},
       Pointer{"test"},
       Pointer{},
       "#/test",
       "",
+      true,
       true,
       JSON{5},
       condition}};
@@ -857,11 +905,12 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
   const JSON expected{parse(R"EOF([
     {
       "category": "annotation",
-      "type": "public",
+      "type": "emit",
       "relativeSchemaLocation": "/test",
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#/test",
       "target": {
         "category": "target",
@@ -881,6 +930,7 @@ TEST(JSONSchema_compile_json, public_annotation_with_condition) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -911,6 +961,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
       "#",
       "",
       true,
+      true,
       SchemaCompilerValueType{JSON::Type::String},
       {}}};
 
@@ -920,6 +971,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
       Pointer{},
       "#",
       "",
+      true,
       true,
       SchemaCompilerValueType{JSON::Type::Object},
       {}}};
@@ -932,6 +984,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
                                    "",
                                    true,
                                    true,
+                                   SchemaCompilerValueNone{},
                                    children,
                                    condition}};
 
@@ -940,15 +993,12 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
     {
       "category": "loop",
       "type": "properties",
-      "value": {
-        "category": "value",
-        "type": "boolean",
-        "value": true
-      },
+      "value": null,
       "relativeSchemaLocation": "/loop",
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#/loop",
       "target": {
         "category": "target",
@@ -963,6 +1013,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -985,6 +1036,7 @@ TEST(JSONSchema_compile_json, loop_properties_with_children_and_condition) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -1014,6 +1066,7 @@ TEST(JSONSchema_compile_json, regex_basic) {
       "#",
       "",
       true,
+      true,
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
       {}}};
 
@@ -1026,6 +1079,7 @@ TEST(JSONSchema_compile_json, regex_basic) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#",
       "target": {
         "category": "target",
@@ -1047,12 +1101,13 @@ TEST(JSONSchema_compile_json, regex_basic) {
 TEST(JSONSchema_compile_json, loop_properties_annotation_instance_basename) {
   using namespace sourcemeta::jsontoolkit;
 
-  const SchemaCompilerTemplate children{SchemaCompilerAnnotationPublic{
+  const SchemaCompilerTemplate children{SchemaCompilerAnnotationEmit{
       {SchemaCompilerTargetType::Instance, {}},
       Pointer{},
       Pointer{},
       "#",
       "",
+      true,
       true,
       SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename, {}},
       {}}};
@@ -1065,6 +1120,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_basename) {
                                    "",
                                    true,
                                    true,
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -1073,15 +1129,12 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_basename) {
     {
       "category": "loop",
       "type": "properties",
-      "value": {
-        "category": "value",
-        "type": "boolean",
-        "value": true
-      },
+      "value": null,
       "relativeSchemaLocation": "/loop",
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#/loop",
       "target": {
         "category": "target",
@@ -1091,11 +1144,12 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_basename) {
       "children": [
         {
           "category": "annotation",
-          "type": "public",
+          "type": "emit",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
@@ -1120,12 +1174,13 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_basename) {
 TEST(JSONSchema_compile_json, loop_properties_annotation_instance_parent) {
   using namespace sourcemeta::jsontoolkit;
 
-  const SchemaCompilerTemplate children{SchemaCompilerAnnotationPublic{
+  const SchemaCompilerTemplate children{SchemaCompilerAnnotationEmit{
       {SchemaCompilerTargetType::Instance, {}},
       Pointer{},
       Pointer{},
       "#",
       "",
+      true,
       true,
       SchemaCompilerTarget{SchemaCompilerTargetType::InstanceParent, {}},
       {}}};
@@ -1138,6 +1193,7 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_parent) {
                                    "",
                                    true,
                                    true,
+                                   SchemaCompilerValueNone{},
                                    children,
                                    {}}};
 
@@ -1146,15 +1202,12 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_parent) {
     {
       "category": "loop",
       "type": "properties",
-      "value": {
-        "category": "value",
-        "type": "boolean",
-        "value": true
-      },
+      "value": null,
       "relativeSchemaLocation": "/loop",
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": true,
+      "report": true,
       "absoluteKeywordLocation": "#/loop",
       "target": {
         "category": "target",
@@ -1164,11 +1217,12 @@ TEST(JSONSchema_compile_json, loop_properties_annotation_instance_parent) {
       "children": [
         {
           "category": "annotation",
-          "type": "public",
+          "type": "emit",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": true,
+          "report": true,
           "absoluteKeywordLocation": "#",
           "target": {
             "category": "target",
