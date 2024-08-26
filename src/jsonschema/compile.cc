@@ -27,8 +27,8 @@ auto compile_subschema(
       return {};
     } else {
       return {make<SchemaCompilerAssertionFail>(
-          context, schema_context, dynamic_context, SchemaCompilerValueNone{},
-          {}, SchemaCompilerTargetType::Instance)};
+          true, context, schema_context, dynamic_context,
+          SchemaCompilerValueNone{}, {}, SchemaCompilerTargetType::Instance)};
     }
   }
 
@@ -150,7 +150,7 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
                                 {}};
 
       compiler_template.push_back(make<SchemaCompilerControlMark>(
-          context, nested_schema_context, dynamic_context,
+          true, context, nested_schema_context, dynamic_context,
           SchemaCompilerValueUnsignedInteger{label},
           compile(context, nested_schema_context, relative_dynamic_context,
                   empty_pointer, empty_pointer, entry.first.second)));

@@ -57,12 +57,13 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
       "relativeInstanceLocation": "",
       "schemaResource": "https://example.com/schema",
       "dynamic": false,
+      "report": true,
       "absoluteKeywordLocation": "https://example.com/schema#/properties",
       "condition": [],
       "children": [
         {
-          "category": "internal",
-          "type": "container",
+          "category": "logical",
+          "type": "and",
           "value": null,
           "target": {
             "category": "target",
@@ -73,6 +74,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
           "relativeInstanceLocation": "",
           "schemaResource": "https://example.com/schema",
           "dynamic": false,
+          "report": false,
           "absoluteKeywordLocation": "https://example.com/schema#/properties",
           "children": [
             {
@@ -83,6 +85,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
               "relativeInstanceLocation": "/foo",
               "schemaResource": "https://example.com/schema",
               "dynamic": false,
+              "report": true,
               "absoluteKeywordLocation": "https://example.com/schema#/properties/foo/type",
               "target": {
                 "category": "target",
@@ -97,12 +100,13 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
             },
             {
               "category": "annotation",
-              "type": "public",
+              "type": "emit",
               "condition": [],
               "relativeSchemaLocation": "",
               "relativeInstanceLocation": "",
               "schemaResource": "https://example.com/schema",
               "dynamic": false,
+              "report": true,
               "absoluteKeywordLocation": "https://example.com/schema#/properties",
               "target": {
                 "category": "target",
@@ -125,6 +129,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
               "relativeInstanceLocation": "",
               "schemaResource": "https://example.com/schema",
               "dynamic": false,
+              "report": true,
               "absoluteKeywordLocation": "https://example.com/schema#/properties",
               "target": {
                 "category": "target",
@@ -179,12 +184,13 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
       "relativeInstanceLocation": "",
       "schemaResource": "",
       "dynamic": false,
+      "report": true,
       "absoluteKeywordLocation": "#/properties",
       "condition": [],
       "children": [
         {
-          "category": "internal",
-          "type": "container",
+          "category": "logical",
+          "type": "and",
           "value": null,
           "target": {
             "category": "target",
@@ -195,6 +201,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": false,
+          "report": false,
           "absoluteKeywordLocation": "#/properties",
           "children": [
             {
@@ -205,6 +212,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "relativeInstanceLocation": "/bar",
               "schemaResource": "",
               "dynamic": false,
+              "report": true,
               "absoluteKeywordLocation": "#/properties/bar/type",
               "target": {
                 "category": "target",
@@ -219,12 +227,13 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
             },
             {
               "category": "annotation",
-              "type": "public",
+              "type": "emit",
               "condition": [],
               "relativeSchemaLocation": "",
               "relativeInstanceLocation": "",
               "schemaResource": "",
               "dynamic": false,
+              "report": true,
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -247,6 +256,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "relativeInstanceLocation": "",
               "schemaResource": "",
               "dynamic": false,
+              "report": true,
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -262,8 +272,8 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
           ]
         },
         {
-          "category": "internal",
-          "type": "container",
+          "category": "logical",
+          "type": "and",
           "value": null,
           "target": {
             "category": "target",
@@ -274,6 +284,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
           "relativeInstanceLocation": "",
           "schemaResource": "",
           "dynamic": false,
+          "report": false,
           "absoluteKeywordLocation": "#/properties",
           "children": [
             {
@@ -284,6 +295,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "relativeInstanceLocation": "/foo",
               "schemaResource": "",
               "dynamic": false,
+              "report": true,
               "absoluteKeywordLocation": "#/properties/foo/type",
               "target": {
                 "category": "target",
@@ -298,12 +310,13 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
             },
             {
               "category": "annotation",
-              "type": "public",
+              "type": "emit",
               "condition": [],
               "relativeSchemaLocation": "",
               "relativeInstanceLocation": "",
               "schemaResource": "",
               "dynamic": false,
+              "report": true,
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -326,6 +339,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "relativeInstanceLocation": "",
               "schemaResource": "",
               "dynamic": false,
+              "report": true,
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
