@@ -112,5 +112,4 @@ if(JSONTOOLKIT_TESTS)
     find_package(GoogleBenchmark REQUIRED)
     add_subdirectory(benchmark)
   endif()
-
 endif()
