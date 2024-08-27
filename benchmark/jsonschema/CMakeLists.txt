@@ -1,4 +1,5 @@
 add_executable(sourcemeta_jsontoolkit_benchmark_jsonschema compiler_basic.cc)
+noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_benchmark_jsonschema)
 
 target_link_libraries(sourcemeta_jsontoolkit_benchmark_jsonschema PRIVATE benchmark::benchmark)
 target_link_libraries(sourcemeta_jsontoolkit_benchmark_jsonschema PRIVATE benchmark::benchmark_main)
