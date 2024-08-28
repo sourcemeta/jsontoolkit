@@ -70,6 +70,7 @@ endif()
 if(PROJECT_IS_TOP_LEVEL)
   noa_target_clang_format(SOURCES
     src/*.h src/*.cc
+    benchmark/*.h benchmark/*.cc
     test/*.h test/*.cc)
   noa_target_clang_tidy(SOURCES
     src/*.h src/*.cc)
