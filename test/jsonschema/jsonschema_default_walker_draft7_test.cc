@@ -131,7 +131,7 @@ TEST(JSONSchema_default_walker_draft7, properties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("properties", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "required", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -652,9 +652,9 @@ TEST(JSONSchema_default_walker_draft7, keyword_priority_object) {
   const auto &vocabularies = VOCABULARIES_DRAFT7;
   const auto &walker = sourcemeta::jsontoolkit::default_schema_walker;
   using namespace sourcemeta::jsontoolkit;
-  EXPECT_EQ(keyword_priority("properties", vocabularies, walker), 1);
+  EXPECT_EQ(keyword_priority("properties", vocabularies, walker), 2);
   EXPECT_EQ(keyword_priority("patternProperties", vocabularies, walker), 1);
-  EXPECT_EQ(keyword_priority("additionalProperties", vocabularies, walker), 2);
+  EXPECT_EQ(keyword_priority("additionalProperties", vocabularies, walker), 3);
 }
 
 TEST(JSONSchema_default_walker_draft7, keyword_priority_other) {

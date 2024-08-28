@@ -18,6 +18,7 @@ TEST(JSONSchema_keyword_iterator, draft_2020_12) {
     "items": true,
     "minContains": 0,
     "maxContains": 1,
+    "required": [ "foo" ],
     "contains": true,
     "unevaluatedItems": true,
     "if": true,
@@ -38,7 +39,7 @@ TEST(JSONSchema_keyword_iterator, draft_2020_12) {
     EXPECT_EQ(entry.vocabularies.size(), 7);
   }
 
-  EXPECT_EQ(entries.size(), 14);
+  EXPECT_EQ(entries.size(), 15);
 
   EXPECT_EQ(entries.at(0).pointer,
             sourcemeta::jsontoolkit::Pointer({"$schema"}));
@@ -66,34 +67,37 @@ TEST(JSONSchema_keyword_iterator, draft_2020_12) {
   EXPECT_EQ(entries.at(5).value, sourcemeta::jsontoolkit::parse("[]"));
 
   EXPECT_EQ(entries.at(6).pointer,
-            sourcemeta::jsontoolkit::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(6).value, sourcemeta::jsontoolkit::parse("{}"));
+            sourcemeta::jsontoolkit::Pointer({"required"}));
+  EXPECT_EQ(entries.at(6).value, sourcemeta::jsontoolkit::parse("[ \"foo\" ]"));
 
   EXPECT_EQ(entries.at(7).pointer,
-            sourcemeta::jsontoolkit::Pointer({"additionalProperties"}));
+            sourcemeta::jsontoolkit::Pointer({"contains"}));
   EXPECT_EQ(entries.at(7).value, sourcemeta::jsontoolkit::JSON{true});
 
-  EXPECT_EQ(entries.at(8).pointer,
-            sourcemeta::jsontoolkit::Pointer({"contains"}));
+  EXPECT_EQ(entries.at(8).pointer, sourcemeta::jsontoolkit::Pointer({"else"}));
   EXPECT_EQ(entries.at(8).value, sourcemeta::jsontoolkit::JSON{true});
 
-  EXPECT_EQ(entries.at(9).pointer, sourcemeta::jsontoolkit::Pointer({"else"}));
+  EXPECT_EQ(entries.at(9).pointer, sourcemeta::jsontoolkit::Pointer({"items"}));
   EXPECT_EQ(entries.at(9).value, sourcemeta::jsontoolkit::JSON{true});
 
   EXPECT_EQ(entries.at(10).pointer,
-            sourcemeta::jsontoolkit::Pointer({"items"}));
-  EXPECT_EQ(entries.at(10).value, sourcemeta::jsontoolkit::JSON{true});
+            sourcemeta::jsontoolkit::Pointer({"properties"}));
+  EXPECT_EQ(entries.at(10).value, sourcemeta::jsontoolkit::parse("{}"));
 
   EXPECT_EQ(entries.at(11).pointer, sourcemeta::jsontoolkit::Pointer({"then"}));
   EXPECT_EQ(entries.at(11).value, sourcemeta::jsontoolkit::JSON{true});
 
   EXPECT_EQ(entries.at(12).pointer,
-            sourcemeta::jsontoolkit::Pointer({"unevaluatedItems"}));
+            sourcemeta::jsontoolkit::Pointer({"additionalProperties"}));
   EXPECT_EQ(entries.at(12).value, sourcemeta::jsontoolkit::JSON{true});
 
   EXPECT_EQ(entries.at(13).pointer,
-            sourcemeta::jsontoolkit::Pointer({"unevaluatedProperties"}));
+            sourcemeta::jsontoolkit::Pointer({"unevaluatedItems"}));
   EXPECT_EQ(entries.at(13).value, sourcemeta::jsontoolkit::JSON{true});
+
+  EXPECT_EQ(entries.at(14).pointer,
+            sourcemeta::jsontoolkit::Pointer({"unevaluatedProperties"}));
+  EXPECT_EQ(entries.at(14).value, sourcemeta::jsontoolkit::JSON{true});
 }
 
 TEST(JSONSchema_keyword_iterator, draft_2019_09) {
@@ -108,6 +112,7 @@ TEST(JSONSchema_keyword_iterator, draft_2019_09) {
     "items": [],
     "minContains": 0,
     "maxContains": 1,
+    "required": [ "foo" ],
     "contains": true,
     "unevaluatedItems": true,
     "if": true,
@@ -128,7 +133,7 @@ TEST(JSONSchema_keyword_iterator, draft_2019_09) {
     EXPECT_EQ(entry.vocabularies.size(), 6);
   }
 
-  EXPECT_EQ(entries.size(), 14);
+  EXPECT_EQ(entries.size(), 15);
 
   EXPECT_EQ(entries.at(0).pointer,
             sourcemeta::jsontoolkit::Pointer({"$schema"}));
@@ -155,34 +160,38 @@ TEST(JSONSchema_keyword_iterator, draft_2019_09) {
   EXPECT_EQ(entries.at(5).value, sourcemeta::jsontoolkit::parse("{}"));
 
   EXPECT_EQ(entries.at(6).pointer,
-            sourcemeta::jsontoolkit::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(6).value, sourcemeta::jsontoolkit::parse("{}"));
+            sourcemeta::jsontoolkit::Pointer({"required"}));
+  EXPECT_EQ(entries.at(6).value, sourcemeta::jsontoolkit::parse("[ \"foo\" ]"));
 
   EXPECT_EQ(entries.at(7).pointer,
             sourcemeta::jsontoolkit::Pointer({"additionalItems"}));
   EXPECT_EQ(entries.at(7).value, sourcemeta::jsontoolkit::JSON{true});
 
   EXPECT_EQ(entries.at(8).pointer,
-            sourcemeta::jsontoolkit::Pointer({"additionalProperties"}));
+            sourcemeta::jsontoolkit::Pointer({"contains"}));
   EXPECT_EQ(entries.at(8).value, sourcemeta::jsontoolkit::JSON{true});
 
-  EXPECT_EQ(entries.at(9).pointer,
-            sourcemeta::jsontoolkit::Pointer({"contains"}));
+  EXPECT_EQ(entries.at(9).pointer, sourcemeta::jsontoolkit::Pointer({"else"}));
   EXPECT_EQ(entries.at(9).value, sourcemeta::jsontoolkit::JSON{true});
 
-  EXPECT_EQ(entries.at(10).pointer, sourcemeta::jsontoolkit::Pointer({"else"}));
-  EXPECT_EQ(entries.at(10).value, sourcemeta::jsontoolkit::JSON{true});
+  EXPECT_EQ(entries.at(10).pointer,
+            sourcemeta::jsontoolkit::Pointer({"properties"}));
+  EXPECT_EQ(entries.at(10).value, sourcemeta::jsontoolkit::parse("{}"));
 
   EXPECT_EQ(entries.at(11).pointer, sourcemeta::jsontoolkit::Pointer({"then"}));
   EXPECT_EQ(entries.at(11).value, sourcemeta::jsontoolkit::JSON{true});
 
   EXPECT_EQ(entries.at(12).pointer,
-            sourcemeta::jsontoolkit::Pointer({"unevaluatedItems"}));
+            sourcemeta::jsontoolkit::Pointer({"additionalProperties"}));
   EXPECT_EQ(entries.at(12).value, sourcemeta::jsontoolkit::JSON{true});
 
   EXPECT_EQ(entries.at(13).pointer,
-            sourcemeta::jsontoolkit::Pointer({"unevaluatedProperties"}));
+            sourcemeta::jsontoolkit::Pointer({"unevaluatedItems"}));
   EXPECT_EQ(entries.at(13).value, sourcemeta::jsontoolkit::JSON{true});
+
+  EXPECT_EQ(entries.at(14).pointer,
+            sourcemeta::jsontoolkit::Pointer({"unevaluatedProperties"}));
+  EXPECT_EQ(entries.at(14).value, sourcemeta::jsontoolkit::JSON{true});
 }
 
 TEST(JSONSchema_keyword_iterator, draft7) {
@@ -193,6 +202,7 @@ TEST(JSONSchema_keyword_iterator, draft7) {
     "patternProperties": {},
     "additionalProperties": true,
     "additionalItems": true,
+    "required": [ "foo" ],
     "items": [],
     "if": true,
     "then": true,
@@ -211,7 +221,7 @@ TEST(JSONSchema_keyword_iterator, draft7) {
     EXPECT_EQ(entry.vocabularies.size(), 1);
   }
 
-  EXPECT_EQ(entries.size(), 9);
+  EXPECT_EQ(entries.size(), 10);
 
   EXPECT_EQ(entries.at(0).pointer,
             sourcemeta::jsontoolkit::Pointer({"$schema"}));
@@ -230,22 +240,26 @@ TEST(JSONSchema_keyword_iterator, draft7) {
   EXPECT_EQ(entries.at(3).value, sourcemeta::jsontoolkit::parse("{}"));
 
   EXPECT_EQ(entries.at(4).pointer,
-            sourcemeta::jsontoolkit::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(4).value, sourcemeta::jsontoolkit::parse("{}"));
+            sourcemeta::jsontoolkit::Pointer({"required"}));
+  EXPECT_EQ(entries.at(4).value, sourcemeta::jsontoolkit::parse("[ \"foo\" ]"));
 
   EXPECT_EQ(entries.at(5).pointer,
             sourcemeta::jsontoolkit::Pointer({"additionalItems"}));
   EXPECT_EQ(entries.at(5).value, sourcemeta::jsontoolkit::JSON{true});
 
-  EXPECT_EQ(entries.at(6).pointer,
-            sourcemeta::jsontoolkit::Pointer({"additionalProperties"}));
+  EXPECT_EQ(entries.at(6).pointer, sourcemeta::jsontoolkit::Pointer({"else"}));
   EXPECT_EQ(entries.at(6).value, sourcemeta::jsontoolkit::JSON{true});
 
-  EXPECT_EQ(entries.at(7).pointer, sourcemeta::jsontoolkit::Pointer({"else"}));
-  EXPECT_EQ(entries.at(7).value, sourcemeta::jsontoolkit::JSON{true});
+  EXPECT_EQ(entries.at(7).pointer,
+            sourcemeta::jsontoolkit::Pointer({"properties"}));
+  EXPECT_EQ(entries.at(7).value, sourcemeta::jsontoolkit::parse("{}"));
 
   EXPECT_EQ(entries.at(8).pointer, sourcemeta::jsontoolkit::Pointer({"then"}));
   EXPECT_EQ(entries.at(8).value, sourcemeta::jsontoolkit::JSON{true});
+
+  EXPECT_EQ(entries.at(9).pointer,
+            sourcemeta::jsontoolkit::Pointer({"additionalProperties"}));
+  EXPECT_EQ(entries.at(9).value, sourcemeta::jsontoolkit::JSON{true});
 }
 
 TEST(JSONSchema_keyword_iterator, draft6) {
@@ -254,6 +268,7 @@ TEST(JSONSchema_keyword_iterator, draft6) {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "properties": {},
     "patternProperties": {},
+    "required": [ "foo" ],
     "additionalProperties": true,
     "additionalItems": true,
     "items": []
@@ -271,7 +286,7 @@ TEST(JSONSchema_keyword_iterator, draft6) {
     EXPECT_EQ(entry.vocabularies.size(), 1);
   }
 
-  EXPECT_EQ(entries.size(), 6);
+  EXPECT_EQ(entries.size(), 7);
 
   EXPECT_EQ(entries.at(0).pointer,
             sourcemeta::jsontoolkit::Pointer({"$schema"}));
@@ -287,16 +302,20 @@ TEST(JSONSchema_keyword_iterator, draft6) {
   EXPECT_EQ(entries.at(2).value, sourcemeta::jsontoolkit::parse("{}"));
 
   EXPECT_EQ(entries.at(3).pointer,
-            sourcemeta::jsontoolkit::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(3).value, sourcemeta::jsontoolkit::parse("{}"));
+            sourcemeta::jsontoolkit::Pointer({"required"}));
+  EXPECT_EQ(entries.at(3).value, sourcemeta::jsontoolkit::parse("[ \"foo\" ]"));
 
   EXPECT_EQ(entries.at(4).pointer,
             sourcemeta::jsontoolkit::Pointer({"additionalItems"}));
   EXPECT_EQ(entries.at(4).value, sourcemeta::jsontoolkit::JSON{true});
 
   EXPECT_EQ(entries.at(5).pointer,
+            sourcemeta::jsontoolkit::Pointer({"properties"}));
+  EXPECT_EQ(entries.at(5).value, sourcemeta::jsontoolkit::parse("{}"));
+
+  EXPECT_EQ(entries.at(6).pointer,
             sourcemeta::jsontoolkit::Pointer({"additionalProperties"}));
-  EXPECT_EQ(entries.at(5).value, sourcemeta::jsontoolkit::JSON{true});
+  EXPECT_EQ(entries.at(6).value, sourcemeta::jsontoolkit::JSON{true});
 }
 
 TEST(JSONSchema_keyword_iterator, draft4) {
@@ -305,6 +324,7 @@ TEST(JSONSchema_keyword_iterator, draft4) {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "properties": {},
     "patternProperties": {},
+    "required": [ "foo" ],
     "additionalProperties": true,
     "additionalItems": true,
     "items": []
@@ -322,7 +342,7 @@ TEST(JSONSchema_keyword_iterator, draft4) {
     EXPECT_EQ(entry.vocabularies.size(), 1);
   }
 
-  EXPECT_EQ(entries.size(), 6);
+  EXPECT_EQ(entries.size(), 7);
 
   EXPECT_EQ(entries.at(0).pointer,
             sourcemeta::jsontoolkit::Pointer({"$schema"}));
@@ -342,12 +362,16 @@ TEST(JSONSchema_keyword_iterator, draft4) {
   EXPECT_EQ(entries.at(3).value, sourcemeta::jsontoolkit::JSON{true});
 
   EXPECT_EQ(entries.at(4).pointer,
-            sourcemeta::jsontoolkit::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(4).value, sourcemeta::jsontoolkit::parse("{}"));
+            sourcemeta::jsontoolkit::Pointer({"required"}));
+  EXPECT_EQ(entries.at(4).value, sourcemeta::jsontoolkit::parse("[ \"foo\" ]"));
 
   EXPECT_EQ(entries.at(5).pointer,
+            sourcemeta::jsontoolkit::Pointer({"properties"}));
+  EXPECT_EQ(entries.at(5).value, sourcemeta::jsontoolkit::parse("{}"));
+
+  EXPECT_EQ(entries.at(6).pointer,
             sourcemeta::jsontoolkit::Pointer({"additionalProperties"}));
-  EXPECT_EQ(entries.at(5).value, sourcemeta::jsontoolkit::JSON{true});
+  EXPECT_EQ(entries.at(6).value, sourcemeta::jsontoolkit::JSON{true});
 }
 
 TEST(JSONSchema_keyword_iterator, draft3) {
