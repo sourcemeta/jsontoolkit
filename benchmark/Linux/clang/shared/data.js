@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724877176934,
+  "lastUpdate": 1724880519155,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark": [
@@ -142,6 +142,42 @@ window.BENCHMARK_DATA = {
             "value": 17739.05794303484,
             "unit": "ns/iter",
             "extra": "iterations: 37813\ncpu: 17738.654431015788 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56ab6c2a0aec0eacba6b0527d583c64899ee65d8",
+          "message": "Fix how we end the annotation emit trace (#1045)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-28T17:22:34-04:00",
+          "tree_id": "a3ff5e0010772f89874c9dd86b29875ca103726c",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/56ab6c2a0aec0eacba6b0527d583c64899ee65d8"
+        },
+        "date": 1724880518200,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 338893.82392995787,
+            "unit": "ns/iter",
+            "extra": "iterations: 2056\ncpu: 338876.87354085606 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 17855.08820042234,
+            "unit": "ns/iter",
+            "extra": "iterations: 38798\ncpu: 17854.234187329243 ns\nthreads: 1"
           }
         ]
       }
