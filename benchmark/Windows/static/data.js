@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724873624343,
+  "lastUpdate": 1724877353135,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark": [
@@ -106,6 +106,42 @@ window.BENCHMARK_DATA = {
             "value": 33469.82749769053,
             "unit": "ns/iter",
             "extra": "iterations: 19478\ncpu: 33691.85748023411 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cafc42ce8e704b669fb7d59fbec53976c64446ad",
+          "message": "Introduce basic tracing facilities for schema evaluation (#1043)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-28T16:26:42-04:00",
+          "tree_id": "4a06b1e17f1b7f5edbe5f4b1472e2055ce611cba",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/cafc42ce8e704b669fb7d59fbec53976c64446ad"
+        },
+        "date": 1724877348557,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 731082.589285543,
+            "unit": "ns/iter",
+            "extra": "iterations: 896\ncpu: 732421.875 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 33569.087605583445,
+            "unit": "ns/iter",
+            "extra": "iterations: 20364\ncpu: 33760.5578471813 ns\nthreads: 1"
           }
         ]
       }
