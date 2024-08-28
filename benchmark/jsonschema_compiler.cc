@@ -3,7 +3,7 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-static void Compiler_Basic(benchmark::State &state) {
+static void JSONSchema_Compile_Basic(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -22,4 +22,4 @@ static void Compiler_Basic(benchmark::State &state) {
   }
 }
 
-BENCHMARK(Compiler_Basic);
+BENCHMARK(JSONSchema_Compile_Basic);
