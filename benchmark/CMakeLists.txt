@@ -8,17 +8,17 @@ endif()
 if(BENCHMARK_SOURCES)
   add_executable(sourcemeta_jsontoolkit_benchmark ${BENCHMARK_SOURCES})
   noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_benchmark)
-  target_link_libraries(sourcemeta_jsontoolkit_benchmark 
+  target_link_libraries(sourcemeta_jsontoolkit_benchmark
     PRIVATE benchmark::benchmark)
-  target_link_libraries(sourcemeta_jsontoolkit_benchmark 
+  target_link_libraries(sourcemeta_jsontoolkit_benchmark
     PRIVATE benchmark::benchmark_main)
 
   if(JSONTOOLKIT_JSON)
-    target_link_libraries(sourcemeta_jsontoolkit_benchmark 
+    target_link_libraries(sourcemeta_jsontoolkit_benchmark
       PRIVATE sourcemeta::jsontoolkit::json)
   endif()
   if(JSONTOOLKIT_JSONSCHEMA)
-    target_link_libraries(sourcemeta_jsontoolkit_benchmark 
+    target_link_libraries(sourcemeta_jsontoolkit_benchmark
       PRIVATE sourcemeta::jsontoolkit::jsonschema)
   endif()
 
@@ -27,8 +27,8 @@ if(BENCHMARK_SOURCES)
     DEPENDS sourcemeta_jsontoolkit_benchmark
     COMMENT "Running benchmark...")
   add_custom_target(benchmark_json
-    COMMAND sourcemeta_jsontoolkit_benchmark 
-      --benchmark_format=json 
+    COMMAND sourcemeta_jsontoolkit_benchmark
+      --benchmark_format=json
       --benchmark_out="${PROJECT_BINARY_DIR}/benchmark.json"
     DEPENDS sourcemeta_jsontoolkit_benchmark
     COMMENT "Running benchmark...")
