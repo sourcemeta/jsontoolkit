@@ -20,37 +20,45 @@ jobs:
             cxx: clang++
             type: static
             shell: sh
+            benchmark: true
           - os: macos-latest
             cc: clang
             cxx: clang++
             type: shared
             shell: sh
+            benchmark: true
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: static
             shell: sh
+            benchmark: true
           - os: ubuntu-latest
             cc: gcc
             cxx: g++
             type: static
             shell: sh
+            benchmark: true
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: shared
             shell: sh
+            benchmark: true
           - os: ubuntu-latest
             cc: gcc
             cxx: g++
             type: shared
             shell: sh
+            benchmark: true
           - os: windows-latest
             type: static
             shell: pwsh
+            benchmark: true
           - os: windows-latest
             type: shared
             shell: pwsh
+            benchmark: true
 
           # Sanitizers
           - os: ubuntu-latest
@@ -58,12 +66,14 @@ jobs:
             cxx: clang++
             type: static
             shell: sh
+            benchmark: false
             options: -DJSONTOOLKIT_ADDRESS_SANITIZER:BOOL=ON
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: static
             shell: sh
+            benchmark: false
             options: -DJSONTOOLKIT_UNDEFINED_SANITIZER:BOOL=ON
 
     defaults:
@@ -126,4 +136,6 @@ jobs:
           UBSAN_OPTIONS: print_stacktrace=1
 
       - run: cmake --build ./build --config Release --verbose --target benchmark_all
+        if: matrix.platform.benchmark
       - run: cmake --build ./build --config Release --verbose --target benchmark_json
+        if: matrix.platform.benchmark
