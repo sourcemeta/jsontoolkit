@@ -683,9 +683,7 @@ auto evaluate_step(
     for (const auto &child : logical.children) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
         result = false;
-        if (!logical.report || mode == SchemaCompilerEvaluationMode::Fast) {
-          break;
-        }
+        break;
       }
     }
 
@@ -778,9 +776,7 @@ auto evaluate_step(
     for (const auto &child : control.children) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
         result = false;
-        if (mode == SchemaCompilerEvaluationMode::Fast) {
-          break;
-        }
+        break;
       }
     }
 
@@ -801,9 +797,7 @@ auto evaluate_step(
     for (const auto &child : context.jump(control.id)) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
         result = false;
-        if (mode == SchemaCompilerEvaluationMode::Fast) {
-          break;
-        }
+        break;
       }
     }
 
@@ -820,9 +814,7 @@ auto evaluate_step(
       for (const auto &child : context.jump(id.value())) {
         if (!evaluate_step(child, instance, mode, callback, context)) {
           result = false;
-          if (mode == SchemaCompilerEvaluationMode::Fast) {
-            break;
-          }
+          break;
         }
       }
     }
@@ -868,13 +860,9 @@ auto evaluate_step(
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, instance, mode, callback, context)) {
           result = false;
-          if (mode == SchemaCompilerEvaluationMode::Fast) {
-            context.pop(loop);
-            // For efficiently breaking from the outer loop too
-            goto evaluate_loop_properties_end;
-          } else {
-            break;
-          }
+          context.pop(loop);
+          // For efficiently breaking from the outer loop too
+          goto evaluate_loop_properties_end;
         }
       }
 
@@ -899,12 +887,8 @@ auto evaluate_step(
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, instance, mode, callback, context)) {
           result = false;
-          if (mode == SchemaCompilerEvaluationMode::Fast) {
-            context.pop(loop);
-            goto evaluate_loop_keys_end;
-          } else {
-            break;
-          }
+          context.pop(loop);
+          goto evaluate_loop_keys_end;
         }
       }
 
@@ -941,12 +925,8 @@ auto evaluate_step(
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, instance, mode, callback, context)) {
           result = false;
-          if (mode == SchemaCompilerEvaluationMode::Fast) {
-            context.pop(loop);
-            CALLBACK_POST("SchemaCompilerLoopItems", loop);
-          } else {
-            break;
-          }
+          context.pop(loop);
+          CALLBACK_POST("SchemaCompilerLoopItems", loop);
         }
       }
 
@@ -1006,12 +986,8 @@ auto evaluate_step(
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, instance, mode, callback, context)) {
           result = false;
-          if (mode == SchemaCompilerEvaluationMode::Fast) {
-            context.pop(loop);
-            CALLBACK_POST("SchemaCompilerLoopItemsFromAnnotationIndex", loop);
-          } else {
-            break;
-          }
+          context.pop(loop);
+          CALLBACK_POST("SchemaCompilerLoopItemsFromAnnotationIndex", loop);
         }
       }
 
@@ -1097,9 +1073,7 @@ inline auto evaluate_internal(
   for (const auto &step : steps) {
     if (!evaluate_step(step, instance, mode, callback, context)) {
       overall = false;
-      if (mode == sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast) {
-        break;
-      }
+      break;
     }
   }
 

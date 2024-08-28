@@ -615,58 +615,6 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_3_fast) {
                                "expected to validate against this subschema");
 }
 
-TEST(JSONSchema_compile_2019_09, additionalProperties_3_exhaustive) {
-  const sourcemeta::jsontoolkit::JSON schema{
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "https://json-schema.org/draft/2019-09/schema",
-    "additionalProperties": {
-      "type": "integer"
-    }
-  })JSON")};
-
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
-  const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": \"baz\" }")};
-
-  EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(compiled_schema, instance, 4);
-
-  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
-                     "#/additionalProperties", "");
-  EVALUATE_TRACE_PRE(1, AssertionType, "/additionalProperties/type",
-                     "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_PRE(2, AssertionType, "/additionalProperties/type",
-                     "#/additionalProperties/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/additionalProperties",
-                                       "#/additionalProperties", "");
-
-  EVALUATE_TRACE_POST_FAILURE(0, AssertionType, "/additionalProperties/type",
-                              "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/additionalProperties/type",
-                              "#/additionalProperties/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/additionalProperties",
-                                        "#/additionalProperties", "", "foo");
-  EVALUATE_TRACE_POST_FAILURE(3, LoopProperties, "/additionalProperties",
-                              "#/additionalProperties", "");
-
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The value was expected to be of type integer but it was of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The object property \"foo\" successfully validated against the "
-      "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "The object properties not covered by other "
-                               "adjacent object keywords were "
-                               "expected to validate against this subschema");
-}
-
 TEST(JSONSchema_compile_2019_09, contains_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
