@@ -789,7 +789,7 @@ auto evaluate_step(
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerControlMark");
     const auto &control{std::get<SchemaCompilerControlMark>(step)};
     context.mark(control.id, control.children);
-    SOURCEMETA_TRACE_END(trace_id, "evaluate_step");
+    SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerControlMark");
     return true;
   } else if (std::holds_alternative<SchemaCompilerControlJump>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerControlJump");
@@ -851,7 +851,7 @@ auto evaluate_step(
     }
 
     context.pop(annotation);
-    SOURCEMETA_TRACE_END(trace_id, "evaluate_step");
+    SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerAnnotationEmit");
     return result;
   } else if (std::holds_alternative<SchemaCompilerLoopProperties>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLoopProperties");
