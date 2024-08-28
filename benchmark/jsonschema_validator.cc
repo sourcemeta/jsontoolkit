@@ -3,7 +3,8 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-static void Draft4_Meta_1_No_Callback(benchmark::State &state) {
+static void
+JSONSchema_Validate_Draft4_Meta_1_No_Callback(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -26,4 +27,4 @@ static void Draft4_Meta_1_No_Callback(benchmark::State &state) {
   }
 }
 
-BENCHMARK(Draft4_Meta_1_No_Callback);
+BENCHMARK(JSONSchema_Validate_Draft4_Meta_1_No_Callback);
