@@ -126,3 +126,4 @@ jobs:
           UBSAN_OPTIONS: print_stacktrace=1
 
       - run: cmake --build ./build --config Release --verbose --target benchmark_all
+      - run: cmake --build ./build --config Release --verbose --target benchmark_json
