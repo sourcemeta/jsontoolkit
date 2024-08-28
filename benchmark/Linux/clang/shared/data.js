@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724872104671,
+  "lastUpdate": 1724873466452,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark": [
@@ -70,6 +70,42 @@ window.BENCHMARK_DATA = {
             "value": 17839.534384747687,
             "unit": "ns/iter",
             "extra": "iterations: 39756\ncpu: 17838.78365529731 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b28c217945a08b206314a0b619e990b6dcba9c70",
+          "message": "Get rid of weird trailing spaces in `benchmark/CMakeLists.txt` (#1044)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-28T15:25:03-04:00",
+          "tree_id": "d8629308cabea67e975197f85d2e631b4409d157",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/b28c217945a08b206314a0b619e990b6dcba9c70"
+        },
+        "date": 1724873465574,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 342864.5198237892,
+            "unit": "ns/iter",
+            "extra": "iterations: 2043\ncpu: 342840.1825746451 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 17799.999066175274,
+            "unit": "ns/iter",
+            "extra": "iterations: 39622\ncpu: 17799.171218010197 ns\nthreads: 1"
           }
         ]
       }
