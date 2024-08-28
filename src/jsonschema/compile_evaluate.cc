@@ -264,34 +264,28 @@ private:
   TargetType target_type_ = TargetType::Value;
 };
 
-auto callback_noop(
-    const sourcemeta::jsontoolkit::SchemaCompilerEvaluationType, bool,
-    const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
-    const sourcemeta::jsontoolkit::Pointer &,
-    const sourcemeta::jsontoolkit::Pointer &,
-    const sourcemeta::jsontoolkit::JSON &) noexcept -> void {}
-
 auto evaluate_step(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step,
     const sourcemeta::jsontoolkit::JSON &instance,
     const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode,
-    const sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback &callback,
+    const std::optional<
+        sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback> &callback,
     EvaluationContext &context) -> bool {
   using namespace sourcemeta::jsontoolkit;
   bool result{false};
 
 #define CALLBACK_PRE(current_step, current_instance_location)                  \
-  if (current_step.report) {                                                   \
-    callback(SchemaCompilerEvaluationType::Pre, true, step,                    \
-             context.evaluate_path(), current_instance_location,               \
-             context.value(nullptr));                                          \
+  if (current_step.report && callback.has_value()) {                           \
+    callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
+                     context.evaluate_path(), current_instance_location,       \
+                     context.value(nullptr));                                  \
   }
 
 #define CALLBACK_POST(current_step)                                            \
-  if (current_step.report) {                                                   \
-    callback(SchemaCompilerEvaluationType::Post, result, step,                 \
-             context.evaluate_path(), context.instance_location(),             \
-             context.value(nullptr));                                          \
+  if (current_step.report && callback.has_value()) {                           \
+    callback.value()(SchemaCompilerEvaluationType::Post, result, step,         \
+                     context.evaluate_path(), context.instance_location(),     \
+                     context.value(nullptr));                                  \
   }                                                                            \
   context.pop(current_step);                                                   \
   return result;
@@ -299,7 +293,7 @@ auto evaluate_step(
 #define EVALUATE_CONDITION_GUARD(step, instance)                               \
   for (const auto &child : step.condition) {                                   \
     if (!evaluate_step(child, instance, SchemaCompilerEvaluationMode::Fast,    \
-                       callback_noop, context)) {                              \
+                       std::nullopt, context)) {                               \
       context.pop(step);                                                       \
       return true;                                                             \
     }                                                                          \
@@ -669,7 +663,7 @@ auto evaluate_step(
 
         // We don't need to report traces that part of the exhaustive
         // XOR search. We can treat those as internal
-        if (evaluate_step(*subiterator, instance, mode, callback_noop,
+        if (evaluate_step(*subiterator, instance, mode, std::nullopt,
                           context)) {
           subresult = false;
           break;
@@ -784,10 +778,11 @@ auto evaluate_step(
 
     // As a safety guard, only emit the annotation if it didn't exist already.
     // Otherwise we risk confusing consumers
-    if (value.second) {
+    if (value.second && callback.has_value()) {
       CALLBACK_PRE(annotation, current_instance_location);
-      callback(SchemaCompilerEvaluationType::Post, result, step,
-               context.evaluate_path(), current_instance_location, value.first);
+      callback.value()(SchemaCompilerEvaluationType::Post, result, step,
+                       context.evaluate_path(), current_instance_location,
+                       value.first);
     }
 
     context.pop(annotation);
@@ -1017,19 +1012,19 @@ auto evaluate_step(
   return result;
 }
 
-} // namespace
-
-namespace sourcemeta::jsontoolkit {
-
-auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
-              const SchemaCompilerEvaluationMode mode,
-              const SchemaCompilerEvaluationCallback &callback) -> bool {
+inline auto evaluate_internal(
+    const sourcemeta::jsontoolkit::SchemaCompilerTemplate &steps,
+    const sourcemeta::jsontoolkit::JSON &instance,
+    const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode,
+    const std::optional<
+        sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback> &callback)
+    -> bool {
   EvaluationContext context;
   bool overall{true};
   for (const auto &step : steps) {
     if (!evaluate_step(step, instance, mode, callback, context)) {
       overall = false;
-      if (mode == SchemaCompilerEvaluationMode::Fast) {
+      if (mode == sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast) {
         break;
       }
     }
@@ -1043,12 +1038,22 @@ auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
   return overall;
 }
 
+} // namespace
+
+namespace sourcemeta::jsontoolkit {
+
+auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
+              const SchemaCompilerEvaluationMode mode,
+              const SchemaCompilerEvaluationCallback &callback) -> bool {
+  return evaluate_internal(steps, instance, mode, callback);
+}
+
 auto evaluate(const SchemaCompilerTemplate &steps,
               const JSON &instance) -> bool {
-  // Otherwise what's the point of an exhaustive
-  // evaluation if you don't get the results?
-  return evaluate(steps, instance, SchemaCompilerEvaluationMode::Fast,
-                  callback_noop);
+  return evaluate_internal(steps, instance,
+                           // Otherwise what's the point of an exhaustive
+                           // evaluation if you don't get the results?
+                           SchemaCompilerEvaluationMode::Fast, std::nullopt);
 }
 
 } // namespace sourcemeta::jsontoolkit
