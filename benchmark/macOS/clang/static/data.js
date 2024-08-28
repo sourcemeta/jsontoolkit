@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724868515824,
+  "lastUpdate": 1724871930672,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark": [
@@ -36,6 +36,40 @@ window.BENCHMARK_DATA = {
             "value": 13122.366307414713,
             "unit": "ns/iter",
             "extra": "iterations: 53537\ncpu: 13100.640678409336 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "2e43ba5f786c9306c94da0d27f70fa11f636b0bc",
+          "message": "Use nicer OS names on benchmark results (#1042)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-28T18:05:10Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/2e43ba5f786c9306c94da0d27f70fa11f636b0bc"
+        },
+        "date": 1724871929067,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 188094.00677689744,
+            "unit": "ns/iter",
+            "extra": "iterations: 3689\ncpu: 188086.7443751694 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 12139.83090565693,
+            "unit": "ns/iter",
+            "extra": "iterations: 57737\ncpu: 12138.92304761244 ns\nthreads: 1"
           }
         ]
       }
