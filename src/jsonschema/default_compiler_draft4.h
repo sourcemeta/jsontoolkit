@@ -658,29 +658,35 @@ auto compiler_draft4_applicator_items_conditional_annotation(
     const SchemaCompilerDynamicContext &dynamic_context,
     const bool annotate) -> SchemaCompilerTemplate {
   if (is_schema(schema_context.schema.at(dynamic_context.keyword))) {
-    SchemaCompilerTemplate children;
-    children.push_back(make<SchemaCompilerLoopItems>(
-        true, context, schema_context, relative_dynamic_context,
-        SchemaCompilerValueUnsignedInteger{0},
-        compile(context, schema_context, relative_dynamic_context,
-                empty_pointer, empty_pointer),
-        SchemaCompilerTemplate{}));
-
     if (annotate) {
+      SchemaCompilerTemplate children;
+      children.push_back(make<SchemaCompilerLoopItems>(
+          true, context, schema_context, relative_dynamic_context,
+          SchemaCompilerValueUnsignedInteger{0},
+          compile(context, schema_context, relative_dynamic_context,
+                  empty_pointer, empty_pointer),
+          SchemaCompilerTemplate{}));
       children.push_back(make<SchemaCompilerAnnotationEmit>(
           true, context, schema_context, relative_dynamic_context, JSON{true},
           {}, SchemaCompilerTargetType::Instance));
+
+      // TODO: We could get rid of the precondition here if we extend
+      // LogicalAnd, which currently doesn't take any value, to take a
+      // conditional type as a value and then use it as an implicit precondition
+      return {make<SchemaCompilerLogicalAnd>(
+          false, context, schema_context, dynamic_context,
+          SchemaCompilerValueNone{}, std::move(children),
+          {make<SchemaCompilerAssertionTypeStrict>(
+              true, context, schema_context, relative_dynamic_context,
+              JSON::Type::Array, {}, SchemaCompilerTargetType::Instance)})};
     }
 
-    // TODO: We could get rid of the precondition here if we extend LogicalAnd,
-    // which currently doesn't take any value, to take a conditional type
-    // as a value and then use it as an implicit precondition
-    return {make<SchemaCompilerLogicalAnd>(
-        false, context, schema_context, dynamic_context,
-        SchemaCompilerValueNone{}, std::move(children),
-        {make<SchemaCompilerAssertionTypeStrict>(
-            true, context, schema_context, relative_dynamic_context,
-            JSON::Type::Array, {}, SchemaCompilerTargetType::Instance)})};
+    return {make<SchemaCompilerLoopItems>(
+        true, context, schema_context, dynamic_context,
+        SchemaCompilerValueUnsignedInteger{0},
+        compile(context, schema_context, relative_dynamic_context,
+                empty_pointer, empty_pointer),
+        SchemaCompilerTemplate{})};
   }
 
   return compiler_draft4_applicator_items_array(context, schema_context,
