@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724892974176,
+  "lastUpdate": 1724894753581,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark": [
@@ -250,6 +250,48 @@ window.BENCHMARK_DATA = {
             "value": 33832.79316440963,
             "unit": "ns/iter",
             "extra": "iterations: 20364\ncpu: 33760.5578471813 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "54bae151ab852d11fa8cdb11ffb4fcacd057884f",
+          "message": "Optimize compilation of required schema properties (#1048)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-28T21:14:56-04:00",
+          "tree_id": "5222468355b8ffae4d8baf00ff1940bd9cb0ca3e",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/54bae151ab852d11fa8cdb11ffb4fcacd057884f"
+        },
+        "date": 1724894729227,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 810595.312500035,
+            "unit": "ns/iter",
+            "extra": "iterations: 896\ncpu: 802176.3392857143 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 35305.20526419083,
+            "unit": "ns/iter",
+            "extra": "iterations: 20364\ncpu: 35295.12865841681 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 22372.262499999353,
+            "unit": "ns/iter",
+            "extra": "iterations: 32000\ncpu: 22460.9375 ns\nthreads: 1"
           }
         ]
       }
