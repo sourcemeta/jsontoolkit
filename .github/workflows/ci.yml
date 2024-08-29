@@ -20,7 +20,7 @@ jobs:
             cxx: clang++
             type: static
             shell: sh
-            benchmark: macOS
+            benchmark: macos
           - os: macos-latest
             cc: clang
             cxx: clang++
@@ -31,13 +31,13 @@ jobs:
             cxx: clang++
             type: static
             shell: sh
-            benchmark: Linux (LLVM)
+            benchmark: linux/llvm
           - os: ubuntu-latest
             cc: gcc
             cxx: g++
             type: static
             shell: sh
-            benchmark: Linux (GCC)
+            benchmark: linux/gcc
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
@@ -51,7 +51,7 @@ jobs:
           - os: windows-latest
             type: static
             shell: pwsh
-            benchmark: Windows
+            benchmark: windows
           - os: windows-latest
             type: shared
             shell: pwsh
@@ -137,7 +137,7 @@ jobs:
       - uses: benchmark-action/github-action-benchmark@v1
         if: matrix.platform.benchmark
         with:
-          name: Benchmark ${{ matrix.platform.benchmark }}
+          name: Benchmark (${{ matrix.platform.benchmark }})
           tool: googlecpp
           output-file-path: build/benchmark.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
