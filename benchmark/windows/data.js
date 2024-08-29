@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724943335453,
+  "lastUpdate": 1724956998908,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (windows)": [
@@ -168,6 +168,48 @@ window.BENCHMARK_DATA = {
             "value": 20418.11560559147,
             "unit": "ns/iter",
             "extra": "iterations: 34462\ncpu: 20402.90755034531 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "201fab700c50f44b37dbc16aaae6f20b0990d13a",
+          "message": "Support performing schema compilation in \"optimized\" mode (#1059)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-29T14:33:49-04:00",
+          "tree_id": "ec9a8cde74fde53771c08ebc399f6336aef662cb",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/201fab700c50f44b37dbc16aaae6f20b0990d13a"
+        },
+        "date": 1724956985631,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 794108.4821429761,
+            "unit": "ns/iter",
+            "extra": "iterations: 896\ncpu: 784737.7232142857 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 26512.386998269034,
+            "unit": "ns/iter",
+            "extra": "iterations: 24889\ncpu: 26367.069789867008 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 20380.165624999336,
+            "unit": "ns/iter",
+            "extra": "iterations: 32000\ncpu: 20507.8125 ns\nthreads: 1"
           }
         ]
       }
