@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724903088902,
+  "lastUpdate": 1724943140886,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -126,6 +126,48 @@ window.BENCHMARK_DATA = {
             "value": 9016.234444531045,
             "unit": "ns/iter",
             "extra": "iterations: 76854\ncpu: 9016.035977307623 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gorez.tony@gmail.com",
+            "name": "Tony Gorez",
+            "username": "tony-go"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cf9503fd399f5dd7c78214759af043a36939763d",
+          "message": "chore: highlights dialect support (#1057)\n\nPREVIEW: https://github.com/sourcemeta/jsontoolkit/tree/impr-rdme\r\n\r\nIt triggers me when I check the readme this morning!\r\n\r\nSigned-off-by: Tony Gorez <gorez.tony@gmail.com>",
+          "timestamp": "2024-08-29T16:46:05+02:00",
+          "tree_id": "79ff4d206c3097e34c6786773432999ab682ad43",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/cf9503fd399f5dd7c78214759af043a36939763d"
+        },
+        "date": 1724943140303,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 406159.84167634137,
+            "unit": "ns/iter",
+            "extra": "iterations: 1718\ncpu: 406125.3259604191 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 14241.046504934622,
+            "unit": "ns/iter",
+            "extra": "iterations: 48640\ncpu: 14240.228906249997 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 9102.773863353867,
+            "unit": "ns/iter",
+            "extra": "iterations: 76299\ncpu: 9102.091783640679 ns\nthreads: 1"
           }
         ]
       }
