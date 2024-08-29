@@ -143,6 +143,7 @@ jobs:
       - uses: benchmark-action/github-action-benchmark@v1
         if: matrix.platform.benchmark
         with:
+          name: ${{ runner.os }} (${{ matrix.platform.cc }}/${{ matrix.platform.type }})
           tool: googlecpp
           output-file-path: build/benchmark.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
