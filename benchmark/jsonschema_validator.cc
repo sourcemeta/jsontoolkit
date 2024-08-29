@@ -112,6 +112,58 @@ JSONSchema_Validate_Draft4_Required_Properties(benchmark::State &state) {
   }
 }
 
+static void JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match(
+    benchmark::State &state) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "a": { "type": "boolean" },
+      "b": { "type": "boolean" },
+      "c": { "type": "boolean" },
+      "d": { "type": "boolean" },
+      "e": { "type": "boolean" },
+      "f": { "type": "boolean" },
+      "g": { "type": "boolean" },
+      "h": { "type": "boolean" },
+      "i": { "type": "boolean" },
+      "j": { "type": "boolean" },
+      "k": { "type": "boolean" },
+      "l": { "type": "boolean" },
+      "m": { "type": "boolean" },
+      "n": { "type": "boolean" },
+      "o": { "type": "boolean" },
+      "p": { "type": "boolean" },
+      "q": { "type": "boolean" },
+      "r": { "type": "boolean" },
+      "s": { "type": "boolean" },
+      "t": { "type": "boolean" },
+      "u": { "type": "boolean" },
+      "v": { "type": "boolean" },
+      "w": { "type": "boolean" },
+      "x": { "type": "boolean" },
+      "y": { "type": "boolean" },
+      "z": { "type": "boolean" }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "p": true
+  })JSON")};
+
+  const auto schema_template{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  for (auto _ : state) {
+    auto result{sourcemeta::jsontoolkit::evaluate(schema_template, instance)};
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
 static void JSONSchema_Validate_Draft4_Items_Schema(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -193,4 +245,5 @@ static void JSONSchema_Validate_Draft4_Items_Schema(benchmark::State &state) {
 
 BENCHMARK(JSONSchema_Validate_Draft4_Meta_1_No_Callback);
 BENCHMARK(JSONSchema_Validate_Draft4_Required_Properties);
+BENCHMARK(JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match);
 BENCHMARK(JSONSchema_Validate_Draft4_Items_Schema);
