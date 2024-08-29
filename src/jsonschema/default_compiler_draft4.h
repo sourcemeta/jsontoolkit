@@ -966,15 +966,10 @@ auto compiler_draft4_validation_maximum(
 
   // TODO: As an optimization, avoid this condition if the subschema
   // declares `type` to `number` or `integer` already
-  SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
-      true, context, schema_context, relative_dynamic_context, false,
-      {make<SchemaCompilerAssertionTypeStrict>(
-           true, context, schema_context, relative_dynamic_context,
-           JSON::Type::Real, {}, SchemaCompilerTargetType::Instance),
-       make<SchemaCompilerAssertionTypeStrict>(
-           true, context, schema_context, relative_dynamic_context,
-           JSON::Type::Integer, {}, SchemaCompilerTargetType::Instance)},
-      SchemaCompilerTemplate{})};
+  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionTypeStrictAny>(
+      false, context, schema_context, relative_dynamic_context,
+      std::set<JSON::Type>{JSON::Type::Integer, JSON::Type::Real}, {},
+      SchemaCompilerTargetType::Instance)};
 
   // TODO: As an optimization, if `minimum` is set to the same number, do
   // a single equality assertion
@@ -1004,15 +999,10 @@ auto compiler_draft4_validation_minimum(
 
   // TODO: As an optimization, avoid this condition if the subschema
   // declares `type` to `number` or `integer` already
-  SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
-      true, context, schema_context, relative_dynamic_context, false,
-      {make<SchemaCompilerAssertionTypeStrict>(
-           true, context, schema_context, relative_dynamic_context,
-           JSON::Type::Real, {}, SchemaCompilerTargetType::Instance),
-       make<SchemaCompilerAssertionTypeStrict>(
-           true, context, schema_context, relative_dynamic_context,
-           JSON::Type::Integer, {}, SchemaCompilerTargetType::Instance)},
-      SchemaCompilerTemplate{})};
+  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionTypeStrictAny>(
+      false, context, schema_context, relative_dynamic_context,
+      std::set<JSON::Type>{JSON::Type::Integer, JSON::Type::Real}, {},
+      SchemaCompilerTargetType::Instance)};
 
   // TODO: As an optimization, if `maximum` is set to the same number, do
   // a single equality assertion
