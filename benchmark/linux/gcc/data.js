@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724958747999,
+  "lastUpdate": 1724959549122,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -292,6 +292,48 @@ window.BENCHMARK_DATA = {
             "value": 398730.9828962311,
             "unit": "ns/iter",
             "extra": "iterations: 1754\ncpu: 398732.98688711517 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eb8c8794a72352932adf5dcd3b23f5d344e3b320",
+          "message": "Correctly format the new `report` step option (#1060)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-29T15:19:27-04:00",
+          "tree_id": "958feb406f0b7b335ae3aba6ee60cd54549a81b2",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/eb8c8794a72352932adf5dcd3b23f5d344e3b320"
+        },
+        "date": 1724959548760,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 12213.991350690265,
+            "unit": "ns/iter",
+            "extra": "iterations: 57230\ncpu: 12213.195212301238 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 3571.8471784479707,
+            "unit": "ns/iter",
+            "extra": "iterations: 196399\ncpu: 3571.7203753583262 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 400579.17636785243,
+            "unit": "ns/iter",
+            "extra": "iterations: 1718\ncpu: 400552.34807916183 ns\nthreads: 1"
           }
         ]
       }
