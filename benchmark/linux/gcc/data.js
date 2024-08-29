@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724957446736,
+  "lastUpdate": 1724958747999,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -252,6 +252,46 @@ window.BENCHMARK_DATA = {
             "value": 391350.33632287395,
             "unit": "ns/iter",
             "extra": "iterations: 1784\ncpu: 391328.9125560539 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "821c1480dfbb7375154cbc3fc6b403a86956f461",
+          "message": "Don't unnecessarily emit `properties` annotations in the \"optimized\" mode (#1058)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-29T18:44:14Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/821c1480dfbb7375154cbc3fc6b403a86956f461"
+        },
+        "date": 1724958747620,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 12067.841694072053,
+            "unit": "ns/iter",
+            "extra": "iterations: 57471\ncpu: 12067.681978737099 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 3466.327724999479,
+            "unit": "ns/iter",
+            "extra": "iterations: 202734\ncpu: 3466.24579991516 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 398730.9828962311,
+            "unit": "ns/iter",
+            "extra": "iterations: 1754\ncpu: 398732.98688711517 ns\nthreads: 1"
           }
         ]
       }
