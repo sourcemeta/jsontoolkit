@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724959545916,
+  "lastUpdate": 1724964724965,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -376,6 +376,48 @@ window.BENCHMARK_DATA = {
             "value": 3351.4041154441666,
             "unit": "ns/iter",
             "extra": "iterations: 211739\ncpu: 3351.420569663596 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "96a12c3bb487c65af92e6d93961570fe68740936",
+          "message": "Establish implicit preconditions for compiler steps (#1062)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-29T16:45:55-04:00",
+          "tree_id": "d2c3d2ea117edb2096b64caa2e2b27a96dc6099f",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/96a12c3bb487c65af92e6d93961570fe68740936"
+        },
+        "date": 1724964724599,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 392989.465129325,
+            "unit": "ns/iter",
+            "extra": "iterations: 1778\ncpu: 392980.3543307086 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 12262.462665613992,
+            "unit": "ns/iter",
+            "extra": "iterations: 56985\ncpu: 12261.7863297359 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 3399.7357811266284,
+            "unit": "ns/iter",
+            "extra": "iterations: 205818\ncpu: 3399.674353069217 ns\nthreads: 1"
           }
         ]
       }
