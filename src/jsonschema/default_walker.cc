@@ -52,6 +52,8 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK_MAYBE_DEPENDENT(HTTPS_BASE "2020-12/vocab/applicator", "properties",
                        Members, HTTPS_BASE "2020-12/vocab/validation", "type",
                        "required")
+  WALK(HTTPS_BASE "2020-12/vocab/validation", "maximum", None, "type")
+  WALK(HTTPS_BASE "2020-12/vocab/validation", "minimum", None, "type")
 
   // 2019-09
   WALK(HTTPS_BASE "2019-09/vocab/core", "$defs", Members)
@@ -89,6 +91,8 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK_MAYBE_DEPENDENT(HTTPS_BASE "2019-09/vocab/applicator", "properties",
                        Members, HTTPS_BASE "2019-09/vocab/validation", "type",
                        "required")
+  WALK(HTTPS_BASE "2019-09/vocab/validation", "maximum", None, "type")
+  WALK(HTTPS_BASE "2019-09/vocab/validation", "minimum", None, "type")
 
 #undef HTTPS_BASE
 
@@ -126,6 +130,8 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   // For the purpose of compiler optimizations
   WALK(HTTP_BASE "draft-07/schema#", "properties", Members, "$ref", "type",
        "required")
+  WALK(HTTP_BASE "draft-07/schema#", "maximum", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-07/schema#", "minimum", None, "$ref", "type")
 
   // $ref also takes precedence over any unknown keyword
   if (vocabularies.contains(HTTP_BASE "draft-07/schema#") &&
@@ -160,6 +166,8 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   // For the purpose of compiler optimizations
   WALK(HTTP_BASE "draft-06/schema#", "properties", Members, "$ref", "type",
        "required")
+  WALK(HTTP_BASE "draft-06/schema#", "maximum", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-06/schema#", "minimum", None, "$ref", "type")
 
   // $ref also takes precedence over any unknown keyword
   if (vocabularies.contains(HTTP_BASE "draft-06/schema#") &&
@@ -186,6 +194,8 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-04/schema#", "minLength", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "maxItems", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "minItems", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "maximum", None, "$ref", "type")
+  WALK(HTTP_BASE "draft-04/schema#", "minimum", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "maxProperties", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "minProperties", None, "$ref", "type")
   WALK(HTTP_BASE "draft-04/schema#", "properties", Members, "$ref", "type",

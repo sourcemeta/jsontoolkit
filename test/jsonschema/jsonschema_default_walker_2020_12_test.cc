@@ -334,7 +334,8 @@ TEST(JSONSchema_default_walker_2020_12, validation_maximum) {
   const auto result{
       default_schema_walker("maximum", VOCABULARIES_2020_12_VALIDATION)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"type"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_2020_12, validation_minimum) {
@@ -342,7 +343,8 @@ TEST(JSONSchema_default_walker_2020_12, validation_minimum) {
   const auto result{
       default_schema_walker("minimum", VOCABULARIES_2020_12_VALIDATION)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"type"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_2020_12, validation_exclusiveMaximum) {

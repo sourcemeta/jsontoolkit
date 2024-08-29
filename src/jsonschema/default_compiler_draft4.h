@@ -964,12 +964,18 @@ auto compiler_draft4_validation_maximum(
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_number());
 
-  // TODO: As an optimization, avoid this condition if the subschema
-  // declares `type` to `number` or `integer` already
-  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionTypeStrictAny>(
-      false, context, schema_context, relative_dynamic_context,
-      std::set<JSON::Type>{JSON::Type::Integer, JSON::Type::Real}, {},
-      SchemaCompilerTargetType::Instance)};
+  SchemaCompilerTemplate condition;
+  const auto is_numeric{
+      schema_context.schema.defines("type") &&
+      (schema_context.schema.at("type").is_string() &&
+       (schema_context.schema.at("type").to_string() == "integer" ||
+        schema_context.schema.at("type").to_string() == "number"))};
+  if (!is_numeric) {
+    condition.push_back(make<SchemaCompilerAssertionTypeStrictAny>(
+        false, context, schema_context, relative_dynamic_context,
+        std::set<JSON::Type>{JSON::Type::Integer, JSON::Type::Real}, {},
+        SchemaCompilerTargetType::Instance));
+  }
 
   // TODO: As an optimization, if `minimum` is set to the same number, do
   // a single equality assertion
@@ -997,12 +1003,18 @@ auto compiler_draft4_validation_minimum(
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_number());
 
-  // TODO: As an optimization, avoid this condition if the subschema
-  // declares `type` to `number` or `integer` already
-  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionTypeStrictAny>(
-      false, context, schema_context, relative_dynamic_context,
-      std::set<JSON::Type>{JSON::Type::Integer, JSON::Type::Real}, {},
-      SchemaCompilerTargetType::Instance)};
+  SchemaCompilerTemplate condition;
+  const auto is_numeric{
+      schema_context.schema.defines("type") &&
+      (schema_context.schema.at("type").is_string() &&
+       (schema_context.schema.at("type").to_string() == "integer" ||
+        schema_context.schema.at("type").to_string() == "number"))};
+  if (!is_numeric) {
+    condition.push_back(make<SchemaCompilerAssertionTypeStrictAny>(
+        false, context, schema_context, relative_dynamic_context,
+        std::set<JSON::Type>{JSON::Type::Integer, JSON::Type::Real}, {},
+        SchemaCompilerTargetType::Instance));
+  }
 
   // TODO: As an optimization, if `maximum` is set to the same number, do
   // a single equality assertion
