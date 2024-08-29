@@ -123,20 +123,6 @@ public:
     return this->instance_location_;
   }
 
-  auto instance_location(const sourcemeta::jsontoolkit::SchemaCompilerTarget
-                             &target) const -> Pointer {
-    switch (target.first) {
-      case sourcemeta::jsontoolkit::SchemaCompilerTargetType::InstanceParent:
-        return this->instance_location().concat(target.second).initial();
-      default:
-        return this->instance_location().concat(target.second);
-    }
-  }
-
-  template <typename T> auto instance_location(const T &step) const -> Pointer {
-    return this->instance_location(step.target);
-  }
-
   auto target_type(const TargetType type) -> void { this->target_type_ = type; }
 
   auto target_type() const -> TargetType { return this->target_type_; }
@@ -167,19 +153,21 @@ public:
       }
     } else {
       static_assert(std::is_same_v<JSON, T>);
+      assert(target.second.empty());
+      assert(target.first !=
+             sourcemeta::jsontoolkit::SchemaCompilerTargetType::InstanceParent);
       switch (target.first) {
         case SchemaCompilerTargetType::Instance:
           if (this->target_type() == TargetType::Key) {
-            assert(!this->instance_location(target).empty());
-            assert(this->instance_location(target).back().is_property());
-            return this->value(
-                this->instance_location(target).back().to_property());
+            assert(!this->instance_location().empty());
+            assert(this->instance_location().back().is_property());
+            return this->value(this->instance_location().back().to_property());
           }
 
           assert(this->target_type() == TargetType::Value);
-          return get(instance, this->instance_location(target));
+          return get(instance, this->instance_location());
         case SchemaCompilerTargetType::InstanceBasename:
-          return this->value(this->instance_location(target).back().to_json());
+          return this->value(this->instance_location().back().to_json());
         default:
           // We should never get here
           assert(false);
@@ -826,7 +814,14 @@ auto evaluate_step(
     context.push(annotation);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAnnotationEmit", annotation,
                              instance);
-    const auto current_instance_location{context.instance_location(annotation)};
+    assert(annotation.target.second.empty());
+
+    // TODO: Can we avoid a copy of the instance location here?
+    const auto current_instance_location{
+        annotation.target.first == SchemaCompilerTargetType::InstanceParent
+            ? context.instance_location().initial()
+            : context.instance_location()};
+
     const auto value{
         context.annotate(current_instance_location,
                          context.resolve_value(annotation.value, instance))};
