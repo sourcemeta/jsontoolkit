@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724959549122,
+  "lastUpdate": 1724959569094,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -334,6 +334,48 @@ window.BENCHMARK_DATA = {
             "value": 400579.17636785243,
             "unit": "ns/iter",
             "extra": "iterations: 1718\ncpu: 400552.34807916183 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2b5158f237584fff7e35d520c2e5a722d01fd678",
+          "message": "Avoid unnecessary `patternProperties` annotations in optimized mode (#1061)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-29T15:19:49-04:00",
+          "tree_id": "64acfd6035f0c97218d268782c3431ca857e827e",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/2b5158f237584fff7e35d520c2e5a722d01fd678"
+        },
+        "date": 1724959568728,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 12236.337205843976,
+            "unit": "ns/iter",
+            "extra": "iterations: 57155\ncpu: 12236.383448517188 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 3456.7917936590175,
+            "unit": "ns/iter",
+            "extra": "iterations: 202112\ncpu: 3456.7817051931597 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 393223.5569335032,
+            "unit": "ns/iter",
+            "extra": "iterations: 1774\ncpu: 393212.2638105976 ns\nthreads: 1"
           }
         ]
       }
