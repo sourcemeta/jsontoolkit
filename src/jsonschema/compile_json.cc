@@ -122,6 +122,15 @@ auto value_to_json(const sourcemeta::jsontoolkit::SchemaCompilerStepValue<T>
     values.push_back(JSON{std::get<2>(range)});
     result.assign("value", std::move(values));
     return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueNamedIndexes, T>) {
+    result.assign("type", JSON{"named-indexes"});
+    JSON values{JSON::make_object()};
+    for (const auto &[name, index] : std::get<T>(value)) {
+      values.assign(name, JSON{index});
+    }
+
+    result.assign("value", std::move(values));
+    return result;
   } else if constexpr (std::is_same_v<SchemaCompilerValueStringType, T>) {
     result.assign("type", JSON{"string-type"});
     switch (std::get<T>(value)) {
@@ -245,17 +254,18 @@ struct StepVisitor {
   HANDLE_STEP("assertion", "divisible", SchemaCompilerAssertionDivisible)
   HANDLE_STEP("assertion", "string-type", SchemaCompilerAssertionStringType)
   HANDLE_STEP("assertion", "equals-any", SchemaCompilerAssertionEqualsAny)
-  HANDLE_STEP("annotation", "emit", SchemaCompilerAnnotationEmit)
   HANDLE_STEP("assertion", "size-equal", SchemaCompilerAssertionSizeEqual)
   HANDLE_STEP("assertion", "annotation", SchemaCompilerAssertionAnnotation)
   HANDLE_STEP("assertion", "no-adjacent-annotation",
               SchemaCompilerAssertionNoAdjacentAnnotation)
   HANDLE_STEP("assertion", "no-annotation", SchemaCompilerAssertionNoAnnotation)
+  HANDLE_STEP("annotation", "emit", SchemaCompilerAnnotationEmit)
   HANDLE_STEP("logical", "or", SchemaCompilerLogicalOr)
   HANDLE_STEP("logical", "and", SchemaCompilerLogicalAnd)
   HANDLE_STEP("logical", "xor", SchemaCompilerLogicalXor)
   HANDLE_STEP("logical", "try", SchemaCompilerLogicalTry)
   HANDLE_STEP("logical", "not", SchemaCompilerLogicalNot)
+  HANDLE_STEP("loop", "properties-match", SchemaCompilerLoopPropertiesMatch)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "keys", SchemaCompilerLoopKeys)
   HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)

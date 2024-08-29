@@ -872,6 +872,40 @@ auto evaluate_step(
     context.pop(annotation);
     SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerAnnotationEmit");
     return result;
+
+  } else if (std::holds_alternative<SchemaCompilerLoopPropertiesMatch>(step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLoopPropertiesMatch");
+    const auto &loop{std::get<SchemaCompilerLoopPropertiesMatch>(step)};
+    context.push(loop);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLoopPropertiesMatch", loop,
+                             instance);
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopPropertiesMatch", loop,
+                                   target.is_object());
+    CALLBACK_PRE(loop, context.instance_location());
+    const auto &value{context.resolve_value(loop.value, instance)};
+    assert(!value.empty());
+    result = true;
+    for (const auto &entry : target.as_object()) {
+      const auto index{value.find(entry.first)};
+      if (index == value.cend()) {
+        continue;
+      }
+
+      const auto &substep{loop.children[index->second]};
+      assert(std::holds_alternative<SchemaCompilerLogicalAnd>(substep));
+      for (const auto &child :
+           std::get<SchemaCompilerLogicalAnd>(substep).children) {
+        if (!evaluate_step(child, instance, mode, callback, context)) {
+          result = false;
+          // For efficiently breaking from the outer loop too
+          goto evaluate_loop_properties_match_end;
+        }
+      }
+    }
+
+  evaluate_loop_properties_match_end:
+    CALLBACK_POST("SchemaCompilerLoopPropertiesMatch", loop);
   } else if (std::holds_alternative<SchemaCompilerLoopProperties>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLoopProperties");
     const auto &loop{std::get<SchemaCompilerLoopProperties>(step)};

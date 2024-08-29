@@ -106,7 +106,12 @@ using SchemaCompilerValueRange =
 using SchemaCompilerValueBoolean = bool;
 
 /// @ingroup jsonschema
-/// Represents a compiler step a string logical type
+/// Represents a compiler step string to index map
+using SchemaCompilerValueNamedIndexes =
+    std::map<SchemaCompilerValueString, SchemaCompilerValueUnsignedInteger>;
+
+/// @ingroup jsonschema
+/// Represents a compiler step string logical type
 enum class SchemaCompilerValueStringType { URI };
 
 /// @ingroup jsonschema
@@ -217,10 +222,6 @@ struct SchemaCompilerAssertionStringType;
 struct SchemaCompilerAssertionSizeEqual;
 
 /// @ingroup jsonschema
-/// Represents a compiler step that emits an annotation
-struct SchemaCompilerAnnotationEmit;
-
-/// @ingroup jsonschema
 /// Represents a compiler assertion step that checks a certain
 /// annotation was produced
 struct SchemaCompilerAssertionAnnotation;
@@ -234,6 +235,10 @@ struct SchemaCompilerAssertionNoAdjacentAnnotation;
 /// Represents a compiler assertion step that checks a certain
 /// annotation was not produced independently of the schema location
 struct SchemaCompilerAssertionNoAnnotation;
+
+/// @ingroup jsonschema
+/// Represents a compiler step that emits an annotation
+struct SchemaCompilerAnnotationEmit;
 
 /// @ingroup jsonschema
 /// Represents a compiler logical step that represents a disjunction
@@ -255,6 +260,10 @@ struct SchemaCompilerLogicalTry;
 /// @ingroup jsonschema
 /// Represents a compiler logical step that represents a negation
 struct SchemaCompilerLogicalNot;
+
+/// @ingroup jsonschema
+/// Represents a compiler step that matches steps to object properties
+struct SchemaCompilerLoopPropertiesMatch;
 
 /// @ingroup jsonschema
 /// Represents a compiler step that loops over object properties
@@ -315,11 +324,11 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionNoAnnotation, SchemaCompilerAnnotationEmit,
     SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
-    SchemaCompilerLoopProperties, SchemaCompilerLoopKeys,
-    SchemaCompilerLoopItems, SchemaCompilerLoopItemsFromAnnotationIndex,
-    SchemaCompilerLoopContains, SchemaCompilerControlLabel,
-    SchemaCompilerControlMark, SchemaCompilerControlJump,
-    SchemaCompilerControlDynamicAnchorJump>>;
+    SchemaCompilerLoopPropertiesMatch, SchemaCompilerLoopProperties,
+    SchemaCompilerLoopKeys, SchemaCompilerLoopItems,
+    SchemaCompilerLoopItemsFromAnnotationIndex, SchemaCompilerLoopContains,
+    SchemaCompilerControlLabel, SchemaCompilerControlMark,
+    SchemaCompilerControlJump, SchemaCompilerControlDynamicAnchorJump>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -407,6 +416,7 @@ DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Try, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Loop, PropertiesMatch, SchemaCompilerValueNamedIndexes)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, Keys, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueUnsignedInteger)
