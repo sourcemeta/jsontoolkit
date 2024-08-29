@@ -316,14 +316,24 @@ auto compiler_draft4_applicator_properties(
     substeps.push_back(make<SchemaCompilerAnnotationEmit>(
         true, context, schema_context, relative_dynamic_context, JSON{key}, {},
         SchemaCompilerTargetType::Instance));
-    children.push_back(make<SchemaCompilerLogicalAnd>(
-        false, context, schema_context, relative_dynamic_context,
-        SchemaCompilerValueNone{}, std::move(substeps),
-        // TODO: As an optimization, avoid this condition if the subschema
-        // declares `required` and includes the given key
-        {make<SchemaCompilerAssertionDefines>(
-            true, context, schema_context, relative_dynamic_context, key, {},
-            SchemaCompilerTargetType::Instance)}));
+
+    // We can avoid this "defines" condition if the property is a required one
+    if (schema_context.schema.defines("required") &&
+        schema_context.schema.at("required").is_array() &&
+        schema_context.schema.at("required").contains(JSON{key})) {
+      // We can avoid the container too and just inline these steps
+      for (auto &&substep : substeps) {
+        children.push_back(std::move(substep));
+      }
+    } else {
+      SchemaCompilerTemplate condition{make<SchemaCompilerAssertionDefines>(
+          false, context, schema_context, relative_dynamic_context, key, {},
+          SchemaCompilerTargetType::Instance)};
+      children.push_back(make<SchemaCompilerLogicalAnd>(
+          false, context, schema_context, relative_dynamic_context,
+          SchemaCompilerValueNone{}, std::move(substeps),
+          std::move(condition)));
+    }
   }
 
   return {make<SchemaCompilerLogicalAnd>(

@@ -129,7 +129,7 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
               "relativeInstanceLocation": "",
               "schemaResource": "https://example.com/schema",
               "dynamic": false,
-              "report": true,
+              "report": false,
               "absoluteKeywordLocation": "https://example.com/schema#/properties",
               "target": {
                 "category": "target",
@@ -256,7 +256,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "relativeInstanceLocation": "",
               "schemaResource": "",
               "dynamic": false,
-              "report": true,
+              "report": false,
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
@@ -339,7 +339,7 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
               "relativeInstanceLocation": "",
               "schemaResource": "",
               "dynamic": false,
-              "report": true,
+              "report": false,
               "absoluteKeywordLocation": "#/properties",
               "target": {
                 "category": "target",
