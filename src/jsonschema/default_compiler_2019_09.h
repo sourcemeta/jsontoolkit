@@ -331,10 +331,7 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
 
   return {make<SchemaCompilerLoopProperties>(
       true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
-      {std::move(wrapper)},
-      {make<SchemaCompilerAssertionTypeStrict>(
-          true, context, schema_context, relative_dynamic_context,
-          JSON::Type::Object, {}, SchemaCompilerTargetType::Instance)})};
+      {std::move(wrapper)}, SchemaCompilerTemplate{})};
 }
 
 auto compiler_2019_09_core_recursiveref(
