@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724901989945,
+  "lastUpdate": 1724902196314,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -42,6 +42,48 @@ window.BENCHMARK_DATA = {
             "value": 404609.9070567866,
             "unit": "ns/iter",
             "extra": "iterations: 1743\ncpu: 404599.8009179575 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "79253e81f99a3ea39f4cda62fa3be2a0cda0d12c",
+          "message": "Optimize how we determine instance location on target resolution (#1056)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-28T23:19:59-04:00",
+          "tree_id": "21ffbaaf0bbb1ba5b227ee04c646f483adcd3ed8",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/79253e81f99a3ea39f4cda62fa3be2a0cda0d12c"
+        },
+        "date": 1724902195957,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 13868.912501717046,
+            "unit": "ns/iter",
+            "extra": "iterations: 50961\ncpu: 13868.470811012337 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 9364.979988449444,
+            "unit": "ns/iter",
+            "extra": "iterations: 74457\ncpu: 9364.232496608778 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 394682.1432731509,
+            "unit": "ns/iter",
+            "extra": "iterations: 1717\ncpu: 394674.09202096675 ns\nthreads: 1"
           }
         ]
       }
