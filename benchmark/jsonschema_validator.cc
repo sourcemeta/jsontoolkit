@@ -112,5 +112,85 @@ JSONSchema_Validate_Draft4_Required_Properties(benchmark::State &state) {
   }
 }
 
+static void JSONSchema_Validate_Draft4_Items_Schema(benchmark::State &state) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "items": {
+      "items": {
+        "items": {
+          "items": {
+            "items": {
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse(R"JSON([
+    [
+      [
+        [
+          [ [ "red", "blue" ], [ "green", "yellow" ] ],
+          [ [ "circle", "square" ], [ "triangle", "rectangle" ] ]
+        ],
+        [
+          [ [ "cat", "dog" ], [ "fish", "bird" ] ],
+          [ [ "apple", "banana" ], [ "cherry", "date" ] ]
+        ]
+      ],
+      [
+        [
+          [ [ "hot", "cold" ], [ "wet", "dry" ] ],
+          [ [ "big", "small" ], [ "tall", "short" ] ]
+        ],
+        [
+          [ [ "happy", "sad" ], [ "angry", "calm" ] ],
+          [ [ "fast", "slow" ], [ "loud", "quiet" ] ]
+        ]
+      ]
+    ],
+    [
+      [
+        [
+          [ [ "sun", "moon" ], [ "star", "planet" ] ],
+          [ [ "ocean", "mountain" ], [ "forest", "desert" ] ]
+        ],
+        [
+          [ [ "car", "bike" ], [ "train", "plane" ] ],
+          [ [ "pencil", "pen" ], [ "paper", "eraser" ] ]
+        ]
+      ],
+      [
+        [
+          [ [ "jazz", "rock" ], [ "pop", "classical" ] ],
+          [ [ "comedy", "drama" ], [ "action", "romance" ] ]
+        ],
+        [
+          [ [ "spring", "summer" ], [ "autumn", "winter" ] ],
+          [ [ "breakfast", "lunch" ], [ "dinner", "snack" ] ]
+        ]
+      ]
+    ]
+  ])JSON")};
+
+  const auto schema_template{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  for (auto _ : state) {
+    auto result{sourcemeta::jsontoolkit::evaluate(schema_template, instance)};
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
 BENCHMARK(JSONSchema_Validate_Draft4_Meta_1_No_Callback);
 BENCHMARK(JSONSchema_Validate_Draft4_Required_Properties);
+BENCHMARK(JSONSchema_Validate_Draft4_Items_Schema);
