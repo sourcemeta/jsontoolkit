@@ -139,6 +139,8 @@ public:
           this->evaluate_path().initial().concat(target.second)};
       assert(target.first != SchemaCompilerTargetType::ParentAnnotations);
       if (target.first == SchemaCompilerTargetType::ParentAdjacentAnnotations) {
+        // TODO: This involves expensive pointer copies, allocations, and
+        // destructions
         return this->annotations(this->instance_location().initial(),
                                  schema_location);
       } else {
@@ -146,6 +148,8 @@ public:
       }
     } else if constexpr (std::is_same_v<InstanceAnnotations, T>) {
       if (target.first == SchemaCompilerTargetType::ParentAnnotations) {
+        // TODO: This involves expensive pointer copies, allocations, and
+        // destructions
         return this->annotations(this->instance_location().initial());
       } else {
         assert(target.first == SchemaCompilerTargetType::Annotations);
@@ -165,6 +169,12 @@ public:
           }
 
           assert(this->target_type() == TargetType::Value);
+
+          // TODO: This means that we traverse the instance into
+          // the current instance location EVERY single time.
+          // Can we be smarter? Maybe we keep a reference to the current
+          // instance location in this class that we manipulate through
+          // .push() and .pop()
           return get(instance, this->instance_location());
         case SchemaCompilerTargetType::InstanceBasename:
           return this->value(this->instance_location().back().to_json());
@@ -814,6 +824,8 @@ auto evaluate_step(
     context.push(annotation);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAnnotationEmit", annotation,
                              instance);
+    // Annotations never fail
+    result = true;
     assert(annotation.target.second.empty());
 
     // TODO: Can we avoid a copy of the instance location here?
@@ -825,8 +837,6 @@ auto evaluate_step(
     const auto value{
         context.annotate(current_instance_location,
                          context.resolve_value(annotation.value, instance))};
-    // Annotations never fail
-    result = true;
 
     // As a safety guard, only emit the annotation if it didn't exist already.
     // Otherwise we risk confusing consumers
