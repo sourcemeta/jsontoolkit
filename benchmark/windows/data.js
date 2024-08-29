@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724959738084,
+  "lastUpdate": 1724959757869,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (windows)": [
@@ -334,6 +334,48 @@ window.BENCHMARK_DATA = {
             "value": 5267.557000001943,
             "unit": "ns/iter",
             "extra": "iterations: 100000\ncpu: 5312.5 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2b5158f237584fff7e35d520c2e5a722d01fd678",
+          "message": "Avoid unnecessary `patternProperties` annotations in optimized mode (#1061)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-29T15:19:49-04:00",
+          "tree_id": "64acfd6035f0c97218d268782c3431ca857e827e",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/2b5158f237584fff7e35d520c2e5a722d01fd678"
+        },
+        "date": 1724959747938,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 817387.8179382599,
+            "unit": "ns/iter",
+            "extra": "iterations: 747\ncpu: 815763.0522088354 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 22680.14531087773,
+            "unit": "ns/iter",
+            "extra": "iterations: 29867\ncpu: 23018.716308969764 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 5300.059821428656,
+            "unit": "ns/iter",
+            "extra": "iterations: 112000\ncpu: 5301.339285714285 ns\nthreads: 1"
           }
         ]
       }
