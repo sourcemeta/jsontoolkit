@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724894461726,
+  "lastUpdate": 1724895444182,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark": [
@@ -292,6 +292,50 @@ window.BENCHMARK_DATA = {
             "value": 10032.974094607083,
             "unit": "ns/iter",
             "extra": "iterations: 69445\ncpu: 10032.834372525022 ns\nthreads: 1"
+          }
+        ]
+      }
+    ],
+    "Benchmark Linux (clang/static)": [
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5ba60659db0e717a8405ffb3f29735792015bd7f",
+          "message": "Give different platforms different benchmark names (#1049)\n\nOtherwise we seem to only get one comment on PRs for the run that\r\nfinished last.\r\n\r\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-28T21:31:37-04:00",
+          "tree_id": "623c33609a81c14a7996eda1501fcfce49e2e99f",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/5ba60659db0e717a8405ffb3f29735792015bd7f"
+        },
+        "date": 1724895443648,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 384813.57971016504,
+            "unit": "ns/iter",
+            "extra": "iterations: 1794\ncpu: 384811.8428093645 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 17382.12139530398,
+            "unit": "ns/iter",
+            "extra": "iterations: 40364\ncpu: 17381.14042215837 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 9864.979208338604,
+            "unit": "ns/iter",
+            "extra": "iterations: 70990\ncpu: 9864.833427243273 ns\nthreads: 1"
           }
         ]
       }
