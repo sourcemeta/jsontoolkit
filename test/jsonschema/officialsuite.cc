@@ -248,50 +248,72 @@ static auto register_tests(const std::filesystem::path &subdirectory,
 
       std::cerr << "    Compiling: " << test.at("description").to_string()
                 << "\n";
-      const auto schema{sourcemeta::jsontoolkit::compile(
-          test.at("schema"), sourcemeta::jsontoolkit::default_schema_walker,
-          test_resolver, sourcemeta::jsontoolkit::default_schema_compiler,
-          default_dialect)};
 
-      for (const auto &test_case : test.at("tests").as_array()) {
-        assert(test_case.is_object());
-        assert(test_case.defines("data"));
-        assert(test_case.defines("description"));
-        assert(test_case.defines("valid"));
-        assert(test_case.at("description").is_string());
-        assert(test_case.at("valid").is_boolean());
+      for (const auto compilation_mode :
+           {sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Optimized,
+            sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full}) {
+        const auto schema_template{sourcemeta::jsontoolkit::compile(
+            test.at("schema"), sourcemeta::jsontoolkit::default_schema_walker,
+            test_resolver, sourcemeta::jsontoolkit::default_schema_compiler,
+            compilation_mode, default_dialect)};
 
-        const auto &instance{test_case.at("data")};
-        const bool valid{test_case.at("valid").to_boolean()};
+        for (const auto &test_case : test.at("tests").as_array()) {
+          assert(test_case.is_object());
+          assert(test_case.defines("data"));
+          assert(test_case.defines("description"));
+          assert(test_case.defines("valid"));
+          assert(test_case.at("description").is_string());
+          assert(test_case.at("valid").is_boolean());
 
-        for (const auto mode :
-             {sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
-              sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::
-                  Exhaustive}) {
-          std::ostringstream title;
-          switch (mode) {
-            case sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast:
-              title << "fast";
-              break;
-            case sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::
-                Exhaustive:
-              title << "exhaustive";
-              break;
-            default:
-              // We should never get here
-              assert(false);
+          const auto &instance{test_case.at("data")};
+          const bool valid{test_case.at("valid").to_boolean()};
+
+          for (const auto evaluation_mode :
+               {sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
+                sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::
+                    Exhaustive}) {
+            std::ostringstream title;
+
+            switch (compilation_mode) {
+              case sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::
+                  Optimized:
+                title << "optimized";
+                break;
+              case sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full:
+                title << "full";
+                break;
+              default:
+                // We should never get here
+                assert(false);
+            }
+
+            title << "_";
+
+            switch (evaluation_mode) {
+              case sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast:
+                title << "fast";
+                break;
+              case sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::
+                  Exhaustive:
+                title << "exhaustive";
+                break;
+              default:
+                // We should never get here
+                assert(false);
+            }
+
+            title << "_";
+            slugify(test.at("description").to_string(), title);
+            title << "__";
+            slugify(test_case.at("description").to_string(), title);
+
+            testing::RegisterTest(
+                suite_name.c_str(), title.str().c_str(), nullptr, nullptr,
+                __FILE__, __LINE__, [=]() -> OfficialTest * {
+                  return new OfficialTest(valid, evaluation_mode,
+                                          schema_template, instance);
+                });
           }
-
-          title << "_";
-          slugify(test.at("description").to_string(), title);
-          title << "__";
-          slugify(test_case.at("description").to_string(), title);
-
-          testing::RegisterTest(
-              suite_name.c_str(), title.str().c_str(), nullptr, nullptr,
-              __FILE__, __LINE__, [=]() -> OfficialTest * {
-                return new OfficialTest(valid, mode, schema, instance);
-              });
         }
       }
     }
