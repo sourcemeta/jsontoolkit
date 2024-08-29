@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724896059646,
+  "lastUpdate": 1724897394338,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark macOS (clang/static)": [
@@ -42,6 +42,48 @@ window.BENCHMARK_DATA = {
             "value": 9715.084070852616,
             "unit": "ns/iter",
             "extra": "iterations: 77399\ncpu: 9122.766444010906 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "66a594a329330d28dced59b8937e360c4101b240",
+          "message": "Reduce `maximum`/`minimum` conditions from 3 steps to 1 (#1051)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-28T22:06:23-04:00",
+          "tree_id": "cc568b45811886ef14294cd7d102844d169ddeb6",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/66a594a329330d28dced59b8937e360c4101b240"
+        },
+        "date": 1724897392706,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 197563.08839163836,
+            "unit": "ns/iter",
+            "extra": "iterations: 3575\ncpu: 197562.23776223775 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 12203.334622754974,
+            "unit": "ns/iter",
+            "extra": "iterations: 56873\ncpu: 12201.501591264745 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 8928.867774732376,
+            "unit": "ns/iter",
+            "extra": "iterations: 78094\ncpu: 8927.817758086414 ns\nthreads: 1"
           }
         ]
       }
