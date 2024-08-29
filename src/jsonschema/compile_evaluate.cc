@@ -931,10 +931,11 @@ auto evaluate_step(
     const auto &loop{std::get<SchemaCompilerLoopItems>(step)};
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopItems", loop, instance);
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopItems", loop,
+                                   target.is_array());
     CALLBACK_PRE(loop, context.instance_location());
     const auto value{context.resolve_value(loop.value, instance)};
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
-    assert(target.is_array());
     const auto &array{target.as_array()};
     result = true;
     auto iterator{array.cbegin()};
