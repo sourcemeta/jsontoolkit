@@ -20,45 +20,41 @@ jobs:
             cxx: clang++
             type: static
             shell: sh
-            benchmark: true
+            benchmark: macOS
           - os: macos-latest
             cc: clang
             cxx: clang++
             type: shared
             shell: sh
-            benchmark: true
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: static
             shell: sh
-            benchmark: true
+            benchmark: Linux (LLVM)
           - os: ubuntu-latest
             cc: gcc
             cxx: g++
             type: static
             shell: sh
-            benchmark: true
+            benchmark: Linux (GCC)
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: shared
             shell: sh
-            benchmark: true
           - os: ubuntu-latest
             cc: gcc
             cxx: g++
             type: shared
             shell: sh
-            benchmark: true
           - os: windows-latest
             type: static
             shell: pwsh
-            benchmark: true
+            benchmark: Windows
           - os: windows-latest
             type: shared
             shell: pwsh
-            benchmark: true
 
           # Sanitizers
           - os: ubuntu-latest
@@ -66,14 +62,12 @@ jobs:
             cxx: clang++
             type: static
             shell: sh
-            benchmark: false
             options: -DJSONTOOLKIT_ADDRESS_SANITIZER:BOOL=ON
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
             type: static
             shell: sh
-            benchmark: false
             options: -DJSONTOOLKIT_UNDEFINED_SANITIZER:BOOL=ON
 
     defaults:
@@ -143,12 +137,12 @@ jobs:
       - uses: benchmark-action/github-action-benchmark@v1
         if: matrix.platform.benchmark
         with:
-          name: Benchmark ${{ runner.os }} (${{ matrix.platform.cc }}/${{ matrix.platform.type }})
+          name: Benchmark ${{ matrix.platform.benchmark }}
           tool: googlecpp
           output-file-path: build/benchmark.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: ${{ github.event_name != 'pull_request' }}
-          benchmark-data-dir-path: benchmark/${{ runner.os }}/${{ matrix.platform.cc }}/${{ matrix.platform.type }}
+          benchmark-data-dir-path: benchmark/${{ matrix.platform.benchmark }}
           alert-threshold: '5%'
           comment-always: true
           fail-on-alert: false
