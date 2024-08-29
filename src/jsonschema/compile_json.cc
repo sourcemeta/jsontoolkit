@@ -299,9 +299,10 @@ auto compiler_template_format_compare(const JSON::String &left,
                    {"target", 7},
                    {"location", 8},
                    {"id", 9},
-                   {"dynamic", 10},
-                   {"condition", 11},
-                   {"children", 12}};
+                   {"report", 10},
+                   {"dynamic", 11},
+                   {"condition", 12},
+                   {"children", 13}};
 
   // We define and control all of these keywords, so if we are missing
   // some here, then we did something wrong?
