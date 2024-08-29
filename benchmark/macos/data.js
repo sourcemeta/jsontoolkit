@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724959470412,
+  "lastUpdate": 1724964587298,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -376,6 +376,48 @@ window.BENCHMARK_DATA = {
             "value": 3450.7517456123783,
             "unit": "ns/iter",
             "extra": "iterations: 202651\ncpu: 3449.4327686515253 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "96a12c3bb487c65af92e6d93961570fe68740936",
+          "message": "Establish implicit preconditions for compiler steps (#1062)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-29T16:45:55-04:00",
+          "tree_id": "d2c3d2ea117edb2096b64caa2e2b27a96dc6099f",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/96a12c3bb487c65af92e6d93961570fe68740936"
+        },
+        "date": 1724964585630,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 198753.17957446392,
+            "unit": "ns/iter",
+            "extra": "iterations: 3525\ncpu: 198734.46808510637 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 8563.581942766965,
+            "unit": "ns/iter",
+            "extra": "iterations: 81142\ncpu: 8561.299943309261 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 3410.279458021562,
+            "unit": "ns/iter",
+            "extra": "iterations: 205691\ncpu: 3409.9936312235354 ns\nthreads: 1"
           }
         ]
       }
