@@ -206,7 +206,7 @@ TEST(JSONSchema_default_walker_draft7, maximum) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("maximum", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -214,7 +214,7 @@ TEST(JSONSchema_default_walker_draft7, minimum) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("minimum", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"$ref", "type"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
