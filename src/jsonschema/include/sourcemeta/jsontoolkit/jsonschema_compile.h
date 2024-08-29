@@ -457,6 +457,16 @@ struct SchemaCompilerContext;
 #endif
 
 /// @ingroup jsonschema
+/// Represents the mode of compilation
+enum class SchemaCompilerCompilationMode {
+  /// Produce a compile template optimized for speed, ignoring everything
+  /// that is not strictly required for that case
+  Optimized,
+  /// Produce a compile template optimized for full coverage
+  Full
+};
+
+/// @ingroup jsonschema
 /// A compiler is represented as a function that maps a keyword compiler
 /// contexts into a compiler template. You can provide your own to implement
 /// your own keywords
@@ -469,6 +479,8 @@ using SchemaCompiler = std::function<SchemaCompilerTemplate(
 /// disposal to implement a keyword that will never change throughout
 /// the compilation process
 struct SchemaCompilerContext {
+  /// The selected mode of compilation
+  const SchemaCompilerCompilationMode mode;
   /// The root schema resource
   const JSON &root;
   /// The reference frame of the entire schema
@@ -488,9 +500,7 @@ struct SchemaCompilerContext {
 /// @ingroup jsonschema
 /// Represents the mode of evalution
 enum class SchemaCompilerEvaluationMode {
-  /// Attempt to get to a boolean result as fast as possible, ignoring
-  /// everything that is not strictly required (like collecting most
-  /// annotations)
+  /// Attempt to get to a boolean result as fast as possible
   Fast,
   /// Perform a full schema evaluation
   Exhaustive
@@ -731,6 +741,8 @@ auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT default_schema_compiler(
 auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 compile(const JSON &schema, const SchemaWalker &walker,
         const SchemaResolver &resolver, const SchemaCompiler &compiler,
+        const SchemaCompilerCompilationMode mode =
+            SchemaCompilerCompilationMode::Optimized,
         const std::optional<std::string> &default_dialect = std::nullopt)
     -> SchemaCompilerTemplate;
 
