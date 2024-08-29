@@ -97,27 +97,6 @@ TEST(JSONSchema_compile_template_draft4, properties_single) {
                 "type": "type",
                 "value": "string"
               }
-            },
-            {
-              "category": "annotation",
-              "type": "emit",
-              "condition": [],
-              "relativeSchemaLocation": "",
-              "relativeInstanceLocation": "",
-              "schemaResource": "https://example.com/schema",
-              "dynamic": false,
-              "report": true,
-              "absoluteKeywordLocation": "https://example.com/schema#/properties",
-              "target": {
-                "category": "target",
-                "location": "",
-                "type": "instance"
-              },
-              "value": {
-                "category": "value",
-                "type": "json",
-                "value": "foo"
-              }
             }
           ],
           "condition": [
@@ -224,27 +203,6 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
                 "type": "type",
                 "value": "integer"
               }
-            },
-            {
-              "category": "annotation",
-              "type": "emit",
-              "condition": [],
-              "relativeSchemaLocation": "",
-              "relativeInstanceLocation": "",
-              "schemaResource": "",
-              "dynamic": false,
-              "report": true,
-              "absoluteKeywordLocation": "#/properties",
-              "target": {
-                "category": "target",
-                "location": "",
-                "type": "instance"
-              },
-              "value": {
-                "category": "value",
-                "type": "json",
-                "value": "bar"
-              }
             }
           ],
           "condition": [
@@ -306,27 +264,6 @@ TEST(JSONSchema_compile_template_draft4, properties_multi) {
                 "category": "value",
                 "type": "type",
                 "value": "string"
-              }
-            },
-            {
-              "category": "annotation",
-              "type": "emit",
-              "condition": [],
-              "relativeSchemaLocation": "",
-              "relativeInstanceLocation": "",
-              "schemaResource": "",
-              "dynamic": false,
-              "report": true,
-              "absoluteKeywordLocation": "#/properties",
-              "target": {
-                "category": "target",
-                "location": "",
-                "type": "instance"
-              },
-              "value": {
-                "category": "value",
-                "type": "json",
-                "value": "foo"
               }
             }
           ],
