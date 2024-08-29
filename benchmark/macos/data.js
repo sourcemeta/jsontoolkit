@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724943010441,
+  "lastUpdate": 1724956657301,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -168,6 +168,48 @@ window.BENCHMARK_DATA = {
             "value": 8340.658707696646,
             "unit": "ns/iter",
             "extra": "iterations: 83386\ncpu: 8340.488811071402 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "201fab700c50f44b37dbc16aaae6f20b0990d13a",
+          "message": "Support performing schema compilation in \"optimized\" mode (#1059)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-29T14:33:49-04:00",
+          "tree_id": "ec9a8cde74fde53771c08ebc399f6336aef662cb",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/201fab700c50f44b37dbc16aaae6f20b0990d13a"
+        },
+        "date": 1724956655453,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 219919.42007549992,
+            "unit": "ns/iter",
+            "extra": "iterations: 3178\ncpu: 219902.13971050974 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 10194.390943480126,
+            "unit": "ns/iter",
+            "extra": "iterations: 72169\ncpu: 10194.127672546378 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 8183.623218584636,
+            "unit": "ns/iter",
+            "extra": "iterations: 83080\ncpu: 8181.608088589316 ns\nthreads: 1"
           }
         ]
       }
