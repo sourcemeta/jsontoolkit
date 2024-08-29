@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724888691241,
+  "lastUpdate": 1724892776847,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark": [
@@ -214,6 +214,42 @@ window.BENCHMARK_DATA = {
             "value": 16933.252133530194,
             "unit": "ns/iter",
             "extra": "iterations: 41129\ncpu: 16932.406866201465 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f87751e6247255369f95ef658ccfafdacf44e740",
+          "message": "Always break early from \"and\" operations in the evaluator (#1047)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-28T20:47:14-04:00",
+          "tree_id": "13a78e96d93374df0c3d11792f799df3c6316e0b",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/f87751e6247255369f95ef658ccfafdacf44e740"
+        },
+        "date": 1724892776534,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 382582.1551817594,
+            "unit": "ns/iter",
+            "extra": "iterations: 1843\ncpu: 382561.7699403147 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 16783.20020928697,
+            "unit": "ns/iter",
+            "extra": "iterations: 41092\ncpu: 16782.13481942957 ns\nthreads: 1"
           }
         ]
       }
