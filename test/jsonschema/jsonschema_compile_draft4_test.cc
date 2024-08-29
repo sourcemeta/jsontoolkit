@@ -1280,6 +1280,47 @@ TEST(JSONSchema_compile_draft4, patternProperties_4) {
       "pattern property subschema");
 }
 
+TEST(JSONSchema_compile_draft4, patternProperties_4_optimized) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "patternProperties": {
+      "^f": { "type": "integer" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler,
+      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Optimized)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/patternProperties", "#/patternProperties",
+                     "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/patternProperties/^f/type",
+                     // Note that the caret needs to be URI escaped
+                     "#/patternProperties/%5Ef/type", "/foo");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
+                              "/patternProperties/^f/type",
+                              // Note that the caret needs to be URI escaped
+                              "#/patternProperties/%5Ef/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/patternProperties",
+                              "#/patternProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
+}
+
 TEST(JSONSchema_compile_draft4, patternProperties_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({

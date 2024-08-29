@@ -364,6 +364,12 @@ auto compiler_draft4_applicator_patternproperties(
     return {};
   }
 
+  const auto loads_unevaluated_keywords =
+      schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2019-09/vocab/applicator") ||
+      schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/unevaluated");
+
   SchemaCompilerTemplate children;
 
   // For each regular expression and corresponding subschema in the object
@@ -372,17 +378,20 @@ auto compiler_draft4_applicator_patternproperties(
     auto substeps{compile(context, schema_context, relative_dynamic_context,
                           {entry.first}, {})};
 
-    // TODO: As an optimization, only emit an annotation if
-    // `additionalProperties` is also declared in the same subschema
-
-    // The evaluator will make sure the same annotation is not reported twice.
-    // For example, if the same property matches more than one subschema in
-    // `patternProperties`
-    substeps.push_back(make<SchemaCompilerAnnotationEmit>(
-        true, context, schema_context, relative_dynamic_context,
-        SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
-                             empty_pointer},
-        {}, SchemaCompilerTargetType::InstanceParent));
+    // We can avoid producing an annotation if we need to go fast
+    // and there is no other keyword that would rely on this annotation
+    if (context.mode != SchemaCompilerCompilationMode::Optimized ||
+        loads_unevaluated_keywords ||
+        schema_context.schema.defines("additionalProperties")) {
+      // The evaluator will make sure the same annotation is not reported twice.
+      // For example, if the same property matches more than one subschema in
+      // `patternProperties`
+      substeps.push_back(make<SchemaCompilerAnnotationEmit>(
+          true, context, schema_context, relative_dynamic_context,
+          SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                               empty_pointer},
+          {}, SchemaCompilerTargetType::InstanceParent));
+    }
 
     // The instance property matches the schema property regex
     SchemaCompilerTemplate loop_condition{make<SchemaCompilerAssertionRegex>(
