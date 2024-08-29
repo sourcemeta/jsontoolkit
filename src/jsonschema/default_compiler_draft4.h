@@ -308,14 +308,27 @@ auto compiler_draft4_applicator_properties(
     return {};
   }
 
+  const auto loads_unevaluated_keywords =
+      schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2019-09/vocab/applicator") ||
+      schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/unevaluated");
+
   SchemaCompilerTemplate children;
   for (auto &[key, subschema] :
        schema_context.schema.at(dynamic_context.keyword).as_object()) {
     auto substeps{compile(context, schema_context, relative_dynamic_context,
                           {key}, {key})};
-    substeps.push_back(make<SchemaCompilerAnnotationEmit>(
-        true, context, schema_context, relative_dynamic_context, JSON{key}, {},
-        SchemaCompilerTargetType::Instance));
+
+    // We can avoid producing an annotation if we need to go fast
+    // and there is no other keyword that would rely on this annotation
+    if (context.mode != SchemaCompilerCompilationMode::Optimized ||
+        loads_unevaluated_keywords ||
+        schema_context.schema.defines("additionalProperties")) {
+      substeps.push_back(make<SchemaCompilerAnnotationEmit>(
+          true, context, schema_context, relative_dynamic_context, JSON{key},
+          {}, SchemaCompilerTargetType::Instance));
+    }
 
     // We can avoid this "defines" condition if the property is a required one
     if (schema_context.schema.defines("required") &&
