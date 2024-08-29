@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724959569094,
+  "lastUpdate": 1724964731795,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -376,6 +376,48 @@ window.BENCHMARK_DATA = {
             "value": 393223.5569335032,
             "unit": "ns/iter",
             "extra": "iterations: 1774\ncpu: 393212.2638105976 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "96a12c3bb487c65af92e6d93961570fe68740936",
+          "message": "Establish implicit preconditions for compiler steps (#1062)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-29T16:45:55-04:00",
+          "tree_id": "d2c3d2ea117edb2096b64caa2e2b27a96dc6099f",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/96a12c3bb487c65af92e6d93961570fe68740936"
+        },
+        "date": 1724964730831,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 11794.648067621009,
+            "unit": "ns/iter",
+            "extra": "iterations: 57261\ncpu: 11794.53114685388 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 3276.7750790078,
+            "unit": "ns/iter",
+            "extra": "iterations: 217383\ncpu: 3276.7445982436548 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 379536.25123968866,
+            "unit": "ns/iter",
+            "extra": "iterations: 1815\ncpu: 379529.06280991726 ns\nthreads: 1"
           }
         ]
       }
