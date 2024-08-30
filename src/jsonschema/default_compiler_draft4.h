@@ -453,23 +453,13 @@ auto compiler_draft4_applicator_patternproperties(
           SchemaCompilerValueNone{}, {}, SchemaCompilerTargetType::Instance));
     }
 
-    // The instance property matches the schema property regex
-    SchemaCompilerTemplate loop_condition{make<SchemaCompilerAssertionRegex>(
-        true, context, schema_context, relative_dynamic_context,
-        SchemaCompilerValueRegex{
-            std::regex{entry.first, std::regex::ECMAScript}, entry.first},
-        {}, SchemaCompilerTargetType::InstanceBasename)};
-
     // Loop over the instance properties
-    children.push_back(make<SchemaCompilerLoopProperties>(
+    children.push_back(make<SchemaCompilerLoopPropertiesRegex>(
         // Treat this as an internal step
         false, context, schema_context, relative_dynamic_context,
-        SchemaCompilerValueNone{},
-        {make<SchemaCompilerLogicalAnd>(
-            false, context, schema_context, relative_dynamic_context,
-            SchemaCompilerValueNone{}, std::move(substeps),
-            std::move(loop_condition))},
-        SchemaCompilerTemplate{}));
+        SchemaCompilerValueRegex{
+            std::regex{entry.first, std::regex::ECMAScript}, entry.first},
+        std::move(substeps), SchemaCompilerTemplate{}));
   }
 
   // If the instance is an object...
