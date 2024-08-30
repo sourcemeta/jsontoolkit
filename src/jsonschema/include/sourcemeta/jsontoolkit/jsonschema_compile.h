@@ -267,6 +267,11 @@ struct SchemaCompilerLogicalNot;
 struct SchemaCompilerLogicalWhenType;
 
 /// @ingroup jsonschema
+/// Represents a compiler logical step that represents a conjunction
+/// when the instance is an object and defines a given property
+struct SchemaCompilerLogicalWhenDefines;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that matches steps to object properties
 struct SchemaCompilerLoopPropertiesMatch;
 
@@ -329,12 +334,12 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionNoAnnotation, SchemaCompilerAnnotationEmit,
     SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
-    SchemaCompilerLogicalWhenType, SchemaCompilerLoopPropertiesMatch,
-    SchemaCompilerLoopProperties, SchemaCompilerLoopKeys,
-    SchemaCompilerLoopItems, SchemaCompilerLoopItemsFromAnnotationIndex,
-    SchemaCompilerLoopContains, SchemaCompilerControlLabel,
-    SchemaCompilerControlMark, SchemaCompilerControlJump,
-    SchemaCompilerControlDynamicAnchorJump>>;
+    SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
+    SchemaCompilerLoopPropertiesMatch, SchemaCompilerLoopProperties,
+    SchemaCompilerLoopKeys, SchemaCompilerLoopItems,
+    SchemaCompilerLoopItemsFromAnnotationIndex, SchemaCompilerLoopContains,
+    SchemaCompilerControlLabel, SchemaCompilerControlMark,
+    SchemaCompilerControlJump, SchemaCompilerControlDynamicAnchorJump>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -423,6 +428,7 @@ DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Try, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, WhenType, SchemaCompilerValueType)
+DEFINE_STEP_APPLICATOR(Logical, WhenDefines, SchemaCompilerValueString)
 DEFINE_STEP_APPLICATOR(Loop, PropertiesMatch, SchemaCompilerValueNamedIndexes)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, Keys, SchemaCompilerValueNone)

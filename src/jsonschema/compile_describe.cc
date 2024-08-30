@@ -1245,14 +1245,10 @@ struct DescribeVisitor {
 
       for (const auto &child : step.children) {
         // Schema
-        if (std::holds_alternative<SchemaCompilerLogicalAnd>(child)) {
-          const auto &substep{std::get<SchemaCompilerLogicalAnd>(child)};
-          assert(substep.condition.size() == 1);
-          assert(std::holds_alternative<SchemaCompilerAssertionDefines>(
-              substep.condition.front()));
-          const auto &define{std::get<SchemaCompilerAssertionDefines>(
-              substep.condition.front())};
-          const auto &property{step_value(define)};
+        if (std::holds_alternative<SchemaCompilerLogicalWhenDefines>(child)) {
+          const auto &substep{
+              std::get<SchemaCompilerLogicalWhenDefines>(child)};
+          const auto &property{step_value(substep)};
           all_dependencies.insert(property);
           if (!this->target.defines(property)) {
             continue;
@@ -1381,14 +1377,9 @@ struct DescribeVisitor {
       std::set<std::string> present;
       std::set<std::string> all_dependencies;
       for (const auto &child : step.children) {
-        assert(std::holds_alternative<SchemaCompilerLogicalWhenType>(child));
-        const auto &substep{std::get<SchemaCompilerLogicalWhenType>(child)};
-        assert(substep.condition.size() == 1);
-        assert(std::holds_alternative<SchemaCompilerAssertionDefines>(
-            substep.condition.front()));
-        const auto &define{std::get<SchemaCompilerAssertionDefines>(
-            substep.condition.front())};
-        const auto &property{step_value(define)};
+        assert(std::holds_alternative<SchemaCompilerLogicalWhenDefines>(child));
+        const auto &substep{std::get<SchemaCompilerLogicalWhenDefines>(child)};
+        const auto &property{step_value(substep)};
         all_dependencies.insert(property);
         if (!this->target.defines(property)) {
           continue;
@@ -1553,6 +1544,10 @@ struct DescribeVisitor {
 
   // These steps are never described, at least not right now
 
+  auto
+  operator()(const SchemaCompilerLogicalWhenDefines &) const -> std::string {
+    return unknown();
+  }
   auto
   operator()(const SchemaCompilerAssertionSizeEqual &) const -> std::string {
     return unknown();
