@@ -915,7 +915,35 @@ auto evaluate_step(
     context.pop(annotation);
     SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerAnnotationEmit");
     return result;
+  } else if (std::holds_alternative<SchemaCompilerAnnotationBasenameToParent>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerAnnotationBasenameToParent");
+    const auto &annotation{
+        std::get<SchemaCompilerAnnotationBasenameToParent>(step)};
+    context.push(annotation);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerAnnotationBasenameToParent",
+                             annotation, instance);
+    assert(std::holds_alternative<SchemaCompilerValueNone>(annotation.value));
+    // Annotations never fail
+    result = true;
 
+    // TODO: Can we avoid a copy of the instance location here?
+    const auto destination{context.instance_location().initial()};
+    const auto value{context.annotate(
+        destination, context.instance_location().back().to_json())};
+
+    // As a safety guard, only emit the annotation if it didn't exist already.
+    // Otherwise we risk confusing consumers
+    if (value.second && callback.has_value()) {
+      CALLBACK_PRE(annotation, destination);
+      callback.value()(SchemaCompilerEvaluationType::Post, result, step,
+                       context.evaluate_path(), destination, value.first);
+    }
+
+    context.pop(annotation);
+    SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerAnnotationBasenameToParent");
+    return result;
   } else if (std::holds_alternative<SchemaCompilerLoopPropertiesMatch>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLoopPropertiesMatch");
     const auto &loop{std::get<SchemaCompilerLoopPropertiesMatch>(step)};

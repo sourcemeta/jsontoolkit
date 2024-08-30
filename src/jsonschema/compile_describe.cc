@@ -300,36 +300,6 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    if (this->keyword == "unevaluatedProperties") {
-      assert(this->annotation.is_string());
-      std::ostringstream message;
-      message << "The object property "
-              << escape_string(this->annotation.to_string())
-              << " successfully validated against the subschema for "
-                 "unevaluated properties";
-      return message.str();
-    }
-
-    if (this->keyword == "patternProperties") {
-      assert(this->annotation.is_string());
-      std::ostringstream message;
-      message << "The object property "
-              << escape_string(this->annotation.to_string())
-              << " successfully validated against its pattern property "
-                 "subschema";
-      return message.str();
-    }
-
-    if (this->keyword == "additionalProperties") {
-      assert(this->annotation.is_string());
-      std::ostringstream message;
-      message << "The object property "
-              << escape_string(this->annotation.to_string())
-              << " successfully validated against the additional properties "
-                 "subschema";
-      return message.str();
-    }
-
     if ((this->keyword == "items" || this->keyword == "additionalItems") &&
         this->annotation.is_boolean() && this->annotation.to_boolean()) {
       assert(this->target.is_array());
@@ -373,16 +343,6 @@ struct DescribeVisitor {
                    "positional subschemas";
       }
 
-      return message.str();
-    }
-
-    if (this->keyword == "contains" && this->annotation.is_integer()) {
-      assert(this->target.is_array());
-      assert(this->annotation.is_positive());
-      std::ostringstream message;
-      message << "The item at index " << this->annotation.to_integer()
-              << " of the array value successfully validated against the "
-                 "containment check subschema";
       return message.str();
     }
 
@@ -554,6 +514,51 @@ struct DescribeVisitor {
             << " was collected as the annotation ";
     stringify(this->annotation, message);
     return message.str();
+  }
+
+  auto operator()(const SchemaCompilerAnnotationBasenameToParent &) const
+      -> std::string {
+    if (this->keyword == "patternProperties") {
+      assert(this->annotation.is_string());
+      std::ostringstream message;
+      message << "The object property "
+              << escape_string(this->annotation.to_string())
+              << " successfully validated against its pattern property "
+                 "subschema";
+      return message.str();
+    }
+
+    if (this->keyword == "additionalProperties") {
+      assert(this->annotation.is_string());
+      std::ostringstream message;
+      message << "The object property "
+              << escape_string(this->annotation.to_string())
+              << " successfully validated against the additional properties "
+                 "subschema";
+      return message.str();
+    }
+
+    if (this->keyword == "unevaluatedProperties") {
+      assert(this->annotation.is_string());
+      std::ostringstream message;
+      message << "The object property "
+              << escape_string(this->annotation.to_string())
+              << " successfully validated against the subschema for "
+                 "unevaluated properties";
+      return message.str();
+    }
+
+    if (this->keyword == "contains" && this->annotation.is_integer()) {
+      assert(this->target.is_array());
+      assert(this->annotation.is_positive());
+      std::ostringstream message;
+      message << "The item at index " << this->annotation.to_integer()
+              << " of the array value successfully validated against the "
+                 "containment check subschema";
+      return message.str();
+    }
+
+    return unknown();
   }
 
   auto

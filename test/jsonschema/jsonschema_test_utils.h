@@ -266,32 +266,30 @@
 
 #define EVALUATE_TRACE_PRE_ANNOTATION(index, evaluate_path, keyword_location,  \
                                       instance_location)                       \
-  EVALUATE_TRACE_PRE(index, AnnotationEmit, evaluate_path, keyword_location,   \
-                     instance_location);                                       \
+  if (std::holds_alternative<                                                  \
+          sourcemeta::jsontoolkit::SchemaCompilerAnnotationBasenameToParent>(  \
+          std::get<3>(trace_pre.at(index)))) {                                 \
+    EVALUATE_TRACE_PRE(index, AnnotationBasenameToParent, evaluate_path,       \
+                       keyword_location, instance_location);                   \
+  } else {                                                                     \
+    EVALUATE_TRACE_PRE(index, AnnotationEmit, evaluate_path, keyword_location, \
+                       instance_location);                                     \
+  }                                                                            \
   EXPECT_TRUE(std::get<4>(trace_pre.at(index)).is_null());
 
 #define EVALUATE_TRACE_POST_ANNOTATION(index, evaluate_path, keyword_location, \
                                        instance_location, expected_annotation) \
   EXPECT_TRUE(index < trace_post.size());                                      \
   EXPECT_TRUE(std::get<0>(trace_post.at(index)));                              \
-  EVALUATE_TRACE_POST(index, AnnotationEmit, evaluate_path, keyword_location,  \
-                      instance_location);                                      \
-  EXPECT_EQ(std::get<4>(trace_post.at(index)),                                 \
-            sourcemeta::jsontoolkit::JSON(expected_annotation));
-
-#define EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(                                  \
-    index, evaluate_path, keyword_location, instance_location)                 \
-  EVALUATE_TRACE_PRE(index, AnnotationEmit, evaluate_path, keyword_location,   \
-                     instance_location);                                       \
-  EXPECT_TRUE(std::get<4>(trace_pre.at(index)).is_null());
-
-#define EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(                                 \
-    index, evaluate_path, keyword_location, instance_location,                 \
-    expected_annotation)                                                       \
-  EXPECT_TRUE(index < trace_post.size());                                      \
-  EXPECT_TRUE(std::get<0>(trace_post.at(index)));                              \
-  EVALUATE_TRACE_POST(index, AnnotationEmit, evaluate_path, keyword_location,  \
-                      instance_location);                                      \
+  if (std::holds_alternative<                                                  \
+          sourcemeta::jsontoolkit::SchemaCompilerAnnotationBasenameToParent>(  \
+          std::get<3>(trace_post.at(index)))) {                                \
+    EVALUATE_TRACE_POST(index, AnnotationBasenameToParent, evaluate_path,      \
+                        keyword_location, instance_location);                  \
+  } else {                                                                     \
+    EVALUATE_TRACE_POST(index, AnnotationEmit, evaluate_path,                  \
+                        keyword_location, instance_location);                  \
+  }                                                                            \
   EXPECT_EQ(std::get<4>(trace_post.at(index)),                                 \
             sourcemeta::jsontoolkit::JSON(expected_annotation));
 
