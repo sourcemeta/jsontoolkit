@@ -309,15 +309,6 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    if (this->keyword == "unevaluatedItems" && this->annotation.is_boolean() &&
-        this->annotation.to_boolean()) {
-      assert(this->target.is_array());
-      std::ostringstream message;
-      message << "At least one item of the array value successfully validated "
-                 "against the subschema for unevaluated items";
-      return message.str();
-    }
-
     if (this->keyword == "prefixItems" && this->annotation.is_boolean() &&
         this->annotation.to_boolean()) {
       assert(this->target.is_array());
@@ -514,6 +505,20 @@ struct DescribeVisitor {
             << " was collected as the annotation ";
     stringify(this->annotation, message);
     return message.str();
+  }
+
+  auto
+  operator()(const SchemaCompilerAnnotationToParent &) const -> std::string {
+    if (this->keyword == "unevaluatedItems" && this->annotation.is_boolean() &&
+        this->annotation.to_boolean()) {
+      assert(this->target.is_array());
+      std::ostringstream message;
+      message << "At least one item of the array value successfully validated "
+                 "against the subschema for unevaluated items";
+      return message.str();
+    }
+
+    return unknown();
   }
 
   auto operator()(const SchemaCompilerAnnotationBasenameToParent &) const

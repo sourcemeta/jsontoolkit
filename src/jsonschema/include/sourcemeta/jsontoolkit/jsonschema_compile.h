@@ -33,9 +33,6 @@ enum class SchemaCompilerTargetType {
   /// The last path (i.e. property or index) of the instance location
   InstanceBasename,
 
-  /// The penultimate path (i.e. property or index) of the instance location
-  InstanceParent,
-
   /// The annotations produced at the same base evaluation path for the
   /// current instance location
   AdjacentAnnotations,
@@ -241,6 +238,10 @@ struct SchemaCompilerAssertionNoAnnotation;
 struct SchemaCompilerAnnotationEmit;
 
 /// @ingroup jsonschema
+/// Represents a compiler step that emits an annotation to the parent
+struct SchemaCompilerAnnotationToParent;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that emits the current basename as an annotation
 /// to the parent
 struct SchemaCompilerAnnotationBasenameToParent;
@@ -337,8 +338,8 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionAnnotation,
     SchemaCompilerAssertionNoAdjacentAnnotation,
     SchemaCompilerAssertionNoAnnotation, SchemaCompilerAnnotationEmit,
-    SchemaCompilerAnnotationBasenameToParent, SchemaCompilerLogicalOr,
-    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerAnnotationToParent, SchemaCompilerAnnotationBasenameToParent,
+    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
     SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
     SchemaCompilerLoopPropertiesMatch, SchemaCompilerLoopProperties,
@@ -428,6 +429,7 @@ DEFINE_STEP_WITH_VALUE_AND_DATA(Assertion, NoAnnotation,
                                 SchemaCompilerValueJSON,
                                 SchemaCompilerValueStrings)
 DEFINE_STEP_WITH_VALUE(Annotation, Emit, SchemaCompilerValueJSON)
+DEFINE_STEP_WITH_VALUE(Annotation, ToParent, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, BasenameToParent, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueBoolean)
 DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)

@@ -227,9 +227,9 @@ auto compiler_2019_09_applicator_unevaluateditems(
   SchemaCompilerTemplate loop_children{compile(context, schema_context,
                                                relative_dynamic_context,
                                                empty_pointer, empty_pointer)};
-  loop_children.push_back(make<SchemaCompilerAnnotationEmit>(
+  loop_children.push_back(make<SchemaCompilerAnnotationToParent>(
       true, context, schema_context, relative_dynamic_context, JSON{true}, {},
-      SchemaCompilerTargetType::InstanceParent));
+      SchemaCompilerTargetType::Instance));
 
   if (schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2020-12/vocab/applicator")) {
