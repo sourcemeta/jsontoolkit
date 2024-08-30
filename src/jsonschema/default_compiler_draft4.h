@@ -315,6 +315,75 @@ auto compiler_draft4_applicator_properties(
       schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2020-12/vocab/unevaluated");
 
+  const auto size{schema_context.schema.at(dynamic_context.keyword).size()};
+  const auto imports_required_keyword =
+      schema_context.vocabularies.contains(
+          "http://json-schema.org/draft-04/schema#") ||
+      schema_context.vocabularies.contains(
+          "http://json-schema.org/draft-06/schema#") ||
+      schema_context.vocabularies.contains(
+          "http://json-schema.org/draft-07/schema#") ||
+      schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2019-09/vocab/validation") ||
+      schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/validation");
+  std::set<std::string> required;
+  if (imports_required_keyword && schema_context.schema.defines("required") &&
+      schema_context.schema.at("required").is_array()) {
+    for (const auto &property :
+         schema_context.schema.at("required").as_array()) {
+      if (property.is_string()) {
+        required.insert(property.to_string());
+      }
+    }
+  }
+
+  std::size_t is_required = 0;
+  for (const auto &entry :
+       schema_context.schema.at(dynamic_context.keyword).as_object()) {
+    if (required.contains(entry.first)) {
+      is_required += 1;
+    }
+  }
+
+  // There are two ways to compile `properties` depending on whether
+  // most of the properties are marked as required using `required`
+  // or whether most of the properties are optional. Each shines
+  // in the corresponding case.
+
+  // This strategy only makes sense if most of the properties are "optional"
+  if (is_required <= (size / 2)) {
+    SchemaCompilerValueNamedIndexes indexes;
+    SchemaCompilerTemplate children;
+    std::size_t cursor = 0;
+    for (const auto &[name, subschema] :
+         schema_context.schema.at(dynamic_context.keyword).as_object()) {
+      indexes.emplace(name, cursor);
+      auto substeps{compile(context, schema_context, relative_dynamic_context,
+                            {name}, {name})};
+
+      // We can avoid producing an annotation if we need to go fast
+      // and there is no other keyword that would rely on this annotation
+      if (context.mode != SchemaCompilerCompilationMode::Optimized ||
+          loads_unevaluated_keywords ||
+          schema_context.schema.defines("additionalProperties")) {
+        substeps.push_back(make<SchemaCompilerAnnotationEmit>(
+            true, context, schema_context, relative_dynamic_context, JSON{name},
+            {}, SchemaCompilerTargetType::Instance));
+      }
+
+      children.push_back(make<SchemaCompilerLogicalAnd>(
+          false, context, schema_context, relative_dynamic_context,
+          SchemaCompilerValueNone{}, std::move(substeps),
+          SchemaCompilerTemplate{}));
+      cursor += 1;
+    }
+
+    return {make<SchemaCompilerLoopPropertiesMatch>(
+        true, context, schema_context, dynamic_context, std::move(indexes),
+        std::move(children), SchemaCompilerTemplate{})};
+  }
+
   SchemaCompilerTemplate children;
   for (auto &[key, subschema] :
        schema_context.schema.at(dynamic_context.keyword).as_object()) {
@@ -332,7 +401,7 @@ auto compiler_draft4_applicator_properties(
     }
 
     // We can avoid this "defines" condition if the property is a required one
-    if (schema_context.schema.defines("required") &&
+    if (imports_required_keyword && schema_context.schema.defines("required") &&
         schema_context.schema.at("required").is_array() &&
         schema_context.schema.at("required").contains(JSON{key})) {
       // We can avoid the container too and just inline these steps

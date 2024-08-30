@@ -201,7 +201,10 @@ struct DescribeVisitor {
       if (step.children.size() == 1) {
         message << "single defined property subschema";
       } else {
-        message << step.children.size() << " defined properties subschemas";
+        // We cannot provide the specific number of properties,
+        // as the number of children might be flatten out
+        // for performance reasons
+        message << "defined properties subschemas";
       }
 
       return message.str();
@@ -1524,6 +1527,21 @@ struct DescribeVisitor {
         break;
       default:
         return unknown();
+    }
+
+    return message.str();
+  }
+
+  auto operator()(const SchemaCompilerLoopPropertiesMatch &step) const
+      -> std::string {
+    assert(!step.children.empty());
+    assert(this->target.is_object());
+    std::ostringstream message;
+    message << "The object value was expected to validate against the ";
+    if (step.children.size() == 1) {
+      message << "single defined property subschema";
+    } else {
+      message << step.children.size() << " defined properties subschemas";
     }
 
     return message.str();

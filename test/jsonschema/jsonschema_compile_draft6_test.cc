@@ -444,7 +444,7 @@ TEST(JSONSchema_compile_draft6, propertyNames_3) {
 TEST(JSONSchema_compile_draft6, propertyNames_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "http://json-schema.org/draft-06/schema#",
     "properties": {
       "foo": {
         "propertyNames": {}
@@ -465,7 +465,7 @@ TEST(JSONSchema_compile_draft6, propertyNames_4) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, LoopKeys, "/properties/foo/propertyNames",
                      "#/properties/foo/propertyNames", "/foo");
   EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
@@ -473,7 +473,8 @@ TEST(JSONSchema_compile_draft6, propertyNames_4) {
   EVALUATE_TRACE_POST_SUCCESS(0, LoopKeys, "/properties/foo/propertyNames",
                               "#/properties/foo/propertyNames", "/foo");
   EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "foo");
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch, "/properties",
+                              "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
