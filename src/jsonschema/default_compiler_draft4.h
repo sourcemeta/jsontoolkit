@@ -405,12 +405,9 @@ auto compiler_draft4_applicator_properties(
         children.push_back(std::move(substep));
       }
     } else {
-      SchemaCompilerTemplate condition{make<SchemaCompilerAssertionDefines>(
-          false, context, schema_context, relative_dynamic_context, key, {},
-          SchemaCompilerTargetType::Instance)};
-      children.push_back(make<SchemaCompilerLogicalWhenType>(
-          false, context, schema_context, relative_dynamic_context,
-          JSON::Type::Object, std::move(substeps), std::move(condition)));
+      children.push_back(make<SchemaCompilerLogicalWhenDefines>(
+          false, context, schema_context, relative_dynamic_context, key,
+          std::move(substeps), SchemaCompilerTemplate{}));
     }
   }
 
@@ -813,17 +810,12 @@ auto compiler_draft4_applicator_dependencies(
        schema_context.schema.at(dynamic_context.keyword).as_object()) {
     if (is_schema(entry.second)) {
       if (!entry.second.is_boolean() || !entry.second.to_boolean()) {
-        children.push_back(make<SchemaCompilerLogicalAnd>(
+        children.push_back(make<SchemaCompilerLogicalWhenDefines>(
             false, context, schema_context, relative_dynamic_context,
-            SchemaCompilerValueNone{},
+            entry.first,
             compile(context, schema_context, relative_dynamic_context,
                     {entry.first}, empty_pointer),
-
-            // TODO: As an optimization, avoid this condition if the subschema
-            // declares `required` and includes the given key
-            {make<SchemaCompilerAssertionDefines>(
-                true, context, schema_context, relative_dynamic_context,
-                entry.first, {}, SchemaCompilerTargetType::Instance)}));
+            SchemaCompilerTemplate{}));
       }
     } else if (entry.second.is_array()) {
       std::set<JSON::String> properties;

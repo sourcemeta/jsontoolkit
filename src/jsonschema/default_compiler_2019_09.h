@@ -25,14 +25,11 @@ auto compiler_2019_09_applicator_dependentschemas(
     }
 
     if (!entry.second.is_boolean() || !entry.second.to_boolean()) {
-      children.push_back(make<SchemaCompilerLogicalWhenType>(
-          false, context, schema_context, relative_dynamic_context,
-          JSON::Type::Object,
+      children.push_back(make<SchemaCompilerLogicalWhenDefines>(
+          false, context, schema_context, relative_dynamic_context, entry.first,
           compile(context, schema_context, relative_dynamic_context,
                   {entry.first}, empty_pointer),
-          {make<SchemaCompilerAssertionDefines>(
-              true, context, schema_context, relative_dynamic_context,
-              entry.first, {}, SchemaCompilerTargetType::Instance)}));
+          SchemaCompilerTemplate{}));
     }
   }
 
