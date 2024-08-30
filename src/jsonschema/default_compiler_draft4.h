@@ -568,9 +568,7 @@ auto compiler_draft4_validation_pattern(
       true, context, schema_context, dynamic_context,
       SchemaCompilerValueRegex{std::regex{regex_string, std::regex::ECMAScript},
                                regex_string},
-      // TODO: Move this into an implicit condition of AssertionRegex
-      type_condition(context, schema_context, JSON::Type::String),
-      SchemaCompilerTargetType::Instance)};
+      SchemaCompilerTemplate{}, SchemaCompilerTargetType::Instance)};
 }
 
 auto compiler_draft4_validation_format(
@@ -599,7 +597,6 @@ auto compiler_draft4_validation_format(
         SchemaCompilerTargetType::Instance)};
   }
 
-  // TODO: Move the type condition into an implicit condition of AssertionRegex
 #define COMPILE_FORMAT_REGEX(name, regular_expression)                         \
   if (format == (name)) {                                                      \
     return {make<SchemaCompilerAssertionRegex>(                                \
@@ -607,8 +604,7 @@ auto compiler_draft4_validation_format(
         SchemaCompilerValueRegex{                                              \
             std::regex{(regular_expression), std::regex::ECMAScript},          \
             (regular_expression)},                                             \
-        type_condition(context, schema_context, JSON::Type::String),           \
-        SchemaCompilerTargetType::Instance)};                                  \
+        SchemaCompilerTemplate{}, SchemaCompilerTargetType::Instance)};        \
   }
 
   COMPILE_FORMAT_REGEX("ipv4", FORMAT_REGEX_IPV4)

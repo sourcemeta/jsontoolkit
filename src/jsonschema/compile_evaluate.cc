@@ -422,11 +422,12 @@ auto evaluate_step(
     context.push(assertion);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionRegex", assertion,
                              instance);
-    CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
     const auto &target{
         context.resolve_target<JSON>(assertion.target, instance)};
-    assert(target.is_string());
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionRegex", assertion,
+                                   target.is_string());
+    CALLBACK_PRE(assertion, context.instance_location());
+    const auto &value{context.resolve_value(assertion.value, instance)};
     result = std::regex_search(target.to_string(), value.first);
     CALLBACK_POST("SchemaCompilerAssertionRegex", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionSizeGreater>(step)) {
