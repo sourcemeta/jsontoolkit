@@ -286,6 +286,11 @@ struct SchemaCompilerLoopPropertiesMatch;
 struct SchemaCompilerLoopProperties;
 
 /// @ingroup jsonschema
+/// Represents a compiler step that loops over object properties that match a
+/// given ECMA regular expression
+struct SchemaCompilerLoopPropertiesRegex;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that loops over object property keys
 struct SchemaCompilerLoopKeys;
 
@@ -343,10 +348,11 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
     SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
     SchemaCompilerLoopPropertiesMatch, SchemaCompilerLoopProperties,
-    SchemaCompilerLoopKeys, SchemaCompilerLoopItems,
-    SchemaCompilerLoopItemsFromAnnotationIndex, SchemaCompilerLoopContains,
-    SchemaCompilerControlLabel, SchemaCompilerControlMark,
-    SchemaCompilerControlJump, SchemaCompilerControlDynamicAnchorJump>>;
+    SchemaCompilerLoopPropertiesRegex, SchemaCompilerLoopKeys,
+    SchemaCompilerLoopItems, SchemaCompilerLoopItemsFromAnnotationIndex,
+    SchemaCompilerLoopContains, SchemaCompilerControlLabel,
+    SchemaCompilerControlMark, SchemaCompilerControlJump,
+    SchemaCompilerControlDynamicAnchorJump>>;
 
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
@@ -440,6 +446,7 @@ DEFINE_STEP_APPLICATOR(Logical, WhenType, SchemaCompilerValueType)
 DEFINE_STEP_APPLICATOR(Logical, WhenDefines, SchemaCompilerValueString)
 DEFINE_STEP_APPLICATOR(Loop, PropertiesMatch, SchemaCompilerValueNamedIndexes)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Loop, PropertiesRegex, SchemaCompilerValueRegex)
 DEFINE_STEP_APPLICATOR(Loop, Keys, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_APPLICATOR(Loop, ItemsFromAnnotationIndex,

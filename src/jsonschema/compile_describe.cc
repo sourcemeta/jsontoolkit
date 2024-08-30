@@ -1574,6 +1574,10 @@ struct DescribeVisitor {
       -> std::string {
     return unknown();
   }
+  auto
+  operator()(const SchemaCompilerLoopPropertiesRegex &) const -> std::string {
+    return unknown();
+  }
 };
 
 } // namespace

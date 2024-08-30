@@ -1005,6 +1005,38 @@ auto evaluate_step(
 
   evaluate_loop_properties_end:
     CALLBACK_POST("SchemaCompilerLoopProperties", loop);
+  } else if (std::holds_alternative<SchemaCompilerLoopPropertiesRegex>(step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLoopPropertiesRegex");
+    const auto &loop{std::get<SchemaCompilerLoopPropertiesRegex>(step)};
+    context.push(loop);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLoopPropertiesRegex", loop,
+                             instance);
+    const auto &value{context.resolve_value(loop.value, instance)};
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopPropertiesRegex", loop,
+                                   target.is_object());
+    CALLBACK_PRE(loop, context.instance_location());
+    result = true;
+    for (const auto &entry : target.as_object()) {
+      if (!std::regex_search(entry.first, value.first)) {
+        continue;
+      }
+
+      context.push(loop, empty_pointer, {entry.first});
+      for (const auto &child : loop.children) {
+        if (!evaluate_step(child, instance, mode, callback, context)) {
+          result = false;
+          context.pop(loop);
+          // For efficiently breaking from the outer loop too
+          goto evaluate_loop_properties_regex_end;
+        }
+      }
+
+      context.pop(loop);
+    }
+
+  evaluate_loop_properties_regex_end:
+    CALLBACK_POST("SchemaCompilerLoopPropertiesRegex", loop);
   } else if (std::holds_alternative<SchemaCompilerLoopKeys>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLoopKeys");
     const auto &loop{std::get<SchemaCompilerLoopKeys>(step)};

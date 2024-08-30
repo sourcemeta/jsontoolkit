@@ -269,6 +269,7 @@ struct StepVisitor {
   HANDLE_STEP("logical", "when-defines", SchemaCompilerLogicalWhenDefines)
   HANDLE_STEP("loop", "properties-match", SchemaCompilerLoopPropertiesMatch)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
+  HANDLE_STEP("loop", "properties-regex", SchemaCompilerLoopPropertiesRegex)
   HANDLE_STEP("loop", "keys", SchemaCompilerLoopKeys)
   HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)
   HANDLE_STEP("loop", "items-from-annotation-index",
