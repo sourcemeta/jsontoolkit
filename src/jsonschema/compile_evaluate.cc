@@ -158,8 +158,6 @@ public:
     } else {
       static_assert(std::is_same_v<JSON, T>);
       assert(target.second.empty());
-      assert(target.first !=
-             sourcemeta::jsontoolkit::SchemaCompilerTargetType::InstanceParent);
       switch (target.first) {
         case SchemaCompilerTargetType::Instance:
           if (this->target_type() == TargetType::Key) {
@@ -292,6 +290,17 @@ auto evaluate_step(
   context.pop(current_step);                                                   \
   SOURCEMETA_TRACE_END(trace_id, title);                                       \
   return result;
+
+  // As a safety guard, only emit the annotation if it didn't exist already.
+  // Otherwise we risk confusing consumers
+#define CALLBACK_ANNOTATION(annotation_result, current_step,                   \
+                            current_instance_location)                         \
+  if (annotation_result.second && callback.has_value()) {                      \
+    CALLBACK_PRE(current_step, current_instance_location);                     \
+    callback.value()(SchemaCompilerEvaluationType::Post, result, step,         \
+                     context.evaluate_path(), current_instance_location,       \
+                     annotation_result.first);                                 \
+  }
 
 #define EVALUATE_IMPLICIT_PRECONDITION(title, current_step, precondition)      \
   if (!(precondition)) {                                                       \
@@ -892,28 +901,29 @@ auto evaluate_step(
     // Annotations never fail
     result = true;
     assert(annotation.target.second.empty());
-
-    // TODO: Can we avoid a copy of the instance location here?
-    const auto current_instance_location{
-        annotation.target.first == SchemaCompilerTargetType::InstanceParent
-            ? context.instance_location().initial()
-            : context.instance_location()};
-
+    const auto &current_instance_location{context.instance_location()};
     const auto value{
         context.annotate(current_instance_location,
                          context.resolve_value(annotation.value, instance))};
-
-    // As a safety guard, only emit the annotation if it didn't exist already.
-    // Otherwise we risk confusing consumers
-    if (value.second && callback.has_value()) {
-      CALLBACK_PRE(annotation, current_instance_location);
-      callback.value()(SchemaCompilerEvaluationType::Post, result, step,
-                       context.evaluate_path(), current_instance_location,
-                       value.first);
-    }
-
+    CALLBACK_ANNOTATION(value, annotation, current_instance_location);
     context.pop(annotation);
     SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerAnnotationEmit");
+    return result;
+  } else if (std::holds_alternative<SchemaCompilerAnnotationToParent>(step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAnnotationToParent");
+    const auto &annotation{std::get<SchemaCompilerAnnotationToParent>(step)};
+    context.push(annotation);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerAnnotationToParent", annotation,
+                             instance);
+    // Annotations never fail
+    result = true;
+    // TODO: Can we avoid a copy of the instance location here?
+    const auto destination{context.instance_location().initial()};
+    const auto value{context.annotate(
+        destination, context.resolve_value(annotation.value, instance))};
+    CALLBACK_ANNOTATION(value, annotation, destination);
+    context.pop(annotation);
+    SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerAnnotationToParent");
     return result;
   } else if (std::holds_alternative<SchemaCompilerAnnotationBasenameToParent>(
                  step)) {
@@ -927,20 +937,11 @@ auto evaluate_step(
     assert(std::holds_alternative<SchemaCompilerValueNone>(annotation.value));
     // Annotations never fail
     result = true;
-
     // TODO: Can we avoid a copy of the instance location here?
     const auto destination{context.instance_location().initial()};
     const auto value{context.annotate(
         destination, context.instance_location().back().to_json())};
-
-    // As a safety guard, only emit the annotation if it didn't exist already.
-    // Otherwise we risk confusing consumers
-    if (value.second && callback.has_value()) {
-      CALLBACK_PRE(annotation, destination);
-      callback.value()(SchemaCompilerEvaluationType::Post, result, step,
-                       context.evaluate_path(), destination, value.first);
-    }
-
+    CALLBACK_ANNOTATION(value, annotation, destination);
     context.pop(annotation);
     SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerAnnotationBasenameToParent");
     return result;
@@ -1189,6 +1190,7 @@ auto evaluate_step(
 
 #undef CALLBACK_PRE
 #undef CALLBACK_POST
+#undef CALLBACK_ANNOTATION
 #undef EVALUATE_IMPLICIT_PRECONDITION
 #undef EVALUATE_CONDITION_GUARD
   // We should never get here

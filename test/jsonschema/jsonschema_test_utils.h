@@ -271,6 +271,11 @@
           std::get<3>(trace_pre.at(index)))) {                                 \
     EVALUATE_TRACE_PRE(index, AnnotationBasenameToParent, evaluate_path,       \
                        keyword_location, instance_location);                   \
+  } else if (std::holds_alternative<                                           \
+                 sourcemeta::jsontoolkit::SchemaCompilerAnnotationToParent>(   \
+                 std::get<3>(trace_pre.at(index)))) {                          \
+    EVALUATE_TRACE_PRE(index, AnnotationToParent, evaluate_path,               \
+                       keyword_location, instance_location);                   \
   } else {                                                                     \
     EVALUATE_TRACE_PRE(index, AnnotationEmit, evaluate_path, keyword_location, \
                        instance_location);                                     \
@@ -285,6 +290,11 @@
           sourcemeta::jsontoolkit::SchemaCompilerAnnotationBasenameToParent>(  \
           std::get<3>(trace_post.at(index)))) {                                \
     EVALUATE_TRACE_POST(index, AnnotationBasenameToParent, evaluate_path,      \
+                        keyword_location, instance_location);                  \
+  } else if (std::holds_alternative<                                           \
+                 sourcemeta::jsontoolkit::SchemaCompilerAnnotationToParent>(   \
+                 std::get<3>(trace_post.at(index)))) {                         \
+    EVALUATE_TRACE_POST(index, AnnotationToParent, evaluate_path,              \
                         keyword_location, instance_location);                  \
   } else {                                                                     \
     EVALUATE_TRACE_POST(index, AnnotationEmit, evaluate_path,                  \
