@@ -265,6 +265,7 @@ struct StepVisitor {
   HANDLE_STEP("logical", "xor", SchemaCompilerLogicalXor)
   HANDLE_STEP("logical", "try", SchemaCompilerLogicalTry)
   HANDLE_STEP("logical", "not", SchemaCompilerLogicalNot)
+  HANDLE_STEP("logical", "when-type", SchemaCompilerLogicalWhenType)
   HANDLE_STEP("loop", "properties-match", SchemaCompilerLoopPropertiesMatch)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "keys", SchemaCompilerLoopKeys)

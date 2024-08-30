@@ -186,7 +186,7 @@ TEST(JSONSchema_compile_2020_12, items_4) {
       sourcemeta::jsontoolkit::parse("[ true, 5 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/prefixItems/0/type",
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/prefixItems/1/type",
@@ -199,8 +199,8 @@ TEST(JSONSchema_compile_2020_12, items_4) {
                               "#/prefixItems/1/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "",
                                         true);
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/prefixItems", "#/prefixItems",
-                              "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/prefixItems",
+                              "#/prefixItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
@@ -236,7 +236,7 @@ TEST(JSONSchema_compile_2020_12, items_5) {
       sourcemeta::jsontoolkit::parse("[ true, 5, \"foo\", \"bar\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 8);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/prefixItems/0/type",
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/prefixItems/1/type",
@@ -255,8 +255,8 @@ TEST(JSONSchema_compile_2020_12, items_5) {
                               "#/prefixItems/1/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "",
                                         1);
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/prefixItems", "#/prefixItems",
-                              "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/prefixItems",
+                              "#/prefixItems", "");
   EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/2");
   EVALUATE_TRACE_POST_SUCCESS(5, AssertionTypeStrict, "/items/type",
@@ -311,7 +311,7 @@ TEST(JSONSchema_compile_2020_12, items_6) {
       sourcemeta::jsontoolkit::parse("[ true, 5, 6, \"bar\" ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 6);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/prefixItems/0/type",
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/prefixItems/1/type",
@@ -327,8 +327,8 @@ TEST(JSONSchema_compile_2020_12, items_6) {
                               "#/prefixItems/1/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "",
                                         1);
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/prefixItems", "#/prefixItems",
-                              "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/prefixItems",
+                              "#/prefixItems", "");
   EVALUATE_TRACE_POST_FAILURE(4, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/2");
   EVALUATE_TRACE_POST_FAILURE(5, LoopItems, "/items", "#/items", "");
@@ -388,9 +388,9 @@ TEST(JSONSchema_compile_2020_12, prefixItems_2) {
       sourcemeta::jsontoolkit::parse("[]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/prefixItems", "#/prefixItems", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/prefixItems", "#/prefixItems",
-                              "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/prefixItems",
+                              "#/prefixItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -415,7 +415,7 @@ TEST(JSONSchema_compile_2020_12, prefixItems_3) {
       sourcemeta::jsontoolkit::parse("[ 5 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/prefixItems/0/type",
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "");
@@ -424,8 +424,8 @@ TEST(JSONSchema_compile_2020_12, prefixItems_3) {
                               "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/prefixItems", "#/prefixItems", "",
                                         0);
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/prefixItems", "#/prefixItems",
-                              "");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/prefixItems",
+                              "#/prefixItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
@@ -456,7 +456,7 @@ TEST(JSONSchema_compile_2020_12, prefixItems_4) {
       sourcemeta::jsontoolkit::parse("[ 5, true, \"extra\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/prefixItems/0/type",
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/prefixItems/1/type",
@@ -469,8 +469,8 @@ TEST(JSONSchema_compile_2020_12, prefixItems_4) {
                               "#/prefixItems/1/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "",
                                         1);
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/prefixItems", "#/prefixItems",
-                              "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/prefixItems",
+                              "#/prefixItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
@@ -503,7 +503,7 @@ TEST(JSONSchema_compile_2020_12, prefixItems_5) {
       sourcemeta::jsontoolkit::parse("[ 5, 1, \"extra\" ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/prefixItems/0/type",
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/prefixItems/1/type",
@@ -513,8 +513,8 @@ TEST(JSONSchema_compile_2020_12, prefixItems_5) {
                               "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/prefixItems/1/type",
                               "#/prefixItems/1/type", "/1");
-  EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/prefixItems", "#/prefixItems",
-                              "");
+  EVALUATE_TRACE_POST_FAILURE(2, LogicalWhenType, "/prefixItems",
+                              "#/prefixItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
@@ -544,7 +544,7 @@ TEST(JSONSchema_compile_2020_12, prefixItems_6) {
       sourcemeta::jsontoolkit::parse("[ 5, true ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/prefixItems/0/type",
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/prefixItems/1/type",
@@ -557,8 +557,8 @@ TEST(JSONSchema_compile_2020_12, prefixItems_6) {
                               "#/prefixItems/1/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "",
                                         true);
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/prefixItems", "#/prefixItems",
-                              "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/prefixItems",
+                              "#/prefixItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");

@@ -98,9 +98,9 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentRequired", "#/dependentRequired",
-                     "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependentRequired",
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependentRequired",
+                     "#/dependentRequired", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/dependentRequired",
                               "#/dependentRequired", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -129,9 +129,9 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_3) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentRequired", "#/dependentRequired",
-                     "");
-  EVALUATE_TRACE_POST_FAILURE(0, LogicalAnd, "/dependentRequired",
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependentRequired",
+                     "#/dependentRequired", "");
+  EVALUATE_TRACE_POST_FAILURE(0, LogicalWhenType, "/dependentRequired",
                               "#/dependentRequired", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -160,9 +160,9 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_4) {
       sourcemeta::jsontoolkit::parse("{ \"none\": true }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentRequired", "#/dependentRequired",
-                     "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependentRequired",
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependentRequired",
+                     "#/dependentRequired", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/dependentRequired",
                               "#/dependentRequired", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -189,9 +189,9 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_5) {
       sourcemeta::jsontoolkit::parse("{ \"none\": true }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentRequired", "#/dependentRequired",
-                     "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependentRequired",
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependentRequired",
+                     "#/dependentRequired", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/dependentRequired",
                               "#/dependentRequired", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -238,15 +238,15 @@ TEST(JSONSchema_compile_2019_09, dependentSchemas_2) {
       sourcemeta::jsontoolkit::parse("{ \"qux\": 1, \"extra\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentSchemas", "#/dependentSchemas",
-                     "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependentSchemas",
+                     "#/dependentSchemas", "");
   EVALUATE_TRACE_PRE(1, AssertionDefines, "/dependentSchemas/qux/required",
                      "#/dependentSchemas/qux/required", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionDefines,
                               "/dependentSchemas/qux/required",
                               "#/dependentSchemas/qux/required", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/dependentSchemas",
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalWhenType, "/dependentSchemas",
                               "#/dependentSchemas", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -278,9 +278,9 @@ TEST(JSONSchema_compile_2019_09, dependentSchemas_3) {
       sourcemeta::jsontoolkit::parse("{ \"none\": 1 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentSchemas", "#/dependentSchemas",
-                     "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/dependentSchemas",
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependentSchemas",
+                     "#/dependentSchemas", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/dependentSchemas",
                               "#/dependentSchemas", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -308,8 +308,8 @@ TEST(JSONSchema_compile_2019_09, dependentSchemas_4) {
       "{ \"foo\": 1, \"bar\": 2, \"baz\": 3, \"qux\": 4 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/dependentSchemas", "#/dependentSchemas",
-                     "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependentSchemas",
+                     "#/dependentSchemas", "");
   EVALUATE_TRACE_PRE(1, AssertionDefines, "/dependentSchemas/baz/required",
                      "#/dependentSchemas/baz/required", "");
   EVALUATE_TRACE_PRE(2, AssertionDefines, "/dependentSchemas/foo/required",
@@ -321,7 +321,7 @@ TEST(JSONSchema_compile_2019_09, dependentSchemas_4) {
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionDefines,
                               "/dependentSchemas/foo/required",
                               "#/dependentSchemas/foo/required", "");
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/dependentSchemas",
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/dependentSchemas",
                               "#/dependentSchemas", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -1674,8 +1674,8 @@ TEST(JSONSchema_compile_2019_09, items_5) {
       sourcemeta::jsontoolkit::parse("[]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -1700,14 +1700,14 @@ TEST(JSONSchema_compile_2019_09, items_6) {
       sourcemeta::jsontoolkit::parse("[ 5 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", 0);
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
@@ -1738,7 +1738,7 @@ TEST(JSONSchema_compile_2019_09, items_7) {
       sourcemeta::jsontoolkit::parse("[ 5, true, \"extra\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
                      "/1");
@@ -1749,7 +1749,7 @@ TEST(JSONSchema_compile_2019_09, items_7) {
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
                               "#/items/1/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", 1);
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
@@ -1782,7 +1782,7 @@ TEST(JSONSchema_compile_2019_09, items_8) {
       sourcemeta::jsontoolkit::parse("[ 5, 1, \"extra\" ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
                      "/1");
@@ -1791,7 +1791,7 @@ TEST(JSONSchema_compile_2019_09, items_8) {
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/items/1/type",
                               "#/items/1/type", "/1");
-  EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_FAILURE(2, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
@@ -1821,7 +1821,7 @@ TEST(JSONSchema_compile_2019_09, items_9) {
       sourcemeta::jsontoolkit::parse("[ 5, true ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
                      "/1");
@@ -1832,7 +1832,7 @@ TEST(JSONSchema_compile_2019_09, items_9) {
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
                               "#/items/1/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", true);
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
@@ -1940,7 +1940,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_3) {
       sourcemeta::jsontoolkit::parse("[ true, 5 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/items/1/type", "#/items/1/type", "/1");
@@ -1951,7 +1951,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_3) {
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/items/1/type",
                               "#/items/1/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", true);
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
@@ -1988,7 +1988,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_4) {
       sourcemeta::jsontoolkit::parse("[ true, 5, \"foo\", \"bar\" ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 8);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/items/1/type", "#/items/1/type", "/1");
@@ -2006,7 +2006,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_4) {
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/items/1/type",
                               "#/items/1/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", 1);
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict, "/additionalItems/type",
                               "#/additionalItems/type", "/2");
   EVALUATE_TRACE_POST_SUCCESS(5, AssertionTypeStrict, "/additionalItems/type",
@@ -2063,7 +2063,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_5) {
       sourcemeta::jsontoolkit::parse("[ true, 5, 6, \"bar\" ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 6);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/items/1/type", "#/items/1/type", "/1");
@@ -2077,7 +2077,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_5) {
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/items/1/type",
                               "#/items/1/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", 1);
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_POST_FAILURE(4, AssertionTypeStrict, "/additionalItems/type",
                               "#/additionalItems/type", "/2");
   EVALUATE_TRACE_POST_FAILURE(5, LoopItems, "/additionalItems",
@@ -2513,7 +2513,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_4) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
@@ -2523,7 +2523,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_4) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", 0);
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_POST_SUCCESS(3, LoopItemsFromAnnotationIndex,
                               "/unevaluatedItems", "#/unevaluatedItems", "");
 
@@ -2562,7 +2562,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_5) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
@@ -2570,7 +2570,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_5) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", true);
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
@@ -2603,7 +2603,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_6) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 6);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
@@ -2617,7 +2617,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_6) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", 0);
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_POST_SUCCESS(3, AssertionTypeStrict, "/unevaluatedItems/type",
                               "#/unevaluatedItems/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(4, "/unevaluatedItems",
@@ -2669,7 +2669,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
-  EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/items", "#/allOf/0/items", "");
+  EVALUATE_TRACE_PRE(1, LogicalWhenType, "/allOf/0/items", "#/allOf/0/items",
+                     "");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/items/0/type",
                      "#/allOf/0/items/0/type", "/0");
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/allOf/0/items", "#/allOf/0/items",
@@ -2685,7 +2686,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
                               "#/allOf/0/items/0/type", "/0");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/allOf/0/items", "#/allOf/0/items",
                                         "", 0);
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/allOf/0/items",
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/allOf/0/items",
                               "#/allOf/0/items", "");
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
   EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict, "/unevaluatedItems/type",
@@ -2742,7 +2743,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 6);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
-  EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/items", "#/allOf/0/items", "");
+  EVALUATE_TRACE_PRE(1, LogicalWhenType, "/allOf/0/items", "#/allOf/0/items",
+                     "");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/items/0/type",
                      "#/allOf/0/items/0/type", "/0");
   EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/allOf/0/items", "#/allOf/0/items",
@@ -2756,7 +2758,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
                               "#/allOf/0/items/0/type", "/0");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/allOf/0/items", "#/allOf/0/items",
                                         "", 0);
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/allOf/0/items",
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/allOf/0/items",
                               "#/allOf/0/items", "");
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
   EVALUATE_TRACE_POST_FAILURE(4, AssertionTypeStrict, "/unevaluatedItems/type",
@@ -3084,7 +3086,7 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
 
   EVALUATE_TRACE_PRE(0, LoopItems, "/items",
                      "https://example.com/schema#/items", "");
-  EVALUATE_TRACE_PRE(1, LogicalAnd, "/items/items",
+  EVALUATE_TRACE_PRE(1, LogicalWhenType, "/items/items",
                      "https://example.com/nested#/items", "/0");
   EVALUATE_TRACE_PRE(
       2, ControlDynamicAnchorJump, "/items/items/0/$recursiveRef",
@@ -3099,7 +3101,7 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
       "https://example.com/nested#/items/0/$recursiveRef", "/0/0");
   EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
       1, "/items/items", "https://example.com/nested#/items", "/0", true);
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/items/items",
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items/items",
                               "https://example.com/nested#/items", "/0");
   EVALUATE_TRACE_POST_SUCCESS(3, LoopItems, "/items",
                               "https://example.com/schema#/items", "");
