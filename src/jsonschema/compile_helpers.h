@@ -109,6 +109,8 @@ auto make(const bool report, const SchemaCompilerContext &context,
           std::move(children)};
 }
 
+// TODO: Completely get rid of this. We should never have
+// explicit type conditions
 inline auto type_condition(const SchemaCompilerContext &context,
                            const SchemaCompilerSchemaContext &schema_context,
                            const JSON::Type type) -> SchemaCompilerTemplate {
