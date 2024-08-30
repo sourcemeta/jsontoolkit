@@ -1037,6 +1037,65 @@ auto evaluate_step(
 
   evaluate_loop_properties_regex_end:
     CALLBACK_POST("SchemaCompilerLoopPropertiesRegex", loop);
+  } else if (std::holds_alternative<
+                 SchemaCompilerLoopPropertiesNoAdjacentAnnotation>(step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerLoopPropertiesNoAdjacentAnnotation");
+    const auto &loop{
+        std::get<SchemaCompilerLoopPropertiesNoAdjacentAnnotation>(step)};
+    context.push(loop);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLoopPropertiesNoAdjacentAnnotation",
+                             loop, instance);
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    EVALUATE_IMPLICIT_PRECONDITION(
+        "SchemaCompilerLoopPropertiesNoAdjacentAnnotation", loop,
+        target.is_object());
+    CALLBACK_PRE(loop, context.instance_location());
+    result = true;
+    const auto &value{context.resolve_value(loop.value, instance)};
+    assert(!value.empty());
+
+    // TODO: Find a way to be more efficient with this
+    std::vector<std::reference_wrapper<const EvaluationContext::Annotations>>
+        current_annotations;
+    for (const auto &keyword : value) {
+      assert(!context.evaluate_path().empty());
+      // TODO: Can we avoid this expensive pointer manipulation?
+      auto expected_evaluate_path{context.evaluate_path()};
+      expected_evaluate_path.pop_back();
+      expected_evaluate_path.push_back({keyword});
+      current_annotations.emplace_back(context.annotations(
+          context.instance_location(), expected_evaluate_path));
+    }
+
+    for (const auto &entry : target.as_object()) {
+      bool apply_children{true};
+      for (const auto &annotations : current_annotations) {
+        if (annotations.get().contains(JSON{entry.first})) {
+          apply_children = false;
+          break;
+        }
+      }
+
+      if (!apply_children) {
+        continue;
+      }
+
+      context.push(loop, empty_pointer, {entry.first});
+      for (const auto &child : loop.children) {
+        if (!evaluate_step(child, instance, mode, callback, context)) {
+          result = false;
+          context.pop(loop);
+          // For efficiently breaking from the outer loop too
+          goto evaluate_loop_properties_no_adjacent_annotation_end;
+        }
+      }
+
+      context.pop(loop);
+    }
+
+  evaluate_loop_properties_no_adjacent_annotation_end:
+    CALLBACK_POST("SchemaCompilerLoopPropertiesNoAdjacentAnnotation", loop);
   } else if (std::holds_alternative<SchemaCompilerLoopKeys>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLoopKeys");
     const auto &loop{std::get<SchemaCompilerLoopKeys>(step)};
