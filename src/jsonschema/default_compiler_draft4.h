@@ -195,9 +195,7 @@ auto compiler_draft4_validation_required(
     if (properties.size() == 1) {
       return {make<SchemaCompilerAssertionDefines>(
           true, context, schema_context, dynamic_context,
-          *(properties.cbegin()),
-          // TODO: Make this condition an implicit condition of AssertionDefines
-          type_condition(context, schema_context, JSON::Type::Object),
+          *(properties.cbegin()), SchemaCompilerTemplate{},
           SchemaCompilerTargetType::Instance)};
     } else {
       return {make<SchemaCompilerAssertionDefinesAll>(
@@ -210,9 +208,7 @@ auto compiler_draft4_validation_required(
     return {make<SchemaCompilerAssertionDefines>(
         true, context, schema_context, dynamic_context,
         schema_context.schema.at(dynamic_context.keyword).front().to_string(),
-        // TODO: Make this condition an implicit condition of AssertionDefines
-        type_condition(context, schema_context, JSON::Type::Object),
-        SchemaCompilerTargetType::Instance)};
+        SchemaCompilerTemplate{}, SchemaCompilerTargetType::Instance)};
   }
 }
 
