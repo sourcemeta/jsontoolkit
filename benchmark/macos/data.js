@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725032703142,
+  "lastUpdate": 1725043175731,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -838,6 +838,60 @@ window.BENCHMARK_DATA = {
             "value": 9882.696637026214,
             "unit": "ns/iter",
             "extra": "iterations: 67589\ncpu: 9873.011880631466 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a4b8893dfb9dc133fb64e896116bc2953c50429d",
+          "message": "Introduce a new `AnnotationBasenameToParent` compiler step (#1072)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-30T14:35:54-04:00",
+          "tree_id": "1acc67650b38db1ee601e57ec7c390d76e6fbbd2",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/a4b8893dfb9dc133fb64e896116bc2953c50429d"
+        },
+        "date": 1725043174049,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 201172.30355129213,
+            "unit": "ns/iter",
+            "extra": "iterations: 3548\ncpu: 201151.91657271702 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 6878.698177471619,
+            "unit": "ns/iter",
+            "extra": "iterations: 100410\ncpu: 6878.378647545061 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 3437.8122504429566,
+            "unit": "ns/iter",
+            "extra": "iterations: 205364\ncpu: 3437.549911376874 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 1207.7210446488389,
+            "unit": "ns/iter",
+            "extra": "iterations: 586800\ncpu: 1207.5034083162916 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 8982.050764502093,
+            "unit": "ns/iter",
+            "extra": "iterations: 77436\ncpu: 8978.73082287308 ns\nthreads: 1"
           }
         ]
       }
