@@ -618,6 +618,32 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerAssertionStringType", assertion);
+  } else if (std::holds_alternative<
+                 SchemaCompilerAssertionNoParentAdjacentBasenameAnnotation>(
+                 step)) {
+    SOURCEMETA_TRACE_START(
+        trace_id, "SchemaCompilerAssertionNoParentAdjacentBasenameAnnotation");
+    const auto &assertion{
+        std::get<SchemaCompilerAssertionNoParentAdjacentBasenameAnnotation>(
+            step)};
+    context.push(assertion);
+    EVALUATE_CONDITION_GUARD(
+        "SchemaCompilerAssertionNoParentAdjacentBasenameAnnotation", assertion,
+        instance);
+    CALLBACK_PRE(assertion, context.instance_location());
+    const auto &value{context.resolve_value(assertion.value, instance)};
+    assert(!value.empty());
+    const auto annotation{context.instance_location().back().to_json()};
+    // TODO: Is the concat necessary?
+    const auto current_schema_location{
+        context.evaluate_path().initial().concat(assertion.target.second)};
+    // TODO: This operation involves copying the instance location pointer
+    result = !context
+                  .annotations(context.instance_location().initial(),
+                               current_schema_location)
+                  .contains(annotation);
+    CALLBACK_POST("SchemaCompilerAssertionNoParentAdjacentBasenameAnnotation",
+                  assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionAnnotation>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionAnnotation");
     const auto &assertion{std::get<SchemaCompilerAssertionAnnotation>(step)};

@@ -219,6 +219,11 @@ struct SchemaCompilerAssertionStringType;
 struct SchemaCompilerAssertionSizeEqual;
 
 /// @ingroup jsonschema
+/// Represents a compiler assertion step that checks the basename of the
+/// instance was not produced as a parent adjacent annotation
+struct SchemaCompilerAssertionNoParentAdjacentBasenameAnnotation;
+
+/// @ingroup jsonschema
 /// Represents a compiler assertion step that checks a certain
 /// annotation was produced
 struct SchemaCompilerAssertionAnnotation;
@@ -340,6 +345,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionGreater, SchemaCompilerAssertionLess,
     SchemaCompilerAssertionUnique, SchemaCompilerAssertionDivisible,
     SchemaCompilerAssertionStringType, SchemaCompilerAssertionSizeEqual,
+    SchemaCompilerAssertionNoParentAdjacentBasenameAnnotation,
     SchemaCompilerAssertionAnnotation,
     SchemaCompilerAssertionNoAdjacentAnnotation,
     SchemaCompilerAssertionNoAnnotation, SchemaCompilerAnnotationEmit,
@@ -429,6 +435,8 @@ DEFINE_STEP_WITH_VALUE(Assertion, Unique, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Assertion, Divisible, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, StringType, SchemaCompilerValueStringType)
 DEFINE_STEP_WITH_VALUE(Assertion, SizeEqual, SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_WITH_VALUE(Assertion, NoParentAdjacentBasenameAnnotation,
+                       SchemaCompilerValueStrings)
 DEFINE_STEP_WITH_VALUE(Assertion, Annotation, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, NoAdjacentAnnotation, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE_AND_DATA(Assertion, NoAnnotation,

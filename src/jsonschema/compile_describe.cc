@@ -1563,6 +1563,11 @@ struct DescribeVisitor {
     return unknown();
   }
   auto
+  operator()(const SchemaCompilerAssertionNoParentAdjacentBasenameAnnotation &)
+      const -> std::string {
+    return unknown();
+  }
+  auto
   operator()(const SchemaCompilerAssertionNoAnnotation &) const -> std::string {
     return unknown();
   }

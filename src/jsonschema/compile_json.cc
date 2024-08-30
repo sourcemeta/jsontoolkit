@@ -252,6 +252,8 @@ struct StepVisitor {
   HANDLE_STEP("assertion", "string-type", SchemaCompilerAssertionStringType)
   HANDLE_STEP("assertion", "equals-any", SchemaCompilerAssertionEqualsAny)
   HANDLE_STEP("assertion", "size-equal", SchemaCompilerAssertionSizeEqual)
+  HANDLE_STEP("assertion", "no-parent-adjacent-basename-annotation",
+              SchemaCompilerAssertionNoParentAdjacentBasenameAnnotation)
   HANDLE_STEP("assertion", "annotation", SchemaCompilerAssertionAnnotation)
   HANDLE_STEP("assertion", "no-adjacent-annotation",
               SchemaCompilerAssertionNoAdjacentAnnotation)
