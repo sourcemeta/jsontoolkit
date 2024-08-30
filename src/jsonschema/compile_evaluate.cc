@@ -709,6 +709,27 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerLogicalAnd", logical);
+
+  } else if (std::holds_alternative<SchemaCompilerLogicalWhenType>(step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalWhenType");
+    const auto &logical{std::get<SchemaCompilerLogicalWhenType>(step)};
+    context.push(logical);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenType", logical,
+                             instance);
+    const auto &value{context.resolve_value(logical.value, instance)};
+    const auto &target{context.resolve_target<JSON>(logical.target, instance)};
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLogicalWhenType", logical,
+                                   target.type() == value);
+    CALLBACK_PRE(logical, context.instance_location());
+    result = true;
+    for (const auto &child : logical.children) {
+      if (!evaluate_step(child, instance, mode, callback, context)) {
+        result = false;
+        break;
+      }
+    }
+
+    CALLBACK_POST("SchemaCompilerLogicalWhenType", logical);
   } else if (std::holds_alternative<SchemaCompilerLogicalXor>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalXor");
     const auto &logical{std::get<SchemaCompilerLogicalXor>(step)};

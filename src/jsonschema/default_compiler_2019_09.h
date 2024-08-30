@@ -25,9 +25,9 @@ auto compiler_2019_09_applicator_dependentschemas(
     }
 
     if (!entry.second.is_boolean() || !entry.second.to_boolean()) {
-      children.push_back(make<SchemaCompilerLogicalAnd>(
+      children.push_back(make<SchemaCompilerLogicalWhenType>(
           false, context, schema_context, relative_dynamic_context,
-          SchemaCompilerValueNone{},
+          JSON::Type::Object,
           compile(context, schema_context, relative_dynamic_context,
                   {entry.first}, empty_pointer),
           {make<SchemaCompilerAssertionDefines>(
@@ -36,10 +36,9 @@ auto compiler_2019_09_applicator_dependentschemas(
     }
   }
 
-  return {make<SchemaCompilerLogicalAnd>(
-      true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
-      std::move(children),
-      type_condition(context, schema_context, JSON::Type::Object))};
+  return {make<SchemaCompilerLogicalWhenType>(
+      true, context, schema_context, dynamic_context, JSON::Type::Object,
+      std::move(children), SchemaCompilerTemplate{})};
 }
 
 auto compiler_2019_09_validation_dependentrequired(
@@ -85,10 +84,9 @@ auto compiler_2019_09_validation_dependentrequired(
     }
   }
 
-  return {make<SchemaCompilerLogicalAnd>(
-      true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
-      std::move(children),
-      type_condition(context, schema_context, JSON::Type::Object))};
+  return {make<SchemaCompilerLogicalWhenType>(
+      true, context, schema_context, dynamic_context, JSON::Type::Object,
+      std::move(children), SchemaCompilerTemplate{})};
 }
 
 auto compiler_2019_09_core_annotation(
@@ -276,16 +274,12 @@ auto compiler_2019_09_applicator_unevaluateditems(
         SchemaCompilerTemplate{}));
   }
 
-  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionTypeStrict>(
-      true, context, schema_context, relative_dynamic_context,
-      JSON::Type::Array, {}, SchemaCompilerTargetType::Instance)};
-  condition.push_back(make<SchemaCompilerAssertionNoAnnotation>(
+  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
       false, context, schema_context, relative_dynamic_context, JSON{true}, {},
-      SchemaCompilerTargetType::Annotations, std::move(dependencies)));
-
-  return {make<SchemaCompilerLogicalAnd>(
-      false, context, schema_context, dynamic_context,
-      SchemaCompilerValueNone{}, std::move(loop), std::move(condition))};
+      SchemaCompilerTargetType::Annotations, std::move(dependencies))};
+  return {make<SchemaCompilerLogicalWhenType>(
+      false, context, schema_context, dynamic_context, JSON::Type::Array,
+      std::move(loop), std::move(condition))};
 }
 
 auto compiler_2019_09_applicator_unevaluatedproperties(
