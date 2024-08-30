@@ -260,6 +260,8 @@ struct StepVisitor {
               SchemaCompilerAssertionNoAdjacentAnnotation)
   HANDLE_STEP("assertion", "no-annotation", SchemaCompilerAssertionNoAnnotation)
   HANDLE_STEP("annotation", "emit", SchemaCompilerAnnotationEmit)
+  HANDLE_STEP("annotation", "basename-to-parent",
+              SchemaCompilerAnnotationBasenameToParent)
   HANDLE_STEP("logical", "or", SchemaCompilerLogicalOr)
   HANDLE_STEP("logical", "and", SchemaCompilerLogicalAnd)
   HANDLE_STEP("logical", "xor", SchemaCompilerLogicalXor)

@@ -21,8 +21,8 @@ TEST(JSONSchema_compile_2020_12, unknown_1) {
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "", "baz");
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/fooBar", "#/fooBar", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/fooBar", "#/fooBar", "", "baz");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The unrecognized keyword \"fooBar\" was "
@@ -45,8 +45,8 @@ TEST(JSONSchema_compile_2020_12, unknown_2) {
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "", 1);
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/x-test", "#/x-test", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/x-test", "#/x-test", "", 1);
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -98,7 +98,7 @@ TEST(JSONSchema_compile_2020_12, items_2) {
                      "/1");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/items/type", "#/items/type",
                      "/2");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(4, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/0");
@@ -107,7 +107,7 @@ TEST(JSONSchema_compile_2020_12, items_2) {
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/2");
   EVALUATE_TRACE_POST_SUCCESS(3, LoopItems, "/items", "#/items", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(4, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/items", "#/items", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
@@ -191,14 +191,13 @@ TEST(JSONSchema_compile_2020_12, items_4) {
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/prefixItems/1/type",
                      "#/prefixItems/1/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/prefixItems", "#/prefixItems", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/prefixItems/0/type",
                               "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/prefixItems/1/type",
                               "#/prefixItems/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "",
-                                        true);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/prefixItems", "#/prefixItems", "", true);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/prefixItems",
                               "#/prefixItems", "");
 
@@ -241,20 +240,19 @@ TEST(JSONSchema_compile_2020_12, items_5) {
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/prefixItems/1/type",
                      "#/prefixItems/1/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(4, LoopItems, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/items/type", "#/items/type",
                      "/2");
   EVALUATE_TRACE_PRE(6, AssertionTypeStrict, "/items/type", "#/items/type",
                      "/3");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(7, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(7, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/prefixItems/0/type",
                               "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/prefixItems/1/type",
                               "#/prefixItems/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "",
-                                        1);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/prefixItems", "#/prefixItems", "", 1);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/prefixItems",
                               "#/prefixItems", "");
   EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict, "/items/type",
@@ -262,7 +260,7 @@ TEST(JSONSchema_compile_2020_12, items_5) {
   EVALUATE_TRACE_POST_SUCCESS(5, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/3");
   EVALUATE_TRACE_POST_SUCCESS(6, LoopItems, "/items", "#/items", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(7, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(7, "/items", "#/items", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
@@ -316,7 +314,7 @@ TEST(JSONSchema_compile_2020_12, items_6) {
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/prefixItems/1/type",
                      "#/prefixItems/1/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(4, LoopItems, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/items/type", "#/items/type",
                      "/2");
@@ -325,8 +323,7 @@ TEST(JSONSchema_compile_2020_12, items_6) {
                               "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/prefixItems/1/type",
                               "#/prefixItems/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "",
-                                        1);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/prefixItems", "#/prefixItems", "", 1);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/prefixItems",
                               "#/prefixItems", "");
   EVALUATE_TRACE_POST_FAILURE(4, AssertionTypeStrict, "/items/type",
@@ -418,12 +415,11 @@ TEST(JSONSchema_compile_2020_12, prefixItems_3) {
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/prefixItems/0/type",
                      "#/prefixItems/0/type", "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/prefixItems", "#/prefixItems", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/prefixItems/0/type",
                               "#/prefixItems/0/type", "/0");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/prefixItems", "#/prefixItems", "",
-                                        0);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/prefixItems", "#/prefixItems", "", 0);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/prefixItems",
                               "#/prefixItems", "");
 
@@ -461,14 +457,13 @@ TEST(JSONSchema_compile_2020_12, prefixItems_4) {
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/prefixItems/1/type",
                      "#/prefixItems/1/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/prefixItems", "#/prefixItems", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/prefixItems/0/type",
                               "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/prefixItems/1/type",
                               "#/prefixItems/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "",
-                                        1);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/prefixItems", "#/prefixItems", "", 1);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/prefixItems",
                               "#/prefixItems", "");
 
@@ -549,14 +544,13 @@ TEST(JSONSchema_compile_2020_12, prefixItems_6) {
                      "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/prefixItems/1/type",
                      "#/prefixItems/1/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/prefixItems", "#/prefixItems", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/prefixItems", "#/prefixItems", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/prefixItems/0/type",
                               "#/prefixItems/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/prefixItems/1/type",
                               "#/prefixItems/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/prefixItems", "#/prefixItems", "",
-                                        true);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/prefixItems", "#/prefixItems", "", true);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/prefixItems",
                               "#/prefixItems", "");
 
@@ -612,7 +606,7 @@ TEST(JSONSchema_compile_2020_12, contains_2) {
                      "#/contains/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/contains/type",
                      "#/contains/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/contains", "#/contains", "");
   EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/contains/type",
                      "#/contains/type", "/2");
 
@@ -620,7 +614,7 @@ TEST(JSONSchema_compile_2020_12, contains_2) {
                               "#/contains/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/contains/type",
                               "#/contains/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/contains", "#/contains", "", 1);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/contains", "#/contains", "", 1);
   EVALUATE_TRACE_POST_FAILURE(3, AssertionTypeStrict, "/contains/type",
                               "#/contains/type", "/2");
   EVALUATE_TRACE_POST_SUCCESS(4, LoopContains, "/contains", "#/contains", "");
@@ -711,25 +705,25 @@ TEST(JSONSchema_compile_2020_12, contains_4) {
   EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
                      "#/contains/type", "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/contains", "#/contains", "");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/contains/type",
                      "#/contains/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(4, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/contains", "#/contains", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/contains/type",
                      "#/contains/type", "/2");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(6, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(6, "/contains", "#/contains", "");
 
   // TODO: We should be emitting "true" by the end of this as all items matched
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/contains/type",
                               "#/contains/type", "/0");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/contains", "#/contains", "", 0);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/contains", "#/contains", "", 0);
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/contains/type",
                               "#/contains/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(3, "/contains", "#/contains", "", 1);
+  EVALUATE_TRACE_POST_ANNOTATION(3, "/contains", "#/contains", "", 1);
   EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict, "/contains/type",
                               "#/contains/type", "/2");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(5, "/contains", "#/contains", "", 2);
+  EVALUATE_TRACE_POST_ANNOTATION(5, "/contains", "#/contains", "", 2);
   EVALUATE_TRACE_POST_SUCCESS(6, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -777,17 +771,17 @@ TEST(JSONSchema_compile_2020_12, contains_5) {
   EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
                      "#/contains/type", "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/contains", "#/contains", "");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/contains/type",
                      "#/contains/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(4, "/contains", "#/contains", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/contains/type",
                               "#/contains/type", "/0");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/contains", "#/contains", "", 0);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/contains", "#/contains", "", 0);
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/contains/type",
                               "#/contains/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(3, "/contains", "#/contains", "", 1);
+  EVALUATE_TRACE_POST_ANNOTATION(3, "/contains", "#/contains", "", 1);
   EVALUATE_TRACE_POST_FAILURE(4, LoopContains, "/contains", "#/contains", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,

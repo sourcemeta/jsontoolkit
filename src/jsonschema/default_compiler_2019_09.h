@@ -142,11 +142,9 @@ auto compiler_2019_09_applicator_contains_conditional_annotate(
                                           empty_pointer, empty_pointer)};
 
   if (annotate) {
-    children.push_back(make<SchemaCompilerAnnotationEmit>(
+    children.push_back(make<SchemaCompilerAnnotationBasenameToParent>(
         true, context, schema_context, relative_dynamic_context,
-        SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
-                             empty_pointer},
-        {}, SchemaCompilerTargetType::InstanceParent));
+        SchemaCompilerValueNone{}, {}, SchemaCompilerTargetType::Instance));
 
     // TODO: If after emitting the above annotation, the number of annotations
     // for the current schema location + instance location is equal to the
@@ -310,11 +308,9 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
   SchemaCompilerTemplate children{compile(context, schema_context,
                                           relative_dynamic_context,
                                           empty_pointer, empty_pointer)};
-  children.push_back(make<SchemaCompilerAnnotationEmit>(
+  children.push_back(make<SchemaCompilerAnnotationBasenameToParent>(
       true, context, schema_context, relative_dynamic_context,
-      SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
-                           empty_pointer},
-      {}, SchemaCompilerTargetType::InstanceParent));
+      SchemaCompilerValueNone{}, {}, SchemaCompilerTargetType::Instance));
 
   SchemaCompilerTemplate wrapper{make<SchemaCompilerLogicalAnd>(
       false, context, schema_context, relative_dynamic_context,

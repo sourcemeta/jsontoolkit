@@ -241,6 +241,11 @@ struct SchemaCompilerAssertionNoAnnotation;
 struct SchemaCompilerAnnotationEmit;
 
 /// @ingroup jsonschema
+/// Represents a compiler step that emits the current basename as an annotation
+/// to the parent
+struct SchemaCompilerAnnotationBasenameToParent;
+
+/// @ingroup jsonschema
 /// Represents a compiler logical step that represents a disjunction
 struct SchemaCompilerLogicalOr;
 
@@ -332,7 +337,8 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionAnnotation,
     SchemaCompilerAssertionNoAdjacentAnnotation,
     SchemaCompilerAssertionNoAnnotation, SchemaCompilerAnnotationEmit,
-    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerAnnotationBasenameToParent, SchemaCompilerLogicalOr,
+    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
     SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
     SchemaCompilerLoopPropertiesMatch, SchemaCompilerLoopProperties,
@@ -422,6 +428,7 @@ DEFINE_STEP_WITH_VALUE_AND_DATA(Assertion, NoAnnotation,
                                 SchemaCompilerValueJSON,
                                 SchemaCompilerValueStrings)
 DEFINE_STEP_WITH_VALUE(Annotation, Emit, SchemaCompilerValueJSON)
+DEFINE_STEP_WITH_VALUE(Annotation, BasenameToParent, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueBoolean)
 DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueNone)

@@ -32,14 +32,13 @@ TEST(JSONSchema_compile_2019_09, properties_1_exhaustive) {
   EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/properties/bar/type",
                      "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/properties/bar/type",
                               "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/properties", "#/properties", "",
-                                        "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "bar");
   EVALUATE_TRACE_POST_FAILURE(2, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_POST_FAILURE(3, LoopPropertiesMatch, "/properties",
@@ -360,21 +359,21 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_1_fast) {
                      "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/additionalProperties/type",
                      "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/additionalProperties",
-                                       "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/additionalProperties",
+                                "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(3, AssertionType, "/additionalProperties/type",
                      "#/additionalProperties/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(4, "/additionalProperties",
-                                       "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/additionalProperties",
+                                "#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/additionalProperties/type",
                               "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/additionalProperties",
-                                        "#/additionalProperties", "", "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/additionalProperties",
+                                 "#/additionalProperties", "", "bar");
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionType, "/additionalProperties/type",
                               "#/additionalProperties/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(3, "/additionalProperties",
-                                        "#/additionalProperties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(3, "/additionalProperties",
+                                 "#/additionalProperties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(4, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 
@@ -420,21 +419,21 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_1_exhaustive) {
                      "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/additionalProperties/type",
                      "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/additionalProperties",
-                                       "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/additionalProperties",
+                                "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(3, AssertionType, "/additionalProperties/type",
                      "#/additionalProperties/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(4, "/additionalProperties",
-                                       "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/additionalProperties",
+                                "#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/additionalProperties/type",
                               "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/additionalProperties",
-                                        "#/additionalProperties", "", "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/additionalProperties",
+                                 "#/additionalProperties", "", "bar");
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionType, "/additionalProperties/type",
                               "#/additionalProperties/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(3, "/additionalProperties",
-                                        "#/additionalProperties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(3, "/additionalProperties",
+                                 "#/additionalProperties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(4, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 
@@ -484,24 +483,23 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_fast) {
   EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(3, LoopProperties, "/additionalProperties",
                      "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionType, "/additionalProperties/type",
                      "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(5, "/additionalProperties",
-                                       "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(5, "/additionalProperties",
+                                "#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/properties", "#/properties", "",
-                                        "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch, "/properties",
                               "#/properties", "");
   EVALUATE_TRACE_POST_SUCCESS(3, AssertionType, "/additionalProperties/type",
                               "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(4, "/additionalProperties",
-                                        "#/additionalProperties", "", "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/additionalProperties",
+                                 "#/additionalProperties", "", "bar");
   EVALUATE_TRACE_POST_SUCCESS(5, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 
@@ -553,24 +551,23 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_exhaustive) {
   EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(3, LoopProperties, "/additionalProperties",
                      "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionType, "/additionalProperties/type",
                      "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(5, "/additionalProperties",
-                                       "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(5, "/additionalProperties",
+                                "#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/properties", "#/properties", "",
-                                        "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch, "/properties",
                               "#/properties", "");
   EVALUATE_TRACE_POST_SUCCESS(3, AssertionType, "/additionalProperties/type",
                               "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(4, "/additionalProperties",
-                                        "#/additionalProperties", "", "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/additionalProperties",
+                                 "#/additionalProperties", "", "bar");
   EVALUATE_TRACE_POST_SUCCESS(5, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 
@@ -1144,8 +1141,8 @@ TEST(JSONSchema_compile_2019_09, title) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/title", "#/title", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/title", "#/title", "", "My title");
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/title", "#/title", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/title", "#/title", "", "My title");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The title of the instance was \"My title\"");
@@ -1170,10 +1167,9 @@ TEST(JSONSchema_compile_2019_09, title_with_core_keywords) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/title",
-                                       "https://example.com#/title", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
-      0, "/title", "https://example.com#/title", "", "My title");
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/title", "https://example.com#/title", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/title", "https://example.com#/title", "",
+                                 "My title");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The title of the instance was \"My title\"");
@@ -1195,9 +1191,9 @@ TEST(JSONSchema_compile_2019_09, description) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/description", "#/description", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/description", "#/description", "",
-                                        "My description");
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/description", "#/description", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/description", "#/description", "",
+                                 "My description");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0, "The description of the instance was \"My description\"");
@@ -1219,8 +1215,8 @@ TEST(JSONSchema_compile_2019_09, default) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/default", "#/default", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/default", "#/default", "", 1);
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/default", "#/default", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/default", "#/default", "", 1);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The default value of the instance was 1");
@@ -1242,9 +1238,8 @@ TEST(JSONSchema_compile_2019_09, deprecated_1) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/deprecated", "#/deprecated", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/deprecated", "#/deprecated", "",
-                                        true);
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/deprecated", "#/deprecated", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/deprecated", "#/deprecated", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The instance was considered deprecated");
@@ -1266,9 +1261,8 @@ TEST(JSONSchema_compile_2019_09, deprecated_2) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/deprecated", "#/deprecated", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/deprecated", "#/deprecated", "",
-                                        false);
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/deprecated", "#/deprecated", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/deprecated", "#/deprecated", "", false);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The instance was not considered deprecated");
@@ -1290,9 +1284,8 @@ TEST(JSONSchema_compile_2019_09, readOnly_1) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/readOnly", "#/readOnly", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/readOnly", "#/readOnly", "",
-                                        false);
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/readOnly", "#/readOnly", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/readOnly", "#/readOnly", "", false);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The instance was not considered read-only");
@@ -1314,8 +1307,8 @@ TEST(JSONSchema_compile_2019_09, readOnly_2) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/readOnly", "#/readOnly", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/readOnly", "#/readOnly", "", true);
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/readOnly", "#/readOnly", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/readOnly", "#/readOnly", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The instance was considered read-only");
@@ -1337,9 +1330,8 @@ TEST(JSONSchema_compile_2019_09, writeOnly_1) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/writeOnly", "#/writeOnly", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/writeOnly", "#/writeOnly", "",
-                                        false);
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/writeOnly", "#/writeOnly", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/writeOnly", "#/writeOnly", "", false);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The instance was not considered write-only");
@@ -1361,9 +1353,8 @@ TEST(JSONSchema_compile_2019_09, writeOnly_2) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/writeOnly", "#/writeOnly", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/writeOnly", "#/writeOnly", "",
-                                        true);
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/writeOnly", "#/writeOnly", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/writeOnly", "#/writeOnly", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The instance was considered write-only");
@@ -1390,9 +1381,8 @@ TEST(JSONSchema_compile_2019_09, examples) {
   examples.push_back(sourcemeta::jsontoolkit::JSON{2});
   examples.push_back(sourcemeta::jsontoolkit::JSON{3});
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/examples", "#/examples", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/examples", "#/examples", "",
-                                        examples);
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/examples", "#/examples", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/examples", "#/examples", "", examples);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "Examples of the instance were 1, 2, and 3");
@@ -1414,10 +1404,9 @@ TEST(JSONSchema_compile_2019_09, contentEncoding) {
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/contentEncoding",
-                                       "#/contentEncoding", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/contentEncoding",
-                                        "#/contentEncoding", "", "base64");
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/contentEncoding", "#/contentEncoding", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/contentEncoding", "#/contentEncoding", "",
+                                 "base64");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0, "The content encoding of the instance was \"base64\"");
@@ -1439,10 +1428,10 @@ TEST(JSONSchema_compile_2019_09, contentMediaType) {
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/contentMediaType",
-                                       "#/contentMediaType", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
-      0, "/contentMediaType", "#/contentMediaType", "", "application/json");
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/contentMediaType", "#/contentMediaType",
+                                "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/contentMediaType", "#/contentMediaType",
+                                 "", "application/json");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -1465,14 +1454,13 @@ TEST(JSONSchema_compile_2019_09, contentSchema) {
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/contentSchema", "#/contentSchema",
-                                       "");
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/contentSchema", "#/contentSchema", "");
 
   auto content_schema{sourcemeta::jsontoolkit::JSON::make_object()};
   content_schema.assign("type", sourcemeta::jsontoolkit::JSON{"string"});
 
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/contentSchema", "#/contentSchema",
-                                        "", content_schema);
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/contentSchema", "#/contentSchema", "",
+                                 content_schema);
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -1496,8 +1484,8 @@ TEST(JSONSchema_compile_2019_09, unknown_1) {
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/fooBar", "#/fooBar", "", "baz");
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/fooBar", "#/fooBar", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/fooBar", "#/fooBar", "", "baz");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The unrecognized keyword \"fooBar\" was "
@@ -1520,8 +1508,8 @@ TEST(JSONSchema_compile_2019_09, unknown_2) {
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(0, "/x-test", "#/x-test", "", 1);
+  EVALUATE_TRACE_PRE_ANNOTATION(0, "/x-test", "#/x-test", "");
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/x-test", "#/x-test", "", 1);
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -1573,7 +1561,7 @@ TEST(JSONSchema_compile_2019_09, items_2) {
                      "/1");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/items/type", "#/items/type",
                      "/2");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(4, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/0");
@@ -1582,7 +1570,7 @@ TEST(JSONSchema_compile_2019_09, items_2) {
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/2");
   EVALUATE_TRACE_POST_SUCCESS(3, LoopItems, "/items", "#/items", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(4, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/items", "#/items", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
@@ -1702,11 +1690,11 @@ TEST(JSONSchema_compile_2019_09, items_6) {
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/items/0/type",
                               "#/items/0/type", "/0");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", 0);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/items", "#/items", "", 0);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -1742,13 +1730,13 @@ TEST(JSONSchema_compile_2019_09, items_7) {
   EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
                      "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
                               "#/items/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", 1);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/items", "#/items", "", 1);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -1825,13 +1813,13 @@ TEST(JSONSchema_compile_2019_09, items_9) {
   EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
                      "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
                               "#/items/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/items", "#/items", "", true);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -1893,7 +1881,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_2) {
                      "/1");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/items/type", "#/items/type",
                      "/2");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(4, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/0");
@@ -1902,7 +1890,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_2) {
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/2");
   EVALUATE_TRACE_POST_SUCCESS(3, LoopItems, "/items", "#/items", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(4, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/items", "#/items", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
@@ -1944,13 +1932,13 @@ TEST(JSONSchema_compile_2019_09, additionalItems_3) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/items/1/type", "#/items/1/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/items/1/type",
                               "#/items/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/items", "#/items", "", true);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -1992,20 +1980,19 @@ TEST(JSONSchema_compile_2019_09, additionalItems_4) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/items/1/type", "#/items/1/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(4, LoopItems, "/additionalItems", "#/additionalItems", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/additionalItems/type",
                      "#/additionalItems/type", "/2");
   EVALUATE_TRACE_PRE(6, AssertionTypeStrict, "/additionalItems/type",
                      "#/additionalItems/type", "/3");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(7, "/additionalItems",
-                                       "#/additionalItems", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(7, "/additionalItems", "#/additionalItems", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/items/1/type",
                               "#/items/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", 1);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/items", "#/items", "", 1);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict, "/additionalItems/type",
                               "#/additionalItems/type", "/2");
@@ -2013,8 +2000,8 @@ TEST(JSONSchema_compile_2019_09, additionalItems_4) {
                               "#/additionalItems/type", "/3");
   EVALUATE_TRACE_POST_SUCCESS(6, LoopItems, "/additionalItems",
                               "#/additionalItems", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(7, "/additionalItems",
-                                        "#/additionalItems", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(7, "/additionalItems", "#/additionalItems", "",
+                                 true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
@@ -2067,7 +2054,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_5) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE(2, AssertionType, "/items/1/type", "#/items/1/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(4, LoopItems, "/additionalItems", "#/additionalItems", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/additionalItems/type",
                      "#/additionalItems/type", "/2");
@@ -2076,7 +2063,7 @@ TEST(JSONSchema_compile_2019_09, additionalItems_5) {
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/items/1/type",
                               "#/items/1/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", 1);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/items", "#/items", "", 1);
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_POST_FAILURE(4, AssertionTypeStrict, "/additionalItems/type",
                               "#/additionalItems/type", "/2");
@@ -2128,25 +2115,24 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_1) {
   EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(3, LoopProperties, "/unevaluatedProperties",
                      "#/unevaluatedProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/unevaluatedProperties/type",
                      "#/unevaluatedProperties/type", "/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(5, "/unevaluatedProperties",
-                                       "#/unevaluatedProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(5, "/unevaluatedProperties",
+                                "#/unevaluatedProperties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/properties", "#/properties", "",
-                                        "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch, "/properties",
                               "#/properties", "");
   EVALUATE_TRACE_POST_SUCCESS(3, AssertionTypeStrict,
                               "/unevaluatedProperties/type",
                               "#/unevaluatedProperties/type", "/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(4, "/unevaluatedProperties",
-                                        "#/unevaluatedProperties", "", "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/unevaluatedProperties",
+                                 "#/unevaluatedProperties", "", "bar");
   EVALUATE_TRACE_POST_SUCCESS(5, LoopProperties, "/unevaluatedProperties",
                               "#/unevaluatedProperties", "");
 
@@ -2200,28 +2186,28 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
                      "#/allOf/0/properties", "");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/properties/foo/type",
                      "#/allOf/0/properties/foo/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/allOf/0/properties",
-                                       "#/allOf/0/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/properties",
+                                "#/allOf/0/properties", "");
   EVALUATE_TRACE_PRE(4, LoopProperties, "/unevaluatedProperties",
                      "#/unevaluatedProperties", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedProperties/type",
                      "#/unevaluatedProperties/type", "/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(6, "/unevaluatedProperties",
-                                       "#/unevaluatedProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(6, "/unevaluatedProperties",
+                                "#/unevaluatedProperties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
                               "/allOf/0/properties/foo/type",
                               "#/allOf/0/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/allOf/0/properties",
-                                        "#/allOf/0/properties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/allOf/0/properties",
+                                 "#/allOf/0/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch, "/allOf/0/properties",
                               "#/allOf/0/properties", "");
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
   EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict,
                               "/unevaluatedProperties/type",
                               "#/unevaluatedProperties/type", "/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(5, "/unevaluatedProperties",
-                                        "#/unevaluatedProperties", "", "bar");
+  EVALUATE_TRACE_POST_ANNOTATION(5, "/unevaluatedProperties",
+                                 "#/unevaluatedProperties", "", "bar");
   EVALUATE_TRACE_POST_SUCCESS(6, LoopProperties, "/unevaluatedProperties",
                               "#/unevaluatedProperties", "");
 
@@ -2278,8 +2264,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
                      "#/allOf/0/properties", "");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/properties/foo/type",
                      "#/allOf/0/properties/foo/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/allOf/0/properties",
-                                       "#/allOf/0/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/properties",
+                                "#/allOf/0/properties", "");
   EVALUATE_TRACE_PRE(4, LoopProperties, "/unevaluatedProperties",
                      "#/unevaluatedProperties", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedProperties/type",
@@ -2288,8 +2274,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
                               "/allOf/0/properties/foo/type",
                               "#/allOf/0/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/allOf/0/properties",
-                                        "#/allOf/0/properties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/allOf/0/properties",
+                                 "#/allOf/0/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch, "/allOf/0/properties",
                               "#/allOf/0/properties", "");
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
@@ -2343,7 +2329,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_4) {
   EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(3, LoopProperties, "/unevaluatedProperties",
                      "#/unevaluatedProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionFail, "/unevaluatedProperties",
@@ -2351,8 +2337,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_4) {
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/properties", "#/properties", "",
-                                        "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch, "/properties",
                               "#/properties", "");
   EVALUATE_TRACE_POST_FAILURE(3, AssertionFail, "/unevaluatedProperties",
@@ -2426,15 +2411,15 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_2) {
                      "#/unevaluatedItems", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/unevaluatedItems/type",
                      "#/unevaluatedItems/type", "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/unevaluatedItems",
-                                       "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/unevaluatedItems", "#/unevaluatedItems",
+                                "");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/unevaluatedItems/type",
                      "#/unevaluatedItems/type", "/1");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/unevaluatedItems/type",
                               "#/unevaluatedItems/type", "/0");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/unevaluatedItems",
-                                        "#/unevaluatedItems", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/unevaluatedItems", "#/unevaluatedItems",
+                                 "", true);
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/unevaluatedItems/type",
                               "#/unevaluatedItems/type", "/1");
   EVALUATE_TRACE_POST_SUCCESS(3, LoopItemsFromAnnotationIndex,
@@ -2476,12 +2461,12 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_3) {
   EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
                      "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
                               "#/items/type", "/0");
   EVALUATE_TRACE_POST_SUCCESS(1, LoopItems, "/items", "#/items", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(2, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/items", "#/items", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
@@ -2516,13 +2501,13 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_4) {
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(3, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
                      "#/unevaluatedItems", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", 0);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/items", "#/items", "", 0);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_POST_SUCCESS(3, LoopItemsFromAnnotationIndex,
                               "/unevaluatedItems", "#/unevaluatedItems", "");
@@ -2565,11 +2550,11 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_5) {
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/items", "#/items", "", true);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -2606,22 +2591,22 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_6) {
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(3, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
                      "#/unevaluatedItems", "");
   EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/unevaluatedItems/type",
                      "#/unevaluatedItems/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(5, "/unevaluatedItems",
-                                       "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(5, "/unevaluatedItems", "#/unevaluatedItems",
+                                "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/items", "#/items", "", 0);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/items", "#/items", "", 0);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_POST_SUCCESS(3, AssertionTypeStrict, "/unevaluatedItems/type",
                               "#/unevaluatedItems/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(4, "/unevaluatedItems",
-                                        "#/unevaluatedItems", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/unevaluatedItems", "#/unevaluatedItems",
+                                 "", true);
   EVALUATE_TRACE_POST_SUCCESS(5, LoopItemsFromAnnotationIndex,
                               "/unevaluatedItems", "#/unevaluatedItems", "");
 
@@ -2673,26 +2658,24 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
                      "");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/items/0/type",
                      "#/allOf/0/items/0/type", "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/allOf/0/items", "#/allOf/0/items",
-                                       "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/items", "#/allOf/0/items", "");
   EVALUATE_TRACE_PRE(4, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
                      "#/unevaluatedItems", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedItems/type",
                      "#/unevaluatedItems/type", "/1");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(6, "/unevaluatedItems",
-                                       "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(6, "/unevaluatedItems", "#/unevaluatedItems",
+                                "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/items/0/type",
                               "#/allOf/0/items/0/type", "/0");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/allOf/0/items", "#/allOf/0/items",
-                                        "", 0);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/allOf/0/items", "#/allOf/0/items", "", 0);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/allOf/0/items",
                               "#/allOf/0/items", "");
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
   EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict, "/unevaluatedItems/type",
                               "#/unevaluatedItems/type", "/1");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(5, "/unevaluatedItems",
-                                        "#/unevaluatedItems", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(5, "/unevaluatedItems", "#/unevaluatedItems",
+                                 "", true);
   EVALUATE_TRACE_POST_SUCCESS(6, LoopItemsFromAnnotationIndex,
                               "/unevaluatedItems", "#/unevaluatedItems", "");
 
@@ -2747,8 +2730,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
                      "");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/items/0/type",
                      "#/allOf/0/items/0/type", "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(3, "/allOf/0/items", "#/allOf/0/items",
-                                       "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/items", "#/allOf/0/items", "");
   EVALUATE_TRACE_PRE(4, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
                      "#/unevaluatedItems", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedItems/type",
@@ -2756,8 +2738,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/items/0/type",
                               "#/allOf/0/items/0/type", "/0");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/allOf/0/items", "#/allOf/0/items",
-                                        "", 0);
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/allOf/0/items", "#/allOf/0/items", "", 0);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/allOf/0/items",
                               "#/allOf/0/items", "");
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
@@ -2815,14 +2796,14 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_1) {
   EVALUATE_TRACE_PRE(
       1, ControlDynamicAnchorJump, "/additionalProperties/$recursiveRef",
       "https://example.com/schema#/additionalProperties/$recursiveRef", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(
+  EVALUATE_TRACE_PRE_ANNOTATION(
       2, "/additionalProperties",
       "https://example.com/schema#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(
       0, ControlDynamicAnchorJump, "/additionalProperties/$recursiveRef",
       "https://example.com/schema#/additionalProperties/$recursiveRef", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
+  EVALUATE_TRACE_POST_ANNOTATION(
       1, "/additionalProperties",
       "https://example.com/schema#/additionalProperties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(
@@ -2874,7 +2855,7 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
   EVALUATE_TRACE_PRE(2, AssertionGreaterEqual,
                      "/additionalProperties/$recursiveRef/minimum",
                      "https://example.com/schema#/minimum", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(
+  EVALUATE_TRACE_PRE_ANNOTATION(
       3, "/additionalProperties",
       "https://example.com/schema#/additionalProperties", "");
 
@@ -2884,7 +2865,7 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_2) {
   EVALUATE_TRACE_POST_SUCCESS(
       1, ControlDynamicAnchorJump, "/additionalProperties/$recursiveRef",
       "https://example.com/schema#/additionalProperties/$recursiveRef", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
+  EVALUATE_TRACE_POST_ANNOTATION(
       2, "/additionalProperties",
       "https://example.com/schema#/additionalProperties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(
@@ -2938,14 +2919,14 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_3) {
                      "https://example.com/schema#/additionalProperties", "");
   EVALUATE_TRACE_PRE(1, AssertionGreaterEqual, "/additionalProperties/minimum",
                      "https://example.com/nested#/minimum", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(
+  EVALUATE_TRACE_PRE_ANNOTATION(
       2, "/additionalProperties",
       "https://example.com/schema#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreaterEqual,
                               "/additionalProperties/minimum",
                               "https://example.com/nested#/minimum", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
+  EVALUATE_TRACE_POST_ANNOTATION(
       1, "/additionalProperties",
       "https://example.com/schema#/additionalProperties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(
@@ -3005,10 +2986,10 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
       3, AssertionGreaterEqual,
       "/additionalProperties/additionalProperties/$recursiveRef/minimum",
       "https://example.com/nested#/minimum", "/foo/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(
+  EVALUATE_TRACE_PRE_ANNOTATION(
       4, "/additionalProperties/additionalProperties",
       "https://example.com/nested#/additionalProperties", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(
+  EVALUATE_TRACE_PRE_ANNOTATION(
       5, "/additionalProperties",
       "https://example.com/schema#/additionalProperties", "");
 
@@ -3021,13 +3002,13 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_4) {
       "/additionalProperties/additionalProperties/$recursiveRef",
       "https://example.com/nested#/additionalProperties/$recursiveRef",
       "/foo/bar");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
+  EVALUATE_TRACE_POST_ANNOTATION(
       2, "/additionalProperties/additionalProperties",
       "https://example.com/nested#/additionalProperties", "/foo", "bar");
   EVALUATE_TRACE_POST_SUCCESS(
       3, LoopProperties, "/additionalProperties/additionalProperties",
       "https://example.com/nested#/additionalProperties", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
+  EVALUATE_TRACE_POST_ANNOTATION(
       4, "/additionalProperties",
       "https://example.com/schema#/additionalProperties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(
@@ -3091,22 +3072,22 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_5) {
   EVALUATE_TRACE_PRE(
       2, ControlDynamicAnchorJump, "/items/items/0/$recursiveRef",
       "https://example.com/nested#/items/0/$recursiveRef", "/0/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(
-      3, "/items/items", "https://example.com/nested#/items", "/0");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(4, "/items",
-                                       "https://example.com/schema#/items", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/items/items",
+                                "https://example.com/nested#/items", "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/items",
+                                "https://example.com/schema#/items", "");
 
   EVALUATE_TRACE_POST_SUCCESS(
       0, ControlDynamicAnchorJump, "/items/items/0/$recursiveRef",
       "https://example.com/nested#/items/0/$recursiveRef", "/0/0");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
+  EVALUATE_TRACE_POST_ANNOTATION(
       1, "/items/items", "https://example.com/nested#/items", "/0", true);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items/items",
                               "https://example.com/nested#/items", "/0");
   EVALUATE_TRACE_POST_SUCCESS(3, LoopItems, "/items",
                               "https://example.com/schema#/items", "");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(
-      4, "/items", "https://example.com/schema#/items", "", true);
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/items",
+                                 "https://example.com/schema#/items", "", true);
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -3155,14 +3136,14 @@ TEST(JSONSchema_compile_2019_09, recursiveRef_6) {
   EVALUATE_TRACE_PRE(1, ControlDynamicAnchorJump,
                      "/additionalProperties/$recursiveRef",
                      "#/additionalProperties/$recursiveRef", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION_PUBLIC(2, "/additionalProperties",
-                                       "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/additionalProperties",
+                                "#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, ControlDynamicAnchorJump,
                               "/additionalProperties/$recursiveRef",
                               "#/additionalProperties/$recursiveRef", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION_PUBLIC(1, "/additionalProperties",
-                                        "#/additionalProperties", "", "foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/additionalProperties",
+                                 "#/additionalProperties", "", "foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 

@@ -448,11 +448,9 @@ auto compiler_draft4_applicator_patternproperties(
       // The evaluator will make sure the same annotation is not reported twice.
       // For example, if the same property matches more than one subschema in
       // `patternProperties`
-      substeps.push_back(make<SchemaCompilerAnnotationEmit>(
+      substeps.push_back(make<SchemaCompilerAnnotationBasenameToParent>(
           true, context, schema_context, relative_dynamic_context,
-          SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
-                               empty_pointer},
-          {}, SchemaCompilerTargetType::InstanceParent));
+          SchemaCompilerValueNone{}, {}, SchemaCompilerTargetType::Instance));
     }
 
     // The instance property matches the schema property regex
@@ -513,11 +511,9 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
                                           empty_pointer, empty_pointer)};
 
   if (annotate) {
-    children.push_back(make<SchemaCompilerAnnotationEmit>(
+    children.push_back(make<SchemaCompilerAnnotationBasenameToParent>(
         true, context, schema_context, relative_dynamic_context,
-        SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
-                             empty_pointer},
-        {}, SchemaCompilerTargetType::InstanceParent));
+        SchemaCompilerValueNone{}, {}, SchemaCompilerTargetType::Instance));
   }
 
   SchemaCompilerTemplate wrapper{make<SchemaCompilerLogicalAnd>(
