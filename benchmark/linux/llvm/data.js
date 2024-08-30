@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724985760178,
+  "lastUpdate": 1724988483797,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -622,6 +622,60 @@ window.BENCHMARK_DATA = {
             "value": 10513.78355611089,
             "unit": "ns/iter",
             "extra": "iterations: 66359\ncpu: 10513.604198375504 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ab0a7b441e3488d41e47c1c22b8fd698c9ee508a",
+          "message": "Get rid of `AssertionRegex` explicit type conditions (#1068)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-29T23:22:09-04:00",
+          "tree_id": "922422459b61635aaf6bc473e0efef715392144c",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/ab0a7b441e3488d41e47c1c22b8fd698c9ee508a"
+        },
+        "date": 1724988482686,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 386348.6751381,
+            "unit": "ns/iter",
+            "extra": "iterations: 1810\ncpu: 386342.18618784525 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 7243.748745549146,
+            "unit": "ns/iter",
+            "extra": "iterations: 96058\ncpu: 7243.568416998061 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 3226.3642508710464,
+            "unit": "ns/iter",
+            "extra": "iterations: 215250\ncpu: 3226.315981416957 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 782.0700985233815,
+            "unit": "ns/iter",
+            "extra": "iterations: 872686\ncpu: 782.0455776762777 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 10267.51858133092,
+            "unit": "ns/iter",
+            "extra": "iterations: 67810\ncpu: 10267.459887922125 ns\nthreads: 1"
           }
         ]
       }
