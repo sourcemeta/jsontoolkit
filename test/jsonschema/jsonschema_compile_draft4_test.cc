@@ -1639,8 +1639,8 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(3, LoopProperties, "/additionalProperties",
-                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(3, LoopPropertiesNoAdjacentAnnotation,
+                     "/additionalProperties", "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/additionalProperties/type",
                      "#/additionalProperties/type", "/bar");
 
@@ -1652,8 +1652,9 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
   EVALUATE_TRACE_POST_SUCCESS(3, AssertionTypeStrict,
                               "/additionalProperties/type",
                               "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_POST_SUCCESS(4, LoopProperties, "/additionalProperties",
-                              "#/additionalProperties", "");
+  EVALUATE_TRACE_POST_SUCCESS(4, LoopPropertiesNoAdjacentAnnotation,
+                              "/additionalProperties", "#/additionalProperties",
+                              "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
@@ -1697,8 +1698,8 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(1, LoopProperties, "/additionalProperties",
-                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(1, LoopPropertiesNoAdjacentAnnotation,
+                     "/additionalProperties", "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/additionalProperties/type",
                      "#/additionalProperties/type", "/bar");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/additionalProperties/type",
@@ -1712,8 +1713,9 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict,
                               "/additionalProperties/type",
                               "#/additionalProperties/type", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(3, LoopProperties, "/additionalProperties",
-                              "#/additionalProperties", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopPropertiesNoAdjacentAnnotation,
+                              "/additionalProperties", "#/additionalProperties",
+                              "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The object value was expected to validate "
@@ -1765,8 +1767,8 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
                      "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE_ANNOTATION(5, "/properties", "#/properties", "");
 
-  EVALUATE_TRACE_PRE(6, LoopProperties, "/additionalProperties",
-                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(6, LoopPropertiesNoAdjacentAnnotation,
+                     "/additionalProperties", "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(7, AssertionTypeStrict, "/additionalProperties/type",
                      "#/additionalProperties/type", "/baz");
 
@@ -1791,8 +1793,9 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
   EVALUATE_TRACE_POST_SUCCESS(6, AssertionTypeStrict,
                               "/additionalProperties/type",
                               "#/additionalProperties/type", "/baz");
-  EVALUATE_TRACE_POST_SUCCESS(7, LoopProperties, "/additionalProperties",
-                              "#/additionalProperties", "");
+  EVALUATE_TRACE_POST_SUCCESS(7, LoopPropertiesNoAdjacentAnnotation,
+                              "/additionalProperties", "#/additionalProperties",
+                              "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type integer");
@@ -1847,8 +1850,8 @@ TEST(JSONSchema_compile_draft4, additionalProperties_5) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(3, LoopProperties, "/additionalProperties",
-                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(3, LoopPropertiesNoAdjacentAnnotation,
+                     "/additionalProperties", "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionFail, "/additionalProperties",
                      "#/additionalProperties", "/bar");
 
@@ -1859,8 +1862,9 @@ TEST(JSONSchema_compile_draft4, additionalProperties_5) {
                               "#/properties", "");
   EVALUATE_TRACE_POST_FAILURE(3, AssertionFail, "/additionalProperties",
                               "#/additionalProperties", "/bar");
-  EVALUATE_TRACE_POST_FAILURE(4, LoopProperties, "/additionalProperties",
-                              "#/additionalProperties", "");
+  EVALUATE_TRACE_POST_FAILURE(4, LoopPropertiesNoAdjacentAnnotation,
+                              "/additionalProperties", "#/additionalProperties",
+                              "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
@@ -1976,8 +1980,9 @@ TEST(JSONSchema_compile_draft4, not_3) {
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/not/properties/foo/type",
                      "#/not/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE_ANNOTATION(3, "/not/properties", "#/not/properties", "");
-  EVALUATE_TRACE_PRE(4, LoopProperties, "/not/additionalProperties",
-                     "#/not/additionalProperties", "");
+  EVALUATE_TRACE_PRE(4, LoopPropertiesNoAdjacentAnnotation,
+                     "/not/additionalProperties", "#/not/additionalProperties",
+                     "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/not/additionalProperties/type",
                      "#/not/additionalProperties/type", "/bar");
 
@@ -1991,7 +1996,8 @@ TEST(JSONSchema_compile_draft4, not_3) {
   EVALUATE_TRACE_POST_FAILURE(3, AssertionTypeStrict,
                               "/not/additionalProperties/type",
                               "#/not/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_POST_FAILURE(4, LoopProperties, "/not/additionalProperties",
+  EVALUATE_TRACE_POST_FAILURE(4, LoopPropertiesNoAdjacentAnnotation,
+                              "/not/additionalProperties",
                               "#/not/additionalProperties", "");
   EVALUATE_TRACE_POST_SUCCESS(5, LogicalNot, "/not", "#/not", "");
 

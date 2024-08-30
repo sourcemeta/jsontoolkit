@@ -473,29 +473,6 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context,
     const bool annotate) -> SchemaCompilerTemplate {
-  // Evaluate the subschema against the current property if it
-  // was NOT collected as an annotation on either "properties" or
-  // "patternProperties"
-
-  // TODO: Extend SchemaCompilerAssertionNoAdjacentAnnotation to take
-  // more than one path and check on both on one shot so we save 2
-  // instructions
-  SchemaCompilerTemplate conjunctions{
-      make<SchemaCompilerAssertionNoAdjacentAnnotation>(
-          false, context, schema_context, relative_dynamic_context,
-          SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
-                               empty_pointer},
-          {}, SchemaCompilerTargetType::ParentAdjacentAnnotations,
-          Pointer{"properties"}),
-
-      make<SchemaCompilerAssertionNoAdjacentAnnotation>(
-          false, context, schema_context, relative_dynamic_context,
-          SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
-                               empty_pointer},
-          {}, SchemaCompilerTargetType::ParentAdjacentAnnotations,
-          Pointer{"patternProperties"}),
-  };
-
   SchemaCompilerTemplate children{compile(context, schema_context,
                                           relative_dynamic_context,
                                           empty_pointer, empty_pointer)};
@@ -506,17 +483,25 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
         SchemaCompilerValueNone{}, {}, SchemaCompilerTargetType::Instance));
   }
 
-  SchemaCompilerTemplate wrapper{make<SchemaCompilerLogicalAnd>(
-      false, context, schema_context, relative_dynamic_context,
-      SchemaCompilerValueNone{}, std::move(children),
-      {make<SchemaCompilerLogicalAnd>(
-          true, context, schema_context, relative_dynamic_context,
-          SchemaCompilerValueNone{}, std::move(conjunctions),
-          SchemaCompilerTemplate{})})};
+  SchemaCompilerValueStrings dependencies;
+  if (schema_context.schema.defines("properties")) {
+    dependencies.insert("properties");
+  }
 
-  return {make<SchemaCompilerLoopProperties>(
-      true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
-      {std::move(wrapper)}, SchemaCompilerTemplate{})};
+  if (schema_context.schema.defines("patternProperties")) {
+    dependencies.insert("patternProperties");
+  }
+
+  if (dependencies.empty()) {
+    return {make<SchemaCompilerLoopProperties>(
+        true, context, schema_context, dynamic_context,
+        SchemaCompilerValueNone{}, std::move(children),
+        SchemaCompilerTemplate{})};
+  } else {
+    return {make<SchemaCompilerLoopPropertiesNoAdjacentAnnotation>(
+        true, context, schema_context, dynamic_context, std::move(dependencies),
+        std::move(children), SchemaCompilerTemplate{})};
+  }
 }
 
 auto compiler_draft4_applicator_additionalproperties(

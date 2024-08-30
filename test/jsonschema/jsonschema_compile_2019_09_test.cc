@@ -484,8 +484,8 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_fast) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(3, LoopProperties, "/additionalProperties",
-                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(3, LoopPropertiesNoAdjacentAnnotation,
+                     "/additionalProperties", "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionType, "/additionalProperties/type",
                      "#/additionalProperties/type", "/bar");
   EVALUATE_TRACE_PRE_ANNOTATION(5, "/additionalProperties",
@@ -500,8 +500,9 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_fast) {
                               "#/additionalProperties/type", "/bar");
   EVALUATE_TRACE_POST_ANNOTATION(4, "/additionalProperties",
                                  "#/additionalProperties", "", "bar");
-  EVALUATE_TRACE_POST_SUCCESS(5, LoopProperties, "/additionalProperties",
-                              "#/additionalProperties", "");
+  EVALUATE_TRACE_POST_SUCCESS(5, LoopPropertiesNoAdjacentAnnotation,
+                              "/additionalProperties", "#/additionalProperties",
+                              "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
@@ -552,8 +553,8 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_exhaustive) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(3, LoopProperties, "/additionalProperties",
-                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(3, LoopPropertiesNoAdjacentAnnotation,
+                     "/additionalProperties", "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionType, "/additionalProperties/type",
                      "#/additionalProperties/type", "/bar");
   EVALUATE_TRACE_PRE_ANNOTATION(5, "/additionalProperties",
@@ -568,8 +569,9 @@ TEST(JSONSchema_compile_2019_09, additionalProperties_2_exhaustive) {
                               "#/additionalProperties/type", "/bar");
   EVALUATE_TRACE_POST_ANNOTATION(4, "/additionalProperties",
                                  "#/additionalProperties", "", "bar");
-  EVALUATE_TRACE_POST_SUCCESS(5, LoopProperties, "/additionalProperties",
-                              "#/additionalProperties", "");
+  EVALUATE_TRACE_POST_SUCCESS(5, LoopPropertiesNoAdjacentAnnotation,
+                              "/additionalProperties", "#/additionalProperties",
+                              "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");

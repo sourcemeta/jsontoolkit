@@ -291,6 +291,11 @@ struct SchemaCompilerLoopProperties;
 struct SchemaCompilerLoopPropertiesRegex;
 
 /// @ingroup jsonschema
+/// Represents a compiler step that loops over object properties that were
+/// not collected as adjacent annotations
+struct SchemaCompilerLoopPropertiesNoAdjacentAnnotation;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that loops over object property keys
 struct SchemaCompilerLoopKeys;
 
@@ -348,7 +353,8 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
     SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
     SchemaCompilerLoopPropertiesMatch, SchemaCompilerLoopProperties,
-    SchemaCompilerLoopPropertiesRegex, SchemaCompilerLoopKeys,
+    SchemaCompilerLoopPropertiesRegex,
+    SchemaCompilerLoopPropertiesNoAdjacentAnnotation, SchemaCompilerLoopKeys,
     SchemaCompilerLoopItems, SchemaCompilerLoopItemsFromAnnotationIndex,
     SchemaCompilerLoopContains, SchemaCompilerControlLabel,
     SchemaCompilerControlMark, SchemaCompilerControlJump,
@@ -447,6 +453,8 @@ DEFINE_STEP_APPLICATOR(Logical, WhenDefines, SchemaCompilerValueString)
 DEFINE_STEP_APPLICATOR(Loop, PropertiesMatch, SchemaCompilerValueNamedIndexes)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, PropertiesRegex, SchemaCompilerValueRegex)
+DEFINE_STEP_APPLICATOR(Loop, PropertiesNoAdjacentAnnotation,
+                       SchemaCompilerValueStrings)
 DEFINE_STEP_APPLICATOR(Loop, Keys, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_APPLICATOR(Loop, ItemsFromAnnotationIndex,
