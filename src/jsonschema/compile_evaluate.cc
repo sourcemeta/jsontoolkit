@@ -630,21 +630,6 @@ auto evaluate_step(
         context.resolve_target<std::set<JSON>>(assertion.target, instance)};
     result = target.contains(value);
     CALLBACK_POST("SchemaCompilerAssertionAnnotation", assertion);
-  } else if (std::holds_alternative<
-                 SchemaCompilerAssertionNoAdjacentAnnotation>(step)) {
-    SOURCEMETA_TRACE_START(trace_id,
-                           "SchemaCompilerAssertionNoAdjacentAnnotation");
-    const auto &assertion{
-        std::get<SchemaCompilerAssertionNoAdjacentAnnotation>(step)};
-    context.push(assertion);
-    EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionNoAdjacentAnnotation",
-                             assertion, instance);
-    CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<std::set<JSON>>(assertion.target, instance)};
-    result = !target.contains(value);
-    CALLBACK_POST("SchemaCompilerAssertionNoAdjacentAnnotation", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionNoAnnotation>(
                  step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionNoAnnotation");
@@ -760,6 +745,37 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerLogicalWhenDefines", logical);
+  } else if (std::holds_alternative<
+                 SchemaCompilerLogicalWhenNoAdjacentAnnotations>(step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerLogicalWhenNoAdjacentAnnotations");
+    const auto &logical{
+        std::get<SchemaCompilerLogicalWhenNoAdjacentAnnotations>(step)};
+    context.push(logical);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenNoAdjacentAnnotations",
+                             logical, instance);
+    const auto &value{context.resolve_value(logical.value, instance)};
+
+    // TODO: How can we avoid this expensive pointer manipulation?
+    auto expected_evaluate_path{context.evaluate_path()};
+    expected_evaluate_path.pop_back();
+    expected_evaluate_path.push_back({value});
+    const auto &current_annotations{context.annotations(
+        context.instance_location(), expected_evaluate_path)};
+    EVALUATE_IMPLICIT_PRECONDITION(
+        "SchemaCompilerLogicalWhenNoAdjacentAnnotations", logical,
+        current_annotations.empty());
+
+    CALLBACK_PRE(logical, context.instance_location());
+    result = true;
+    for (const auto &child : logical.children) {
+      if (!evaluate_step(child, instance, mode, callback, context)) {
+        result = false;
+        break;
+      }
+    }
+
+    CALLBACK_POST("SchemaCompilerLogicalWhenNoAdjacentAnnotations", logical);
   } else if (std::holds_alternative<SchemaCompilerLogicalXor>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalXor");
     const auto &logical{std::get<SchemaCompilerLogicalXor>(step)};
@@ -1071,6 +1087,7 @@ auto evaluate_step(
     for (const auto &entry : target.as_object()) {
       bool apply_children{true};
       for (const auto &annotations : current_annotations) {
+        // TODO: Can we avoid this JSON conversion?
         if (annotations.get().contains(JSON{entry.first})) {
           apply_children = false;
           break;

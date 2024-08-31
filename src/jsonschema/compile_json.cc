@@ -253,8 +253,6 @@ struct StepVisitor {
   HANDLE_STEP("assertion", "equals-any", SchemaCompilerAssertionEqualsAny)
   HANDLE_STEP("assertion", "size-equal", SchemaCompilerAssertionSizeEqual)
   HANDLE_STEP("assertion", "annotation", SchemaCompilerAssertionAnnotation)
-  HANDLE_STEP("assertion", "no-adjacent-annotation",
-              SchemaCompilerAssertionNoAdjacentAnnotation)
   HANDLE_STEP("assertion", "no-annotation", SchemaCompilerAssertionNoAnnotation)
   HANDLE_STEP("annotation", "emit", SchemaCompilerAnnotationEmit)
   HANDLE_STEP("annotation", "to-parent", SchemaCompilerAnnotationToParent)
@@ -267,6 +265,8 @@ struct StepVisitor {
   HANDLE_STEP("logical", "not", SchemaCompilerLogicalNot)
   HANDLE_STEP("logical", "when-type", SchemaCompilerLogicalWhenType)
   HANDLE_STEP("logical", "when-defines", SchemaCompilerLogicalWhenDefines)
+  HANDLE_STEP("logical", "when-no-adjacent-annotations",
+              SchemaCompilerLogicalWhenNoAdjacentAnnotations)
   HANDLE_STEP("loop", "properties-match", SchemaCompilerLoopPropertiesMatch)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "properties-regex", SchemaCompilerLoopPropertiesRegex)

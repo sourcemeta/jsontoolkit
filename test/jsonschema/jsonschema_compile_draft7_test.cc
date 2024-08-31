@@ -256,7 +256,8 @@ TEST(JSONSchema_compile_draft7, else_3) {
 
   EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE(2, LogicalAnd, "/else", "#/else", "");
+  EVALUATE_TRACE_PRE(2, LogicalWhenNoAdjacentAnnotations, "/else", "#/else",
+                     "");
   EVALUATE_TRACE_PRE(3, AssertionDivisible, "/else/multipleOf",
                      "#/else/multipleOf", "");
 
@@ -264,7 +265,8 @@ TEST(JSONSchema_compile_draft7, else_3) {
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionDivisible, "/else/multipleOf",
                               "#/else/multipleOf", "");
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/else", "#/else", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenNoAdjacentAnnotations, "/else",
+                              "#/else", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -300,7 +302,8 @@ TEST(JSONSchema_compile_draft7, else_4) {
 
   EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE(2, LogicalAnd, "/else", "#/else", "");
+  EVALUATE_TRACE_PRE(2, LogicalWhenNoAdjacentAnnotations, "/else", "#/else",
+                     "");
   EVALUATE_TRACE_PRE(3, AssertionDivisible, "/else/multipleOf",
                      "#/else/multipleOf", "");
 
@@ -308,7 +311,8 @@ TEST(JSONSchema_compile_draft7, else_4) {
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
   EVALUATE_TRACE_POST_FAILURE(2, AssertionDivisible, "/else/multipleOf",
                               "#/else/multipleOf", "");
-  EVALUATE_TRACE_POST_FAILURE(3, LogicalAnd, "/else", "#/else", "");
+  EVALUATE_TRACE_POST_FAILURE(3, LogicalWhenNoAdjacentAnnotations, "/else",
+                              "#/else", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,

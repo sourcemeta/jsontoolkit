@@ -225,11 +225,6 @@ struct SchemaCompilerAssertionAnnotation;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that checks a certain
-/// annotation was not produced at an adjacent location
-struct SchemaCompilerAssertionNoAdjacentAnnotation;
-
-/// @ingroup jsonschema
-/// Represents a compiler assertion step that checks a certain
 /// annotation was not produced independently of the schema location
 struct SchemaCompilerAssertionNoAnnotation;
 
@@ -276,6 +271,11 @@ struct SchemaCompilerLogicalWhenType;
 /// Represents a compiler logical step that represents a conjunction
 /// when the instance is an object and defines a given property
 struct SchemaCompilerLogicalWhenDefines;
+
+/// @ingroup jsonschema
+/// Represents a compiler logical step that represents a conjunction
+/// when the instance did not receive any certain adjacent annotation
+struct SchemaCompilerLogicalWhenNoAdjacentAnnotations;
 
 /// @ingroup jsonschema
 /// Represents a compiler step that matches steps to object properties
@@ -345,13 +345,13 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionGreater, SchemaCompilerAssertionLess,
     SchemaCompilerAssertionUnique, SchemaCompilerAssertionDivisible,
     SchemaCompilerAssertionStringType, SchemaCompilerAssertionSizeEqual,
-    SchemaCompilerAssertionAnnotation,
-    SchemaCompilerAssertionNoAdjacentAnnotation,
-    SchemaCompilerAssertionNoAnnotation, SchemaCompilerAnnotationEmit,
-    SchemaCompilerAnnotationToParent, SchemaCompilerAnnotationBasenameToParent,
-    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerAssertionAnnotation, SchemaCompilerAssertionNoAnnotation,
+    SchemaCompilerAnnotationEmit, SchemaCompilerAnnotationToParent,
+    SchemaCompilerAnnotationBasenameToParent, SchemaCompilerLogicalOr,
+    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
     SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
+    SchemaCompilerLogicalWhenNoAdjacentAnnotations,
     SchemaCompilerLoopPropertiesMatch, SchemaCompilerLoopProperties,
     SchemaCompilerLoopPropertiesRegex,
     SchemaCompilerLoopPropertiesNoAdjacentAnnotation, SchemaCompilerLoopKeys,
@@ -450,6 +450,8 @@ DEFINE_STEP_APPLICATOR(Logical, Try, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, WhenType, SchemaCompilerValueType)
 DEFINE_STEP_APPLICATOR(Logical, WhenDefines, SchemaCompilerValueString)
+DEFINE_STEP_APPLICATOR(Logical, WhenNoAdjacentAnnotations,
+                       SchemaCompilerValueString)
 DEFINE_STEP_APPLICATOR(Loop, PropertiesMatch, SchemaCompilerValueNamedIndexes)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, PropertiesRegex, SchemaCompilerValueRegex)
