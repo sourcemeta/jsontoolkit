@@ -247,34 +247,35 @@ auto compiler_2019_09_applicator_unevaluateditems(
     children = std::move(loop_children);
   }
 
-  SchemaCompilerTemplate loop;
   if (schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/applicator") &&
       dependencies.contains("items")) {
-    loop.push_back(make<SchemaCompilerLoopItemsFromAnnotationIndex>(
-        true, context, schema_context, relative_dynamic_context,
+    SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
+        false, context, schema_context, relative_dynamic_context, JSON{true},
+        {}, SchemaCompilerTargetType::Annotations, std::move(dependencies))};
+    return {make<SchemaCompilerLoopItemsFromAnnotationIndex>(
+        true, context, schema_context, dynamic_context,
         SchemaCompilerValueString{"items"}, std::move(children),
-        SchemaCompilerTemplate{}));
+        std::move(condition))};
   } else if (schema_context.vocabularies.contains(
                  "https://json-schema.org/draft/2020-12/vocab/applicator") &&
              dependencies.contains("prefixItems")) {
-    loop.push_back(make<SchemaCompilerLoopItemsFromAnnotationIndex>(
-        true, context, schema_context, relative_dynamic_context,
+    SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
+        false, context, schema_context, relative_dynamic_context, JSON{true},
+        {}, SchemaCompilerTargetType::Annotations, std::move(dependencies))};
+    return {make<SchemaCompilerLoopItemsFromAnnotationIndex>(
+        true, context, schema_context, dynamic_context,
         SchemaCompilerValueString{"prefixItems"}, std::move(children),
-        SchemaCompilerTemplate{}));
+        std::move(condition))};
   } else {
-    loop.push_back(make<SchemaCompilerLoopItems>(
-        true, context, schema_context, relative_dynamic_context,
+    SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
+        false, context, schema_context, relative_dynamic_context, JSON{true},
+        {}, SchemaCompilerTargetType::Annotations, std::move(dependencies))};
+    return {make<SchemaCompilerLoopItems>(
+        true, context, schema_context, dynamic_context,
         SchemaCompilerValueUnsignedInteger{0}, std::move(children),
-        SchemaCompilerTemplate{}));
+        std::move(condition))};
   }
-
-  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
-      false, context, schema_context, relative_dynamic_context, JSON{true}, {},
-      SchemaCompilerTargetType::Annotations, std::move(dependencies))};
-  return {make<SchemaCompilerLogicalWhenType>(
-      false, context, schema_context, dynamic_context, JSON::Type::Array,
-      std::move(loop), std::move(condition))};
 }
 
 auto compiler_2019_09_applicator_unevaluatedproperties(
@@ -298,13 +299,6 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
     dependencies.emplace("additionalProperties");
   }
 
-  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
-      false, context, schema_context, relative_dynamic_context,
-      SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
-                           empty_pointer},
-      {}, SchemaCompilerTargetType::ParentAnnotations,
-      std::move(dependencies))};
-
   SchemaCompilerTemplate children{compile(context, schema_context,
                                           relative_dynamic_context,
                                           empty_pointer, empty_pointer)};
@@ -312,6 +306,12 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
       true, context, schema_context, relative_dynamic_context,
       SchemaCompilerValueNone{}, {}, SchemaCompilerTargetType::Instance));
 
+  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
+      false, context, schema_context, relative_dynamic_context,
+      SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
+                           empty_pointer},
+      {}, SchemaCompilerTargetType::ParentAnnotations,
+      std::move(dependencies))};
   SchemaCompilerTemplate wrapper{make<SchemaCompilerLogicalAnd>(
       false, context, schema_context, relative_dynamic_context,
       SchemaCompilerValueNone{}, std::move(children), std::move(condition))};

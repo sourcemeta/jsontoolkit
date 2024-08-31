@@ -1192,9 +1192,11 @@ auto evaluate_step(
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopItemsFromAnnotationIndex", loop,
                              instance);
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopItemsFromAnnotationIndex",
+                                   loop, target.is_array());
     CALLBACK_PRE(loop, context.instance_location());
     const auto &value{context.resolve_value(loop.value, instance)};
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
     assert(target.is_array());
     const auto &array{target.as_array()};
     result = true;
