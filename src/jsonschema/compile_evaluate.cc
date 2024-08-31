@@ -39,6 +39,7 @@ public:
     return {*(result.first), result.second};
   }
 
+private:
   auto
   annotations(const Pointer &current_instance_location,
               const Pointer &schema_location) const -> const Annotations & {
@@ -72,6 +73,112 @@ public:
     }
 
     return instance_location_result->second;
+  }
+
+public:
+  auto
+  defines_any_adjacent_annotation(const Pointer &expected_instance_location,
+                                  const Pointer &base_evaluate_path,
+                                  const std::string &keyword) const -> bool {
+    // TODO: We should be taking masks into account
+    // TODO: How can we avoid this expensive pointer manipulation?
+    auto expected_evaluate_path{base_evaluate_path};
+    expected_evaluate_path.push_back({keyword});
+    return !this->annotations(expected_instance_location,
+                              expected_evaluate_path)
+                .empty();
+  }
+
+  auto defines_any_adjacent_annotation(
+      const Pointer &expected_instance_location,
+      const Pointer &base_evaluate_path,
+      const std::set<std::string> &keywords) const -> bool {
+    for (const auto &keyword : keywords) {
+      if (this->defines_any_adjacent_annotation(expected_instance_location,
+                                                base_evaluate_path, keyword)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  auto defines_adjacent_annotation(const Pointer &expected_instance_location,
+                                   const Pointer &base_evaluate_path,
+                                   const std::set<std::string> &keywords,
+                                   const JSON &value) const -> bool {
+    // TODO: We should be taking masks into account
+    for (const auto &keyword : keywords) {
+      auto expected_evaluate_path{base_evaluate_path};
+      expected_evaluate_path.push_back({keyword});
+      if (this->annotations(expected_instance_location, expected_evaluate_path)
+              .contains(value)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  auto defines_annotation(const Pointer &expected_instance_location,
+                          const Pointer &base_evaluate_path,
+                          const std::set<std::string> &keywords,
+                          const JSON &value) const -> bool {
+    if (keywords.empty()) {
+      return false;
+    }
+
+    const auto instance_annotations{
+        this->annotations(expected_instance_location)};
+    for (const auto &[schema_location, schema_annotations] :
+         instance_annotations) {
+      assert(!schema_location.empty());
+      const auto &keyword{schema_location.back()};
+      if (keyword.is_property() && keywords.contains(keyword.to_property()) &&
+          schema_annotations.contains(value) &&
+          schema_location.initial().starts_with(base_evaluate_path)) {
+        bool blacklisted = false;
+        for (const auto &masked : this->annotation_blacklist) {
+          if (schema_location.starts_with(masked) &&
+              !this->evaluate_path_.starts_with(masked)) {
+            blacklisted = true;
+            break;
+          }
+        }
+
+        if (!blacklisted) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  auto largest_annotation_index(const Pointer &expected_instance_location,
+                                const std::set<std::string> &keywords,
+                                const std::uint64_t default_value) const
+      -> std::uint64_t {
+    // TODO: We should be taking masks into account
+
+    std::uint64_t result{default_value};
+    for (const auto &[schema_location, schema_annotations] :
+         this->annotations(expected_instance_location)) {
+      assert(!schema_location.empty());
+      const auto &keyword{schema_location.back()};
+      if (!keyword.is_property() || !keywords.contains(keyword.to_property())) {
+        continue;
+      }
+
+      for (const auto &annotation : schema_annotations) {
+        if (annotation.is_integer() && annotation.is_positive()) {
+          result = std::max(
+              result, static_cast<std::uint64_t>(annotation.to_integer()) + 1);
+        }
+      }
+    }
+
+    return result;
   }
 
   template <typename T>
@@ -132,43 +239,30 @@ public:
   resolve_target(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
                  const JSON &instance) -> const T & {
     using namespace sourcemeta::jsontoolkit;
+    static_assert(std::is_same_v<JSON, T>);
+    assert(target.second.empty());
+    switch (target.first) {
+      case SchemaCompilerTargetType::Instance:
+        if (this->target_type() == TargetType::Key) {
+          assert(!this->instance_location().empty());
+          assert(this->instance_location().back().is_property());
+          return this->value(this->instance_location().back().to_property());
+        }
 
-    // An optimization for efficiently accessing annotations
-    if constexpr (std::is_same_v<InstanceAnnotations, T>) {
-      if (target.first == SchemaCompilerTargetType::ParentAnnotations) {
-        // TODO: This involves expensive pointer copies, allocations, and
-        // destructions
-        return this->annotations(this->instance_location().initial());
-      } else {
-        assert(target.first == SchemaCompilerTargetType::Annotations);
-        return this->annotations(this->instance_location());
-      }
-    } else {
-      static_assert(std::is_same_v<JSON, T>);
-      assert(target.second.empty());
-      switch (target.first) {
-        case SchemaCompilerTargetType::Instance:
-          if (this->target_type() == TargetType::Key) {
-            assert(!this->instance_location().empty());
-            assert(this->instance_location().back().is_property());
-            return this->value(this->instance_location().back().to_property());
-          }
+        assert(this->target_type() == TargetType::Value);
 
-          assert(this->target_type() == TargetType::Value);
-
-          // TODO: This means that we traverse the instance into
-          // the current instance location EVERY single time.
-          // Can we be smarter? Maybe we keep a reference to the current
-          // instance location in this class that we manipulate through
-          // .push() and .pop()
-          return get(instance, this->instance_location());
-        case SchemaCompilerTargetType::InstanceBasename:
-          return this->value(this->instance_location().back().to_json());
-        default:
-          // We should never get here
-          assert(false);
-          return this->value(nullptr);
-      }
+        // TODO: This means that we traverse the instance into
+        // the current instance location EVERY single time.
+        // Can we be smarter? Maybe we keep a reference to the current
+        // instance location in this class that we manipulate through
+        // .push() and .pop()
+        return get(instance, this->instance_location());
+      case SchemaCompilerTargetType::InstanceBasename:
+        return this->value(this->instance_location().back().to_json());
+      default:
+        // We should never get here
+        assert(false);
+        return this->value(nullptr);
     }
   }
 
@@ -199,17 +293,6 @@ public:
   // an unnecessary copy
   auto mask() -> void {
     this->annotation_blacklist.insert(this->evaluate_path_);
-  }
-
-  auto masked(const Pointer &path) const -> bool {
-    for (const auto &masked : this->annotation_blacklist) {
-      if (path.starts_with(masked) &&
-          !this->evaluate_path_.starts_with(masked)) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   auto find_dynamic_anchor(const std::string &anchor) const
@@ -615,33 +698,15 @@ auto evaluate_step(
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<EvaluationContext::InstanceAnnotations>(
-            assertion.target, instance)};
-    result = true;
 
-    if (!assertion.data.empty()) {
-      for (const auto &[schema_location, annotations] : target) {
-        assert(!schema_location.empty());
-        const auto &keyword{schema_location.back()};
-        if (keyword.is_property() &&
-            assertion.data.contains(keyword.to_property()) &&
-            annotations.contains(value) &&
-            // Make sure its not a cousin annotation, which can
-            // never be seen
-            // TODO: Have a better function at Pointer to check
-            // for these "initial starts with" cases in a way
-            // that we don't have to copy pointers, which `.initial()`
-            // does.
-            schema_location.initial().starts_with(
-                context.evaluate_path().initial()) &&
-            // We want to ignore certain annotations, like the ones
-            // inside "not"
-            !context.masked(schema_location)) {
-          result = false;
-          break;
-        }
-      }
+    if (assertion.target.first == SchemaCompilerTargetType::ParentAnnotations) {
+      result = !context.defines_annotation(
+          context.instance_location().initial(),
+          context.evaluate_path().initial(), assertion.data, value);
+    } else {
+      result = !context.defines_annotation(context.instance_location(),
+                                           context.evaluate_path().initial(),
+                                           assertion.data, value);
     }
 
     CALLBACK_POST("SchemaCompilerAssertionNoAnnotation", assertion);
@@ -728,16 +793,11 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenUnmarked", logical,
                              instance);
     const auto &value{context.resolve_value(logical.value, instance)};
-
-    // TODO: How can we avoid this expensive pointer manipulation?
-    auto expected_evaluate_path{context.evaluate_path()};
-    expected_evaluate_path.pop_back();
-    expected_evaluate_path.push_back({value});
-    const auto &current_annotations{context.annotations(
-        context.instance_location(), expected_evaluate_path)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLogicalWhenUnmarked", logical,
-                                   current_annotations.empty());
-
+                                   !context.defines_any_adjacent_annotation(
+                                       context.instance_location(),
+                                       context.evaluate_path().initial(),
+                                       value));
     CALLBACK_PRE(logical, context.instance_location());
     result = true;
     for (const auto &child : logical.children) {
@@ -755,16 +815,11 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenMarked", logical,
                              instance);
     const auto &value{context.resolve_value(logical.value, instance)};
-
-    // TODO: How can we avoid this expensive pointer manipulation?
-    auto expected_evaluate_path{context.evaluate_path()};
-    expected_evaluate_path.pop_back();
-    expected_evaluate_path.push_back({value});
-    const auto &current_annotations{context.annotations(
-        context.instance_location(), expected_evaluate_path)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLogicalWhenMarked", logical,
-                                   !current_annotations.empty());
-
+                                   context.defines_any_adjacent_annotation(
+                                       context.instance_location(),
+                                       context.evaluate_path().initial(),
+                                       value));
     CALLBACK_PRE(logical, context.instance_location());
     result = true;
     for (const auto &child : logical.children) {
@@ -1077,30 +1132,16 @@ auto evaluate_step(
     const auto &value{context.resolve_value(loop.value, instance)};
     assert(!value.empty());
 
-    // TODO: Find a way to be more efficient with this
-    std::vector<std::reference_wrapper<const EvaluationContext::Annotations>>
-        current_annotations;
-    for (const auto &keyword : value) {
-      assert(!context.evaluate_path().empty());
-      // TODO: Can we avoid this expensive pointer manipulation?
-      auto expected_evaluate_path{context.evaluate_path()};
-      expected_evaluate_path.pop_back();
-      expected_evaluate_path.push_back({keyword});
-      current_annotations.emplace_back(context.annotations(
-          context.instance_location(), expected_evaluate_path));
-    }
-
     for (const auto &entry : target.as_object()) {
-      bool apply_children{true};
-      for (const auto &annotations : current_annotations) {
-        // TODO: Can we avoid this JSON conversion?
-        if (annotations.get().contains(JSON{entry.first})) {
-          apply_children = false;
-          break;
-        }
-      }
-
-      if (!apply_children) {
+      // TODO: It might be more efficient to get all the annotations we
+      // potentially care about as a set first, and the make the loop
+      // check for O(1) containment in that set?
+      if (context.defines_adjacent_annotation(
+              context.instance_location(),
+              // TODO: Can we avoid doing this expensive operation on a loop?
+              context.evaluate_path().initial(), value,
+              // TODO: This conversion implies a string copy
+              JSON{entry.first})) {
         continue;
       }
 
@@ -1203,25 +1244,9 @@ auto evaluate_step(
     auto iterator{array.cbegin()};
 
     // Determine the proper start based on integer annotations collected for the
-    // current instance location by the keyword requested by the user. We will
-    // exhaustively check the matching annotations and end up with the largest
-    // index or zero
-    std::uint64_t start{0};
-    for (const auto &[schema_location, annotations] :
-         context.annotations(context.instance_location())) {
-      assert(!schema_location.empty());
-      const auto &keyword{schema_location.back()};
-      if (!keyword.is_property() || keyword.to_property() != value) {
-        continue;
-      }
-
-      for (const auto &annotation : annotations) {
-        if (annotation.is_integer() && annotation.is_positive()) {
-          start = std::max(
-              start, static_cast<std::uint64_t>(annotation.to_integer()) + 1);
-        }
-      }
-    }
+    // current instance location by the keyword requested by the user.
+    const std::uint64_t start{context.largest_annotation_index(
+        context.instance_location(), {value}, 0)};
 
     // We need this check, as advancing an iterator past its bounds
     // is considered undefined behavior
