@@ -20,6 +20,10 @@ auto compiler_draft7_applicator_if(
   children.push_back(make<SchemaCompilerAnnotationEmit>(
       true, context, schema_context, relative_dynamic_context, JSON{true}, {},
       SchemaCompilerTargetType::Instance));
+  // TODO: Make this a "try-and-mark" step that internally emits the annotation
+  // Maybe then we make the other rules about "marked", "unmarked", without
+  // pointing out the fact that annotations are produced? It would also
+  // avoid emitting this unnecessary annotation
   return {make<SchemaCompilerLogicalTry>(
       true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
       std::move(children), SchemaCompilerTemplate{})};
@@ -37,15 +41,11 @@ auto compiler_draft7_applicator_then(
     return {};
   }
 
-  SchemaCompilerTemplate children{compile(context, schema_context,
-                                          relative_dynamic_context,
-                                          empty_pointer, empty_pointer)};
-  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionAnnotation>(
-      false, context, schema_context, relative_dynamic_context, JSON{true}, {},
-      SchemaCompilerTargetType::AdjacentAnnotations, Pointer{"if"})};
-  return {make<SchemaCompilerLogicalAnd>(
-      true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
-      std::move(children), std::move(condition))};
+  return {make<SchemaCompilerLogicalWhenAdjacentAnnotations>(
+      true, context, schema_context, dynamic_context, "if",
+      compile(context, schema_context, relative_dynamic_context, empty_pointer,
+              empty_pointer),
+      SchemaCompilerTemplate{})};
 }
 
 auto compiler_draft7_applicator_else(

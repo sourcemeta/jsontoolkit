@@ -178,21 +178,6 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    if (this->keyword == "then") {
-      assert(!step.children.empty());
-      std::ostringstream message;
-      message << "Because of the conditional outcome, the "
-              << to_string(this->target.type())
-              << " value was expected to validate against the ";
-      if (step.children.size() > 1) {
-        message << step.children.size() << " given subschemas";
-      } else {
-        message << "given subschema";
-      }
-
-      return message.str();
-    }
-
     if (this->keyword == "properties") {
       assert(!step.children.empty());
       assert(this->target.is_object());
@@ -1586,6 +1571,26 @@ struct DescribeVisitor {
     return unknown();
   }
 
+  auto operator()(const SchemaCompilerLogicalWhenAdjacentAnnotations &step)
+      const -> std::string {
+    if (this->keyword == "then") {
+      assert(!step.children.empty());
+      std::ostringstream message;
+      message << "Because of the conditional outcome, the "
+              << to_string(this->target.type())
+              << " value was expected to validate against the ";
+      if (step.children.size() > 1) {
+        message << step.children.size() << " given subschemas";
+      } else {
+        message << "given subschema";
+      }
+
+      return message.str();
+    }
+
+    return unknown();
+  }
+
   // These steps are never described, at least not right now
 
   auto
@@ -1598,10 +1603,6 @@ struct DescribeVisitor {
   }
   auto
   operator()(const SchemaCompilerAssertionNoAnnotation &) const -> std::string {
-    return unknown();
-  }
-  auto
-  operator()(const SchemaCompilerAssertionAnnotation &) const -> std::string {
     return unknown();
   }
   auto
