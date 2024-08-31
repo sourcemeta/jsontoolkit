@@ -60,16 +60,11 @@ auto compiler_draft7_applicator_else(
     return {};
   }
 
-  SchemaCompilerTemplate children{compile(context, schema_context,
-                                          relative_dynamic_context,
-                                          empty_pointer, empty_pointer)};
-  SchemaCompilerTemplate condition{
-      make<SchemaCompilerAssertionNoAdjacentAnnotation>(
-          false, context, schema_context, relative_dynamic_context, JSON{true},
-          {}, SchemaCompilerTargetType::AdjacentAnnotations, Pointer{"if"})};
-  return {make<SchemaCompilerLogicalAnd>(
-      true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
-      std::move(children), std::move(condition))};
+  return {make<SchemaCompilerLogicalWhenNoAdjacentAnnotations>(
+      true, context, schema_context, dynamic_context, "if",
+      compile(context, schema_context, relative_dynamic_context, empty_pointer,
+              empty_pointer),
+      SchemaCompilerTemplate{})};
 }
 
 } // namespace internal
