@@ -36,24 +36,19 @@ TEST(JSONSchema_compile_draft7, if_1) {
       sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
 
   const sourcemeta::jsontoolkit::JSON instance{1};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
-  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE_ANNOTATION(2, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_ANNOTATION(1, "/if", "#/if", "", true);
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The integer value 1 was expected to equal the integer constant 1");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The integer value successfully validated "
-                               "against the conditional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
+      instance, 1,
       "The integer value was tested against the conditional subschema");
 }
 
@@ -73,11 +68,11 @@ TEST(JSONSchema_compile_draft7, if_2) {
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
-  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -119,37 +114,31 @@ TEST(JSONSchema_compile_draft7, then_2) {
       sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
 
   const sourcemeta::jsontoolkit::JSON instance{10};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE_ANNOTATION(2, "/if", "#/if", "");
-  EVALUATE_TRACE_PRE(3, LogicalWhenAdjacentAnnotations, "/then", "#/then", "");
-  EVALUATE_TRACE_PRE(4, AssertionDivisible, "/then/multipleOf",
+  EVALUATE_TRACE_PRE(2, LogicalWhenMarked, "/then", "#/then", "");
+  EVALUATE_TRACE_PRE(3, AssertionDivisible, "/then/multipleOf",
                      "#/then/multipleOf", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_ANNOTATION(1, "/if", "#/if", "", true);
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
-  EVALUATE_TRACE_POST_SUCCESS(3, AssertionDivisible, "/then/multipleOf",
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionDivisible, "/then/multipleOf",
                               "#/then/multipleOf", "");
-  EVALUATE_TRACE_POST_SUCCESS(4, LogicalWhenAdjacentAnnotations, "/then",
-                              "#/then", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenMarked, "/then", "#/then", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The integer value 10 was expected to equal the integer constant 10");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The integer value successfully validated "
-                               "against the conditional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
+      instance, 1,
       "The integer value was tested against the conditional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      instance, 2,
       "The integer value 10 was expected to be divisible by the integer 5");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4,
+      instance, 3,
       "Because of the conditional outcome, the integer value was expected to "
       "validate against the given subschema");
 }
@@ -171,11 +160,11 @@ TEST(JSONSchema_compile_draft7, then_3) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
-  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -217,24 +206,19 @@ TEST(JSONSchema_compile_draft7, else_2) {
       sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
 
   const sourcemeta::jsontoolkit::JSON instance{1};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
-  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE_ANNOTATION(2, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_ANNOTATION(1, "/if", "#/if", "", true);
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The integer value 1 was expected to equal the integer constant 1");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The integer value successfully validated "
-                               "against the conditional subschema");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
+      instance, 1,
       "The integer value was tested against the conditional subschema");
 }
 
@@ -255,19 +239,17 @@ TEST(JSONSchema_compile_draft7, else_3) {
   const sourcemeta::jsontoolkit::JSON instance{10};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE(2, LogicalWhenNoAdjacentAnnotations, "/else", "#/else",
-                     "");
+  EVALUATE_TRACE_PRE(2, LogicalWhenUnmarked, "/else", "#/else", "");
   EVALUATE_TRACE_PRE(3, AssertionDivisible, "/else/multipleOf",
                      "#/else/multipleOf", "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionDivisible, "/else/multipleOf",
                               "#/else/multipleOf", "");
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenNoAdjacentAnnotations, "/else",
-                              "#/else", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenUnmarked, "/else", "#/else", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -301,19 +283,17 @@ TEST(JSONSchema_compile_draft7, else_4) {
   const sourcemeta::jsontoolkit::JSON instance{8};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE(2, LogicalWhenNoAdjacentAnnotations, "/else", "#/else",
-                     "");
+  EVALUATE_TRACE_PRE(2, LogicalWhenUnmarked, "/else", "#/else", "");
   EVALUATE_TRACE_PRE(3, AssertionDivisible, "/else/multipleOf",
                      "#/else/multipleOf", "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTry, "/if", "#/if", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
   EVALUATE_TRACE_POST_FAILURE(2, AssertionDivisible, "/else/multipleOf",
                               "#/else/multipleOf", "");
-  EVALUATE_TRACE_POST_FAILURE(3, LogicalWhenNoAdjacentAnnotations, "/else",
-                              "#/else", "");
+  EVALUATE_TRACE_POST_FAILURE(3, LogicalWhenUnmarked, "/else", "#/else", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,

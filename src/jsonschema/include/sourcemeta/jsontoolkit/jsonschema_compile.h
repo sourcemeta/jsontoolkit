@@ -242,8 +242,8 @@ struct SchemaCompilerLogicalXor;
 
 /// @ingroup jsonschema
 /// Represents a compiler logical step that represents a conjunction that always
-/// reports success
-struct SchemaCompilerLogicalTry;
+/// reports success and marks its outcome for other steps
+struct SchemaCompilerLogicalTryMark;
 
 /// @ingroup jsonschema
 /// Represents a compiler logical step that represents a negation
@@ -261,13 +261,13 @@ struct SchemaCompilerLogicalWhenDefines;
 
 /// @ingroup jsonschema
 /// Represents a compiler logical step that represents a conjunction
-/// when the instance did not receive any adjacent annotation
-struct SchemaCompilerLogicalWhenNoAdjacentAnnotations;
+/// when the instance and desired evaluation path was not marked
+struct SchemaCompilerLogicalWhenUnmarked;
 
 /// @ingroup jsonschema
 /// Represents a compiler logical step that represents a conjunction
-/// when the instance received any adjacent annotation
-struct SchemaCompilerLogicalWhenAdjacentAnnotations;
+/// when the instance and desired evaluation path was marked
+struct SchemaCompilerLogicalWhenMarked;
 
 /// @ingroup jsonschema
 /// Represents a compiler step that matches steps to object properties
@@ -340,10 +340,9 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionNoAnnotation, SchemaCompilerAnnotationEmit,
     SchemaCompilerAnnotationToParent, SchemaCompilerAnnotationBasenameToParent,
     SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
-    SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
+    SchemaCompilerLogicalTryMark, SchemaCompilerLogicalNot,
     SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
-    SchemaCompilerLogicalWhenNoAdjacentAnnotations,
-    SchemaCompilerLogicalWhenAdjacentAnnotations,
+    SchemaCompilerLogicalWhenUnmarked, SchemaCompilerLogicalWhenMarked,
     SchemaCompilerLoopPropertiesMatch, SchemaCompilerLoopProperties,
     SchemaCompilerLoopPropertiesRegex,
     SchemaCompilerLoopPropertiesNoAdjacentAnnotation, SchemaCompilerLoopKeys,
@@ -436,14 +435,12 @@ DEFINE_STEP_WITH_VALUE(Annotation, BasenameToParent, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueBoolean)
 DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueNone)
-DEFINE_STEP_APPLICATOR(Logical, Try, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Logical, TryMark, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, WhenType, SchemaCompilerValueType)
 DEFINE_STEP_APPLICATOR(Logical, WhenDefines, SchemaCompilerValueString)
-DEFINE_STEP_APPLICATOR(Logical, WhenNoAdjacentAnnotations,
-                       SchemaCompilerValueString)
-DEFINE_STEP_APPLICATOR(Logical, WhenAdjacentAnnotations,
-                       SchemaCompilerValueString)
+DEFINE_STEP_APPLICATOR(Logical, WhenUnmarked, SchemaCompilerValueString)
+DEFINE_STEP_APPLICATOR(Logical, WhenMarked, SchemaCompilerValueString)
 DEFINE_STEP_APPLICATOR(Loop, PropertiesMatch, SchemaCompilerValueNamedIndexes)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, PropertiesRegex, SchemaCompilerValueRegex)
