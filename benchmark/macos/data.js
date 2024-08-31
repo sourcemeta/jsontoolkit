@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725138806871,
+  "lastUpdate": 1725146494741,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -1322,6 +1322,60 @@ window.BENCHMARK_DATA = {
             "value": 9455.953181785766,
             "unit": "ns/iter",
             "extra": "iterations: 75398\ncpu: 9234.435926682385 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "23502c6299a977dcd74c14cc7c993443935245ab",
+          "message": "Centralise annotation logic on the `EvaluationContext` (#1081)\n\nSo we can more easily create other compiler rules without duplicating\r\nall of the currently messy logic.\r\n\r\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-08-31T19:17:53-04:00",
+          "tree_id": "1cec93c011ce9fbd0de8993444728da1e3c947b2",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/23502c6299a977dcd74c14cc7c993443935245ab"
+        },
+        "date": 1725146493050,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 199947.56763005062,
+            "unit": "ns/iter",
+            "extra": "iterations: 3460\ncpu: 199901.15606936414 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 6032.668557253795,
+            "unit": "ns/iter",
+            "extra": "iterations: 116895\ncpu: 6030.583001839256 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 3412.1311021203296,
+            "unit": "ns/iter",
+            "extra": "iterations: 204642\ncpu: 3411.9144652612845 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 1198.9096910254602,
+            "unit": "ns/iter",
+            "extra": "iterations: 589886\ncpu: 1198.670590588689 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 9006.709632425674,
+            "unit": "ns/iter",
+            "extra": "iterations: 77426\ncpu: 9006.548187947197 ns\nthreads: 1"
           }
         ]
       }
