@@ -254,14 +254,12 @@ struct StepVisitor {
   HANDLE_STEP("logical", "or", SchemaCompilerLogicalOr)
   HANDLE_STEP("logical", "and", SchemaCompilerLogicalAnd)
   HANDLE_STEP("logical", "xor", SchemaCompilerLogicalXor)
-  HANDLE_STEP("logical", "try", SchemaCompilerLogicalTry)
+  HANDLE_STEP("logical", "try-mark", SchemaCompilerLogicalTryMark)
   HANDLE_STEP("logical", "not", SchemaCompilerLogicalNot)
   HANDLE_STEP("logical", "when-type", SchemaCompilerLogicalWhenType)
   HANDLE_STEP("logical", "when-defines", SchemaCompilerLogicalWhenDefines)
-  HANDLE_STEP("logical", "when-no-adjacent-annotations",
-              SchemaCompilerLogicalWhenNoAdjacentAnnotations)
-  HANDLE_STEP("logical", "when-adjacent-annotations",
-              SchemaCompilerLogicalWhenAdjacentAnnotations)
+  HANDLE_STEP("logical", "when-unmarked", SchemaCompilerLogicalWhenUnmarked)
+  HANDLE_STEP("logical", "when-marked", SchemaCompilerLogicalWhenMarked)
   HANDLE_STEP("loop", "properties-match", SchemaCompilerLoopPropertiesMatch)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "properties-regex", SchemaCompilerLoopPropertiesRegex)

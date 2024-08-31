@@ -213,7 +213,7 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto operator()(const SchemaCompilerLogicalTry &) const -> std::string {
+  auto operator()(const SchemaCompilerLogicalTryMark &) const -> std::string {
     assert(this->keyword == "if");
     std::ostringstream message;
     message << "The " << to_string(this->target.type())
@@ -266,15 +266,6 @@ struct DescribeVisitor {
   }
 
   auto operator()(const SchemaCompilerAnnotationEmit &) const -> std::string {
-    if (this->keyword == "if") {
-      assert(this->annotation == JSON{true});
-      std::ostringstream message;
-      message
-          << "The " << to_string(this->target.type())
-          << " value successfully validated against the conditional subschema";
-      return message.str();
-    }
-
     if (this->keyword == "properties") {
       assert(this->annotation.is_string());
       std::ostringstream message;
@@ -1551,8 +1542,8 @@ struct DescribeVisitor {
     return unknown();
   }
 
-  auto operator()(const SchemaCompilerLogicalWhenNoAdjacentAnnotations &step)
-      const -> std::string {
+  auto operator()(const SchemaCompilerLogicalWhenUnmarked &step) const
+      -> std::string {
     if (this->keyword == "else") {
       assert(!step.children.empty());
       std::ostringstream message;
@@ -1571,8 +1562,8 @@ struct DescribeVisitor {
     return unknown();
   }
 
-  auto operator()(const SchemaCompilerLogicalWhenAdjacentAnnotations &step)
-      const -> std::string {
+  auto
+  operator()(const SchemaCompilerLogicalWhenMarked &step) const -> std::string {
     if (this->keyword == "then") {
       assert(!step.children.empty());
       std::ostringstream message;

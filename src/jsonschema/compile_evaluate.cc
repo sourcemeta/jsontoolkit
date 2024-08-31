@@ -721,15 +721,12 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerLogicalWhenDefines", logical);
-  } else if (std::holds_alternative<
-                 SchemaCompilerLogicalWhenNoAdjacentAnnotations>(step)) {
-    SOURCEMETA_TRACE_START(trace_id,
-                           "SchemaCompilerLogicalWhenNoAdjacentAnnotations");
-    const auto &logical{
-        std::get<SchemaCompilerLogicalWhenNoAdjacentAnnotations>(step)};
+  } else if (std::holds_alternative<SchemaCompilerLogicalWhenUnmarked>(step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalWhenUnmarked");
+    const auto &logical{std::get<SchemaCompilerLogicalWhenUnmarked>(step)};
     context.push(logical);
-    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenNoAdjacentAnnotations",
-                             logical, instance);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenUnmarked", logical,
+                             instance);
     const auto &value{context.resolve_value(logical.value, instance)};
 
     // TODO: How can we avoid this expensive pointer manipulation?
@@ -738,9 +735,8 @@ auto evaluate_step(
     expected_evaluate_path.push_back({value});
     const auto &current_annotations{context.annotations(
         context.instance_location(), expected_evaluate_path)};
-    EVALUATE_IMPLICIT_PRECONDITION(
-        "SchemaCompilerLogicalWhenNoAdjacentAnnotations", logical,
-        current_annotations.empty());
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLogicalWhenUnmarked", logical,
+                                   current_annotations.empty());
 
     CALLBACK_PRE(logical, context.instance_location());
     result = true;
@@ -751,16 +747,13 @@ auto evaluate_step(
       }
     }
 
-    CALLBACK_POST("SchemaCompilerLogicalWhenNoAdjacentAnnotations", logical);
-  } else if (std::holds_alternative<
-                 SchemaCompilerLogicalWhenAdjacentAnnotations>(step)) {
-    SOURCEMETA_TRACE_START(trace_id,
-                           "SchemaCompilerLogicalWhenAdjacentAnnotations");
-    const auto &logical{
-        std::get<SchemaCompilerLogicalWhenAdjacentAnnotations>(step)};
+    CALLBACK_POST("SchemaCompilerLogicalWhenUnmarked", logical);
+  } else if (std::holds_alternative<SchemaCompilerLogicalWhenMarked>(step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalWhenMarked");
+    const auto &logical{std::get<SchemaCompilerLogicalWhenMarked>(step)};
     context.push(logical);
-    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenAdjacentAnnotations",
-                             logical, instance);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenMarked", logical,
+                             instance);
     const auto &value{context.resolve_value(logical.value, instance)};
 
     // TODO: How can we avoid this expensive pointer manipulation?
@@ -769,9 +762,8 @@ auto evaluate_step(
     expected_evaluate_path.push_back({value});
     const auto &current_annotations{context.annotations(
         context.instance_location(), expected_evaluate_path)};
-    EVALUATE_IMPLICIT_PRECONDITION(
-        "SchemaCompilerLogicalWhenAdjacentAnnotations", logical,
-        !current_annotations.empty());
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLogicalWhenMarked", logical,
+                                   !current_annotations.empty());
 
     CALLBACK_PRE(logical, context.instance_location());
     result = true;
@@ -782,7 +774,7 @@ auto evaluate_step(
       }
     }
 
-    CALLBACK_POST("SchemaCompilerLogicalWhenAdjacentAnnotations", logical);
+    CALLBACK_POST("SchemaCompilerLogicalWhenMarked", logical);
   } else if (std::holds_alternative<SchemaCompilerLogicalXor>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalXor");
     const auto &logical{std::get<SchemaCompilerLogicalXor>(step)};
@@ -826,21 +818,28 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerLogicalXor", logical);
-  } else if (std::holds_alternative<SchemaCompilerLogicalTry>(step)) {
-    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalTry");
-    const auto &logical{std::get<SchemaCompilerLogicalTry>(step)};
+  } else if (std::holds_alternative<SchemaCompilerLogicalTryMark>(step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalTryMark");
+    const auto &logical{std::get<SchemaCompilerLogicalTryMark>(step)};
     assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
-    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalTry", logical, instance);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalTryMark", logical, instance);
     CALLBACK_PRE(logical, context.instance_location());
     result = true;
     for (const auto &child : logical.children) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
+        result = false;
         break;
       }
     }
 
-    CALLBACK_POST("SchemaCompilerLogicalTry", logical);
+    if (result) {
+      context.annotate(context.instance_location(), JSON{true});
+    } else {
+      result = true;
+    }
+
+    CALLBACK_POST("SchemaCompilerLogicalTryMark", logical);
   } else if (std::holds_alternative<SchemaCompilerLogicalNot>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalNot");
     const auto &logical{std::get<SchemaCompilerLogicalNot>(step)};
