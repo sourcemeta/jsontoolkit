@@ -134,19 +134,7 @@ public:
     using namespace sourcemeta::jsontoolkit;
 
     // An optimization for efficiently accessing annotations
-    if constexpr (std::is_same_v<Annotations, T>) {
-      const auto schema_location{
-          this->evaluate_path().initial().concat(target.second)};
-      assert(target.first != SchemaCompilerTargetType::ParentAnnotations);
-      if (target.first == SchemaCompilerTargetType::ParentAdjacentAnnotations) {
-        // TODO: This involves expensive pointer copies, allocations, and
-        // destructions
-        return this->annotations(this->instance_location().initial(),
-                                 schema_location);
-      } else {
-        return this->annotations(this->instance_location(), schema_location);
-      }
-    } else if constexpr (std::is_same_v<InstanceAnnotations, T>) {
+    if constexpr (std::is_same_v<InstanceAnnotations, T>) {
       if (target.first == SchemaCompilerTargetType::ParentAnnotations) {
         // TODO: This involves expensive pointer copies, allocations, and
         // destructions
@@ -618,18 +606,6 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerAssertionStringType", assertion);
-  } else if (std::holds_alternative<SchemaCompilerAssertionAnnotation>(step)) {
-    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionAnnotation");
-    const auto &assertion{std::get<SchemaCompilerAssertionAnnotation>(step)};
-    context.push(assertion);
-    EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionAnnotation", assertion,
-                             instance);
-    CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<std::set<JSON>>(assertion.target, instance)};
-    result = target.contains(value);
-    CALLBACK_POST("SchemaCompilerAssertionAnnotation", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionNoAnnotation>(
                  step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionNoAnnotation");
@@ -776,6 +752,37 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerLogicalWhenNoAdjacentAnnotations", logical);
+  } else if (std::holds_alternative<
+                 SchemaCompilerLogicalWhenAdjacentAnnotations>(step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerLogicalWhenAdjacentAnnotations");
+    const auto &logical{
+        std::get<SchemaCompilerLogicalWhenAdjacentAnnotations>(step)};
+    context.push(logical);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenAdjacentAnnotations",
+                             logical, instance);
+    const auto &value{context.resolve_value(logical.value, instance)};
+
+    // TODO: How can we avoid this expensive pointer manipulation?
+    auto expected_evaluate_path{context.evaluate_path()};
+    expected_evaluate_path.pop_back();
+    expected_evaluate_path.push_back({value});
+    const auto &current_annotations{context.annotations(
+        context.instance_location(), expected_evaluate_path)};
+    EVALUATE_IMPLICIT_PRECONDITION(
+        "SchemaCompilerLogicalWhenAdjacentAnnotations", logical,
+        !current_annotations.empty());
+
+    CALLBACK_PRE(logical, context.instance_location());
+    result = true;
+    for (const auto &child : logical.children) {
+      if (!evaluate_step(child, instance, mode, callback, context)) {
+        result = false;
+        break;
+      }
+    }
+
+    CALLBACK_POST("SchemaCompilerLogicalWhenAdjacentAnnotations", logical);
   } else if (std::holds_alternative<SchemaCompilerLogicalXor>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalXor");
     const auto &logical{std::get<SchemaCompilerLogicalXor>(step)};

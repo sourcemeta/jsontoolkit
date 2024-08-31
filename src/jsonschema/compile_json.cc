@@ -23,12 +23,6 @@ auto target_to_json(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target)
     case SchemaCompilerTargetType::InstanceBasename:
       result.assign("type", JSON{"instance-basename"});
       return result;
-    case SchemaCompilerTargetType::AdjacentAnnotations:
-      result.assign("type", JSON{"adjacent-annotations"});
-      return result;
-    case SchemaCompilerTargetType::ParentAdjacentAnnotations:
-      result.assign("type", JSON{"parent-adjacent-annotations"});
-      return result;
     case SchemaCompilerTargetType::ParentAnnotations:
       result.assign("type", JSON{"parent-annotations"});
       return result;
@@ -252,7 +246,6 @@ struct StepVisitor {
   HANDLE_STEP("assertion", "string-type", SchemaCompilerAssertionStringType)
   HANDLE_STEP("assertion", "equals-any", SchemaCompilerAssertionEqualsAny)
   HANDLE_STEP("assertion", "size-equal", SchemaCompilerAssertionSizeEqual)
-  HANDLE_STEP("assertion", "annotation", SchemaCompilerAssertionAnnotation)
   HANDLE_STEP("assertion", "no-annotation", SchemaCompilerAssertionNoAnnotation)
   HANDLE_STEP("annotation", "emit", SchemaCompilerAnnotationEmit)
   HANDLE_STEP("annotation", "to-parent", SchemaCompilerAnnotationToParent)
@@ -267,6 +260,8 @@ struct StepVisitor {
   HANDLE_STEP("logical", "when-defines", SchemaCompilerLogicalWhenDefines)
   HANDLE_STEP("logical", "when-no-adjacent-annotations",
               SchemaCompilerLogicalWhenNoAdjacentAnnotations)
+  HANDLE_STEP("logical", "when-adjacent-annotations",
+              SchemaCompilerLogicalWhenAdjacentAnnotations)
   HANDLE_STEP("loop", "properties-match", SchemaCompilerLoopPropertiesMatch)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "properties-regex", SchemaCompilerLoopPropertiesRegex)

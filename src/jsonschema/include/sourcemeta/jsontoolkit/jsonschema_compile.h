@@ -33,14 +33,6 @@ enum class SchemaCompilerTargetType {
   /// The last path (i.e. property or index) of the instance location
   InstanceBasename,
 
-  /// The annotations produced at the same base evaluation path for the
-  /// current instance location
-  AdjacentAnnotations,
-
-  /// The annotations produced at the same base evaluation path for the parent
-  /// of the current instance location
-  ParentAdjacentAnnotations,
-
   /// The annotations produced for the parent of the current instance location
   ParentAnnotations,
 
@@ -220,11 +212,6 @@ struct SchemaCompilerAssertionSizeEqual;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that checks a certain
-/// annotation was produced
-struct SchemaCompilerAssertionAnnotation;
-
-/// @ingroup jsonschema
-/// Represents a compiler assertion step that checks a certain
 /// annotation was not produced independently of the schema location
 struct SchemaCompilerAssertionNoAnnotation;
 
@@ -274,8 +261,13 @@ struct SchemaCompilerLogicalWhenDefines;
 
 /// @ingroup jsonschema
 /// Represents a compiler logical step that represents a conjunction
-/// when the instance did not receive any certain adjacent annotation
+/// when the instance did not receive any adjacent annotation
 struct SchemaCompilerLogicalWhenNoAdjacentAnnotations;
+
+/// @ingroup jsonschema
+/// Represents a compiler logical step that represents a conjunction
+/// when the instance received any adjacent annotation
+struct SchemaCompilerLogicalWhenAdjacentAnnotations;
 
 /// @ingroup jsonschema
 /// Represents a compiler step that matches steps to object properties
@@ -345,13 +337,13 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionGreater, SchemaCompilerAssertionLess,
     SchemaCompilerAssertionUnique, SchemaCompilerAssertionDivisible,
     SchemaCompilerAssertionStringType, SchemaCompilerAssertionSizeEqual,
-    SchemaCompilerAssertionAnnotation, SchemaCompilerAssertionNoAnnotation,
-    SchemaCompilerAnnotationEmit, SchemaCompilerAnnotationToParent,
-    SchemaCompilerAnnotationBasenameToParent, SchemaCompilerLogicalOr,
-    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerAssertionNoAnnotation, SchemaCompilerAnnotationEmit,
+    SchemaCompilerAnnotationToParent, SchemaCompilerAnnotationBasenameToParent,
+    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTry, SchemaCompilerLogicalNot,
     SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
     SchemaCompilerLogicalWhenNoAdjacentAnnotations,
+    SchemaCompilerLogicalWhenAdjacentAnnotations,
     SchemaCompilerLoopPropertiesMatch, SchemaCompilerLoopProperties,
     SchemaCompilerLoopPropertiesRegex,
     SchemaCompilerLoopPropertiesNoAdjacentAnnotation, SchemaCompilerLoopKeys,
@@ -435,8 +427,6 @@ DEFINE_STEP_WITH_VALUE(Assertion, Unique, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Assertion, Divisible, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, StringType, SchemaCompilerValueStringType)
 DEFINE_STEP_WITH_VALUE(Assertion, SizeEqual, SchemaCompilerValueUnsignedInteger)
-DEFINE_STEP_WITH_VALUE(Assertion, Annotation, SchemaCompilerValueJSON)
-DEFINE_STEP_WITH_VALUE(Assertion, NoAdjacentAnnotation, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE_AND_DATA(Assertion, NoAnnotation,
                                 SchemaCompilerValueJSON,
                                 SchemaCompilerValueStrings)
@@ -451,6 +441,8 @@ DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, WhenType, SchemaCompilerValueType)
 DEFINE_STEP_APPLICATOR(Logical, WhenDefines, SchemaCompilerValueString)
 DEFINE_STEP_APPLICATOR(Logical, WhenNoAdjacentAnnotations,
+                       SchemaCompilerValueString)
+DEFINE_STEP_APPLICATOR(Logical, WhenAdjacentAnnotations,
                        SchemaCompilerValueString)
 DEFINE_STEP_APPLICATOR(Loop, PropertiesMatch, SchemaCompilerValueNamedIndexes)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueNone)

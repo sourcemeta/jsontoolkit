@@ -124,7 +124,7 @@ TEST(JSONSchema_compile_draft7, then_2) {
   EVALUATE_TRACE_PRE(0, LogicalTry, "/if", "#/if", "");
   EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_PRE_ANNOTATION(2, "/if", "#/if", "");
-  EVALUATE_TRACE_PRE(3, LogicalAnd, "/then", "#/then", "");
+  EVALUATE_TRACE_PRE(3, LogicalWhenAdjacentAnnotations, "/then", "#/then", "");
   EVALUATE_TRACE_PRE(4, AssertionDivisible, "/then/multipleOf",
                      "#/then/multipleOf", "");
 
@@ -133,7 +133,8 @@ TEST(JSONSchema_compile_draft7, then_2) {
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalTry, "/if", "#/if", "");
   EVALUATE_TRACE_POST_SUCCESS(3, AssertionDivisible, "/then/multipleOf",
                               "#/then/multipleOf", "");
-  EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/then", "#/then", "");
+  EVALUATE_TRACE_POST_SUCCESS(4, LogicalWhenAdjacentAnnotations, "/then",
+                              "#/then", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
