@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725293358589,
+  "lastUpdate": 1725294722671,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -1484,6 +1484,60 @@ window.BENCHMARK_DATA = {
             "value": 9391.20145088586,
             "unit": "ns/iter",
             "extra": "iterations: 74713\ncpu: 9390.869058932181 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1b0bdd7b6cfe33b264e9724db1cc76450e6f1971",
+          "message": "Introduce a new `LoopItemsUnmarked` compiler step (#1084)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-02T12:27:57-04:00",
+          "tree_id": "96ca8632486e17cae1c4e2ce439842dd583ec060",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/1b0bdd7b6cfe33b264e9724db1cc76450e6f1971"
+        },
+        "date": 1725294720883,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 199088.96578053734,
+            "unit": "ns/iter",
+            "extra": "iterations: 3536\ncpu: 197487.8393665158 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 6718.300342014171,
+            "unit": "ns/iter",
+            "extra": "iterations: 114323\ncpu: 6236.391627231614 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 3413.573757799256,
+            "unit": "ns/iter",
+            "extra": "iterations: 200189\ncpu: 3411.6110275789383 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 1164.6511798653362,
+            "unit": "ns/iter",
+            "extra": "iterations: 593839\ncpu: 1160.779268454919 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 9186.658565798345,
+            "unit": "ns/iter",
+            "extra": "iterations: 77646\ncpu: 9154.302861705703 ns\nthreads: 1"
           }
         ]
       }
