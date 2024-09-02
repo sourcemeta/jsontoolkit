@@ -507,18 +507,6 @@ auto evaluate_step(
     result = (target.is_array() || target.is_object() || target.is_string()) &&
              (target.size() < assertion.value);
     CALLBACK_POST("SchemaCompilerAssertionSizeLess", assertion);
-  } else if (std::holds_alternative<SchemaCompilerAssertionSizeEqual>(step)) {
-    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionSizeEqual");
-    const auto &assertion{std::get<SchemaCompilerAssertionSizeEqual>(step)};
-    context.push(assertion);
-    // TODO: Get rid of this
-    EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionSizeEqual", assertion,
-                             instance);
-    CALLBACK_PRE(assertion, context.instance_location());
-    const auto &target{context.resolve_target(instance)};
-    result = (target.is_array() || target.is_object() || target.is_string()) &&
-             (target.size() == assertion.value);
-    CALLBACK_POST("SchemaCompilerAssertionSizeEqual", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionEqual>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionEqual");
     const auto &assertion{std::get<SchemaCompilerAssertionEqual>(step)};
@@ -909,9 +897,6 @@ auto evaluate_step(
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAnnotationEmit");
     const auto &annotation{std::get<SchemaCompilerAnnotationEmit>(step)};
     context.push(annotation);
-    // TODO: Get rid of this
-    EVALUATE_CONDITION_GUARD("SchemaCompilerAnnotationEmit", annotation,
-                             instance);
     // Annotations never fail
     result = true;
     const auto &current_instance_location{context.instance_location()};
@@ -941,6 +926,27 @@ auto evaluate_step(
     context.pop(annotation);
     SOURCEMETA_TRACE_END(trace_id,
                          "SchemaCompilerAnnotationWhenArraySizeEqual");
+    return result;
+  } else if (std::holds_alternative<
+                 SchemaCompilerAnnotationWhenArraySizeGreater>(step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerAnnotationWhenArraySizeGreater");
+    const auto &annotation{
+        std::get<SchemaCompilerAnnotationWhenArraySizeGreater>(step)};
+    context.push(annotation);
+    const auto &target{context.resolve_target(instance)};
+    EVALUATE_IMPLICIT_PRECONDITION(
+        "SchemaCompilerAnnotationWhenArraySizeGreater", annotation,
+        target.is_array() && target.size() > annotation.value.first);
+    // Annotations never fail
+    result = true;
+    const auto &current_instance_location{context.instance_location()};
+    const auto value{
+        context.annotate(current_instance_location, annotation.value.second)};
+    CALLBACK_ANNOTATION(value, annotation, current_instance_location);
+    context.pop(annotation);
+    SOURCEMETA_TRACE_END(trace_id,
+                         "SchemaCompilerAnnotationWhenArraySizeGreater");
     return result;
   } else if (std::holds_alternative<SchemaCompilerAnnotationToParent>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAnnotationToParent");

@@ -491,6 +491,30 @@ struct DescribeVisitor {
     return unknown();
   }
 
+  auto operator()(const SchemaCompilerAnnotationWhenArraySizeGreater &) const
+      -> std::string {
+    if ((this->keyword == "prefixItems" || this->keyword == "items") &&
+        this->annotation.is_integer()) {
+      assert(this->target.is_array());
+      assert(this->annotation.is_positive());
+      std::ostringstream message;
+      if (this->annotation.to_integer() == 0) {
+        message << "The first item of the array value successfully validated "
+                   "against the first "
+                   "positional subschema";
+      } else {
+        message << "The first " << this->annotation.to_integer() + 1
+                << " items of the array value successfully validated against "
+                   "the given "
+                   "positional subschemas";
+      }
+
+      return message.str();
+    }
+
+    return unknown();
+  }
+
   auto
   operator()(const SchemaCompilerAnnotationToParent &) const -> std::string {
     if (this->keyword == "unevaluatedItems" && this->annotation.is_boolean() &&
@@ -1575,10 +1599,6 @@ struct DescribeVisitor {
   }
   auto
   operator()(const SchemaCompilerLogicalWhenDefines &) const -> std::string {
-    return unknown();
-  }
-  auto
-  operator()(const SchemaCompilerAssertionSizeEqual &) const -> std::string {
     return unknown();
   }
   auto
