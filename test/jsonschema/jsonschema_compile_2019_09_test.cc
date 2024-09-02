@@ -97,10 +97,10 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependentRequired",
+  EVALUATE_TRACE_PRE(0, AssertionPropertyDependencies, "/dependentRequired",
                      "#/dependentRequired", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/dependentRequired",
-                              "#/dependentRequired", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionPropertyDependencies,
+                              "/dependentRequired", "#/dependentRequired", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -128,10 +128,10 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_3) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependentRequired",
+  EVALUATE_TRACE_PRE(0, AssertionPropertyDependencies, "/dependentRequired",
                      "#/dependentRequired", "");
-  EVALUATE_TRACE_POST_FAILURE(0, LogicalWhenType, "/dependentRequired",
-                              "#/dependentRequired", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionPropertyDependencies,
+                              "/dependentRequired", "#/dependentRequired", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -159,10 +159,10 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_4) {
       sourcemeta::jsontoolkit::parse("{ \"none\": true }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependentRequired",
+  EVALUATE_TRACE_PRE(0, AssertionPropertyDependencies, "/dependentRequired",
                      "#/dependentRequired", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/dependentRequired",
-                              "#/dependentRequired", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionPropertyDependencies,
+                              "/dependentRequired", "#/dependentRequired", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -188,10 +188,10 @@ TEST(JSONSchema_compile_2019_09, dependentRequired_5) {
       sourcemeta::jsontoolkit::parse("{ \"none\": true }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependentRequired",
+  EVALUATE_TRACE_PRE(0, AssertionPropertyDependencies, "/dependentRequired",
                      "#/dependentRequired", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/dependentRequired",
-                              "#/dependentRequired", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionPropertyDependencies,
+                              "/dependentRequired", "#/dependentRequired", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0, "The object value did not define the property \"foo\"");

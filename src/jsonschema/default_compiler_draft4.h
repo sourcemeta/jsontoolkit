@@ -776,6 +776,7 @@ auto compiler_draft4_applicator_dependencies(
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_object());
   SchemaCompilerTemplate children;
+  SchemaCompilerValueStringMap dependencies;
 
   for (const auto &entry :
        schema_context.schema.at(dynamic_context.keyword).as_object()) {
@@ -795,28 +796,16 @@ auto compiler_draft4_applicator_dependencies(
         properties.emplace(property.to_string());
       }
 
-      if (properties.empty()) {
-        continue;
-      } else if (properties.size() == 1) {
-        children.push_back(make<SchemaCompilerAssertionDefines>(
-            false, context, schema_context, relative_dynamic_context,
-            SchemaCompilerValueString{*(properties.cbegin())},
-            // TODO: As an optimization, avoid this condition if the subschema
-            // declares `required` and includes the given key
-            {make<SchemaCompilerAssertionDefines>(
-                true, context, schema_context, relative_dynamic_context,
-                SchemaCompilerValueString{entry.first}, {})}));
-      } else {
-        children.push_back(make<SchemaCompilerAssertionDefinesAll>(
-            false, context, schema_context, relative_dynamic_context,
-            std::move(properties),
-            // TODO: As an optimization, avoid this condition if the subschema
-            // declares `required` and includes the given key
-            {make<SchemaCompilerAssertionDefines>(
-                true, context, schema_context, relative_dynamic_context,
-                SchemaCompilerValueString{entry.first}, {})}));
+      if (!properties.empty()) {
+        dependencies.emplace(entry.first, std::move(properties));
       }
     }
+  }
+
+  if (!dependencies.empty()) {
+    children.push_back(make<SchemaCompilerAssertionPropertyDependencies>(
+        false, context, schema_context, relative_dynamic_context,
+        std::move(dependencies), SchemaCompilerTemplate{}));
   }
 
   return {make<SchemaCompilerLogicalWhenType>(

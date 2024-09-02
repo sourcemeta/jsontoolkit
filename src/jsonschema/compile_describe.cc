@@ -1260,28 +1260,21 @@ struct DescribeVisitor {
 
           // Properties
         } else {
-          assert(
-              std::holds_alternative<SchemaCompilerAssertionDefinesAll>(child));
+          assert(std::holds_alternative<
+                 SchemaCompilerAssertionPropertyDependencies>(child));
           const auto &substep{
-              std::get<SchemaCompilerAssertionDefinesAll>(child)};
-          assert(substep.condition.size() == 1);
-          assert(std::holds_alternative<SchemaCompilerAssertionDefines>(
-              substep.condition.front()));
-          const auto &define{std::get<SchemaCompilerAssertionDefines>(
-              substep.condition.front())};
-          const auto &property{step_value(define)};
-          all_dependencies.insert(property);
-          if (!this->target.defines(property)) {
-            continue;
-          }
+              std::get<SchemaCompilerAssertionPropertyDependencies>(child)};
 
-          present.insert(property);
-          present_with_properties.insert(property);
-
-          const auto &requirements{step_value(substep)};
-          for (const auto &requirement : requirements) {
-            if (this->valid || !this->target.defines(requirement)) {
-              required_properties.insert(requirement);
+          for (const auto &[property, dependencies] : substep.value) {
+            all_dependencies.insert(property);
+            if (this->target.defines(property)) {
+              present.insert(property);
+              present_with_properties.insert(property);
+              for (const auto &dependency : dependencies) {
+                if (this->valid || !this->target.defines(dependency)) {
+                  required_properties.insert(dependency);
+                }
+              }
             }
           }
         }
@@ -1434,51 +1427,64 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    if (this->keyword == "dependentRequired") {
+    return unknown();
+  }
+
+  auto operator()(const SchemaCompilerLogicalWhenAdjacentUnmarked &step) const
+      -> std::string {
+    if (this->keyword == "else") {
       assert(!step.children.empty());
+      std::ostringstream message;
+      message << "Because of the conditional outcome, the "
+              << to_string(this->target.type())
+              << " value was expected to validate against the ";
+      if (step.children.size() > 1) {
+        message << step.children.size() << " given subschemas";
+      } else {
+        message << "given subschema";
+      }
+
+      return message.str();
+    }
+
+    return unknown();
+  }
+
+  auto operator()(const SchemaCompilerLogicalWhenAdjacentMarked &step) const
+      -> std::string {
+    if (this->keyword == "then") {
+      assert(!step.children.empty());
+      std::ostringstream message;
+      message << "Because of the conditional outcome, the "
+              << to_string(this->target.type())
+              << " value was expected to validate against the ";
+      if (step.children.size() > 1) {
+        message << step.children.size() << " given subschemas";
+      } else {
+        message << "given subschema";
+      }
+
+      return message.str();
+    }
+
+    return unknown();
+  }
+
+  auto operator()(const SchemaCompilerAssertionPropertyDependencies &step) const
+      -> std::string {
+    if (this->keyword == "dependentRequired") {
       assert(this->target.is_object());
       std::set<std::string> present;
       std::set<std::string> all_dependencies;
       std::set<std::string> required;
-      for (const auto &child : step.children) {
-        if (std::holds_alternative<SchemaCompilerAssertionDefines>(child)) {
-          const auto &substep{std::get<SchemaCompilerAssertionDefines>(child)};
-          assert(substep.condition.size() == 1);
-          assert(std::holds_alternative<SchemaCompilerAssertionDefines>(
-              substep.condition.front()));
-          const auto &define{std::get<SchemaCompilerAssertionDefines>(
-              substep.condition.front())};
-          const auto &property{step_value(define)};
-          all_dependencies.insert(property);
-          if (!this->target.defines(property)) {
-            continue;
-          }
 
+      for (const auto &[property, dependencies] : step.value) {
+        all_dependencies.insert(property);
+        if (this->target.defines(property)) {
           present.insert(property);
-          if (this->valid || !this->target.defines(step_value(substep))) {
-            required.insert(step_value(substep));
-          }
-        } else {
-          assert(
-              std::holds_alternative<SchemaCompilerAssertionDefinesAll>(child));
-          const auto &substep{
-              std::get<SchemaCompilerAssertionDefinesAll>(child)};
-          assert(substep.condition.size() == 1);
-          assert(std::holds_alternative<SchemaCompilerAssertionDefines>(
-              substep.condition.front()));
-          const auto &define{std::get<SchemaCompilerAssertionDefines>(
-              substep.condition.front())};
-          const auto &property{step_value(define)};
-          all_dependencies.insert(property);
-          if (!this->target.defines(property)) {
-            continue;
-          }
-
-          present.insert(property);
-          const auto &requirements{step_value(substep)};
-          for (const auto &requirement : requirements) {
-            if (this->valid || !this->target.defines(requirement)) {
-              required.insert(requirement);
+          for (const auto &dependency : dependencies) {
+            if (this->valid || !this->target.defines(dependency)) {
+              required.insert(dependency);
             }
           }
         }
@@ -1535,46 +1541,6 @@ struct DescribeVisitor {
             message << escape_string(*iterator) << ", ";
           }
         }
-      }
-
-      return message.str();
-    }
-
-    return unknown();
-  }
-
-  auto operator()(const SchemaCompilerLogicalWhenAdjacentUnmarked &step) const
-      -> std::string {
-    if (this->keyword == "else") {
-      assert(!step.children.empty());
-      std::ostringstream message;
-      message << "Because of the conditional outcome, the "
-              << to_string(this->target.type())
-              << " value was expected to validate against the ";
-      if (step.children.size() > 1) {
-        message << step.children.size() << " given subschemas";
-      } else {
-        message << "given subschema";
-      }
-
-      return message.str();
-    }
-
-    return unknown();
-  }
-
-  auto operator()(const SchemaCompilerLogicalWhenAdjacentMarked &step) const
-      -> std::string {
-    if (this->keyword == "then") {
-      assert(!step.children.empty());
-      std::ostringstream message;
-      message << "Because of the conditional outcome, the "
-              << to_string(this->target.type())
-              << " value was expected to validate against the ";
-      if (step.children.size() > 1) {
-        message << step.children.size() << " given subschemas";
-      } else {
-        message << "given subschema";
       }
 
       return message.str();
