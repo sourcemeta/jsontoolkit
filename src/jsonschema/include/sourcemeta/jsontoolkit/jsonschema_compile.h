@@ -25,23 +25,6 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
-/// Represents a type of compiler step target
-enum class SchemaCompilerTargetType {
-  /// An static instance literal
-  Instance,
-
-  /// The last path (i.e. property or index) of the instance location
-  InstanceBasename,
-
-  /// The annotations produced for the parent of the current instance location
-  ParentAnnotations
-};
-
-/// @ingroup jsonschema
-/// Represents a generic compiler step target
-using SchemaCompilerTarget = std::pair<SchemaCompilerTargetType, Pointer>;
-
-/// @ingroup jsonschema
 /// Represents a compiler step empty value
 struct SchemaCompilerValueNone {};
 
@@ -104,13 +87,9 @@ enum class SchemaCompilerValueStringType { URI };
 /// Represents an array loop compiler step annotation keywords
 struct SchemaCompilerValueItemsAnnotationKeywords {
   const SchemaCompilerValueString index;
+  const SchemaCompilerValueStrings filter;
   const SchemaCompilerValueStrings mask;
 };
-
-/// @ingroup jsonschema
-/// Represents a value in a compiler step
-template <typename T>
-using SchemaCompilerStepValue = std::variant<T, SchemaCompilerTarget>;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that always fails
@@ -213,11 +192,6 @@ struct SchemaCompilerAssertionStringType;
 /// string has a certain number of items, properties, or characters,
 /// respectively
 struct SchemaCompilerAssertionSizeEqual;
-
-/// @ingroup jsonschema
-/// Represents a compiler assertion step that checks a certain
-/// annotation was not produced independently of the schema location
-struct SchemaCompilerAssertionNoAnnotation;
 
 /// @ingroup jsonschema
 /// Represents a compiler step that emits an annotation
@@ -350,9 +324,9 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionGreater, SchemaCompilerAssertionLess,
     SchemaCompilerAssertionUnique, SchemaCompilerAssertionDivisible,
     SchemaCompilerAssertionStringType, SchemaCompilerAssertionSizeEqual,
-    SchemaCompilerAssertionNoAnnotation, SchemaCompilerAnnotationEmit,
-    SchemaCompilerAnnotationToParent, SchemaCompilerAnnotationBasenameToParent,
-    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerAnnotationEmit, SchemaCompilerAnnotationToParent,
+    SchemaCompilerAnnotationBasenameToParent, SchemaCompilerLogicalOr,
+    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTryMark, SchemaCompilerLogicalNot,
     SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
     SchemaCompilerLogicalWhenAdjacentUnmarked,
@@ -368,41 +342,25 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 #if !defined(DOXYGEN)
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
   struct SchemaCompiler##category##name {                                      \
-    const SchemaCompilerTarget target;                                         \
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
     const std::string schema_resource;                                         \
     const bool dynamic;                                                        \
     const bool report;                                                         \
-    const SchemaCompilerStepValue<type> value;                                 \
+    const type value;                                                          \
     const SchemaCompilerTemplate condition;                                    \
-  };
-
-#define DEFINE_STEP_WITH_VALUE_AND_DATA(category, name, type, data_type)       \
-  struct SchemaCompiler##category##name {                                      \
-    const SchemaCompilerTarget target;                                         \
-    const Pointer relative_schema_location;                                    \
-    const Pointer relative_instance_location;                                  \
-    const std::string keyword_location;                                        \
-    const std::string schema_resource;                                         \
-    const bool dynamic;                                                        \
-    const bool report;                                                         \
-    const SchemaCompilerStepValue<type> value;                                 \
-    const SchemaCompilerTemplate condition;                                    \
-    const data_type data;                                                      \
   };
 
 #define DEFINE_STEP_APPLICATOR(category, name, type)                           \
   struct SchemaCompiler##category##name {                                      \
-    const SchemaCompilerTarget target;                                         \
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
     const std::string schema_resource;                                         \
     const bool dynamic;                                                        \
     const bool report;                                                         \
-    const SchemaCompilerStepValue<type> value;                                 \
+    const type value;                                                          \
     const SchemaCompilerTemplate children;                                     \
     const SchemaCompilerTemplate condition;                                    \
   };
@@ -440,9 +398,6 @@ DEFINE_STEP_WITH_VALUE(Assertion, Unique, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Assertion, Divisible, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, StringType, SchemaCompilerValueStringType)
 DEFINE_STEP_WITH_VALUE(Assertion, SizeEqual, SchemaCompilerValueUnsignedInteger)
-DEFINE_STEP_WITH_VALUE_AND_DATA(Assertion, NoAnnotation,
-                                SchemaCompilerValueJSON,
-                                SchemaCompilerValueStrings)
 DEFINE_STEP_WITH_VALUE(Annotation, Emit, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, ToParent, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, BasenameToParent, SchemaCompilerValueNone)
@@ -473,7 +428,6 @@ DEFINE_CONTROL(Jump, SchemaCompilerValueUnsignedInteger)
 DEFINE_CONTROL(DynamicAnchorJump, SchemaCompilerValueString)
 
 #undef DEFINE_STEP_WITH_VALUE
-#undef DEFINE_STEP_WITH_VALUE_AND_DATA
 #undef DEFINE_STEP_APPLICATOR
 #undef DEFINE_CONTROL
 #endif

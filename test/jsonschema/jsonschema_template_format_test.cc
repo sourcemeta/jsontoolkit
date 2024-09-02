@@ -12,11 +12,6 @@ TEST(JSONSchema_compiler_template_format, example_1) {
     "report": true,
     "dynamic": true,
     "id": 5,
-    "target": {
-      "category": "target",
-      "location": "",
-      "type": "instance"
-    },
     "type": "public",
     "relativeSchemaLocation": "",
     "relativeInstanceLocation": "",
@@ -42,11 +37,6 @@ TEST(JSONSchema_compiler_template_format, example_1) {
   "absoluteKeywordLocation": "#/properties",
   "relativeSchemaLocation": "",
   "relativeInstanceLocation": "",
-  "target": {
-    "category": "target",
-    "type": "instance",
-    "location": ""
-  },
   "id": 5,
   "report": true,
   "dynamic": true,

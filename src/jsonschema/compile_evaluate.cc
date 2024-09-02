@@ -31,11 +31,11 @@ public:
     return *(this->values.emplace(std::forward<T>(document)).first);
   }
 
-  auto annotate(const Pointer &current_instance_location, JSON &&value)
+  auto annotate(const Pointer &current_instance_location, const JSON &value)
       -> std::pair<std::reference_wrapper<const JSON>, bool> {
     const auto result{this->annotations_.insert({current_instance_location, {}})
                           .first->second.insert({this->evaluate_path(), {}})
-                          .first->second.insert(std::move(value))};
+                          .first->second.insert(value)};
     return {*(result.first), result.second};
   }
 
@@ -234,53 +234,27 @@ public:
 
   auto target_type() const -> TargetType { return this->target_type_; }
 
-  template <typename T>
-  auto
-  resolve_target(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target,
-                 const JSON &instance) -> const T & {
+  template <typename T> auto resolve_target(const JSON &instance) -> const T & {
     using namespace sourcemeta::jsontoolkit;
     static_assert(std::is_same_v<JSON, T>);
-    assert(target.second.empty());
-    switch (target.first) {
-      case SchemaCompilerTargetType::Instance:
-        if (this->target_type() == TargetType::Key) {
-          assert(!this->instance_location().empty());
-          assert(this->instance_location().back().is_property());
-          return this->value(this->instance_location().back().to_property());
-        }
-
-        assert(this->target_type() == TargetType::Value);
-
-        // TODO: This means that we traverse the instance into
-        // the current instance location EVERY single time.
-        // Can we be smarter? Maybe we keep a reference to the current
-        // instance location in this class that we manipulate through
-        // .push() and .pop()
-        return get(instance, this->instance_location());
-      case SchemaCompilerTargetType::InstanceBasename:
-        return this->value(this->instance_location().back().to_json());
-      default:
-        // We should never get here
-        assert(false);
-        return this->value(nullptr);
+    if (this->target_type() == TargetType::Key) {
+      assert(!this->instance_location().empty());
+      assert(this->instance_location().back().is_property());
+      return this->value(this->instance_location().back().to_property());
     }
+
+    assert(this->target_type() == TargetType::Value);
+
+    // TODO: This means that we traverse the instance into
+    // the current instance location EVERY single time.
+    // Can we be smarter? Maybe we keep a reference to the current
+    // instance location in this class that we manipulate through
+    // .push() and .pop()
+    return get(instance, this->instance_location());
   }
 
-  template <typename T>
-  auto resolve_value(
-      const sourcemeta::jsontoolkit::SchemaCompilerStepValue<T> &value,
-      const JSON &instance) -> T {
-    using namespace sourcemeta::jsontoolkit;
-    // We only define target resolution for JSON documents, at least for now
-    if constexpr (std::is_same_v<SchemaCompilerValueJSON, T>) {
-      if (std::holds_alternative<SchemaCompilerTarget>(value)) {
-        const auto &target{std::get<SchemaCompilerTarget>(value)};
-        return this->resolve_target<T>(target, instance);
-      }
-    }
-
-    assert(std::holds_alternative<T>(value));
-    return std::get<T>(value);
+  template <typename T> auto resolve_value(const T &value) -> decltype(auto) {
+    return value;
   }
 
   auto mark(const std::size_t id, const Template &children) -> void {
@@ -394,7 +368,6 @@ auto evaluate_step(
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionFail");
     const auto &assertion{std::get<SchemaCompilerAssertionFail>(step)};
     context.push(assertion);
-    assert(std::holds_alternative<SchemaCompilerValueNone>(assertion.value));
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionFail", assertion,
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
@@ -405,12 +378,11 @@ auto evaluate_step(
     context.push(assertion);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionDefines", assertion,
                              instance);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionDefines", assertion,
                                    target.is_object());
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
     result = target.defines(value);
     CALLBACK_POST("SchemaCompilerAssertionDefines", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionDefinesAll>(step)) {
@@ -419,13 +391,12 @@ auto evaluate_step(
     context.push(assertion);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionDefinesAll", assertion,
                              instance);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionDefinesAll",
                                    assertion, target.is_object());
 
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
     // Otherwise we are we even emitting this instruction?
     assert(value.size() > 1);
     result = true;
@@ -444,9 +415,8 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionType", assertion,
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     // In non-strict mode, we consider a real number that represents an
     // integer to be an integer
     result = target.type() == value ||
@@ -460,11 +430,10 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionTypeAny", assertion,
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
     // Otherwise we are we even emitting this instruction?
     assert(value.size() > 1);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     // In non-strict mode, we consider a real number that represents an
     // integer to be an integer
     result = value.contains(target.type()) ||
@@ -478,9 +447,8 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionTypeStrict", assertion,
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     result = target.type() == value;
     CALLBACK_POST("SchemaCompilerAssertionTypeStrict", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionTypeStrictAny>(
@@ -491,11 +459,10 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionTypeStrictAny", assertion,
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
     // Otherwise we are we even emitting this instruction?
     assert(value.size() > 1);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     result = value.contains(target.type());
     CALLBACK_POST("SchemaCompilerAssertionTypeStrictAny", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionRegex>(step)) {
@@ -504,12 +471,11 @@ auto evaluate_step(
     context.push(assertion);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionRegex", assertion,
                              instance);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionRegex", assertion,
                                    target.is_string());
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
     result = std::regex_search(target.to_string(), value.first);
     CALLBACK_POST("SchemaCompilerAssertionRegex", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionSizeGreater>(step)) {
@@ -519,9 +485,8 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionSizeGreater", assertion,
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     result = (target.is_array() || target.is_object() || target.is_string()) &&
              (target.size() > value);
     CALLBACK_POST("SchemaCompilerAssertionSizeGreater", assertion);
@@ -532,9 +497,8 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionSizeLess", assertion,
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     result = (target.is_array() || target.is_object() || target.is_string()) &&
              (target.size() < value);
     CALLBACK_POST("SchemaCompilerAssertionSizeLess", assertion);
@@ -545,9 +509,8 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionSizeEqual", assertion,
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     result = (target.is_array() || target.is_object() || target.is_string()) &&
              (target.size() == value);
     CALLBACK_POST("SchemaCompilerAssertionSizeEqual", assertion);
@@ -558,9 +521,8 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionEqual", assertion,
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     result = (target == value);
     CALLBACK_POST("SchemaCompilerAssertionEqual", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionEqualsAny>(step)) {
@@ -570,9 +532,8 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionEqualsAny", assertion,
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     result = value.contains(target);
     CALLBACK_POST("SchemaCompilerAssertionEqualsAny", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionGreaterEqual>(
@@ -582,12 +543,11 @@ auto evaluate_step(
     context.push(assertion);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionGreaterEqual", assertion,
                              instance);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionGreaterEqual",
                                    assertion, target.is_number());
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
     result = target >= value;
     CALLBACK_POST("SchemaCompilerAssertionGreaterEqual", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionLessEqual>(step)) {
@@ -596,12 +556,11 @@ auto evaluate_step(
     context.push(assertion);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionLessEqual", assertion,
                              instance);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionLessEqual",
                                    assertion, target.is_number());
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
     result = target <= value;
     CALLBACK_POST("SchemaCompilerAssertionLessEqual", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionGreater>(step)) {
@@ -610,12 +569,11 @@ auto evaluate_step(
     context.push(assertion);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionGreater", assertion,
                              instance);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionGreater", assertion,
                                    target.is_number());
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
     result = target > value;
     CALLBACK_POST("SchemaCompilerAssertionGreater", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionLess>(step)) {
@@ -624,23 +582,20 @@ auto evaluate_step(
     context.push(assertion);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionLess", assertion,
                              instance);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionLess", assertion,
                                    target.is_number());
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
     result = target < value;
     CALLBACK_POST("SchemaCompilerAssertionLess", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionUnique>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionUnique");
     const auto &assertion{std::get<SchemaCompilerAssertionUnique>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueNone>(assertion.value));
     context.push(assertion);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionUnique", assertion,
                              instance);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionUnique", assertion,
                                    target.is_array());
     CALLBACK_PRE(assertion, context.instance_location());
@@ -652,12 +607,11 @@ auto evaluate_step(
     context.push(assertion);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionDivisible", assertion,
                              instance);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionDivisible",
                                    assertion, target.is_number());
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
+    const auto &value{context.resolve_value(assertion.value)};
     assert(value.is_number());
     result = target.divisible_by(value);
     CALLBACK_POST("SchemaCompilerAssertionDivisible", assertion);
@@ -667,13 +621,12 @@ auto evaluate_step(
     context.push(assertion);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionStringType", assertion,
                              instance);
-    const auto &target{
-        context.resolve_target<JSON>(assertion.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionStringType",
                                    assertion, target.is_string());
 
     CALLBACK_PRE(assertion, context.instance_location());
-    const auto value{context.resolve_value(assertion.value, instance)};
+    const auto value{context.resolve_value(assertion.value)};
     switch (value) {
       case SchemaCompilerValueStringType::URI:
         try {
@@ -689,21 +642,6 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerAssertionStringType", assertion);
-  } else if (std::holds_alternative<SchemaCompilerAssertionNoAnnotation>(
-                 step)) {
-    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionNoAnnotation");
-    const auto &assertion{std::get<SchemaCompilerAssertionNoAnnotation>(step)};
-    context.push(assertion);
-    EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionNoAnnotation", assertion,
-                             instance);
-    CALLBACK_PRE(assertion, context.instance_location());
-    const auto &value{context.resolve_value(assertion.value, instance)};
-    assert(assertion.target.first ==
-           SchemaCompilerTargetType::ParentAnnotations);
-    result = !context.defines_annotation(context.instance_location().initial(),
-                                         context.evaluate_path().initial(),
-                                         assertion.data, value);
-    CALLBACK_POST("SchemaCompilerAssertionNoAnnotation", assertion);
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalOr");
     const auto &logical{std::get<SchemaCompilerLogicalOr>(step)};
@@ -712,7 +650,7 @@ auto evaluate_step(
     CALLBACK_PRE(logical, context.instance_location());
     // This boolean value controls whether we should still evaluate
     // every disjunction even on fast mode
-    const auto value{context.resolve_value(logical.value, instance)};
+    const auto value{context.resolve_value(logical.value)};
     result = logical.children.empty();
     for (const auto &child : logical.children) {
       if (evaluate_step(child, instance, mode, callback, context)) {
@@ -727,7 +665,6 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerLogicalAnd>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalAnd");
     const auto &logical{std::get<SchemaCompilerLogicalAnd>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalAnd", logical, instance);
     CALLBACK_PRE(logical, context.instance_location());
@@ -746,8 +683,8 @@ auto evaluate_step(
     context.push(logical);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenType", logical,
                              instance);
-    const auto &value{context.resolve_value(logical.value, instance)};
-    const auto &target{context.resolve_target<JSON>(logical.target, instance)};
+    const auto &value{context.resolve_value(logical.value)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLogicalWhenType", logical,
                                    target.type() == value);
     CALLBACK_PRE(logical, context.instance_location());
@@ -766,8 +703,8 @@ auto evaluate_step(
     context.push(logical);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenDefines", logical,
                              instance);
-    const auto &value{context.resolve_value(logical.value, instance)};
-    const auto &target{context.resolve_target<JSON>(logical.target, instance)};
+    const auto &value{context.resolve_value(logical.value)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLogicalWhenDefines", logical,
                                    target.is_object() && target.defines(value));
     CALLBACK_PRE(logical, context.instance_location());
@@ -789,7 +726,7 @@ auto evaluate_step(
     context.push(logical);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenAdjacentUnmarked",
                              logical, instance);
-    const auto &value{context.resolve_value(logical.value, instance)};
+    const auto &value{context.resolve_value(logical.value)};
     EVALUATE_IMPLICIT_PRECONDITION(
         "SchemaCompilerLogicalWhenAdjacentUnmarked", logical,
         !context.defines_any_adjacent_annotation(
@@ -813,7 +750,7 @@ auto evaluate_step(
     context.push(logical);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenAdjacentMarked", logical,
                              instance);
-    const auto &value{context.resolve_value(logical.value, instance)};
+    const auto &value{context.resolve_value(logical.value)};
     EVALUATE_IMPLICIT_PRECONDITION(
         "SchemaCompilerLogicalWhenAdjacentMarked", logical,
         context.defines_any_adjacent_annotation(
@@ -832,7 +769,6 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerLogicalXor>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalXor");
     const auto &logical{std::get<SchemaCompilerLogicalXor>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalXor", logical, instance);
     CALLBACK_PRE(logical, context.instance_location());
@@ -875,7 +811,6 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerLogicalTryMark>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalTryMark");
     const auto &logical{std::get<SchemaCompilerLogicalTryMark>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalTryMark", logical, instance);
     CALLBACK_PRE(logical, context.instance_location());
@@ -897,7 +832,6 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerLogicalNot>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalNot");
     const auto &logical{std::get<SchemaCompilerLogicalNot>(step)};
-    assert(std::holds_alternative<SchemaCompilerValueNone>(logical.value));
     context.push(logical);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalNot", logical, instance);
     CALLBACK_PRE(logical, context.instance_location());
@@ -976,11 +910,9 @@ auto evaluate_step(
                              instance);
     // Annotations never fail
     result = true;
-    assert(annotation.target.second.empty());
     const auto &current_instance_location{context.instance_location()};
-    const auto value{
-        context.annotate(current_instance_location,
-                         context.resolve_value(annotation.value, instance))};
+    const auto value{context.annotate(current_instance_location,
+                                      context.resolve_value(annotation.value))};
     CALLBACK_ANNOTATION(value, annotation, current_instance_location);
     context.pop(annotation);
     SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerAnnotationEmit");
@@ -995,8 +927,8 @@ auto evaluate_step(
     result = true;
     // TODO: Can we avoid a copy of the instance location here?
     const auto destination{context.instance_location().initial()};
-    const auto value{context.annotate(
-        destination, context.resolve_value(annotation.value, instance))};
+    const auto value{
+        context.annotate(destination, context.resolve_value(annotation.value))};
     CALLBACK_ANNOTATION(value, annotation, destination);
     context.pop(annotation);
     SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerAnnotationToParent");
@@ -1010,7 +942,6 @@ auto evaluate_step(
     context.push(annotation);
     EVALUATE_CONDITION_GUARD("SchemaCompilerAnnotationBasenameToParent",
                              annotation, instance);
-    assert(std::holds_alternative<SchemaCompilerValueNone>(annotation.value));
     // Annotations never fail
     result = true;
     // TODO: Can we avoid a copy of the instance location here?
@@ -1027,11 +958,11 @@ auto evaluate_step(
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopPropertiesMatch", loop,
                              instance);
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopPropertiesMatch", loop,
                                    target.is_object());
     CALLBACK_PRE(loop, context.instance_location());
-    const auto &value{context.resolve_value(loop.value, instance)};
+    const auto &value{context.resolve_value(loop.value)};
     assert(!value.empty());
     result = true;
     for (const auto &entry : target.as_object()) {
@@ -1059,8 +990,7 @@ auto evaluate_step(
     const auto &loop{std::get<SchemaCompilerLoopProperties>(step)};
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopProperties", loop, instance);
-    assert(std::holds_alternative<SchemaCompilerValueNone>(loop.value));
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopProperties", loop,
                                    target.is_object());
     CALLBACK_PRE(loop, context.instance_location());
@@ -1087,8 +1017,8 @@ auto evaluate_step(
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopPropertiesRegex", loop,
                              instance);
-    const auto &value{context.resolve_value(loop.value, instance)};
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    const auto &value{context.resolve_value(loop.value)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopPropertiesRegex", loop,
                                    target.is_object());
     CALLBACK_PRE(loop, context.instance_location());
@@ -1122,13 +1052,13 @@ auto evaluate_step(
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopPropertiesNoAdjacentAnnotation",
                              loop, instance);
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION(
         "SchemaCompilerLoopPropertiesNoAdjacentAnnotation", loop,
         target.is_object());
     CALLBACK_PRE(loop, context.instance_location());
     result = true;
-    const auto &value{context.resolve_value(loop.value, instance)};
+    const auto &value{context.resolve_value(loop.value)};
     assert(!value.empty());
 
     for (const auto &entry : target.as_object()) {
@@ -1167,12 +1097,12 @@ auto evaluate_step(
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopPropertiesNoAnnotation", loop,
                              instance);
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopPropertiesNoAnnotation",
                                    loop, target.is_object());
     CALLBACK_PRE(loop, context.instance_location());
     result = true;
-    const auto &value{context.resolve_value(loop.value, instance)};
+    const auto &value{context.resolve_value(loop.value)};
     assert(!value.empty());
 
     for (const auto &entry : target.as_object()) {
@@ -1209,8 +1139,7 @@ auto evaluate_step(
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopKeys", loop, instance);
     CALLBACK_PRE(loop, context.instance_location());
-    assert(std::holds_alternative<SchemaCompilerValueNone>(loop.value));
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     assert(target.is_object());
     result = true;
     context.target_type(EvaluationContext::TargetType::Key);
@@ -1235,11 +1164,11 @@ auto evaluate_step(
     const auto &loop{std::get<SchemaCompilerLoopItems>(step)};
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopItems", loop, instance);
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopItems", loop,
                                    target.is_array());
     CALLBACK_PRE(loop, context.instance_location());
-    const auto value{context.resolve_value(loop.value, instance)};
+    const auto value{context.resolve_value(loop.value)};
     const auto &array{target.as_array()};
     result = true;
     auto iterator{array.cbegin()};
@@ -1272,8 +1201,8 @@ auto evaluate_step(
     const auto &loop{std::get<SchemaCompilerLoopItemsUnmarked>(step)};
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopItemsUnmarked", loop, instance);
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
-    const auto &value{context.resolve_value(loop.value, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
+    const auto &value{context.resolve_value(loop.value)};
     // Otherwise you shouldn't be using this step?
     assert(!value.empty());
     EVALUATE_IMPLICIT_PRECONDITION(
@@ -1309,8 +1238,8 @@ auto evaluate_step(
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopItemsUnevaluated", loop,
                              instance);
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
-    const auto &value{context.resolve_value(loop.value, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
+    const auto &value{context.resolve_value(loop.value)};
     EVALUATE_IMPLICIT_PRECONDITION(
         "SchemaCompilerLoopItemsUnevaluated", loop,
         target.is_array() &&
@@ -1337,6 +1266,15 @@ auto evaluate_step(
 
     for (; iterator != array.cend(); ++iterator) {
       const auto index{std::distance(array.cbegin(), iterator)};
+
+      if (context.defines_annotation(
+              context.instance_location(),
+              // TODO: Can we avoid doing this expensive operation on a loop?
+              context.evaluate_path().initial(), value.filter,
+              JSON{static_cast<std::size_t>(index)})) {
+        continue;
+      }
+
       context.push(loop, empty_pointer,
                    {static_cast<Pointer::Token::Index>(index)});
       for (const auto &child : loop.children) {
@@ -1357,12 +1295,12 @@ auto evaluate_step(
     context.push(loop);
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopContains", loop, instance);
     CALLBACK_PRE(loop, context.instance_location());
-    const auto &value{context.resolve_value(loop.value, instance)};
+    const auto &value{context.resolve_value(loop.value)};
     const auto minimum{std::get<0>(value)};
     const auto &maximum{std::get<1>(value)};
     assert(!maximum.has_value() || maximum.value() >= minimum);
     const auto is_exhaustive{std::get<2>(value)};
-    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    const auto &target{context.resolve_target<JSON>(instance)};
     assert(target.is_array());
     result = minimum == 0 && target.empty();
     const auto &array{target.as_array()};
