@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725312983671,
+  "lastUpdate": 1725315014892,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -2238,6 +2238,60 @@ window.BENCHMARK_DATA = {
             "value": 9575.568985114855,
             "unit": "ns/iter",
             "extra": "iterations: 72146\ncpu: 9478.793003077102 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b29de65eba42300f53c975cbbdb763d426492661",
+          "message": "Implement a new `AnnotationWhenArraySizeGreater` compiler step (#1098)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-02T18:06:21-04:00",
+          "tree_id": "d9e44f448ba0bb2229aa748df4139c19781a4002",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/b29de65eba42300f53c975cbbdb763d426492661"
+        },
+        "date": 1725315013130,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 204049.65753429395,
+            "unit": "ns/iter",
+            "extra": "iterations: 3431\ncpu: 204024.48265811717 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1599.5496768072023,
+            "unit": "ns/iter",
+            "extra": "iterations: 440759\ncpu: 1599.1278680639539 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2401.6238914099445,
+            "unit": "ns/iter",
+            "extra": "iterations: 293729\ncpu: 2401.4448692502283 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 165.32197851504478,
+            "unit": "ns/iter",
+            "extra": "iterations: 4259073\ncpu: 165.2979415943329 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 8964.991558762851,
+            "unit": "ns/iter",
+            "extra": "iterations: 76766\ncpu: 8964.710939738945 ns\nthreads: 1"
           }
         ]
       }
