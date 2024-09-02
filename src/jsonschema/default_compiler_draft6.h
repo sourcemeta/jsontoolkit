@@ -135,23 +135,10 @@ auto compiler_draft6_validation_exclusivemaximum(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_number());
-
-  // TODO: As an optimization, avoid this condition if the subschema
-  // declares `type` to `number` or `integer` already
-  SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
-      true, context, schema_context, relative_dynamic_context, false,
-      {make<SchemaCompilerAssertionTypeStrict>(true, context, schema_context,
-                                               relative_dynamic_context,
-                                               JSON::Type::Real, {}),
-       make<SchemaCompilerAssertionTypeStrict>(true, context, schema_context,
-                                               relative_dynamic_context,
-                                               JSON::Type::Integer, {})},
-      SchemaCompilerTemplate{})};
-
   return {make<SchemaCompilerAssertionLess>(
       true, context, schema_context, dynamic_context,
       JSON{schema_context.schema.at(dynamic_context.keyword)},
-      std::move(condition))};
+      SchemaCompilerTemplate{})};
 }
 
 auto compiler_draft6_validation_exclusiveminimum(
@@ -160,23 +147,10 @@ auto compiler_draft6_validation_exclusiveminimum(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_number());
-
-  // TODO: As an optimization, avoid this condition if the subschema
-  // declares `type` to `number` or `integer` already
-  SchemaCompilerTemplate condition{make<SchemaCompilerLogicalOr>(
-      true, context, schema_context, relative_dynamic_context, false,
-      {make<SchemaCompilerAssertionTypeStrict>(true, context, schema_context,
-                                               relative_dynamic_context,
-                                               JSON::Type::Real, {}),
-       make<SchemaCompilerAssertionTypeStrict>(true, context, schema_context,
-                                               relative_dynamic_context,
-                                               JSON::Type::Integer, {})},
-      SchemaCompilerTemplate{})};
-
   return {make<SchemaCompilerAssertionGreater>(
       true, context, schema_context, dynamic_context,
       JSON{schema_context.schema.at(dynamic_context.keyword)},
-      std::move(condition))};
+      SchemaCompilerTemplate{})};
 }
 
 auto compiler_draft6_applicator_contains(
