@@ -786,18 +786,21 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerLogicalWhenDefines", logical);
-  } else if (std::holds_alternative<SchemaCompilerLogicalWhenUnmarked>(step)) {
-    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalWhenUnmarked");
-    const auto &logical{std::get<SchemaCompilerLogicalWhenUnmarked>(step)};
+  } else if (std::holds_alternative<SchemaCompilerLogicalWhenAdjacentUnmarked>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerLogicalWhenAdjacentUnmarked");
+    const auto &logical{
+        std::get<SchemaCompilerLogicalWhenAdjacentUnmarked>(step)};
     context.push(logical);
-    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenUnmarked", logical,
-                             instance);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenAdjacentUnmarked",
+                             logical, instance);
     const auto &value{context.resolve_value(logical.value, instance)};
-    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLogicalWhenUnmarked", logical,
-                                   !context.defines_any_adjacent_annotation(
-                                       context.instance_location(),
-                                       context.evaluate_path().initial(),
-                                       value));
+    EVALUATE_IMPLICIT_PRECONDITION(
+        "SchemaCompilerLogicalWhenAdjacentUnmarked", logical,
+        !context.defines_any_adjacent_annotation(
+            context.instance_location(), context.evaluate_path().initial(),
+            value));
     CALLBACK_PRE(logical, context.instance_location());
     result = true;
     for (const auto &child : logical.children) {
@@ -807,19 +810,21 @@ auto evaluate_step(
       }
     }
 
-    CALLBACK_POST("SchemaCompilerLogicalWhenUnmarked", logical);
-  } else if (std::holds_alternative<SchemaCompilerLogicalWhenMarked>(step)) {
-    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalWhenMarked");
-    const auto &logical{std::get<SchemaCompilerLogicalWhenMarked>(step)};
+    CALLBACK_POST("SchemaCompilerLogicalWhenAdjacentUnmarked", logical);
+  } else if (std::holds_alternative<SchemaCompilerLogicalWhenAdjacentMarked>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalWhenAdjacentMarked");
+    const auto &logical{
+        std::get<SchemaCompilerLogicalWhenAdjacentMarked>(step)};
     context.push(logical);
-    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenMarked", logical,
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenAdjacentMarked", logical,
                              instance);
     const auto &value{context.resolve_value(logical.value, instance)};
-    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLogicalWhenMarked", logical,
-                                   context.defines_any_adjacent_annotation(
-                                       context.instance_location(),
-                                       context.evaluate_path().initial(),
-                                       value));
+    EVALUATE_IMPLICIT_PRECONDITION(
+        "SchemaCompilerLogicalWhenAdjacentMarked", logical,
+        context.defines_any_adjacent_annotation(
+            context.instance_location(), context.evaluate_path().initial(),
+            value));
     CALLBACK_PRE(logical, context.instance_location());
     result = true;
     for (const auto &child : logical.children) {
@@ -829,7 +834,7 @@ auto evaluate_step(
       }
     }
 
-    CALLBACK_POST("SchemaCompilerLogicalWhenMarked", logical);
+    CALLBACK_POST("SchemaCompilerLogicalWhenAdjacentMarked", logical);
   } else if (std::holds_alternative<SchemaCompilerLogicalXor>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalXor");
     const auto &logical{std::get<SchemaCompilerLogicalXor>(step)};
@@ -1268,6 +1273,42 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerLoopItems", loop);
+  } else if (std::holds_alternative<SchemaCompilerLoopItemsUnmarked>(step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLoopItemsUnmarked");
+    const auto &loop{std::get<SchemaCompilerLoopItemsUnmarked>(step)};
+    context.push(loop);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLoopItemsUnmarked", loop, instance);
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    const auto &value{context.resolve_value(loop.value, instance)};
+    // Otherwise you shouldn't be using this step?
+    assert(!value.empty());
+    EVALUATE_IMPLICIT_PRECONDITION(
+        "SchemaCompilerLoopItemsUnmarked", loop,
+        target.is_array() &&
+            !context.defines_annotation(context.instance_location(),
+                                        context.evaluate_path().initial(),
+                                        value, JSON{true}));
+
+    CALLBACK_PRE(loop, context.instance_location());
+    const auto &array{target.as_array()};
+    result = true;
+
+    for (auto iterator = array.cbegin(); iterator != array.cend(); ++iterator) {
+      const auto index{std::distance(array.cbegin(), iterator)};
+      context.push(loop, empty_pointer,
+                   {static_cast<Pointer::Token::Index>(index)});
+      for (const auto &child : loop.children) {
+        if (!evaluate_step(child, instance, mode, callback, context)) {
+          result = false;
+          context.pop(loop);
+          CALLBACK_POST("SchemaCompilerLoopItemsUnmarked", loop);
+        }
+      }
+
+      context.pop(loop);
+    }
+
+    CALLBACK_POST("SchemaCompilerLoopItemsUnmarked", loop);
   } else if (std::holds_alternative<SchemaCompilerLoopItemsFromAnnotationIndex>(
                  step)) {
     SOURCEMETA_TRACE_START(trace_id,

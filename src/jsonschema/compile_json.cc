@@ -258,8 +258,10 @@ struct StepVisitor {
   HANDLE_STEP("logical", "not", SchemaCompilerLogicalNot)
   HANDLE_STEP("logical", "when-type", SchemaCompilerLogicalWhenType)
   HANDLE_STEP("logical", "when-defines", SchemaCompilerLogicalWhenDefines)
-  HANDLE_STEP("logical", "when-unmarked", SchemaCompilerLogicalWhenUnmarked)
-  HANDLE_STEP("logical", "when-marked", SchemaCompilerLogicalWhenMarked)
+  HANDLE_STEP("logical", "when-adjacent-unmarked",
+              SchemaCompilerLogicalWhenAdjacentUnmarked)
+  HANDLE_STEP("logical", "when-adjacent-marked",
+              SchemaCompilerLogicalWhenAdjacentMarked)
   HANDLE_STEP("loop", "properties-match", SchemaCompilerLoopPropertiesMatch)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "properties-regex", SchemaCompilerLoopPropertiesRegex)
@@ -269,6 +271,7 @@ struct StepVisitor {
               SchemaCompilerLoopPropertiesNoAnnotation)
   HANDLE_STEP("loop", "keys", SchemaCompilerLoopKeys)
   HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)
+  HANDLE_STEP("loop", "items-unmarked", SchemaCompilerLoopItemsUnmarked)
   HANDLE_STEP("loop", "items-from-annotation-index",
               SchemaCompilerLoopItemsFromAnnotationIndex)
   HANDLE_STEP("loop", "contains", SchemaCompilerLoopContains)
