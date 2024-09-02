@@ -37,7 +37,7 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
   if (schema_context.labels.contains(label)) {
     return {make<SchemaCompilerControlJump>(
         true, context, schema_context, dynamic_context,
-        SchemaCompilerValueUnsignedInteger{label}, {})};
+        SchemaCompilerValueUnsignedInteger{label}, {}, {})};
   }
 
   // TODO: Avoid this copy
@@ -59,7 +59,8 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
       true, context, schema_context, dynamic_context,
       SchemaCompilerValueUnsignedInteger{label},
       compile(context, std::move(new_schema_context), relative_dynamic_context,
-              empty_pointer, empty_pointer, reference.destination))};
+              empty_pointer, empty_pointer, reference.destination),
+      {})};
 }
 
 auto compiler_draft4_validation_type(

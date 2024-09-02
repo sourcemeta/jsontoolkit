@@ -851,7 +851,7 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerControlLabel>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerControlLabel");
     const auto &control{std::get<SchemaCompilerControlLabel>(step)};
-    context.mark(control.id, control.children);
+    context.mark(control.value, control.children);
     context.push(control);
     CALLBACK_PRE(control, context.instance_location());
     result = true;
@@ -866,7 +866,7 @@ auto evaluate_step(
   } else if (std::holds_alternative<SchemaCompilerControlMark>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerControlMark");
     const auto &control{std::get<SchemaCompilerControlMark>(step)};
-    context.mark(control.id, control.children);
+    context.mark(control.value, control.children);
     SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerControlMark");
     return true;
   } else if (std::holds_alternative<SchemaCompilerControlJump>(step)) {
@@ -876,7 +876,7 @@ auto evaluate_step(
     CALLBACK_PRE(control, context.instance_location());
     assert(control.children.empty());
     result = true;
-    for (const auto &child : context.jump(control.id)) {
+    for (const auto &child : context.jump(control.value)) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
         result = false;
         break;
@@ -890,7 +890,7 @@ auto evaluate_step(
     const auto &control{std::get<SchemaCompilerControlDynamicAnchorJump>(step)};
     context.push(control);
     CALLBACK_PRE(control, context.instance_location());
-    const auto id{context.find_dynamic_anchor(control.id)};
+    const auto id{context.find_dynamic_anchor(control.value)};
     result = id.has_value();
     if (id.has_value()) {
       for (const auto &child : context.jump(id.value())) {

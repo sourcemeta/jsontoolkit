@@ -61,24 +61,6 @@ auto make(const bool report, const SchemaCompilerContext &context,
           std::move(condition)};
 }
 
-// Instantiate a control step
-template <typename Step>
-auto make(const bool report, const SchemaCompilerContext &context,
-          const SchemaCompilerSchemaContext &schema_context,
-          const SchemaCompilerDynamicContext &dynamic_context,
-          // Take the value type from the "id" property of the step struct
-          decltype(std::declval<Step>().id) &&id,
-          SchemaCompilerTemplate &&children) -> Step {
-  return {relative_schema_location(dynamic_context),
-          dynamic_context.base_instance_location,
-          keyword_location(schema_context),
-          schema_context.base.recompose(),
-          context.uses_dynamic_scopes,
-          report,
-          std::move(id),
-          std::move(children)};
-}
-
 // TODO: Completely get rid of this. We should never have
 // explicit type conditions
 inline auto type_condition(const SchemaCompilerContext &context,

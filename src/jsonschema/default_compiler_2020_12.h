@@ -68,7 +68,7 @@ auto compiler_2020_12_core_dynamicref(
   // look for the oldest dynamic anchor in the schema resource chain.
   return {make<SchemaCompilerControlDynamicAnchorJump>(
       true, context, schema_context, dynamic_context,
-      std::string{reference.fragment().value()}, {})};
+      std::string{reference.fragment().value()}, {}, {})};
 }
 
 } // namespace internal
