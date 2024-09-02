@@ -633,12 +633,11 @@ auto compiler_draft4_applicator_items_array(
             true, context, schema_context, relative_dynamic_context,
             SchemaCompilerValueIndexedJSON{cursor, JSON{true}},
             SchemaCompilerTemplate{}));
-        subchildren.push_back(make<SchemaCompilerAnnotationEmit>(
-            true, context, schema_context, relative_dynamic_context,
-            JSON{cursor - 1},
-            {make<SchemaCompilerAssertionSizeGreater>(
+        subchildren.push_back(
+            make<SchemaCompilerAnnotationWhenArraySizeGreater>(
                 true, context, schema_context, relative_dynamic_context,
-                SchemaCompilerValueUnsignedInteger{cursor}, {})}));
+                SchemaCompilerValueIndexedJSON{cursor, JSON{cursor - 1}},
+                SchemaCompilerTemplate{}));
       }
 
       children.push_back(make<SchemaCompilerLogicalWhenArraySizeGreater>(
@@ -659,8 +658,6 @@ auto compiler_draft4_applicator_items_array(
     }
   }
 
-  // TODO: Eventually make this a LogicalAnd, as there
-  // will be array checks in all the substeps
   return {make<SchemaCompilerLogicalWhenType>(
       true, context, schema_context, dynamic_context, JSON::Type::Array,
       std::move(children), SchemaCompilerTemplate{})};

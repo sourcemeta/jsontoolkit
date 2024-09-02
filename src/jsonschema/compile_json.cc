@@ -217,10 +217,11 @@ struct StepVisitor {
   HANDLE_STEP("assertion", "divisible", SchemaCompilerAssertionDivisible)
   HANDLE_STEP("assertion", "string-type", SchemaCompilerAssertionStringType)
   HANDLE_STEP("assertion", "equals-any", SchemaCompilerAssertionEqualsAny)
-  HANDLE_STEP("assertion", "size-equal", SchemaCompilerAssertionSizeEqual)
   HANDLE_STEP("annotation", "emit", SchemaCompilerAnnotationEmit)
   HANDLE_STEP("annotation", "when-array-size-equal",
               SchemaCompilerAnnotationWhenArraySizeEqual)
+  HANDLE_STEP("annotation", "when-array-size-greater",
+              SchemaCompilerAnnotationWhenArraySizeGreater)
   HANDLE_STEP("annotation", "to-parent", SchemaCompilerAnnotationToParent)
   HANDLE_STEP("annotation", "basename-to-parent",
               SchemaCompilerAnnotationBasenameToParent)
