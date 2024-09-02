@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725303071682,
+  "lastUpdate": 1725303959630,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -1808,6 +1808,58 @@ window.BENCHMARK_DATA = {
             "value": 9112.574470255553,
             "unit": "ns/iter",
             "extra": "iterations: 78434\ncpu: 9112.374735446372 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "e186e22cf195d93d71b3fee4c65fff4337b50082",
+          "message": "Unify how applicator and control steps are defined (#1090)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-02T18:47:09Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/e186e22cf195d93d71b3fee4c65fff4337b50082"
+        },
+        "date": 1725303957990,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 201372.0574505825,
+            "unit": "ns/iter",
+            "extra": "iterations: 3342\ncpu: 201345.00299222016 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1799.637640102208,
+            "unit": "ns/iter",
+            "extra": "iterations: 396407\ncpu: 1799.501522425184 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2421.460546216454,
+            "unit": "ns/iter",
+            "extra": "iterations: 287615\ncpu: 2421.121985988215 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 170.08768394900648,
+            "unit": "ns/iter",
+            "extra": "iterations: 4112349\ncpu: 170.06533249001964 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 9212.453483116893,
+            "unit": "ns/iter",
+            "extra": "iterations: 72995\ncpu: 9210.726762107002 ns\nthreads: 1"
           }
         ]
       }
