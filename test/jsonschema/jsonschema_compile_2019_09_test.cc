@@ -2118,7 +2118,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_1) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(3, LoopProperties, "/unevaluatedProperties",
+  EVALUATE_TRACE_PRE(3, LoopPropertiesNoAnnotation, "/unevaluatedProperties",
                      "#/unevaluatedProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/unevaluatedProperties/type",
                      "#/unevaluatedProperties/type", "/bar");
@@ -2135,7 +2135,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_1) {
                               "#/unevaluatedProperties/type", "/bar");
   EVALUATE_TRACE_POST_ANNOTATION(4, "/unevaluatedProperties",
                                  "#/unevaluatedProperties", "", "bar");
-  EVALUATE_TRACE_POST_SUCCESS(5, LoopProperties, "/unevaluatedProperties",
+  EVALUATE_TRACE_POST_SUCCESS(5, LoopPropertiesNoAnnotation,
+                              "/unevaluatedProperties",
                               "#/unevaluatedProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -2190,7 +2191,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
                      "#/allOf/0/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/properties",
                                 "#/allOf/0/properties", "");
-  EVALUATE_TRACE_PRE(4, LoopProperties, "/unevaluatedProperties",
+  EVALUATE_TRACE_PRE(4, LoopPropertiesNoAnnotation, "/unevaluatedProperties",
                      "#/unevaluatedProperties", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedProperties/type",
                      "#/unevaluatedProperties/type", "/bar");
@@ -2210,7 +2211,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_2) {
                               "#/unevaluatedProperties/type", "/bar");
   EVALUATE_TRACE_POST_ANNOTATION(5, "/unevaluatedProperties",
                                  "#/unevaluatedProperties", "", "bar");
-  EVALUATE_TRACE_POST_SUCCESS(6, LoopProperties, "/unevaluatedProperties",
+  EVALUATE_TRACE_POST_SUCCESS(6, LoopPropertiesNoAnnotation,
+                              "/unevaluatedProperties",
                               "#/unevaluatedProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -2268,7 +2270,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
                      "#/allOf/0/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/properties",
                                 "#/allOf/0/properties", "");
-  EVALUATE_TRACE_PRE(4, LoopProperties, "/unevaluatedProperties",
+  EVALUATE_TRACE_PRE(4, LoopPropertiesNoAnnotation, "/unevaluatedProperties",
                      "#/unevaluatedProperties", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedProperties/type",
                      "#/unevaluatedProperties/type", "/bar");
@@ -2284,7 +2286,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_3) {
   EVALUATE_TRACE_POST_FAILURE(4, AssertionTypeStrict,
                               "/unevaluatedProperties/type",
                               "#/unevaluatedProperties/type", "/bar");
-  EVALUATE_TRACE_POST_FAILURE(5, LoopProperties, "/unevaluatedProperties",
+  EVALUATE_TRACE_POST_FAILURE(5, LoopPropertiesNoAnnotation,
+                              "/unevaluatedProperties",
                               "#/unevaluatedProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -2332,7 +2335,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_4) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(3, LoopProperties, "/unevaluatedProperties",
+  EVALUATE_TRACE_PRE(3, LoopPropertiesNoAnnotation, "/unevaluatedProperties",
                      "#/unevaluatedProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionFail, "/unevaluatedProperties",
                      "#/unevaluatedProperties", "/bar");
@@ -2344,7 +2347,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedProperties_4) {
                               "#/properties", "");
   EVALUATE_TRACE_POST_FAILURE(3, AssertionFail, "/unevaluatedProperties",
                               "#/unevaluatedProperties", "/bar");
-  EVALUATE_TRACE_POST_FAILURE(4, LoopProperties, "/unevaluatedProperties",
+  EVALUATE_TRACE_POST_FAILURE(4, LoopPropertiesNoAnnotation,
+                              "/unevaluatedProperties",
                               "#/unevaluatedProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,

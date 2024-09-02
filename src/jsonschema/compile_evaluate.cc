@@ -1160,6 +1160,50 @@ auto evaluate_step(
 
   evaluate_loop_properties_no_adjacent_annotation_end:
     CALLBACK_POST("SchemaCompilerLoopPropertiesNoAdjacentAnnotation", loop);
+  } else if (std::holds_alternative<SchemaCompilerLoopPropertiesNoAnnotation>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerLoopPropertiesNoAnnotation");
+    const auto &loop{std::get<SchemaCompilerLoopPropertiesNoAnnotation>(step)};
+    context.push(loop);
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLoopPropertiesNoAnnotation", loop,
+                             instance);
+    const auto &target{context.resolve_target<JSON>(loop.target, instance)};
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopPropertiesNoAnnotation",
+                                   loop, target.is_object());
+    CALLBACK_PRE(loop, context.instance_location());
+    result = true;
+    const auto &value{context.resolve_value(loop.value, instance)};
+    assert(!value.empty());
+
+    for (const auto &entry : target.as_object()) {
+      // TODO: It might be more efficient to get all the annotations we
+      // potentially care about as a set first, and the make the loop
+      // check for O(1) containment in that set?
+      if (context.defines_annotation(
+              context.instance_location(),
+              // TODO: Can we avoid doing this expensive operation on a loop?
+              context.evaluate_path().initial(), value,
+              // TODO: This conversion implies a string copy
+              JSON{entry.first})) {
+        continue;
+      }
+
+      context.push(loop, empty_pointer, {entry.first});
+      for (const auto &child : loop.children) {
+        if (!evaluate_step(child, instance, mode, callback, context)) {
+          result = false;
+          context.pop(loop);
+          // For efficiently breaking from the outer loop too
+          goto evaluate_loop_properties_no_annotation_end;
+        }
+      }
+
+      context.pop(loop);
+    }
+
+  evaluate_loop_properties_no_annotation_end:
+    CALLBACK_POST("SchemaCompilerLoopPropertiesNoAnnotation", loop);
   } else if (std::holds_alternative<SchemaCompilerLoopKeys>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLoopKeys");
     const auto &loop{std::get<SchemaCompilerLoopKeys>(step)};
