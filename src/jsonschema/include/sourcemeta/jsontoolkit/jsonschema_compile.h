@@ -34,10 +34,7 @@ enum class SchemaCompilerTargetType {
   InstanceBasename,
 
   /// The annotations produced for the parent of the current instance location
-  ParentAnnotations,
-
-  /// The annotations produced for current instance location
-  Annotations
+  ParentAnnotations
 };
 
 /// @ingroup jsonschema
@@ -107,6 +104,7 @@ enum class SchemaCompilerValueStringType { URI };
 /// Represents an array loop compiler step annotation keywords
 struct SchemaCompilerValueItemsAnnotationKeywords {
   const SchemaCompilerValueString index;
+  const SchemaCompilerValueStrings mask;
 };
 
 /// @ingroup jsonschema

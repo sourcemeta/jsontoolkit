@@ -698,17 +698,11 @@ auto evaluate_step(
                              instance);
     CALLBACK_PRE(assertion, context.instance_location());
     const auto &value{context.resolve_value(assertion.value, instance)};
-
-    if (assertion.target.first == SchemaCompilerTargetType::ParentAnnotations) {
-      result = !context.defines_annotation(
-          context.instance_location().initial(),
-          context.evaluate_path().initial(), assertion.data, value);
-    } else {
-      result = !context.defines_annotation(context.instance_location(),
-                                           context.evaluate_path().initial(),
-                                           assertion.data, value);
-    }
-
+    assert(assertion.target.first ==
+           SchemaCompilerTargetType::ParentAnnotations);
+    result = !context.defines_annotation(context.instance_location().initial(),
+                                         context.evaluate_path().initial(),
+                                         assertion.data, value);
     CALLBACK_POST("SchemaCompilerAssertionNoAnnotation", assertion);
   } else if (std::holds_alternative<SchemaCompilerLogicalOr>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalOr");
@@ -1316,10 +1310,14 @@ auto evaluate_step(
     EVALUATE_CONDITION_GUARD("SchemaCompilerLoopItemsUnevaluated", loop,
                              instance);
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
-    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopItemsUnevaluated", loop,
-                                   target.is_array());
-    CALLBACK_PRE(loop, context.instance_location());
     const auto &value{context.resolve_value(loop.value, instance)};
+    EVALUATE_IMPLICIT_PRECONDITION(
+        "SchemaCompilerLoopItemsUnevaluated", loop,
+        target.is_array() &&
+            !context.defines_annotation(context.instance_location(),
+                                        context.evaluate_path().initial(),
+                                        value.mask, JSON{true}));
+    CALLBACK_PRE(loop, context.instance_location());
     assert(target.is_array());
     const auto &array{target.as_array()};
     result = true;
