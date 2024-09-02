@@ -653,15 +653,15 @@ auto compiler_draft4_applicator_items_array(
             JSON{cursor - 1}, {}));
       }
 
-      children.push_back(make<SchemaCompilerLogicalAnd>(
+      children.push_back(make<SchemaCompilerLogicalWhenArraySizeEqual>(
           false, context, schema_context, relative_dynamic_context,
-          SchemaCompilerValueNone{}, std::move(subchildren),
-          {make<SchemaCompilerAssertionSizeEqual>(
-              false, context, schema_context, relative_dynamic_context,
-              SchemaCompilerValueUnsignedInteger{cursor}, {})}));
+          SchemaCompilerValueUnsignedInteger{cursor}, std::move(subchildren),
+          SchemaCompilerTemplate{}));
     }
   }
 
+  // TODO: Eventually make this a LogicalAnd, as there
+  // will be array checks in all the substeps
   return {make<SchemaCompilerLogicalWhenType>(
       true, context, schema_context, dynamic_context, JSON::Type::Array,
       std::move(children), SchemaCompilerTemplate{})};

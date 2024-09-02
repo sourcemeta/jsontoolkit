@@ -1555,6 +1555,10 @@ struct DescribeVisitor {
       -> std::string {
     return unknown();
   }
+  auto operator()(const SchemaCompilerLogicalWhenArraySizeEqual &) const
+      -> std::string {
+    return unknown();
+  }
   auto
   operator()(const SchemaCompilerLogicalWhenDefines &) const -> std::string {
     return unknown();
