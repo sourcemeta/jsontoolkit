@@ -104,6 +104,12 @@ using SchemaCompilerValueNamedIndexes =
 enum class SchemaCompilerValueStringType { URI };
 
 /// @ingroup jsonschema
+/// Represents an array loop compiler step annotation keywords
+struct SchemaCompilerValueItemsAnnotationKeywords {
+  const SchemaCompilerValueString index;
+};
+
+/// @ingroup jsonschema
 /// Represents a value in a compiler step
 template <typename T>
 using SchemaCompilerStepValue = std::variant<T, SchemaCompilerTarget>;
@@ -307,9 +313,8 @@ struct SchemaCompilerLoopItems;
 struct SchemaCompilerLoopItemsUnmarked;
 
 /// @ingroup jsonschema
-/// Represents a compiler step that loops over array items, potentially starting
-/// from a given index that was previously collected as an annotation
-struct SchemaCompilerLoopItemsFromAnnotationIndex;
+/// Represents a compiler step that loops over unevaluated array items
+struct SchemaCompilerLoopItemsUnevaluated;
 
 /// @ingroup jsonschema
 /// Represents a compiler step that checks array items match a given criteria
@@ -358,7 +363,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerLoopPropertiesNoAdjacentAnnotation,
     SchemaCompilerLoopPropertiesNoAnnotation, SchemaCompilerLoopKeys,
     SchemaCompilerLoopItems, SchemaCompilerLoopItemsUnmarked,
-    SchemaCompilerLoopItemsFromAnnotationIndex, SchemaCompilerLoopContains,
+    SchemaCompilerLoopItemsUnevaluated, SchemaCompilerLoopContains,
     SchemaCompilerControlLabel, SchemaCompilerControlMark,
     SchemaCompilerControlJump, SchemaCompilerControlDynamicAnchorJump>>;
 
@@ -461,8 +466,8 @@ DEFINE_STEP_APPLICATOR(Loop, PropertiesNoAnnotation, SchemaCompilerValueStrings)
 DEFINE_STEP_APPLICATOR(Loop, Keys, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_APPLICATOR(Loop, ItemsUnmarked, SchemaCompilerValueStrings)
-DEFINE_STEP_APPLICATOR(Loop, ItemsFromAnnotationIndex,
-                       SchemaCompilerValueString)
+DEFINE_STEP_APPLICATOR(Loop, ItemsUnevaluated,
+                       SchemaCompilerValueItemsAnnotationKeywords)
 DEFINE_STEP_APPLICATOR(Loop, Contains, SchemaCompilerValueRange)
 DEFINE_CONTROL(Label, SchemaCompilerValueUnsignedInteger)
 DEFINE_CONTROL(Mark, SchemaCompilerValueUnsignedInteger)
