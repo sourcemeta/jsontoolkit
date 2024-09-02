@@ -641,6 +641,11 @@ struct DescribeVisitor {
     return message.str();
   }
 
+  auto
+  operator()(const SchemaCompilerLoopItemsUnmarked &) const -> std::string {
+    return unknown();
+  }
+
   auto operator()(const SchemaCompilerLoopItemsFromAnnotationIndex &step) const
       -> std::string {
     assert(this->keyword == "unevaluatedItems");
@@ -1544,7 +1549,7 @@ struct DescribeVisitor {
     return unknown();
   }
 
-  auto operator()(const SchemaCompilerLogicalWhenUnmarked &step) const
+  auto operator()(const SchemaCompilerLogicalWhenAdjacentUnmarked &step) const
       -> std::string {
     if (this->keyword == "else") {
       assert(!step.children.empty());
@@ -1564,8 +1569,8 @@ struct DescribeVisitor {
     return unknown();
   }
 
-  auto
-  operator()(const SchemaCompilerLogicalWhenMarked &step) const -> std::string {
+  auto operator()(const SchemaCompilerLogicalWhenAdjacentMarked &step) const
+      -> std::string {
     if (this->keyword == "then") {
       assert(!step.children.empty());
       std::ostringstream message;

@@ -246,14 +246,10 @@ auto compiler_2019_09_applicator_unevaluateditems(
         SchemaCompilerValueString{"prefixItems"}, std::move(subchildren),
         std::move(condition))};
   } else {
-    // TODO: Introduce a new LoopItemsUnmarked that takes an array of keywords
-    SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
-        false, context, schema_context, relative_dynamic_context, JSON{true},
-        {}, SchemaCompilerTargetType::Annotations, {"unevaluatedItems"})};
-    return {make<SchemaCompilerLoopItems>(
+    return {make<SchemaCompilerLoopItemsUnmarked>(
         true, context, schema_context, dynamic_context,
-        SchemaCompilerValueUnsignedInteger{0}, std::move(children),
-        std::move(condition))};
+        SchemaCompilerValueStrings{"unevaluatedItems"}, std::move(children),
+        SchemaCompilerTemplate{})};
   }
 }
 

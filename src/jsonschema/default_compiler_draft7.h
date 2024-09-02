@@ -33,7 +33,7 @@ auto compiler_draft7_applicator_then(
     return {};
   }
 
-  return {make<SchemaCompilerLogicalWhenMarked>(
+  return {make<SchemaCompilerLogicalWhenAdjacentMarked>(
       true, context, schema_context, dynamic_context, "if",
       compile(context, schema_context, relative_dynamic_context, empty_pointer,
               empty_pointer),
@@ -52,7 +52,7 @@ auto compiler_draft7_applicator_else(
     return {};
   }
 
-  return {make<SchemaCompilerLogicalWhenUnmarked>(
+  return {make<SchemaCompilerLogicalWhenAdjacentUnmarked>(
       true, context, schema_context, dynamic_context, "if",
       compile(context, schema_context, relative_dynamic_context, empty_pointer,
               empty_pointer),
