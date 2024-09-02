@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725296749534,
+  "lastUpdate": 1725301299516,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -1646,6 +1646,60 @@ window.BENCHMARK_DATA = {
             "value": 9216.663204284554,
             "unit": "ns/iter",
             "extra": "iterations: 76922\ncpu: 9215.127011778157 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "78f5e18965aa3a0e1c29afb2536eeb1393a33962",
+          "message": "Get rid of the concept of compiler target types (#1087)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-02T14:17:39-04:00",
+          "tree_id": "182ed78d918be978b4923c77c6efea31c6359d25",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/78f5e18965aa3a0e1c29afb2536eeb1393a33962"
+        },
+        "date": 1725301298266,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 200242.41862461626,
+            "unit": "ns/iter",
+            "extra": "iterations: 3490\ncpu: 200204.29799426932 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1790.3382781195055,
+            "unit": "ns/iter",
+            "extra": "iterations: 394557\ncpu: 1789.9847170370822 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2432.9643084920363,
+            "unit": "ns/iter",
+            "extra": "iterations: 293207\ncpu: 2432.4896745302813 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 165.6520822843309,
+            "unit": "ns/iter",
+            "extra": "iterations: 4293794\ncpu: 165.6183319460598 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 9110.435121938943,
+            "unit": "ns/iter",
+            "extra": "iterations: 77006\ncpu: 9109.147339168376 ns\nthreads: 1"
           }
         ]
       }
