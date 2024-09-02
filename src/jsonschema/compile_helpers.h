@@ -30,12 +30,8 @@ auto make(const bool report, const SchemaCompilerContext &context,
           const SchemaCompilerDynamicContext &dynamic_context,
           // Take the value type from the "type" property of the step struct
           decltype(std::declval<Step>().value) &&value,
-          SchemaCompilerTemplate &&condition,
-          const SchemaCompilerTargetType target_type,
-          const std::optional<Pointer> &target_location = std::nullopt)
-    -> Step {
-  return {{target_type, target_location.value_or(empty_pointer)},
-          relative_schema_location(dynamic_context),
+          SchemaCompilerTemplate &&condition) -> Step {
+  return {relative_schema_location(dynamic_context),
           dynamic_context.base_instance_location,
           keyword_location(schema_context),
           schema_context.base.recompose(),
@@ -43,31 +39,6 @@ auto make(const bool report, const SchemaCompilerContext &context,
           report,
           std::move(value),
           std::move(condition)};
-}
-
-// Instantiate a value-oriented step with data
-template <typename Step>
-auto make(const bool report, const SchemaCompilerContext &context,
-          const SchemaCompilerSchemaContext &schema_context,
-          const SchemaCompilerDynamicContext &dynamic_context,
-          // Take the value type from the "type" property of the step struct
-          decltype(std::declval<Step>().value) &&value,
-          SchemaCompilerTemplate &&condition,
-          const SchemaCompilerTargetType target_type,
-          // Take the value type from the "data" property of the step struct
-          decltype(std::declval<Step>().data) &&data,
-          const std::optional<Pointer> &target_location = std::nullopt)
-    -> Step {
-  return {{target_type, target_location.value_or(empty_pointer)},
-          relative_schema_location(dynamic_context),
-          dynamic_context.base_instance_location,
-          keyword_location(schema_context),
-          schema_context.base.recompose(),
-          context.uses_dynamic_scopes,
-          report,
-          std::move(value),
-          std::move(condition),
-          std::move(data)};
 }
 
 // Instantiate an applicator step
@@ -79,8 +50,7 @@ auto make(const bool report, const SchemaCompilerContext &context,
           decltype(std::declval<Step>().value) &&value,
           SchemaCompilerTemplate &&children,
           SchemaCompilerTemplate &&condition) -> Step {
-  return {{SchemaCompilerTargetType::Instance, empty_pointer},
-          relative_schema_location(dynamic_context),
+  return {relative_schema_location(dynamic_context),
           dynamic_context.base_instance_location,
           keyword_location(schema_context),
           schema_context.base.recompose(),
@@ -135,8 +105,8 @@ inline auto type_condition(const SchemaCompilerContext &context,
   }
 
   return {make<SchemaCompilerAssertionTypeStrict>(
-      true, context, schema_context, relative_dynamic_context, type, {},
-      SchemaCompilerTargetType::Instance)};
+      true, context, schema_context, relative_dynamic_context,
+      SchemaCompilerValueType{type}, {})};
 }
 
 } // namespace sourcemeta::jsontoolkit

@@ -26,9 +26,9 @@ auto compile_subschema(
     if (schema_context.schema.to_boolean()) {
       return {};
     } else {
-      return {make<SchemaCompilerAssertionFail>(
-          true, context, schema_context, dynamic_context,
-          SchemaCompilerValueNone{}, {}, SchemaCompilerTargetType::Instance)};
+      return {make<SchemaCompilerAssertionFail>(true, context, schema_context,
+                                                dynamic_context,
+                                                SchemaCompilerValueNone{}, {})};
     }
   }
 

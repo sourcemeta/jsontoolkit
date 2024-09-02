@@ -8,15 +8,9 @@
 namespace {
 using namespace sourcemeta::jsontoolkit;
 
-template <typename T>
-auto step_value(const SchemaCompilerStepValue<T> &value) -> const T & {
-  assert(std::holds_alternative<T>(value));
-  return std::get<T>(value);
-}
-
 template <typename T> auto step_value(const T &step) -> decltype(auto) {
   if constexpr (requires { step.value; }) {
-    return step_value(step.value);
+    return step.value;
   } else {
     return step.id;
   }
@@ -1597,10 +1591,6 @@ struct DescribeVisitor {
   }
   auto
   operator()(const SchemaCompilerAssertionSizeEqual &) const -> std::string {
-    return unknown();
-  }
-  auto
-  operator()(const SchemaCompilerAssertionNoAnnotation &) const -> std::string {
     return unknown();
   }
   auto
