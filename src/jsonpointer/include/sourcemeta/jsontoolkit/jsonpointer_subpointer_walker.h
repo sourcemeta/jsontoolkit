@@ -10,13 +10,11 @@ namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonpointer
 /// A forward iterator to traverse all subpointers of a given JSON Pointer.
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-class GenericSubPointerIterator {
+template <typename Property> class GenericSubPointerIterator {
 public:
   using iterator_category = std::forward_iterator_tag;
   using difference_type = std::ptrdiff_t;
-  using value_type = GenericPointer<CharT, Traits, Allocator>;
+  using value_type = GenericPointer<Property>;
   using pointer = value_type *;
   using reference = value_type &;
 
@@ -53,11 +51,9 @@ private:
 
 /// @ingroup jsonpointer
 /// A walker to traverse all subpointers of a given JSON Pointer.
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-class GenericSubPointerWalker {
+template <typename Property> class GenericSubPointerWalker {
 public:
-  using const_iterator = GenericSubPointerIterator<CharT, Traits, Allocator>;
+  using const_iterator = GenericSubPointerIterator<Property>;
   GenericSubPointerWalker(const typename const_iterator::value_type &pointer)
       : data{pointer} {}
 

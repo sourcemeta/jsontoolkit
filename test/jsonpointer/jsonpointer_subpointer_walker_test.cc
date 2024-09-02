@@ -19,7 +19,9 @@ TEST(JSONPointer_subpointer_walker, equality_null_subpointer_iterators) {
 
 TEST(JSONPointer_subpointer_walker,
      equality_null_and_not_null_subpointer_iterators) {
-  sourcemeta::jsontoolkit::Pointer pointer;
+  using Pointer = sourcemeta::jsontoolkit::GenericPointer<char>;
+  Pointer pointer;
+
   const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator first{
       &pointer};
   const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator second{
@@ -31,8 +33,9 @@ TEST(JSONPointer_subpointer_walker,
 }
 
 TEST(JSONPointer_subpointer_walker, equality_same_subpointer_iterators) {
-  sourcemeta::jsontoolkit::Pointer pointer_1;
-  sourcemeta::jsontoolkit::Pointer pointer_2;
+  using Pointer = sourcemeta::jsontoolkit::GenericPointer<char>;
+  Pointer pointer_1;
+  Pointer pointer_2;
   const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator first{
       &pointer_1};
   const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator second{
@@ -44,8 +47,9 @@ TEST(JSONPointer_subpointer_walker, equality_same_subpointer_iterators) {
 }
 
 TEST(JSONPointer_subpointer_walker, equality_different_subpointer_iterators) {
-  sourcemeta::jsontoolkit::Pointer pointer_1{"foo"};
-  sourcemeta::jsontoolkit::Pointer pointer_2{"bar"};
+  using Pointer = sourcemeta::jsontoolkit::GenericPointer<char>;
+  Pointer pointer_1{"foo"};
+  Pointer pointer_2{"bar"};
   const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator first{
       &pointer_1};
   const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator second{
@@ -57,10 +61,12 @@ TEST(JSONPointer_subpointer_walker, equality_different_subpointer_iterators) {
 }
 
 TEST(JSONPointer_subpointer_walker, subpointer_walker) {
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
   std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
-  for (const auto &subpointer :
-       sourcemeta::jsontoolkit::SubPointerWalker{pointer}) {
+  using Walker = sourcemeta::jsontoolkit::GenericSubPointerWalker<std::string>;
+  Walker walker(pointer);
+
+  for (const auto &subpointer : Walker{pointer}) {
     subpointers.push_back(subpointer);
   }
 

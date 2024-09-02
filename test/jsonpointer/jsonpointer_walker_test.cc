@@ -6,21 +6,23 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 
+using Pointer = sourcemeta::jsontoolkit::GenericPointer<char>;
+
 TEST(JSONPointer_walker, null) {
   const sourcemeta::jsontoolkit::JSON document{nullptr};
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
-       sourcemeta::jsontoolkit::PointerWalker{document}) {
+       sourcemeta::jsontoolkit::GenericPointerWalker<char>{document}) {
     subpointers.push_back(subpointer);
   }
 
   EXPECT_EQ(subpointers.size(), 1);
-  EXPECT_EQ(subpointers.at(0), sourcemeta::jsontoolkit::Pointer{});
+  EXPECT_EQ(subpointers.at(0), sourcemeta::jsontoolkit::GenericPointer<char>{});
 }
 
 TEST(JSONPointer_walker, boolean_false) {
   const sourcemeta::jsontoolkit::JSON document{false};
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -32,7 +34,7 @@ TEST(JSONPointer_walker, boolean_false) {
 
 TEST(JSONPointer_walker, boolean_true) {
   const sourcemeta::jsontoolkit::JSON document{true};
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -44,7 +46,7 @@ TEST(JSONPointer_walker, boolean_true) {
 
 TEST(JSONPointer_walker, integer) {
   const sourcemeta::jsontoolkit::JSON document{5};
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -56,7 +58,7 @@ TEST(JSONPointer_walker, integer) {
 
 TEST(JSONPointer_walker, real) {
   const sourcemeta::jsontoolkit::JSON document{3.14};
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -68,7 +70,7 @@ TEST(JSONPointer_walker, real) {
 
 TEST(JSONPointer_walker, string) {
   const sourcemeta::jsontoolkit::JSON document{"foo bar"};
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -81,7 +83,7 @@ TEST(JSONPointer_walker, string) {
 TEST(JSONPointer_walker, array_empty) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("[]");
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -94,7 +96,7 @@ TEST(JSONPointer_walker, array_empty) {
 TEST(JSONPointer_walker, array_scalars) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3, 4 ]");
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -115,7 +117,7 @@ TEST(JSONPointer_walker, array_deep) {
     [ 1, 2 ],
     [ "foo" ]
   ])EOF");
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -134,7 +136,7 @@ TEST(JSONPointer_walker, array_deep) {
 TEST(JSONPointer_walker, object_empty) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{}");
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -147,7 +149,7 @@ TEST(JSONPointer_walker, object_empty) {
 TEST(JSONPointer_walker, object_scalars) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }");
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -163,7 +165,7 @@ TEST(JSONPointer_walker, object_scalars) {
 TEST(JSONPointer_walker, object_nested) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"bar\": 1 } }");
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  std::vector<Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
     subpointers.push_back(subpointer);

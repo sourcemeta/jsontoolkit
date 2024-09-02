@@ -10,12 +10,9 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonpointer
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-class GenericToken {
+template <typename Property> class GenericToken {
 public:
   using Value = JSON;
-  using Property = typename Value::String;
   using Index = typename Value::Array::size_type;
 
   /// This constructor creates an JSON Pointer token from a string. For
@@ -39,8 +36,8 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
   /// ```
-  GenericToken(const CharT *const property)
-      : data{std::in_place_type<Property>, property} {}
+  GenericToken(const JSON::Char *const property)
+      : data{std::in_place_type<std::string>, property} {}
 
   /// This constructor creates an JSON Pointer token from a character. For
   /// example:
@@ -51,7 +48,7 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::Pointer::Token token{'a'};
   /// ```
-  GenericToken(const CharT character)
+  GenericToken(const JSON::Char character)
       : data{std::in_place_type<Property>, Property{character}} {}
 
   /// This constructor creates an JSON Pointer token from an item index. For
@@ -208,15 +205,13 @@ public:
   }
 
   /// Compare JSON Pointer tokens
-  auto operator==(const GenericToken<CharT, Traits, Allocator> &other)
-      const noexcept -> bool {
+  auto operator==(const GenericToken<Property> &other) const noexcept -> bool {
     return this->data == other.data;
   }
 
   /// Overload to support ordering of JSON Pointer token. Typically for sorting
   /// reasons.
-  auto operator<(const GenericToken<CharT, Traits, Allocator> &other)
-      const noexcept -> bool {
+  auto operator<(const GenericToken<Property> &other) const noexcept -> bool {
     return this->data < other.data;
   }
 

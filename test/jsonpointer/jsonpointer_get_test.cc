@@ -34,7 +34,7 @@ TEST(JSONPointer_get, character_after_property) {
     "foo": { "x": 1 }
   })JSON");
 
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo", 'x'};
+  const sourcemeta::jsontoolkit::Pointer pointer{{"foo", 'x'}};
   const sourcemeta::jsontoolkit::JSON &result{
       sourcemeta::jsontoolkit::get(document, pointer)};
   EXPECT_TRUE(result.is_integer());
@@ -106,7 +106,7 @@ TEST(JSONPointer_get, const_foo_0_bar_1) {
     ]
   })JSON");
 
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo", 0, "bar", 1};
+  const sourcemeta::jsontoolkit::Pointer pointer{{"foo", 0, "bar", 1}};
   const sourcemeta::jsontoolkit::JSON &result{
       sourcemeta::jsontoolkit::get(document, pointer)};
   EXPECT_TRUE(result.is_integer());
@@ -122,7 +122,7 @@ TEST(JSONPointer_get, foo_0_bar_1) {
     ]
   })JSON");
 
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo", 0, "bar", 1};
+  const sourcemeta::jsontoolkit::Pointer pointer{{"foo", 0, "bar", 1}};
   sourcemeta::jsontoolkit::JSON &result{
       sourcemeta::jsontoolkit::get(document, pointer)};
   EXPECT_TRUE(result.is_integer());
@@ -265,7 +265,7 @@ TEST(JSONPointer_get, rfc6901_3) {
   })JSON");
 
   // Pointer: "/foo/0"
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo", 0};
+  const sourcemeta::jsontoolkit::Pointer pointer{{"foo", 0}};
   const sourcemeta::jsontoolkit::JSON &result{
       sourcemeta::jsontoolkit::get(document, pointer)};
   EXPECT_TRUE(result.is_string());

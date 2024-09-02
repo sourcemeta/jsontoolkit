@@ -1,3 +1,4 @@
+#include "sourcemeta/jsontoolkit/jsonpointer_subpointer_walker.h"
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
@@ -16,7 +17,7 @@ static auto find_nearest_bases(const std::map<sourcemeta::jsontoolkit::Pointer,
                                const std::optional<std::string> &default_base)
     -> std::pair<std::vector<std::string>, sourcemeta::jsontoolkit::Pointer> {
   for (const auto &subpointer :
-       sourcemeta::jsontoolkit::SubPointerWalker{pointer}) {
+       sourcemeta::jsontoolkit::GenericSubPointerWalker<std::string>{pointer}) {
     if (bases.contains(subpointer)) {
       return {bases.at(subpointer), subpointer};
     }
@@ -36,7 +37,7 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
   std::vector<std::pair<std::string, sourcemeta::jsontoolkit::Pointer>> result;
 
   for (const auto &subpointer :
-       sourcemeta::jsontoolkit::SubPointerWalker{pointer}) {
+       sourcemeta::jsontoolkit::GenericSubPointerWalker<std::string>{pointer}) {
     if (bases.contains(subpointer)) {
       for (const auto &base : bases.at(subpointer)) {
         result.push_back({base, subpointer});
@@ -341,7 +342,8 @@ auto sourcemeta::jsontoolkit::frame(
   }
 
   // Pre-compute every possible pointer to the schema
-  for (const auto &pointer : sourcemeta::jsontoolkit::PointerWalker{schema}) {
+  for (const auto &pointer :
+       sourcemeta::jsontoolkit::GenericPointerWalker<std::string>{schema}) {
     const auto dialects{
         find_nearest_bases(base_dialects, pointer, root_dialect)};
     assert(dialects.first.size() == 1);

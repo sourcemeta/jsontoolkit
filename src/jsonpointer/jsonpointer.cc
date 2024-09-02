@@ -1,3 +1,4 @@
+#include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 
 #include "grammar.h"
@@ -13,16 +14,13 @@
 #include <utility>     // std::move
 
 namespace {
-template <template <typename T> typename Allocator, typename V>
+template <typename V>
 auto traverse(V &document,
               typename sourcemeta::jsontoolkit::GenericPointer<
-                  typename V::Char, typename V::CharTraits,
-                  Allocator>::const_iterator begin,
+                  std::string>::const_iterator begin,
               typename sourcemeta::jsontoolkit::GenericPointer<
-                  typename V::Char, typename V::CharTraits,
-                  Allocator>::const_iterator end) -> V & {
-  using Pointer = sourcemeta::jsontoolkit::GenericPointer<
-      typename V::Char, typename V::CharTraits, Allocator>;
+                  std::string>::const_iterator end) -> V & {
+  using Pointer = sourcemeta::jsontoolkit::GenericPointer<typename V::Char>;
   // Make sure types match
   static_assert(
       std::is_same_v<typename Pointer::Value, std::remove_const_t<V>>);
@@ -64,13 +62,12 @@ auto traverse(V &document,
 namespace sourcemeta::jsontoolkit {
 
 auto get(const JSON &document, const Pointer &pointer) -> const JSON & {
-  return traverse<std::allocator, const JSON>(document, std::cbegin(pointer),
-                                              std::cend(pointer));
+  return traverse<const JSON>(document, std::cbegin(pointer),
+                              std::cend(pointer));
 }
 
 auto get(JSON &document, const Pointer &pointer) -> JSON & {
-  return traverse<std::allocator, JSON>(document, std::cbegin(pointer),
-                                        std::cend(pointer));
+  return traverse<JSON>(document, std::cbegin(pointer), std::cend(pointer));
 }
 
 auto set(JSON &document, const Pointer &pointer, const JSON &value) -> void {
@@ -79,8 +76,8 @@ auto set(JSON &document, const Pointer &pointer, const JSON &value) -> void {
     return;
   }
 
-  JSON &current{traverse<std::allocator, JSON>(document, std::cbegin(pointer),
-                                               std::prev(std::cend(pointer)))};
+  JSON &current{traverse<JSON>(document, std::cbegin(pointer),
+                               std::prev(std::cend(pointer)))};
   const auto last{pointer.back()};
   // Handle the hyphen as a last constant
   // If the currently referenced value is a JSON array, the reference
@@ -102,8 +99,8 @@ auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void {
     return;
   }
 
-  JSON &current{traverse<std::allocator, JSON>(document, std::cbegin(pointer),
-                                               std::prev(std::cend(pointer)))};
+  JSON &current{traverse<JSON>(document, std::cbegin(pointer),
+                               std::prev(std::cend(pointer)))};
   const auto last{pointer.back()};
   // Handle the hyphen as a last constant
   // If the currently referenced value is a JSON array, the reference
@@ -122,7 +119,7 @@ auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void {
 auto to_pointer(const JSON &document) -> Pointer {
   assert(document.is_string());
   auto stream{document.to_stringstream()};
-  return parse_pointer<JSON::Char, JSON::CharTraits, std::allocator>(stream);
+  return parse_pointer<std::string>(stream);
 }
 
 auto to_pointer(const std::basic_string<JSON::Char, JSON::CharTraits,
@@ -140,8 +137,7 @@ auto to_pointer(const std::basic_string<JSON::Char, JSON::CharTraits,
 auto stringify(const Pointer &pointer,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
-  stringify<JSON::Char, JSON::CharTraits, std::allocator>(pointer, stream,
-                                                          false);
+  stringify(pointer, stream, false);
 }
 
 auto to_string(const Pointer &pointer)
@@ -158,8 +154,7 @@ auto to_uri(const Pointer &pointer) -> URI {
   std::basic_ostringstream<JSON::Char, JSON::CharTraits,
                            std::allocator<JSON::Char>>
       result;
-  stringify<JSON::Char, JSON::CharTraits, std::allocator>(pointer, result,
-                                                          true);
+  stringify(pointer, result, true);
   return URI::from_fragment(result.str());
 }
 

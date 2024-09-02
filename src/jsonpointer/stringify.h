@@ -3,6 +3,7 @@
 
 #include "grammar.h"
 
+#include <sourcemeta/jsontoolkit/json_value.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_pointer.h>
 #include <sourcemeta/jsontoolkit/uri.h>
 
@@ -11,9 +12,8 @@
 #include <string>  // std::to_string, std::basic_string
 
 namespace {
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-static auto write_character(std::basic_ostream<CharT, Traits> &stream,
+template <typename CharT>
+static auto write_character(std::basic_ostream<CharT> &stream,
                             const CharT character,
                             const bool perform_uri_escaping) -> void {
   // The dollar sign does not need to be encoded in URI fragments
@@ -21,8 +21,7 @@ static auto write_character(std::basic_ostream<CharT, Traits> &stream,
   if (perform_uri_escaping && character != '$') {
     // TODO: Implement a URI function capable of efficiently escaping a single
     // character to avoid this expensive ugliness
-    std::basic_istringstream<CharT, Traits, Allocator<CharT>> input{
-        std::basic_string<CharT, Traits, Allocator<CharT>>{character}};
+    std::basic_istringstream<CharT> input{std::basic_string<CharT>{character}};
     sourcemeta::jsontoolkit::URI::escape(input, stream);
   } else {
     stream.put(character);
@@ -32,17 +31,16 @@ static auto write_character(std::basic_ostream<CharT, Traits> &stream,
 
 namespace sourcemeta::jsontoolkit {
 
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
-               std::basic_ostream<CharT, Traits> &stream,
+template <typename Property>
+auto stringify(const GenericPointer<Property> &pointer,
+               std::basic_ostream<JSON::Char> &stream,
                const bool perform_uri_escaping) -> void {
   for (const auto &token : pointer) {
     // A JSON Pointer is a Unicode string (see [RFC4627], Section 3)
     // containing a sequence of zero or more reference tokens, each prefixed
     // by a '/' (%x2F) character.
     // See https://www.rfc-editor.org/rfc/rfc6901#section-3
-    stream.put(internal::token_pointer_slash<CharT>);
+    stream.put(internal::token_pointer_slash<JSON::Char>);
     if (token.is_property()) {
       for (const auto &character : token.to_property()) {
         switch (character) {
@@ -51,38 +49,37 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
           // needs to be encoded as '~1' when these characters appear in a
           // reference token.
           // See https://www.rfc-editor.org/rfc/rfc6901#section-3
-          case internal::token_pointer_slash<CharT>:
-            stream.put(internal::token_pointer_tilde<CharT>);
-            stream.put(internal::token_pointer_one<CharT>);
+          case internal::token_pointer_slash<JSON::Char>:
+            stream.put(internal::token_pointer_tilde<JSON::Char>);
+            stream.put(internal::token_pointer_one<JSON::Char>);
             break;
-          case internal::token_pointer_tilde<CharT>:
-            stream.put(internal::token_pointer_tilde<CharT>);
-            stream.put(internal::token_pointer_zero<CharT>);
+          case internal::token_pointer_tilde<JSON::Char>:
+            stream.put(internal::token_pointer_tilde<JSON::Char>);
+            stream.put(internal::token_pointer_zero<JSON::Char>);
             break;
 
           // All instances of quotation mark '"' (%x22), reverse solidus '\'
           // (%x5C), and control (%x00-1F) characters MUST be escaped. See
           // https://www.rfc-editor.org/rfc/rfc6901#section-5
-          case internal::token_pointer_quote<CharT>:
+          case internal::token_pointer_quote<JSON::Char>:
             if (!perform_uri_escaping) {
-              write_character<CharT, Traits, Allocator>(
-                  stream, internal::token_pointer_reverse_solidus<CharT>,
+              write_character<JSON::Char>(
+                  stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                   perform_uri_escaping);
             }
 
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_quote<CharT>,
-                perform_uri_escaping);
+            write_character(stream, internal::token_pointer_quote<JSON::Char>,
+                            perform_uri_escaping);
             break;
-          case internal::token_pointer_reverse_solidus<CharT>:
+          case internal::token_pointer_reverse_solidus<JSON::Char>:
             if (!perform_uri_escaping) {
-              write_character<CharT, Traits, Allocator>(
-                  stream, internal::token_pointer_reverse_solidus<CharT>,
+              write_character<JSON::Char>(
+                  stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                   perform_uri_escaping);
             }
 
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
             break;
 
@@ -91,10 +88,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
 
           // Null
           case '\u0000':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
-                perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            write_character(stream,
+                            internal::token_pointer_reverse_solidus<JSON::Char>,
+                            perform_uri_escaping);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('0');
@@ -102,10 +99,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Start of heading
           case '\u0001':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('0');
@@ -113,10 +110,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Start of text
           case '\u0002':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('0');
@@ -124,10 +121,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // End of text
           case '\u0003':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('0');
@@ -135,10 +132,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // End of transmission
           case '\u0004':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('0');
@@ -146,10 +143,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Enquiry
           case '\u0005':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('0');
@@ -157,10 +154,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Acknowledge
           case '\u0006':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('0');
@@ -168,10 +165,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Bell
           case '\u0007':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('0');
@@ -179,31 +176,31 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Backspace
           case '\u0008':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_backspace<CharT>);
+            stream.put(internal::token_pointer_escape_backspace<JSON::Char>);
             break;
           // Horizontal tab
           case '\u0009':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_tab<CharT>);
+            stream.put(internal::token_pointer_escape_tab<JSON::Char>);
             break;
           // Line feed
           case '\u000A':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_line_feed<CharT>);
+            stream.put(internal::token_pointer_escape_line_feed<JSON::Char>);
             break;
           // Vertical tab
           case '\u000B':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('0');
@@ -211,24 +208,25 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Form feed
           case '\u000C':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_form_feed<CharT>);
+            stream.put(internal::token_pointer_escape_form_feed<JSON::Char>);
             break;
           // Carriage return
           case '\u000D':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_carriage_return<CharT>);
+            stream.put(
+                internal::token_pointer_escape_carriage_return<JSON::Char>);
             break;
           // Shift out
           case '\u000E':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('0');
@@ -236,10 +234,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Shift in
           case '\u000F':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('0');
@@ -247,10 +245,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Data link escape
           case '\u0010':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -258,10 +256,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Device control 1
           case '\u0011':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -269,10 +267,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Device control 2
           case '\u0012':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -280,10 +278,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Device control 3
           case '\u0013':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -291,10 +289,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Device control 4
           case '\u0014':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -302,10 +300,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Negative acknowledge
           case '\u0015':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -313,10 +311,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Synchronous idle
           case '\u0016':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -324,10 +322,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // End of transmission block
           case '\u0017':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -335,10 +333,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Cancel
           case '\u0018':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -346,10 +344,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // End of medium
           case '\u0019':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -357,10 +355,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Substitute
           case '\u001A':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -368,10 +366,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Escape
           case '\u001B':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -379,10 +377,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // File separator
           case '\u001C':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -390,10 +388,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Group separator
           case '\u001D':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -401,10 +399,10 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Record separator
           case '\u001E':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
@@ -412,25 +410,25 @@ auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
             break;
           // Unit separator
           case '\u001F':
-            write_character<CharT, Traits, Allocator>(
-                stream, internal::token_pointer_reverse_solidus<CharT>,
+            write_character<JSON::Char>(
+                stream, internal::token_pointer_reverse_solidus<JSON::Char>,
                 perform_uri_escaping);
-            stream.put(internal::token_pointer_escape_unicode<CharT>);
+            stream.put(internal::token_pointer_escape_unicode<JSON::Char>);
             stream.put('0');
             stream.put('0');
             stream.put('1');
             stream.put('F');
             break;
           default:
-            write_character<CharT, Traits, Allocator>(stream, character,
-                                                      perform_uri_escaping);
+            write_character<JSON::Char>(stream, character,
+                                        perform_uri_escaping);
         }
       }
     } else {
       const auto index{std::to_string(token.to_index())};
       stream.write(
           index.c_str(),
-          static_cast<typename std::basic_ostream<CharT, Traits>::int_type>(
+          static_cast<typename std::basic_ostream<JSON::Char>::int_type>(
               index.size()));
     }
   }
