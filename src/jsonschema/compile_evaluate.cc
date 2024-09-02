@@ -921,6 +921,27 @@ auto evaluate_step(
     context.pop(annotation);
     SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerAnnotationEmit");
     return result;
+  } else if (std::holds_alternative<SchemaCompilerAnnotationWhenArraySizeEqual>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerAnnotationWhenArraySizeEqual");
+    const auto &annotation{
+        std::get<SchemaCompilerAnnotationWhenArraySizeEqual>(step)};
+    context.push(annotation);
+    const auto &target{context.resolve_target(instance)};
+    EVALUATE_IMPLICIT_PRECONDITION(
+        "SchemaCompilerAnnotationWhenArraySizeEqual", annotation,
+        target.is_array() && target.size() == annotation.value.first);
+    // Annotations never fail
+    result = true;
+    const auto &current_instance_location{context.instance_location()};
+    const auto value{
+        context.annotate(current_instance_location, annotation.value.second)};
+    CALLBACK_ANNOTATION(value, annotation, current_instance_location);
+    context.pop(annotation);
+    SOURCEMETA_TRACE_END(trace_id,
+                         "SchemaCompilerAnnotationWhenArraySizeEqual");
+    return result;
   } else if (std::holds_alternative<SchemaCompilerAnnotationToParent>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAnnotationToParent");
     const auto &annotation{std::get<SchemaCompilerAnnotationToParent>(step)};

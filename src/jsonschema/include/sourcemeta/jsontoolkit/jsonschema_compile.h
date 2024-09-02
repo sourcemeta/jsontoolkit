@@ -97,6 +97,11 @@ using SchemaCompilerValueStringMap =
     std::map<SchemaCompilerValueString, SchemaCompilerValueStrings>;
 
 /// @ingroup jsonschema
+/// Represents a compiler step JSON value accompanied with an index
+using SchemaCompilerValueIndexedJSON =
+    std::pair<SchemaCompilerValueUnsignedInteger, JSON>;
+
+/// @ingroup jsonschema
 /// Represents a compiler assertion step that always fails
 struct SchemaCompilerAssertionFail;
 
@@ -206,6 +211,11 @@ struct SchemaCompilerAssertionSizeEqual;
 /// @ingroup jsonschema
 /// Represents a compiler step that emits an annotation
 struct SchemaCompilerAnnotationEmit;
+
+/// @ingroup jsonschema
+/// Represents a compiler step that emits an annotation when the size of the
+/// array instance is equal to the given size
+struct SchemaCompilerAnnotationWhenArraySizeEqual;
 
 /// @ingroup jsonschema
 /// Represents a compiler step that emits an annotation to the parent
@@ -345,9 +355,9 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionGreater, SchemaCompilerAssertionLess,
     SchemaCompilerAssertionUnique, SchemaCompilerAssertionDivisible,
     SchemaCompilerAssertionStringType, SchemaCompilerAssertionSizeEqual,
-    SchemaCompilerAnnotationEmit, SchemaCompilerAnnotationToParent,
-    SchemaCompilerAnnotationBasenameToParent, SchemaCompilerLogicalOr,
-    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerAnnotationEmit, SchemaCompilerAnnotationWhenArraySizeEqual,
+    SchemaCompilerAnnotationToParent, SchemaCompilerAnnotationBasenameToParent,
+    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalTryMark, SchemaCompilerLogicalNot,
     SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
     SchemaCompilerLogicalWhenAdjacentUnmarked,
@@ -412,6 +422,8 @@ DEFINE_STEP_WITH_VALUE(Assertion, Divisible, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, StringType, SchemaCompilerValueStringType)
 DEFINE_STEP_WITH_VALUE(Assertion, SizeEqual, SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_WITH_VALUE(Annotation, Emit, SchemaCompilerValueJSON)
+DEFINE_STEP_WITH_VALUE(Annotation, WhenArraySizeEqual,
+                       SchemaCompilerValueIndexedJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, ToParent, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, BasenameToParent, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueBoolean)

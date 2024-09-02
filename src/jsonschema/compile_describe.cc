@@ -279,15 +279,6 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    if (this->keyword == "prefixItems" && this->annotation.is_boolean() &&
-        this->annotation.to_boolean()) {
-      assert(this->target.is_array());
-      std::ostringstream message;
-      message << "Every item of the array value validated against the given "
-                 "positional subschemas";
-      return message.str();
-    }
-
     if ((this->keyword == "prefixItems" || this->keyword == "items") &&
         this->annotation.is_integer()) {
       assert(this->target.is_array());
@@ -475,6 +466,29 @@ struct DescribeVisitor {
             << " was collected as the annotation ";
     stringify(this->annotation, message);
     return message.str();
+  }
+
+  auto operator()(const SchemaCompilerAnnotationWhenArraySizeEqual &) const
+      -> std::string {
+    if (this->keyword == "items" && this->annotation.is_boolean() &&
+        this->annotation.to_boolean()) {
+      assert(this->target.is_array());
+      std::ostringstream message;
+      message << "At least one item of the array value successfully validated "
+                 "against the given subschema";
+      return message.str();
+    }
+
+    if (this->keyword == "prefixItems" && this->annotation.is_boolean() &&
+        this->annotation.to_boolean()) {
+      assert(this->target.is_array());
+      std::ostringstream message;
+      message << "Every item of the array value validated against the given "
+                 "positional subschemas";
+      return message.str();
+    }
+
+    return unknown();
   }
 
   auto

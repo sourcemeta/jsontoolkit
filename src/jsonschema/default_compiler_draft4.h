@@ -629,11 +629,10 @@ auto compiler_draft4_applicator_items_array(
     // The first entry
     if (cursor == items_size) {
       if (annotate) {
-        subchildren.push_back(make<SchemaCompilerAnnotationEmit>(
-            true, context, schema_context, relative_dynamic_context, JSON{true},
-            {make<SchemaCompilerAssertionSizeEqual>(
-                false, context, schema_context, relative_dynamic_context,
-                SchemaCompilerValueUnsignedInteger{cursor}, {})}));
+        subchildren.push_back(make<SchemaCompilerAnnotationWhenArraySizeEqual>(
+            true, context, schema_context, relative_dynamic_context,
+            SchemaCompilerValueIndexedJSON{cursor, JSON{true}},
+            SchemaCompilerTemplate{}));
         subchildren.push_back(make<SchemaCompilerAnnotationEmit>(
             true, context, schema_context, relative_dynamic_context,
             JSON{cursor - 1},
