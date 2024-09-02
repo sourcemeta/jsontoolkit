@@ -3007,12 +3007,21 @@ TEST(JSONSchema_compile_draft4, dependencies_8) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"qux\": 2 }")};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/dependencies", "#/dependencies", "");
-  EVALUATE_TRACE_POST_FAILURE(0, LogicalWhenType, "/dependencies",
+  EVALUATE_TRACE_PRE(1, AssertionDefines, "/dependencies/qux/required",
+                     "#/dependencies/qux/required", "");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionDefines, "/dependencies/qux/required",
+                              "#/dependencies/qux/required", "");
+  EVALUATE_TRACE_POST_FAILURE(1, LogicalWhenType, "/dependencies",
                               "#/dependencies", "");
+
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
+      "The object value was expected to define the property \"extra\"");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
       "Because the object value defined the properties \"foo\", and \"qux\", "
       "it was also expected to define the properties \"bar\", and \"baz\", and "
       "it was also expected to successfully validate against the corresponding "

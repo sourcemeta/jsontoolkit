@@ -370,9 +370,6 @@ auto evaluate_step(
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionDefines");
     const auto &assertion{std::get<SchemaCompilerAssertionDefines>(step)};
     context.push(assertion);
-    // TODO: Get rid of this
-    EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionDefines", assertion,
-                             instance);
     const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionDefines", assertion,
                                    target.is_object());
@@ -383,9 +380,6 @@ auto evaluate_step(
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionDefinesAll");
     const auto &assertion{std::get<SchemaCompilerAssertionDefinesAll>(step)};
     context.push(assertion);
-    // TODO: Get rid of this
-    EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionDefinesAll", assertion,
-                             instance);
     const auto &target{context.resolve_target<JSON>(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionDefinesAll",
                                    assertion, target.is_object());
@@ -402,6 +396,39 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerAssertionDefinesAll", assertion);
+  } else if (std::holds_alternative<
+                 SchemaCompilerAssertionPropertyDependencies>(step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerAssertionPropertyDependencies");
+    const auto &assertion{
+        std::get<SchemaCompilerAssertionPropertyDependencies>(step)};
+    context.push(assertion);
+    const auto &target{context.resolve_target<JSON>(instance)};
+    EVALUATE_IMPLICIT_PRECONDITION(
+        "SchemaCompilerAssertionPropertyDependencies", assertion,
+        target.is_object());
+    CALLBACK_PRE(assertion, context.instance_location());
+    // Otherwise we are we even emitting this instruction?
+    assert(!assertion.value.empty());
+
+    result = true;
+    for (const auto &[property, dependencies] : assertion.value) {
+      if (!target.defines(property)) {
+        continue;
+      }
+
+      assert(!dependencies.empty());
+      for (const auto &dependency : dependencies) {
+        if (!target.defines(dependency)) {
+          result = false;
+          // For efficiently breaking from the outer loop too
+          goto evaluate_assertion_property_dependencies_end;
+        }
+      }
+    }
+
+  evaluate_assertion_property_dependencies_end:
+    CALLBACK_POST("SchemaCompilerAssertionPropertyDependencies", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionType>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionType");
     const auto &assertion{std::get<SchemaCompilerAssertionType>(step)};

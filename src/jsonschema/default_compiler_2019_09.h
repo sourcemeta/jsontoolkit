@@ -48,7 +48,7 @@ auto compiler_2019_09_validation_dependentrequired(
     return {};
   }
 
-  SchemaCompilerTemplate children;
+  SchemaCompilerValueStringMap dependencies;
   for (const auto &entry :
        schema_context.schema.at(dynamic_context.keyword).as_object()) {
     if (!entry.second.is_array()) {
@@ -61,28 +61,18 @@ auto compiler_2019_09_validation_dependentrequired(
       properties.emplace(property.to_string());
     }
 
-    if (properties.empty()) {
-      continue;
-    } else if (properties.size() == 1) {
-      children.push_back(make<SchemaCompilerAssertionDefines>(
-          false, context, schema_context, relative_dynamic_context,
-          SchemaCompilerValueString{*(properties.cbegin())},
-          {make<SchemaCompilerAssertionDefines>(
-              true, context, schema_context, relative_dynamic_context,
-              SchemaCompilerValueString{entry.first}, {})}));
-    } else {
-      children.push_back(make<SchemaCompilerAssertionDefinesAll>(
-          false, context, schema_context, relative_dynamic_context,
-          std::move(properties),
-          {make<SchemaCompilerAssertionDefines>(
-              true, context, schema_context, relative_dynamic_context,
-              SchemaCompilerValueString{entry.first}, {})}));
+    if (!properties.empty()) {
+      dependencies.emplace(entry.first, std::move(properties));
     }
   }
 
-  return {make<SchemaCompilerLogicalWhenType>(
-      true, context, schema_context, dynamic_context, JSON::Type::Object,
-      std::move(children), SchemaCompilerTemplate{})};
+  if (dependencies.empty()) {
+    return {};
+  }
+
+  return {make<SchemaCompilerAssertionPropertyDependencies>(
+      true, context, schema_context, dynamic_context, std::move(dependencies),
+      SchemaCompilerTemplate{})};
 }
 
 auto compiler_2019_09_core_annotation(

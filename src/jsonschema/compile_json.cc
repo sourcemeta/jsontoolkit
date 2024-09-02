@@ -90,6 +90,20 @@ auto value_to_json(const T &value) -> sourcemeta::jsontoolkit::JSON {
 
     result.assign("value", std::move(values));
     return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueStringMap, T>) {
+    result.assign("type", JSON{"string-map"});
+    JSON map{JSON::make_object()};
+    for (const auto &[string, strings] : value) {
+      JSON dependencies{JSON::make_array()};
+      for (const auto &substring : strings) {
+        dependencies.push_back(JSON{substring});
+      }
+
+      map.assign(string, std::move(dependencies));
+    }
+
+    result.assign("map", std::move(map));
+    return result;
   } else if constexpr (std::is_same_v<
                            SchemaCompilerValueItemsAnnotationKeywords, T>) {
     result.assign("type", JSON{"items-annotation-keywords"});
@@ -176,6 +190,8 @@ struct StepVisitor {
   HANDLE_STEP("assertion", "fail", SchemaCompilerAssertionFail)
   HANDLE_STEP("assertion", "defines", SchemaCompilerAssertionDefines)
   HANDLE_STEP("assertion", "defines-all", SchemaCompilerAssertionDefinesAll)
+  HANDLE_STEP("assertion", "property-dependencies",
+              SchemaCompilerAssertionPropertyDependencies)
   HANDLE_STEP("assertion", "type", SchemaCompilerAssertionType)
   HANDLE_STEP("assertion", "type-any", SchemaCompilerAssertionTypeAny)
   HANDLE_STEP("assertion", "type-strict", SchemaCompilerAssertionTypeStrict)
