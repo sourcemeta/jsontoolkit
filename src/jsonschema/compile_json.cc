@@ -102,26 +102,34 @@ auto value_to_json(const T &value) -> sourcemeta::jsontoolkit::JSON {
       map.assign(string, std::move(dependencies));
     }
 
-    result.assign("map", std::move(map));
+    result.assign("value", std::move(map));
     return result;
   } else if constexpr (std::is_same_v<
                            SchemaCompilerValueItemsAnnotationKeywords, T>) {
     result.assign("type", JSON{"items-annotation-keywords"});
-    JSON values{JSON::make_object()};
-    result.assign("index", JSON{value.index});
+    JSON data{JSON::make_object()};
+    data.assign("index", JSON{value.index});
 
     JSON mask{JSON::make_array()};
     for (const auto &keyword : value.mask) {
       mask.push_back(JSON{keyword});
     }
-    result.assign("mask", std::move(mask));
+    data.assign("mask", std::move(mask));
 
     JSON filter{JSON::make_array()};
     for (const auto &keyword : value.filter) {
       filter.push_back(JSON{keyword});
     }
-    result.assign("filter", std::move(filter));
+    data.assign("filter", std::move(filter));
 
+    result.assign("value", std::move(data));
+    return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueIndexedJSON, T>) {
+    result.assign("type", JSON{"indexed-json"});
+    JSON data{JSON::make_object()};
+    data.assign("index", JSON{value.first});
+    data.assign("value", value.second);
+    result.assign("value", std::move(data));
     return result;
   } else if constexpr (std::is_same_v<SchemaCompilerValueStringType, T>) {
     result.assign("type", JSON{"string-type"});
@@ -211,6 +219,8 @@ struct StepVisitor {
   HANDLE_STEP("assertion", "equals-any", SchemaCompilerAssertionEqualsAny)
   HANDLE_STEP("assertion", "size-equal", SchemaCompilerAssertionSizeEqual)
   HANDLE_STEP("annotation", "emit", SchemaCompilerAnnotationEmit)
+  HANDLE_STEP("annotation", "when-array-size-equal",
+              SchemaCompilerAnnotationWhenArraySizeEqual)
   HANDLE_STEP("annotation", "to-parent", SchemaCompilerAnnotationToParent)
   HANDLE_STEP("annotation", "basename-to-parent",
               SchemaCompilerAnnotationBasenameToParent)
