@@ -135,6 +135,14 @@ auto compiler_draft6_validation_exclusivemaximum(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_number());
+
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "integer" &&
+      schema_context.schema.at("type").to_string() != "number") {
+    return {};
+  }
+
   return {make<SchemaCompilerAssertionLess>(
       true, context, schema_context, dynamic_context,
       JSON{schema_context.schema.at(dynamic_context.keyword)},
@@ -147,6 +155,14 @@ auto compiler_draft6_validation_exclusiveminimum(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_number());
+
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "integer" &&
+      schema_context.schema.at("type").to_string() != "number") {
+    return {};
+  }
+
   return {make<SchemaCompilerAssertionGreater>(
       true, context, schema_context, dynamic_context,
       JSON{schema_context.schema.at(dynamic_context.keyword)},
@@ -158,6 +174,12 @@ auto compiler_draft6_applicator_contains(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "array") {
+    return {};
+  }
+
   return {make<SchemaCompilerLoopContains>(
       true, context, schema_context, dynamic_context,
       SchemaCompilerValueRange{1, std::nullopt, false},
@@ -171,6 +193,12 @@ auto compiler_draft6_validation_propertynames(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "string") {
+    return {};
+  }
+
   return {make<SchemaCompilerLoopKeys>(
       true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
       compile(context, schema_context, relative_dynamic_context, empty_pointer,

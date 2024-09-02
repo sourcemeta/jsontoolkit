@@ -16,8 +16,14 @@ auto compiler_2019_09_applicator_dependentschemas(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_object());
-  SchemaCompilerTemplate children;
 
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "object") {
+    return {};
+  }
+
+  SchemaCompilerTemplate children;
   for (const auto &entry :
        schema_context.schema.at(dynamic_context.keyword).as_object()) {
     if (!is_schema(entry.second)) {
@@ -45,6 +51,12 @@ auto compiler_2019_09_validation_dependentrequired(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   if (!schema_context.schema.at(dynamic_context.keyword).is_object()) {
+    return {};
+  }
+
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "object") {
     return {};
   }
 
@@ -90,6 +102,11 @@ auto compiler_2019_09_applicator_contains_conditional_annotate(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context,
     const bool annotate) -> SchemaCompilerTemplate {
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "array") {
+    return {};
+  }
 
   std::size_t minimum{1};
   if (schema_context.schema.defines("minContains")) {
@@ -192,6 +209,12 @@ auto compiler_2019_09_applicator_unevaluateditems(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "array") {
+    return {};
+  }
+
   SchemaCompilerTemplate children{compile(context, schema_context,
                                           relative_dynamic_context,
                                           empty_pointer, empty_pointer)};
@@ -227,6 +250,12 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "object") {
+    return {};
+  }
+
   SchemaCompilerValueStrings dependencies{"unevaluatedProperties"};
 
   if (schema_context.vocabularies.contains(
