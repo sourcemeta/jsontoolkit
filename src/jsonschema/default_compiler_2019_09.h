@@ -207,70 +207,49 @@ auto compiler_2019_09_applicator_unevaluateditems(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
-  SchemaCompilerValueStrings dependencies{"unevaluatedItems"};
-
-  if (schema_context.vocabularies.contains(
-          "https://json-schema.org/draft/2019-09/vocab/applicator")) {
-    dependencies.emplace("items");
-    dependencies.emplace("additionalItems");
-  }
-
-  if (schema_context.vocabularies.contains(
-          "https://json-schema.org/draft/2020-12/vocab/applicator")) {
-    dependencies.emplace("prefixItems");
-    dependencies.emplace("items");
-    dependencies.emplace("contains");
-  }
-
-  SchemaCompilerTemplate children;
-
-  SchemaCompilerTemplate loop_children{compile(context, schema_context,
-                                               relative_dynamic_context,
-                                               empty_pointer, empty_pointer)};
-  loop_children.push_back(make<SchemaCompilerAnnotationToParent>(
+  SchemaCompilerTemplate children{compile(context, schema_context,
+                                          relative_dynamic_context,
+                                          empty_pointer, empty_pointer)};
+  children.push_back(make<SchemaCompilerAnnotationToParent>(
       true, context, schema_context, relative_dynamic_context, JSON{true}, {},
       SchemaCompilerTargetType::Instance));
 
   if (schema_context.vocabularies.contains(
-          "https://json-schema.org/draft/2020-12/vocab/applicator")) {
+          "https://json-schema.org/draft/2019-09/vocab/applicator")) {
+    SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
+        false, context, schema_context, relative_dynamic_context, JSON{true},
+        {}, SchemaCompilerTargetType::Annotations,
+        {"items", "additionalItems", "unevaluatedItems"})};
+    return {make<SchemaCompilerLoopItemsFromAnnotationIndex>(
+        true, context, schema_context, dynamic_context,
+        SchemaCompilerValueString{"items"}, std::move(children),
+        std::move(condition))};
+  } else if (schema_context.vocabularies.contains(
+                 "https://json-schema.org/draft/2020-12/vocab/applicator")) {
     SchemaCompilerTemplate subcondition{
         make<SchemaCompilerAssertionNoAnnotation>(
             false, context, schema_context, relative_dynamic_context,
             SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
                                  empty_pointer},
             {}, SchemaCompilerTargetType::ParentAnnotations, {"contains"})};
-    children.push_back(make<SchemaCompilerLogicalAnd>(
+    SchemaCompilerTemplate subchildren{make<SchemaCompilerLogicalAnd>(
         false, context, schema_context, relative_dynamic_context,
-        SchemaCompilerValueNone{}, std::move(loop_children),
-        std::move(subcondition)));
-  } else {
-    children = std::move(loop_children);
-  }
+        SchemaCompilerValueNone{}, std::move(children),
+        std::move(subcondition))};
 
-  if (schema_context.vocabularies.contains(
-          "https://json-schema.org/draft/2019-09/vocab/applicator") &&
-      dependencies.contains("items")) {
     SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
         false, context, schema_context, relative_dynamic_context, JSON{true},
-        {}, SchemaCompilerTargetType::Annotations, std::move(dependencies))};
+        {}, SchemaCompilerTargetType::Annotations,
+        {"prefixItems", "items", "contains", "unevaluatedItems"})};
     return {make<SchemaCompilerLoopItemsFromAnnotationIndex>(
         true, context, schema_context, dynamic_context,
-        SchemaCompilerValueString{"items"}, std::move(children),
-        std::move(condition))};
-  } else if (schema_context.vocabularies.contains(
-                 "https://json-schema.org/draft/2020-12/vocab/applicator") &&
-             dependencies.contains("prefixItems")) {
-    SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
-        false, context, schema_context, relative_dynamic_context, JSON{true},
-        {}, SchemaCompilerTargetType::Annotations, std::move(dependencies))};
-    return {make<SchemaCompilerLoopItemsFromAnnotationIndex>(
-        true, context, schema_context, dynamic_context,
-        SchemaCompilerValueString{"prefixItems"}, std::move(children),
+        SchemaCompilerValueString{"prefixItems"}, std::move(subchildren),
         std::move(condition))};
   } else {
+    // TODO: Introduce a new LoopItemsUnmarked that takes an array of keywords
     SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
         false, context, schema_context, relative_dynamic_context, JSON{true},
-        {}, SchemaCompilerTargetType::Annotations, std::move(dependencies))};
+        {}, SchemaCompilerTargetType::Annotations, {"unevaluatedItems"})};
     return {make<SchemaCompilerLoopItems>(
         true, context, schema_context, dynamic_context,
         SchemaCompilerValueUnsignedInteger{0}, std::move(children),
