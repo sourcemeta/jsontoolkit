@@ -3300,8 +3300,9 @@ TEST(JSONSchema_compile_draft4, minLength_2) {
   const sourcemeta::jsontoolkit::JSON instance{"xx"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minLength", "#/minLength", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeGreater, "/minLength",
+  EVALUATE_TRACE_PRE(0, AssertionStringSizeGreater, "/minLength", "#/minLength",
+                     "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionStringSizeGreater, "/minLength",
                               "#/minLength", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -3326,8 +3327,9 @@ TEST(JSONSchema_compile_draft4, minLength_3) {
   const sourcemeta::jsontoolkit::JSON instance{"x"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minLength", "#/minLength", "");
-  EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeGreater, "/minLength",
+  EVALUATE_TRACE_PRE(0, AssertionStringSizeGreater, "/minLength", "#/minLength",
+                     "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionStringSizeGreater, "/minLength",
                               "#/minLength", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -3369,9 +3371,10 @@ TEST(JSONSchema_compile_draft4, maxLength_2) {
   const sourcemeta::jsontoolkit::JSON instance{"xx"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxLength", "#/maxLength", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeLess, "/maxLength", "#/maxLength",
-                              "");
+  EVALUATE_TRACE_PRE(0, AssertionStringSizeLess, "/maxLength", "#/maxLength",
+                     "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionStringSizeLess, "/maxLength",
+                              "#/maxLength", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -3395,9 +3398,10 @@ TEST(JSONSchema_compile_draft4, maxLength_3) {
   const sourcemeta::jsontoolkit::JSON instance{"xxx"};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxLength", "#/maxLength", "");
-  EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeLess, "/maxLength", "#/maxLength",
-                              "");
+  EVALUATE_TRACE_PRE(0, AssertionStringSizeLess, "/maxLength", "#/maxLength",
+                     "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionStringSizeLess, "/maxLength",
+                              "#/maxLength", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -3439,8 +3443,9 @@ TEST(JSONSchema_compile_draft4, minItems_2) {
       sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minItems", "#/minItems", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeGreater, "/minItems",
+  EVALUATE_TRACE_PRE(0, AssertionArraySizeGreater, "/minItems", "#/minItems",
+                     "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionArraySizeGreater, "/minItems",
                               "#/minItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -3465,8 +3470,9 @@ TEST(JSONSchema_compile_draft4, minItems_3) {
       sourcemeta::jsontoolkit::parse("[ 1 ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minItems", "#/minItems", "");
-  EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeGreater, "/minItems",
+  EVALUATE_TRACE_PRE(0, AssertionArraySizeGreater, "/minItems", "#/minItems",
+                     "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionArraySizeGreater, "/minItems",
                               "#/minItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -3533,9 +3539,9 @@ TEST(JSONSchema_compile_draft4, maxItems_2) {
       sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxItems", "#/maxItems", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeLess, "/maxItems", "#/maxItems",
-                              "");
+  EVALUATE_TRACE_PRE(0, AssertionArraySizeLess, "/maxItems", "#/maxItems", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionArraySizeLess, "/maxItems",
+                              "#/maxItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The array value was expected to contain at "
@@ -3559,9 +3565,9 @@ TEST(JSONSchema_compile_draft4, maxItems_3) {
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxItems", "#/maxItems", "");
-  EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeLess, "/maxItems", "#/maxItems",
-                              "");
+  EVALUATE_TRACE_PRE(0, AssertionArraySizeLess, "/maxItems", "#/maxItems", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionArraySizeLess, "/maxItems",
+                              "#/maxItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The array value was expected to contain at "
@@ -3627,9 +3633,9 @@ TEST(JSONSchema_compile_draft4, minProperties_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minProperties",
+  EVALUATE_TRACE_PRE(0, AssertionObjectSizeGreater, "/minProperties",
                      "#/minProperties", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeGreater, "/minProperties",
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionObjectSizeGreater, "/minProperties",
                               "#/minProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -3655,9 +3661,9 @@ TEST(JSONSchema_compile_draft4, minProperties_3) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeGreater, "/minProperties",
+  EVALUATE_TRACE_PRE(0, AssertionObjectSizeGreater, "/minProperties",
                      "#/minProperties", "");
-  EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeGreater, "/minProperties",
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionObjectSizeGreater, "/minProperties",
                               "#/minProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -3700,9 +3706,9 @@ TEST(JSONSchema_compile_draft4, maxProperties_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxProperties", "#/maxProperties",
-                     "");
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeLess, "/maxProperties",
+  EVALUATE_TRACE_PRE(0, AssertionObjectSizeLess, "/maxProperties",
+                     "#/maxProperties", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionObjectSizeLess, "/maxProperties",
                               "#/maxProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -3728,9 +3734,9 @@ TEST(JSONSchema_compile_draft4, maxProperties_3) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, AssertionSizeLess, "/maxProperties", "#/maxProperties",
-                     "");
-  EVALUATE_TRACE_POST_FAILURE(0, AssertionSizeLess, "/maxProperties",
+  EVALUATE_TRACE_PRE(0, AssertionObjectSizeLess, "/maxProperties",
+                     "#/maxProperties", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionObjectSizeLess, "/maxProperties",
                               "#/maxProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(

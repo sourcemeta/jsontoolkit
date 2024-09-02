@@ -173,10 +173,6 @@ auto encode_step(const std::string_view category, const std::string_view type,
   result.assign("dynamic", JSON{step.dynamic});
   result.assign("report", JSON{step.report});
   result.assign("value", value_to_json(step.value));
-  result.assign("condition", JSON::make_array());
-  for (const auto &substep : step.condition) {
-    result.at("condition").push_back(step_to_json<V>(substep));
-  }
 
   if constexpr (requires { step.children; }) {
     result.assign("children", JSON::make_array());
@@ -206,8 +202,18 @@ struct StepVisitor {
   HANDLE_STEP("assertion", "type-strict-any",
               SchemaCompilerAssertionTypeStrictAny)
   HANDLE_STEP("assertion", "regex", SchemaCompilerAssertionRegex)
-  HANDLE_STEP("assertion", "size-greater", SchemaCompilerAssertionSizeGreater)
-  HANDLE_STEP("assertion", "size-less", SchemaCompilerAssertionSizeLess)
+  HANDLE_STEP("assertion", "string-size-less",
+              SchemaCompilerAssertionStringSizeLess)
+  HANDLE_STEP("assertion", "string-size-greater",
+              SchemaCompilerAssertionStringSizeGreater)
+  HANDLE_STEP("assertion", "array-size-less",
+              SchemaCompilerAssertionArraySizeLess)
+  HANDLE_STEP("assertion", "array-size-greater",
+              SchemaCompilerAssertionArraySizeGreater)
+  HANDLE_STEP("assertion", "object-size-less",
+              SchemaCompilerAssertionObjectSizeLess)
+  HANDLE_STEP("assertion", "object-size-greater",
+              SchemaCompilerAssertionObjectSizeGreater)
   HANDLE_STEP("assertion", "equal", SchemaCompilerAssertionEqual)
   HANDLE_STEP("assertion", "greater-equal", SchemaCompilerAssertionGreaterEqual)
   HANDLE_STEP("assertion", "less-equal", SchemaCompilerAssertionLessEqual)
@@ -289,8 +295,7 @@ auto compiler_template_format_compare(const JSON::String &left,
                    {"location", 7},
                    {"report", 8},
                    {"dynamic", 9},
-                   {"condition", 10},
-                   {"children", 11}};
+                   {"children", 10}};
 
   // We define and control all of these keywords, so if we are missing
   // some here, then we did something wrong?

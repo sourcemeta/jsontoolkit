@@ -28,7 +28,7 @@ auto compile_subschema(
     } else {
       return {make<SchemaCompilerAssertionFail>(true, context, schema_context,
                                                 dynamic_context,
-                                                SchemaCompilerValueNone{}, {})};
+                                                SchemaCompilerValueNone{})};
     }
   }
 
@@ -154,8 +154,7 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
           true, context, nested_schema_context, dynamic_context,
           SchemaCompilerValueUnsignedInteger{label},
           compile(context, nested_schema_context, relative_dynamic_context,
-                  empty_pointer, empty_pointer, entry.first.second),
-          {}));
+                  empty_pointer, empty_pointer, entry.first.second)));
     }
   }
 

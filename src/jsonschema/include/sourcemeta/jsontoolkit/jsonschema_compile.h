@@ -146,16 +146,34 @@ struct SchemaCompilerAssertionTypeStrictAny;
 struct SchemaCompilerAssertionRegex;
 
 /// @ingroup jsonschema
-/// Represents a compiler assertion step that checks a given array, object, or
-/// string has at least a certain number of items, properties, or characters,
-/// respectively
-struct SchemaCompilerAssertionSizeGreater;
+/// Represents a compiler assertion step that checks a given string has less
+/// than a certain number of characters
+struct SchemaCompilerAssertionStringSizeLess;
 
 /// @ingroup jsonschema
-/// Represents a compiler assertion step that checks a given array, object, or
-/// string has less than a certain number of items, properties, or characters,
-/// respectively
-struct SchemaCompilerAssertionSizeLess;
+/// Represents a compiler assertion step that checks a given string has greater
+/// than a certain number of characters
+struct SchemaCompilerAssertionStringSizeGreater;
+
+/// @ingroup jsonschema
+/// Represents a compiler assertion step that checks a given array has less
+/// than a certain number of items
+struct SchemaCompilerAssertionArraySizeLess;
+
+/// @ingroup jsonschema
+/// Represents a compiler assertion step that checks a given array has greater
+/// than a certain number of items
+struct SchemaCompilerAssertionArraySizeGreater;
+
+/// @ingroup jsonschema
+/// Represents a compiler assertion step that checks a given object has less
+/// than a certain number of properties
+struct SchemaCompilerAssertionObjectSizeLess;
+
+/// @ingroup jsonschema
+/// Represents a compiler assertion step that checks a given object has greater
+/// than a certain number of properties
+struct SchemaCompilerAssertionObjectSizeGreater;
 
 /// @ingroup jsonschema
 /// Represents a compiler assertion step that checks the instance equals a given
@@ -348,13 +366,17 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionPropertyDependencies, SchemaCompilerAssertionType,
     SchemaCompilerAssertionTypeAny, SchemaCompilerAssertionTypeStrict,
     SchemaCompilerAssertionTypeStrictAny, SchemaCompilerAssertionRegex,
-    SchemaCompilerAssertionSizeGreater, SchemaCompilerAssertionSizeLess,
-    SchemaCompilerAssertionEqual, SchemaCompilerAssertionEqualsAny,
-    SchemaCompilerAssertionGreaterEqual, SchemaCompilerAssertionLessEqual,
-    SchemaCompilerAssertionGreater, SchemaCompilerAssertionLess,
-    SchemaCompilerAssertionUnique, SchemaCompilerAssertionDivisible,
-    SchemaCompilerAssertionStringType, SchemaCompilerAnnotationEmit,
-    SchemaCompilerAnnotationWhenArraySizeEqual,
+    SchemaCompilerAssertionStringSizeLess,
+    SchemaCompilerAssertionStringSizeGreater,
+    SchemaCompilerAssertionArraySizeLess,
+    SchemaCompilerAssertionArraySizeGreater,
+    SchemaCompilerAssertionObjectSizeLess,
+    SchemaCompilerAssertionObjectSizeGreater, SchemaCompilerAssertionEqual,
+    SchemaCompilerAssertionEqualsAny, SchemaCompilerAssertionGreaterEqual,
+    SchemaCompilerAssertionLessEqual, SchemaCompilerAssertionGreater,
+    SchemaCompilerAssertionLess, SchemaCompilerAssertionUnique,
+    SchemaCompilerAssertionDivisible, SchemaCompilerAssertionStringType,
+    SchemaCompilerAnnotationEmit, SchemaCompilerAnnotationWhenArraySizeEqual,
     SchemaCompilerAnnotationWhenArraySizeGreater,
     SchemaCompilerAnnotationToParent, SchemaCompilerAnnotationBasenameToParent,
     SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
@@ -382,7 +404,6 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const bool dynamic;                                                        \
     const bool report;                                                         \
     const type value;                                                          \
-    const SchemaCompilerTemplate condition;                                    \
   };
 
 #define DEFINE_STEP_APPLICATOR(category, name, type)                           \
@@ -395,7 +416,6 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const bool report;                                                         \
     const type value;                                                          \
     const SchemaCompilerTemplate children;                                     \
-    const SchemaCompilerTemplate condition;                                    \
   };
 
 DEFINE_STEP_WITH_VALUE(Assertion, Fail, SchemaCompilerValueNone)
@@ -408,9 +428,18 @@ DEFINE_STEP_WITH_VALUE(Assertion, TypeAny, SchemaCompilerValueTypes)
 DEFINE_STEP_WITH_VALUE(Assertion, TypeStrict, SchemaCompilerValueType)
 DEFINE_STEP_WITH_VALUE(Assertion, TypeStrictAny, SchemaCompilerValueTypes)
 DEFINE_STEP_WITH_VALUE(Assertion, Regex, SchemaCompilerValueRegex)
-DEFINE_STEP_WITH_VALUE(Assertion, SizeGreater,
+DEFINE_STEP_WITH_VALUE(Assertion, StringSizeLess,
                        SchemaCompilerValueUnsignedInteger)
-DEFINE_STEP_WITH_VALUE(Assertion, SizeLess, SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_WITH_VALUE(Assertion, StringSizeGreater,
+                       SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_WITH_VALUE(Assertion, ArraySizeLess,
+                       SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_WITH_VALUE(Assertion, ArraySizeGreater,
+                       SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_WITH_VALUE(Assertion, ObjectSizeLess,
+                       SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_WITH_VALUE(Assertion, ObjectSizeGreater,
+                       SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_WITH_VALUE(Assertion, Equal, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Assertion, EqualsAny, SchemaCompilerValueArray)
 DEFINE_STEP_WITH_VALUE(Assertion, GreaterEqual, SchemaCompilerValueJSON)

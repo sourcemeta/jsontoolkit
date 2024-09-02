@@ -358,20 +358,20 @@ TEST(JSONSchema_compile_draft6, propertyNames_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
-  EVALUATE_TRACE_PRE(1, AssertionSizeGreater, "/propertyNames/minLength",
+  EVALUATE_TRACE_PRE(1, AssertionStringSizeGreater, "/propertyNames/minLength",
                      "#/propertyNames/minLength", "/bar");
-  EVALUATE_TRACE_PRE(2, AssertionSizeGreater, "/propertyNames/minLength",
+  EVALUATE_TRACE_PRE(2, AssertionStringSizeGreater, "/propertyNames/minLength",
                      "#/propertyNames/minLength", "/baz");
-  EVALUATE_TRACE_PRE(3, AssertionSizeGreater, "/propertyNames/minLength",
+  EVALUATE_TRACE_PRE(3, AssertionStringSizeGreater, "/propertyNames/minLength",
                      "#/propertyNames/minLength", "/foo");
 
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeGreater,
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionStringSizeGreater,
                               "/propertyNames/minLength",
                               "#/propertyNames/minLength", "/bar");
-  EVALUATE_TRACE_POST_SUCCESS(1, AssertionSizeGreater,
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionStringSizeGreater,
                               "/propertyNames/minLength",
                               "#/propertyNames/minLength", "/baz");
-  EVALUATE_TRACE_POST_SUCCESS(2, AssertionSizeGreater,
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionStringSizeGreater,
                               "/propertyNames/minLength",
                               "#/propertyNames/minLength", "/foo");
   EVALUATE_TRACE_POST_SUCCESS(3, LoopKeys, "/propertyNames", "#/propertyNames",
@@ -413,15 +413,15 @@ TEST(JSONSchema_compile_draft6, propertyNames_3) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
-  EVALUATE_TRACE_PRE(1, AssertionSizeGreater, "/propertyNames/minLength",
+  EVALUATE_TRACE_PRE(1, AssertionStringSizeGreater, "/propertyNames/minLength",
                      "#/propertyNames/minLength", "/bar");
-  EVALUATE_TRACE_PRE(2, AssertionSizeGreater, "/propertyNames/minLength",
+  EVALUATE_TRACE_PRE(2, AssertionStringSizeGreater, "/propertyNames/minLength",
                      "#/propertyNames/minLength", "/fo");
 
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionSizeGreater,
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionStringSizeGreater,
                               "/propertyNames/minLength",
                               "#/propertyNames/minLength", "/bar");
-  EVALUATE_TRACE_POST_FAILURE(1, AssertionSizeGreater,
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionStringSizeGreater,
                               "/propertyNames/minLength",
                               "#/propertyNames/minLength", "/fo");
   EVALUATE_TRACE_POST_FAILURE(2, LoopKeys, "/propertyNames", "#/propertyNames",

@@ -17,8 +17,7 @@ auto compiler_draft7_applicator_if(
   return {make<SchemaCompilerLogicalTryMark>(
       true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
       compile(context, schema_context, relative_dynamic_context, empty_pointer,
-              empty_pointer),
-      SchemaCompilerTemplate{})};
+              empty_pointer))};
 }
 
 auto compiler_draft7_applicator_then(
@@ -36,8 +35,7 @@ auto compiler_draft7_applicator_then(
   return {make<SchemaCompilerLogicalWhenAdjacentMarked>(
       true, context, schema_context, dynamic_context, "if",
       compile(context, schema_context, relative_dynamic_context, empty_pointer,
-              empty_pointer),
-      SchemaCompilerTemplate{})};
+              empty_pointer))};
 }
 
 auto compiler_draft7_applicator_else(
@@ -55,8 +53,7 @@ auto compiler_draft7_applicator_else(
   return {make<SchemaCompilerLogicalWhenAdjacentUnmarked>(
       true, context, schema_context, dynamic_context, "if",
       compile(context, schema_context, relative_dynamic_context, empty_pointer,
-              empty_pointer),
-      SchemaCompilerTemplate{})};
+              empty_pointer))};
 }
 
 } // namespace internal
