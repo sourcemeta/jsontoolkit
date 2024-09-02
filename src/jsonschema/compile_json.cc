@@ -127,27 +127,6 @@ auto value_to_json(const T &value) -> sourcemeta::jsontoolkit::JSON {
   }
 }
 
-template <typename T>
-auto data_to_json(const T &data) -> sourcemeta::jsontoolkit::JSON {
-  using namespace sourcemeta::jsontoolkit;
-  JSON result{JSON::make_object()};
-  result.assign("category", JSON{"data"});
-  if constexpr (std::is_same_v<SchemaCompilerValueStrings, T>) {
-    result.assign("type", JSON{"strings"});
-    JSON items{JSON::make_array()};
-    for (const auto &item : data) {
-      items.push_back(JSON{item});
-    }
-
-    result.assign("value", std::move(items));
-    return result;
-  } else {
-    // We should never get here
-    assert(false);
-    return JSON{nullptr};
-  }
-}
-
 template <typename V>
 auto step_to_json(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step)
@@ -171,24 +150,10 @@ auto encode_step(const std::string_view category, const std::string_view type,
   result.assign("schemaResource", JSON{step.schema_resource});
   result.assign("dynamic", JSON{step.dynamic});
   result.assign("report", JSON{step.report});
-
-  if constexpr (requires { step.id; }) {
-    result.assign("id", JSON{step.id});
-  }
-
-  if constexpr (requires { step.value; }) {
-    result.assign("value", value_to_json(step.value));
-  }
-
-  if constexpr (requires { step.data; }) {
-    result.assign("data", data_to_json(step.data));
-  }
-
-  if constexpr (requires { step.condition; }) {
-    result.assign("condition", JSON::make_array());
-    for (const auto &substep : step.condition) {
-      result.at("condition").push_back(step_to_json<V>(substep));
-    }
+  result.assign("value", value_to_json(step.value));
+  result.assign("condition", JSON::make_array());
+  for (const auto &substep : step.condition) {
+    result.at("condition").push_back(step_to_json<V>(substep));
   }
 
   if constexpr (requires { step.children; }) {
@@ -291,11 +256,10 @@ auto compiler_template_format_compare(const JSON::String &left,
                    {"relativeSchemaLocation", 5},
                    {"relativeInstanceLocation", 6},
                    {"location", 7},
-                   {"id", 8},
-                   {"report", 9},
-                   {"dynamic", 10},
-                   {"condition", 11},
-                   {"children", 12}};
+                   {"report", 8},
+                   {"dynamic", 9},
+                   {"condition", 10},
+                   {"children", 11}};
 
   // We define and control all of these keywords, so if we are missing
   // some here, then we did something wrong?

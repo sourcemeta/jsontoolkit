@@ -365,18 +365,6 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const SchemaCompilerTemplate condition;                                    \
   };
 
-#define DEFINE_CONTROL(name, type)                                             \
-  struct SchemaCompilerControl##name {                                         \
-    const Pointer relative_schema_location;                                    \
-    const Pointer relative_instance_location;                                  \
-    const std::string keyword_location;                                        \
-    const std::string schema_resource;                                         \
-    const bool dynamic;                                                        \
-    const bool report;                                                         \
-    const type id;                                                             \
-    const SchemaCompilerTemplate children;                                     \
-  };
-
 DEFINE_STEP_WITH_VALUE(Assertion, Fail, SchemaCompilerValueNone)
 DEFINE_STEP_WITH_VALUE(Assertion, Defines, SchemaCompilerValueString)
 DEFINE_STEP_WITH_VALUE(Assertion, DefinesAll, SchemaCompilerValueStrings)
@@ -422,14 +410,13 @@ DEFINE_STEP_APPLICATOR(Loop, ItemsUnmarked, SchemaCompilerValueStrings)
 DEFINE_STEP_APPLICATOR(Loop, ItemsUnevaluated,
                        SchemaCompilerValueItemsAnnotationKeywords)
 DEFINE_STEP_APPLICATOR(Loop, Contains, SchemaCompilerValueRange)
-DEFINE_CONTROL(Label, SchemaCompilerValueUnsignedInteger)
-DEFINE_CONTROL(Mark, SchemaCompilerValueUnsignedInteger)
-DEFINE_CONTROL(Jump, SchemaCompilerValueUnsignedInteger)
-DEFINE_CONTROL(DynamicAnchorJump, SchemaCompilerValueString)
+DEFINE_STEP_APPLICATOR(Control, Label, SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_APPLICATOR(Control, Mark, SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_APPLICATOR(Control, Jump, SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_APPLICATOR(Control, DynamicAnchorJump, SchemaCompilerValueString)
 
 #undef DEFINE_STEP_WITH_VALUE
 #undef DEFINE_STEP_APPLICATOR
-#undef DEFINE_CONTROL
 #endif
 
 /// @ingroup jsonschema
