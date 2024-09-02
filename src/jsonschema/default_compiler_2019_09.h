@@ -306,19 +306,9 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
       true, context, schema_context, relative_dynamic_context,
       SchemaCompilerValueNone{}, {}, SchemaCompilerTargetType::Instance));
 
-  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
-      false, context, schema_context, relative_dynamic_context,
-      SchemaCompilerTarget{SchemaCompilerTargetType::InstanceBasename,
-                           empty_pointer},
-      {}, SchemaCompilerTargetType::ParentAnnotations,
-      std::move(dependencies))};
-  SchemaCompilerTemplate wrapper{make<SchemaCompilerLogicalAnd>(
-      false, context, schema_context, relative_dynamic_context,
-      SchemaCompilerValueNone{}, std::move(children), std::move(condition))};
-
-  return {make<SchemaCompilerLoopProperties>(
-      true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
-      {std::move(wrapper)}, SchemaCompilerTemplate{})};
+  return {make<SchemaCompilerLoopPropertiesNoAnnotation>(
+      true, context, schema_context, dynamic_context, std::move(dependencies),
+      std::move(children), SchemaCompilerTemplate{})};
 }
 
 auto compiler_2019_09_core_recursiveref(

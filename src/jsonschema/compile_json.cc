@@ -265,6 +265,8 @@ struct StepVisitor {
   HANDLE_STEP("loop", "properties-regex", SchemaCompilerLoopPropertiesRegex)
   HANDLE_STEP("loop", "properties-no-adjacent-annotation",
               SchemaCompilerLoopPropertiesNoAdjacentAnnotation)
+  HANDLE_STEP("loop", "properties-no-annotation",
+              SchemaCompilerLoopPropertiesNoAnnotation)
   HANDLE_STEP("loop", "keys", SchemaCompilerLoopKeys)
   HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)
   HANDLE_STEP("loop", "items-from-annotation-index",

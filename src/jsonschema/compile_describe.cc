@@ -544,24 +544,6 @@ struct DescribeVisitor {
 
   auto
   operator()(const SchemaCompilerLoopProperties &step) const -> std::string {
-    if (this->keyword == "unevaluatedProperties") {
-      std::ostringstream message;
-      if (step.children.size() == 1 &&
-          std::holds_alternative<SchemaCompilerLogicalAnd>(
-              step.children.front()) &&
-          std::holds_alternative<SchemaCompilerAssertionFail>(
-              std::get<SchemaCompilerLogicalAnd>(step.children.front())
-                  .children.front())) {
-        message << "The object value was not expected to define unevaluated "
-                   "properties";
-      } else {
-        message << "The object properties not covered by other object "
-                   "keywords were expected to validate against this subschema";
-      }
-
-      return message.str();
-    }
-
     assert(this->keyword == "additionalProperties");
     std::ostringstream message;
     if (step.children.size() == 1 &&
@@ -592,6 +574,26 @@ struct DescribeVisitor {
     }
 
     return message.str();
+  }
+
+  auto operator()(const SchemaCompilerLoopPropertiesNoAnnotation &step) const
+      -> std::string {
+    if (this->keyword == "unevaluatedProperties") {
+      std::ostringstream message;
+      if (!step.children.empty() &&
+          std::holds_alternative<SchemaCompilerAssertionFail>(
+              step.children.front())) {
+        message << "The object value was not expected to define unevaluated "
+                   "properties";
+      } else {
+        message << "The object properties not covered by other object "
+                   "keywords were expected to validate against this subschema";
+      }
+
+      return message.str();
+    }
+
+    return unknown();
   }
 
   auto operator()(const SchemaCompilerLoopKeys &) const -> std::string {
