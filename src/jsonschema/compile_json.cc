@@ -26,9 +26,6 @@ auto target_to_json(const sourcemeta::jsontoolkit::SchemaCompilerTarget &target)
     case SchemaCompilerTargetType::ParentAnnotations:
       result.assign("type", JSON{"parent-annotations"});
       return result;
-    case SchemaCompilerTargetType::Annotations:
-      result.assign("type", JSON{"annotations"});
-      return result;
     default:
       // We should never get here
       assert(false);
@@ -127,6 +124,12 @@ auto value_to_json(const sourcemeta::jsontoolkit::SchemaCompilerStepValue<T>
     result.assign("type", JSON{"items-annotation-keywords"});
     JSON values{JSON::make_object()};
     result.assign("index", JSON{std::get<T>(value).index});
+    JSON mask{JSON::make_array()};
+    for (const auto &keyword : std::get<T>(value).mask) {
+      mask.push_back(JSON{keyword});
+    }
+
+    result.assign("mask", std::move(mask));
     return result;
   } else if constexpr (std::is_same_v<SchemaCompilerValueStringType, T>) {
     result.assign("type", JSON{"string-type"});

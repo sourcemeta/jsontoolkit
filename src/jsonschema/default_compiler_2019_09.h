@@ -216,16 +216,14 @@ auto compiler_2019_09_applicator_unevaluateditems(
 
   if (schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/applicator")) {
-    SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
-        false, context, schema_context, relative_dynamic_context, JSON{true},
-        {}, SchemaCompilerTargetType::Annotations,
-        {"items", "additionalItems", "unevaluatedItems"})};
     return {make<SchemaCompilerLoopItemsUnevaluated>(
         true, context, schema_context, dynamic_context,
-        SchemaCompilerValueItemsAnnotationKeywords{"items"},
-        std::move(children), std::move(condition))};
+        SchemaCompilerValueItemsAnnotationKeywords{
+            "items", {"items", "additionalItems", "unevaluatedItems"}},
+        std::move(children), SchemaCompilerTemplate{})};
   } else if (schema_context.vocabularies.contains(
                  "https://json-schema.org/draft/2020-12/vocab/applicator")) {
+    // TODO: Get rid of this condition & wrapper
     SchemaCompilerTemplate subcondition{
         make<SchemaCompilerAssertionNoAnnotation>(
             false, context, schema_context, relative_dynamic_context,
@@ -237,14 +235,12 @@ auto compiler_2019_09_applicator_unevaluateditems(
         SchemaCompilerValueNone{}, std::move(children),
         std::move(subcondition))};
 
-    SchemaCompilerTemplate condition{make<SchemaCompilerAssertionNoAnnotation>(
-        false, context, schema_context, relative_dynamic_context, JSON{true},
-        {}, SchemaCompilerTargetType::Annotations,
-        {"prefixItems", "items", "contains", "unevaluatedItems"})};
     return {make<SchemaCompilerLoopItemsUnevaluated>(
         true, context, schema_context, dynamic_context,
-        SchemaCompilerValueItemsAnnotationKeywords{"prefixItems"},
-        std::move(subchildren), std::move(condition))};
+        SchemaCompilerValueItemsAnnotationKeywords{
+            "prefixItems",
+            {"prefixItems", "items", "contains", "unevaluatedItems"}},
+        std::move(subchildren), SchemaCompilerTemplate{})};
   } else {
     return {make<SchemaCompilerLoopItemsUnmarked>(
         true, context, schema_context, dynamic_context,
