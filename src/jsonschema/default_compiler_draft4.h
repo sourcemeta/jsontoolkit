@@ -20,7 +20,8 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
                                   &dynamic_context) -> SchemaCompilerTemplate {
   // Determine the label
   const auto type{ReferenceType::Static};
-  const auto current{keyword_location(schema_context)};
+  const auto current{
+      to_uri(schema_context.relative_pointer, schema_context.base).recompose()};
   assert(context.frame.contains({type, current}));
   const auto &entry{context.frame.at({type, current})};
   if (!context.references.contains({type, entry.pointer})) {
@@ -641,12 +642,10 @@ auto compiler_draft4_applicator_items_array(
                 SchemaCompilerValueUnsignedInteger{cursor}, {})}));
       }
 
-      children.push_back(make<SchemaCompilerLogicalAnd>(
+      children.push_back(make<SchemaCompilerLogicalWhenArraySizeGreater>(
           false, context, schema_context, relative_dynamic_context,
-          SchemaCompilerValueNone{}, std::move(subchildren),
-          {make<SchemaCompilerAssertionSizeGreater>(
-              true, context, schema_context, relative_dynamic_context,
-              cursor - 1, {})}));
+          SchemaCompilerValueUnsignedInteger{cursor - 1},
+          std::move(subchildren), SchemaCompilerTemplate{}));
     } else {
       if (annotate) {
         subchildren.push_back(make<SchemaCompilerAnnotationEmit>(
@@ -730,12 +729,10 @@ auto compiler_draft4_applicator_additionalitems_from_cursor(
         {}));
   }
 
-  SchemaCompilerTemplate condition{make<SchemaCompilerAssertionSizeGreater>(
-      true, context, schema_context, relative_dynamic_context,
-      SchemaCompilerValueUnsignedInteger{cursor}, {})};
-  return {make<SchemaCompilerLogicalWhenType>(
-      false, context, schema_context, dynamic_context, JSON::Type::Array,
-      std::move(children), std::move(condition))};
+  return {make<SchemaCompilerLogicalWhenArraySizeGreater>(
+      false, context, schema_context, dynamic_context,
+      SchemaCompilerValueUnsignedInteger{cursor}, std::move(children),
+      SchemaCompilerTemplate{})};
 }
 
 auto compiler_draft4_applicator_additionalitems_conditional_annotation(

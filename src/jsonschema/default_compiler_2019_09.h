@@ -260,7 +260,8 @@ auto compiler_2019_09_core_recursiveref(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
-  const auto current{keyword_location(schema_context)};
+  const auto current{
+      to_uri(schema_context.relative_pointer, schema_context.base).recompose()};
   assert(context.frame.contains({ReferenceType::Static, current}));
   const auto &entry{context.frame.at({ReferenceType::Static, current})};
   // In this case, just behave as a normal static reference

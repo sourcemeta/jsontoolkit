@@ -225,6 +225,8 @@ struct StepVisitor {
               SchemaCompilerLogicalWhenAdjacentUnmarked)
   HANDLE_STEP("logical", "when-adjacent-marked",
               SchemaCompilerLogicalWhenAdjacentMarked)
+  HANDLE_STEP("logical", "when-array-size-greater",
+              SchemaCompilerLogicalWhenArraySizeGreater)
   HANDLE_STEP("loop", "properties-match", SchemaCompilerLoopPropertiesMatch)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "properties-regex", SchemaCompilerLoopPropertiesRegex)
