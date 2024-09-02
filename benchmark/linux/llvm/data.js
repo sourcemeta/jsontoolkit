@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725315178345,
+  "lastUpdate": 1725316141085,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -2292,6 +2292,60 @@ window.BENCHMARK_DATA = {
             "value": 109444.21641678351,
             "unit": "ns/iter",
             "extra": "iterations: 6603\ncpu: 109432.03725579279 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1abf1db4712909ed2c5415157df0b1f7d27c577a",
+          "message": "Compile out assertions that would never run anyway (#1099)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-02T18:22:53-04:00",
+          "tree_id": "3aa397e3521f15c80e37921cc72d3b234e00ae62",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/1abf1db4712909ed2c5415157df0b1f7d27c577a"
+        },
+        "date": 1725316140087,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 390770.88024619897,
+            "unit": "ns/iter",
+            "extra": "iterations: 1787\ncpu: 390748.53217683267 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 16712.404949005475,
+            "unit": "ns/iter",
+            "extra": "iterations: 41867\ncpu: 16710.45916831873 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 8153.480031776332,
+            "unit": "ns/iter",
+            "extra": "iterations: 88115\ncpu: 8153.026397321683 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 1565.3725641636925,
+            "unit": "ns/iter",
+            "extra": "iterations: 449281\ncpu: 1565.3322775723873 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 106439.87255347312,
+            "unit": "ns/iter",
+            "extra": "iterations: 6591\ncpu: 106434.41617356999 ns\nthreads: 1"
           }
         ]
       }
