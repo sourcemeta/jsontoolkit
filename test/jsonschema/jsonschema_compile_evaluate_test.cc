@@ -126,28 +126,6 @@ TEST(JSONSchema_compile_evaluate, fast_step_fail_with_condition_true) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_step_fail_with_condition_false) {
-  using namespace sourcemeta::jsontoolkit;
-
-  const SchemaCompilerTemplate condition{
-      SchemaCompilerAssertionDefines{Pointer{},
-                                     Pointer{},
-                                     "#",
-                                     "",
-                                     true,
-                                     true,
-                                     SchemaCompilerValueString{"xxx"},
-                                     {}}};
-
-  const SchemaCompilerTemplate steps{
-      SchemaCompilerAssertionFail{Pointer{}, Pointer{}, "#", "", true, true,
-                                  SchemaCompilerValueNone{}, condition}};
-
-  const JSON instance{parse("{ \"foo\": 1, \"bar\": 2 }")};
-  const auto result{evaluate(steps, instance)};
-  EXPECT_TRUE(result);
-}
-
 TEST(JSONSchema_compile_evaluate, fast_step_type_true_no_condition) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionTypeStrict{

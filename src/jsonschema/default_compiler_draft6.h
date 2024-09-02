@@ -189,12 +189,7 @@ auto compiler_draft6_applicator_contains(
       SchemaCompilerValueRange{1, std::nullopt, false},
       compile(context, schema_context, relative_dynamic_context, empty_pointer,
               empty_pointer),
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `array` already
-      {make<SchemaCompilerAssertionTypeStrict>(true, context, schema_context,
-                                               relative_dynamic_context,
-                                               JSON::Type::Array, {})})};
+      SchemaCompilerTemplate{})};
 }
 
 auto compiler_draft6_validation_propertynames(
@@ -206,12 +201,7 @@ auto compiler_draft6_validation_propertynames(
       true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
       compile(context, schema_context, relative_dynamic_context, empty_pointer,
               empty_pointer),
-
-      // TODO: As an optimization, avoid this condition if the subschema
-      // declares `type` to `object` already
-      {make<SchemaCompilerAssertionTypeStrict>(true, context, schema_context,
-                                               relative_dynamic_context,
-                                               JSON::Type::Object, {})})};
+      SchemaCompilerTemplate{})};
 }
 
 } // namespace internal

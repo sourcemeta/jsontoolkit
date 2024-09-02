@@ -158,10 +158,7 @@ auto compiler_2019_09_applicator_contains_conditional_annotate(
           // in use on the schema. Can we pre-determine that and speed things up
           // if not?
           annotate},
-      std::move(children),
-      {make<SchemaCompilerAssertionTypeStrict>(true, context, schema_context,
-                                               relative_dynamic_context,
-                                               JSON::Type::Array, {})})};
+      std::move(children), SchemaCompilerTemplate{})};
 }
 
 auto compiler_2019_09_applicator_contains(
