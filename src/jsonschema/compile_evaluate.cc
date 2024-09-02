@@ -659,9 +659,6 @@ auto evaluate_step(
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalWhenType");
     const auto &logical{std::get<SchemaCompilerLogicalWhenType>(step)};
     context.push(logical);
-    // TODO: Get rid of this
-    EVALUATE_CONDITION_GUARD("SchemaCompilerLogicalWhenType", logical,
-                             instance);
     const auto &target{context.resolve_target(instance)};
     EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLogicalWhenType", logical,
                                    target.type() == logical.value);
@@ -736,6 +733,27 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerLogicalWhenAdjacentMarked", logical);
+  } else if (std::holds_alternative<SchemaCompilerLogicalWhenArraySizeGreater>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerLogicalWhenArraySizeGreater");
+    const auto &logical{
+        std::get<SchemaCompilerLogicalWhenArraySizeGreater>(step)};
+    context.push(logical);
+    const auto &target{context.resolve_target(instance)};
+    EVALUATE_IMPLICIT_PRECONDITION(
+        "SchemaCompilerLogicalWhenArraySizeGreater", logical,
+        target.is_array() && target.size() > logical.value);
+    CALLBACK_PRE(logical, context.instance_location());
+    result = true;
+    for (const auto &child : logical.children) {
+      if (!evaluate_step(child, instance, mode, callback, context)) {
+        result = false;
+        break;
+      }
+    }
+
+    CALLBACK_POST("SchemaCompilerLogicalWhenArraySizeGreater", logical);
   } else if (std::holds_alternative<SchemaCompilerLogicalXor>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLogicalXor");
     const auto &logical{std::get<SchemaCompilerLogicalXor>(step)};

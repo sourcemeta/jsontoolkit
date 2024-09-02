@@ -1551,6 +1551,10 @@ struct DescribeVisitor {
 
   // These steps are never described, at least not right now
 
+  auto operator()(const SchemaCompilerLogicalWhenArraySizeGreater &) const
+      -> std::string {
+    return unknown();
+  }
   auto
   operator()(const SchemaCompilerLogicalWhenDefines &) const -> std::string {
     return unknown();

@@ -258,6 +258,11 @@ struct SchemaCompilerLogicalWhenAdjacentUnmarked;
 struct SchemaCompilerLogicalWhenAdjacentMarked;
 
 /// @ingroup jsonschema
+/// Represents a compiler logical step that represents a conjunction
+/// when the array instance size is greater than the given number
+struct SchemaCompilerLogicalWhenArraySizeGreater;
+
+/// @ingroup jsonschema
 /// Represents a compiler step that matches steps to object properties
 struct SchemaCompilerLoopPropertiesMatch;
 
@@ -341,8 +346,10 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerLogicalTryMark, SchemaCompilerLogicalNot,
     SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
     SchemaCompilerLogicalWhenAdjacentUnmarked,
-    SchemaCompilerLogicalWhenAdjacentMarked, SchemaCompilerLoopPropertiesMatch,
-    SchemaCompilerLoopProperties, SchemaCompilerLoopPropertiesRegex,
+    SchemaCompilerLogicalWhenAdjacentMarked,
+    SchemaCompilerLogicalWhenArraySizeGreater,
+    SchemaCompilerLoopPropertiesMatch, SchemaCompilerLoopProperties,
+    SchemaCompilerLoopPropertiesRegex,
     SchemaCompilerLoopPropertiesNoAdjacentAnnotation,
     SchemaCompilerLoopPropertiesNoAnnotation, SchemaCompilerLoopKeys,
     SchemaCompilerLoopItems, SchemaCompilerLoopItemsUnmarked,
@@ -411,6 +418,8 @@ DEFINE_STEP_APPLICATOR(Logical, WhenType, SchemaCompilerValueType)
 DEFINE_STEP_APPLICATOR(Logical, WhenDefines, SchemaCompilerValueString)
 DEFINE_STEP_APPLICATOR(Logical, WhenAdjacentUnmarked, SchemaCompilerValueString)
 DEFINE_STEP_APPLICATOR(Logical, WhenAdjacentMarked, SchemaCompilerValueString)
+DEFINE_STEP_APPLICATOR(Logical, WhenArraySizeGreater,
+                       SchemaCompilerValueUnsignedInteger)
 DEFINE_STEP_APPLICATOR(Loop, PropertiesMatch, SchemaCompilerValueNamedIndexes)
 DEFINE_STEP_APPLICATOR(Loop, Properties, SchemaCompilerValueNone)
 DEFINE_STEP_APPLICATOR(Loop, PropertiesRegex, SchemaCompilerValueRegex)
