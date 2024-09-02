@@ -181,6 +181,12 @@ auto compiler_draft4_validation_required(
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_array());
 
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "object") {
+    return {};
+  }
+
   if (schema_context.schema.at(dynamic_context.keyword).empty()) {
     return {};
   } else if (schema_context.schema.at(dynamic_context.keyword).size() > 1) {
@@ -308,6 +314,12 @@ auto compiler_draft4_applicator_properties(
     return {};
   }
 
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "object") {
+    return {};
+  }
+
   const auto loads_unevaluated_keywords =
       schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/applicator") ||
@@ -430,6 +442,12 @@ auto compiler_draft4_applicator_patternproperties(
     return {};
   }
 
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "object") {
+    return {};
+  }
+
   const auto loads_unevaluated_keywords =
       schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/applicator") ||
@@ -477,6 +495,12 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context,
     const bool annotate) -> SchemaCompilerTemplate {
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "object") {
+    return {};
+  }
+
   SchemaCompilerTemplate children{compile(context, schema_context,
                                           relative_dynamic_context,
                                           empty_pointer, empty_pointer)};
@@ -523,6 +547,13 @@ auto compiler_draft4_validation_pattern(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_string());
+
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "string") {
+    return {};
+  }
+
   const auto &regex_string{
       schema_context.schema.at(dynamic_context.keyword).to_string()};
   return {make<SchemaCompilerAssertionRegex>(
@@ -538,6 +569,12 @@ auto compiler_draft4_validation_format(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   if (!schema_context.schema.at(dynamic_context.keyword).is_string()) {
+    return {};
+  }
+
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "string") {
     return {};
   }
 
@@ -595,6 +632,12 @@ auto compiler_draft4_applicator_items_array(
   const auto items_size{
       schema_context.schema.at(dynamic_context.keyword).size()};
   if (items_size == 0) {
+    return {};
+  }
+
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "array") {
     return {};
   }
 
@@ -668,6 +711,12 @@ auto compiler_draft4_applicator_items_conditional_annotation(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context,
     const bool annotate) -> SchemaCompilerTemplate {
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "array") {
+    return {};
+  }
+
   if (is_schema(schema_context.schema.at(dynamic_context.keyword))) {
     if (annotate) {
       SchemaCompilerTemplate children;
@@ -712,6 +761,12 @@ auto compiler_draft4_applicator_additionalitems_from_cursor(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context,
     const std::size_t cursor, const bool annotate) -> SchemaCompilerTemplate {
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "array") {
+    return {};
+  }
+
   SchemaCompilerTemplate children{make<SchemaCompilerLoopItems>(
       true, context, schema_context, relative_dynamic_context,
       SchemaCompilerValueUnsignedInteger{cursor},
@@ -736,6 +791,12 @@ auto compiler_draft4_applicator_additionalitems_conditional_annotation(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context,
     const bool annotate) -> SchemaCompilerTemplate {
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "array") {
+    return {};
+  }
+
   assert(schema_context.schema.is_object());
 
   // Nothing to do here
@@ -767,6 +828,12 @@ auto compiler_draft4_applicator_dependencies(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "object") {
+    return {};
+  }
+
   assert(schema_context.schema.at(dynamic_context.keyword).is_object());
   SchemaCompilerTemplate children;
   SchemaCompilerValueStringMap dependencies;
@@ -840,6 +907,12 @@ auto compiler_draft4_validation_uniqueitems(
     return {};
   }
 
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "array") {
+    return {};
+  }
+
   return {make<SchemaCompilerAssertionUnique>(
       true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
       SchemaCompilerTemplate{})};
@@ -853,6 +926,12 @@ auto compiler_draft4_validation_maxlength(
   assert(schema_context.schema.at(dynamic_context.keyword).is_integer() ||
          schema_context.schema.at(dynamic_context.keyword).is_integer_real());
   assert(schema_context.schema.at(dynamic_context.keyword).is_positive());
+
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "string") {
+    return {};
+  }
 
   // TODO: As an optimization, if `minLength` is set to the same number, do
   // a single size equality assertion
@@ -876,6 +955,12 @@ auto compiler_draft4_validation_minlength(
          schema_context.schema.at(dynamic_context.keyword).is_integer_real());
   assert(schema_context.schema.at(dynamic_context.keyword).is_positive());
 
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "string") {
+    return {};
+  }
+
   // TODO: As an optimization, if `maxLength` is set to the same number, do
   // a single size equality assertion
   return {make<SchemaCompilerAssertionSizeGreater>(
@@ -897,6 +982,12 @@ auto compiler_draft4_validation_maxitems(
   assert(schema_context.schema.at(dynamic_context.keyword).is_integer() ||
          schema_context.schema.at(dynamic_context.keyword).is_integer_real());
   assert(schema_context.schema.at(dynamic_context.keyword).is_positive());
+
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "array") {
+    return {};
+  }
 
   // TODO: As an optimization, if `minItems` is set to the same number, do
   // a single size equality assertion
@@ -920,6 +1011,12 @@ auto compiler_draft4_validation_minitems(
          schema_context.schema.at(dynamic_context.keyword).is_integer_real());
   assert(schema_context.schema.at(dynamic_context.keyword).is_positive());
 
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "array") {
+    return {};
+  }
+
   // TODO: As an optimization, if `maxItems` is set to the same number, do
   // a single size equality assertion
   return {make<SchemaCompilerAssertionSizeGreater>(
@@ -941,6 +1038,12 @@ auto compiler_draft4_validation_maxproperties(
   assert(schema_context.schema.at(dynamic_context.keyword).is_integer() ||
          schema_context.schema.at(dynamic_context.keyword).is_integer_real());
   assert(schema_context.schema.at(dynamic_context.keyword).is_positive());
+
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "object") {
+    return {};
+  }
 
   // TODO: As an optimization, if `minProperties` is set to the same number, do
   // a single size equality assertion
@@ -964,6 +1067,12 @@ auto compiler_draft4_validation_minproperties(
          schema_context.schema.at(dynamic_context.keyword).is_integer_real());
   assert(schema_context.schema.at(dynamic_context.keyword).is_positive());
 
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "object") {
+    return {};
+  }
+
   // TODO: As an optimization, if `maxProperties` is set to the same number, do
   // a single size equality assertion
   return {make<SchemaCompilerAssertionSizeGreater>(
@@ -983,6 +1092,13 @@ auto compiler_draft4_validation_maximum(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_number());
+
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "integer" &&
+      schema_context.schema.at("type").to_string() != "number") {
+    return {};
+  }
 
   // TODO: As an optimization, if `minimum` is set to the same number, do
   // a single equality assertion
@@ -1010,6 +1126,13 @@ auto compiler_draft4_validation_minimum(
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_number());
 
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "integer" &&
+      schema_context.schema.at("type").to_string() != "number") {
+    return {};
+  }
+
   // TODO: As an optimization, if `maximum` is set to the same number, do
   // a single equality assertion
 
@@ -1036,6 +1159,14 @@ auto compiler_draft4_validation_multipleof(
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_number());
   assert(schema_context.schema.at(dynamic_context.keyword).is_positive());
+
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() != "integer" &&
+      schema_context.schema.at("type").to_string() != "number") {
+    return {};
+  }
+
   return {make<SchemaCompilerAssertionDivisible>(
       true, context, schema_context, dynamic_context,
       JSON{schema_context.schema.at(dynamic_context.keyword)},
