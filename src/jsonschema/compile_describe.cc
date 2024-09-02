@@ -646,13 +646,13 @@ struct DescribeVisitor {
     return unknown();
   }
 
-  auto operator()(const SchemaCompilerLoopItemsFromAnnotationIndex &step) const
+  auto operator()(const SchemaCompilerLoopItemsUnevaluated &step) const
       -> std::string {
     assert(this->keyword == "unevaluatedItems");
     const auto &value{step_value(step)};
     std::ostringstream message;
     message << "The array items not evaluated by the keyword "
-            << escape_string(value)
+            << escape_string(value.index)
             << ", if any, were expected to validate against this subschema";
     return message.str();
   }

@@ -2385,10 +2385,10 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_1) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+  EVALUATE_TRACE_PRE(0, LoopItemsUnevaluated, "/unevaluatedItems",
                      "#/unevaluatedItems", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LoopItemsFromAnnotationIndex,
-                              "/unevaluatedItems", "#/unevaluatedItems", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LoopItemsUnevaluated, "/unevaluatedItems",
+                              "#/unevaluatedItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -2413,7 +2413,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_2) {
       sourcemeta::jsontoolkit::parse("[ true, false ]")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
-  EVALUATE_TRACE_PRE(0, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+  EVALUATE_TRACE_PRE(0, LoopItemsUnevaluated, "/unevaluatedItems",
                      "#/unevaluatedItems", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/unevaluatedItems/type",
                      "#/unevaluatedItems/type", "/0");
@@ -2428,8 +2428,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_2) {
                                  "", true);
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/unevaluatedItems/type",
                               "#/unevaluatedItems/type", "/1");
-  EVALUATE_TRACE_POST_SUCCESS(3, LoopItemsFromAnnotationIndex,
-                              "/unevaluatedItems", "#/unevaluatedItems", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopItemsUnevaluated, "/unevaluatedItems",
+                              "#/unevaluatedItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
@@ -2508,15 +2508,15 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_4) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE_ANNOTATION(2, "/items", "#/items", "");
-  EVALUATE_TRACE_PRE(3, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+  EVALUATE_TRACE_PRE(3, LoopItemsUnevaluated, "/unevaluatedItems",
                      "#/unevaluatedItems", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
                               "#/items/0/type", "/0");
   EVALUATE_TRACE_POST_ANNOTATION(1, "/items", "#/items", "", 0);
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
-  EVALUATE_TRACE_POST_SUCCESS(3, LoopItemsFromAnnotationIndex,
-                              "/unevaluatedItems", "#/unevaluatedItems", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopItemsUnevaluated, "/unevaluatedItems",
+                              "#/unevaluatedItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
@@ -2598,7 +2598,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_6) {
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
                      "/0");
   EVALUATE_TRACE_PRE_ANNOTATION(2, "/items", "#/items", "");
-  EVALUATE_TRACE_PRE(3, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+  EVALUATE_TRACE_PRE(3, LoopItemsUnevaluated, "/unevaluatedItems",
                      "#/unevaluatedItems", "");
   EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/unevaluatedItems/type",
                      "#/unevaluatedItems/type", "/1");
@@ -2613,8 +2613,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_6) {
                               "#/unevaluatedItems/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION(4, "/unevaluatedItems", "#/unevaluatedItems",
                                  "", true);
-  EVALUATE_TRACE_POST_SUCCESS(5, LoopItemsFromAnnotationIndex,
-                              "/unevaluatedItems", "#/unevaluatedItems", "");
+  EVALUATE_TRACE_POST_SUCCESS(5, LoopItemsUnevaluated, "/unevaluatedItems",
+                              "#/unevaluatedItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
@@ -2665,7 +2665,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/items/0/type",
                      "#/allOf/0/items/0/type", "/0");
   EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/items", "#/allOf/0/items", "");
-  EVALUATE_TRACE_PRE(4, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+  EVALUATE_TRACE_PRE(4, LoopItemsUnevaluated, "/unevaluatedItems",
                      "#/unevaluatedItems", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedItems/type",
                      "#/unevaluatedItems/type", "/1");
@@ -2682,8 +2682,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_7) {
                               "#/unevaluatedItems/type", "/1");
   EVALUATE_TRACE_POST_ANNOTATION(5, "/unevaluatedItems", "#/unevaluatedItems",
                                  "", true);
-  EVALUATE_TRACE_POST_SUCCESS(6, LoopItemsFromAnnotationIndex,
-                              "/unevaluatedItems", "#/unevaluatedItems", "");
+  EVALUATE_TRACE_POST_SUCCESS(6, LoopItemsUnevaluated, "/unevaluatedItems",
+                              "#/unevaluatedItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
@@ -2737,7 +2737,7 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/items/0/type",
                      "#/allOf/0/items/0/type", "/0");
   EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/items", "#/allOf/0/items", "");
-  EVALUATE_TRACE_PRE(4, LoopItemsFromAnnotationIndex, "/unevaluatedItems",
+  EVALUATE_TRACE_PRE(4, LoopItemsUnevaluated, "/unevaluatedItems",
                      "#/unevaluatedItems", "");
   EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedItems/type",
                      "#/unevaluatedItems/type", "/1");
@@ -2750,8 +2750,8 @@ TEST(JSONSchema_compile_2019_09, unevaluatedItems_8) {
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
   EVALUATE_TRACE_POST_FAILURE(4, AssertionTypeStrict, "/unevaluatedItems/type",
                               "#/unevaluatedItems/type", "/1");
-  EVALUATE_TRACE_POST_FAILURE(5, LoopItemsFromAnnotationIndex,
-                              "/unevaluatedItems", "#/unevaluatedItems", "");
+  EVALUATE_TRACE_POST_FAILURE(5, LoopItemsUnevaluated, "/unevaluatedItems",
+                              "#/unevaluatedItems", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");

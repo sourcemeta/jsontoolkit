@@ -1309,18 +1309,15 @@ auto evaluate_step(
     }
 
     CALLBACK_POST("SchemaCompilerLoopItemsUnmarked", loop);
-  } else if (std::holds_alternative<SchemaCompilerLoopItemsFromAnnotationIndex>(
-                 step)) {
-    SOURCEMETA_TRACE_START(trace_id,
-                           "SchemaCompilerLoopItemsFromAnnotationIndex");
-    const auto &loop{
-        std::get<SchemaCompilerLoopItemsFromAnnotationIndex>(step)};
+  } else if (std::holds_alternative<SchemaCompilerLoopItemsUnevaluated>(step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLoopItemsUnevaluated");
+    const auto &loop{std::get<SchemaCompilerLoopItemsUnevaluated>(step)};
     context.push(loop);
-    EVALUATE_CONDITION_GUARD("SchemaCompilerLoopItemsFromAnnotationIndex", loop,
+    EVALUATE_CONDITION_GUARD("SchemaCompilerLoopItemsUnevaluated", loop,
                              instance);
     const auto &target{context.resolve_target<JSON>(loop.target, instance)};
-    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopItemsFromAnnotationIndex",
-                                   loop, target.is_array());
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerLoopItemsUnevaluated", loop,
+                                   target.is_array());
     CALLBACK_PRE(loop, context.instance_location());
     const auto &value{context.resolve_value(loop.value, instance)};
     assert(target.is_array());
@@ -1331,7 +1328,7 @@ auto evaluate_step(
     // Determine the proper start based on integer annotations collected for the
     // current instance location by the keyword requested by the user.
     const std::uint64_t start{context.largest_annotation_index(
-        context.instance_location(), {value}, 0)};
+        context.instance_location(), {value.index}, 0)};
 
     // We need this check, as advancing an iterator past its bounds
     // is considered undefined behavior
@@ -1348,14 +1345,14 @@ auto evaluate_step(
         if (!evaluate_step(child, instance, mode, callback, context)) {
           result = false;
           context.pop(loop);
-          CALLBACK_POST("SchemaCompilerLoopItemsFromAnnotationIndex", loop);
+          CALLBACK_POST("SchemaCompilerLoopItemsUnevaluated", loop);
         }
       }
 
       context.pop(loop);
     }
 
-    CALLBACK_POST("SchemaCompilerLoopItemsFromAnnotationIndex", loop);
+    CALLBACK_POST("SchemaCompilerLoopItemsUnevaluated", loop);
   } else if (std::holds_alternative<SchemaCompilerLoopContains>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerLoopContains");
     const auto &loop{std::get<SchemaCompilerLoopContains>(step)};
