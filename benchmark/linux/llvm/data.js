@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725308744617,
+  "lastUpdate": 1725309490554,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -1968,6 +1968,60 @@ window.BENCHMARK_DATA = {
             "value": 10805.287072979008,
             "unit": "ns/iter",
             "extra": "iterations: 64663\ncpu: 10804.104340967791 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "623c7d1e85f6e2be3d1a1f722cdcdd929d213e88",
+          "message": "Remove unnecessary conditions for `exclusive(Max|min)imum` on Draft 6 (#1093)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-02T16:27:55-04:00",
+          "tree_id": "e74c6899c320a899457b36c2c05803e1869677c1",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/623c7d1e85f6e2be3d1a1f722cdcdd929d213e88"
+        },
+        "date": 1725309490219,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 389271.2736960336,
+            "unit": "ns/iter",
+            "extra": "iterations: 1783\ncpu: 389258.0897363993 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 2229.9050204707455,
+            "unit": "ns/iter",
+            "extra": "iterations: 321922\ncpu: 2229.8561266393735 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2741.342431934923,
+            "unit": "ns/iter",
+            "extra": "iterations: 258025\ncpu: 2741.192120918517 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 196.22124829818955,
+            "unit": "ns/iter",
+            "extra": "iterations: 3558685\ncpu: 196.21794735976906 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 10509.178659827705,
+            "unit": "ns/iter",
+            "extra": "iterations: 67066\ncpu: 10508.966182566428 ns\nthreads: 1"
           }
         ]
       }
