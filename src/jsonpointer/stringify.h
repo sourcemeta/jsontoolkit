@@ -33,8 +33,8 @@ static auto write_character(std::basic_ostream<CharT, Traits> &stream,
 namespace sourcemeta::jsontoolkit {
 
 template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
-auto stringify(const GenericPointer<CharT, Traits, Allocator> &pointer,
+          template <typename T> typename Allocator, typename PointerT>
+auto stringify(const PointerT &pointer,
                std::basic_ostream<CharT, Traits> &stream,
                const bool perform_uri_escaping) -> void {
   for (const auto &token : pointer) {
