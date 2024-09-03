@@ -6,6 +6,7 @@
 
 #include <algorithm>   // std::min
 #include <cassert>     // assert
+#include <cstdint>     // std::uint8_t
 #include <functional>  // std::reference_wrapper
 #include <iterator>    // std::distance, std::advance
 #include <limits>      // std::numeric_limits
@@ -182,13 +183,11 @@ public:
   auto push(const T &step, const Pointer &relative_evaluate_path,
             const Pointer &relative_instance_location) -> void {
     assert(relative_instance_location.size() <= 1);
-    this->frame_sizes.emplace(relative_evaluate_path.size(),
-                              relative_instance_location.size());
+    this->evaluate_path_frame_sizes.emplace(relative_evaluate_path.size());
+    this->instance_location_frame_sizes.emplace(
+        relative_instance_location.size());
     this->evaluate_path_.push_back(relative_evaluate_path);
     this->instance_location_.push_back(relative_instance_location);
-
-    // TODO: Do schema resource management using hashes to avoid
-    // expensive string comparisons
     if (step.dynamic) {
       // Note that we are potentially repeatedly pushing back the
       // same schema resource over and over again. However, the
@@ -199,14 +198,15 @@ public:
   }
 
   template <typename T> auto pop(const T &step) -> void {
-    assert(!this->frame_sizes.empty());
-    const auto &sizes{this->frame_sizes.top()};
-    this->evaluate_path_.pop_back(sizes.first);
-    this->instance_location_.pop_back(sizes.second);
-    this->frame_sizes.pop();
-
-    // TODO: Do schema resource management using hashes to avoid
-    // expensive string comparisons
+    assert(!this->evaluate_path_frame_sizes.empty());
+    assert(!this->instance_location_frame_sizes.empty());
+    const auto evaluate_path_size{this->evaluate_path_frame_sizes.top()};
+    const auto instance_location_size{
+        this->instance_location_frame_sizes.top()};
+    this->evaluate_path_.pop_back(evaluate_path_size);
+    this->instance_location_.pop_back(instance_location_size);
+    this->evaluate_path_frame_sizes.pop();
+    this->instance_location_frame_sizes.pop();
     if (step.dynamic) {
       assert(!this->resources_.empty());
       this->resources_.pop_back();
@@ -297,7 +297,8 @@ public:
 private:
   Pointer evaluate_path_;
   Pointer instance_location_;
-  std::stack<std::pair<std::size_t, std::size_t>> frame_sizes;
+  std::stack<std::uint8_t> evaluate_path_frame_sizes;
+  std::stack<std::uint8_t> instance_location_frame_sizes;
   // TODO: Keep hashes of schema resources URI instead for performance reasons
   std::vector<std::string> resources_;
   std::vector<Pointer> annotation_blacklist;
