@@ -23,7 +23,7 @@ public:
   using Pointer = sourcemeta::jsontoolkit::Pointer;
   using JSON = sourcemeta::jsontoolkit::JSON;
   using Template = sourcemeta::jsontoolkit::SchemaCompilerTemplate;
-  EvaluationContext(const JSON &instance) : instance_{instance} {};
+  EvaluationContext(const JSON &instance) : instances_{instance} {};
 
   template <typename T> auto value(T &&document) -> const JSON & {
     return *(this->values.emplace(std::forward<T>(document)).first);
@@ -222,7 +222,7 @@ public:
     }
   }
 
-  auto instance() const -> const auto & { return this->instance_; }
+  auto instances() const -> const auto & { return this->instances_; }
 
   auto resources() const -> const std::vector<std::string> & {
     return this->resources_;
@@ -259,9 +259,9 @@ public:
     // instance location in this class that we manipulate through
     // .push() and .pop()
     if (relative_instance_location.empty()) {
-      return get(this->instance_, this->instance_location());
+      return get(this->instances_.back(), this->instance_location());
     } else {
-      return get(get(this->instance_, this->instance_location()),
+      return get(get(this->instances_.back(), this->instance_location()),
                  relative_instance_location);
     }
   }
@@ -304,7 +304,7 @@ public:
   }
 
 private:
-  const JSON &instance_;
+  std::vector<std::reference_wrapper<const JSON>> instances_;
   Pointer evaluate_path_;
   Pointer instance_location_;
   std::stack<std::pair<std::size_t, std::size_t>> frame_sizes;
@@ -1207,6 +1207,8 @@ inline auto evaluate_internal(
   assert(context.evaluate_path().empty());
   assert(context.instance_location().empty());
   assert(context.resources().empty());
+  // We should end up at the root of the instance
+  assert(context.instances().size() == 1);
   return overall;
 }
 
