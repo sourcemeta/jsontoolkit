@@ -37,7 +37,7 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
   /// ```
-  GenericToken(const Property::value_type *const property)
+  GenericToken(const typename Property::value_type *const property)
       : data{std::in_place_type<Property>, property} {}
 
   /// This constructor creates an JSON Pointer token from a character. For
@@ -49,7 +49,7 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::Pointer::Token token{'a'};
   /// ```
-  GenericToken(const Property::value_type character)
+  GenericToken(const typename Property::value_type character)
       : data{std::in_place_type<Property>, Property{character}} {}
 
   /// This constructor creates an JSON Pointer token from an item index. For
