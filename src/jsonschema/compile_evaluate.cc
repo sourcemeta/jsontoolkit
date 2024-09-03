@@ -30,10 +30,18 @@ public:
 
   auto annotate(const Pointer &current_instance_location, const JSON &value)
       -> std::pair<std::reference_wrapper<const JSON>, bool> {
-    const auto result{this->annotations_.insert({current_instance_location, {}})
-                          .first->second.insert({this->evaluate_path(), {}})
-                          .first->second.insert(value)};
-    return {*(result.first), result.second};
+    auto &container{this->annotations_.insert({current_instance_location, {}})
+                        .first->second.insert({this->evaluate_path(), {}})
+                        .first->second};
+
+    for (const auto &annotation : container) {
+      if (annotation.get() == value) {
+        return {annotation, false};
+      }
+    }
+
+    container.push_back(value);
+    return {container.back(), true};
   }
 
 private:
@@ -108,9 +116,12 @@ public:
     for (const auto &keyword : keywords) {
       auto expected_evaluate_path{base_evaluate_path};
       expected_evaluate_path.push_back({keyword});
-      if (this->annotations(expected_instance_location, expected_evaluate_path)
-              .contains(value)) {
-        return true;
+      const auto &annotation_values{this->annotations(
+          expected_instance_location, expected_evaluate_path)};
+      for (const auto &annotation : annotation_values) {
+        if (annotation.get() == value) {
+          return true;
+        }
       }
     }
 
@@ -131,9 +142,17 @@ public:
          instance_annotations) {
       assert(!schema_location.empty());
       const auto &keyword{schema_location.back()};
+
+      bool found{false};
+      for (const auto &annotation : schema_annotations) {
+        if (annotation.get() == value) {
+          found = true;
+          break;
+        }
+      }
+
       if (keyword.is_property() && keywords.contains(keyword.to_property()) &&
-          schema_annotations.contains(value) &&
-          schema_location.initial().starts_with(base_evaluate_path)) {
+          found && schema_location.initial().starts_with(base_evaluate_path)) {
         bool blacklisted = false;
         for (const auto &masked : this->annotation_blacklist) {
           if (schema_location.starts_with(masked) &&
@@ -168,9 +187,10 @@ public:
       }
 
       for (const auto &annotation : schema_annotations) {
-        if (annotation.is_integer() && annotation.is_positive()) {
+        if (annotation.get().is_integer() && annotation.get().is_positive()) {
           result = std::max(
-              result, static_cast<std::uint64_t>(annotation.to_integer()) + 1);
+              result,
+              static_cast<std::uint64_t>(annotation.get().to_integer()) + 1);
         }
       }
     }
@@ -305,7 +325,11 @@ private:
   std::set<JSON> values;
   // We don't use a pair for holding the two pointers for runtime
   // efficiency when resolving keywords like `unevaluatedProperties`
-  std::map<Pointer, std::map<Pointer, std::set<JSON>>> annotations_;
+  // Also, while an `std::set` has the right semantics, a vector is
+  // faster for small number of items
+  std::map<Pointer,
+           std::map<Pointer, std::vector<std::reference_wrapper<const JSON>>>>
+      annotations_;
   std::map<std::size_t, const std::reference_wrapper<const Template>> labels;
   bool property_as_instance{false};
 };
@@ -402,7 +426,7 @@ auto evaluate_step(
                      context.value(nullptr));                                  \
     callback.value()(SchemaCompilerEvaluationType::Post, true, step,           \
                      context.evaluate_path(), destination,                     \
-                     annotation_result.first);                                 \
+                     annotation_result.first.get());                           \
   }                                                                            \
   context.pop(step_category);                                                  \
   SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                        \
@@ -423,7 +447,7 @@ auto evaluate_step(
                      context.value(nullptr));                                  \
     callback.value()(SchemaCompilerEvaluationType::Post, true, step,           \
                      context.evaluate_path(), destination,                     \
-                     annotation_result.first);                                 \
+                     annotation_result.first.get());                           \
   }                                                                            \
   context.pop(step_category);                                                  \
   SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                        \
@@ -838,7 +862,8 @@ auto evaluate_step(
         annotation, SchemaCompilerAnnotationBasenameToParent,
         // TODO: Can we avoid a copy of the instance location here?
         context.instance_location().initial(),
-        context.instance_location().back().to_json());
+        // Otherwise this token will go out of scope
+        context.value(context.instance_location().back().to_json()));
   } else if (IS_STEP(SchemaCompilerLoopPropertiesMatch)) {
     EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesMatch, target.is_object());
     assert(!loop.value.empty());
