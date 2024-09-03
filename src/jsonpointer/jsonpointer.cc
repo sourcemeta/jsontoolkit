@@ -16,13 +16,13 @@ namespace {
 template <template <typename T> typename Allocator, typename V>
 auto traverse(V &document,
               typename sourcemeta::jsontoolkit::GenericPointer<
-                  typename V::Char, typename V::CharTraits, Allocator,
+                  typename V::Char, typename V::CharTraits,
                   typename V::String>::const_iterator begin,
               typename sourcemeta::jsontoolkit::GenericPointer<
-                  typename V::Char, typename V::CharTraits, Allocator,
+                  typename V::Char, typename V::CharTraits,
                   typename V::String>::const_iterator end) -> V & {
   using Pointer = sourcemeta::jsontoolkit::GenericPointer<
-      typename V::Char, typename V::CharTraits, Allocator, typename V::String>;
+      typename V::Char, typename V::CharTraits, typename V::String>;
   // Make sure types match
   static_assert(
       std::is_same_v<typename Pointer::Value, std::remove_const_t<V>>);
