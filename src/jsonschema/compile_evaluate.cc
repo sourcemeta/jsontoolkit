@@ -269,7 +269,7 @@ public:
   // Detect if a schema does need this so if not, we avoid
   // an unnecessary copy
   auto mask() -> void {
-    this->annotation_blacklist.insert(this->evaluate_path_);
+    this->annotation_blacklist.push_back(this->evaluate_path_);
   }
 
   auto jump(const std::size_t id) const -> const Template & {
@@ -299,7 +299,7 @@ private:
   std::stack<std::pair<std::size_t, std::size_t>> frame_sizes;
   // TODO: Keep hashes of schema resources URI instead for performance reasons
   std::vector<std::string> resources_;
-  std::set<Pointer> annotation_blacklist;
+  std::vector<Pointer> annotation_blacklist;
   // For efficiency, as we likely reference the same JSON values
   // over and over again
   std::set<JSON> values;
