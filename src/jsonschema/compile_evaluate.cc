@@ -187,15 +187,11 @@ public:
     return result;
   }
 
-  template <typename T> auto push(const T &step) -> void {
-    assert(step.relative_instance_location.size() <= 1);
+  template <typename T> auto internal_push(const T &step) -> void {
     this->frame_sizes.emplace(step.relative_schema_location.size(),
                               step.relative_instance_location.size());
     this->evaluate_path_.push_back(step.relative_schema_location);
     this->instance_location_.push_back(step.relative_instance_location);
-
-    // TODO: Do schema resource management using hashes to avoid
-    // expensive string comparisons
     if (step.dynamic) {
       // Note that we are potentially repeatedly pushing back the
       // same schema resource over and over again. However, the
@@ -205,11 +201,34 @@ public:
     }
   }
 
+  template <typename T> auto push(const T &step) -> void {
+    this->internal_push(step);
+    assert(step.relative_instance_location.size() <= 1);
+    if (!step.relative_instance_location.empty()) {
+      this->instances_.emplace_back(
+          get(this->instances_.back().get(),
+              step.relative_instance_location.back()));
+    }
+  }
+
+  template <typename T>
+  auto push(const T &step, const JSON &new_instance) -> void {
+    this->internal_push(step);
+    if (!step.relative_instance_location.empty()) {
+      this->instances_.emplace_back(new_instance);
+    }
+  }
+
   template <typename T> auto pop(const T &step) -> void {
     assert(!this->frame_sizes.empty());
     const auto &sizes{this->frame_sizes.top()};
     this->evaluate_path_.pop_back(sizes.first);
     this->instance_location_.pop_back(sizes.second);
+    assert(sizes.second <= 1);
+    if (sizes.second == 1) {
+      this->instances_.pop_back();
+    }
+
     this->frame_sizes.pop();
 
     // TODO: Do schema resource management using hashes to avoid
@@ -223,11 +242,13 @@ public:
   auto enter(const Pointer::Token::Property &property) -> void {
     this->frame_sizes.emplace(0, 1);
     this->instance_location_.push_back(property);
+    this->instances_.emplace_back(this->instances_.back().get().at(property));
   }
 
   auto enter(const Pointer::Token::Index &index) -> void {
     this->frame_sizes.emplace(0, 1);
     this->instance_location_.push_back(index);
+    this->instances_.emplace_back(this->instances_.back().get().at(index));
   }
 
   auto leave() -> void {
@@ -236,6 +257,7 @@ public:
     assert(this->frame_sizes.top().second == 1);
     this->instance_location_.pop_back();
     this->frame_sizes.pop();
+    this->instances_.pop_back();
   }
 
   auto instances() const -> const auto & { return this->instances_; }
@@ -255,35 +277,26 @@ public:
     this->property_as_instance = (type == TargetType::Key);
   }
 
-  auto
-  resolve_target(const Pointer &relative_instance_location) -> const JSON & {
-    using namespace sourcemeta::jsontoolkit;
+  auto resolve_target_from(const Pointer &relative_instance_location)
+      -> const JSON & {
+    assert(!relative_instance_location.empty());
     if (this->property_as_instance) [[unlikely]] {
-      if (!relative_instance_location.empty()) {
-        assert(relative_instance_location.back().is_property());
-        return this->value(relative_instance_location.back().to_property());
-      }
+      assert(relative_instance_location.back().is_property());
+      return this->value(relative_instance_location.back().to_property());
+    }
 
+    return get(this->instances_.back().get(),
+               relative_instance_location.back());
+  }
+
+  auto resolve_target() -> const JSON & {
+    if (this->property_as_instance) [[unlikely]] {
       assert(!this->instance_location().empty());
       assert(this->instance_location().back().is_property());
       return this->value(this->instance_location().back().to_property());
     }
 
-    // TODO: This means that we traverse the instance into
-    // the current instance location EVERY single time.
-    // Can we be smarter? Maybe we keep a reference to the current
-    // instance location in this class that we manipulate through
-    // .push() and .pop()
-    if (relative_instance_location.empty()) {
-      return get(this->instances_.back(), this->instance_location());
-    } else {
-      return get(get(this->instances_.back(), this->instance_location()),
-                 relative_instance_location);
-    }
-  }
-
-  auto resolve_target() -> const JSON & {
-    return this->resolve_target(sourcemeta::jsontoolkit::empty_pointer);
+    return this->instances_.back().get();
   }
 
   auto mark(const std::size_t id, const Template &children) -> void {
@@ -352,13 +365,15 @@ auto evaluate_step(
 #define EVALUATE_BEGIN(step_category, step_type, precondition)                 \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
-  const auto &target{                                                          \
-      context.resolve_target(step_category.relative_instance_location)};       \
+  const auto &target{step_category.relative_instance_location.empty()          \
+                         ? context.resolve_target()                            \
+                         : context.resolve_target_from(                        \
+                               step_category.relative_instance_location)};     \
   if (!(precondition)) {                                                       \
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
   }                                                                            \
-  context.push(step_category);                                                 \
+  context.push(step_category, target);                                         \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
