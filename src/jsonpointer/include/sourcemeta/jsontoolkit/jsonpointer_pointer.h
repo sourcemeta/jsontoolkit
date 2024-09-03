@@ -193,6 +193,13 @@ public:
   /// assert(pointer.at(2).to_property() == "baz");
   /// ```
   auto push_back(const GenericPointer<PropertyT> &other) -> void {
+    if (other.empty()) {
+      return;
+    } else if (other.size() == 1) {
+      this->emplace_back(other.back());
+      return;
+    }
+
     this->data.reserve(this->data.size() + other.size());
     std::copy(other.data.cbegin(), other.data.cend(),
               std::back_inserter(this->data));
@@ -219,6 +226,13 @@ public:
   /// assert(pointer.at(2).to_property() == "baz");
   /// ```
   auto push_back(GenericPointer<PropertyT> &&other) -> void {
+    if (other.empty()) {
+      return;
+    } else if (other.size() == 1) {
+      this->emplace_back(std::move(other.back()));
+      return;
+    }
+
     this->data.reserve(this->data.size() + other.size());
     std::move(other.data.begin(), other.data.end(),
               std::back_inserter(this->data));
