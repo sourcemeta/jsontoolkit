@@ -66,10 +66,10 @@ auto compiler_2019_09_validation_dependentrequired(
       continue;
     }
 
-    std::set<JSON::String> properties;
+    std::vector<JSON::String> properties;
     for (const auto &property : entry.second.as_array()) {
       assert(property.is_string());
-      properties.emplace(property.to_string());
+      properties.push_back(property.to_string());
     }
 
     if (!properties.empty()) {
@@ -257,16 +257,16 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
 
   if (schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/applicator")) {
-    dependencies.emplace("properties");
-    dependencies.emplace("patternProperties");
-    dependencies.emplace("additionalProperties");
+    dependencies.push_back("properties");
+    dependencies.push_back("patternProperties");
+    dependencies.push_back("additionalProperties");
   }
 
   if (schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2020-12/vocab/applicator")) {
-    dependencies.emplace("properties");
-    dependencies.emplace("patternProperties");
-    dependencies.emplace("additionalProperties");
+    dependencies.push_back("properties");
+    dependencies.push_back("patternProperties");
+    dependencies.push_back("additionalProperties");
   }
 
   SchemaCompilerTemplate children{compile(context, schema_context,

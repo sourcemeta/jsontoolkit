@@ -32,7 +32,7 @@ auto compiler_draft6_validation_type(
     } else if (type == "number") {
       return {make<SchemaCompilerAssertionTypeStrictAny>(
           true, context, schema_context, dynamic_context,
-          std::set<JSON::Type>{JSON::Type::Real, JSON::Type::Integer})};
+          std::vector<JSON::Type>{JSON::Type::Real, JSON::Type::Integer})};
     } else if (type == "integer") {
       return {make<SchemaCompilerAssertionType>(
           true, context, schema_context, dynamic_context, JSON::Type::Integer)};
@@ -64,7 +64,7 @@ auto compiler_draft6_validation_type(
     } else if (type == "number") {
       return {make<SchemaCompilerAssertionTypeStrictAny>(
           true, context, schema_context, dynamic_context,
-          std::set<JSON::Type>{JSON::Type::Real, JSON::Type::Integer})};
+          std::vector<JSON::Type>{JSON::Type::Real, JSON::Type::Integer})};
     } else if (type == "integer") {
       return {make<SchemaCompilerAssertionType>(
           true, context, schema_context, dynamic_context, JSON::Type::Integer)};
@@ -75,26 +75,26 @@ auto compiler_draft6_validation_type(
       return {};
     }
   } else if (schema_context.schema.at(dynamic_context.keyword).is_array()) {
-    std::set<JSON::Type> types;
+    std::vector<JSON::Type> types;
     for (const auto &type :
          schema_context.schema.at(dynamic_context.keyword).as_array()) {
       assert(type.is_string());
       const auto &type_string{type.to_string()};
       if (type_string == "null") {
-        types.emplace(JSON::Type::Null);
+        types.push_back(JSON::Type::Null);
       } else if (type_string == "boolean") {
-        types.emplace(JSON::Type::Boolean);
+        types.push_back(JSON::Type::Boolean);
       } else if (type_string == "object") {
-        types.emplace(JSON::Type::Object);
+        types.push_back(JSON::Type::Object);
       } else if (type_string == "array") {
-        types.emplace(JSON::Type::Array);
+        types.push_back(JSON::Type::Array);
       } else if (type_string == "number") {
-        types.emplace(JSON::Type::Integer);
-        types.emplace(JSON::Type::Real);
+        types.push_back(JSON::Type::Integer);
+        types.push_back(JSON::Type::Real);
       } else if (type_string == "integer") {
-        types.emplace(JSON::Type::Integer);
+        types.push_back(JSON::Type::Integer);
       } else if (type_string == "string") {
-        types.emplace(JSON::Type::String);
+        types.push_back(JSON::Type::String);
       }
     }
 

@@ -86,7 +86,7 @@ auto compiler_draft4_validation_type(
     } else if (type == "number") {
       return {make<SchemaCompilerAssertionTypeStrictAny>(
           true, context, schema_context, dynamic_context,
-          std::set<JSON::Type>{JSON::Type::Real, JSON::Type::Integer})};
+          std::vector<JSON::Type>{JSON::Type::Real, JSON::Type::Integer})};
     } else if (type == "integer") {
       return {make<SchemaCompilerAssertionTypeStrict>(
           true, context, schema_context, dynamic_context, JSON::Type::Integer)};
@@ -118,7 +118,7 @@ auto compiler_draft4_validation_type(
     } else if (type == "number") {
       return {make<SchemaCompilerAssertionTypeStrictAny>(
           true, context, schema_context, dynamic_context,
-          std::set<JSON::Type>{JSON::Type::Real, JSON::Type::Integer})};
+          std::vector<JSON::Type>{JSON::Type::Real, JSON::Type::Integer})};
     } else if (type == "integer") {
       return {make<SchemaCompilerAssertionTypeStrict>(
           true, context, schema_context, dynamic_context, JSON::Type::Integer)};
@@ -129,26 +129,26 @@ auto compiler_draft4_validation_type(
       return {};
     }
   } else if (schema_context.schema.at(dynamic_context.keyword).is_array()) {
-    std::set<JSON::Type> types;
+    std::vector<JSON::Type> types;
     for (const auto &type :
          schema_context.schema.at(dynamic_context.keyword).as_array()) {
       assert(type.is_string());
       const auto &type_string{type.to_string()};
       if (type_string == "null") {
-        types.emplace(JSON::Type::Null);
+        types.push_back(JSON::Type::Null);
       } else if (type_string == "boolean") {
-        types.emplace(JSON::Type::Boolean);
+        types.push_back(JSON::Type::Boolean);
       } else if (type_string == "object") {
-        types.emplace(JSON::Type::Object);
+        types.push_back(JSON::Type::Object);
       } else if (type_string == "array") {
-        types.emplace(JSON::Type::Array);
+        types.push_back(JSON::Type::Array);
       } else if (type_string == "number") {
-        types.emplace(JSON::Type::Integer);
-        types.emplace(JSON::Type::Real);
+        types.push_back(JSON::Type::Integer);
+        types.push_back(JSON::Type::Real);
       } else if (type_string == "integer") {
-        types.emplace(JSON::Type::Integer);
+        types.push_back(JSON::Type::Integer);
       } else if (type_string == "string") {
-        types.emplace(JSON::Type::String);
+        types.push_back(JSON::Type::String);
       }
     }
 
@@ -177,11 +177,11 @@ auto compiler_draft4_validation_required(
   if (schema_context.schema.at(dynamic_context.keyword).empty()) {
     return {};
   } else if (schema_context.schema.at(dynamic_context.keyword).size() > 1) {
-    std::set<JSON::String> properties;
+    std::vector<JSON::String> properties;
     for (const auto &property :
          schema_context.schema.at(dynamic_context.keyword).as_array()) {
       assert(property.is_string());
-      properties.emplace(property.to_string());
+      properties.push_back(property.to_string());
     }
 
     if (properties.size() == 1) {
@@ -492,11 +492,11 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
 
   SchemaCompilerValueStrings dependencies;
   if (schema_context.schema.defines("properties")) {
-    dependencies.insert("properties");
+    dependencies.push_back("properties");
   }
 
   if (schema_context.schema.defines("patternProperties")) {
-    dependencies.insert("patternProperties");
+    dependencies.push_back("patternProperties");
   }
 
   if (dependencies.empty()) {
@@ -815,10 +815,10 @@ auto compiler_draft4_applicator_dependencies(
                     {entry.first}, empty_pointer)));
       }
     } else if (entry.second.is_array()) {
-      std::set<JSON::String> properties;
+      std::vector<JSON::String> properties;
       for (const auto &property : entry.second.as_array()) {
         assert(property.is_string());
-        properties.emplace(property.to_string());
+        properties.push_back(property.to_string());
       }
 
       if (!properties.empty()) {
@@ -851,10 +851,10 @@ auto compiler_draft4_validation_enum(
         JSON{schema_context.schema.at(dynamic_context.keyword).front()})};
   }
 
-  std::set<JSON> options;
+  std::vector<JSON> options;
   for (const auto &option :
        schema_context.schema.at(dynamic_context.keyword).as_array()) {
-    options.insert(option);
+    options.push_back(option);
   }
 
   return {make<SchemaCompilerAssertionEqualsAny>(

@@ -89,7 +89,7 @@ public:
   auto defines_any_adjacent_annotation(
       const Pointer &expected_instance_location,
       const Pointer &base_evaluate_path,
-      const std::set<std::string> &keywords) const -> bool {
+      const std::vector<std::string> &keywords) const -> bool {
     for (const auto &keyword : keywords) {
       if (this->defines_any_adjacent_annotation(expected_instance_location,
                                                 base_evaluate_path, keyword)) {
@@ -102,7 +102,7 @@ public:
 
   auto defines_adjacent_annotation(const Pointer &expected_instance_location,
                                    const Pointer &base_evaluate_path,
-                                   const std::set<std::string> &keywords,
+                                   const std::vector<std::string> &keywords,
                                    const JSON &value) const -> bool {
     // TODO: We should be taking masks into account
     for (const auto &keyword : keywords) {
@@ -119,7 +119,7 @@ public:
 
   auto defines_annotation(const Pointer &expected_instance_location,
                           const Pointer &base_evaluate_path,
-                          const std::set<std::string> &keywords,
+                          const std::vector<std::string> &keywords,
                           const JSON &value) const -> bool {
     if (keywords.empty()) {
       return false;
@@ -131,7 +131,10 @@ public:
          instance_annotations) {
       assert(!schema_location.empty());
       const auto &keyword{schema_location.back()};
-      if (keyword.is_property() && keywords.contains(keyword.to_property()) &&
+
+      if (keyword.is_property() &&
+          std::find(keywords.cbegin(), keywords.cend(),
+                    keyword.to_property()) != keywords.cend() &&
           schema_annotations.contains(value) &&
           schema_location.initial().starts_with(base_evaluate_path)) {
         bool blacklisted = false;
@@ -153,7 +156,7 @@ public:
   }
 
   auto largest_annotation_index(const Pointer &expected_instance_location,
-                                const std::set<std::string> &keywords,
+                                const std::vector<std::string> &keywords,
                                 const std::uint64_t default_value) const
       -> std::uint64_t {
     // TODO: We should be taking masks into account
@@ -163,7 +166,12 @@ public:
          this->annotations(expected_instance_location)) {
       assert(!schema_location.empty());
       const auto &keyword{schema_location.back()};
-      if (!keyword.is_property() || !keywords.contains(keyword.to_property())) {
+      if (!keyword.is_property()) {
+        continue;
+      }
+
+      if (std::find(keywords.cbegin(), keywords.cend(),
+                    keyword.to_property()) == keywords.cend()) {
         continue;
       }
 
@@ -492,9 +500,16 @@ auto evaluate_step(
     const auto &target{context.resolve_target(instance)};
     // In non-strict mode, we consider a real number that represents an
     // integer to be an integer
-    result = assertion.value.contains(target.type()) ||
-             (assertion.value.contains(JSON::Type::Integer) &&
-              target.is_integer_real());
+    for (const auto type : assertion.value) {
+      if (type == JSON::Type::Integer && target.is_integer_real()) {
+        result = true;
+        break;
+      } else if (type == target.type()) {
+        result = true;
+        break;
+      }
+    }
+
     EVALUATE_END(assertion, SchemaCompilerAssertionTypeAny);
   } else if (IS_STEP(SchemaCompilerAssertionTypeStrict)) {
     EVALUATE_BEGIN_NO_PRECONDITION(assertion,
@@ -506,7 +521,9 @@ auto evaluate_step(
                                    SchemaCompilerAssertionTypeStrictAny);
     // Otherwise we are we even emitting this instruction?
     assert(assertion.value.size() > 1);
-    result = assertion.value.contains(context.resolve_target(instance).type());
+    result = (std::find(assertion.value.cbegin(), assertion.value.cend(),
+                        context.resolve_target(instance).type()) !=
+              assertion.value.cend());
     EVALUATE_END(assertion, SchemaCompilerAssertionTypeStrictAny);
   } else if (IS_STEP(SchemaCompilerAssertionRegex)) {
     EVALUATE_BEGIN(assertion, SchemaCompilerAssertionRegex, target.is_string());
@@ -548,7 +565,9 @@ auto evaluate_step(
     EVALUATE_END(assertion, SchemaCompilerAssertionEqual);
   } else if (IS_STEP(SchemaCompilerAssertionEqualsAny)) {
     EVALUATE_BEGIN_NO_PRECONDITION(assertion, SchemaCompilerAssertionEqualsAny);
-    result = assertion.value.contains(context.resolve_target(instance));
+    result =
+        (std::find(assertion.value.cbegin(), assertion.value.cend(),
+                   context.resolve_target(instance)) != assertion.value.cend());
     EVALUATE_END(assertion, SchemaCompilerAssertionEqualsAny);
   } else if (IS_STEP(SchemaCompilerAssertionGreaterEqual)) {
     EVALUATE_BEGIN(assertion, SchemaCompilerAssertionGreaterEqual,
