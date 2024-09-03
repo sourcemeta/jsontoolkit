@@ -226,7 +226,11 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 
 /// @defgroup jsonschema_compiler_instructions Instruction Set
 /// @ingroup jsonschema_compiler
-/// @brief The set of instructions supported by the compiler
+/// @brief The set of instructions supported by the compiler.
+/// @details
+///
+/// Every instruction operates at a specific instance location and with the
+/// given value, whose type depends on the instruction.
 
 /// @ingroup jsonschema_compiler_instructions
 /// @brief Represents a compiler assertion step that always fails
