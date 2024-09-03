@@ -181,6 +181,7 @@ public:
   template <typename T>
   auto push(const T &step, const Pointer &relative_evaluate_path,
             const Pointer &relative_instance_location) -> void {
+    assert(relative_instance_location.size() <= 1);
     this->frame_sizes.emplace(relative_evaluate_path.size(),
                               relative_instance_location.size());
     this->evaluate_path_.push_back(relative_evaluate_path);
