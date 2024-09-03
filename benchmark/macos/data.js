@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725406194029,
+  "lastUpdate": 1725406616510,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -3334,6 +3334,66 @@ window.BENCHMARK_DATA = {
             "value": 7245.0943633127745,
             "unit": "ns/iter",
             "extra": "iterations: 97167\ncpu: 7243.395391439483 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5bd9a62d3ad0c79ab2214212cf34faf0ba4ececc",
+          "message": "Add helpers to directly push properties and indexes to pointers (#1121)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-03T19:21:40-04:00",
+          "tree_id": "f49e141ca47db6ad5b7c8e5d551600c4d5c17794",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/5bd9a62d3ad0c79ab2214212cf34faf0ba4ececc"
+        },
+        "date": 1725406615273,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 202892.85714288708,
+            "unit": "ns/iter",
+            "extra": "iterations: 3479\ncpu: 200201.20724346073 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1481.3806426642766,
+            "unit": "ns/iter",
+            "extra": "iterations: 490925\ncpu: 1459.6038091358146 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2264.1425677851244,
+            "unit": "ns/iter",
+            "extra": "iterations: 310540\ncpu: 2236.639402331421 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 173.36684890548906,
+            "unit": "ns/iter",
+            "extra": "iterations: 4055667\ncpu: 168.57054585595898 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 8215.668068670015,
+            "unit": "ns/iter",
+            "extra": "iterations: 87256\ncpu: 8214.850554689663 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 6699.3909165558425,
+            "unit": "ns/iter",
+            "extra": "iterations: 105951\ncpu: 6698.530452756465 ns\nthreads: 1"
           }
         ]
       }
