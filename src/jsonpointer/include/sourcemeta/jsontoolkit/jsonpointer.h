@@ -270,8 +270,7 @@ auto to_uri(const Pointer &pointer, const URI &base) -> URI;
 /// assert(subpointers.at(2) == sourcemeta::jsontoolkit::Pointer{1});
 /// assert(subpointers.at(3) == sourcemeta::jsontoolkit::Pointer{2});
 /// ```
-using PointerWalker =
-    GenericPointerWalker<JSON::Char, JSON::CharTraits, std::allocator>;
+using PointerWalker = GenericPointerWalker<Pointer>;
 
 /// @ingroup jsonpointer
 ///
@@ -297,8 +296,7 @@ using PointerWalker =
 /// assert(subpointers.at(1) == sourcemeta::jsontoolkit::Pointer{"foo"});
 /// assert(subpointers.at(2) == sourcemeta::jsontoolkit::Pointer{});
 /// ```
-using SubPointerWalker =
-    GenericSubPointerWalker<JSON::Char, JSON::CharTraits, std::allocator>;
+using SubPointerWalker = GenericSubPointerWalker<Pointer>;
 
 } // namespace sourcemeta::jsontoolkit
 
