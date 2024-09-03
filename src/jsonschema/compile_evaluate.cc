@@ -199,11 +199,6 @@ public:
     }
   }
 
-  template <typename T> auto push(const T &step) -> void {
-    this->push(step, step.relative_schema_location,
-               step.relative_instance_location);
-  }
-
   template <typename T> auto pop(const T &step) -> void {
     assert(!this->frame_sizes.empty());
     const auto &sizes{this->frame_sizes.top()};
@@ -339,7 +334,8 @@ auto evaluate_step(
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
   }                                                                            \
-  context.push(step_category);                                                 \
+  context.push(step_category, step_category.relative_schema_location,          \
+               step_category.relative_instance_location);                      \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
@@ -354,7 +350,8 @@ auto evaluate_step(
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
   }                                                                            \
-  context.push(step_category);                                                 \
+  context.push(step_category, step_category.relative_schema_location,          \
+               step_category.relative_instance_location);                      \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
@@ -365,7 +362,8 @@ auto evaluate_step(
 #define EVALUATE_BEGIN_NO_PRECONDITION(step_category, step_type)               \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
-  context.push(step_category);                                                 \
+  context.push(step_category, step_category.relative_schema_location,          \
+               step_category.relative_instance_location);                      \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
@@ -397,7 +395,8 @@ auto evaluate_step(
   }                                                                            \
   const auto annotation_result{                                                \
       context.annotate(destination, annotation_value)};                        \
-  context.push(annotation);                                                    \
+  context.push(step_category, step_category.relative_schema_location,          \
+               step_category.relative_instance_location);                      \
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
@@ -417,7 +416,8 @@ auto evaluate_step(
   const auto &step_category{std::get<step_type>(step)};                        \
   const auto annotation_result{                                                \
       context.annotate(destination, annotation_value)};                        \
-  context.push(step_category);                                                 \
+  context.push(step_category, step_category.relative_schema_location,          \
+               step_category.relative_instance_location);                      \
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
