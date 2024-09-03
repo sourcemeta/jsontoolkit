@@ -35,14 +35,13 @@ auto compiler_2019_09_applicator_dependentschemas(
           false, context, schema_context, relative_dynamic_context,
           SchemaCompilerValueString{entry.first},
           compile(context, schema_context, relative_dynamic_context,
-                  {entry.first}, empty_pointer),
-          SchemaCompilerTemplate{}));
+                  {entry.first}, empty_pointer)));
     }
   }
 
   return {make<SchemaCompilerLogicalWhenType>(
       true, context, schema_context, dynamic_context, JSON::Type::Object,
-      std::move(children), SchemaCompilerTemplate{})};
+      std::move(children))};
 }
 
 auto compiler_2019_09_validation_dependentrequired(
@@ -83,8 +82,7 @@ auto compiler_2019_09_validation_dependentrequired(
   }
 
   return {make<SchemaCompilerAssertionPropertyDependencies>(
-      true, context, schema_context, dynamic_context, std::move(dependencies),
-      SchemaCompilerTemplate{})};
+      true, context, schema_context, dynamic_context, std::move(dependencies))};
 }
 
 auto compiler_2019_09_core_annotation(
@@ -94,7 +92,7 @@ auto compiler_2019_09_core_annotation(
     -> SchemaCompilerTemplate {
   return {make<SchemaCompilerAnnotationEmit>(
       true, context, schema_context, dynamic_context,
-      JSON{schema_context.schema.at(dynamic_context.keyword)}, {})};
+      JSON{schema_context.schema.at(dynamic_context.keyword)})};
 }
 
 auto compiler_2019_09_applicator_contains_conditional_annotate(
@@ -135,7 +133,7 @@ auto compiler_2019_09_applicator_contains_conditional_annotate(
   if (maximum.has_value() && minimum > maximum.value()) {
     return {make<SchemaCompilerAssertionFail>(true, context, schema_context,
                                               dynamic_context,
-                                              SchemaCompilerValueNone{}, {})};
+                                              SchemaCompilerValueNone{})};
   }
 
   if (minimum == 0 && !maximum.has_value()) {
@@ -149,7 +147,7 @@ auto compiler_2019_09_applicator_contains_conditional_annotate(
   if (annotate) {
     children.push_back(make<SchemaCompilerAnnotationBasenameToParent>(
         true, context, schema_context, relative_dynamic_context,
-        SchemaCompilerValueNone{}, {}));
+        SchemaCompilerValueNone{}));
 
     // TODO: If after emitting the above annotation, the number of annotations
     // for the current schema location + instance location is equal to the
@@ -165,7 +163,7 @@ auto compiler_2019_09_applicator_contains_conditional_annotate(
           // in use on the schema. Can we pre-determine that and speed things up
           // if not?
           annotate},
-      std::move(children), SchemaCompilerTemplate{})};
+      std::move(children))};
 }
 
 auto compiler_2019_09_applicator_contains(
@@ -219,7 +217,7 @@ auto compiler_2019_09_applicator_unevaluateditems(
                                           relative_dynamic_context,
                                           empty_pointer, empty_pointer)};
   children.push_back(make<SchemaCompilerAnnotationToParent>(
-      true, context, schema_context, relative_dynamic_context, JSON{true}, {}));
+      true, context, schema_context, relative_dynamic_context, JSON{true}));
 
   if (schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/applicator")) {
@@ -227,7 +225,7 @@ auto compiler_2019_09_applicator_unevaluateditems(
         true, context, schema_context, dynamic_context,
         SchemaCompilerValueItemsAnnotationKeywords{
             "items", {}, {"items", "additionalItems", "unevaluatedItems"}},
-        std::move(children), SchemaCompilerTemplate{})};
+        std::move(children))};
   } else if (schema_context.vocabularies.contains(
                  "https://json-schema.org/draft/2020-12/vocab/applicator")) {
     return {make<SchemaCompilerLoopItemsUnevaluated>(
@@ -236,12 +234,11 @@ auto compiler_2019_09_applicator_unevaluateditems(
             "prefixItems",
             {"contains"},
             {"prefixItems", "items", "contains", "unevaluatedItems"}},
-        std::move(children), SchemaCompilerTemplate{})};
+        std::move(children))};
   } else {
     return {make<SchemaCompilerLoopItemsUnmarked>(
         true, context, schema_context, dynamic_context,
-        SchemaCompilerValueStrings{"unevaluatedItems"}, std::move(children),
-        SchemaCompilerTemplate{})};
+        SchemaCompilerValueStrings{"unevaluatedItems"}, std::move(children))};
   }
 }
 
@@ -277,11 +274,11 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
                                           empty_pointer, empty_pointer)};
   children.push_back(make<SchemaCompilerAnnotationBasenameToParent>(
       true, context, schema_context, relative_dynamic_context,
-      SchemaCompilerValueNone{}, {}));
+      SchemaCompilerValueNone{}));
 
   return {make<SchemaCompilerLoopPropertiesNoAnnotation>(
       true, context, schema_context, dynamic_context, std::move(dependencies),
-      std::move(children), SchemaCompilerTemplate{})};
+      std::move(children))};
 }
 
 auto compiler_2019_09_core_recursiveref(
@@ -299,7 +296,7 @@ auto compiler_2019_09_core_recursiveref(
   }
 
   return {make<SchemaCompilerControlDynamicAnchorJump>(
-      true, context, schema_context, dynamic_context, "", {}, {})};
+      true, context, schema_context, dynamic_context, "", {})};
 }
 
 auto compiler_2019_09_applicator_anyof(

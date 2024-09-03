@@ -839,7 +839,49 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto operator()(const SchemaCompilerAssertionSizeGreater &step) const
+  auto operator()(const SchemaCompilerAssertionStringSizeLess &step) const
+      -> std::string {
+    if (this->keyword == "maxLength") {
+      std::ostringstream message;
+      const auto maximum{step_value(step) - 1};
+
+      if (is_within_keyword(this->evaluate_path, "propertyNames")) {
+        assert(this->instance_location.back().is_property());
+        message << "The object property name "
+                << escape_string(this->instance_location.back().to_property());
+      } else {
+        message << "The string value ";
+        stringify(this->target, message);
+      }
+
+      message << " was expected to consist of at most " << maximum
+              << (maximum == 1 ? " character" : " characters");
+
+      if (this->valid) {
+        message << " and";
+      } else {
+        message << " but";
+      }
+
+      message << " it consisted of ";
+
+      if (is_within_keyword(this->evaluate_path, "propertyNames")) {
+        message << this->instance_location.back().to_property().size();
+        message << (this->instance_location.back().to_property().size() == 1
+                        ? " character"
+                        : " characters");
+      } else {
+        message << this->target.size();
+        message << (this->target.size() == 1 ? " character" : " characters");
+      }
+
+      return message.str();
+    }
+
+    return unknown();
+  }
+
+  auto operator()(const SchemaCompilerAssertionStringSizeGreater &step) const
       -> std::string {
     if (this->keyword == "minLength") {
       std::ostringstream message;
@@ -878,6 +920,44 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    return unknown();
+  }
+
+  auto operator()(const SchemaCompilerAssertionArraySizeLess &step) const
+      -> std::string {
+    if (this->keyword == "maxItems") {
+      assert(this->target.is_array());
+      std::ostringstream message;
+      const auto maximum{step_value(step) - 1};
+      message << "The array value was expected to contain at most " << maximum;
+      assert(maximum > 0);
+      if (maximum == 1) {
+        message << " item";
+      } else {
+        message << " items";
+      }
+
+      if (this->valid) {
+        message << " and";
+      } else {
+        message << " but";
+      }
+
+      message << " it contained " << this->target.size();
+      if (this->target.size() == 1) {
+        message << " item";
+      } else {
+        message << " items";
+      }
+
+      return message.str();
+    }
+
+    return unknown();
+  }
+
+  auto operator()(const SchemaCompilerAssertionArraySizeGreater &step) const
+      -> std::string {
     if (this->keyword == "minItems") {
       assert(this->target.is_array());
       std::ostringstream message;
@@ -906,14 +986,18 @@ struct DescribeVisitor {
       return message.str();
     }
 
-    if (this->keyword == "minProperties") {
+    return unknown();
+  }
+
+  auto operator()(const SchemaCompilerAssertionObjectSizeLess &step) const
+      -> std::string {
+    if (this->keyword == "maxProperties") {
       assert(this->target.is_object());
       std::ostringstream message;
-      const auto minimum{step_value(step) + 1};
-      message << "The object value was expected to contain at least "
-              << minimum;
-      assert(minimum > 0);
-      if (minimum == 1) {
+      const auto maximum{step_value(step) - 1};
+      message << "The object value was expected to contain at most " << maximum;
+      assert(maximum > 0);
+      if (maximum == 1) {
         message << " property";
       } else {
         message << " properties";
@@ -947,80 +1031,16 @@ struct DescribeVisitor {
     return unknown();
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionSizeLess &step) const -> std::string {
-    if (this->keyword == "maxLength") {
-      std::ostringstream message;
-      const auto maximum{step_value(step) - 1};
-
-      if (is_within_keyword(this->evaluate_path, "propertyNames")) {
-        assert(this->instance_location.back().is_property());
-        message << "The object property name "
-                << escape_string(this->instance_location.back().to_property());
-      } else {
-        message << "The string value ";
-        stringify(this->target, message);
-      }
-
-      message << " was expected to consist of at most " << maximum
-              << (maximum == 1 ? " character" : " characters");
-
-      if (this->valid) {
-        message << " and";
-      } else {
-        message << " but";
-      }
-
-      message << " it consisted of ";
-
-      if (is_within_keyword(this->evaluate_path, "propertyNames")) {
-        message << this->instance_location.back().to_property().size();
-        message << (this->instance_location.back().to_property().size() == 1
-                        ? " character"
-                        : " characters");
-      } else {
-        message << this->target.size();
-        message << (this->target.size() == 1 ? " character" : " characters");
-      }
-
-      return message.str();
-    }
-
-    if (this->keyword == "maxItems") {
-      assert(this->target.is_array());
-      std::ostringstream message;
-      const auto maximum{step_value(step) - 1};
-      message << "The array value was expected to contain at most " << maximum;
-      assert(maximum > 0);
-      if (maximum == 1) {
-        message << " item";
-      } else {
-        message << " items";
-      }
-
-      if (this->valid) {
-        message << " and";
-      } else {
-        message << " but";
-      }
-
-      message << " it contained " << this->target.size();
-      if (this->target.size() == 1) {
-        message << " item";
-      } else {
-        message << " items";
-      }
-
-      return message.str();
-    }
-
-    if (this->keyword == "maxProperties") {
+  auto operator()(const SchemaCompilerAssertionObjectSizeGreater &step) const
+      -> std::string {
+    if (this->keyword == "minProperties") {
       assert(this->target.is_object());
       std::ostringstream message;
-      const auto maximum{step_value(step) - 1};
-      message << "The object value was expected to contain at most " << maximum;
-      assert(maximum > 0);
-      if (maximum == 1) {
+      const auto minimum{step_value(step) + 1};
+      message << "The object value was expected to contain at least "
+              << minimum;
+      assert(minimum > 0);
+      if (minimum == 1) {
         message << " property";
       } else {
         message << " properties";

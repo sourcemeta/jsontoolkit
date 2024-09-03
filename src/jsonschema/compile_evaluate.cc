@@ -347,16 +347,6 @@ auto evaluate_step(
     return true;                                                               \
   }
 
-#define EVALUATE_CONDITION_GUARD(title, step, instance)                        \
-  for (const auto &child : step.condition) {                                   \
-    if (!evaluate_step(child, instance, SchemaCompilerEvaluationMode::Fast,    \
-                       std::nullopt, context)) {                               \
-      context.pop(step);                                                       \
-      SOURCEMETA_TRACE_END(trace_id, title);                                   \
-      return true;                                                             \
-    }                                                                          \
-  }
-
   if (std::holds_alternative<SchemaCompilerAssertionFail>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionFail");
     const auto &assertion{std::get<SchemaCompilerAssertionFail>(step)};
@@ -483,30 +473,80 @@ auto evaluate_step(
     CALLBACK_PRE(assertion, context.instance_location());
     result = std::regex_search(target.to_string(), assertion.value.first);
     CALLBACK_POST("SchemaCompilerAssertionRegex", assertion);
-  } else if (std::holds_alternative<SchemaCompilerAssertionSizeGreater>(step)) {
-    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionSizeGreater");
-    const auto &assertion{std::get<SchemaCompilerAssertionSizeGreater>(step)};
+  } else if (std::holds_alternative<SchemaCompilerAssertionStringSizeLess>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionStringSizeLess");
+    const auto &assertion{
+        std::get<SchemaCompilerAssertionStringSizeLess>(step)};
     context.push(assertion);
-    // TODO: Get rid of this
-    EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionSizeGreater", assertion,
-                             instance);
-    CALLBACK_PRE(assertion, context.instance_location());
     const auto &target{context.resolve_target(instance)};
-    result = (target.is_array() || target.is_object() || target.is_string()) &&
-             (target.size() > assertion.value);
-    CALLBACK_POST("SchemaCompilerAssertionSizeGreater", assertion);
-  } else if (std::holds_alternative<SchemaCompilerAssertionSizeLess>(step)) {
-    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionSizeLess");
-    const auto &assertion{std::get<SchemaCompilerAssertionSizeLess>(step)};
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionStringSizeLess",
+                                   assertion, target.is_string());
+    CALLBACK_PRE(assertion, context.instance_location());
+    result = (target.size() < assertion.value);
+    CALLBACK_POST("SchemaCompilerAssertionStringSizeLess", assertion);
+  } else if (std::holds_alternative<SchemaCompilerAssertionStringSizeGreater>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerAssertionStringSizeGreater");
+    const auto &assertion{
+        std::get<SchemaCompilerAssertionStringSizeGreater>(step)};
     context.push(assertion);
-    // TODO: Get rid of this
-    EVALUATE_CONDITION_GUARD("SchemaCompilerAssertionSizeLess", assertion,
-                             instance);
-    CALLBACK_PRE(assertion, context.instance_location());
     const auto &target{context.resolve_target(instance)};
-    result = (target.is_array() || target.is_object() || target.is_string()) &&
-             (target.size() < assertion.value);
-    CALLBACK_POST("SchemaCompilerAssertionSizeLess", assertion);
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionStringSizeGreater",
+                                   assertion, target.is_string());
+    CALLBACK_PRE(assertion, context.instance_location());
+    result = (target.size() > assertion.value);
+    CALLBACK_POST("SchemaCompilerAssertionStringSizeGreater", assertion);
+
+  } else if (std::holds_alternative<SchemaCompilerAssertionArraySizeLess>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionArraySizeLess");
+    const auto &assertion{std::get<SchemaCompilerAssertionArraySizeLess>(step)};
+    context.push(assertion);
+    const auto &target{context.resolve_target(instance)};
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionArraySizeLess",
+                                   assertion, target.is_array());
+    CALLBACK_PRE(assertion, context.instance_location());
+    result = (target.size() < assertion.value);
+    CALLBACK_POST("SchemaCompilerAssertionArraySizeLess", assertion);
+  } else if (std::holds_alternative<SchemaCompilerAssertionArraySizeGreater>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionArraySizeGreater");
+    const auto &assertion{
+        std::get<SchemaCompilerAssertionArraySizeGreater>(step)};
+    context.push(assertion);
+    const auto &target{context.resolve_target(instance)};
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionArraySizeGreater",
+                                   assertion, target.is_array());
+    CALLBACK_PRE(assertion, context.instance_location());
+    result = (target.size() > assertion.value);
+    CALLBACK_POST("SchemaCompilerAssertionArraySizeGreater", assertion);
+  } else if (std::holds_alternative<SchemaCompilerAssertionObjectSizeLess>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionObjectSizeLess");
+    const auto &assertion{
+        std::get<SchemaCompilerAssertionObjectSizeLess>(step)};
+    context.push(assertion);
+    const auto &target{context.resolve_target(instance)};
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionObjectSizeLess",
+                                   assertion, target.is_object());
+    CALLBACK_PRE(assertion, context.instance_location());
+    result = (target.size() < assertion.value);
+    CALLBACK_POST("SchemaCompilerAssertionObjectSizeLess", assertion);
+  } else if (std::holds_alternative<SchemaCompilerAssertionObjectSizeGreater>(
+                 step)) {
+    SOURCEMETA_TRACE_START(trace_id,
+                           "SchemaCompilerAssertionObjectSizeGreater");
+    const auto &assertion{
+        std::get<SchemaCompilerAssertionObjectSizeGreater>(step)};
+    context.push(assertion);
+    const auto &target{context.resolve_target(instance)};
+    EVALUATE_IMPLICIT_PRECONDITION("SchemaCompilerAssertionObjectSizeGreater",
+                                   assertion, target.is_object());
+    CALLBACK_PRE(assertion, context.instance_location());
+    result = (target.size() > assertion.value);
+    CALLBACK_POST("SchemaCompilerAssertionObjectSizeGreater", assertion);
   } else if (std::holds_alternative<SchemaCompilerAssertionEqual>(step)) {
     SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerAssertionEqual");
     const auto &assertion{std::get<SchemaCompilerAssertionEqual>(step)};
@@ -1358,7 +1398,6 @@ auto evaluate_step(
 #undef CALLBACK_POST
 #undef CALLBACK_ANNOTATION
 #undef EVALUATE_IMPLICIT_PRECONDITION
-#undef EVALUATE_CONDITION_GUARD
   // We should never get here
   assert(false);
   return result;

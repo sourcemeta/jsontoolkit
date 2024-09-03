@@ -8,7 +8,6 @@ TEST(JSONSchema_compiler_template_format, example_1) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "absoluteKeywordLocation": "#/properties",
     "category": "annotation",
-    "condition": [],
     "report": true,
     "dynamic": true,
     "type": "public",
@@ -37,7 +36,6 @@ TEST(JSONSchema_compiler_template_format, example_1) {
   "relativeSchemaLocation": "",
   "relativeInstanceLocation": "",
   "report": true,
-  "dynamic": true,
-  "condition": []
+  "dynamic": true
 })JSON");
 }

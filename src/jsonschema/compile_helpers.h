@@ -16,8 +16,7 @@ auto make(const bool report, const SchemaCompilerContext &context,
           const SchemaCompilerSchemaContext &schema_context,
           const SchemaCompilerDynamicContext &dynamic_context,
           // Take the value type from the "type" property of the step struct
-          decltype(std::declval<Step>().value) &&value,
-          SchemaCompilerTemplate &&condition) -> Step {
+          decltype(std::declval<Step>().value) &&value) -> Step {
   return {
       dynamic_context.keyword.empty()
           ? dynamic_context.base_schema_location
@@ -28,8 +27,7 @@ auto make(const bool report, const SchemaCompilerContext &context,
       schema_context.base.recompose(),
       context.uses_dynamic_scopes,
       report,
-      std::move(value),
-      std::move(condition)};
+      std::move(value)};
 }
 
 // Instantiate an applicator step
@@ -39,8 +37,7 @@ auto make(const bool report, const SchemaCompilerContext &context,
           const SchemaCompilerDynamicContext &dynamic_context,
           // Take the value type from the "value" property of the step struct
           decltype(std::declval<Step>().value) &&value,
-          SchemaCompilerTemplate &&children,
-          SchemaCompilerTemplate &&condition) -> Step {
+          SchemaCompilerTemplate &&children) -> Step {
   return {
       dynamic_context.keyword.empty()
           ? dynamic_context.base_schema_location
@@ -52,32 +49,7 @@ auto make(const bool report, const SchemaCompilerContext &context,
       context.uses_dynamic_scopes,
       report,
       std::move(value),
-      std::move(children),
-      std::move(condition)};
-}
-
-// TODO: Completely get rid of this. We should never have
-// explicit type conditions
-inline auto type_condition(const SchemaCompilerContext &context,
-                           const SchemaCompilerSchemaContext &schema_context,
-                           const JSON::Type type) -> SchemaCompilerTemplate {
-  // As an optimization
-  if (schema_context.schema.is_object() &&
-      schema_context.schema.defines("type") &&
-      schema_context.schema.at("type").is_string()) {
-    const auto &type_string{schema_context.schema.at("type").to_string()};
-    if (type == JSON::Type::String && type_string == "string") {
-      return {};
-    } else if (type == JSON::Type::Array && type_string == "array") {
-      return {};
-    } else if (type == JSON::Type::Object && type_string == "object") {
-      return {};
-    }
-  }
-
-  return {make<SchemaCompilerAssertionTypeStrict>(
-      true, context, schema_context, relative_dynamic_context,
-      SchemaCompilerValueType{type}, {})};
+      std::move(children)};
 }
 
 } // namespace sourcemeta::jsontoolkit
