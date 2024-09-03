@@ -22,8 +22,6 @@ class EvaluationContext {
 public:
   using Pointer = sourcemeta::jsontoolkit::Pointer;
   using JSON = sourcemeta::jsontoolkit::JSON;
-  using Annotations = std::set<JSON>;
-  using InstanceAnnotations = std::map<Pointer, Annotations>;
   using Template = sourcemeta::jsontoolkit::SchemaCompilerTemplate;
 
   template <typename T> auto value(T &&document) -> const JSON & {
@@ -39,10 +37,10 @@ public:
   }
 
 private:
-  auto
-  annotations(const Pointer &current_instance_location,
-              const Pointer &schema_location) const -> const Annotations & {
-    static const Annotations placeholder;
+  auto annotations(const Pointer &current_instance_location,
+                   const Pointer &schema_location) const -> const auto & {
+    static const decltype(this->annotations_)::mapped_type::mapped_type
+        placeholder;
     // Use `.find()` instead of `.contains()` and `.at()` for performance
     // reasons
     const auto instance_location_result{
@@ -60,9 +58,9 @@ private:
     return schema_location_result->second;
   }
 
-  auto annotations(const Pointer &current_instance_location) const
-      -> const InstanceAnnotations & {
-    static const InstanceAnnotations placeholder;
+  auto annotations(const Pointer &current_instance_location) const -> const
+      auto & {
+    static const decltype(this->annotations_)::mapped_type placeholder;
     // Use `.find()` instead of `.contains()` and `.at()` for performance
     // reasons
     const auto instance_location_result{
@@ -307,7 +305,7 @@ private:
   std::set<JSON> values;
   // We don't use a pair for holding the two pointers for runtime
   // efficiency when resolving keywords like `unevaluatedProperties`
-  std::map<Pointer, InstanceAnnotations> annotations_;
+  std::map<Pointer, std::map<Pointer, std::set<JSON>>> annotations_;
   std::map<std::size_t, const std::reference_wrapper<const Template>> labels;
   bool property_as_instance{false};
 };
