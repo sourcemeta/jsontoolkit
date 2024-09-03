@@ -243,7 +243,145 @@ static void JSONSchema_Validate_Draft4_Items_Schema(benchmark::State &state) {
   }
 }
 
+static void JSONSchema_Validate_Draft4_Nested_Object(benchmark::State &state) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON(
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "additionalProperties": {
+    "additionalProperties": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "additionalProperties": {
+            "additionalProperties": {
+              "additionalProperties": {
+                "additionalProperties": {
+                  "additionalProperties": {
+                    "additionalProperties": {
+                      "additionalProperties": {
+                        "additionalProperties": {
+                          "additionalProperties": {
+                            "additionalProperties": {
+                              "additionalProperties": {
+                                "additionalProperties": {
+                                  "additionalProperties": {
+                                    "additionalProperties": {
+                                      "additionalProperties": true
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+  )JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse(R"JSON(
+{
+  "a1": {
+    "a2": {
+      "a3": {
+        "a4": {
+          "a5": {
+            "a6": {
+              "a7": {
+                "a8": {
+                  "a9": {
+                    "a10": {
+                      "a11": {
+                        "a12": {
+                          "a13": {
+                            "a14": {
+                              "a15": {
+                                "a16": {
+                                  "a17": {
+                                    "a18": {
+                                      "a19": {}
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "b1": {
+    "b2": {
+      "b3": {
+        "b4": {
+          "b5": {
+            "b6": {
+              "b7": {
+                "b8": {
+                  "b9": {
+                    "b10": {
+                      "b11": {
+                        "b12": {
+                          "b13": {
+                            "b14": {
+                              "b15": {
+                                "b16": {
+                                  "b17": {
+                                    "b18": {
+                                      "b19": {}
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+  )JSON")};
+
+  const auto schema_template{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  for (auto _ : state) {
+    auto result{sourcemeta::jsontoolkit::evaluate(schema_template, instance)};
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
 BENCHMARK(JSONSchema_Validate_Draft4_Meta_1_No_Callback);
 BENCHMARK(JSONSchema_Validate_Draft4_Required_Properties);
 BENCHMARK(JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match);
 BENCHMARK(JSONSchema_Validate_Draft4_Items_Schema);
+BENCHMARK(JSONSchema_Validate_Draft4_Nested_Object);
