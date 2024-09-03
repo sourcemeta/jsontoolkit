@@ -53,7 +53,7 @@ private:
 /// A walker to traverse all subpointers of a given JSON Pointer.
 template <typename PointerT> class GenericSubPointerWalker {
 public:
-  using const_iterator = PointerT;
+  using const_iterator = GenericSubPointerIterator<PointerT>;
   GenericSubPointerWalker(const PointerT &pointer) : data{pointer} {}
 
   const_iterator begin() { return {&this->data}; }
