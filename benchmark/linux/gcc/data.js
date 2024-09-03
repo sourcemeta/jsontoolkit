@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725380110860,
+  "lastUpdate": 1725381340067,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -2562,6 +2562,60 @@ window.BENCHMARK_DATA = {
             "value": 385891.39745007374,
             "unit": "ns/iter",
             "extra": "iterations: 1804\ncpu: 385858.0443458977 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gorez.tony@gmail.com",
+            "name": "Tony Gorez",
+            "username": "tony-go"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "755c55dcf9b578c1580647d979a6ca409bf90f05",
+          "message": "Improve template arguments of Pointer walker classes/iterators (#1105)\n\nSigned-off-by: Tony Gorez <gorez.tony@gmail.com>",
+          "timestamp": "2024-09-03T12:28:45-04:00",
+          "tree_id": "990f0c1cdf847a531f97f8bd1dbccec49e26ae79",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/755c55dcf9b578c1580647d979a6ca409bf90f05"
+        },
+        "date": 1725381339660,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 2226.8062970396677,
+            "unit": "ns/iter",
+            "extra": "iterations: 317419\ncpu: 2226.696379233757 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2805.082777648332,
+            "unit": "ns/iter",
+            "extra": "iterations: 248642\ncpu: 2805.000108589861 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 207.84148177173307,
+            "unit": "ns/iter",
+            "extra": "iterations: 3358844\ncpu: 207.83721780469716 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 11765.342438925622,
+            "unit": "ns/iter",
+            "extra": "iterations: 59231\ncpu: 11764.897722476406 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 383174.0706849291,
+            "unit": "ns/iter",
+            "extra": "iterations: 1825\ncpu: 383155.299178082 ns\nthreads: 1"
           }
         ]
       }
