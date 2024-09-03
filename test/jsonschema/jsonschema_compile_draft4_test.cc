@@ -211,8 +211,8 @@ TEST(JSONSchema_compile_draft4, type_8) {
   EVALUATE_TRACE_PRE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The value was expected to be of type number, "
-                               "string, or object and it was of type number");
+                               "The value was expected to be of type string, "
+                               "number, or object and it was of type number");
 }
 
 TEST(JSONSchema_compile_draft4, type_9) {
@@ -233,8 +233,8 @@ TEST(JSONSchema_compile_draft4, type_9) {
   EVALUATE_TRACE_PRE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrictAny, "/type", "#/type", "");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The value was expected to be of type number, "
-                               "string, or object but it was of type boolean");
+                               "The value was expected to be of type string, "
+                               "number, or object but it was of type boolean");
 }
 
 TEST(JSONSchema_compile_draft4, required_1) {
@@ -300,7 +300,7 @@ TEST(JSONSchema_compile_draft4, required_3) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The object value was expected to define properties \"baz\", and \"foo\" "
+      "The object value was expected to define properties \"foo\", and \"baz\" "
       "but did not define the property \"baz\"");
 }
 
@@ -331,7 +331,7 @@ TEST(JSONSchema_compile_draft4, required_4) {
                                "The value was expected to be of type object");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The object value was expected to define "
-                               "properties \"bar\", and \"foo\"");
+                               "properties \"foo\", and \"bar\"");
 }
 
 TEST(JSONSchema_compile_draft4, allOf_1) {
@@ -371,7 +371,7 @@ TEST(JSONSchema_compile_draft4, allOf_1) {
                                "The value was expected to be of type object");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The object value was expected to define "
-                               "properties \"bar\", and \"foo\"");
+                               "properties \"foo\", and \"bar\"");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
                                "against the 2 given subschemas");
@@ -414,7 +414,7 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
                                "The value was expected to be of type object");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The object value was expected to define properties \"bar\", and \"foo\" "
+      "The object value was expected to define properties \"foo\", and \"bar\" "
       "but did not define the property \"bar\"");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object value was expected to validate "
@@ -1135,7 +1135,7 @@ TEST(JSONSchema_compile_draft4, properties_5) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The object value was expected to define "
-                               "properties \"bar\", and \"foo\"");
+                               "properties \"foo\", and \"bar\"");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
@@ -3076,7 +3076,7 @@ TEST(JSONSchema_compile_draft4, enum_2) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The object value {\"foo\":1} was expected to equal one of the following "
-      "values: 1, \"foo\", and {}");
+      "values: 1, {}, and \"foo\"");
 }
 
 TEST(JSONSchema_compile_draft4, enum_3) {

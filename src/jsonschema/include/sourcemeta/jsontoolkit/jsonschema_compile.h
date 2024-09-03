@@ -37,25 +37,29 @@ struct SchemaCompilerValueNone {};
 /// Represents a compiler step JSON value
 using SchemaCompilerValueJSON = JSON;
 
+// Note that for these steps, we prefer vectors over sets as the former performs
+// better for small collections, where we can even guarantee uniqueness when
+// generating the instructions
+
 /// @ingroup jsonschema_compiler
 /// Represents a set of JSON values
-using SchemaCompilerValueArray = std::set<JSON>;
+using SchemaCompilerValueArray = std::vector<JSON>;
+
+/// @ingroup jsonschema_compiler
+/// Represents a compiler step string values
+using SchemaCompilerValueStrings = std::vector<JSON::String>;
+
+/// @ingroup jsonschema_compiler
+/// Represents a compiler step JSON types value
+using SchemaCompilerValueTypes = std::vector<JSON::Type>;
 
 /// @ingroup jsonschema_compiler
 /// Represents a compiler step string value
 using SchemaCompilerValueString = JSON::String;
 
 /// @ingroup jsonschema_compiler
-/// Represents a compiler step string values
-using SchemaCompilerValueStrings = std::set<JSON::String>;
-
-/// @ingroup jsonschema_compiler
 /// Represents a compiler step JSON type value
 using SchemaCompilerValueType = JSON::Type;
-
-/// @ingroup jsonschema_compiler
-/// Represents a compiler step JSON types value
-using SchemaCompilerValueTypes = std::set<JSON::Type>;
 
 /// @ingroup jsonschema_compiler
 /// Represents a compiler step ECMA regular expression value. We store both the

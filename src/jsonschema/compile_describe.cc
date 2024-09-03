@@ -56,12 +56,17 @@ auto describe_type_check(const bool valid, const JSON::Type current,
 }
 
 auto describe_types_check(const bool valid, const JSON::Type current,
-                          const std::set<JSON::Type> &expected,
+                          const std::vector<JSON::Type> &expected,
                           std::ostringstream &message) -> void {
   assert(expected.size() > 1);
   auto copy = expected;
-  if (copy.contains(JSON::Type::Real) && copy.contains(JSON::Type::Integer)) {
-    copy.erase(JSON::Type::Integer);
+
+  const auto match_real{
+      std::find(copy.cbegin(), copy.cend(), JSON::Type::Real)};
+  const auto match_integer{
+      std::find(copy.cbegin(), copy.cend(), JSON::Type::Integer)};
+  if (match_real != copy.cend() && match_integer != copy.cend()) {
+    copy.erase(match_integer);
   }
 
   if (copy.size() == 1) {
@@ -85,7 +90,7 @@ auto describe_types_check(const bool valid, const JSON::Type current,
   }
 
   if (valid && current == JSON::Type::Integer &&
-      copy.contains(JSON::Type::Real)) {
+      std::find(copy.cbegin(), copy.cend(), JSON::Type::Real) != copy.cend()) {
     message << "number";
   } else {
     message << to_string(current);
@@ -775,7 +780,7 @@ struct DescribeVisitor {
       message << " but did not define properties ";
       for (auto iterator = missing.cbegin(); iterator != missing.cend();
            ++iterator) {
-        if (std::next(iterator) == value.cend()) {
+        if (std::next(iterator) == missing.cend()) {
           message << "and " << escape_string(*iterator);
         } else {
           message << escape_string(*iterator) << ", ";
