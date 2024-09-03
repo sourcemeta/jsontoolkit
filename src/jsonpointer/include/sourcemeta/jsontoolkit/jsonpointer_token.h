@@ -10,8 +10,7 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonpointer
-template <typename CharT, typename Traits, typename PropertyT>
-class GenericToken {
+template <typename CharT, typename PropertyT> class GenericToken {
 public:
   using Value = JSON;
   static_assert(std::is_same_v<PropertyT, typename Value::String>);
@@ -208,15 +207,15 @@ public:
   }
 
   /// Compare JSON Pointer tokens
-  auto operator==(const GenericToken<CharT, Traits, PropertyT> &other)
-      const noexcept -> bool {
+  auto operator==(const GenericToken<CharT, PropertyT> &other) const noexcept
+      -> bool {
     return this->data == other.data;
   }
 
   /// Overload to support ordering of JSON Pointer token. Typically for sorting
   /// reasons.
-  auto operator<(const GenericToken<CharT, Traits, PropertyT> &other)
-      const noexcept -> bool {
+  auto operator<(const GenericToken<CharT, PropertyT> &other) const noexcept
+      -> bool {
     return this->data < other.data;
   }
 
