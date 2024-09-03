@@ -396,6 +396,7 @@ auto evaluate_step(
                             destination, annotation_value)                     \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
+  assert(step_category.relative_instance_location.empty());                    \
   const auto &target{context.resolve_target()};                                \
   if (!(precondition)) {                                                       \
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
