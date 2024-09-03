@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725380056571,
+  "lastUpdate": 1725381290010,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -2562,6 +2562,60 @@ window.BENCHMARK_DATA = {
             "value": 115846.76718699002,
             "unit": "ns/iter",
             "extra": "iterations: 6022\ncpu: 115843.85951511118 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gorez.tony@gmail.com",
+            "name": "Tony Gorez",
+            "username": "tony-go"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "755c55dcf9b578c1580647d979a6ca409bf90f05",
+          "message": "Improve template arguments of Pointer walker classes/iterators (#1105)\n\nSigned-off-by: Tony Gorez <gorez.tony@gmail.com>",
+          "timestamp": "2024-09-03T12:28:45-04:00",
+          "tree_id": "990f0c1cdf847a531f97f8bd1dbccec49e26ae79",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/755c55dcf9b578c1580647d979a6ca409bf90f05"
+        },
+        "date": 1725381289425,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 390742.581962588,
+            "unit": "ns/iter",
+            "extra": "iterations: 1763\ncpu: 390725.066931367 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 18500.93808296382,
+            "unit": "ns/iter",
+            "extra": "iterations: 37631\ncpu: 18500.73819457363 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 7985.001768326347,
+            "unit": "ns/iter",
+            "extra": "iterations: 87088\ncpu: 7984.587210637519 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 1698.4276381082504,
+            "unit": "ns/iter",
+            "extra": "iterations: 413118\ncpu: 1698.3955770506245 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 114155.98775111367,
+            "unit": "ns/iter",
+            "extra": "iterations: 6123\ncpu: 114156.00571615221 ns\nthreads: 1"
           }
         ]
       }
