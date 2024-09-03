@@ -16,13 +16,13 @@ namespace {
 template <template <typename T> typename Allocator, typename V>
 auto traverse(V &document,
               typename sourcemeta::jsontoolkit::GenericPointer<
-                  typename V::Char, typename V::CharTraits,
-                  Allocator>::const_iterator begin,
+                  typename V::Char, typename V::CharTraits, Allocator,
+                  typename V::String>::const_iterator begin,
               typename sourcemeta::jsontoolkit::GenericPointer<
-                  typename V::Char, typename V::CharTraits,
-                  Allocator>::const_iterator end) -> V & {
+                  typename V::Char, typename V::CharTraits, Allocator,
+                  typename V::String>::const_iterator end) -> V & {
   using Pointer = sourcemeta::jsontoolkit::GenericPointer<
-      typename V::Char, typename V::CharTraits, Allocator>;
+      typename V::Char, typename V::CharTraits, Allocator, typename V::String>;
   // Make sure types match
   static_assert(
       std::is_same_v<typename Pointer::Value, std::remove_const_t<V>>);
@@ -122,7 +122,8 @@ auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void {
 auto to_pointer(const JSON &document) -> Pointer {
   assert(document.is_string());
   auto stream{document.to_stringstream()};
-  return parse_pointer<JSON::Char, JSON::CharTraits, std::allocator>(stream);
+  return parse_pointer<JSON::Char, JSON::CharTraits, std::allocator, Pointer>(
+      stream);
 }
 
 auto to_pointer(const std::basic_string<JSON::Char, JSON::CharTraits,

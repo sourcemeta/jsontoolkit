@@ -16,10 +16,10 @@ namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonpointer
 template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+          template <typename T> typename Allocator, typename PropertyT>
 class GenericPointer {
 public:
-  using Token = GenericToken<JSON::String>;
+  using Token = GenericToken<PropertyT>;
   using Value = typename Token::Value;
   using Container = std::vector<Token>;
 
@@ -195,7 +195,8 @@ public:
   /// assert(pointer.at(2).to_property() == "baz");
   /// ```
   auto
-  push_back(const GenericPointer<CharT, Traits, Allocator> &other) -> void {
+  push_back(const GenericPointer<CharT, Traits, Allocator, PropertyT> &other)
+      -> void {
     this->data.reserve(this->data.size() + other.size());
     std::copy(other.data.cbegin(), other.data.cend(),
               std::back_inserter(this->data));
@@ -221,7 +222,8 @@ public:
   /// assert(pointer.at(1).to_property() == "bar");
   /// assert(pointer.at(2).to_property() == "baz");
   /// ```
-  auto push_back(GenericPointer<CharT, Traits, Allocator> &&other) -> void {
+  auto push_back(GenericPointer<CharT, Traits, Allocator, PropertyT> &&other)
+      -> void {
     this->data.reserve(this->data.size() + other.size());
     std::move(other.data.begin(), other.data.end(),
               std::back_inserter(this->data));
@@ -284,9 +286,9 @@ public:
   /// assert(pointer.at(1).to_property() == "bar");
   /// ```
   [[nodiscard]] auto
-  initial() const -> GenericPointer<CharT, Traits, Allocator> {
+  initial() const -> GenericPointer<CharT, Traits, Allocator, PropertyT> {
     assert(!this->empty());
-    GenericPointer<CharT, Traits, Allocator> result{*this};
+    GenericPointer<CharT, Traits, Allocator, PropertyT> result{*this};
     result.pop_back();
     return result;
   }
@@ -303,9 +305,9 @@ public:
   /// assert(left.concat(right) ==
   ///   sourcemeta::jsontoolkit::Pointer{"foo", "bar", "baz"});
   /// ```
-  auto concat(const GenericPointer<CharT, Traits, Allocator> &other) const
-      -> GenericPointer<CharT, Traits, Allocator> {
-    GenericPointer<CharT, Traits, Allocator> result{*this};
+  auto concat(const GenericPointer<CharT, Traits, Allocator, PropertyT> &other)
+      const -> GenericPointer<CharT, Traits, Allocator, PropertyT> {
+    GenericPointer<CharT, Traits, Allocator, PropertyT> result{*this};
     result.push_back(other);
     return result;
   }
@@ -321,8 +323,8 @@ public:
   /// const sourcemeta::jsontoolkit::Pointer prefix{"foo", "bar"};
   /// assert(pointer.starts_with(prefix));
   /// ```
-  auto starts_with(const GenericPointer<CharT, Traits, Allocator> &other) const
-      -> bool {
+  auto starts_with(const GenericPointer<CharT, Traits, Allocator, PropertyT>
+                       &other) const -> bool {
     return other.data.size() <= this->data.size() &&
            std::equal(other.data.cbegin(), other.data.cend(),
                       this->data.cbegin());
@@ -341,9 +343,10 @@ public:
   /// assert(pointer.rebase(prefix, replacement) ==
   ///   sourcemeta::jsontoolkit::Pointer{"qux", "baz"});
   /// ```
-  auto rebase(const GenericPointer<CharT, Traits, Allocator> &prefix,
-              const GenericPointer<CharT, Traits, Allocator> &replacement) const
-      -> GenericPointer<CharT, Traits, Allocator> {
+  auto
+  rebase(const GenericPointer<CharT, Traits, Allocator, PropertyT> &prefix,
+         const GenericPointer<CharT, Traits, Allocator, PropertyT> &replacement)
+      const -> GenericPointer<CharT, Traits, Allocator, PropertyT> {
     typename Container::size_type index{0};
     while (index < prefix.size()) {
       if (index >= this->size() || prefix.data[index] != this->data[index]) {
@@ -357,7 +360,7 @@ public:
     assert(this->starts_with(prefix));
     auto new_begin{this->data.cbegin()};
     std::advance(new_begin, index);
-    GenericPointer<CharT, Traits, Allocator> result{replacement};
+    GenericPointer<CharT, Traits, Allocator, PropertyT> result{replacement};
     std::copy(new_begin, this->data.cend(), std::back_inserter(result.data));
     return result;
   }
@@ -376,8 +379,9 @@ public:
   ///
   /// If the JSON Pointer is not relative to the base, a copy of the original
   /// input pointer is returned.
-  auto resolve_from(const GenericPointer<CharT, Traits, Allocator> &base) const
-      -> GenericPointer<CharT, Traits, Allocator> {
+  auto
+  resolve_from(const GenericPointer<CharT, Traits, Allocator, PropertyT> &base)
+      const -> GenericPointer<CharT, Traits, Allocator, PropertyT> {
     typename Container::size_type index{0};
     while (index < base.size()) {
       if (index >= this->size() || base.data[index] != this->data[index]) {
@@ -390,21 +394,21 @@ public:
     // Make a pointer from the remaining tokens
     auto new_begin{this->data.cbegin()};
     std::advance(new_begin, index);
-    GenericPointer<CharT, Traits, Allocator> result;
+    GenericPointer<CharT, Traits, Allocator, PropertyT> result;
     std::copy(new_begin, this->data.cend(), std::back_inserter(result.data));
     return result;
   }
 
   /// Compare JSON Pointer instances
-  auto operator==(const GenericPointer<CharT, Traits, Allocator> &other)
-      const noexcept -> bool {
+  auto operator==(const GenericPointer<CharT, Traits, Allocator, PropertyT>
+                      &other) const noexcept -> bool {
     return this->data == other.data;
   }
 
   /// Overload to support ordering of JSON Pointers. Typically for sorting
   /// reasons.
-  auto operator<(const GenericPointer<CharT, Traits, Allocator> &other)
-      const noexcept -> bool {
+  auto operator<(const GenericPointer<CharT, Traits, Allocator, PropertyT>
+                     &other) const noexcept -> bool {
     return this->data < other.data;
   }
 

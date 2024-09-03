@@ -29,7 +29,8 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonpointer
-using Pointer = GenericPointer<JSON::Char, JSON::CharTraits, std::allocator>;
+using Pointer =
+    GenericPointer<JSON::Char, JSON::CharTraits, std::allocator, JSON::String>;
 
 /// @ingroup jsonpointer
 /// A global constant instance of the empty JSON Pointer.
