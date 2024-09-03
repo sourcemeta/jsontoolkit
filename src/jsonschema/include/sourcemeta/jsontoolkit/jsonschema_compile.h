@@ -498,11 +498,11 @@ DEFINE_STEP_APPLICATOR(Control, Mark, SchemaCompilerValueUnsignedInteger)
 /// @ingroup jsonschema_compiler_instructions
 /// @brief Represents a compiler step that consists of jumping into a
 /// pre-registered label
-DEFINE_STEP_APPLICATOR(Control, Jump, SchemaCompilerValueUnsignedInteger)
+DEFINE_STEP_WITH_VALUE(Control, Jump, SchemaCompilerValueUnsignedInteger)
 
 /// @ingroup jsonschema_compiler_instructions
 /// @brief Represents a compiler step that consists of jump to a dynamic anchor
-DEFINE_STEP_APPLICATOR(Control, DynamicAnchorJump, SchemaCompilerValueString)
+DEFINE_STEP_WITH_VALUE(Control, DynamicAnchorJump, SchemaCompilerValueString)
 
 #undef DEFINE_STEP_WITH_VALUE
 #undef DEFINE_STEP_APPLICATOR

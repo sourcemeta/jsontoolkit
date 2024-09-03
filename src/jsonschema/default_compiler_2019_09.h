@@ -296,7 +296,7 @@ auto compiler_2019_09_core_recursiveref(
   }
 
   return {make<SchemaCompilerControlDynamicAnchorJump>(
-      true, context, schema_context, dynamic_context, "", {})};
+      true, context, schema_context, dynamic_context, "")};
 }
 
 auto compiler_2019_09_applicator_anyof(

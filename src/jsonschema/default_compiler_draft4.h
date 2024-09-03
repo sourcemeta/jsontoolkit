@@ -38,7 +38,7 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
   if (schema_context.labels.contains(label)) {
     return {make<SchemaCompilerControlJump>(
         true, context, schema_context, dynamic_context,
-        SchemaCompilerValueUnsignedInteger{label}, {})};
+        SchemaCompilerValueUnsignedInteger{label})};
   }
 
   // TODO: Avoid this copy

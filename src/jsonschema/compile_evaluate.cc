@@ -792,7 +792,6 @@ auto evaluate_step(
     return true;
   } else if (IS_STEP(SchemaCompilerControlJump)) {
     EVALUATE_BEGIN_NO_PRECONDITION(control, SchemaCompilerControlJump);
-    assert(control.children.empty());
     result = true;
     for (const auto &child : context.jump(control.value)) {
       if (!evaluate_step(child, instance, mode, callback, context)) {
