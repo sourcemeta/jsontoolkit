@@ -222,6 +222,24 @@ public:
     }
   }
 
+  auto enter(const Pointer::Token::Property &property) -> void {
+    this->frame_sizes.emplace(0, 1);
+    this->instance_location_.push_back(property);
+  }
+
+  auto enter(const Pointer::Token::Index &index) -> void {
+    this->frame_sizes.emplace(0, 1);
+    this->instance_location_.push_back(index);
+  }
+
+  auto leave() -> void {
+    assert(!this->frame_sizes.empty());
+    assert(this->frame_sizes.top().first == 0);
+    assert(this->frame_sizes.top().second == 1);
+    this->instance_location_.pop_back();
+    this->frame_sizes.pop();
+  }
+
   auto instances() const -> const auto & { return this->instances_; }
 
   auto resources() const -> const std::vector<std::string> & {
@@ -886,17 +904,17 @@ auto evaluate_step(
     EVALUATE_BEGIN(loop, SchemaCompilerLoopProperties, target.is_object());
     result = true;
     for (const auto &entry : target.as_object()) {
-      context.push(loop, empty_pointer, {entry.first});
+      context.enter(entry.first);
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, mode, callback, context)) {
           result = false;
-          context.pop(loop);
+          context.leave();
           // For efficiently breaking from the outer loop too
           goto evaluate_loop_properties_end;
         }
       }
 
-      context.pop(loop);
+      context.leave();
     }
 
   evaluate_loop_properties_end:
@@ -909,17 +927,17 @@ auto evaluate_step(
         continue;
       }
 
-      context.push(loop, empty_pointer, {entry.first});
+      context.enter(entry.first);
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, mode, callback, context)) {
           result = false;
-          context.pop(loop);
+          context.leave();
           // For efficiently breaking from the outer loop too
           goto evaluate_loop_properties_regex_end;
         }
       }
 
-      context.pop(loop);
+      context.leave();
     }
 
   evaluate_loop_properties_regex_end:
@@ -943,17 +961,17 @@ auto evaluate_step(
         continue;
       }
 
-      context.push(loop, empty_pointer, {entry.first});
+      context.enter(entry.first);
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, mode, callback, context)) {
           result = false;
-          context.pop(loop);
+          context.leave();
           // For efficiently breaking from the outer loop too
           goto evaluate_loop_properties_no_adjacent_annotation_end;
         }
       }
 
-      context.pop(loop);
+      context.leave();
     }
 
   evaluate_loop_properties_no_adjacent_annotation_end:
@@ -977,17 +995,17 @@ auto evaluate_step(
         continue;
       }
 
-      context.push(loop, empty_pointer, {entry.first});
+      context.enter(entry.first);
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, mode, callback, context)) {
           result = false;
-          context.pop(loop);
+          context.leave();
           // For efficiently breaking from the outer loop too
           goto evaluate_loop_properties_no_annotation_end;
         }
       }
 
-      context.pop(loop);
+      context.leave();
     }
 
   evaluate_loop_properties_no_annotation_end:
@@ -997,16 +1015,16 @@ auto evaluate_step(
     result = true;
     context.target_type(EvaluationContext::TargetType::Key);
     for (const auto &entry : target.as_object()) {
-      context.push(loop, empty_pointer, {entry.first});
+      context.enter(entry.first);
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, mode, callback, context)) {
           result = false;
-          context.pop(loop);
+          context.leave();
           goto evaluate_loop_keys_end;
         }
       }
 
-      context.pop(loop);
+      context.leave();
     }
 
   evaluate_loop_keys_end:
@@ -1027,17 +1045,16 @@ auto evaluate_step(
 
     for (; iterator != array.cend(); ++iterator) {
       const auto index{std::distance(array.cbegin(), iterator)};
-      context.push(loop, empty_pointer,
-                   {static_cast<Pointer::Token::Index>(index)});
+      context.enter(static_cast<Pointer::Token::Index>(index));
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, mode, callback, context)) {
           result = false;
-          context.pop(loop);
+          context.leave();
           goto evaluate_compiler_loop_items_end;
         }
       }
 
-      context.pop(loop);
+      context.leave();
     }
 
   evaluate_compiler_loop_items_end:
@@ -1055,17 +1072,16 @@ auto evaluate_step(
 
     for (auto iterator = array.cbegin(); iterator != array.cend(); ++iterator) {
       const auto index{std::distance(array.cbegin(), iterator)};
-      context.push(loop, empty_pointer,
-                   {static_cast<Pointer::Token::Index>(index)});
+      context.enter(static_cast<Pointer::Token::Index>(index));
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, mode, callback, context)) {
           result = false;
-          context.pop(loop);
+          context.leave();
           goto evaluate_compiler_loop_items_unmarked_end;
         }
       }
 
-      context.pop(loop);
+      context.leave();
     }
 
   evaluate_compiler_loop_items_unmarked_end:
@@ -1107,17 +1123,16 @@ auto evaluate_step(
         continue;
       }
 
-      context.push(loop, empty_pointer,
-                   {static_cast<Pointer::Token::Index>(index)});
+      context.enter(static_cast<Pointer::Token::Index>(index));
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, mode, callback, context)) {
           result = false;
-          context.pop(loop);
+          context.leave();
           goto evaluate_compiler_loop_items_unevaluated_end;
         }
       }
 
-      context.pop(loop);
+      context.leave();
     }
 
   evaluate_compiler_loop_items_unevaluated_end:
@@ -1133,8 +1148,7 @@ auto evaluate_step(
     auto match_count{std::numeric_limits<decltype(minimum)>::min()};
     for (auto iterator = array.cbegin(); iterator != array.cend(); ++iterator) {
       const auto index{std::distance(array.cbegin(), iterator)};
-      context.push(loop, empty_pointer,
-                   {static_cast<Pointer::Token::Index>(index)});
+      context.enter(static_cast<Pointer::Token::Index>(index));
       bool subresult{true};
       for (const auto &child : loop.children) {
         if (!evaluate_step(child, mode, callback, context)) {
@@ -1143,7 +1157,7 @@ auto evaluate_step(
         }
       }
 
-      context.pop(loop);
+      context.leave();
 
       if (subresult) {
         match_count += 1;
