@@ -213,3 +213,45 @@ TEST(JSONPointer_pointer, initial_with_three_tokens) {
   EXPECT_TRUE(pointer.at(1).is_property());
   EXPECT_EQ(pointer.at(1).to_property(), "bar");
 }
+
+TEST(JSONPointer_pointer, push_back_property_copy) {
+  sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+  const sourcemeta::jsontoolkit::Pointer other{"bar"};
+  pointer.push_back(other.back().to_property());
+  EXPECT_EQ(pointer.size(), 2);
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_EQ(pointer.at(0).to_property(), "foo");
+  EXPECT_TRUE(pointer.at(1).is_property());
+  EXPECT_EQ(pointer.at(1).to_property(), "bar");
+}
+
+TEST(JSONPointer_pointer, push_back_property_move) {
+  sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+  pointer.push_back("bar");
+  EXPECT_EQ(pointer.size(), 2);
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_EQ(pointer.at(0).to_property(), "foo");
+  EXPECT_TRUE(pointer.at(1).is_property());
+  EXPECT_EQ(pointer.at(1).to_property(), "bar");
+}
+
+TEST(JSONPointer_pointer, push_back_index_copy) {
+  sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+  const sourcemeta::jsontoolkit::Pointer other{0};
+  pointer.push_back(other.back().to_index());
+  EXPECT_EQ(pointer.size(), 2);
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_EQ(pointer.at(0).to_property(), "foo");
+  EXPECT_TRUE(pointer.at(1).is_index());
+  EXPECT_EQ(pointer.at(1).to_index(), 0);
+}
+
+TEST(JSONPointer_pointer, push_back_index_move) {
+  sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+  pointer.push_back(0);
+  EXPECT_EQ(pointer.size(), 2);
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_EQ(pointer.at(0).to_property(), "foo");
+  EXPECT_TRUE(pointer.at(1).is_index());
+  EXPECT_EQ(pointer.at(1).to_index(), 0);
+}
