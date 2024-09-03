@@ -70,6 +70,22 @@ auto get(JSON &document, const Pointer &pointer) -> JSON & {
                                         std::cend(pointer));
 }
 
+auto get(const JSON &document, const Pointer::Token &token) -> const JSON & {
+  if (token.is_property()) {
+    return document.at(token.to_property());
+  } else {
+    return document.at(token.to_index());
+  }
+}
+
+auto get(JSON &document, const Pointer::Token &token) -> JSON & {
+  if (token.is_property()) {
+    return document.at(token.to_property());
+  } else {
+    return document.at(token.to_index());
+  }
+}
+
 auto set(JSON &document, const Pointer &pointer, const JSON &value) -> void {
   if (pointer.empty()) {
     document.into(value);

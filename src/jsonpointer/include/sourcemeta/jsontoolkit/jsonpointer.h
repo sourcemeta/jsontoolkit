@@ -82,6 +82,50 @@ SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(JSON &document, const Pointer &pointer) -> JSON &;
 
 /// @ingroup jsonpointer
+/// Get a value from a JSON document using a JSON Pointer token (`const`
+/// overload).
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <cassert>
+/// #include <sstream>
+///
+/// std::istringstream stream{"{ \"foo\": 1 }"};
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(stream);
+///
+/// const sourcemeta::jsontoolkit::JSON &value{
+///   sourcemeta::jsontoolkit::get(document, "bar")};
+/// assert(value.is_integer());
+/// assert(value.to_integer() == 2);
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto get(const JSON &document, const Pointer::Token &token) -> const JSON &;
+
+/// @ingroup jsonpointer
+/// Get a value from a JSON document using a JSON Pointer token (non-`const`
+/// overload).
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <cassert>
+/// #include <sstream>
+///
+/// std::istringstream stream{"{ \"foo\": 1 }"};
+/// sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(stream);
+///
+/// sourcemeta::jsontoolkit::JSON &value{
+///   sourcemeta::jsontoolkit::get(document, "bar")};
+/// assert(value.is_integer());
+/// assert(value.to_integer() == 2);
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto get(JSON &document, const Pointer::Token &token) -> JSON &;
+
+/// @ingroup jsonpointer
 /// Set a value in a JSON document using a JSON Pointer (`const` overload).
 ///
 /// If the last token of the JSON Pointer is the constant `-` and the tail
