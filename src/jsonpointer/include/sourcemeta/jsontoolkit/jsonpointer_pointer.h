@@ -238,6 +238,71 @@ public:
               std::back_inserter(this->data));
   }
 
+  /// Push a property token into the back of a JSON Pointer.
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+  /// const sourcemeta::jsontoolkit::Pointer other{"bar"};
+  /// pointer.push_back(other.back().to_property());
+  /// assert(pointer.size() == 2);
+  ///
+  /// assert(pointer.at(0).is_property());
+  /// assert(pointer.at(1).is_property());
+  ///
+  /// assert(pointer.at(0).to_property() == "foo");
+  /// assert(pointer.at(1).to_property() == "bar");
+  /// ```
+  auto push_back(const typename Token::Property &property) -> void {
+    this->data.emplace_back(property);
+  }
+
+  /// Move a property token into the back of a JSON Pointer.
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+  /// pointer.push_back("bar");
+  /// assert(pointer.size() == 2);
+  ///
+  /// assert(pointer.at(0).is_property());
+  /// assert(pointer.at(1).is_property());
+  ///
+  /// assert(pointer.at(0).to_property() == "foo");
+  /// assert(pointer.at(1).to_property() == "bar");
+  /// ```
+  auto push_back(typename Token::Property &&property) -> void {
+    this->data.emplace_back(std::move(property));
+  }
+
+  /// Push an index token into the back of a JSON Pointer.
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// sourcemeta::jsontoolkit::Pointer pointer{"foo"};
+  /// const sourcemeta::jsontoolkit::Pointer other{0};
+  /// pointer.push_back(other.back().to_index());
+  /// assert(pointer.size() == 2);
+  ///
+  /// assert(pointer.at(0).is_property());
+  /// assert(pointer.at(1).is_index());
+  ///
+  /// assert(pointer.at(0).to_property() == "foo");
+  /// assert(pointer.at(1).to_index() == 0);
+  /// ```
+  auto push_back(const typename Token::Index &index) -> void {
+    this->data.emplace_back(index);
+  }
+
   /// Remove the last token of a JSON Pointer. For example:
   ///
   /// ```cpp
