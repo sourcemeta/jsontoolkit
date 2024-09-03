@@ -296,8 +296,7 @@ using PointerWalker = GenericPointerWalker<Pointer>;
 /// assert(subpointers.at(1) == sourcemeta::jsontoolkit::Pointer{"foo"});
 /// assert(subpointers.at(2) == sourcemeta::jsontoolkit::Pointer{});
 /// ```
-using SubPointerWalker =
-    GenericSubPointerWalker<JSON::Char, JSON::CharTraits, std::allocator>;
+using SubPointerWalker = GenericSubPointerWalker<Pointer>;
 
 } // namespace sourcemeta::jsontoolkit
 
