@@ -19,7 +19,7 @@ template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
 class GenericPointer {
 public:
-  using Token = GenericToken<CharT, Traits, Allocator, std::string>;
+  using Token = GenericToken<CharT, Traits, std::string>;
   using Value = typename Token::Value;
   using Container = std::vector<Token>;
 
