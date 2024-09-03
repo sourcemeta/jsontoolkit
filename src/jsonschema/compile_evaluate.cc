@@ -23,6 +23,7 @@ public:
   using Pointer = sourcemeta::jsontoolkit::Pointer;
   using JSON = sourcemeta::jsontoolkit::JSON;
   using Template = sourcemeta::jsontoolkit::SchemaCompilerTemplate;
+  EvaluationContext(const JSON &instance) : instance_{instance} {};
 
   template <typename T> auto value(T &&document) -> const JSON & {
     return *(this->values.emplace(std::forward<T>(document)).first);
@@ -221,6 +222,8 @@ public:
     }
   }
 
+  auto instance() const -> const auto & { return this->instance_; }
+
   auto resources() const -> const std::vector<std::string> & {
     return this->resources_;
   }
@@ -237,8 +240,7 @@ public:
   }
 
   auto
-  resolve_target(const JSON &instance,
-                 const Pointer &relative_instance_location) -> const JSON & {
+  resolve_target(const Pointer &relative_instance_location) -> const JSON & {
     using namespace sourcemeta::jsontoolkit;
     if (this->property_as_instance) [[unlikely]] {
       if (!relative_instance_location.empty()) {
@@ -257,16 +259,15 @@ public:
     // instance location in this class that we manipulate through
     // .push() and .pop()
     if (relative_instance_location.empty()) {
-      return get(instance, this->instance_location());
+      return get(this->instance_, this->instance_location());
     } else {
-      return get(get(instance, this->instance_location()),
+      return get(get(this->instance_, this->instance_location()),
                  relative_instance_location);
     }
   }
 
-  auto resolve_target(const JSON &instance) -> const JSON & {
-    return this->resolve_target(instance,
-                                sourcemeta::jsontoolkit::empty_pointer);
+  auto resolve_target() -> const JSON & {
+    return this->resolve_target(sourcemeta::jsontoolkit::empty_pointer);
   }
 
   auto mark(const std::size_t id, const Template &children) -> void {
@@ -303,6 +304,7 @@ public:
   }
 
 private:
+  const JSON &instance_;
   Pointer evaluate_path_;
   Pointer instance_location_;
   std::stack<std::pair<std::size_t, std::size_t>> frame_sizes;
@@ -321,7 +323,6 @@ private:
 
 auto evaluate_step(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step,
-    const sourcemeta::jsontoolkit::JSON &instance,
     const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode,
     const std::optional<
         sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback> &callback,
@@ -335,8 +336,8 @@ auto evaluate_step(
 #define EVALUATE_BEGIN(step_category, step_type, precondition)                 \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
-  const auto &target{context.resolve_target(                                   \
-      instance, step_category.relative_instance_location)};                    \
+  const auto &target{                                                          \
+      context.resolve_target(step_category.relative_instance_location)};       \
   if (!(precondition)) {                                                       \
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
@@ -395,7 +396,7 @@ auto evaluate_step(
                             destination, annotation_value)                     \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
-  const auto &target{context.resolve_target(instance)};                        \
+  const auto &target{context.resolve_target()};                                \
   if (!(precondition)) {                                                       \
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
@@ -486,7 +487,7 @@ auto evaluate_step(
     EVALUATE_END(assertion, SchemaCompilerAssertionPropertyDependencies);
   } else if (IS_STEP(SchemaCompilerAssertionType)) {
     EVALUATE_BEGIN_NO_PRECONDITION(assertion, SchemaCompilerAssertionType);
-    const auto &target{context.resolve_target(instance)};
+    const auto &target{context.resolve_target()};
     // In non-strict mode, we consider a real number that represents an
     // integer to be an integer
     result =
@@ -497,7 +498,7 @@ auto evaluate_step(
     EVALUATE_BEGIN_NO_PRECONDITION(assertion, SchemaCompilerAssertionTypeAny);
     // Otherwise we are we even emitting this instruction?
     assert(assertion.value.size() > 1);
-    const auto &target{context.resolve_target(instance)};
+    const auto &target{context.resolve_target()};
     // In non-strict mode, we consider a real number that represents an
     // integer to be an integer
     for (const auto type : assertion.value) {
@@ -514,16 +515,16 @@ auto evaluate_step(
   } else if (IS_STEP(SchemaCompilerAssertionTypeStrict)) {
     EVALUATE_BEGIN_NO_PRECONDITION(assertion,
                                    SchemaCompilerAssertionTypeStrict);
-    result = context.resolve_target(instance).type() == assertion.value;
+    result = context.resolve_target().type() == assertion.value;
     EVALUATE_END(assertion, SchemaCompilerAssertionTypeStrict);
   } else if (IS_STEP(SchemaCompilerAssertionTypeStrictAny)) {
     EVALUATE_BEGIN_NO_PRECONDITION(assertion,
                                    SchemaCompilerAssertionTypeStrictAny);
     // Otherwise we are we even emitting this instruction?
     assert(assertion.value.size() > 1);
-    result = (std::find(assertion.value.cbegin(), assertion.value.cend(),
-                        context.resolve_target(instance).type()) !=
-              assertion.value.cend());
+    result =
+        (std::find(assertion.value.cbegin(), assertion.value.cend(),
+                   context.resolve_target().type()) != assertion.value.cend());
     EVALUATE_END(assertion, SchemaCompilerAssertionTypeStrictAny);
   } else if (IS_STEP(SchemaCompilerAssertionRegex)) {
     EVALUATE_BEGIN(assertion, SchemaCompilerAssertionRegex, target.is_string());
@@ -561,13 +562,12 @@ auto evaluate_step(
     EVALUATE_END(assertion, SchemaCompilerAssertionObjectSizeGreater);
   } else if (IS_STEP(SchemaCompilerAssertionEqual)) {
     EVALUATE_BEGIN_NO_PRECONDITION(assertion, SchemaCompilerAssertionEqual);
-    result = (context.resolve_target(instance) == assertion.value);
+    result = (context.resolve_target() == assertion.value);
     EVALUATE_END(assertion, SchemaCompilerAssertionEqual);
   } else if (IS_STEP(SchemaCompilerAssertionEqualsAny)) {
     EVALUATE_BEGIN_NO_PRECONDITION(assertion, SchemaCompilerAssertionEqualsAny);
-    result =
-        (std::find(assertion.value.cbegin(), assertion.value.cend(),
-                   context.resolve_target(instance)) != assertion.value.cend());
+    result = (std::find(assertion.value.cbegin(), assertion.value.cend(),
+                        context.resolve_target()) != assertion.value.cend());
     EVALUATE_END(assertion, SchemaCompilerAssertionEqualsAny);
   } else if (IS_STEP(SchemaCompilerAssertionGreaterEqual)) {
     EVALUATE_BEGIN(assertion, SchemaCompilerAssertionGreaterEqual,
@@ -621,7 +621,7 @@ auto evaluate_step(
     EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalOr);
     result = logical.children.empty();
     for (const auto &child : logical.children) {
-      if (evaluate_step(child, instance, mode, callback, context)) {
+      if (evaluate_step(child, mode, callback, context)) {
         result = true;
         // This boolean value controls whether we should still evaluate
         // every disjunction even on fast mode
@@ -636,7 +636,7 @@ auto evaluate_step(
     EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalAnd);
     result = true;
     for (const auto &child : logical.children) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
+      if (!evaluate_step(child, mode, callback, context)) {
         result = false;
         break;
       }
@@ -648,7 +648,7 @@ auto evaluate_step(
                    target.type() == logical.value);
     result = true;
     for (const auto &child : logical.children) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
+      if (!evaluate_step(child, mode, callback, context)) {
         result = false;
         break;
       }
@@ -660,7 +660,7 @@ auto evaluate_step(
                    target.is_object() && target.defines(logical.value));
     result = true;
     for (const auto &child : logical.children) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
+      if (!evaluate_step(child, mode, callback, context)) {
         result = false;
         break;
       }
@@ -674,7 +674,7 @@ auto evaluate_step(
                                  context.evaluate_path(), logical.value));
     result = true;
     for (const auto &child : logical.children) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
+      if (!evaluate_step(child, mode, callback, context)) {
         result = false;
         break;
       }
@@ -688,7 +688,7 @@ auto evaluate_step(
                                  context.evaluate_path(), logical.value));
     result = true;
     for (const auto &child : logical.children) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
+      if (!evaluate_step(child, mode, callback, context)) {
         result = false;
         break;
       }
@@ -700,7 +700,7 @@ auto evaluate_step(
                    target.is_array() && target.size() > logical.value);
     result = true;
     for (const auto &child : logical.children) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
+      if (!evaluate_step(child, mode, callback, context)) {
         result = false;
         break;
       }
@@ -712,7 +712,7 @@ auto evaluate_step(
                    target.is_array() && target.size() == logical.value);
     result = true;
     for (const auto &child : logical.children) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
+      if (!evaluate_step(child, mode, callback, context)) {
         result = false;
         break;
       }
@@ -727,7 +727,7 @@ auto evaluate_step(
     // computing it multiple times
     for (auto iterator{logical.children.cbegin()};
          iterator != logical.children.cend(); ++iterator) {
-      if (!evaluate_step(*iterator, instance, mode, callback, context)) {
+      if (!evaluate_step(*iterator, mode, callback, context)) {
         continue;
       }
 
@@ -743,8 +743,7 @@ auto evaluate_step(
 
         // We don't need to report traces that part of the exhaustive
         // XOR search. We can treat those as internal
-        if (evaluate_step(*subiterator, instance, mode, std::nullopt,
-                          context)) {
+        if (evaluate_step(*subiterator, mode, std::nullopt, context)) {
           subresult = false;
           break;
         }
@@ -761,7 +760,7 @@ auto evaluate_step(
     EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalTryMark);
     result = true;
     for (const auto &child : logical.children) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
+      if (!evaluate_step(child, mode, callback, context)) {
         result = false;
         break;
       }
@@ -781,7 +780,7 @@ auto evaluate_step(
     context.mask();
     result = false;
     for (const auto &child : logical.children) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
+      if (!evaluate_step(child, mode, callback, context)) {
         result = true;
         if (mode == SchemaCompilerEvaluationMode::Fast) {
           break;
@@ -795,7 +794,7 @@ auto evaluate_step(
     context.mark(control.value, control.children);
     result = true;
     for (const auto &child : control.children) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
+      if (!evaluate_step(child, mode, callback, context)) {
         result = false;
         break;
       }
@@ -812,7 +811,7 @@ auto evaluate_step(
     EVALUATE_BEGIN_NO_PRECONDITION(control, SchemaCompilerControlJump);
     result = true;
     for (const auto &child : context.jump(control.value)) {
-      if (!evaluate_step(child, instance, mode, callback, context)) {
+      if (!evaluate_step(child, mode, callback, context)) {
         result = false;
         break;
       }
@@ -826,7 +825,7 @@ auto evaluate_step(
     result = id.has_value();
     if (id.has_value()) {
       for (const auto &child : context.jump(id.value())) {
-        if (!evaluate_step(child, instance, mode, callback, context)) {
+        if (!evaluate_step(child, mode, callback, context)) {
           result = false;
           break;
         }
@@ -873,7 +872,7 @@ auto evaluate_step(
       assert(std::holds_alternative<SchemaCompilerLogicalAnd>(substep));
       for (const auto &child :
            std::get<SchemaCompilerLogicalAnd>(substep).children) {
-        if (!evaluate_step(child, instance, mode, callback, context)) {
+        if (!evaluate_step(child, mode, callback, context)) {
           result = false;
           // For efficiently breaking from the outer loop too
           goto evaluate_loop_properties_match_end;
@@ -889,7 +888,7 @@ auto evaluate_step(
     for (const auto &entry : target.as_object()) {
       context.push(loop, empty_pointer, {entry.first});
       for (const auto &child : loop.children) {
-        if (!evaluate_step(child, instance, mode, callback, context)) {
+        if (!evaluate_step(child, mode, callback, context)) {
           result = false;
           context.pop(loop);
           // For efficiently breaking from the outer loop too
@@ -912,7 +911,7 @@ auto evaluate_step(
 
       context.push(loop, empty_pointer, {entry.first});
       for (const auto &child : loop.children) {
-        if (!evaluate_step(child, instance, mode, callback, context)) {
+        if (!evaluate_step(child, mode, callback, context)) {
           result = false;
           context.pop(loop);
           // For efficiently breaking from the outer loop too
@@ -946,7 +945,7 @@ auto evaluate_step(
 
       context.push(loop, empty_pointer, {entry.first});
       for (const auto &child : loop.children) {
-        if (!evaluate_step(child, instance, mode, callback, context)) {
+        if (!evaluate_step(child, mode, callback, context)) {
           result = false;
           context.pop(loop);
           // For efficiently breaking from the outer loop too
@@ -980,7 +979,7 @@ auto evaluate_step(
 
       context.push(loop, empty_pointer, {entry.first});
       for (const auto &child : loop.children) {
-        if (!evaluate_step(child, instance, mode, callback, context)) {
+        if (!evaluate_step(child, mode, callback, context)) {
           result = false;
           context.pop(loop);
           // For efficiently breaking from the outer loop too
@@ -1000,7 +999,7 @@ auto evaluate_step(
     for (const auto &entry : target.as_object()) {
       context.push(loop, empty_pointer, {entry.first});
       for (const auto &child : loop.children) {
-        if (!evaluate_step(child, instance, mode, callback, context)) {
+        if (!evaluate_step(child, mode, callback, context)) {
           result = false;
           context.pop(loop);
           goto evaluate_loop_keys_end;
@@ -1031,7 +1030,7 @@ auto evaluate_step(
       context.push(loop, empty_pointer,
                    {static_cast<Pointer::Token::Index>(index)});
       for (const auto &child : loop.children) {
-        if (!evaluate_step(child, instance, mode, callback, context)) {
+        if (!evaluate_step(child, mode, callback, context)) {
           result = false;
           context.pop(loop);
           goto evaluate_compiler_loop_items_end;
@@ -1059,7 +1058,7 @@ auto evaluate_step(
       context.push(loop, empty_pointer,
                    {static_cast<Pointer::Token::Index>(index)});
       for (const auto &child : loop.children) {
-        if (!evaluate_step(child, instance, mode, callback, context)) {
+        if (!evaluate_step(child, mode, callback, context)) {
           result = false;
           context.pop(loop);
           goto evaluate_compiler_loop_items_unmarked_end;
@@ -1111,7 +1110,7 @@ auto evaluate_step(
       context.push(loop, empty_pointer,
                    {static_cast<Pointer::Token::Index>(index)});
       for (const auto &child : loop.children) {
-        if (!evaluate_step(child, instance, mode, callback, context)) {
+        if (!evaluate_step(child, mode, callback, context)) {
           result = false;
           context.pop(loop);
           goto evaluate_compiler_loop_items_unevaluated_end;
@@ -1138,7 +1137,7 @@ auto evaluate_step(
                    {static_cast<Pointer::Token::Index>(index)});
       bool subresult{true};
       for (const auto &child : loop.children) {
-        if (!evaluate_step(child, instance, mode, callback, context)) {
+        if (!evaluate_step(child, mode, callback, context)) {
           subresult = false;
           break;
         }
@@ -1194,10 +1193,10 @@ inline auto evaluate_internal(
     const std::optional<
         sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback> &callback)
     -> bool {
-  EvaluationContext context;
+  EvaluationContext context{instance};
   bool overall{true};
   for (const auto &step : steps) {
-    if (!evaluate_step(step, instance, mode, callback, context)) {
+    if (!evaluate_step(step, mode, callback, context)) {
       overall = false;
       break;
     }
