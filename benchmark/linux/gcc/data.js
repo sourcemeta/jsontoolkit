@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725377758422,
+  "lastUpdate": 1725380110860,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -2508,6 +2508,60 @@ window.BENCHMARK_DATA = {
             "value": 392543.07058821345,
             "unit": "ns/iter",
             "extra": "iterations: 1785\ncpu: 392518.5064425772 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gorez.tony@gmail.com",
+            "name": "Tony Gorez",
+            "username": "tony-go"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2adf4c37a7d33d62bb5edfced461f7262eac1104",
+          "message": "Revise Pointer Token templates to only configure property type (#1104)\n\nSigned-off-by: Tony Gorez <gorez.tony@gmail.com>",
+          "timestamp": "2024-09-03T12:07:57-04:00",
+          "tree_id": "0bc821d1b36bb8f3c7751efce3586005ba1d2543",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/2adf4c37a7d33d62bb5edfced461f7262eac1104"
+        },
+        "date": 1725380109598,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 2224.9177458610643,
+            "unit": "ns/iter",
+            "extra": "iterations: 317212\ncpu: 2224.7879872135986 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2820.4126156072653,
+            "unit": "ns/iter",
+            "extra": "iterations: 251498\ncpu: 2820.182597873542 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 206.07984546587215,
+            "unit": "ns/iter",
+            "extra": "iterations: 3408697\ncpu: 206.0705468981256 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 11902.130196412696,
+            "unit": "ns/iter",
+            "extra": "iterations: 58550\ncpu: 11901.560871050384 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 385891.39745007374,
+            "unit": "ns/iter",
+            "extra": "iterations: 1804\ncpu: 385858.0443458977 ns\nthreads: 1"
           }
         ]
       }
