@@ -82,7 +82,7 @@ jobs:
       - name: Install ClangFormat
         run: pip install clang-format==18.1.5
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies (macOS)
         if: runner.os == 'macos'
         run: brew bundle
