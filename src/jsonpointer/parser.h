@@ -38,12 +38,11 @@ parse_index(std::basic_stringstream<CharT, Traits, Allocator<CharT>> &stream,
 // NOLINTBEGIN(cppcoreguidelines-avoid-goto)
 
 namespace sourcemeta::jsontoolkit {
-template <typename CharT, typename Traits,
-          template <typename T> typename Allocator>
+template <typename CharT, typename Traits>
 auto parse_pointer(std::basic_istream<CharT, Traits> &stream) -> Pointer {
   Pointer result;
   CharT character;
-  std::basic_stringstream<CharT, Traits, Allocator<CharT>> string;
+  std::basic_stringstream<CharT, Traits, std::allocator<CharT>> string;
   std::uint64_t column{0};
 
 parse_token_begin:
