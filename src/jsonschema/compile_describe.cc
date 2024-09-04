@@ -596,6 +596,11 @@ struct DescribeVisitor {
     return message.str();
   }
 
+  auto
+  operator()(const SchemaCompilerLoopPropertiesTriad &) const -> std::string {
+    return unknown();
+  }
+
   auto operator()(const SchemaCompilerLoopPropertiesNoAdjacentAnnotation &step)
       const -> std::string {
     assert(this->keyword == "additionalProperties");

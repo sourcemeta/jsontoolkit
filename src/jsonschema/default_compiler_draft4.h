@@ -11,6 +11,8 @@
 
 #include "compile_helpers.h"
 
+#include <iostream>
+
 namespace internal {
 using namespace sourcemeta::jsontoolkit;
 
@@ -302,6 +304,70 @@ auto compiler_draft4_applicator_properties(
     return {};
   }
 
+  if (schema_context.schema.defines("additionalProperties") &&
+      (schema_context.vocabularies.contains(
+           "http://json-schema.org/draft-04/schema#") ||
+       schema_context.vocabularies.contains(
+           "http://json-schema.org/draft-06/schema#") ||
+       schema_context.vocabularies.contains(
+           "http://json-schema.org/draft-07/schema#"))) {
+    SchemaCompilerValueNamedIndexes indexes;
+    SchemaCompilerTemplate children;
+    // const SchemaCompilerDynamicContext additional_properties_context{
+    // "additionalProperties", empty_pointer, empty_pointer};
+    std::cerr << "ABOUT TO COMPILE additionalProperties\n";
+    std::cerr << "SCHEMA CONTEXT RELATIVE POINTER: ";
+    sourcemeta::jsontoolkit::stringify(schema_context.relative_pointer,
+                                       std::cerr);
+    std::cerr << "\n";
+
+    SchemaCompilerTemplate additional_properties_template{compile(
+        context,
+        {schema_context.relative_pointer.initial(), schema_context.schema,
+         schema_context.vocabularies, schema_context.base,
+         schema_context.labels},
+        relative_dynamic_context, {"additionalProperties"}, empty_pointer)};
+
+    if (additional_properties_template.empty()) {
+      std::cerr << "EMPTY additionalProperties instruction\n";
+    }
+
+    if (additional_properties_template.size() == 1) {
+      std::cerr << "DIRECT additionalProperties instruction\n";
+      children.push_back(additional_properties_template.front());
+    } else {
+      std::cerr << "INDIRECT additionalProperties instruction\n";
+      // TODO: Make the evaluator smart enough to "see through" these wrappers
+      children.push_back(make<SchemaCompilerLogicalAnd>(
+          false, context, schema_context, relative_dynamic_context,
+          SchemaCompilerValueNone{},
+          std::move(additional_properties_template)));
+    }
+
+    // As zero is for additionalProperties
+    std::size_t cursor{1};
+    for (const auto &[name, subschema] :
+         schema_context.schema.at(dynamic_context.keyword).as_object()) {
+      indexes.emplace(name, cursor);
+      auto substeps{compile(context, schema_context, relative_dynamic_context,
+                            {name}, {name})};
+      if (substeps.size() == 1) {
+        children.push_back(substeps.front());
+      } else {
+        // TODO: Make the evaluator smart enough to "see through" these wrappers
+        children.push_back(make<SchemaCompilerLogicalAnd>(
+            false, context, schema_context, relative_dynamic_context,
+            SchemaCompilerValueNone{}, std::move(substeps)));
+      }
+
+      cursor += 1;
+    }
+
+    return {make<SchemaCompilerLoopPropertiesTriad>(
+        true, context, schema_context, dynamic_context,
+        SchemaCompilerValueObjectIndexes{indexes}, std::move(children))};
+  }
+
   const auto loads_unevaluated_keywords =
       schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/applicator") ||
@@ -368,6 +434,7 @@ auto compiler_draft4_applicator_properties(
             JSON{name}));
       }
 
+      // TODO: Avoid this wrapper of the substeps only consist of a single step
       children.push_back(make<SchemaCompilerLogicalAnd>(
           false, context, schema_context, relative_dynamic_context,
           SchemaCompilerValueNone{}, std::move(substeps)));
@@ -518,6 +585,17 @@ auto compiler_draft4_applicator_additionalproperties(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
+  // In this case, we handle the keyword as part of "properties"
+  if (schema_context.schema.defines("properties") &&
+      (schema_context.vocabularies.contains(
+           "http://json-schema.org/draft-04/schema#") ||
+       schema_context.vocabularies.contains(
+           "http://json-schema.org/draft-06/schema#") ||
+       schema_context.vocabularies.contains(
+           "http://json-schema.org/draft-07/schema#"))) {
+    return {};
+  }
+
   return compiler_draft4_applicator_additionalproperties_conditional_annotation(
       context, schema_context, dynamic_context, false);
 }

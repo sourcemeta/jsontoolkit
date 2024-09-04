@@ -8,6 +8,8 @@
 
 #include "compile_helpers.h"
 
+#include <iostream>
+
 namespace {
 
 auto compile_subschema(
@@ -190,6 +192,8 @@ auto compile(const SchemaCompilerContext &context,
           : dynamic_context.base_schema_location
                 .concat({dynamic_context.keyword})
                 .concat(schema_suffix)};
+
+  std::cerr << "COMPILING: " << destination << "\n";
 
   // Otherwise the recursion attempt is non-sense
   if (!context.frame.contains({ReferenceType::Static, destination})) {

@@ -15,6 +15,8 @@
 #include <type_traits> // std::is_same_v
 #include <vector>      // std::vector
 
+#include <iostream> // TODO
+
 namespace {
 
 class EvaluationContext {
@@ -190,10 +192,27 @@ public:
     this->instance_location_.push_back(step.relative_instance_location);
     assert(step.relative_instance_location.size() <= 1);
     if (!step.relative_instance_location.empty()) {
+      std::cerr << "CALCULATING NEW INSTANCE IN PUSH\n";
+      std::cerr << "CURRENT PATH: ";
+      sourcemeta::jsontoolkit::stringify(this->instance_location_, std::cerr);
+      std::cerr << "\n";
+      std::cerr << "RELATIVE PATH: ";
+      sourcemeta::jsontoolkit::stringify(step.relative_instance_location,
+                                         std::cerr);
+      std::cerr << "\n";
+
       this->instances_.emplace_back(
           get(this->instances_.back().get(),
               step.relative_instance_location.back()));
     }
+
+    std::cerr << "-------- PUSH\n";
+    std::cerr << "EVALUATE PATH: ";
+    sourcemeta::jsontoolkit::stringify(this->evaluate_path_, std::cerr);
+    std::cerr << "\n";
+    std::cerr << "INSTANCE LOCATION: ";
+    sourcemeta::jsontoolkit::stringify(this->instance_location_, std::cerr);
+    std::cerr << "\n";
 
     if (step.dynamic) {
       // Note that we are potentially repeatedly pushing back the
@@ -216,6 +235,14 @@ public:
 
     this->frame_sizes.pop_back();
 
+    std::cerr << "-------- POP\n";
+    std::cerr << "EVALUATE PATH: ";
+    sourcemeta::jsontoolkit::stringify(this->evaluate_path_, std::cerr);
+    std::cerr << "\n";
+    std::cerr << "INSTANCE LOCATION: ";
+    sourcemeta::jsontoolkit::stringify(this->instance_location_, std::cerr);
+    std::cerr << "\n";
+
     // TODO: Do schema resource management using hashes to avoid
     // expensive string comparisons
     if (step.dynamic) {
@@ -225,16 +252,19 @@ public:
   }
 
   auto enter(const Pointer::Token::Property &property) -> void {
+    std::cerr << "    -------- ENTER: " << property << "\n";
     this->instance_location_.push_back(property);
     this->instances_.emplace_back(this->instances_.back().get().at(property));
   }
 
   auto enter(const Pointer::Token::Index &index) -> void {
+    std::cerr << "    -------- ENTER: " << index << "\n";
     this->instance_location_.push_back(index);
     this->instances_.emplace_back(this->instances_.back().get().at(index));
   }
 
   auto leave() -> void {
+    std::cerr << "    -------- LEAVE\n";
     this->instance_location_.pop_back();
     this->instances_.pop_back();
   }
@@ -312,7 +342,11 @@ public:
 
 private:
   std::vector<std::reference_wrapper<const JSON>> instances_;
+
+public:
   Pointer evaluate_path_;
+
+private:
   Pointer instance_location_;
   std::vector<std::pair<std::size_t, std::size_t>> frame_sizes;
   // TODO: Keep hashes of schema resources URI instead for performance reasons
@@ -511,8 +545,16 @@ auto evaluate_step(
 
     EVALUATE_END(assertion, SchemaCompilerAssertionTypeAny);
   } else if (IS_STEP(SchemaCompilerAssertionTypeStrict)) {
+    std::cerr << "=== ABOUT TO TRY TYPE CHECK\n";
     EVALUATE_BEGIN_NO_PRECONDITION(assertion,
                                    SchemaCompilerAssertionTypeStrict);
+
+    std::cerr << "@@@@ TYPE CHECK for instance at ";
+    sourcemeta::jsontoolkit::stringify(context.instance_location(), std::cerr);
+    std::cerr << " at evaluate path ";
+    sourcemeta::jsontoolkit::stringify(context.evaluate_path(), std::cerr);
+    std::cerr << "\n";
+
     result = context.resolve_target().type() == assertion.value;
     EVALUATE_END(assertion, SchemaCompilerAssertionTypeStrict);
   } else if (IS_STEP(SchemaCompilerAssertionTypeStrictAny)) {
@@ -990,6 +1032,49 @@ auto evaluate_step(
 
   evaluate_loop_properties_no_annotation_end:
     EVALUATE_END(loop, SchemaCompilerLoopPropertiesNoAnnotation);
+  } else if (IS_STEP(SchemaCompilerLoopPropertiesTriad)) {
+    EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesTriad, target.is_object());
+    result = true;
+    // As the first child is always the one for the additional properties
+    assert(!loop.children.empty());
+
+    for (const auto &entry : target.as_object()) {
+
+      // Properties by name
+      const auto name_match{loop.value.names.find(entry.first)};
+
+      if (name_match != loop.value.names.cend()) {
+        std::cerr << "???? INDEX MATCH FOR " << name_match->first << " => "
+                  << name_match->second << "\n";
+      }
+
+      if (name_match != loop.value.names.cend()) {
+        if (!evaluate_step(loop.children[name_match->second], mode, callback,
+                           context)) {
+          result = false;
+          break;
+        }
+
+        // Otherwise validate against the default
+      } else {
+        context.evaluate_path_.pop_back();
+        context.enter(entry.first);
+        std::cerr << "TRYING ADDITIONAL PROPERTIES FOR: " << entry.first
+                  << "\n";
+
+        if (!evaluate_step(loop.children.front(), mode, callback, context)) {
+          result = false;
+          context.leave();
+          context.evaluate_path_.push_back("properties");
+          break;
+        }
+
+        context.leave();
+        context.evaluate_path_.push_back("properties");
+      }
+    }
+
+    EVALUATE_END(loop, SchemaCompilerLoopPropertiesTriad);
   } else if (IS_STEP(SchemaCompilerLoopKeys)) {
     EVALUATE_BEGIN(loop, SchemaCompilerLoopKeys, target.is_object());
     result = true;

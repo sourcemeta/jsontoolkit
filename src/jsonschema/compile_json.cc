@@ -90,6 +90,15 @@ auto value_to_json(const T &value) -> sourcemeta::jsontoolkit::JSON {
 
     result.assign("value", std::move(values));
     return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValueObjectIndexes, T>) {
+    result.assign("type", JSON{"object-indexes"});
+    result.assign("value", JSON::make_object());
+    JSON names{JSON::make_object()};
+    for (const auto &[name, index] : value.names) {
+      names.assign(name, JSON{index});
+    }
+    result.at("value").assign("names", std::move(names));
+    return result;
   } else if constexpr (std::is_same_v<SchemaCompilerValueStringMap, T>) {
     result.assign("type", JSON{"string-map"});
     JSON map{JSON::make_object()};
@@ -253,6 +262,7 @@ struct StepVisitor {
               SchemaCompilerLoopPropertiesNoAdjacentAnnotation)
   HANDLE_STEP("loop", "properties-no-annotation",
               SchemaCompilerLoopPropertiesNoAnnotation)
+  HANDLE_STEP("loop", "properties-triad", SchemaCompilerLoopPropertiesTriad)
   HANDLE_STEP("loop", "keys", SchemaCompilerLoopKeys)
   HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)
   HANDLE_STEP("loop", "items-unmarked", SchemaCompilerLoopItemsUnmarked)

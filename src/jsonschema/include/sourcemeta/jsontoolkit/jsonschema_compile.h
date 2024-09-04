@@ -89,6 +89,12 @@ using SchemaCompilerValueNamedIndexes =
     std::map<SchemaCompilerValueString, SchemaCompilerValueUnsignedInteger>;
 
 /// @ingroup jsonschema_compiler
+/// Represents a compiler step map of property names and patterns to indexes
+struct SchemaCompilerValueObjectIndexes {
+  const SchemaCompilerValueNamedIndexes names;
+};
+
+/// @ingroup jsonschema_compiler
 /// Represents a compiler step string logical type
 enum class SchemaCompilerValueStringType { URI };
 
@@ -158,6 +164,7 @@ struct SchemaCompilerLoopProperties;
 struct SchemaCompilerLoopPropertiesRegex;
 struct SchemaCompilerLoopPropertiesNoAdjacentAnnotation;
 struct SchemaCompilerLoopPropertiesNoAnnotation;
+struct SchemaCompilerLoopPropertiesTriad;
 struct SchemaCompilerLoopKeys;
 struct SchemaCompilerLoopItems;
 struct SchemaCompilerLoopItemsUnmarked;
@@ -199,11 +206,12 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerLogicalWhenArraySizeEqual, SchemaCompilerLoopPropertiesMatch,
     SchemaCompilerLoopProperties, SchemaCompilerLoopPropertiesRegex,
     SchemaCompilerLoopPropertiesNoAdjacentAnnotation,
-    SchemaCompilerLoopPropertiesNoAnnotation, SchemaCompilerLoopKeys,
-    SchemaCompilerLoopItems, SchemaCompilerLoopItemsUnmarked,
-    SchemaCompilerLoopItemsUnevaluated, SchemaCompilerLoopContains,
-    SchemaCompilerControlLabel, SchemaCompilerControlMark,
-    SchemaCompilerControlJump, SchemaCompilerControlDynamicAnchorJump>>;
+    SchemaCompilerLoopPropertiesNoAnnotation, SchemaCompilerLoopPropertiesTriad,
+    SchemaCompilerLoopKeys, SchemaCompilerLoopItems,
+    SchemaCompilerLoopItemsUnmarked, SchemaCompilerLoopItemsUnevaluated,
+    SchemaCompilerLoopContains, SchemaCompilerControlLabel,
+    SchemaCompilerControlMark, SchemaCompilerControlJump,
+    SchemaCompilerControlDynamicAnchorJump>>;
 
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
   struct SchemaCompiler##category##name {                                      \
@@ -464,6 +472,11 @@ DEFINE_STEP_APPLICATOR(Loop, PropertiesNoAdjacentAnnotation,
 /// @brief Represents a compiler step that loops over object properties that
 /// were not collected as annotations
 DEFINE_STEP_APPLICATOR(Loop, PropertiesNoAnnotation, SchemaCompilerValueStrings)
+
+/// @ingroup jsonschema_compiler_instructions
+/// @brief A specialized step that validates object properties against static
+/// and pattern-based conditions
+DEFINE_STEP_APPLICATOR(Loop, PropertiesTriad, SchemaCompilerValueObjectIndexes)
 
 /// @ingroup jsonschema_compiler_instructions
 /// @brief Represents a compiler step that loops over object property keys
