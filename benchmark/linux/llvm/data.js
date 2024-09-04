@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725410142757,
+  "lastUpdate": 1725410353771,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -3574,6 +3574,66 @@ window.BENCHMARK_DATA = {
             "value": 54758.06811925139,
             "unit": "ns/iter",
             "extra": "iterations: 12713\ncpu: 54755.76268386691 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eba0d998c1850bc3f3d79cf0645d6caa0315f378",
+          "message": "Assert that annotation steps have no relative instance location (#1124)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-03T20:29:37-04:00",
+          "tree_id": "4f0bd5e0e78ffc64a8f5986bb7b59cf95aa4809b",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/eba0d998c1850bc3f3d79cf0645d6caa0315f378"
+        },
+        "date": 1725410353319,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 387343.67454952275,
+            "unit": "ns/iter",
+            "extra": "iterations: 1776\ncpu: 387317.2725225224 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 19148.697343686126,
+            "unit": "ns/iter",
+            "extra": "iterations: 36705\ncpu: 19147.388775371197 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 8626.239571582579,
+            "unit": "ns/iter",
+            "extra": "iterations: 80669\ncpu: 8625.371133892822 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 1782.8645130984212,
+            "unit": "ns/iter",
+            "extra": "iterations: 355503\ncpu: 1782.8162687797287 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 107759.34838909084,
+            "unit": "ns/iter",
+            "extra": "iterations: 6487\ncpu: 107752.62956682598 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 53652.03575314826,
+            "unit": "ns/iter",
+            "extra": "iterations: 12866\ncpu: 53649.124591947766 ns\nthreads: 1"
           }
         ]
       }
