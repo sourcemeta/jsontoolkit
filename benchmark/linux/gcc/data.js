@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725417220802,
+  "lastUpdate": 1725417332301,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -3994,6 +3994,66 @@ window.BENCHMARK_DATA = {
             "value": 382759.6482192161,
             "unit": "ns/iter",
             "extra": "iterations: 1825\ncpu: 382736.2679452051 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "178f6d9852d917fa065036ad2e0b7184b6412a6e",
+          "message": "Optimize how to get null values to evaluation callbacks (#1131)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-03T22:28:32-04:00",
+          "tree_id": "d8e0657edbddc8dae8171c0d835cc313e0279578",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/178f6d9852d917fa065036ad2e0b7184b6412a6e"
+        },
+        "date": 1725417331675,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1751.8700624651433,
+            "unit": "ns/iter",
+            "extra": "iterations: 393820\ncpu: 1751.836968665888 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2816.2639698091707,
+            "unit": "ns/iter",
+            "extra": "iterations: 241664\ncpu: 2816.242936473781 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 238.58530725110265,
+            "unit": "ns/iter",
+            "extra": "iterations: 2937939\ncpu: 238.581874572617 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 5450.052292091323,
+            "unit": "ns/iter",
+            "extra": "iterations: 128987\ncpu: 5449.8925705691245 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 3559.602634406193,
+            "unit": "ns/iter",
+            "extra": "iterations: 196401\ncpu: 3559.404947021656 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 387284.02839645307,
+            "unit": "ns/iter",
+            "extra": "iterations: 1796\ncpu: 387280.83351893094 ns\nthreads: 1"
           }
         ]
       }
