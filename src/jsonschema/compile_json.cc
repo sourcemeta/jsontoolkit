@@ -131,6 +131,22 @@ auto value_to_json(const T &value) -> sourcemeta::jsontoolkit::JSON {
     data.assign("value", value.second);
     result.assign("value", std::move(data));
     return result;
+  } else if constexpr (std::is_same_v<SchemaCompilerValuePropertyFilter, T>) {
+    result.assign("type", JSON{"property-filter"});
+    JSON data{JSON::make_object()};
+    data.assign("names", JSON::make_array());
+    data.assign("patterns", JSON::make_array());
+
+    for (const auto &name : value.first) {
+      data.at("names").push_back(JSON{name});
+    }
+
+    for (const auto &pattern : value.second) {
+      data.at("patterns").push_back(JSON{pattern.second});
+    }
+
+    result.assign("value", std::move(data));
+    return result;
   } else if constexpr (std::is_same_v<SchemaCompilerValueStringType, T>) {
     result.assign("type", JSON{"string-type"});
     switch (value) {
@@ -249,10 +265,9 @@ struct StepVisitor {
   HANDLE_STEP("loop", "properties-match", SchemaCompilerLoopPropertiesMatch)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "properties-regex", SchemaCompilerLoopPropertiesRegex)
-  HANDLE_STEP("loop", "properties-no-adjacent-annotation",
-              SchemaCompilerLoopPropertiesNoAdjacentAnnotation)
   HANDLE_STEP("loop", "properties-no-annotation",
               SchemaCompilerLoopPropertiesNoAnnotation)
+  HANDLE_STEP("loop", "properties-except", SchemaCompilerLoopPropertiesExcept)
   HANDLE_STEP("loop", "keys", SchemaCompilerLoopKeys)
   HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)
   HANDLE_STEP("loop", "items-unmarked", SchemaCompilerLoopItemsUnmarked)

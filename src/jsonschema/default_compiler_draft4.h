@@ -358,6 +358,7 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
             JSON{name}));
       }
 
+      // Note that the evaluator completely ignores this wrapper anyway
       children.push_back(make<SchemaCompilerLogicalAnd>(
           false, context, schema_context, relative_dynamic_context,
           SchemaCompilerValueNone{}, std::move(substeps)));
@@ -406,11 +407,7 @@ auto compiler_draft4_applicator_properties(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   return compiler_draft4_applicator_properties_conditional_annotation(
-      context, schema_context, dynamic_context,
-      // TODO: We want this to be false here. Maybe then we can
-      // get rid of the optimized mode
-      context.mode != SchemaCompilerCompilationMode::Optimized ||
-          schema_context.schema.defines("additionalProperties"));
+      context, schema_context, dynamic_context, false);
 }
 
 auto compiler_draft4_applicator_patternproperties_conditional_annotation(
@@ -467,11 +464,7 @@ auto compiler_draft4_applicator_patternproperties(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   return compiler_draft4_applicator_patternproperties_conditional_annotation(
-      context, schema_context, dynamic_context,
-      // TODO: We want this to be false here. Maybe then we can
-      // get rid of the optimized mode
-      context.mode != SchemaCompilerCompilationMode::Optimized ||
-          schema_context.schema.defines("additionalProperties"));
+      context, schema_context, dynamic_context, false);
 }
 
 auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
@@ -495,23 +488,33 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
         SchemaCompilerValueNone{}));
   }
 
-  SchemaCompilerValueStrings dependencies;
-  if (schema_context.schema.defines("properties")) {
-    dependencies.push_back("properties");
+  SchemaCompilerValuePropertyFilter filter;
+
+  if (schema_context.schema.defines("properties") &&
+      schema_context.schema.at("properties").is_object()) {
+    for (const auto &entry :
+         schema_context.schema.at("properties").as_object()) {
+      filter.first.insert(entry.first);
+    }
   }
 
-  if (schema_context.schema.defines("patternProperties")) {
-    dependencies.push_back("patternProperties");
+  if (schema_context.schema.defines("patternProperties") &&
+      schema_context.schema.at("patternProperties").is_object()) {
+    for (const auto &entry :
+         schema_context.schema.at("patternProperties").as_object()) {
+      filter.second.push_back(
+          {std::regex{entry.first, std::regex::ECMAScript}, entry.first});
+    }
   }
 
-  if (dependencies.empty()) {
+  if (!filter.first.empty() || !filter.second.empty()) {
+    return {make<SchemaCompilerLoopPropertiesExcept>(
+        true, context, schema_context, dynamic_context, std::move(filter),
+        std::move(children))};
+  } else {
     return {make<SchemaCompilerLoopProperties>(
         true, context, schema_context, dynamic_context,
         SchemaCompilerValueNone{}, std::move(children))};
-  } else {
-    return {make<SchemaCompilerLoopPropertiesNoAdjacentAnnotation>(
-        true, context, schema_context, dynamic_context, std::move(dependencies),
-        std::move(children))};
   }
 }
 
