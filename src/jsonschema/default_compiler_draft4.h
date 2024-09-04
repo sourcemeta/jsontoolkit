@@ -286,11 +286,11 @@ auto compiler_draft4_applicator_oneof(
       std::move(disjunctors))};
 }
 
-auto compiler_draft4_applicator_properties(
+auto compiler_draft4_applicator_properties_conditional_annotation(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context)
-    -> SchemaCompilerTemplate {
+    const SchemaCompilerDynamicContext &dynamic_context,
+    const bool annotate) -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_object());
   if (schema_context.schema.at(dynamic_context.keyword).empty()) {
     return {};
@@ -301,12 +301,6 @@ auto compiler_draft4_applicator_properties(
       schema_context.schema.at("type").to_string() != "object") {
     return {};
   }
-
-  const auto loads_unevaluated_keywords =
-      schema_context.vocabularies.contains(
-          "https://json-schema.org/draft/2019-09/vocab/applicator") ||
-      schema_context.vocabularies.contains(
-          "https://json-schema.org/draft/2020-12/vocab/unevaluated");
 
   const auto size{schema_context.schema.at(dynamic_context.keyword).size()};
   const auto imports_required_keyword =
@@ -358,11 +352,7 @@ auto compiler_draft4_applicator_properties(
       auto substeps{compile(context, schema_context, relative_dynamic_context,
                             {name}, {name})};
 
-      // We can avoid producing an annotation if we need to go fast
-      // and there is no other keyword that would rely on this annotation
-      if (context.mode != SchemaCompilerCompilationMode::Optimized ||
-          loads_unevaluated_keywords ||
-          schema_context.schema.defines("additionalProperties")) {
+      if (annotate) {
         substeps.push_back(make<SchemaCompilerAnnotationEmit>(
             true, context, schema_context, relative_dynamic_context,
             JSON{name}));
@@ -385,11 +375,7 @@ auto compiler_draft4_applicator_properties(
     auto substeps{compile(context, schema_context, relative_dynamic_context,
                           {key}, {key})};
 
-    // We can avoid producing an annotation if we need to go fast
-    // and there is no other keyword that would rely on this annotation
-    if (context.mode != SchemaCompilerCompilationMode::Optimized ||
-        loads_unevaluated_keywords ||
-        schema_context.schema.defines("additionalProperties")) {
+    if (annotate) {
       substeps.push_back(make<SchemaCompilerAnnotationEmit>(
           true, context, schema_context, relative_dynamic_context, JSON{key}));
     }
@@ -414,11 +400,24 @@ auto compiler_draft4_applicator_properties(
       std::move(children))};
 }
 
-auto compiler_draft4_applicator_patternproperties(
+auto compiler_draft4_applicator_properties(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
+  return compiler_draft4_applicator_properties_conditional_annotation(
+      context, schema_context, dynamic_context,
+      // TODO: We want this to be false here. Maybe then we can
+      // get rid of the optimized mode
+      context.mode != SchemaCompilerCompilationMode::Optimized ||
+          schema_context.schema.defines("additionalProperties"));
+}
+
+auto compiler_draft4_applicator_patternproperties_conditional_annotation(
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context,
+    const bool annotate) -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_object());
   if (schema_context.schema.at(dynamic_context.keyword).empty()) {
     return {};
@@ -430,12 +429,6 @@ auto compiler_draft4_applicator_patternproperties(
     return {};
   }
 
-  const auto loads_unevaluated_keywords =
-      schema_context.vocabularies.contains(
-          "https://json-schema.org/draft/2019-09/vocab/applicator") ||
-      schema_context.vocabularies.contains(
-          "https://json-schema.org/draft/2020-12/vocab/unevaluated");
-
   SchemaCompilerTemplate children;
 
   // For each regular expression and corresponding subschema in the object
@@ -444,11 +437,7 @@ auto compiler_draft4_applicator_patternproperties(
     auto substeps{compile(context, schema_context, relative_dynamic_context,
                           {entry.first}, {})};
 
-    // We can avoid producing an annotation if we need to go fast
-    // and there is no other keyword that would rely on this annotation
-    if (context.mode != SchemaCompilerCompilationMode::Optimized ||
-        loads_unevaluated_keywords ||
-        schema_context.schema.defines("additionalProperties")) {
+    if (annotate) {
       // The evaluator will make sure the same annotation is not reported twice.
       // For example, if the same property matches more than one subschema in
       // `patternProperties`
@@ -470,6 +459,19 @@ auto compiler_draft4_applicator_patternproperties(
   return {make<SchemaCompilerLogicalWhenType>(
       true, context, schema_context, dynamic_context, JSON::Type::Object,
       std::move(children))};
+}
+
+auto compiler_draft4_applicator_patternproperties(
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  return compiler_draft4_applicator_patternproperties_conditional_annotation(
+      context, schema_context, dynamic_context,
+      // TODO: We want this to be false here. Maybe then we can
+      // get rid of the optimized mode
+      context.mode != SchemaCompilerCompilationMode::Optimized ||
+          schema_context.schema.defines("additionalProperties"));
 }
 
 auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
