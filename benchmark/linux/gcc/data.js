@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725483629218,
+  "lastUpdate": 1725484351986,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -4910,6 +4910,78 @@ window.BENCHMARK_DATA = {
             "value": 2085.119801450734,
             "unit": "ns/iter",
             "extra": "iterations: 334829\ncpu: 2085.0737570521096 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ce9969ea33ea252618643768703ec2d688a736ff",
+          "message": "Make JSON Pointer object walker tests independent of key ordering (#1147)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-04T17:05:13-04:00",
+          "tree_id": "bf9e5e2f291df33665f8425fdeaf5665250a3056",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/ce9969ea33ea252618643768703ec2d688a736ff"
+        },
+        "date": 1725484351536,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1810.1249810885051,
+            "unit": "ns/iter",
+            "extra": "iterations: 389979\ncpu: 1810.0431100136168 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2932.152310223092,
+            "unit": "ns/iter",
+            "extra": "iterations: 239544\ncpu: 2932.126586347393 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 246.90103213422208,
+            "unit": "ns/iter",
+            "extra": "iterations: 2814944\ncpu: 246.88690254584117 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 5701.500833741926,
+            "unit": "ns/iter",
+            "extra": "iterations: 112145\ncpu: 5701.167060502032 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 3637.600730336946,
+            "unit": "ns/iter",
+            "extra": "iterations: 194157\ncpu: 3637.3165015940726 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 1978.9872253391375,
+            "unit": "ns/iter",
+            "extra": "iterations: 357896\ncpu: 1978.849682589356 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 1625.6254636442407,
+            "unit": "ns/iter",
+            "extra": "iterations: 430017\ncpu: 1625.5577081836304 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 2072.437352708019,
+            "unit": "ns/iter",
+            "extra": "iterations: 337764\ncpu: 2072.3460848403042 ns\nthreads: 1"
           }
         ]
       }
