@@ -340,7 +340,7 @@ TEST(JSONSchema_compile_draft6, propertyNames_2) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }")};
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"baz\": 3, \"foo\": 1 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
@@ -394,7 +394,7 @@ TEST(JSONSchema_compile_draft6, propertyNames_3) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"fo\": 1, \"bar\": 2 }")};
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"fo\": 1 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
