@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725471668323,
+  "lastUpdate": 1725473721182,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -4480,6 +4480,78 @@ window.BENCHMARK_DATA = {
             "value": 3180.12581475967,
             "unit": "ns/iter",
             "extra": "iterations: 220157\ncpu: 3179.967023533213 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gorez.tony@gmail.com",
+            "name": "Tony Gorez",
+            "username": "tony-go"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8d47de94eec26643c64198344769c2656cef432e",
+          "message": "refactor(jsonpointer): get rid of templating for parse_pointer (#1138)\n\nSigned-off-by: Tony Gorez <gorez.tony@gmail.com>",
+          "timestamp": "2024-09-04T20:11:18+02:00",
+          "tree_id": "d271f7b9dddf3977a5c18a329e79381c40267e41",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/8d47de94eec26643c64198344769c2656cef432e"
+        },
+        "date": 1725473719101,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1077.1910407620962,
+            "unit": "ns/iter",
+            "extra": "iterations: 665570\ncpu: 1077.1669396156678 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2027.6858244691755,
+            "unit": "ns/iter",
+            "extra": "iterations: 343324\ncpu: 2027.48715499062 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 178.38698040204673,
+            "unit": "ns/iter",
+            "extra": "iterations: 3887140\ncpu: 178.36918659991665 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 2433.2041031307895,
+            "unit": "ns/iter",
+            "extra": "iterations: 289535\ncpu: 2433.080629284886 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 1670.6818793194927,
+            "unit": "ns/iter",
+            "extra": "iterations: 419322\ncpu: 1670.4274996303568 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 2880.67754012875,
+            "unit": "ns/iter",
+            "extra": "iterations: 241720\ncpu: 2880.324342214133 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 2528.999978439595,
+            "unit": "ns/iter",
+            "extra": "iterations: 278289\ncpu: 2528.9285598784 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 2945.358704862091,
+            "unit": "ns/iter",
+            "extra": "iterations: 233674\ncpu: 2945.3340979313125 ns\nthreads: 1"
           }
         ]
       }
