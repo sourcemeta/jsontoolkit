@@ -39,9 +39,9 @@ parse_index(std::basic_stringstream<CharT, Traits, Allocator<CharT>> &stream,
 
 namespace sourcemeta::jsontoolkit {
 template <typename CharT, typename Traits,
-          template <typename T> typename Allocator, typename PointerT>
-auto parse_pointer(std::basic_istream<CharT, Traits> &stream) -> PointerT {
-  PointerT result;
+          template <typename T> typename Allocator>
+auto parse_pointer(std::basic_istream<CharT, Traits> &stream) -> Pointer {
+  Pointer result;
   CharT character;
   std::basic_stringstream<CharT, Traits, Allocator<CharT>> string;
   std::uint64_t column{0};
