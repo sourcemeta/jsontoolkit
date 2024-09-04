@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -147,17 +148,18 @@ TEST(JSONPointer_walker, object_empty) {
 TEST(JSONPointer_walker, object_scalars) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }");
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
+  // Do a set to not dependent on object property ordering
+  std::set<sourcemeta::jsontoolkit::Pointer> subpointers;
   for (const auto &subpointer :
        sourcemeta::jsontoolkit::PointerWalker{document}) {
-    subpointers.push_back(subpointer);
+    subpointers.insert(subpointer);
   }
 
   EXPECT_EQ(subpointers.size(), 4);
-  EXPECT_EQ(subpointers.at(0), sourcemeta::jsontoolkit::Pointer{});
-  EXPECT_EQ(subpointers.at(1), sourcemeta::jsontoolkit::Pointer({"bar"}));
-  EXPECT_EQ(subpointers.at(2), sourcemeta::jsontoolkit::Pointer({"baz"}));
-  EXPECT_EQ(subpointers.at(3), sourcemeta::jsontoolkit::Pointer({"foo"}));
+  EXPECT_TRUE(subpointers.contains(sourcemeta::jsontoolkit::Pointer{}));
+  EXPECT_TRUE(subpointers.contains(sourcemeta::jsontoolkit::Pointer({"foo"})));
+  EXPECT_TRUE(subpointers.contains(sourcemeta::jsontoolkit::Pointer({"bar"})));
+  EXPECT_TRUE(subpointers.contains(sourcemeta::jsontoolkit::Pointer({"baz"})));
 }
 
 TEST(JSONPointer_walker, object_nested) {
