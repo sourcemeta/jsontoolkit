@@ -47,5 +47,7 @@ if(JSONTOOLKIT_JSONSCHEMA)
   target_link_libraries(sourcemeta_jsontoolkit_benchmark_validator_helper
     PRIVATE sourcemeta::jsontoolkit::json)
   target_link_libraries(sourcemeta_jsontoolkit_benchmark_validator_helper
+    PRIVATE sourcemeta::jsontoolkit::jsonl)
+  target_link_libraries(sourcemeta_jsontoolkit_benchmark_validator_helper
     PRIVATE sourcemeta::jsontoolkit::jsonschema)
 endif()
