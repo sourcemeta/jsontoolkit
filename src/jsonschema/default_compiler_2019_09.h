@@ -313,5 +313,23 @@ auto compiler_2019_09_applicator_anyof(
       true);
 }
 
+auto compiler_2019_09_applicator_properties(
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  return compiler_draft4_applicator_properties_conditional_annotation(
+      context, schema_context, dynamic_context, true);
+}
+
+auto compiler_2019_09_applicator_patternproperties(
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
+  return compiler_draft4_applicator_patternproperties_conditional_annotation(
+      context, schema_context, dynamic_context, true);
+}
+
 } // namespace internal
 #endif
