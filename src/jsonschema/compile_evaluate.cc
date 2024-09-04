@@ -23,7 +23,7 @@ public:
   using Pointer = sourcemeta::jsontoolkit::Pointer;
   using JSON = sourcemeta::jsontoolkit::JSON;
   using Template = sourcemeta::jsontoolkit::SchemaCompilerTemplate;
-  EvaluationContext(const JSON &instance) : instances_{instance} {};
+  EvaluationContext(const JSON &instance) { this->instances_.push(instance); };
 
   template <typename T> auto value(T &&document) -> const JSON & {
     return *(this->values.emplace(std::forward<T>(document)).first);
@@ -195,9 +195,8 @@ public:
     this->instance_location_.push_back(step.relative_instance_location);
     assert(step.relative_instance_location.size() <= 1);
     if (!step.relative_instance_location.empty()) {
-      this->instances_.emplace_back(
-          get(this->instances_.back().get(),
-              step.relative_instance_location.back()));
+      this->instances_.push(get(this->instances_.top().get(),
+                                step.relative_instance_location.back()));
     }
 
     if (step.dynamic) {
@@ -216,7 +215,7 @@ public:
     this->instance_location_.pop_back(sizes.second);
     assert(sizes.second <= 1);
     if (sizes.second == 1) {
-      this->instances_.pop_back();
+      this->instances_.pop();
     }
 
     this->frame_sizes.pop();
@@ -232,13 +231,13 @@ public:
   auto enter(const Pointer::Token::Property &property) -> void {
     this->frame_sizes.emplace(0, 1);
     this->instance_location_.push_back(property);
-    this->instances_.emplace_back(this->instances_.back().get().at(property));
+    this->instances_.push(this->instances_.top().get().at(property));
   }
 
   auto enter(const Pointer::Token::Index &index) -> void {
     this->frame_sizes.emplace(0, 1);
     this->instance_location_.push_back(index);
-    this->instances_.emplace_back(this->instances_.back().get().at(index));
+    this->instances_.push(this->instances_.top().get().at(index));
   }
 
   auto leave() -> void {
@@ -247,7 +246,7 @@ public:
     assert(this->frame_sizes.top().second == 1);
     this->instance_location_.pop_back();
     this->frame_sizes.pop();
-    this->instances_.pop_back();
+    this->instances_.pop();
   }
 
   auto instances() const -> const auto & { return this->instances_; }
@@ -274,7 +273,7 @@ public:
       return this->value(this->instance_location().back().to_property());
     }
 
-    return this->instances_.back().get();
+    return this->instances_.top().get();
   }
 
   auto mark(const std::size_t id, const Template &children) -> void {
@@ -311,7 +310,7 @@ public:
   }
 
 private:
-  std::vector<std::reference_wrapper<const JSON>> instances_;
+  std::stack<std::reference_wrapper<const JSON>> instances_;
   Pointer evaluate_path_;
   Pointer instance_location_;
   std::stack<std::pair<std::size_t, std::size_t>> frame_sizes;
