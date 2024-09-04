@@ -250,20 +250,22 @@ public:
     this->instances_.pop_back();
   }
 
-  auto instances() const -> const auto & { return this->instances_; }
+  auto instances() const noexcept -> const auto & { return this->instances_; }
 
-  auto resources() const -> const std::vector<std::string> & {
+  auto resources() const noexcept -> const std::vector<std::string> & {
     return this->resources_;
   }
 
-  auto evaluate_path() const -> const Pointer & { return this->evaluate_path_; }
+  auto evaluate_path() const noexcept -> const Pointer & {
+    return this->evaluate_path_;
+  }
 
-  auto instance_location() const -> const Pointer & {
+  auto instance_location() const noexcept -> const Pointer & {
     return this->instance_location_;
   }
 
   enum class TargetType { Key, Value };
-  auto target_type(const TargetType type) -> void {
+  auto target_type(const TargetType type) noexcept -> void {
     this->property_as_instance = (type == TargetType::Key);
   }
 
@@ -289,7 +291,7 @@ public:
     this->annotation_blacklist.push_back(this->evaluate_path_);
   }
 
-  auto jump(const std::size_t id) const -> const Template & {
+  auto jump(const std::size_t id) const noexcept -> const Template & {
     assert(this->labels.contains(id));
     return this->labels.at(id).get();
   }
