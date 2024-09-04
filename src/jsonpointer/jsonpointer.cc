@@ -135,8 +135,7 @@ auto set(JSON &document, const Pointer &pointer, JSON &&value) -> void {
 auto to_pointer(const JSON &document) -> Pointer {
   assert(document.is_string());
   auto stream{document.to_stringstream()};
-  return parse_pointer<JSON::Char, JSON::CharTraits, std::allocator, Pointer>(
-      stream);
+  return parse_pointer(stream);
 }
 
 auto to_pointer(const std::basic_string<JSON::Char, JSON::CharTraits,
