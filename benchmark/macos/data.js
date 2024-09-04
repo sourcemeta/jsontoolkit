@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725407354206,
+  "lastUpdate": 1725409803028,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -3454,6 +3454,66 @@ window.BENCHMARK_DATA = {
             "value": 6750.571467317069,
             "unit": "ns/iter",
             "extra": "iterations: 103243\ncpu: 6750.055693848499 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f9f830bcdc283ecfc9e58c7e28c210fa866477ce",
+          "message": "Create specialized methods for traversing instances during loops (#1120)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-03T20:25:35-04:00",
+          "tree_id": "84b093e7c08683d705b1809a3413143297803964",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/f9f830bcdc283ecfc9e58c7e28c210fa866477ce"
+        },
+        "date": 1725409801021,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 207891.97908801527,
+            "unit": "ns/iter",
+            "extra": "iterations: 3443\ncpu: 207884.11269241944 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1469.1569498758583,
+            "unit": "ns/iter",
+            "extra": "iterations: 478433\ncpu: 1469.0061095283972 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2261.6485133713477,
+            "unit": "ns/iter",
+            "extra": "iterations: 294290\ncpu: 2261.554928811715 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 176.33863924372983,
+            "unit": "ns/iter",
+            "extra": "iterations: 3981095\ncpu: 176.3210875399859 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 3625.349219120544,
+            "unit": "ns/iter",
+            "extra": "iterations: 193884\ncpu: 3625.2501495739725 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 5596.341958603156,
+            "unit": "ns/iter",
+            "extra": "iterations: 106045\ncpu: 5596.143146777309 ns\nthreads: 1"
           }
         ]
       }
