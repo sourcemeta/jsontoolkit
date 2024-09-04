@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725410078066,
+  "lastUpdate": 1725410097514,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -3574,6 +3574,66 @@ window.BENCHMARK_DATA = {
             "value": 6981.662840011423,
             "unit": "ns/iter",
             "extra": "iterations: 113415\ncpu: 6979.500066128817 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eba0d998c1850bc3f3d79cf0645d6caa0315f378",
+          "message": "Assert that annotation steps have no relative instance location (#1124)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-03T20:29:37-04:00",
+          "tree_id": "4f0bd5e0e78ffc64a8f5986bb7b59cf95aa4809b",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/eba0d998c1850bc3f3d79cf0645d6caa0315f378"
+        },
+        "date": 1725410095524,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compile_Basic",
+            "value": 276729.9191745308,
+            "unit": "ns/iter",
+            "extra": "iterations: 2326\ncpu: 254987.10232158212 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1699.047934583564,
+            "unit": "ns/iter",
+            "extra": "iterations: 432673\ncpu: 1682.8667376979852 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2733.684672959011,
+            "unit": "ns/iter",
+            "extra": "iterations: 249709\ncpu: 2611.503790412039 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 223.0011004456786,
+            "unit": "ns/iter",
+            "extra": "iterations: 3424976\ncpu: 213.4689410962295 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 4265.10589404289,
+            "unit": "ns/iter",
+            "extra": "iterations: 159008\ncpu: 4257.609680016098 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 6799.848782299438,
+            "unit": "ns/iter",
+            "extra": "iterations: 113082\ncpu: 6721.06966625988 ns\nthreads: 1"
           }
         ]
       }
