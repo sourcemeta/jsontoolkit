@@ -193,9 +193,17 @@ public:
                               step.relative_instance_location.size());
     this->evaluate_path_.push_back(step.relative_schema_location);
     this->instance_location_.push_back(step.relative_instance_location);
+    assert(step.relative_instance_location.size() <= 1);
+    if (!step.relative_instance_location.empty()) {
+      const auto &token{step.relative_instance_location.back()};
+      const auto &current{this->instances_.back().get()};
+      if (token.is_property()) {
+        this->instances_.emplace_back(current.at(token.to_property()));
+      } else {
+        this->instances_.emplace_back(current.at(token.to_index()));
+      }
+    }
 
-    // TODO: Do schema resource management using hashes to avoid
-    // expensive string comparisons
     if (step.dynamic) {
       // Note that we are potentially repeatedly pushing back the
       // same schema resource over and over again. However, the
@@ -210,6 +218,11 @@ public:
     const auto &sizes{this->frame_sizes.top()};
     this->evaluate_path_.pop_back(sizes.first);
     this->instance_location_.pop_back(sizes.second);
+    assert(sizes.second <= 1);
+    if (sizes.second == 1) {
+      this->instances_.pop_back();
+    }
+
     this->frame_sizes.pop();
 
     // TODO: Do schema resource management using hashes to avoid
@@ -223,11 +236,13 @@ public:
   auto enter(const Pointer::Token::Property &property) -> void {
     this->frame_sizes.emplace(0, 1);
     this->instance_location_.push_back(property);
+    this->instances_.emplace_back(this->instances_.back().get().at(property));
   }
 
   auto enter(const Pointer::Token::Index &index) -> void {
     this->frame_sizes.emplace(0, 1);
     this->instance_location_.push_back(index);
+    this->instances_.emplace_back(this->instances_.back().get().at(index));
   }
 
   auto leave() -> void {
@@ -236,6 +251,7 @@ public:
     assert(this->frame_sizes.top().second == 1);
     this->instance_location_.pop_back();
     this->frame_sizes.pop();
+    this->instances_.pop_back();
   }
 
   auto instances() const -> const auto & { return this->instances_; }
@@ -255,35 +271,14 @@ public:
     this->property_as_instance = (type == TargetType::Key);
   }
 
-  auto
-  resolve_target(const Pointer &relative_instance_location) -> const JSON & {
-    using namespace sourcemeta::jsontoolkit;
+  auto resolve_target() -> const JSON & {
     if (this->property_as_instance) [[unlikely]] {
-      if (!relative_instance_location.empty()) {
-        assert(relative_instance_location.back().is_property());
-        return this->value(relative_instance_location.back().to_property());
-      }
-
       assert(!this->instance_location().empty());
       assert(this->instance_location().back().is_property());
       return this->value(this->instance_location().back().to_property());
     }
 
-    // TODO: This means that we traverse the instance into
-    // the current instance location EVERY single time.
-    // Can we be smarter? Maybe we keep a reference to the current
-    // instance location in this class that we manipulate through
-    // .push() and .pop()
-    if (relative_instance_location.empty()) {
-      return get(this->instances_.back(), this->instance_location());
-    } else {
-      return get(get(this->instances_.back(), this->instance_location()),
-                 relative_instance_location);
-    }
-  }
-
-  auto resolve_target() -> const JSON & {
-    return this->resolve_target(sourcemeta::jsontoolkit::empty_pointer);
+    return this->instances_.back().get();
   }
 
   auto mark(const std::size_t id, const Template &children) -> void {
@@ -352,13 +347,13 @@ auto evaluate_step(
 #define EVALUATE_BEGIN(step_category, step_type, precondition)                 \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
-  const auto &target{                                                          \
-      context.resolve_target(step_category.relative_instance_location)};       \
+  context.push(step_category);                                                 \
+  const auto &target{context.resolve_target()};                                \
   if (!(precondition)) {                                                       \
+    context.pop(step_category);                                                \
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
   }                                                                            \
-  context.push(step_category);                                                 \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
@@ -1083,13 +1078,10 @@ auto evaluate_step(
   } else if (IS_STEP(SchemaCompilerLoopItemsUnevaluated)) {
     // TODO: This precondition is very expensive due to pointer manipulation
     EVALUATE_BEGIN(loop, SchemaCompilerLoopItemsUnevaluated,
-                   target.is_array() &&
-                       !context.defines_annotation(
-                           context.instance_location().concat(
-                               loop.relative_instance_location),
-                           context.evaluate_path().concat(
-                               loop.relative_schema_location.initial()),
-                           loop.value.mask, JSON{true}));
+                   target.is_array() && !context.defines_annotation(
+                                            context.instance_location(),
+                                            context.evaluate_path().initial(),
+                                            loop.value.mask, JSON{true}));
     const auto &array{target.as_array()};
     result = true;
     auto iterator{array.cbegin()};
