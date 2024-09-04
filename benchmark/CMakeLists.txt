@@ -1,7 +1,6 @@
 set(BENCHMARK_SOURCES)
 
 if(JSONTOOLKIT_JSONSCHEMA)
-  list(APPEND BENCHMARK_SOURCES jsonschema_compiler.cc)
   list(APPEND BENCHMARK_SOURCES jsonschema_validator.cc)
 endif()
 
