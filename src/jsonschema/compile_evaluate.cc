@@ -187,14 +187,12 @@ public:
     return result;
   }
 
-  template <typename T>
-  auto push(const T &step, const Pointer &relative_evaluate_path,
-            const Pointer &relative_instance_location) -> void {
-    assert(relative_instance_location.size() <= 1);
-    this->frame_sizes.emplace(relative_evaluate_path.size(),
-                              relative_instance_location.size());
-    this->evaluate_path_.push_back(relative_evaluate_path);
-    this->instance_location_.push_back(relative_instance_location);
+  template <typename T> auto push(const T &step) -> void {
+    assert(step.relative_instance_location.size() <= 1);
+    this->frame_sizes.emplace(step.relative_schema_location.size(),
+                              step.relative_instance_location.size());
+    this->evaluate_path_.push_back(step.relative_schema_location);
+    this->instance_location_.push_back(step.relative_instance_location);
 
     // TODO: Do schema resource management using hashes to avoid
     // expensive string comparisons
@@ -360,8 +358,7 @@ auto evaluate_step(
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
   }                                                                            \
-  context.push(step_category, step_category.relative_schema_location,          \
-               step_category.relative_instance_location);                      \
+  context.push(step_category);                                                 \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
@@ -376,8 +373,7 @@ auto evaluate_step(
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
   }                                                                            \
-  context.push(step_category, step_category.relative_schema_location,          \
-               step_category.relative_instance_location);                      \
+  context.push(step_category);                                                 \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
@@ -388,8 +384,7 @@ auto evaluate_step(
 #define EVALUATE_BEGIN_NO_PRECONDITION(step_category, step_type)               \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
-  context.push(step_category, step_category.relative_schema_location,          \
-               step_category.relative_instance_location);                      \
+  context.push(step_category);                                                 \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
@@ -422,8 +417,7 @@ auto evaluate_step(
   }                                                                            \
   const auto annotation_result{                                                \
       context.annotate(destination, annotation_value)};                        \
-  context.push(step_category, step_category.relative_schema_location,          \
-               step_category.relative_instance_location);                      \
+  context.push(step_category);                                                 \
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
@@ -443,8 +437,7 @@ auto evaluate_step(
   const auto &step_category{std::get<step_type>(step)};                        \
   const auto annotation_result{                                                \
       context.annotate(destination, annotation_value)};                        \
-  context.push(step_category, step_category.relative_schema_location,          \
-               step_category.relative_instance_location);                      \
+  context.push(step_category);                                                 \
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
