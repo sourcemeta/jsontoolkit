@@ -12,7 +12,6 @@
 #include <map>         // std::map
 #include <optional>    // std::optional
 #include <set>         // std::set
-#include <stack>       // std::stack
 #include <type_traits> // std::is_same_v
 #include <vector>      // std::vector
 
@@ -189,8 +188,8 @@ public:
 
   template <typename T> auto push(const T &step) -> void {
     assert(step.relative_instance_location.size() <= 1);
-    this->frame_sizes.emplace(step.relative_schema_location.size(),
-                              step.relative_instance_location.size());
+    this->frame_sizes.emplace_back(step.relative_schema_location.size(),
+                                   step.relative_instance_location.size());
     this->evaluate_path_.push_back(step.relative_schema_location);
     this->instance_location_.push_back(step.relative_instance_location);
     assert(step.relative_instance_location.size() <= 1);
@@ -211,7 +210,7 @@ public:
 
   template <typename T> auto pop(const T &step) -> void {
     assert(!this->frame_sizes.empty());
-    const auto &sizes{this->frame_sizes.top()};
+    const auto &sizes{this->frame_sizes.back()};
     this->evaluate_path_.pop_back(sizes.first);
     this->instance_location_.pop_back(sizes.second);
     assert(sizes.second <= 1);
@@ -219,7 +218,7 @@ public:
       this->instances_.pop_back();
     }
 
-    this->frame_sizes.pop();
+    this->frame_sizes.pop_back();
 
     // TODO: Do schema resource management using hashes to avoid
     // expensive string comparisons
@@ -308,7 +307,7 @@ private:
   std::vector<std::reference_wrapper<const JSON>> instances_;
   Pointer evaluate_path_;
   Pointer instance_location_;
-  std::stack<std::pair<std::size_t, std::size_t>> frame_sizes;
+  std::vector<std::pair<std::size_t, std::size_t>> frame_sizes;
   // TODO: Keep hashes of schema resources URI instead for performance reasons
   std::vector<std::string> resources_;
   std::vector<Pointer> annotation_blacklist;
