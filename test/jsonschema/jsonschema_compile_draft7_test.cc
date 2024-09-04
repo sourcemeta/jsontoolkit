@@ -14,8 +14,7 @@ TEST(JSONSchema_compile_draft7, metaschema) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       metaschema.value(), sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{}")};
@@ -32,8 +31,7 @@ TEST(JSONSchema_compile_draft7, if_1) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
@@ -62,8 +60,7 @@ TEST(JSONSchema_compile_draft7, if_2) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{2};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
@@ -92,8 +89,7 @@ TEST(JSONSchema_compile_draft7, then_1) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{3};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
@@ -110,8 +106,7 @@ TEST(JSONSchema_compile_draft7, then_2) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{10};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
@@ -155,8 +150,7 @@ TEST(JSONSchema_compile_draft7, then_3) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
@@ -185,8 +179,7 @@ TEST(JSONSchema_compile_draft7, else_1) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{3};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
@@ -203,8 +196,7 @@ TEST(JSONSchema_compile_draft7, else_2) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{1};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
@@ -234,8 +226,7 @@ TEST(JSONSchema_compile_draft7, else_3) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{10};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
@@ -279,8 +270,7 @@ TEST(JSONSchema_compile_draft7, else_4) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{8};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
@@ -324,8 +314,7 @@ TEST(JSONSchema_compile_draft7, invalid_ref_top_level) {
     sourcemeta::jsontoolkit::compile(
         schema, sourcemeta::jsontoolkit::default_schema_walker,
         sourcemeta::jsontoolkit::official_resolver,
-        sourcemeta::jsontoolkit::default_schema_compiler,
-        sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full);
+        sourcemeta::jsontoolkit::default_schema_compiler);
   } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
     EXPECT_EQ(error.location(), sourcemeta::jsontoolkit::Pointer({"$ref"}));
     SUCCEED();
@@ -349,8 +338,7 @@ TEST(JSONSchema_compile_draft7, invalid_ref_nested) {
     sourcemeta::jsontoolkit::compile(
         schema, sourcemeta::jsontoolkit::default_schema_walker,
         sourcemeta::jsontoolkit::official_resolver,
-        sourcemeta::jsontoolkit::default_schema_compiler,
-        sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full);
+        sourcemeta::jsontoolkit::default_schema_compiler);
   } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
     EXPECT_EQ(error.location(),
               sourcemeta::jsontoolkit::Pointer({"properties", "foo", "$ref"}));
@@ -382,8 +370,7 @@ TEST(JSONSchema_compile_draft7, invalid_ref_embedded) {
     sourcemeta::jsontoolkit::compile(
         schema, sourcemeta::jsontoolkit::default_schema_walker,
         sourcemeta::jsontoolkit::official_resolver,
-        sourcemeta::jsontoolkit::default_schema_compiler,
-        sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full);
+        sourcemeta::jsontoolkit::default_schema_compiler);
   } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
     EXPECT_EQ(error.location(),
               sourcemeta::jsontoolkit::Pointer(
@@ -408,8 +395,7 @@ TEST(JSONSchema_compile_draft7, metadata) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
@@ -426,8 +412,7 @@ TEST(JSONSchema_compile_draft7, content) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{"test"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
@@ -443,8 +428,7 @@ TEST(JSONSchema_compile_draft7, unknown_1) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
@@ -460,8 +444,7 @@ TEST(JSONSchema_compile_draft7, unknown_2) {
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
@@ -486,8 +469,7 @@ TEST(JSONSchema_compile_draft7, reference_from_unknown_keyword) {
     sourcemeta::jsontoolkit::compile(
         schema, sourcemeta::jsontoolkit::default_schema_walker,
         sourcemeta::jsontoolkit::official_resolver,
-        sourcemeta::jsontoolkit::default_schema_compiler,
-        sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Full);
+        sourcemeta::jsontoolkit::default_schema_compiler);
   } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
     EXPECT_EQ(error.id(), "#/properties/baz");
     EXPECT_EQ(error.location(),

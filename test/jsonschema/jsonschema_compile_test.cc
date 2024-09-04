@@ -51,7 +51,6 @@ TEST(JSONSchema_compile, boolean_true) {
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
       sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Optimized,
       "https://json-schema.org/draft/2020-12/schema")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
@@ -65,7 +64,6 @@ TEST(JSONSchema_compile, boolean_false) {
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
       sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Optimized,
       "https://json-schema.org/draft/2020-12/schema")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo bar"};

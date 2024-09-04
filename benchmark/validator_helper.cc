@@ -22,8 +22,7 @@ auto main(int argc, char **argv) noexcept -> int {
   const auto schema_template{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler,
-      sourcemeta::jsontoolkit::SchemaCompilerCompilationMode::Optimized)};
+      sourcemeta::jsontoolkit::default_schema_compiler)};
 
   // Get the instance/s
   const std::filesystem::path instance_path{argv[2]};

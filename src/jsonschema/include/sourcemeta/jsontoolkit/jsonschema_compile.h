@@ -110,6 +110,14 @@ using SchemaCompilerValueStringMap =
 using SchemaCompilerValueIndexedJSON =
     std::pair<SchemaCompilerValueUnsignedInteger, JSON>;
 
+// Note that while we generally avoid sets, in this case, we want
+// hash-based lookups on string collections that might get large.
+/// @ingroup jsonschema_compiler
+/// Represents a compiler step value that consist of object property filters
+using SchemaCompilerValuePropertyFilter =
+    std::pair<std::set<SchemaCompilerValueString>,
+              std::vector<SchemaCompilerValueRegex>>;
+
 // Forward declarations for the sole purpose of being bale to define circular
 // structures
 #ifndef DOXYGEN
@@ -156,8 +164,8 @@ struct SchemaCompilerLogicalWhenArraySizeEqual;
 struct SchemaCompilerLoopPropertiesMatch;
 struct SchemaCompilerLoopProperties;
 struct SchemaCompilerLoopPropertiesRegex;
-struct SchemaCompilerLoopPropertiesNoAdjacentAnnotation;
 struct SchemaCompilerLoopPropertiesNoAnnotation;
+struct SchemaCompilerLoopPropertiesExcept;
 struct SchemaCompilerLoopKeys;
 struct SchemaCompilerLoopItems;
 struct SchemaCompilerLoopItemsUnmarked;
@@ -198,8 +206,8 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerLogicalWhenArraySizeGreater,
     SchemaCompilerLogicalWhenArraySizeEqual, SchemaCompilerLoopPropertiesMatch,
     SchemaCompilerLoopProperties, SchemaCompilerLoopPropertiesRegex,
-    SchemaCompilerLoopPropertiesNoAdjacentAnnotation,
-    SchemaCompilerLoopPropertiesNoAnnotation, SchemaCompilerLoopKeys,
+    SchemaCompilerLoopPropertiesNoAnnotation,
+    SchemaCompilerLoopPropertiesExcept, SchemaCompilerLoopKeys,
     SchemaCompilerLoopItems, SchemaCompilerLoopItemsUnmarked,
     SchemaCompilerLoopItemsUnevaluated, SchemaCompilerLoopContains,
     SchemaCompilerControlLabel, SchemaCompilerControlMark,
@@ -456,14 +464,14 @@ DEFINE_STEP_APPLICATOR(Loop, PropertiesRegex, SchemaCompilerValueRegex)
 
 /// @ingroup jsonschema_compiler_instructions
 /// @brief Represents a compiler step that loops over object properties that
-/// were not collected as adjacent annotations
-DEFINE_STEP_APPLICATOR(Loop, PropertiesNoAdjacentAnnotation,
-                       SchemaCompilerValueStrings)
+/// were not collected as annotations
+DEFINE_STEP_APPLICATOR(Loop, PropertiesNoAnnotation, SchemaCompilerValueStrings)
 
 /// @ingroup jsonschema_compiler_instructions
 /// @brief Represents a compiler step that loops over object properties that
-/// were not collected as annotations
-DEFINE_STEP_APPLICATOR(Loop, PropertiesNoAnnotation, SchemaCompilerValueStrings)
+/// do not match the given property filters
+DEFINE_STEP_APPLICATOR(Loop, PropertiesExcept,
+                       SchemaCompilerValuePropertyFilter)
 
 /// @ingroup jsonschema_compiler_instructions
 /// @brief Represents a compiler step that loops over object property keys
@@ -544,16 +552,6 @@ struct SchemaCompilerContext;
 #endif
 
 /// @ingroup jsonschema_compiler
-/// Represents the mode of compilation
-enum class SchemaCompilerCompilationMode {
-  /// Produce a compile template optimized for speed, ignoring everything
-  /// that is not strictly required for that case
-  Optimized,
-  /// Produce a compile template optimized for full coverage
-  Full
-};
-
-/// @ingroup jsonschema_compiler
 /// A compiler is represented as a function that maps a keyword compiler
 /// contexts into a compiler template. You can provide your own to implement
 /// your own keywords
@@ -566,8 +564,6 @@ using SchemaCompiler = std::function<SchemaCompilerTemplate(
 /// disposal to implement a keyword that will never change throughout
 /// the compilation process
 struct SchemaCompilerContext {
-  /// The selected mode of compilation
-  const SchemaCompilerCompilationMode mode;
   /// The root schema resource
   const JSON &root;
   /// The reference frame of the entire schema
@@ -828,8 +824,6 @@ auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT default_schema_compiler(
 auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 compile(const JSON &schema, const SchemaWalker &walker,
         const SchemaResolver &resolver, const SchemaCompiler &compiler,
-        const SchemaCompilerCompilationMode mode =
-            SchemaCompilerCompilationMode::Optimized,
         const std::optional<std::string> &default_dialect = std::nullopt)
     -> SchemaCompilerTemplate;
 

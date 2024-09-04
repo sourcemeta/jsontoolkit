@@ -4,7 +4,7 @@
 
 #include "trace.h"
 
-#include <algorithm>   // std::min
+#include <algorithm>   // std::min, std::any_of
 #include <cassert>     // assert
 #include <functional>  // std::reference_wrapper
 #include <iterator>    // std::distance, std::advance
@@ -89,23 +89,6 @@ public:
     for (const auto &keyword : keywords) {
       if (this->defines_any_adjacent_annotation(expected_instance_location,
                                                 base_evaluate_path, keyword)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  auto defines_adjacent_annotation(const Pointer &expected_instance_location,
-                                   const Pointer &base_evaluate_path,
-                                   const std::vector<std::string> &keywords,
-                                   const JSON &value) const -> bool {
-    // TODO: We should be taking masks into account
-    for (const auto &keyword : keywords) {
-      auto expected_evaluate_path{base_evaluate_path};
-      expected_evaluate_path.push_back({keyword});
-      if (this->annotations(expected_instance_location, expected_evaluate_path)
-              .contains(value)) {
         return true;
       }
     }
@@ -922,40 +905,6 @@ auto evaluate_step(
 
   evaluate_loop_properties_regex_end:
     EVALUATE_END(loop, SchemaCompilerLoopPropertiesRegex);
-  } else if (IS_STEP(SchemaCompilerLoopPropertiesNoAdjacentAnnotation)) {
-    EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesNoAdjacentAnnotation,
-                   target.is_object());
-    result = true;
-    assert(!loop.value.empty());
-
-    for (const auto &entry : target.as_object()) {
-      // TODO: It might be more efficient to get all the annotations we
-      // potentially care about as a set first, and the make the loop
-      // check for O(1) containment in that set?
-      if (context.defines_adjacent_annotation(
-              context.instance_location(),
-              // TODO: Can we avoid doing this expensive operation on a loop?
-              context.evaluate_path().initial(), loop.value,
-              // TODO: This conversion implies a string copy
-              JSON{entry.first})) {
-        continue;
-      }
-
-      context.enter(entry.first);
-      for (const auto &child : loop.children) {
-        if (!evaluate_step(child, mode, callback, context)) {
-          result = false;
-          context.leave();
-          // For efficiently breaking from the outer loop too
-          goto evaluate_loop_properties_no_adjacent_annotation_end;
-        }
-      }
-
-      context.leave();
-    }
-
-  evaluate_loop_properties_no_adjacent_annotation_end:
-    EVALUATE_END(loop, SchemaCompilerLoopPropertiesNoAdjacentAnnotation);
   } else if (IS_STEP(SchemaCompilerLoopPropertiesNoAnnotation)) {
     EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesNoAnnotation,
                    target.is_object());
@@ -990,6 +939,37 @@ auto evaluate_step(
 
   evaluate_loop_properties_no_annotation_end:
     EVALUATE_END(loop, SchemaCompilerLoopPropertiesNoAnnotation);
+  } else if (IS_STEP(SchemaCompilerLoopPropertiesExcept)) {
+    EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesExcept,
+                   target.is_object());
+    result = true;
+    // Otherwise why emit this instruction?
+    assert(!loop.value.first.empty() || !loop.value.second.empty());
+
+    for (const auto &entry : target.as_object()) {
+      if (loop.value.first.contains(entry.first) ||
+          std::any_of(loop.value.second.cbegin(), loop.value.second.cend(),
+                      [&entry](const auto &pattern) {
+                        return std::regex_search(entry.first, pattern.first);
+                      })) {
+        continue;
+      }
+
+      context.enter(entry.first);
+      for (const auto &child : loop.children) {
+        if (!evaluate_step(child, mode, callback, context)) {
+          result = false;
+          context.leave();
+          // For efficiently breaking from the outer loop too
+          goto evaluate_loop_properties_except_end;
+        }
+      }
+
+      context.leave();
+    }
+
+  evaluate_loop_properties_except_end:
+    EVALUATE_END(loop, SchemaCompilerLoopPropertiesExcept);
   } else if (IS_STEP(SchemaCompilerLoopKeys)) {
     EVALUATE_BEGIN(loop, SchemaCompilerLoopKeys, target.is_object());
     result = true;
