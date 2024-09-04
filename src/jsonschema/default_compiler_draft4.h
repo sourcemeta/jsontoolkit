@@ -325,7 +325,10 @@ auto compiler_draft4_applicator_properties(
       schema_context.schema.at("required").is_array()) {
     for (const auto &property :
          schema_context.schema.at("required").as_array()) {
-      if (property.is_string()) {
+      if (property.is_string() &&
+          // Only count the required property if its indeed in "properties"
+          schema_context.schema.at(dynamic_context.keyword)
+              .defines(property.to_string())) {
         required.insert(property.to_string());
       }
     }
