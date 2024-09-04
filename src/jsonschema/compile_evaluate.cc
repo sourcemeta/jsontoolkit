@@ -195,13 +195,9 @@ public:
     this->instance_location_.push_back(step.relative_instance_location);
     assert(step.relative_instance_location.size() <= 1);
     if (!step.relative_instance_location.empty()) {
-      const auto &token{step.relative_instance_location.back()};
-      const auto &current{this->instances_.back().get()};
-      if (token.is_property()) {
-        this->instances_.emplace_back(current.at(token.to_property()));
-      } else {
-        this->instances_.emplace_back(current.at(token.to_index()));
-      }
+      this->instances_.emplace_back(
+          get(this->instances_.back().get(),
+              step.relative_instance_location.back()));
     }
 
     if (step.dynamic) {
