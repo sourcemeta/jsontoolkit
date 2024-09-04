@@ -11,16 +11,17 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/uri.h>
 
-#include <functional> // std::function
-#include <map>        // std::map
-#include <optional>   // std::optional, std::nullopt
-#include <regex>      // std::regex
-#include <set>        // std::set
-#include <string>     // std::string
-#include <tuple>      // std::tuple
-#include <utility>    // std::move, std::pair
-#include <variant>    // std::variant
-#include <vector>     // std::vector
+#include <functional>    // std::function
+#include <map>           // std::map
+#include <optional>      // std::optional, std::nullopt
+#include <regex>         // std::regex
+#include <set>           // std::set
+#include <string>        // std::string
+#include <tuple>         // std::tuple
+#include <unordered_map> // std::unordered_map
+#include <utility>       // std::move, std::pair
+#include <variant>       // std::variant
+#include <vector>        // std::vector
 
 /// @ingroup jsonschema
 /// @defgroup jsonschema_compiler Compiler
@@ -86,7 +87,8 @@ using SchemaCompilerValueBoolean = bool;
 /// @ingroup jsonschema_compiler
 /// Represents a compiler step string to index map
 using SchemaCompilerValueNamedIndexes =
-    std::map<SchemaCompilerValueString, SchemaCompilerValueUnsignedInteger>;
+    std::unordered_map<SchemaCompilerValueString,
+                       SchemaCompilerValueUnsignedInteger>;
 
 /// @ingroup jsonschema_compiler
 /// Represents a compiler step string logical type
@@ -103,7 +105,7 @@ struct SchemaCompilerValueItemsAnnotationKeywords {
 /// @ingroup jsonschema_compiler
 /// Represents an compiler step that maps strings to strings
 using SchemaCompilerValueStringMap =
-    std::map<SchemaCompilerValueString, SchemaCompilerValueStrings>;
+    std::unordered_map<SchemaCompilerValueString, SchemaCompilerValueStrings>;
 
 /// @ingroup jsonschema_compiler
 /// Represents a compiler step JSON value accompanied with an index
