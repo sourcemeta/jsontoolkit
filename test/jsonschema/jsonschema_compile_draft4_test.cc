@@ -820,7 +820,7 @@ TEST(JSONSchema_compile_draft4, properties_1) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
 
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
 
@@ -863,7 +863,7 @@ TEST(JSONSchema_compile_draft4, properties_2) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": \"xxx\", \"bar\": 2 }")};
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": \"xxx\" }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
@@ -1238,8 +1238,8 @@ TEST(JSONSchema_compile_draft4, patternProperties_6) {
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "patternProperties": {
-      "^f": { "type": "integer" },
-      "o$": { "type": "integer" }
+      "o$": { "type": "integer" },
+      "^f": { "type": "integer" }
     }
   })JSON")};
 
@@ -1249,7 +1249,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_6) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
@@ -1349,7 +1349,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_1) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
@@ -1454,7 +1454,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
@@ -3305,7 +3305,7 @@ TEST(JSONSchema_compile_draft4, minProperties_2) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
   EVALUATE_TRACE_PRE(0, AssertionObjectSizeGreater, "/minProperties",
@@ -3375,7 +3375,7 @@ TEST(JSONSchema_compile_draft4, maxProperties_2) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
   EVALUATE_TRACE_PRE(0, AssertionObjectSizeLess, "/maxProperties",
@@ -3402,7 +3402,7 @@ TEST(JSONSchema_compile_draft4, maxProperties_3) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }")};
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"baz\": 3, \"foo\": 1 }")};
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
 
   EVALUATE_TRACE_PRE(0, AssertionObjectSizeLess, "/maxProperties",
