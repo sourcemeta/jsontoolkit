@@ -230,23 +230,17 @@ public:
   }
 
   auto enter(const Pointer::Token::Property &property) -> void {
-    this->frame_sizes.emplace(0, 1);
     this->instance_location_.push_back(property);
     this->instances_.emplace_back(this->instances_.back().get().at(property));
   }
 
   auto enter(const Pointer::Token::Index &index) -> void {
-    this->frame_sizes.emplace(0, 1);
     this->instance_location_.push_back(index);
     this->instances_.emplace_back(this->instances_.back().get().at(index));
   }
 
   auto leave() -> void {
-    assert(!this->frame_sizes.empty());
-    assert(this->frame_sizes.top().first == 0);
-    assert(this->frame_sizes.top().second == 1);
     this->instance_location_.pop_back();
-    this->frame_sizes.pop();
     this->instances_.pop_back();
   }
 
