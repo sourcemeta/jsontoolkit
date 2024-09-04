@@ -25,10 +25,6 @@ public:
   using Template = sourcemeta::jsontoolkit::SchemaCompilerTemplate;
   EvaluationContext(const JSON &instance) : instances_{instance} {};
 
-  template <typename T> auto value(T &&document) -> const JSON & {
-    return *(this->values.emplace(std::forward<T>(document)).first);
-  }
-
   auto annotate(const Pointer &current_instance_location, const JSON &value)
       -> std::pair<std::reference_wrapper<const JSON>, bool> {
     const auto result{this->annotations_.insert({current_instance_location, {}})
@@ -271,7 +267,13 @@ public:
     if (this->property_as_instance) [[unlikely]] {
       assert(!this->instance_location().empty());
       assert(this->instance_location().back().is_property());
-      return this->value(this->instance_location().back().to_property());
+      // For efficiency, as we likely reference the same JSON values
+      // over and over again
+      // TODO: Get rid of this once we have weak pointers
+      static std::set<JSON> property_values;
+      return *(property_values
+                   .emplace(this->instance_location().back().to_property())
+                   .first);
     }
 
     return this->instances_.back().get();
@@ -310,6 +312,9 @@ public:
     return std::nullopt;
   }
 
+public:
+  const JSON null{nullptr};
+
 private:
   std::vector<std::reference_wrapper<const JSON>> instances_;
   Pointer evaluate_path_;
@@ -318,9 +323,6 @@ private:
   // TODO: Keep hashes of schema resources URI instead for performance reasons
   std::vector<std::string> resources_;
   std::vector<Pointer> annotation_blacklist;
-  // For efficiency, as we likely reference the same JSON values
-  // over and over again
-  std::set<JSON> values;
   // We don't use a pair for holding the two pointers for runtime
   // efficiency when resolving keywords like `unevaluatedProperties`
   std::map<Pointer, std::map<Pointer, std::set<JSON>>> annotations_;
@@ -353,7 +355,7 @@ auto evaluate_step(
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.value(nullptr));                                  \
+                     context.null);                                            \
   }                                                                            \
   bool result{false};
 
@@ -368,7 +370,7 @@ auto evaluate_step(
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.value(nullptr));                                  \
+                     context.null);                                            \
   }                                                                            \
   bool result{false};
 
@@ -379,7 +381,7 @@ auto evaluate_step(
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.value(nullptr));                                  \
+                     context.null);                                            \
   }                                                                            \
   bool result{false};
 
@@ -387,7 +389,7 @@ auto evaluate_step(
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Post, result, step,         \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.value(nullptr));                                  \
+                     context.null);                                            \
   }                                                                            \
   context.pop(step_category);                                                  \
   SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                        \
@@ -412,8 +414,7 @@ auto evaluate_step(
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
-                     context.evaluate_path(), destination,                     \
-                     context.value(nullptr));                                  \
+                     context.evaluate_path(), destination, context.null);      \
     callback.value()(SchemaCompilerEvaluationType::Post, true, step,           \
                      context.evaluate_path(), destination,                     \
                      annotation_result.first);                                 \
@@ -432,8 +433,7 @@ auto evaluate_step(
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
-                     context.evaluate_path(), destination,                     \
-                     context.value(nullptr));                                  \
+                     context.evaluate_path(), destination, context.null);      \
     callback.value()(SchemaCompilerEvaluationType::Post, true, step,           \
                      context.evaluate_path(), destination,                     \
                      annotation_result.first);                                 \
