@@ -70,7 +70,11 @@ function(noa_add_default_options visibility target)
       -Wno-exit-time-destructors
       -Wrange-loop-analysis)
   elseif(NOA_COMPILER_GCC)
-    # Newer versions of GCC (i.e. 14) seem to print a lot of false-positives here
-    target_compile_options("${target}" ${visibility} -Wno-dangling-reference)
+    target_compile_options("${target}" ${visibility}
+      # Newer versions of GCC (i.e. 14) seem to print a lot of false-positives here
+      -Wno-dangling-reference
+
+      # Disables runtime type information
+      -fno-rtti)
   endif()
 endfunction()
