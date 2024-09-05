@@ -40,3 +40,13 @@ TEST(JSONWeakPointer_pointer, empty) {
   EXPECT_EQ(pointer.size(), 0);
   EXPECT_TRUE(pointer.empty());
 }
+
+TEST(JSONWeakPointer_pointer, store_a_const_ref) {
+  const std::string str = "foo";
+  const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(str)};
+
+  EXPECT_EQ(pointer.size(), 1);
+  EXPECT_FALSE(pointer.empty());
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_EQ(pointer.at(0).to_property().get(), "foo");
+}
