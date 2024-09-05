@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
+
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
+
 #include <vector>
 
 static auto test_resolver(std::string_view identifier)
@@ -688,25 +690,48 @@ TEST(JSONSchema_walker, flat) {
   }
 
   EXPECT_EQ(subschemas.size(), 2);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::jsontoolkit::parse(R"JSON({
-    "schema": { "foo": 1 }
-  })JSON"));
-  EXPECT_EQ(subschemas.at(1), sourcemeta::jsontoolkit::parse(R"JSON({
-    "schema": { "foo": 2 }
-  })JSON"));
-
   EXPECT_EQ(entries.size(), 2);
 
-  EXPECT_EQ(entries.at(0).pointer, sourcemeta::jsontoolkit::Pointer{"schema"});
-  EXPECT_EQ(entries.at(0).dialect, "https://sourcemeta.com/test-metaschema");
-  EXPECT_EQ(entries.at(0).base_dialect,
-            "https://json-schema.org/draft/2020-12/schema");
+  // The order of object properties is irrelevant
+  if (subschemas.at(0).at("schema").at("foo").to_integer() == 1) {
+    EXPECT_EQ(subschemas.at(0), sourcemeta::jsontoolkit::parse(R"JSON({
+      "schema": { "foo": 1 }
+    })JSON"));
+    EXPECT_EQ(subschemas.at(1), sourcemeta::jsontoolkit::parse(R"JSON({
+      "schema": { "foo": 2 }
+    })JSON"));
 
-  EXPECT_EQ(entries.at(1).pointer,
-            sourcemeta::jsontoolkit::Pointer({"schemaMap", "foo"}));
-  EXPECT_EQ(entries.at(1).dialect, "https://sourcemeta.com/test-metaschema");
-  EXPECT_EQ(entries.at(1).base_dialect,
-            "https://json-schema.org/draft/2020-12/schema");
+    EXPECT_EQ(entries.at(0).pointer,
+              sourcemeta::jsontoolkit::Pointer{"schema"});
+    EXPECT_EQ(entries.at(0).dialect, "https://sourcemeta.com/test-metaschema");
+    EXPECT_EQ(entries.at(0).base_dialect,
+              "https://json-schema.org/draft/2020-12/schema");
+
+    EXPECT_EQ(entries.at(1).pointer,
+              sourcemeta::jsontoolkit::Pointer({"schemaMap", "foo"}));
+    EXPECT_EQ(entries.at(1).dialect, "https://sourcemeta.com/test-metaschema");
+    EXPECT_EQ(entries.at(1).base_dialect,
+              "https://json-schema.org/draft/2020-12/schema");
+  } else {
+    EXPECT_EQ(subschemas.at(1), sourcemeta::jsontoolkit::parse(R"JSON({
+      "schema": { "foo": 1 }
+    })JSON"));
+    EXPECT_EQ(subschemas.at(0), sourcemeta::jsontoolkit::parse(R"JSON({
+      "schema": { "foo": 2 }
+    })JSON"));
+
+    EXPECT_EQ(entries.at(1).pointer,
+              sourcemeta::jsontoolkit::Pointer{"schema"});
+    EXPECT_EQ(entries.at(1).dialect, "https://sourcemeta.com/test-metaschema");
+    EXPECT_EQ(entries.at(1).base_dialect,
+              "https://json-schema.org/draft/2020-12/schema");
+
+    EXPECT_EQ(entries.at(0).pointer,
+              sourcemeta::jsontoolkit::Pointer({"schemaMap", "foo"}));
+    EXPECT_EQ(entries.at(0).dialect, "https://sourcemeta.com/test-metaschema");
+    EXPECT_EQ(entries.at(0).base_dialect,
+              "https://json-schema.org/draft/2020-12/schema");
+  }
 }
 
 TEST(JSONSchema_walker, flat_non_modify) {
