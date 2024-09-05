@@ -41,6 +41,9 @@ function(noa_add_default_options visibility target)
       -Woverloaded-virtual
       -Winvalid-offsetof
 
+      # Speed up floating point computation in exchange of precision
+      -ffast-math
+
       # Assume that signed arithmetic overflow of addition, subtraction and
       # multiplication wraps around using twos-complement representation
       # See https://users.cs.utah.edu/~regehr/papers/overflow12.pdf
