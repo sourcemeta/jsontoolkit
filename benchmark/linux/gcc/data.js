@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725568569016,
+  "lastUpdate": 1725570052472,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -5774,6 +5774,78 @@ window.BENCHMARK_DATA = {
             "value": 2010.790551387503,
             "unit": "ns/iter",
             "extra": "iterations: 350697\ncpu: 2010.6713573255545 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "567e714a7f552a680da7a161a7c97c95d18c895a",
+          "message": "Upgrade Noa to the latest version (#1166)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-05T16:52:58-04:00",
+          "tree_id": "e5b0af78c69d18c8e0dc8b078c733b1f01b73d1b",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/567e714a7f552a680da7a161a7c97c95d18c895a"
+        },
+        "date": 1725570051343,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1729.4517596405603,
+            "unit": "ns/iter",
+            "extra": "iterations: 378117\ncpu: 1729.3528907719042 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2660.5620952766526,
+            "unit": "ns/iter",
+            "extra": "iterations: 264996\ncpu: 2660.5279815544372 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 226.62536559786716,
+            "unit": "ns/iter",
+            "extra": "iterations: 3089460\ncpu: 226.6213373858215 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 5378.558181914907,
+            "unit": "ns/iter",
+            "extra": "iterations: 131149\ncpu: 5378.563328732966 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 3519.818718950298,
+            "unit": "ns/iter",
+            "extra": "iterations: 199883\ncpu: 3519.6643036176156 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 1979.3422536575783,
+            "unit": "ns/iter",
+            "extra": "iterations: 351482\ncpu: 1979.2479301927285 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 1620.3271242688058,
+            "unit": "ns/iter",
+            "extra": "iterations: 430607\ncpu: 1620.3090497832147 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 2065.202943604846,
+            "unit": "ns/iter",
+            "extra": "iterations: 340331\ncpu: 2065.1314749464477 ns\nthreads: 1"
           }
         ]
       }
