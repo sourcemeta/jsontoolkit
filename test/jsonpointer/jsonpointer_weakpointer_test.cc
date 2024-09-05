@@ -42,11 +42,36 @@ TEST(JSONWeakPointer_pointer, empty) {
 }
 
 TEST(JSONWeakPointer_pointer, store_a_const_ref) {
-  const std::string str = "foo";
-  const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(str)};
+  const std::string foo = "foo";
+  const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(foo)};
 
   EXPECT_EQ(pointer.size(), 1);
   EXPECT_FALSE(pointer.empty());
   EXPECT_TRUE(pointer.at(0).is_property());
-  EXPECT_EQ(pointer.at(0).to_property().get(), "foo");
+  EXPECT_EQ(pointer.at(0).to_property().get(), foo);
+}
+
+TEST(JSONWeakPointer_pointer, one_fragment_back) {
+  const std::string foo = "foo";
+  const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(foo)};
+
+  EXPECT_EQ(pointer.size(), 1);
+  EXPECT_TRUE(pointer.back().is_property());
+  EXPECT_EQ(pointer.back().to_property().get(), foo);
+}
+
+TEST(JSONWeakPointer_pointer, multiple_fragments_mixed) {
+  const std::string foo = "foo";
+  const std::string bar = "bar";
+
+  const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(foo), 2,
+                                                     std::cref(bar)};
+  EXPECT_EQ(pointer.size(), 3);
+  EXPECT_FALSE(pointer.empty());
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_TRUE(pointer.at(1).is_index());
+  EXPECT_TRUE(pointer.at(2).is_property());
+  EXPECT_EQ(pointer.at(0).to_property().get(), foo);
+  EXPECT_EQ(pointer.at(1).to_index(), 2);
+  EXPECT_EQ(pointer.at(2).to_property().get(), bar);
 }
