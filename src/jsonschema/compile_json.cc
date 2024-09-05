@@ -182,8 +182,20 @@ auto encode_step(const std::string_view category, const std::string_view type,
   result.assign("type", JSON{type});
   result.assign("relativeSchemaLocation",
                 JSON{to_string(step.relative_schema_location)});
-  result.assign("relativeInstanceLocation",
-                JSON{to_string(step.relative_instance_location)});
+
+  if (step.relative_instance_location.has_value()) {
+    if (step.relative_instance_location.value().is_property()) {
+      result.assign(
+          "relativeInstanceLocation",
+          JSON{step.relative_instance_location.value().to_property()});
+    } else {
+      result.assign("relativeInstanceLocation",
+                    JSON{step.relative_instance_location.value().to_index()});
+    }
+  } else {
+    result.assign("relativeInstanceLocation", JSON{nullptr});
+  }
+
   result.assign("absoluteKeywordLocation", JSON{step.keyword_location});
   result.assign("schemaResource", JSON{step.schema_resource});
   result.assign("dynamic", JSON{step.dynamic});

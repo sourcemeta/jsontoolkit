@@ -218,7 +218,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
   struct SchemaCompiler##category##name {                                      \
     const Pointer relative_schema_location;                                    \
-    const Pointer relative_instance_location;                                  \
+    const std::optional<Pointer::Token> relative_instance_location;            \
     const std::string keyword_location;                                        \
     const std::string schema_resource;                                         \
     const bool dynamic;                                                        \
@@ -229,7 +229,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
 #define DEFINE_STEP_APPLICATOR(category, name, type)                           \
   struct SchemaCompiler##category##name {                                      \
     const Pointer relative_schema_location;                                    \
-    const Pointer relative_instance_location;                                  \
+    const std::optional<Pointer::Token> relative_instance_location;            \
     const std::string keyword_location;                                        \
     const std::string schema_resource;                                         \
     const bool dynamic;                                                        \

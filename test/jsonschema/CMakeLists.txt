@@ -106,6 +106,12 @@ target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE sourcemeta::jsontoolkit::jsonschema)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE sourcemeta::jsontoolkit::uri)
+
+if(NOA_COMPILER_MSVC)
+  # Otherwise we get "error C1128: number of sections exceeded object file format limit"
+  target_compile_options(sourcemeta_jsontoolkit_jsonschema_unit PRIVATE /bigobj)
+endif()
+
 add_test(NAME JSONSchema COMMAND sourcemeta_jsontoolkit_jsonschema_unit --gtest_brief=1)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema_unit
   PROPERTIES FOLDER "JSON Toolkit/JSON Schema")

@@ -166,16 +166,20 @@ public:
   }
 
   template <typename T> auto push(const T &step) -> void {
-    assert(step.relative_instance_location.size() <= 1);
-    this->frame_sizes.emplace_back(step.relative_schema_location.size(),
-                                   step.relative_instance_location.size());
     this->evaluate_path_.push_back(step.relative_schema_location);
-    this->instance_location_.push_back(step.relative_instance_location);
-    assert(step.relative_instance_location.size() <= 1);
-    if (!step.relative_instance_location.empty()) {
-      this->instances_.emplace_back(
-          get(this->instances_.back().get(),
-              step.relative_instance_location.back()));
+    if (!step.relative_instance_location.has_value()) [[likely]] {
+      this->frame_sizes.emplace_back(step.relative_schema_location.size(), 0);
+    } else {
+      this->frame_sizes.emplace_back(step.relative_schema_location.size(), 1);
+      const auto &token{step.relative_instance_location.value()};
+      this->instance_location_.emplace_back(token);
+      if (token.is_property()) [[likely]] {
+        this->instances_.emplace_back(
+            this->instances_.back().get().at(token.to_property()));
+      } else {
+        this->instances_.emplace_back(
+            this->instances_.back().get().at(token.to_index()));
+      }
     }
 
     if (step.dynamic) {
@@ -380,7 +384,7 @@ auto evaluate_step(
                             destination, annotation_value)                     \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
-  assert(step_category.relative_instance_location.empty());                    \
+  assert(!step_category.relative_instance_location.has_value());               \
   const auto &target{context.resolve_target()};                                \
   if (!(precondition)) {                                                       \
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \

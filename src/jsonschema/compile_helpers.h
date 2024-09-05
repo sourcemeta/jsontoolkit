@@ -22,7 +22,10 @@ auto make(const bool report, const SchemaCompilerContext &context,
           ? dynamic_context.base_schema_location
           : dynamic_context.base_schema_location.concat(
                 {dynamic_context.keyword}),
-      dynamic_context.base_instance_location,
+      dynamic_context.base_instance_location.empty()
+          ? std::nullopt
+          : std::optional<Pointer::Token>{dynamic_context.base_instance_location
+                                              .back()},
       to_uri(schema_context.relative_pointer, schema_context.base).recompose(),
       schema_context.base.recompose(),
       context.uses_dynamic_scopes,
@@ -43,7 +46,10 @@ auto make(const bool report, const SchemaCompilerContext &context,
           ? dynamic_context.base_schema_location
           : dynamic_context.base_schema_location.concat(
                 {dynamic_context.keyword}),
-      dynamic_context.base_instance_location,
+      dynamic_context.base_instance_location.empty()
+          ? std::nullopt
+          : std::optional<Pointer::Token>{dynamic_context.base_instance_location
+                                              .back()},
       to_uri(schema_context.relative_pointer, schema_context.base).recompose(),
       schema_context.base.recompose(),
       context.uses_dynamic_scopes,
