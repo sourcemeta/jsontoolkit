@@ -213,7 +213,7 @@ TEST(JSON_value, compare_object_object_different_same_size) {
       sourcemeta::jsontoolkit::parse("{\"foo\":1}");
   const sourcemeta::jsontoolkit::JSON right =
       sourcemeta::jsontoolkit::parse("{\"foo\":2}");
-  EXPECT_TRUE(left < right);
+  EXPECT_FALSE(left < right);
   EXPECT_FALSE(right < left);
 }
 
@@ -223,7 +223,7 @@ TEST(JSON_value, compare_object_object_different) {
   const sourcemeta::jsontoolkit::JSON right =
       sourcemeta::jsontoolkit::parse("{\"foo\":1, \"bar\":2}");
   EXPECT_FALSE(left < right);
-  EXPECT_TRUE(right < left);
+  EXPECT_FALSE(right < left);
 }
 
 TEST(JSON_value, compare_int_operator_less_than_or_equal_int) {

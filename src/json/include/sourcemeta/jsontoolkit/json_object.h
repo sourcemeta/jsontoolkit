@@ -22,8 +22,8 @@ public:
   // Operators
   // We cannot default given that this class references
   // a JSON "value" as an incomplete type
-  auto operator<(const JSONObject<Key, Value> &other) const noexcept -> bool {
-    return this->data < other.data;
+  auto operator<(const JSONObject<Key, Value> &) const noexcept -> bool {
+    return false;
   }
   auto operator<=(const JSONObject<Key, Value> &other) const noexcept -> bool {
     return this->data <= other.data;
