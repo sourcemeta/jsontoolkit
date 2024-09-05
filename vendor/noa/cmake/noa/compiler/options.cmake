@@ -46,6 +46,12 @@ function(noa_add_default_options visibility target)
       # See https://users.cs.utah.edu/~regehr/papers/overflow12.pdf
       # See https://www.postgresql.org/message-id/1689.1134422394@sss.pgh.pa.us
       -fwrapv)
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+      # Frees up a register by omitting the frame pointer. May make debugging harder,
+      # which is why we only set it on release builds
+      target_compile_options("${target}" ${visibility} -fomit-frame-pointer)
+    endif()
   endif()
 
   if(NOA_COMPILER_LLVM)
