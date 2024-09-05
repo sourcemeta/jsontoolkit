@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725547706563,
+  "lastUpdate": 1725550973192,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos)": [
@@ -5198,6 +5198,78 @@ window.BENCHMARK_DATA = {
             "value": 1550.756031355679,
             "unit": "ns/iter",
             "extra": "iterations: 446873\ncpu: 1550.500925318827 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bfbd2f82b3a917cfc2f58973a7f7ec36d8a28fee",
+          "message": "Run tests on GCC for macOS (#1151)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-05T11:38:56-04:00",
+          "tree_id": "7cf9ec53ed16b0e4fbbc2eba9a5ebbdcdd6f2739",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/bfbd2f82b3a917cfc2f58973a7f7ec36d8a28fee"
+        },
+        "date": 1725550971270,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 991.7076001368321,
+            "unit": "ns/iter",
+            "extra": "iterations: 690356\ncpu: 991.6448904623122 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2024.8986175782939,
+            "unit": "ns/iter",
+            "extra": "iterations: 344902\ncpu: 2024.7490591530348 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 158.64819478116848,
+            "unit": "ns/iter",
+            "extra": "iterations: 4413897\ncpu: 158.64371098827172 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 2396.0022022970757,
+            "unit": "ns/iter",
+            "extra": "iterations: 292876\ncpu: 2395.6042830412853 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 1660.0824607361462,
+            "unit": "ns/iter",
+            "extra": "iterations: 419533\ncpu: 1659.9719211599559 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 1479.040704802759,
+            "unit": "ns/iter",
+            "extra": "iterations: 474686\ncpu: 1478.9755754330245 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 1120.14962854185,
+            "unit": "ns/iter",
+            "extra": "iterations: 623758\ncpu: 1119.9808258972234 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 1518.6738178623111,
+            "unit": "ns/iter",
+            "extra": "iterations: 458851\ncpu: 1518.3883221350704 ns\nthreads: 1"
           }
         ]
       }
