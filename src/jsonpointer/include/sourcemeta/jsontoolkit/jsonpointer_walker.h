@@ -9,7 +9,8 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonpointer
-/// A walker to get every JSON Pointer in a JSON document
+/// A walker to get every JSON Pointer in a JSON document. Note that no specific
+/// ordering is guaranteed. If you expect any ordering, sort afterwards.
 template <typename PointerT> class GenericPointerWalker {
 private:
   using internal = typename std::vector<PointerT>;
