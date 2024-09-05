@@ -20,7 +20,7 @@ jobs:
             cxx: clang++
             type: static
             shell: sh
-            benchmark: macos
+            benchmark: macos/llvm
           - os: macos-latest
             cc: clang
             cxx: clang++
@@ -57,7 +57,7 @@ jobs:
           - os: windows-latest
             type: static
             shell: pwsh
-            benchmark: windows
+            benchmark: windows/msvc
           - os: windows-latest
             type: shared
             shell: pwsh
