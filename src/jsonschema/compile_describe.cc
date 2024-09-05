@@ -1020,12 +1020,19 @@ struct DescribeVisitor {
         message << escape_string(this->target.as_object().cbegin()->first);
       } else {
         message << " properties: ";
-        for (auto iterator = this->target.as_object().cbegin();
-             iterator != this->target.as_object().cend(); ++iterator) {
-          if (std::next(iterator) == this->target.as_object().cend()) {
-            message << "and " << escape_string(iterator->first);
+
+        std::vector<std::string> properties;
+        for (const auto &entry : this->target.as_object()) {
+          properties.push_back(entry.first);
+        }
+        std::sort(properties.begin(), properties.end());
+
+        for (auto iterator = properties.cbegin(); iterator != properties.cend();
+             ++iterator) {
+          if (std::next(iterator) == properties.cend()) {
+            message << "and " << escape_string(*iterator);
           } else {
-            message << escape_string(iterator->first) << ", ";
+            message << escape_string(*iterator) << ", ";
           }
         }
       }
@@ -1063,12 +1070,18 @@ struct DescribeVisitor {
         message << escape_string(this->target.as_object().cbegin()->first);
       } else {
         message << " properties: ";
-        for (auto iterator = this->target.as_object().cbegin();
-             iterator != this->target.as_object().cend(); ++iterator) {
-          if (std::next(iterator) == this->target.as_object().cend()) {
-            message << "and " << escape_string(iterator->first);
+        std::vector<std::string> properties;
+        for (const auto &entry : this->target.as_object()) {
+          properties.push_back(entry.first);
+        }
+        std::sort(properties.begin(), properties.end());
+
+        for (auto iterator = properties.cbegin(); iterator != properties.cend();
+             ++iterator) {
+          if (std::next(iterator) == properties.cend()) {
+            message << "and " << escape_string(*iterator);
           } else {
-            message << escape_string(iterator->first) << ", ";
+            message << escape_string(*iterator) << ", ";
           }
         }
       }

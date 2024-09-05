@@ -24,18 +24,28 @@ auto compiler_2019_09_applicator_dependentschemas(
   }
 
   SchemaCompilerTemplate children;
+
+  // To guarantee order
+  std::vector<std::string> dependents;
   for (const auto &entry :
        schema_context.schema.at(dynamic_context.keyword).as_object()) {
-    if (!is_schema(entry.second)) {
+    dependents.push_back(entry.first);
+  }
+  std::sort(dependents.begin(), dependents.end());
+
+  for (const auto &dependent : dependents) {
+    const auto &dependency{
+        schema_context.schema.at(dynamic_context.keyword).at(dependent)};
+    if (!is_schema(dependency)) {
       continue;
     }
 
-    if (!entry.second.is_boolean() || !entry.second.to_boolean()) {
+    if (!dependency.is_boolean() || !dependency.to_boolean()) {
       children.push_back(make<SchemaCompilerLogicalWhenDefines>(
           false, context, schema_context, relative_dynamic_context,
-          SchemaCompilerValueString{entry.first},
+          SchemaCompilerValueString{dependent},
           compile(context, schema_context, relative_dynamic_context,
-                  {entry.first}, empty_pointer)));
+                  {dependent}, empty_pointer)));
     }
   }
 
