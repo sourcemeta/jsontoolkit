@@ -26,6 +26,12 @@ jobs:
             cxx: clang++
             type: shared
             shell: sh
+          # TODO: Add this to the benchmarks
+          - os: macos-latest
+            cc: gcc-13
+            cxx: g++-13
+            type: static
+            shell: sh
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
