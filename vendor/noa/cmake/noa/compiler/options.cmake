@@ -40,6 +40,7 @@ function(noa_add_default_options visibility target)
       -Wnon-virtual-dtor
       -Woverloaded-virtual
       -Winvalid-offsetof
+      -funroll-loops
 
       # Assume that signed arithmetic overflow of addition, subtraction and
       # multiplication wraps around using twos-complement representation
