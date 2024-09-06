@@ -423,14 +423,14 @@ TEST(JSONSchema_compile_draft4, ref_1) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
-  EVALUATE_TRACE_PRE(1, ControlLabel, "/allOf/0/$ref", "#/allOf/0/$ref", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/$ref", "#/allOf/0/$ref", "");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/$ref/type",
                      "#/definitions/string/type", "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/allOf/0/$ref/type",
                               "#/definitions/string/type", "");
-  EVALUATE_TRACE_POST_FAILURE(1, ControlLabel, "/allOf/0/$ref",
-                              "#/allOf/0/$ref", "");
+  EVALUATE_TRACE_POST_FAILURE(1, LogicalAnd, "/allOf/0/$ref", "#/allOf/0/$ref",
+                              "");
   EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/allOf", "#/allOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
@@ -464,14 +464,14 @@ TEST(JSONSchema_compile_draft4, ref_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
-  EVALUATE_TRACE_PRE(1, ControlLabel, "/allOf/0/$ref", "#/allOf/0/$ref", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/$ref", "#/allOf/0/$ref", "");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/$ref/type",
                      "#/definitions/string/type", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/$ref/type",
                               "#/definitions/string/type", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, ControlLabel, "/allOf/0/$ref",
-                              "#/allOf/0/$ref", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/allOf/0/$ref", "#/allOf/0/$ref",
+                              "");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/allOf", "#/allOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
