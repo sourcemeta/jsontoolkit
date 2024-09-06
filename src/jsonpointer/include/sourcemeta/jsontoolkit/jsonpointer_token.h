@@ -219,7 +219,13 @@ public:
   /// Overload to support ordering of JSON Pointer token. Typically for sorting
   /// reasons.
   auto operator<(const GenericToken<PropertyT> &other) const noexcept -> bool {
-    return this->data < other.data;
+    if (this->data.index() != other.data.index()) {
+      return this->data.index() < other.data.index();
+    }
+    if (this->is_property()) {
+      return this->to_property() < other.to_property();
+    }
+    return this->to_index() < other.to_index();
   }
 
 private:
