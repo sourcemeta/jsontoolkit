@@ -194,6 +194,10 @@ struct DescribeVisitor {
       return message.str();
     }
 
+    if (this->keyword == "$ref") {
+      return describe_reference(this->target);
+    }
+
     return unknown();
   }
 
