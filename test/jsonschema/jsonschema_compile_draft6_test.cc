@@ -340,45 +340,70 @@ TEST(JSONSchema_compile_draft6, propertyNames_2) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"baz\": 3, \"foo\": 1 }")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
-  EVALUATE_TRACE_PRE(1, AssertionStringSizeGreater, "/propertyNames/minLength",
-                     "#/propertyNames/minLength", "/bar");
-  EVALUATE_TRACE_PRE(2, AssertionStringSizeGreater, "/propertyNames/minLength",
-                     "#/propertyNames/minLength", "/baz");
-  EVALUATE_TRACE_PRE(3, AssertionStringSizeGreater, "/propertyNames/minLength",
-                     "#/propertyNames/minLength", "/foo");
+  if (FIRST_PROPERTY_IS(instance, "foo")) {
+    EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
+    EVALUATE_TRACE_PRE(1, AssertionStringSizeGreater,
+                       "/propertyNames/minLength", "#/propertyNames/minLength",
+                       "/foo");
+    EVALUATE_TRACE_PRE(2, AssertionStringSizeGreater,
+                       "/propertyNames/minLength", "#/propertyNames/minLength",
+                       "/bar");
 
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionStringSizeGreater,
-                              "/propertyNames/minLength",
-                              "#/propertyNames/minLength", "/bar");
-  EVALUATE_TRACE_POST_SUCCESS(1, AssertionStringSizeGreater,
-                              "/propertyNames/minLength",
-                              "#/propertyNames/minLength", "/baz");
-  EVALUATE_TRACE_POST_SUCCESS(2, AssertionStringSizeGreater,
-                              "/propertyNames/minLength",
-                              "#/propertyNames/minLength", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(3, LoopKeys, "/propertyNames", "#/propertyNames",
-                              "");
+    EVALUATE_TRACE_POST_SUCCESS(0, AssertionStringSizeGreater,
+                                "/propertyNames/minLength",
+                                "#/propertyNames/minLength", "/foo");
+    EVALUATE_TRACE_POST_SUCCESS(1, AssertionStringSizeGreater,
+                                "/propertyNames/minLength",
+                                "#/propertyNames/minLength", "/bar");
+    EVALUATE_TRACE_POST_SUCCESS(2, LoopKeys, "/propertyNames",
+                                "#/propertyNames", "");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The object property name \"bar\" was expected to consist of at least 3 "
-      "characters and it consisted of 3 characters");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "The object property name \"baz\" was expected to consist of at least 3 "
-      "characters and it consisted of 3 characters");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The object property name \"foo\" was expected to consist of at least 3 "
-      "characters and it consisted of 3 characters");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
-      "The object properties \"bar\", \"baz\", and \"foo\" were expected to "
-      "validate against the given subschema");
+    EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                                 "The object property name \"foo\" was "
+                                 "expected to consist of at least 3 "
+                                 "characters and it consisted of 3 characters");
+    EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                                 "The object property name \"bar\" was "
+                                 "expected to consist of at least 3 "
+                                 "characters and it consisted of 3 characters");
+    EVALUATE_TRACE_POST_DESCRIBE(
+        instance, 2,
+        "The object properties \"foo\", and \"bar\" were expected to "
+        "validate against the given subschema");
+  } else {
+    EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
+    EVALUATE_TRACE_PRE(1, AssertionStringSizeGreater,
+                       "/propertyNames/minLength", "#/propertyNames/minLength",
+                       "/bar");
+    EVALUATE_TRACE_PRE(2, AssertionStringSizeGreater,
+                       "/propertyNames/minLength", "#/propertyNames/minLength",
+                       "/foo");
+
+    EVALUATE_TRACE_POST_SUCCESS(0, AssertionStringSizeGreater,
+                                "/propertyNames/minLength",
+                                "#/propertyNames/minLength", "/bar");
+    EVALUATE_TRACE_POST_SUCCESS(1, AssertionStringSizeGreater,
+                                "/propertyNames/minLength",
+                                "#/propertyNames/minLength", "/foo");
+    EVALUATE_TRACE_POST_SUCCESS(2, LoopKeys, "/propertyNames",
+                                "#/propertyNames", "");
+
+    EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                                 "The object property name \"bar\" was "
+                                 "expected to consist of at least 3 "
+                                 "characters and it consisted of 3 characters");
+    EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                                 "The object property name \"foo\" was "
+                                 "expected to consist of at least 3 "
+                                 "characters and it consisted of 3 characters");
+    EVALUATE_TRACE_POST_DESCRIBE(
+        instance, 2,
+        "The object properties \"bar\", and \"foo\" were expected to "
+        "validate against the given subschema");
+  }
 }
 
 TEST(JSONSchema_compile_draft6, propertyNames_3) {
@@ -395,35 +420,62 @@ TEST(JSONSchema_compile_draft6, propertyNames_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"fo\": 1 }")};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
-  EVALUATE_TRACE_PRE(1, AssertionStringSizeGreater, "/propertyNames/minLength",
-                     "#/propertyNames/minLength", "/bar");
-  EVALUATE_TRACE_PRE(2, AssertionStringSizeGreater, "/propertyNames/minLength",
-                     "#/propertyNames/minLength", "/fo");
+  if (FIRST_PROPERTY_IS(instance, "fo")) {
+    EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
 
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionStringSizeGreater,
-                              "/propertyNames/minLength",
-                              "#/propertyNames/minLength", "/bar");
-  EVALUATE_TRACE_POST_FAILURE(1, AssertionStringSizeGreater,
-                              "/propertyNames/minLength",
-                              "#/propertyNames/minLength", "/fo");
-  EVALUATE_TRACE_POST_FAILURE(2, LoopKeys, "/propertyNames", "#/propertyNames",
-                              "");
+    EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
+    EVALUATE_TRACE_PRE(1, AssertionStringSizeGreater,
+                       "/propertyNames/minLength", "#/propertyNames/minLength",
+                       "/fo");
 
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The object property name \"bar\" was expected to consist of at least 3 "
-      "characters and it consisted of 3 characters");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "The object property name \"fo\" was expected to consist of at least 3 "
-      "characters but it consisted of 2 characters");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
-      "The object properties \"bar\", and \"fo\" were expected to validate "
-      "against the given subschema");
+    EVALUATE_TRACE_POST_FAILURE(0, AssertionStringSizeGreater,
+                                "/propertyNames/minLength",
+                                "#/propertyNames/minLength", "/fo");
+    EVALUATE_TRACE_POST_FAILURE(1, LoopKeys, "/propertyNames",
+                                "#/propertyNames", "");
+
+    EVALUATE_TRACE_POST_DESCRIBE(
+        instance, 0,
+        "The object property name \"fo\" was expected to consist of at least 3 "
+        "characters but it consisted of 2 characters");
+    EVALUATE_TRACE_POST_DESCRIBE(
+        instance, 1,
+        "The object properties \"fo\", and \"bar\" were expected to validate "
+        "against the given subschema");
+  } else {
+    EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+
+    EVALUATE_TRACE_PRE(0, LoopKeys, "/propertyNames", "#/propertyNames", "");
+    EVALUATE_TRACE_PRE(1, AssertionStringSizeGreater,
+                       "/propertyNames/minLength", "#/propertyNames/minLength",
+                       "/bar");
+    EVALUATE_TRACE_PRE(2, AssertionStringSizeGreater,
+                       "/propertyNames/minLength", "#/propertyNames/minLength",
+                       "/fo");
+
+    EVALUATE_TRACE_POST_SUCCESS(0, AssertionStringSizeGreater,
+                                "/propertyNames/minLength",
+                                "#/propertyNames/minLength", "/bar");
+    EVALUATE_TRACE_POST_FAILURE(1, AssertionStringSizeGreater,
+                                "/propertyNames/minLength",
+                                "#/propertyNames/minLength", "/fo");
+    EVALUATE_TRACE_POST_FAILURE(2, LoopKeys, "/propertyNames",
+                                "#/propertyNames", "");
+
+    EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                                 "The object property name \"bar\" was "
+                                 "expected to consist of at least 3 "
+                                 "characters and it consisted of 3 characters");
+    EVALUATE_TRACE_POST_DESCRIBE(
+        instance, 1,
+        "The object property name \"fo\" was expected to consist of at least 3 "
+        "characters but it consisted of 2 characters");
+    EVALUATE_TRACE_POST_DESCRIBE(
+        instance, 2,
+        "The object properties \"bar\", and \"fo\" were expected to validate "
+        "against the given subschema");
+  }
 }
 
 TEST(JSONSchema_compile_draft6, propertyNames_4) {

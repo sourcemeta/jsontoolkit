@@ -1,6 +1,7 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_TEST_UTILS_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_TEST_UTILS_H_
 
+#include <cassert>
 #include <tuple>
 #include <vector>
 
@@ -169,6 +170,12 @@
   EXPECT_REFERENCE(                                                            \
       references, sourcemeta::jsontoolkit::ReferenceType::Dynamic,             \
       expected_pointer, expected_uri, expected_base, expected_fragment)
+
+inline auto FIRST_PROPERTY_IS(const sourcemeta::jsontoolkit::JSON &document,
+                              const std::string &check) -> bool {
+  assert(document.is_object());
+  return document.as_object().cbegin()->first == check;
+}
 
 #define EVALUATE_WITH_TRACE(mode, schema_template, instance, count)            \
   std::vector<                                                                 \

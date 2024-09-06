@@ -4,10 +4,11 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
-#include <cassert> // assert
-#include <regex>   // std::regex
-#include <set>     // std::set
-#include <utility> // std::move
+#include <algorithm> // std::sort
+#include <cassert>   // assert
+#include <regex>     // std::regex
+#include <set>       // std::set
+#include <utility>   // std::move
 
 #include "compile_helpers.h"
 
@@ -329,12 +330,17 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
   }
 
   std::size_t is_required = 0;
+  std::vector<std::string> properties;
   for (const auto &entry :
        schema_context.schema.at(dynamic_context.keyword).as_object()) {
+    properties.push_back(entry.first);
     if (required.contains(entry.first)) {
       is_required += 1;
     }
   }
+
+  // To guarantee order
+  std::sort(properties.begin(), properties.end());
 
   // There are two ways to compile `properties` depending on whether
   // most of the properties are marked as required using `required`
@@ -346,8 +352,8 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
     SchemaCompilerValueNamedIndexes indexes;
     SchemaCompilerTemplate children;
     std::size_t cursor = 0;
-    for (const auto &[name, subschema] :
-         schema_context.schema.at(dynamic_context.keyword).as_object()) {
+
+    for (const auto &name : properties) {
       indexes.emplace(name, cursor);
       auto substeps{compile(context, schema_context, relative_dynamic_context,
                             {name}, {name})};
@@ -371,20 +377,20 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
   }
 
   SchemaCompilerTemplate children;
-  for (auto &[key, subschema] :
-       schema_context.schema.at(dynamic_context.keyword).as_object()) {
+
+  for (const auto &name : properties) {
     auto substeps{compile(context, schema_context, relative_dynamic_context,
-                          {key}, {key})};
+                          {name}, {name})};
 
     if (annotate) {
       substeps.push_back(make<SchemaCompilerAnnotationEmit>(
-          true, context, schema_context, relative_dynamic_context, JSON{key}));
+          true, context, schema_context, relative_dynamic_context, JSON{name}));
     }
 
     // We can avoid this "defines" condition if the property is a required one
     if (imports_required_keyword && schema_context.schema.defines("required") &&
         schema_context.schema.at("required").is_array() &&
-        schema_context.schema.at("required").contains(JSON{key})) {
+        schema_context.schema.at("required").contains(JSON{name})) {
       // We can avoid the container too and just inline these steps
       for (auto &&substep : substeps) {
         children.push_back(std::move(substep));
@@ -392,7 +398,7 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
     } else {
       children.push_back(make<SchemaCompilerLogicalWhenDefines>(
           false, context, schema_context, relative_dynamic_context,
-          SchemaCompilerValueString{key}, std::move(substeps)));
+          SchemaCompilerValueString{name}, std::move(substeps)));
     }
   }
 
@@ -428,11 +434,19 @@ auto compiler_draft4_applicator_patternproperties_conditional_annotation(
 
   SchemaCompilerTemplate children;
 
-  // For each regular expression and corresponding subschema in the object
+  // To guarantee ordering
+  std::vector<std::string> patterns;
   for (auto &entry :
        schema_context.schema.at(dynamic_context.keyword).as_object()) {
+    patterns.push_back(entry.first);
+  }
+
+  std::sort(patterns.begin(), patterns.end());
+
+  // For each regular expression and corresponding subschema in the object
+  for (const auto &pattern : patterns) {
     auto substeps{compile(context, schema_context, relative_dynamic_context,
-                          {entry.first}, {})};
+                          {pattern}, {})};
 
     if (annotate) {
       // The evaluator will make sure the same annotation is not reported twice.
@@ -447,8 +461,8 @@ auto compiler_draft4_applicator_patternproperties_conditional_annotation(
     children.push_back(make<SchemaCompilerLoopPropertiesRegex>(
         // Treat this as an internal step
         false, context, schema_context, relative_dynamic_context,
-        SchemaCompilerValueRegex{
-            std::regex{entry.first, std::regex::ECMAScript}, entry.first},
+        SchemaCompilerValueRegex{std::regex{pattern, std::regex::ECMAScript},
+                                 pattern},
         std::move(substeps)));
   }
 

@@ -1,9 +1,14 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSON_OBJECT_H_
 #define SOURCEMETA_JSONTOOLKIT_JSON_OBJECT_H_
 
-#include <functional>       // std::less
+#include <functional>       // std::equal_to, std::less
 #include <initializer_list> // std::initializer_list
-#include <map>              // std::map
+
+#if defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 12)
+#include <map> // std::map
+#else
+#include <unordered_map> // std::unordered_map
+#endif
 
 namespace sourcemeta::jsontoolkit {
 
@@ -11,10 +16,18 @@ namespace sourcemeta::jsontoolkit {
 template <typename Key, typename Value> class JSONObject {
 public:
   // Constructors
+
+  // Older versions of GCC don't allow `std::unordered_map` to incomplete
+  // types, and in this case, `Value` is an incomplete type.
   using Container =
+#if defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 12)
       std::map<Key, Value, std::less<Key>,
+#else
+      std::unordered_map<Key, Value, std::hash<Key>, std::equal_to<Key>,
+#endif
                typename Value::template Allocator<
                    std::pair<const typename Value::String, Value>>>;
+
   JSONObject() : data{} {}
   JSONObject(std::initializer_list<typename Container::value_type> values)
       : data{values} {}
