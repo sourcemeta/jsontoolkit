@@ -804,6 +804,95 @@ TEST(JSONSchema_compile_draft4, ref_7) {
                                "against the 6 defined properties subschemas");
 }
 
+TEST(JSONSchema_compile_draft4, ref_8) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/foo",
+    "definitions": {
+      "foo": {
+        "additionalProperties": {
+          "$ref": "#/definitions/bar"
+        }
+      },
+      "bar": {
+        "additionalProperties": {
+          "$ref": "#/definitions/foo"
+        }
+      }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{true};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/$ref", "#/$ref", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/$ref", "#/$ref", "");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The boolean value was expected to validate "
+                               "against the statically referenced schema");
+}
+
+TEST(JSONSchema_compile_draft4, ref_9) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": { "$ref": "#/definitions/one" },
+    "definitions": {
+      "one": { "$ref": "#/definitions/two" },
+      "two": { "type": "boolean" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/additionalProperties/$ref",
+                     "#/additionalProperties/$ref", "/foo");
+  EVALUATE_TRACE_PRE(2, LogicalAnd, "/additionalProperties/$ref/$ref",
+                     "#/definitions/one/$ref", "/foo");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict,
+                     "/additionalProperties/$ref/$ref/type",
+                     "#/definitions/two/type", "/foo");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
+                              "/additionalProperties/$ref/$ref/type",
+                              "#/definitions/two/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/additionalProperties/$ref/$ref",
+                              "#/definitions/one/$ref", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/additionalProperties/$ref",
+                              "#/additionalProperties/$ref", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopProperties, "/additionalProperties",
+                              "#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The boolean value was expected to validate "
+                               "against the statically referenced schema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The boolean value was expected to validate "
+                               "against the statically referenced schema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object properties not covered by other adjacent object keywords "
+      "were expected to validate against this subschema");
+}
+
 TEST(JSONSchema_compile_draft4, properties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
