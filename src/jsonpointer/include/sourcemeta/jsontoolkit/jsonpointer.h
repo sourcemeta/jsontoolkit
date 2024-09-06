@@ -11,9 +11,10 @@
 #include <sourcemeta/jsontoolkit/jsonpointer_walker.h>
 #include <sourcemeta/jsontoolkit/uri.h>
 
-#include <memory>  // std::allocator
-#include <ostream> // std::basic_ostream
-#include <string>  // std::basic_string
+#include <functional> // std::reference_wrapper
+#include <memory>     // std::allocator
+#include <ostream>    // std::basic_ostream
+#include <string>     // std::basic_string
 
 /// @defgroup jsonpointer JSON Pointer
 /// @brief An growing implementation of RFC 6901 JSON Pointer.
@@ -24,12 +25,13 @@
 /// #include <sourcemeta/jsontoolkit/jsonpointer.h>
 /// ```
 
-// TODO: Remove character and character traits template arguments from pointers
-
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonpointer
 using Pointer = GenericPointer<JSON::String>;
+
+/// @ingroup jsonpointer
+using WeakPointer = GenericPointer<std::reference_wrapper<const std::string>>;
 
 /// @ingroup jsonpointer
 /// A global constant instance of the empty JSON Pointer.

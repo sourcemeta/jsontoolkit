@@ -37,7 +37,7 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
   /// ```
-  GenericToken(const typename Property::value_type *const property)
+  GenericToken(const JSON::Char *const property)
       : data{std::in_place_type<Property>, property} {}
 
   /// This constructor creates an JSON Pointer token from a character. For
@@ -49,7 +49,7 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::Pointer::Token token{'a'};
   /// ```
-  GenericToken(const typename Property::value_type character)
+  GenericToken(const JSON::Char character)
       : data{std::in_place_type<Property>, Property{character}} {}
 
   /// This constructor creates an JSON Pointer token from an item index. For
@@ -144,9 +144,13 @@ public:
   /// assert(token.is_property());
   /// assert(token.to_property() == "foo");
   /// ```
-  [[nodiscard]] auto to_property() const noexcept -> const Property & {
+  [[nodiscard]] auto to_property() const noexcept -> const auto & {
     assert(this->is_property());
-    return std::get<Property>(this->data);
+    if constexpr (requires { std::get<Property>(this->data).get(); }) {
+      return std::get<Property>(this->data).get();
+    } else {
+      return std::get<Property>(this->data);
+    }
   }
 
   /// Get the underlying value of a JSON Pointer object property token
@@ -160,9 +164,13 @@ public:
   /// assert(token.is_property());
   /// assert(token.to_property() == "foo");
   /// ```
-  auto to_property() noexcept -> Property & {
+  auto to_property() noexcept -> auto & {
     assert(this->is_property());
-    return std::get<Property>(this->data);
+    if constexpr (requires { std::get<Property>(this->data).get(); }) {
+      return std::get<Property>(this->data).get();
+    } else {
+      return std::get<Property>(this->data);
+    }
   }
 
   /// Get the underlying value of a JSON Pointer array index token
