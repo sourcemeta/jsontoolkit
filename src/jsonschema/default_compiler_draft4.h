@@ -34,6 +34,14 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
 
   const auto &reference{context.references.at({type, entry.pointer})};
   assert(context.frame.contains({type, reference.destination}));
+  const auto label{std::hash<std::string>{}(reference.destination)};
+
+  // The label is already registered, so just jump to it
+  if (schema_context.labels.contains(label)) {
+    return {make<SchemaCompilerControlJump>(
+        true, context, schema_context, dynamic_context,
+        SchemaCompilerValueUnsignedInteger{label})};
+  }
 
   // Here we detect whether a schema is recursive in terms of the reference
   // we are compiling right now. We do this by checking whether the current
@@ -59,15 +67,6 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
         SchemaCompilerValueNone{},
         compile(context, schema_context, relative_dynamic_context,
                 empty_pointer, empty_pointer, reference.destination))};
-  }
-
-  const auto label{std::hash<std::string>{}(reference.destination)};
-
-  // The label is already registered, so just jump to it
-  if (schema_context.labels.contains(label)) {
-    return {make<SchemaCompilerControlJump>(
-        true, context, schema_context, dynamic_context,
-        SchemaCompilerValueUnsignedInteger{label})};
   }
 
   // TODO: Avoid this copy
