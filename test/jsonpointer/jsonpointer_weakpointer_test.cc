@@ -48,7 +48,7 @@ TEST(JSONWeakPointer_pointer, store_a_const_ref) {
   EXPECT_EQ(pointer.size(), 1);
   EXPECT_FALSE(pointer.empty());
   EXPECT_TRUE(pointer.at(0).is_property());
-  EXPECT_EQ(pointer.at(0).to_property().get(), foo);
+  EXPECT_EQ(pointer.at(0).to_property(), foo);
 }
 
 TEST(JSONWeakPointer_pointer, one_fragment_back) {
@@ -57,7 +57,7 @@ TEST(JSONWeakPointer_pointer, one_fragment_back) {
 
   EXPECT_EQ(pointer.size(), 1);
   EXPECT_TRUE(pointer.back().is_property());
-  EXPECT_EQ(pointer.back().to_property().get(), foo);
+  EXPECT_EQ(pointer.back().to_property(), foo);
 }
 
 TEST(JSONWeakPointer_pointer, multiple_fragments_mixed) {
@@ -71,9 +71,9 @@ TEST(JSONWeakPointer_pointer, multiple_fragments_mixed) {
   EXPECT_TRUE(pointer.at(0).is_property());
   EXPECT_TRUE(pointer.at(1).is_index());
   EXPECT_TRUE(pointer.at(2).is_property());
-  EXPECT_EQ(pointer.at(0).to_property().get(), foo);
+  EXPECT_EQ(pointer.at(0).to_property(), foo);
   EXPECT_EQ(pointer.at(1).to_index(), 2);
-  EXPECT_EQ(pointer.at(2).to_property().get(), bar);
+  EXPECT_EQ(pointer.at(2).to_property(), bar);
 }
 
 TEST(JSONWeakPointer_pointer, multiple_fragments_back) {
@@ -84,7 +84,7 @@ TEST(JSONWeakPointer_pointer, multiple_fragments_back) {
 
   EXPECT_EQ(pointer.size(), 3);
   EXPECT_TRUE(pointer.back().is_property());
-  EXPECT_EQ(pointer.back().to_property().get(), bar);
+  EXPECT_EQ(pointer.back().to_property(), bar);
 }
 
 TEST(JSONWeakPointer_pointer, build_with_emplace_back) {
@@ -94,7 +94,7 @@ TEST(JSONWeakPointer_pointer, build_with_emplace_back) {
   const std::string foo = "foo";
   auto &result_1{pointer.emplace_back(std::cref(foo))};
   EXPECT_TRUE(result_1.is_property());
-  EXPECT_EQ(result_1.to_property().get(), foo);
+  EXPECT_EQ(result_1.to_property(), foo);
 
   auto &result_2{pointer.emplace_back(1)};
   EXPECT_TRUE(result_2.is_index());
@@ -103,7 +103,7 @@ TEST(JSONWeakPointer_pointer, build_with_emplace_back) {
   EXPECT_EQ(pointer.size(), 2);
   EXPECT_TRUE(pointer.at(0).is_property());
   EXPECT_TRUE(pointer.at(1).is_index());
-  EXPECT_EQ(pointer.at(0).to_property().get(), foo);
+  EXPECT_EQ(pointer.at(0).to_property(), foo);
   EXPECT_EQ(pointer.at(1).to_index(), 1);
 }
 

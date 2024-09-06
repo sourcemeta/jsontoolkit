@@ -1,6 +1,7 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONPOINTER_TOKEN_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONPOINTER_TOKEN_H_
 
+#include <functional>
 #include <sourcemeta/jsontoolkit/json.h>
 
 #include <cassert> // assert
@@ -144,9 +145,14 @@ public:
   /// assert(token.is_property());
   /// assert(token.to_property() == "foo");
   /// ```
-  [[nodiscard]] auto to_property() const noexcept -> const Property & {
+  [[nodiscard]] auto to_property() const noexcept -> const auto & {
     assert(this->is_property());
-    return std::get<Property>(this->data);
+    if constexpr (std::is_same_v<Property,
+                                 std::reference_wrapper<const std::string>>) {
+      return std::get<Property>(this->data).get();
+    } else {
+      return std::get<Property>(this->data);
+    }
   }
 
   /// Get the underlying value of a JSON Pointer object property token
@@ -158,6 +164,7 @@ public:
   ///
   /// sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
   /// assert(token.is_property());
+  ///
   /// assert(token.to_property() == "foo");
   /// ```
   auto to_property() noexcept -> Property & {
