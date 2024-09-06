@@ -2,10 +2,10 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <type_traits>
 
-const std::string foo = "foo";
-const std::string bar = "bar";
-const std::string baz = "baz";
-const std::string qux = "qux";
+static const std::string foo = "foo";
+static const std::string bar = "bar";
+static const std::string baz = "baz";
+static const std::string qux = "qux";
 
 TEST(JSONWeakPointer_pointer, general_traits) {
   EXPECT_TRUE(std::is_default_constructible<

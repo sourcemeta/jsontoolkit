@@ -162,7 +162,6 @@ public:
   ///
   /// sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
   /// assert(token.is_property());
-  ///
   /// assert(token.to_property() == "foo");
   /// ```
   auto to_property() noexcept -> auto & {
