@@ -147,8 +147,7 @@ public:
   /// ```
   [[nodiscard]] auto to_property() const noexcept -> const auto & {
     assert(this->is_property());
-    if constexpr (std::is_same_v<Property,
-                                 std::reference_wrapper<const std::string>>) {
+    if constexpr (requires { std::get<Property>(this->data).get(); }) {
       return std::get<Property>(this->data).get();
     } else {
       return std::get<Property>(this->data);
@@ -167,9 +166,13 @@ public:
   ///
   /// assert(token.to_property() == "foo");
   /// ```
-  auto to_property() noexcept -> Property & {
+  auto to_property() noexcept -> auto & {
     assert(this->is_property());
-    return std::get<Property>(this->data);
+    if constexpr (requires { std::get<Property>(this->data).get(); }) {
+      return std::get<Property>(this->data).get();
+    } else {
+      return std::get<Property>(this->data);
+    }
   }
 
   /// Get the underlying value of a JSON Pointer array index token

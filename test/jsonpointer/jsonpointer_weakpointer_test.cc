@@ -123,15 +123,15 @@ TEST(JSONWeakPointer_pointer, equality_true) {
   EXPECT_EQ(pointer_1, pointer_2);
 }
 
-// TEST(JSONWeakPointer_pointer, equality_false) {
-//   const std::string foo = "foo";
-//   const std::string bar = "bar";
-//   const sourcemeta::jsontoolkit::WeakPointer pointer_1{std::cref(foo), 1,
-//                                                        std::cref(bar)};
-//   const sourcemeta::jsontoolkit::WeakPointer pointer_2{std::cref(foo), 1,
-//                                                        std::cref(bar)};
-//   EXPECT_FALSE(pointer_1 == pointer_2);
-// }
+TEST(JSONWeakPointer_pointer, equality_false) {
+  const std::string foo = "foo";
+  const std::string bar = "bar";
+  const sourcemeta::jsontoolkit::WeakPointer pointer_1{std::cref(foo), 1,
+                                                       std::cref(bar)};
+  const sourcemeta::jsontoolkit::WeakPointer pointer_2{std::cref(foo), 3,
+                                                       std::cref(bar)};
+  EXPECT_FALSE(pointer_1 == pointer_2);
+}
 
 // TEST(JSONPointer_pointer, pop_back_non_empty) {
 //   const std::string foo = "foo";
