@@ -19,10 +19,17 @@ auto main(int argc, char **argv) noexcept -> int {
 
   // Get the schema
   const auto schema{sourcemeta::jsontoolkit::from_file(argv[1])};
+  std::cerr << "Compiling schema\n";
+  const auto compile_start{std::chrono::high_resolution_clock::now()};
   const auto schema_template{sourcemeta::jsontoolkit::compile(
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
       sourcemeta::jsontoolkit::default_schema_compiler)};
+  const auto compile_end{std::chrono::high_resolution_clock::now()};
+  const auto compile_duration{
+      std::chrono::duration_cast<std::chrono::milliseconds>(compile_end -
+                                                            compile_start)};
+  std::cout << compile_duration.count() << "ms\n";
 
   // Get the instance/s
   const std::filesystem::path instance_path{argv[2]};
