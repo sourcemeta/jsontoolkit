@@ -207,7 +207,13 @@ public:
 
   /// Compare JSON Pointer tokens
   auto operator==(const GenericToken<PropertyT> &other) const noexcept -> bool {
-    return this->data == other.data;
+    if (this->data.index() != other.data.index()) {
+      return false;
+    }
+    if (this->is_property()) {
+      return this->to_property() == other.to_property();
+    }
+    return this->to_index() == other.to_index();
   }
 
   /// Overload to support ordering of JSON Pointer token. Typically for sorting
