@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725645402808,
+  "lastUpdate": 1725646846317,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -6072,6 +6072,84 @@ window.BENCHMARK_DATA = {
             "value": 79076.27348353631,
             "unit": "ns/iter",
             "extra": "iterations: 8655\ncpu: 79073.50306181397 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gorez.tony@gmail.com",
+            "name": "Tony Gorez",
+            "username": "tony-go"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "84974daae1bbc6f8041e9d759e5117a2e0e064a3",
+          "message": "Make generic pointer token operators explicit (#1170)\n\nSigned-off-by: Tony Gorez <gorez.tony@gmail.com>",
+          "timestamp": "2024-09-06T14:14:06-04:00",
+          "tree_id": "bbffc7c80b7ca3213e28dca0f41ed14d323abf13",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/84974daae1bbc6f8041e9d759e5117a2e0e064a3"
+        },
+        "date": 1725646845917,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 17165.71827334504,
+            "unit": "ns/iter",
+            "extra": "iterations: 39730\ncpu: 17164.82212433929 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 7712.764126114363,
+            "unit": "ns/iter",
+            "extra": "iterations: 92329\ncpu: 7712.251892688107 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 1709.656836605449,
+            "unit": "ns/iter",
+            "extra": "iterations: 408814\ncpu: 1709.5091190614812 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 106068.86921681484,
+            "unit": "ns/iter",
+            "extra": "iterations: 6614\ncpu: 106061.38010281218 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 49573.35155306127,
+            "unit": "ns/iter",
+            "extra": "iterations: 14069\ncpu: 49568.56059421418 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 8302.021718646813,
+            "unit": "ns/iter",
+            "extra": "iterations: 84904\ncpu: 8301.36235041929 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 7695.597257268172,
+            "unit": "ns/iter",
+            "extra": "iterations: 91150\ncpu: 7695.00176631926 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 8484.25003930694,
+            "unit": "ns/iter",
+            "extra": "iterations: 82683\ncpu: 8484.226152897207 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Non_Recursive_Ref",
+            "value": 78961.6089750827,
+            "unit": "ns/iter",
+            "extra": "iterations: 8869\ncpu: 78954.8004284587 ns\nthreads: 1"
           }
         ]
       }
