@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725651347958,
+  "lastUpdate": 1725652458580,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos/llvm)": [
@@ -1034,6 +1034,84 @@ window.BENCHMARK_DATA = {
             "value": 1813.1292425141585,
             "unit": "ns/iter",
             "extra": "iterations: 384324\ncpu: 1812.8792373101815 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gorez.tony@gmail.com",
+            "name": "Tony Gorez",
+            "username": "tony-go"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2ade645fab3ac37ecdf09ca57aa54eedf5071a77",
+          "message": "feat(jsonpointer): introduce `WeakPointer` (#1173)\n\nThe current `Pointer` abstraction stores properties by making copies\r\ninstead of keeping references. The new `WeakPointer` is designed to\r\neliminate unnecessary copies by holding references to the properties\r\ninstead, thereby improving efficiency.\r\n\r\n---------\r\n\r\nSigned-off-by: Tony Gorez <gorez.tony@gmail.com>",
+          "timestamp": "2024-09-06T21:49:49+02:00",
+          "tree_id": "0c08db90905f5f8c98cfaf9b9fe82b2ccbf26c9b",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/2ade645fab3ac37ecdf09ca57aa54eedf5071a77"
+        },
+        "date": 1725652456616,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 916.42577856571,
+            "unit": "ns/iter",
+            "extra": "iterations: 768336\ncpu: 916.3855396597319 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 1029.959194814659,
+            "unit": "ns/iter",
+            "extra": "iterations: 690574\ncpu: 1029.6521444479524 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 157.98995415374293,
+            "unit": "ns/iter",
+            "extra": "iterations: 4418244\ncpu: 157.96864093517698 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 2441.277644168248,
+            "unit": "ns/iter",
+            "extra": "iterations: 287321\ncpu: 2440.743976249561 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 1506.072097388458,
+            "unit": "ns/iter",
+            "extra": "iterations: 459767\ncpu: 1505.9867280600818 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 1351.8811495784846,
+            "unit": "ns/iter",
+            "extra": "iterations: 518938\ncpu: 1351.7973245358792 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 1049.98673740446,
+            "unit": "ns/iter",
+            "extra": "iterations: 661032\ncpu: 1049.90681237822 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 1385.827776506419,
+            "unit": "ns/iter",
+            "extra": "iterations: 489428\ncpu: 1385.799341271854 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Non_Recursive_Ref",
+            "value": 1827.3106951996288,
+            "unit": "ns/iter",
+            "extra": "iterations: 383041\ncpu: 1827.2560900791293 ns\nthreads: 1"
           }
         ]
       }
