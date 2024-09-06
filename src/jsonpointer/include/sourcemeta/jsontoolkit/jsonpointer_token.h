@@ -1,7 +1,6 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONPOINTER_TOKEN_H_
 #define SOURCEMETA_JSONTOOLKIT_JSONPOINTER_TOKEN_H_
 
-#include <functional>
 #include <sourcemeta/jsontoolkit/json.h>
 
 #include <cassert> // assert
