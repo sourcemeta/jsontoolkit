@@ -36,27 +36,26 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
   assert(context.frame.contains({type, reference.destination}));
   const auto label{std::hash<std::string>{}(reference.destination)};
 
-  // The label is already registered, so just jump to it
-  if (schema_context.labels.contains(label)) {
-    return {make<SchemaCompilerControlJump>(
-        true, context, schema_context, dynamic_context,
-        SchemaCompilerValueUnsignedInteger{label})};
+  // TODO: Cleanup this
+  std::size_t references_to_parent{0};
+  const bool recursive_for_sure{entry.pointer.starts_with(
+      context.frame.at({type, reference.destination}).pointer)};
+  for (const auto &reference_entry : context.references) {
+    if (context.frame.contains(
+            {ReferenceType::Static, reference_entry.second.destination})) {
+      const auto &destination_entry{context.frame.at(
+          {ReferenceType::Static, reference_entry.second.destination})};
+      if (entry.pointer.starts_with(destination_entry.pointer)) {
+        references_to_parent += 1;
+      }
+    }
   }
 
   // Here we detect whether a schema is recursive in terms of the reference
-  // we are compiling right now. We do this by checking whether the current
-  // reference goes back to any of its parents (easy recursion case), or
-  // if there is any other reference on the schema that will eventually
-  // attempt to refer back to the base of the reference we are compiling.
-  const bool is_recursive{
-      entry.pointer.starts_with(
-          context.frame.at({type, reference.destination}).pointer) ||
-      std::any_of(context.references.cbegin(), context.references.cend(),
-                  [&entry](const auto &reference_entry) {
-                    return reference_entry.first.second != entry.pointer &&
-                           reference_entry.second.base.has_value() &&
-                           reference_entry.second.base.value() == entry.base;
-                  })};
+  // we are compiling right now. We do so by checking if there is any
+  // reference in the schema (including the current one) that will point
+  // to one of the parents of the current reference.
+  const bool is_recursive{recursive_for_sure || references_to_parent > 1};
 
   // If the reference is not a recursive one, we can avoid the extra
   // overhead of marking the location for future jumps, and pretty much
@@ -67,6 +66,13 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
         SchemaCompilerValueNone{},
         compile(context, schema_context, relative_dynamic_context,
                 empty_pointer, empty_pointer, reference.destination))};
+  }
+
+  // The label is already registered, so just jump to it
+  if (schema_context.labels.contains(label)) {
+    return {make<SchemaCompilerControlJump>(
+        true, context, schema_context, dynamic_context,
+        SchemaCompilerValueUnsignedInteger{label})};
   }
 
   // TODO: Avoid this copy
