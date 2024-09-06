@@ -168,7 +168,8 @@ public:
   /// assert(!pointer.empty());
   /// assert(token.is_property());
   /// ```
-  template <class... Args> auto emplace_back(Args &&...args) -> reference {
+  template <class... Args>
+  auto emplace_back(Args &&...args) -> const_reference {
     return this->data.emplace_back(args...);
   }
 

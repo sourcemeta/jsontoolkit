@@ -4,7 +4,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
-#include <algorithm> // std::sort
+#include <algorithm> // std::sort, std::any_of
 #include <cassert>   // assert
 #include <regex>     // std::regex
 #include <set>       // std::set
@@ -33,6 +33,34 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
   }
 
   const auto &reference{context.references.at({type, entry.pointer})};
+  assert(context.frame.contains({type, reference.destination}));
+
+  // Here we detect whether a schema is recursive in terms of the reference
+  // we are compiling right now. We do this by checking whether the current
+  // reference goes back to any of its parents (easy recursion case), or
+  // if there is any other reference on the schema that will eventually
+  // attempt to refer back to the base of the reference we are compiling.
+  const bool is_recursive{
+      entry.pointer.starts_with(
+          context.frame.at({type, reference.destination}).pointer) ||
+      std::any_of(context.references.cbegin(), context.references.cend(),
+                  [&entry](const auto &reference_entry) {
+                    return reference_entry.first.second != entry.pointer &&
+                           reference_entry.second.base.has_value() &&
+                           reference_entry.second.base.value() == entry.base;
+                  })};
+
+  // If the reference is not a recursive one, we can avoid the extra
+  // overhead of marking the location for future jumps, and pretty much
+  // just expand the reference destination in place.
+  if (!is_recursive) {
+    return {make<SchemaCompilerLogicalAnd>(
+        true, context, schema_context, dynamic_context,
+        SchemaCompilerValueNone{},
+        compile(context, schema_context, relative_dynamic_context,
+                empty_pointer, empty_pointer, reference.destination))};
+  }
+
   const auto label{std::hash<std::string>{}(reference.destination)};
 
   // The label is already registered, so just jump to it
@@ -45,18 +73,13 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
   // TODO: Avoid this copy
   auto new_schema_context{schema_context};
 
-  new_schema_context.labels.insert(label);
-
-  // TODO: It is possible to check framing/referencing information to detect
-  // whether a schema will recurse. If not, we can avoid the label wrapper
-  // altogether as a minor optimization
-
   // The idea to handle recursion is to expand the reference once, and when
   // doing so, create a "checkpoint" that we can jump back to in a subsequent
   // recursive reference. While unrolling the reference once may initially
   // feel weird, we do it so we can handle references purely in this keyword
   // handler, without having to add logic to every single keyword to check
   // whether something points to them and add the "checkpoint" themselves.
+  new_schema_context.labels.insert(label);
   return {make<SchemaCompilerControlLabel>(
       true, context, schema_context, dynamic_context,
       SchemaCompilerValueUnsignedInteger{label},
