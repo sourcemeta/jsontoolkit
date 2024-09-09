@@ -1,5 +1,6 @@
-#include <algorithm>
 #include <gtest/gtest.h>
+
+#include <algorithm>
 #include <set>
 #include <string>
 #include <type_traits>
@@ -500,4 +501,22 @@ TEST(JSON_array, unique_false) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("[ [2], 1, [2] ]");
   EXPECT_FALSE(document.unique());
+}
+
+TEST(JSON_array, sort_object_items) {
+  auto document = sourcemeta::jsontoolkit::parse(R"JSON([
+    { "type": "string" },
+    { "type": "integer" },
+    { "type": "string" }
+  ])JSON");
+
+  std::sort(document.as_array().begin(), document.as_array().end());
+
+  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON([
+    { "type": "integer" },
+    { "type": "string" },
+    { "type": "string" }
+  ])JSON");
+
+  EXPECT_EQ(document, expected);
 }
