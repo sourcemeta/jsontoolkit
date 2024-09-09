@@ -949,6 +949,74 @@ TEST(JSONSchema_compile_draft4, ref_10) {
       "were expected to validate against this subschema");
 }
 
+TEST(JSONSchema_compile_draft4, ref_11) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/i-dont-exist"
+  })JSON")};
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::compile(
+                   schema, sourcemeta::jsontoolkit::default_schema_walker,
+                   sourcemeta::jsontoolkit::official_resolver,
+                   sourcemeta::jsontoolkit::default_schema_compiler),
+               sourcemeta::jsontoolkit::SchemaReferenceError);
+}
+
+TEST(JSONSchema_compile_draft4, ref_12) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "https://example.com#/i-dont-exist"
+  })JSON")};
+
+  auto test_resolver = [](const std::string_view identifier) {
+    if (identifier == "https://example.com") {
+      std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
+      promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "id": "https://example.com"
+              })JSON"));
+      return promise.get_future();
+    }
+
+    return sourcemeta::jsontoolkit::official_resolver(identifier);
+  };
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::compile(
+                   schema, sourcemeta::jsontoolkit::default_schema_walker,
+                   test_resolver,
+                   sourcemeta::jsontoolkit::default_schema_compiler),
+               sourcemeta::jsontoolkit::SchemaReferenceError);
+}
+
+TEST(JSONSchema_compile_draft4, ref_13) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "https://example.com#i-dont-exist"
+  })JSON")};
+
+  auto test_resolver = [](const std::string_view identifier) {
+    if (identifier == "https://example.com") {
+      std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
+      promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "id": "https://example.com"
+              })JSON"));
+      return promise.get_future();
+    }
+
+    return sourcemeta::jsontoolkit::official_resolver(identifier);
+  };
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::compile(
+                   schema, sourcemeta::jsontoolkit::default_schema_walker,
+                   test_resolver,
+                   sourcemeta::jsontoolkit::default_schema_compiler),
+               sourcemeta::jsontoolkit::SchemaReferenceError);
+}
+
 TEST(JSONSchema_compile_draft4, properties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
