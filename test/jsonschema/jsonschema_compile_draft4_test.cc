@@ -1017,6 +1017,27 @@ TEST(JSONSchema_compile_draft4, ref_13) {
                sourcemeta::jsontoolkit::SchemaReferenceError);
 }
 
+TEST(JSONSchema_compile_draft4, ref_14) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/foo",
+    "definitions": {
+      "foo": { "$ref": "#/definitions/bar" },
+      "bar": { "$ref": "#/definitions/foo" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{true};
+  EXPECT_THROW(sourcemeta::jsontoolkit::evaluate(compiled_schema, instance),
+               sourcemeta::jsontoolkit::SchemaEvaluationError);
+}
+
 TEST(JSONSchema_compile_draft4, properties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
