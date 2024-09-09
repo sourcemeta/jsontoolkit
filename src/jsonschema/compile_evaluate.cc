@@ -19,7 +19,7 @@ namespace {
 
 class EvaluationContext {
 public:
-  using Pointer = sourcemeta::jsontoolkit::Pointer;
+  using Pointer = sourcemeta::jsontoolkit::WeakPointer;
   using JSON = sourcemeta::jsontoolkit::JSON;
   using Template = sourcemeta::jsontoolkit::SchemaCompilerTemplate;
   EvaluationContext(const JSON &instance) : instances_{instance} {};
@@ -169,8 +169,18 @@ public:
     assert(step.relative_instance_location.size() <= 1);
     this->frame_sizes.emplace_back(step.relative_schema_location.size(),
                                    step.relative_instance_location.size());
-    this->evaluate_path_.push_back(step.relative_schema_location);
-    this->instance_location_.push_back(step.relative_instance_location);
+    Pointer relative_schema_location;
+    for (const auto &token : step.relative_schema_location) {
+      relative_schema_location.push_back(token.to_property());
+    }
+    this->evaluate_path_.push_back(relative_schema_location);
+
+    Pointer relative_instance_location;
+    for (const auto &token : step.relative_schema_location) {
+      relative_instance_location.push_back(token.to_property());
+    }
+    this->instance_location_.push_back(relative_instance_location);
+
     assert(step.relative_instance_location.size() <= 1);
     if (!step.relative_instance_location.empty()) {
       this->instances_.emplace_back(

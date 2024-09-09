@@ -611,7 +611,7 @@ enum class SchemaCompilerEvaluationType { Pre, Post };
 using SchemaCompilerEvaluationCallback =
     std::function<void(const SchemaCompilerEvaluationType, bool,
                        const SchemaCompilerTemplate::value_type &,
-                       const Pointer &, const Pointer &, const JSON &)>;
+                       const WeakPointer &, const WeakPointer &, const JSON &)>;
 
 // TODO: Support standard output formats too
 
