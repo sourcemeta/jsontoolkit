@@ -43,16 +43,18 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
         SchemaCompilerValueUnsignedInteger{label})};
   }
 
-  const bool is_recursive(
-      schema_context.references.contains(reference.destination));
-
-  // TODO: Avoid this copy
   auto new_schema_context{schema_context};
   new_schema_context.references.insert(reference.destination);
 
   // If the reference is not a recursive one, we can avoid the extra
   // overhead of marking the location for future jumps, and pretty much
   // just expand the reference destination in place.
+  const bool is_recursive(
+      // This means the reference is directly recursive, by jumping to
+      // a parent of the reference itself.
+      entry.pointer.starts_with(
+          context.frame.at({type, reference.destination}).pointer) ||
+      schema_context.references.contains(reference.destination));
   if (!is_recursive) {
     return {make<SchemaCompilerLogicalAnd>(
         true, context, schema_context, dynamic_context,
