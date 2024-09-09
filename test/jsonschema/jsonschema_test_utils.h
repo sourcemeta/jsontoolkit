@@ -198,17 +198,23 @@ inline auto FIRST_PROPERTY_IS(const sourcemeta::jsontoolkit::JSON &document,
           const bool valid,                                                    \
           const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type    \
               &step,                                                           \
-          const sourcemeta::jsontoolkit::Pointer &evaluate_path,               \
-          const sourcemeta::jsontoolkit::Pointer &instance_location,           \
+          const sourcemeta::jsontoolkit::WeakPointer &evaluate_path,           \
+          const sourcemeta::jsontoolkit::WeakPointer &instance_location,       \
           const sourcemeta::jsontoolkit::JSON &annotation) {                   \
+        sourcemeta::jsontoolkit::Pointer e_path;                               \
+        for (const auto &token : evaluate_path) {                              \
+          e_path.push_back(token.to_property());                               \
+        }                                                                      \
+        sourcemeta::jsontoolkit::Pointer i_loc;                                \
+        for (const auto &token : instance_location) {                          \
+          i_loc.push_back(token.to_property());                                \
+        }                                                                      \
         if (type ==                                                            \
             sourcemeta::jsontoolkit::SchemaCompilerEvaluationType::Pre) {      \
-          trace_pre.push_back(                                                 \
-              {valid, evaluate_path, instance_location, step, annotation});    \
+          trace_pre.push_back({valid, e_path, i_loc, step, annotation});       \
         } else if (type == sourcemeta::jsontoolkit::                           \
                                SchemaCompilerEvaluationType::Post) {           \
-          trace_post.push_back(                                                \
-              {valid, evaluate_path, instance_location, step, annotation});    \
+          trace_post.push_back({valid, e_path, i_loc, step, annotation});      \
         }                                                                      \
       })};                                                                     \
   EXPECT_EQ(trace_pre.size(), count);                                          \

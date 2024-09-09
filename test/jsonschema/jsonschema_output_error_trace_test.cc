@@ -25,8 +25,8 @@ TEST(JSONSchema_output_error_trace, success_string_1) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-
   sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance};
+
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
       sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
