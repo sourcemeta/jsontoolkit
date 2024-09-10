@@ -171,15 +171,27 @@ public:
                                    step.relative_instance_location.size());
     Pointer relative_schema_location;
     for (const auto &token : step.relative_schema_location) {
-      relative_schema_location.push_back(token.to_property());
+      if (token.is_property()) {
+        relative_schema_location.push_back(token.to_property());
+      } else {
+        relative_schema_location.push_back(token.to_index());
+      }
     }
     this->evaluate_path_.push_back(relative_schema_location);
+    assert(relative_schema_location.size() ==
+           step.relative_schema_location.size());
 
     Pointer relative_instance_location;
-    for (const auto &token : step.relative_schema_location) {
-      relative_instance_location.push_back(token.to_property());
+    for (const auto &token : step.relative_instance_location) {
+      if (token.is_property()) {
+        relative_instance_location.push_back(token.to_property());
+      } else {
+        relative_instance_location.push_back(token.to_index());
+      }
     }
     this->instance_location_.push_back(relative_instance_location);
+    assert(relative_instance_location.size() ==
+           step.relative_instance_location.size());
 
     assert(step.relative_instance_location.size() <= 1);
     if (!step.relative_instance_location.empty()) {

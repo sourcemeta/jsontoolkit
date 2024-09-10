@@ -93,9 +93,9 @@ if(JSONTOOLKIT_TESTS)
     add_subdirectory(test/jsonpointer)
   endif()
 
-  # if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
-  #   add_subdirectory(test/jsonschema)
-  # endif()
+  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
+    add_subdirectory(test/jsonschema)
+  endif()
 
   if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
     add_subdirectory(test/jsonl)
