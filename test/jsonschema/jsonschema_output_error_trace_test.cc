@@ -1,71 +1,10 @@
 #include <gtest/gtest.h>
-
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
 namespace {
-// TODO: this is temporary to let the code compile
-// we should use a parameter for the SchemaCompilerErrorTraceOutput class
-class SchemaCompilerErrorTraceOutput {
-public:
-  SchemaCompilerErrorTraceOutput(
-      const sourcemeta::jsontoolkit::JSON &instance,
-      const sourcemeta::jsontoolkit::WeakPointer &base)
-      : instance_(instance), base_(base) {
-    (void)instance_;
-  }
-
-  // Prevent accidental copies
-  SchemaCompilerErrorTraceOutput(const SchemaCompilerErrorTraceOutput &) =
-      delete;
-  auto operator=(const SchemaCompilerErrorTraceOutput &)
-      -> SchemaCompilerErrorTraceOutput & = delete;
-
-  struct Entry {
-    const std::string message;
-    const sourcemeta::jsontoolkit::WeakPointer instance_location;
-    const sourcemeta::jsontoolkit::WeakPointer evaluate_path;
-  };
-
-  auto operator()(
-      const sourcemeta::jsontoolkit::SchemaCompilerEvaluationType, const bool,
-      const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
-      const sourcemeta::jsontoolkit::WeakPointer &evaluate_path,
-      const sourcemeta::jsontoolkit::WeakPointer &instance_location,
-      const sourcemeta::jsontoolkit::JSON &) {
-
-    // Generate a message based on the input or type, result, and step.
-    std::string message = "Evaluation of step";
-
-    // Add a new entry to the output vector
-    output.push_back({message, instance_location, evaluate_path});
-  };
-
-  using container_type = typename std::vector<Entry>;
-  using const_iterator = typename container_type::const_iterator;
-  auto begin() const -> const_iterator { return output.begin(); }
-  auto end() const -> const_iterator { return output.end(); }
-  auto cbegin() const -> const_iterator {
-    return output.cbegin(); // Returns a const iterator to the beginning
-  }
-  auto cend() const -> const_iterator {
-    return output.cend(); // Returns a const iterator to the end
-  }
-
-private:
-// Exporting symbols that depends on the standard C++ library is considered
-// safe.
-// https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4275?view=msvc-170&redirectedfrom=MSDN
-#if defined(_MSC_VER)
-#pragma warning(disable : 4251)
-#endif
-  const sourcemeta::jsontoolkit::JSON &instance_;
-  const sourcemeta::jsontoolkit::WeakPointer base_;
-  container_type output;
-  std::set<sourcemeta::jsontoolkit::WeakPointer> mask;
-#if defined(_MSC_VER)
-#pragma warning(default : 4251)
-#endif
-};
+using SchemaCompilerErrorTraceOutput =
+    sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput<
+        sourcemeta::jsontoolkit::WeakPointer>;
 } // namespace
 
 #define EXPECT_OUTPUT(traces, index, expected_instance_location,               \

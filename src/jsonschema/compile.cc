@@ -212,30 +212,37 @@ auto compile(const SchemaCompilerContext &context,
       entry.dialect);
 }
 
-SchemaCompilerErrorTraceOutput::SchemaCompilerErrorTraceOutput(
-    const JSON &instance, const Pointer &base)
+template <typename PointerT>
+SchemaCompilerErrorTraceOutput<PointerT>::SchemaCompilerErrorTraceOutput(
+    const JSON &instance, const PointerT &base)
     : instance_{instance}, base_{base} {}
 
-auto SchemaCompilerErrorTraceOutput::begin() const -> const_iterator {
+template <typename PointerT>
+auto SchemaCompilerErrorTraceOutput<PointerT>::begin() const -> const_iterator {
   return this->output.begin();
 }
 
-auto SchemaCompilerErrorTraceOutput::end() const -> const_iterator {
+template <typename PointerT>
+auto SchemaCompilerErrorTraceOutput<PointerT>::end() const -> const_iterator {
   return this->output.end();
 }
 
-auto SchemaCompilerErrorTraceOutput::cbegin() const -> const_iterator {
+template <typename PointerT>
+auto SchemaCompilerErrorTraceOutput<PointerT>::cbegin() const
+    -> const_iterator {
   return this->output.cbegin();
 }
 
-auto SchemaCompilerErrorTraceOutput::cend() const -> const_iterator {
+template <typename PointerT>
+auto SchemaCompilerErrorTraceOutput<PointerT>::cend() const -> const_iterator {
   return this->output.cend();
 }
 
-auto SchemaCompilerErrorTraceOutput::operator()(
+template <typename PointerT>
+auto SchemaCompilerErrorTraceOutput<PointerT>::operator()(
     const SchemaCompilerEvaluationType type, const bool result,
     const SchemaCompilerTemplate::value_type &step,
-    const Pointer &evaluate_path, const Pointer &instance_location,
+    const PointerT &evaluate_path, const PointerT &instance_location,
     const JSON &annotation) -> void {
   assert(!evaluate_path.empty());
   assert(evaluate_path.back().is_property());

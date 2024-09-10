@@ -655,10 +655,11 @@ using SchemaCompilerEvaluationCallback =
 ///   }
 /// }
 /// ```
+template <typename PointerT = Pointer>
 class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaCompilerErrorTraceOutput {
 public:
   SchemaCompilerErrorTraceOutput(const JSON &instance,
-                                 const Pointer &base = empty_pointer);
+                                 const PointerT &base = empty_pointer);
 
   // Prevent accidental copies
   SchemaCompilerErrorTraceOutput(const SchemaCompilerErrorTraceOutput &) =
@@ -668,14 +669,14 @@ public:
 
   struct Entry {
     const std::string message;
-    const Pointer instance_location;
-    const Pointer evaluate_path;
+    const PointerT instance_location;
+    const PointerT evaluate_path;
   };
 
   auto operator()(const SchemaCompilerEvaluationType type, const bool result,
                   const SchemaCompilerTemplate::value_type &step,
-                  const Pointer &evaluate_path,
-                  const Pointer &instance_location,
+                  const PointerT &evaluate_path,
+                  const PointerT &instance_location,
                   const JSON &annotation) -> void;
 
   using container_type = typename std::vector<Entry>;
@@ -693,9 +694,9 @@ private:
 #pragma warning(disable : 4251)
 #endif
   const JSON &instance_;
-  const Pointer base_;
+  const PointerT base_;
   container_type output;
-  std::set<Pointer> mask;
+  std::set<PointerT> mask;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251)
 #endif
