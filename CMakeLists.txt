@@ -96,10 +96,10 @@ if(JSONTOOLKIT_TESTS)
   # if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONSCHEMA)
   #   add_subdirectory(test/jsonschema)
   # endif()
-  #
-  # if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
-  #   add_subdirectory(test/jsonl)
-  # endif()
+
+  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
+    add_subdirectory(test/jsonl)
+  endif()
 
   if(PROJECT_IS_TOP_LEVEL)
     # Otherwise we need the child project to link
