@@ -331,63 +331,62 @@ int main(int argc, char **argv) {
                    "https://json-schema.org/draft/2019-09/schema",
                    {// TODO: Enable all tests
                     "bignum", "ecmascript-regex", "non-bmp-regex"});
-    // register_tests(
-    //     std::filesystem::path{"draft2019-09"} / "optional" / "format",
-    //     "JSONSchemaOfficialSuite_2019_09_Optional_Format",
-    //     "https://json-schema.org/draft/2019-09/schema",
-    //     // TODO: Enable all tests
-    //     {"date-time", "date", "duration", "email", "hostname", "idn-email",
-    //      "idn-hostname", "ipv4", "ipv6", "iri-reference", "iri",
-    //      "json-pointer", "regex", "relative-json-pointer", "time",
-    //      "uri-reference", "uri-template", "uri", "uuid"});
-    //
-    // // Draft 7
-    // register_tests("draft7", "JSONSchemaOfficialSuite_Draft7",
-    //                "http://json-schema.org/draft-07/schema#", {});
-    // register_tests(std::filesystem::path{"draft7"} / "optional",
-    //                "JSONSchemaOfficialSuite_Draft7_Optional",
-    //                "http://json-schema.org/draft-07/schema#",
-    //                // TODO: Enable all tests
-    //                {"bignum", "content", "ecmascript-regex",
-    //                "non-bmp-regex"});
-    // register_tests(std::filesystem::path{"draft7"} / "optional" / "format",
-    //                "JSONSchemaOfficialSuite_Draft7_Optional_Format",
-    //                "http://json-schema.org/draft-07/schema#",
-    //                // TODO: Enable all tests
-    //                {"date-time", "date", "email", "hostname", "idn-email",
-    //                 "idn-hostname", "ipv4", "ipv6", "iri-reference", "iri",
-    //                 "json-pointer", "regex", "relative-json-pointer", "time",
-    //                 "unknown", "uri-reference", "uri-template", "uri"});
-    //
-    // // Draft 6
-    // register_tests("draft6", "JSONSchemaOfficialSuite_Draft6",
-    //                "http://json-schema.org/draft-06/schema#", {});
-    // register_tests(std::filesystem::path{"draft6"} / "optional",
-    //                "JSONSchemaOfficialSuite_Draft6_Optional",
-    //                "http://json-schema.org/draft-06/schema#",
-    //                // TODO: Enable all tests
-    //                {"bignum", "ecmascript-regex", "non-bmp-regex"});
-    // register_tests(std::filesystem::path{"draft6"} / "optional" / "format",
-    //                "JSONSchemaOfficialSuite_Draft6_Optional_Format",
-    //                "http://json-schema.org/draft-06/schema#",
-    //                // TODO: Enable all tests
-    //                {"date-time", "email", "hostname", "ipv4", "ipv6",
-    //                 "json-pointer", "unknown", "uri-reference",
-    //                 "uri-template", "uri"});
-    //
-    // // Draft4
-    // register_tests("draft4", "JSONSchemaOfficialSuite_Draft4",
-    //                "http://json-schema.org/draft-04/schema#", {});
-    // register_tests(std::filesystem::path{"draft4"} / "optional",
-    //                "JSONSchemaOfficialSuite_Draft4_Optional",
-    //                "http://json-schema.org/draft-04/schema#",
-    //                // TODO: Enable all tests
-    //                {"bignum", "ecmascript-regex", "non-bmp-regex"});
-    // register_tests(std::filesystem::path{"draft4"} / "optional" / "format",
-    //                "JSONSchemaOfficialSuite_Draft4_Optional_Format",
-    //                "http://json-schema.org/draft-04/schema#",
-    //                // TODO: Enable all tests
-    //                {"date-time", "email", "hostname", "ipv6"});
+    register_tests(
+        std::filesystem::path{"draft2019-09"} / "optional" / "format",
+        "JSONSchemaOfficialSuite_2019_09_Optional_Format",
+        "https://json-schema.org/draft/2019-09/schema",
+        // TODO: Enable all tests
+        {"date-time", "date", "duration", "email", "hostname", "idn-email",
+         "idn-hostname", "ipv4", "ipv6", "iri-reference", "iri", "json-pointer",
+         "regex", "relative-json-pointer", "time", "uri-reference",
+         "uri-template", "uri", "uuid"});
+
+    // Draft 7
+    register_tests("draft7", "JSONSchemaOfficialSuite_Draft7",
+                   "http://json-schema.org/draft-07/schema#", {});
+    register_tests(std::filesystem::path{"draft7"} / "optional",
+                   "JSONSchemaOfficialSuite_Draft7_Optional",
+                   "http://json-schema.org/draft-07/schema#",
+                   // TODO: Enable all tests
+                   {"bignum", "content", "ecmascript-regex", "non-bmp-regex"});
+    register_tests(std::filesystem::path{"draft7"} / "optional" / "format",
+                   "JSONSchemaOfficialSuite_Draft7_Optional_Format",
+                   "http://json-schema.org/draft-07/schema#",
+                   // TODO: Enable all tests
+                   {"date-time", "date", "email", "hostname", "idn-email",
+                    "idn-hostname", "ipv4", "ipv6", "iri-reference", "iri",
+                    "json-pointer", "regex", "relative-json-pointer", "time",
+                    "unknown", "uri-reference", "uri-template", "uri"});
+
+    // Draft 6
+    register_tests("draft6", "JSONSchemaOfficialSuite_Draft6",
+                   "http://json-schema.org/draft-06/schema#", {});
+    register_tests(std::filesystem::path{"draft6"} / "optional",
+                   "JSONSchemaOfficialSuite_Draft6_Optional",
+                   "http://json-schema.org/draft-06/schema#",
+                   // TODO: Enable all tests
+                   {"bignum", "ecmascript-regex", "non-bmp-regex"});
+    register_tests(std::filesystem::path{"draft6"} / "optional" / "format",
+                   "JSONSchemaOfficialSuite_Draft6_Optional_Format",
+                   "http://json-schema.org/draft-06/schema#",
+                   // TODO: Enable all tests
+                   {"date-time", "email", "hostname", "ipv4", "ipv6",
+                    "json-pointer", "unknown", "uri-reference", "uri-template",
+                    "uri"});
+
+    // Draft4
+    register_tests("draft4", "JSONSchemaOfficialSuite_Draft4",
+                   "http://json-schema.org/draft-04/schema#", {});
+    register_tests(std::filesystem::path{"draft4"} / "optional",
+                   "JSONSchemaOfficialSuite_Draft4_Optional",
+                   "http://json-schema.org/draft-04/schema#",
+                   // TODO: Enable all tests
+                   {"bignum", "ecmascript-regex", "non-bmp-regex"});
+    register_tests(std::filesystem::path{"draft4"} / "optional" / "format",
+                   "JSONSchemaOfficialSuite_Draft4_Optional_Format",
+                   "http://json-schema.org/draft-04/schema#",
+                   // TODO: Enable all tests
+                   {"date-time", "email", "hostname", "ipv6"});
   } catch (const sourcemeta::jsontoolkit::SchemaResolutionError &error) {
     std::cerr << error.what() << ": " << error.id() << "\n";
     return EXIT_FAILURE;
