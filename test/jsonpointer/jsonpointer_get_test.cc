@@ -526,8 +526,8 @@ TEST(JSONPointer_get, token_property) {
     "foo": 2
   })JSON");
 
-  const sourcemeta::jsontoolkit::JSON &result{
-      sourcemeta::jsontoolkit::get(document, "foo")};
+  const sourcemeta::jsontoolkit::JSON &result{sourcemeta::jsontoolkit::get(
+      document, sourcemeta::jsontoolkit::Pointer{"foo"})};
   EXPECT_TRUE(result.is_integer());
   EXPECT_EQ(result.to_integer(), 2);
 }
@@ -536,8 +536,8 @@ TEST(JSONPointer_get, token_index) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON([ 1, 2, 3 ])JSON");
 
-  const sourcemeta::jsontoolkit::JSON &result{
-      sourcemeta::jsontoolkit::get(document, 1)};
+  const sourcemeta::jsontoolkit::JSON &result{sourcemeta::jsontoolkit::get(
+      document, sourcemeta::jsontoolkit::Pointer{1})};
   EXPECT_TRUE(result.is_integer());
   EXPECT_EQ(result.to_integer(), 2);
 }
@@ -548,8 +548,8 @@ TEST(JSONPointer_get, token_hyphen) {
     "-": 2
   })JSON");
 
-  const sourcemeta::jsontoolkit::JSON &result{
-      sourcemeta::jsontoolkit::get(document, "-")};
+  const sourcemeta::jsontoolkit::JSON &result{sourcemeta::jsontoolkit::get(
+      document, sourcemeta::jsontoolkit::Pointer{"-"})};
   EXPECT_TRUE(result.is_integer());
   EXPECT_EQ(result.to_integer(), 2);
 }

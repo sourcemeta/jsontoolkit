@@ -3,8 +3,7 @@
 
 namespace {
 using SchemaCompilerErrorTraceOutput =
-    sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput<
-        sourcemeta::jsontoolkit::WeakPointer>;
+    sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput;
 } // namespace
 
 #define EXPECT_OUTPUT(traces, index, expected_instance_location,               \

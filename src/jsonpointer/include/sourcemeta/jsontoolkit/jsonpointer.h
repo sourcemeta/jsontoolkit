@@ -38,6 +38,10 @@ using WeakPointer = GenericPointer<std::reference_wrapper<const std::string>>;
 const Pointer empty_pointer;
 
 /// @ingroup jsonpointer
+/// A global constant instance of the empty JSON Pointer.
+const WeakPointer empty_weak_pointer;
+
+/// @ingroup jsonpointer
 /// Get a value from a JSON document using a JSON Pointer (`const` overload).
 ///
 /// ```cpp
@@ -58,6 +62,10 @@ const Pointer empty_pointer;
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const Pointer &pointer) -> const JSON &;
+
+// TODO: add dock
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto get(const JSON &document, const WeakPointer &pointer) -> const JSON &;
 
 /// @ingroup jsonpointer
 /// Get a value from a JSON document using a JSON Pointer (non-`const`
@@ -104,6 +112,9 @@ auto get(JSON &document, const Pointer &pointer) -> JSON &;
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const Pointer::Token &token) -> const JSON &;
+
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto get(const JSON &document, const WeakPointer::Token &token) -> const JSON &;
 
 /// @ingroup jsonpointer
 /// Get a value from a JSON document using a JSON Pointer token (non-`const`
@@ -230,6 +241,11 @@ auto to_pointer(const std::basic_string<JSON::Char, JSON::CharTraits,
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto stringify(const Pointer &pointer,
+               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
+    -> void;
+
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto stringify(const WeakPointer &pointer,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void;
 

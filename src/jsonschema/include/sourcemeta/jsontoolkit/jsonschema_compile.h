@@ -655,11 +655,10 @@ using SchemaCompilerEvaluationCallback =
 ///   }
 /// }
 /// ```
-template <typename PointerT = Pointer>
 class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT SchemaCompilerErrorTraceOutput {
 public:
   SchemaCompilerErrorTraceOutput(const JSON &instance,
-                                 const PointerT &base = empty_pointer);
+                                 const WeakPointer &base = empty_weak_pointer);
 
   // Prevent accidental copies
   SchemaCompilerErrorTraceOutput(const SchemaCompilerErrorTraceOutput &) =
@@ -669,14 +668,14 @@ public:
 
   struct Entry {
     const std::string message;
-    const PointerT instance_location;
-    const PointerT evaluate_path;
+    const WeakPointer instance_location;
+    const WeakPointer evaluate_path;
   };
 
   auto operator()(const SchemaCompilerEvaluationType type, const bool result,
                   const SchemaCompilerTemplate::value_type &step,
-                  const PointerT &evaluate_path,
-                  const PointerT &instance_location,
+                  const WeakPointer &evaluate_path,
+                  const WeakPointer &instance_location,
                   const JSON &annotation) -> void;
 
   using container_type = typename std::vector<Entry>;
@@ -694,9 +693,9 @@ private:
 #pragma warning(disable : 4251)
 #endif
   const JSON &instance_;
-  const PointerT base_;
+  const WeakPointer base_;
   container_type output;
-  std::set<PointerT> mask;
+  std::set<WeakPointer> mask;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251)
 #endif
@@ -708,7 +707,7 @@ private:
 /// Useful as the building block for producing user-friendly evaluation results.
 auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 describe(const bool valid, const SchemaCompilerTemplate::value_type &step,
-         const Pointer &evaluate_path, const Pointer &instance_location,
+         const WeakPointer &evaluate_path, const WeakPointer &instance_location,
          const JSON &instance, const JSON &annotation) -> std::string;
 
 /// @ingroup jsonschema_compiler
