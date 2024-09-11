@@ -553,3 +553,39 @@ TEST(JSONPointer_get, token_hyphen) {
   EXPECT_TRUE(result.is_integer());
   EXPECT_EQ(result.to_integer(), 2);
 }
+
+TEST(JSONWeakPointer_get, token_property) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": 2
+  })JSON");
+
+  const std::string foo = "foo";
+  const sourcemeta::jsontoolkit::JSON &result{sourcemeta::jsontoolkit::get(
+      document, sourcemeta::jsontoolkit::WeakPointer{std::cref(foo)})};
+  EXPECT_TRUE(result.is_integer());
+  EXPECT_EQ(result.to_integer(), 2);
+}
+
+TEST(JSONWeakPointer_get, token_index) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON([ 1, 2, 3 ])JSON");
+
+  const sourcemeta::jsontoolkit::JSON &result{sourcemeta::jsontoolkit::get(
+      document, sourcemeta::jsontoolkit::WeakPointer{1})};
+  EXPECT_TRUE(result.is_integer());
+  EXPECT_EQ(result.to_integer(), 2);
+}
+
+TEST(JSONWeakPointer_get, token_hyphen) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "-": 2
+  })JSON");
+
+  const std::string hyphen = "-";
+  const sourcemeta::jsontoolkit::JSON &result{sourcemeta::jsontoolkit::get(
+      document, sourcemeta::jsontoolkit::WeakPointer{std::cref(hyphen)})};
+  EXPECT_TRUE(result.is_integer());
+  EXPECT_EQ(result.to_integer(), 2);
+}

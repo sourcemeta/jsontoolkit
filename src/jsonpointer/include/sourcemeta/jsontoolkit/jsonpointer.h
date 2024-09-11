@@ -68,6 +68,30 @@ SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const WeakPointer &pointer) -> const JSON &;
 
 /// @ingroup jsonpointer
+/// Get a value from a JSON document using a JSON WeakPointer (`const`
+/// overload).
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <cassert>
+/// #include <sstream>
+///
+/// std::istringstream stream{"[ { \"foo\": 1 }, { \"bar\": 2 } ]"};
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(stream);
+///
+/// const std::string bar = "bar";
+/// const sourcemeta::jsontoolkit::WeakPointer pointer{1, std::cref(bar)};
+/// const sourcemeta::jsontoolkit::JSON &value{
+///   sourcemeta::jsontoolkit::get(document, pointer)};
+/// assert(value.is_integer());
+/// assert(value.to_integer() == 2);
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto get(const JSON &document, const WeakPointer &pointer) -> const JSON &;
+
+/// @ingroup jsonpointer
 /// Get a value from a JSON document using a JSON Pointer (non-`const`
 /// overload).
 ///
@@ -106,14 +130,39 @@ auto get(JSON &document, const Pointer &pointer) -> JSON &;
 ///   sourcemeta::jsontoolkit::parse(stream);
 ///
 /// const sourcemeta::jsontoolkit::JSON &value{
-///   sourcemeta::jsontoolkit::get(document, "bar")};
+///   sourcemeta::jsontoolkit::get(document,
+///   sourcemeta::jsontoolkit::Pointer{"foo"})};
 /// assert(value.is_integer());
-/// assert(value.to_integer() == 2);
+/// assert(value.to_integer() == 1);
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const Pointer::Token &token) -> const JSON &;
 
 // TODO: add doc
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto get(const JSON &document, const WeakPointer::Token &token) -> const JSON &;
+
+/// @ingroup jsonpointer
+/// Get a value from a JSON document using a JSON WeakPointer token (`const`
+/// overload).
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <cassert>
+/// #include <sstream>
+///
+/// std::istringstream stream{"{ \"foo\": 1 }"};
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::parse(stream);
+///
+/// const std::string foo = "foo";
+/// const sourcemeta::jsontoolkit::JSON &value{
+///   sourcemeta::jsontoolkit::get(document,
+///   sourcemeta::jsontoolkit::WeakPointer{std::cref(foo)})};
+/// assert(value.is_integer());
+/// assert(value.to_integer() == 1);
+/// ```
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const WeakPointer::Token &token) -> const JSON &;
 
@@ -246,6 +295,27 @@ auto stringify(const Pointer &pointer,
     -> void;
 
 // TODO: add doc
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto stringify(const WeakPointer &pointer,
+               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
+    -> void;
+
+/// @ingroup jsonpointer
+///
+/// Stringify the input JSON WeakPointer into a given C++ standard output
+/// stream. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <iostream>
+/// #include <sstream>
+///
+/// const std::string foo = "foo";
+/// const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(foo)};
+/// std::ostringstream stream;
+/// sourcemeta::jsontoolkit::stringify(pointer, stream);
+/// std::cout << stream.str() << std::endl;
+/// ```
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto stringify(const WeakPointer &pointer,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)

@@ -374,3 +374,37 @@ TEST(JSONPointer_stringify, no_uri_escape) {
   sourcemeta::jsontoolkit::stringify(pointer, stream);
   EXPECT_EQ(stream.str(), "/foo/percent%field");
 }
+
+TEST(JSONWeakPointer, empty_string) {
+  const std::string empty_string = "";
+  const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(empty_string)};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(pointer, stream);
+  EXPECT_EQ(stream.str(), "/");
+}
+
+TEST(JSONWeakPointer, string) {
+  const std::string foo = "foo";
+  const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(foo)};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(pointer, stream);
+  EXPECT_EQ(stream.str(), "/foo");
+}
+
+TEST(JSONWeakPointer, index) {
+  const sourcemeta::jsontoolkit::WeakPointer pointer{2};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(pointer, stream);
+  EXPECT_EQ(stream.str(), "/2");
+}
+
+TEST(JSONWeakPointer, foo_bar_baz) {
+  const std::string foo = "foo";
+  const std::string bar = "bar";
+  const std::string baz = "baz";
+  const sourcemeta::jsontoolkit::WeakPointer pointer{
+      std::cref(foo), std::cref(bar), std::cref(baz)};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(pointer, stream);
+  EXPECT_EQ(stream.str(), "/foo/bar/baz");
+}
