@@ -17,6 +17,16 @@
 
 namespace {
 
+#define CONVERT_WEAK_TO_POINTER(empty_pointer, weak_pointer)                   \
+  for (const auto &token : weak_pointer) {                                     \
+    if (token.is_property()) {                                                 \
+      empty_pointer.push_back(token.to_property());                            \
+    } else {                                                                   \
+      empty_pointer.push_back(token.to_index());                               \
+    }                                                                          \
+  }                                                                            \
+  assert(empty_pointer.size() == weak_pointer.size());
+
 class EvaluationContext {
 public:
   using Pointer = sourcemeta::jsontoolkit::WeakPointer;
@@ -170,28 +180,14 @@ public:
     this->frame_sizes.emplace_back(step.relative_schema_location.size(),
                                    step.relative_instance_location.size());
     Pointer relative_schema_location;
-    for (const auto &token : step.relative_schema_location) {
-      if (token.is_property()) {
-        relative_schema_location.push_back(token.to_property());
-      } else {
-        relative_schema_location.push_back(token.to_index());
-      }
-    }
+    CONVERT_WEAK_TO_POINTER(relative_schema_location,
+                            step.relative_schema_location);
     this->evaluate_path_.push_back(relative_schema_location);
-    assert(relative_schema_location.size() ==
-           step.relative_schema_location.size());
 
     Pointer relative_instance_location;
-    for (const auto &token : step.relative_instance_location) {
-      if (token.is_property()) {
-        relative_instance_location.push_back(token.to_property());
-      } else {
-        relative_instance_location.push_back(token.to_index());
-      }
-    }
+    CONVERT_WEAK_TO_POINTER(relative_instance_location,
+                            step.relative_instance_location);
     this->instance_location_.push_back(relative_instance_location);
-    assert(relative_instance_location.size() ==
-           step.relative_instance_location.size());
 
     assert(step.relative_instance_location.size() <= 1);
     if (!step.relative_instance_location.empty()) {
