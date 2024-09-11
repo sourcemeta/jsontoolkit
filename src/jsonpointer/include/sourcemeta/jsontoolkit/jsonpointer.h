@@ -38,7 +38,7 @@ using WeakPointer = GenericPointer<std::reference_wrapper<const std::string>>;
 const Pointer empty_pointer;
 
 /// @ingroup jsonpointer
-/// A global constant instance of the empty JSON Pointer.
+/// A global constant instance of the empty JSON WeakPointer.
 const WeakPointer empty_weak_pointer;
 
 /// @ingroup jsonpointer
@@ -63,7 +63,7 @@ const WeakPointer empty_weak_pointer;
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const Pointer &pointer) -> const JSON &;
 
-// TODO: add dock
+// TODO: add doc
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const WeakPointer &pointer) -> const JSON &;
 
@@ -113,6 +113,7 @@ auto get(JSON &document, const Pointer &pointer) -> JSON &;
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const Pointer::Token &token) -> const JSON &;
 
+// TODO: add doc
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const WeakPointer::Token &token) -> const JSON &;
 
@@ -244,6 +245,7 @@ auto stringify(const Pointer &pointer,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void;
 
+// TODO: add doc
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto stringify(const WeakPointer &pointer,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
