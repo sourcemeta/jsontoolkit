@@ -270,3 +270,16 @@ TEST(JSONWeakPointer_pointer, push_back_index_move) {
   EXPECT_TRUE(pointer.at(1).is_index());
   EXPECT_EQ(pointer.at(1).to_index(), 0);
 }
+
+TEST(JSONWeakPointer_pointer, push_back_pointer) {
+  const sourcemeta::jsontoolkit::Pointer pointer{bar, baz};
+  sourcemeta::jsontoolkit::WeakPointer destination{std::cref(foo)};
+  destination.push_back(pointer);
+  EXPECT_EQ(destination.size(), 3);
+  EXPECT_TRUE(destination.at(0).is_property());
+  EXPECT_EQ(destination.at(0).to_property(), "foo");
+  EXPECT_TRUE(destination.at(1).is_property());
+  EXPECT_EQ(destination.at(1).to_property(), "bar");
+  EXPECT_TRUE(destination.at(2).is_property());
+  EXPECT_EQ(destination.at(2).to_property(), "baz");
+}
