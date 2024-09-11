@@ -73,7 +73,8 @@ auto get(const JSON &document, const Pointer &pointer) -> const JSON &;
 /// const sourcemeta::jsontoolkit::JSON document =
 ///   sourcemeta::jsontoolkit::parse(stream);
 ///
-/// const sourcemeta::jsontoolkit::WeakPointer pointer{1, "bar"};
+/// const std::string bar = "bar";
+/// const sourcemeta::jsontoolkit::WeakPointer pointer{1, std::cref(bar)};
 /// const sourcemeta::jsontoolkit::JSON &value{
 ///   sourcemeta::jsontoolkit::get(document, pointer)};
 /// assert(value.is_integer());
@@ -122,9 +123,9 @@ auto get(JSON &document, const Pointer &pointer) -> JSON &;
 ///
 /// const sourcemeta::jsontoolkit::JSON &value{
 ///   sourcemeta::jsontoolkit::get(document,
-///   sourcemeta::jsontoolkit::Pointer{"bar"})};
+///   sourcemeta::jsontoolkit::Pointer{"foo"})};
 /// assert(value.is_integer());
-/// assert(value.to_integer() == 2);
+/// assert(value.to_integer() == 1);
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const Pointer::Token &token) -> const JSON &;
@@ -143,11 +144,12 @@ auto get(const JSON &document, const Pointer::Token &token) -> const JSON &;
 /// const sourcemeta::jsontoolkit::JSON document =
 ///   sourcemeta::jsontoolkit::parse(stream);
 ///
+/// const std::string foo = "foo";
 /// const sourcemeta::jsontoolkit::JSON &value{
 ///   sourcemeta::jsontoolkit::get(document,
-///   sourcemeta::jsontoolkit::WeakPointer{"bar"})};
+///   sourcemeta::jsontoolkit::WeakPointer{std::cref(foo)})};
 /// assert(value.is_integer());
-/// assert(value.to_integer() == 2);
+/// assert(value.to_integer() == 1);
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const WeakPointer::Token &token) -> const JSON &;
