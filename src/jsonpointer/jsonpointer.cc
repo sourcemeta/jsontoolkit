@@ -63,12 +63,26 @@ auto get(const JSON &document, const Pointer &pointer) -> const JSON & {
                                               std::cend(pointer));
 }
 
+auto get(const JSON &document, const WeakPointer &pointer) -> const JSON & {
+  return traverse<std::allocator, const JSON, WeakPointer>(
+      document, std::cbegin(pointer), std::cend(pointer));
+}
+
 auto get(JSON &document, const Pointer &pointer) -> JSON & {
   return traverse<std::allocator, JSON>(document, std::cbegin(pointer),
                                         std::cend(pointer));
 }
 
 auto get(const JSON &document, const Pointer::Token &token) -> const JSON & {
+  if (token.is_property()) {
+    return document.at(token.to_property());
+  } else {
+    return document.at(token.to_index());
+  }
+}
+
+auto get(const JSON &document,
+         const WeakPointer::Token &token) -> const JSON & {
   if (token.is_property()) {
     return document.at(token.to_property());
   } else {
