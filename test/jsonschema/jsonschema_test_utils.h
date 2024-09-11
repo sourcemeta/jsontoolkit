@@ -22,7 +22,7 @@ std::string flatten_pointer(const auto &pointer) {
 }
 } // namespace
 
-#define FLAT_POINTER(pointer) flatten_pointer(pointer)
+#define FLATTEN_POINTER(pointer) flatten_pointer(pointer)
 
 #define TO_POINTER(pointer_string)                                             \
   sourcemeta::jsontoolkit::to_pointer((pointer_string))
@@ -256,8 +256,8 @@ inline auto FIRST_PROPERTY_IS(const sourcemeta::jsontoolkit::JSON &document,
                            expected_instance_location)                         \
   EXPECT_TRUE(index < trace_pre.size());                                       \
   EXPECT_TRUE(std::get<0>(trace_pre.at(index)));                               \
-  EXPECT_EQ(FLAT_POINTER(std::get<1>(trace_pre.at(index))), evaluate_path);    \
-  EXPECT_EQ(FLAT_POINTER(std::get<2>(trace_pre.at(index))),                    \
+  EXPECT_EQ(FLATTEN_POINTER(std::get<1>(trace_pre.at(index))), evaluate_path); \
+  EXPECT_EQ(FLATTEN_POINTER(std::get<2>(trace_pre.at(index))),                 \
             expected_instance_location);                                       \
   EXPECT_TRUE(std::holds_alternative<                                          \
               sourcemeta::jsontoolkit::SchemaCompiler##step_type>(             \
@@ -271,8 +271,9 @@ inline auto FIRST_PROPERTY_IS(const sourcemeta::jsontoolkit::JSON &document,
 #define EVALUATE_TRACE_POST(index, step_type, evaluate_path,                   \
                             expected_keyword_location,                         \
                             expected_instance_location)                        \
-  EXPECT_EQ(FLAT_POINTER(std::get<1>(trace_post.at(index))), evaluate_path);   \
-  EXPECT_EQ(FLAT_POINTER(std::get<2>(trace_post.at(index))),                   \
+  EXPECT_EQ(FLATTEN_POINTER(std::get<1>(trace_post.at(index))),                \
+            evaluate_path);                                                    \
+  EXPECT_EQ(FLATTEN_POINTER(std::get<2>(trace_post.at(index))),                \
             expected_instance_location);                                       \
   EXPECT_TRUE(std::holds_alternative<                                          \
               sourcemeta::jsontoolkit::SchemaCompiler##step_type>(             \

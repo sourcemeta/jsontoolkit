@@ -12,9 +12,9 @@ using SchemaCompilerErrorTraceOutput =
                       expected_evaluate_path, expected_message)                \
   EXPECT_TRUE(traces.size() > index);                                          \
   EXPECT_EQ(traces.at((index)).message, (expected_message));                   \
-  EXPECT_EQ(FLAT_POINTER(traces.at((index)).instance_location),                \
+  EXPECT_EQ(FLATTEN_POINTER(traces.at((index)).instance_location),             \
             expected_instance_location);                                       \
-  EXPECT_EQ(FLAT_POINTER(traces.at((index)).evaluate_path),                    \
+  EXPECT_EQ(FLATTEN_POINTER(traces.at((index)).evaluate_path),                 \
             expected_evaluate_path);
 
 TEST(JSONSchema_output_error_trace, success_string_1) {
