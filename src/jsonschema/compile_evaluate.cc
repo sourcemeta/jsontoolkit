@@ -17,15 +17,14 @@
 
 namespace {
 
-#define CONVERT_WEAK_TO_POINTER(empty_pointer, weak_pointer)                   \
+#define PUSH_BACK(weak_pointer, target)                                        \
   for (const auto &token : weak_pointer) {                                     \
     if (token.is_property()) {                                                 \
-      empty_pointer.push_back(token.to_property());                            \
+      target.push_back(token.to_property());                                   \
     } else {                                                                   \
-      empty_pointer.push_back(token.to_index());                               \
+      target.push_back(token.to_index());                                      \
     }                                                                          \
-  }                                                                            \
-  assert(empty_pointer.size() == weak_pointer.size());
+  }
 
 class EvaluationContext {
 public:
@@ -189,15 +188,8 @@ public:
     assert(step.relative_instance_location.size() <= 1);
     this->frame_sizes.emplace_back(step.relative_schema_location.size(),
                                    step.relative_instance_location.size());
-    Pointer relative_schema_location;
-    CONVERT_WEAK_TO_POINTER(relative_schema_location,
-                            step.relative_schema_location);
-    this->evaluate_path_.push_back(relative_schema_location);
-
-    Pointer relative_instance_location;
-    CONVERT_WEAK_TO_POINTER(relative_instance_location,
-                            step.relative_instance_location);
-    this->instance_location_.push_back(relative_instance_location);
+    PUSH_BACK(step.relative_schema_location, this->evaluate_path_);
+    PUSH_BACK(step.relative_instance_location, this->instance_location_);
 
     assert(step.relative_instance_location.size() <= 1);
     if (!step.relative_instance_location.empty()) {
