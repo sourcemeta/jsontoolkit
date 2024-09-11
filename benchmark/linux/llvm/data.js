@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725995448166,
+  "lastUpdate": 1726072441583,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -7080,6 +7080,84 @@ window.BENCHMARK_DATA = {
             "value": 79823.30895419774,
             "unit": "ns/iter",
             "extra": "iterations: 8778\ncpu: 79821.21166552747 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gorez.tony@gmail.com",
+            "name": "Tony Gorez",
+            "username": "tony-go"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fda77d5cda5588f9c22888d95eb2ae4e8b41b259",
+          "message": "refactor: stringify and get to handle WeakPointer (#1182)\n\nSigned-off-by: Tony Gorez <gorez.tony@gmail.com>",
+          "timestamp": "2024-09-11T18:27:02+02:00",
+          "tree_id": "86994b08718ad6c4264cff4f6c5bed9800f6f156",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/fda77d5cda5588f9c22888d95eb2ae4e8b41b259"
+        },
+        "date": 1726072440854,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 17337.484464269237,
+            "unit": "ns/iter",
+            "extra": "iterations: 39908\ncpu: 17336.363886939966 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 7552.913341107614,
+            "unit": "ns/iter",
+            "extra": "iterations: 92616\ncpu: 7552.445624946016 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match",
+            "value": 1743.2160688361962,
+            "unit": "ns/iter",
+            "extra": "iterations: 403626\ncpu: 1743.1003825323446 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 104045.1590977024,
+            "unit": "ns/iter",
+            "extra": "iterations: 6694\ncpu: 104040.39064834178 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 49987.70851185271,
+            "unit": "ns/iter",
+            "extra": "iterations: 14004\ncpu: 49986.130034275935 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 8468.387012516332,
+            "unit": "ns/iter",
+            "extra": "iterations: 82695\ncpu: 8468.138013180973 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 7885.860008098334,
+            "unit": "ns/iter",
+            "extra": "iterations: 88898\ncpu: 7885.579236878222 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 8688.107630572824,
+            "unit": "ns/iter",
+            "extra": "iterations: 79745\ncpu: 8687.932534955167 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Non_Recursive_Ref",
+            "value": 79665.2279328284,
+            "unit": "ns/iter",
+            "extra": "iterations: 8814\ncpu: 79663.74234172911 ns\nthreads: 1"
           }
         ]
       }
