@@ -282,6 +282,27 @@ auto stringify(const Pointer &pointer,
 
 /// @ingroup jsonpointer
 ///
+/// Stringify the input JSON WeakPointer into a given C++ standard output
+/// stream. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <iostream>
+/// #include <sstream>
+///
+/// const std::string foo = "foo";
+/// const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(foo)};
+/// std::ostringstream stream;
+/// sourcemeta::jsontoolkit::stringify(pointer, stream);
+/// std::cout << stream.str() << std::endl;
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto stringify(const WeakPointer &pointer,
+               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
+    -> void;
+
+/// @ingroup jsonpointer
+///
 /// Stringify the input JSON Pointer into a C++ standard string. For example:
 ///
 /// ```cpp
