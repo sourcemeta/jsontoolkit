@@ -13,16 +13,14 @@
 #include <utility>     // std::move
 
 namespace {
-template <template <typename T> typename Allocator, typename V>
-auto traverse(V &document,
-              typename sourcemeta::jsontoolkit::GenericPointer<
-                  typename V::String>::const_iterator begin,
-              typename sourcemeta::jsontoolkit::GenericPointer<
-                  typename V::String>::const_iterator end) -> V & {
-  using Pointer = sourcemeta::jsontoolkit::GenericPointer<typename V::String>;
+template <template <typename T> typename Allocator, typename V,
+          typename PointerT =
+              sourcemeta::jsontoolkit::GenericPointer<typename V::String>>
+auto traverse(V &document, typename PointerT::const_iterator begin,
+              typename PointerT::const_iterator end) -> V & {
   // Make sure types match
   static_assert(
-      std::is_same_v<typename Pointer::Value, std::remove_const_t<V>>);
+      std::is_same_v<typename PointerT::Value, std::remove_const_t<V>>);
 
   std::reference_wrapper<V> current{document};
 
@@ -65,12 +63,26 @@ auto get(const JSON &document, const Pointer &pointer) -> const JSON & {
                                               std::cend(pointer));
 }
 
+auto get(const JSON &document, const WeakPointer &pointer) -> const JSON & {
+  return traverse<std::allocator, const JSON, WeakPointer>(
+      document, std::cbegin(pointer), std::cend(pointer));
+}
+
 auto get(JSON &document, const Pointer &pointer) -> JSON & {
   return traverse<std::allocator, JSON>(document, std::cbegin(pointer),
                                         std::cend(pointer));
 }
 
 auto get(const JSON &document, const Pointer::Token &token) -> const JSON & {
+  if (token.is_property()) {
+    return document.at(token.to_property());
+  } else {
+    return document.at(token.to_index());
+  }
+}
+
+auto get(const JSON &document,
+         const WeakPointer::Token &token) -> const JSON & {
   if (token.is_property()) {
     return document.at(token.to_property());
   } else {
@@ -151,6 +163,13 @@ auto to_pointer(const std::basic_string<JSON::Char, JSON::CharTraits,
 }
 
 auto stringify(const Pointer &pointer,
+               std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
+    -> void {
+  stringify<JSON::Char, JSON::CharTraits, std::allocator>(pointer, stream,
+                                                          false);
+}
+
+auto stringify(const WeakPointer &pointer,
                std::basic_ostream<JSON::Char, JSON::CharTraits> &stream)
     -> void {
   stringify<JSON::Char, JSON::CharTraits, std::allocator>(pointer, stream,
