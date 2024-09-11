@@ -188,8 +188,10 @@ public:
     assert(step.relative_instance_location.size() <= 1);
     this->frame_sizes.emplace_back(step.relative_schema_location.size(),
                                    step.relative_instance_location.size());
-    PUSH_BACK(step.relative_schema_location, this->evaluate_path_);
-    PUSH_BACK(step.relative_instance_location, this->instance_location_);
+    // PUSH_BACK(step.relative_schema_location, this->evaluate_path_);
+    // PUSH_BACK(step.relative_instance_location, this->instance_location_);
+    this->evaluate_path_.push_back(step.relative_schema_location);
+    this->instance_location_.push_back(step.relative_instance_location);
 
     assert(step.relative_instance_location.size() <= 1);
     if (!step.relative_instance_location.empty()) {

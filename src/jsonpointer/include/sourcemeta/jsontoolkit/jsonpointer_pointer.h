@@ -12,16 +12,6 @@
 #include <utility>          // std::move
 #include <vector>           // std::vector
 
-namespace {
-template <typename T>
-concept HasGetMethod = requires(T t) {
-  { t.get() } -> std::same_as<decltype(t.get())>;
-};
-
-template <typename T>
-concept DoesNotHaveGetMethod = !HasGetMethod<T>;
-} // namespace
-
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonpointer
@@ -215,11 +205,38 @@ public:
               std::back_inserter(this->data));
   }
 
-  template <typename OtherT>
-    requires HasGetMethod<PropertyT> && DoesNotHaveGetMethod<OtherT>
-  auto push_back(const GenericPointer<OtherT> &) -> void {
-    // TODO: Implementation
-    return;
+  template <typename OtherT,
+            typename = std::enable_if_t<!std::is_same_v<OtherT, PropertyT>>>
+  auto push_back(const GenericPointer<OtherT> &other) -> void {
+    if (other.empty()) {
+      return;
+    }
+
+    // Handle case where OtherT is a GenericPointer<std::reference_wrapper<const
+    // std::string>>
+    if constexpr (std::is_same_v<OtherT,
+                                 std::reference_wrapper<const std::string>>) {
+      // Logic when OtherT is a weak pointer
+      // (GenericPointer<std::reference_wrapper<const std::string>>)
+      for (const auto &token : other) {
+        if (token.is_property()) {
+          this->emplace_back(
+              GenericToken<std::reference_wrapper<const std::string>>{
+                  std::cref(token.to_property())});
+        } else {
+          this->emplace_back(token.to_index());
+        }
+      }
+    } else {
+      // Logic when OtherT is something else (like GenericPointer<std::string>)
+      for (const auto &token : other) {
+        if (token.is_property()) {
+          this->emplace_back(token.to_property()); // Handle normal string token
+        } else {
+          this->emplace_back(token.to_index()); // Handle index token
+        }
+      }
+    }
   }
 
   /// Move a JSON Pointer into the back of a JSON Pointer. For example:
