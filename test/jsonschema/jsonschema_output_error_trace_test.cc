@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
+#include "jsonschema_test_utils.h"
+
 namespace {
 using SchemaCompilerErrorTraceOutput =
     sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput;
@@ -10,11 +12,10 @@ using SchemaCompilerErrorTraceOutput =
                       expected_evaluate_path, expected_message)                \
   EXPECT_TRUE(traces.size() > index);                                          \
   EXPECT_EQ(traces.at((index)).message, (expected_message));                   \
-  EXPECT_EQ(                                                                   \
-      traces.at((index)).instance_location,                                    \
-      sourcemeta::jsontoolkit::to_pointer((expected_instance_location)));      \
-  EXPECT_EQ(traces.at((index)).evaluate_path,                                  \
-            sourcemeta::jsontoolkit::to_pointer((expected_evaluate_path)));
+  EXPECT_EQ(FLAT_POINTER(traces.at((index)).instance_location),                \
+            expected_instance_location);                                       \
+  EXPECT_EQ(FLAT_POINTER(traces.at((index)).evaluate_path),                    \
+            expected_evaluate_path);
 
 TEST(JSONSchema_output_error_trace, success_string_1) {
 
@@ -99,10 +100,9 @@ TEST(JSONSchema_output_error_trace, fail_string) {
                                                             output.cend()};
 
   EXPECT_EQ(traces.size(), 1);
-  // EXPECT_OUTPUT(
-  //     traces, 0, "", "/type",
-  //     "The value was expected to be of type string but it was of type
-  //     integer");
+  EXPECT_OUTPUT(
+      traces, 0, "", "/type",
+      "The value was expected to be of type string but it was of type integer");
 }
 
 TEST(JSONSchema_output_error_trace, fail_string_over_ref) {
@@ -135,13 +135,12 @@ TEST(JSONSchema_output_error_trace, fail_string_over_ref) {
                                                             output.cend()};
 
   EXPECT_EQ(traces.size(), 2);
-  // EXPECT_OUTPUT(
-  //     traces, 0, "", "/$ref/type",
-  //     "The value was expected to be of type string but it was of type
-  //     integer");
-  // EXPECT_OUTPUT(traces, 1, "", "/$ref",
-  //               "The integer value was expected to validate against the "
-  //               "statically referenced schema");
+  EXPECT_OUTPUT(
+      traces, 0, "", "/$ref/type",
+      "The value was expected to be of type string but it was of type integer");
+  EXPECT_OUTPUT(traces, 1, "", "/$ref",
+                "The integer value was expected to validate against the "
+                "statically referenced schema");
 }
 
 TEST(JSONSchema_output_error_trace, fail_string_with_matching_base) {
@@ -175,10 +174,9 @@ TEST(JSONSchema_output_error_trace, fail_string_with_matching_base) {
                                                             output.cend()};
 
   EXPECT_EQ(traces.size(), 1);
-  // EXPECT_OUTPUT(
-  //     traces, 0, "", "/type",
-  //     "The value was expected to be of type string but it was of type
-  //     integer");
+  EXPECT_OUTPUT(
+      traces, 0, "", "/type",
+      "The value was expected to be of type string but it was of type integer");
 }
 
 TEST(JSONSchema_output_error_trace, fail_string_with_non_matching_base) {
@@ -212,13 +210,12 @@ TEST(JSONSchema_output_error_trace, fail_string_with_non_matching_base) {
                                                             output.cend()};
 
   EXPECT_EQ(traces.size(), 2);
-  // EXPECT_OUTPUT(
-  //     traces, 0, "", "/$ref/type",
-  //     "The value was expected to be of type string but it was of type
-  //     integer");
-  // EXPECT_OUTPUT(traces, 1, "", "/$ref",
-  //               "The integer value was expected to validate against the "
-  //               "statically referenced schema");
+  EXPECT_OUTPUT(
+      traces, 0, "", "/$ref/type",
+      "The value was expected to be of type string but it was of type integer");
+  EXPECT_OUTPUT(traces, 1, "", "/$ref",
+                "The integer value was expected to validate against the "
+                "statically referenced schema");
 }
 
 TEST(JSONSchema_output_error_trace, fail_oneof_1) {
@@ -249,9 +246,9 @@ TEST(JSONSchema_output_error_trace, fail_oneof_1) {
                                                             output.cend()};
 
   EXPECT_EQ(traces.size(), 1);
-  // EXPECT_OUTPUT(traces, 0, "", "/oneOf",
-  //               "The string value was expected to validate against one and "
-  //               "only one of the 2 given subschemas");
+  EXPECT_OUTPUT(traces, 0, "", "/oneOf",
+                "The string value was expected to validate against one and "
+                "only one of the 2 given subschemas");
 }
 
 TEST(JSONSchema_output_error_trace, fail_not_1) {
@@ -281,9 +278,9 @@ TEST(JSONSchema_output_error_trace, fail_not_1) {
                                                             output.cend()};
 
   EXPECT_EQ(traces.size(), 1);
-  // EXPECT_OUTPUT(traces, 0, "", "/not",
-  //               "The string value was expected to not validate against the "
-  //               "given subschema, but it did");
+  EXPECT_OUTPUT(traces, 0, "", "/not",
+                "The string value was expected to not validate against the "
+                "given subschema, but it did");
 }
 
 TEST(JSONSchema_output_error_trace, fail_not_not_1) {
@@ -315,7 +312,7 @@ TEST(JSONSchema_output_error_trace, fail_not_not_1) {
                                                             output.cend()};
 
   EXPECT_EQ(traces.size(), 1);
-  // EXPECT_OUTPUT(traces, 0, "", "/not",
-  //               "The integer value was expected to not validate against the "
-  //               "given subschema, but it did");
+  EXPECT_OUTPUT(traces, 0, "", "/not",
+                "The integer value was expected to not validate against the "
+                "given subschema, but it did");
 }
