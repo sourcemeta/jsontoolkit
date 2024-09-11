@@ -3,11 +3,6 @@
 
 #include "jsonschema_test_utils.h"
 
-namespace {
-using SchemaCompilerErrorTraceOutput =
-    sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput;
-} // namespace
-
 #define EXPECT_OUTPUT(traces, index, expected_instance_location,               \
                       expected_evaluate_path, expected_message)                \
   EXPECT_TRUE(traces.size() > index);                                          \
@@ -18,7 +13,6 @@ using SchemaCompilerErrorTraceOutput =
             expected_evaluate_path);
 
 TEST(JSONSchema_output_error_trace, success_string_1) {
-
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -32,7 +26,8 @@ TEST(JSONSchema_output_error_trace, success_string_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   const sourcemeta::jsontoolkit::WeakPointer empty_pointer{};
-  SchemaCompilerErrorTraceOutput output{instance, empty_pointer};
+  sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance,
+                                                                 empty_pointer};
 
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
@@ -40,8 +35,8 @@ TEST(JSONSchema_output_error_trace, success_string_1) {
       std::ref(output))};
 
   EXPECT_TRUE(result);
-  std::vector<SchemaCompilerErrorTraceOutput::Entry> traces{output.cbegin(),
-                                                            output.cend()};
+  std::vector<sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput::Entry>
+      traces{output.cbegin(), output.cend()};
   EXPECT_TRUE(traces.empty());
 }
 
@@ -62,15 +57,16 @@ TEST(JSONSchema_output_error_trace, success_oneof_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{"fo"};
   const sourcemeta::jsontoolkit::WeakPointer empty_pointer{};
-  SchemaCompilerErrorTraceOutput output{instance, empty_pointer};
+  sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance,
+                                                                 empty_pointer};
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
       sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
       std::ref(output))};
 
   EXPECT_TRUE(result);
-  std::vector<SchemaCompilerErrorTraceOutput::Entry> traces{output.cbegin(),
-                                                            output.cend()};
+  std::vector<sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput::Entry>
+      traces{output.cbegin(), output.cend()};
   EXPECT_TRUE(traces.empty());
 }
 
@@ -89,15 +85,16 @@ TEST(JSONSchema_output_error_trace, fail_string) {
   const sourcemeta::jsontoolkit::JSON instance{5};
 
   const sourcemeta::jsontoolkit::WeakPointer empty_pointer{};
-  SchemaCompilerErrorTraceOutput output{instance, empty_pointer};
+  sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance,
+                                                                 empty_pointer};
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
       sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
       std::ref(output))};
 
   EXPECT_FALSE(result);
-  std::vector<SchemaCompilerErrorTraceOutput::Entry> traces{output.cbegin(),
-                                                            output.cend()};
+  std::vector<sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput::Entry>
+      traces{output.cbegin(), output.cend()};
 
   EXPECT_EQ(traces.size(), 1);
   EXPECT_OUTPUT(
@@ -124,15 +121,16 @@ TEST(JSONSchema_output_error_trace, fail_string_over_ref) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
   const sourcemeta::jsontoolkit::WeakPointer empty_pointer{};
-  SchemaCompilerErrorTraceOutput output{instance, empty_pointer};
+  sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance,
+                                                                 empty_pointer};
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
       sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
       std::ref(output))};
 
   EXPECT_FALSE(result);
-  std::vector<SchemaCompilerErrorTraceOutput::Entry> traces{output.cbegin(),
-                                                            output.cend()};
+  std::vector<sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput::Entry>
+      traces{output.cbegin(), output.cend()};
 
   EXPECT_EQ(traces.size(), 2);
   EXPECT_OUTPUT(
@@ -163,15 +161,16 @@ TEST(JSONSchema_output_error_trace, fail_string_with_matching_base) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   const std::string ref = "$ref";
   const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(ref)};
-  SchemaCompilerErrorTraceOutput output{instance, pointer};
+  sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance,
+                                                                 pointer};
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
       sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
       std::ref(output))};
 
   EXPECT_FALSE(result);
-  std::vector<SchemaCompilerErrorTraceOutput::Entry> traces{output.cbegin(),
-                                                            output.cend()};
+  std::vector<sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput::Entry>
+      traces{output.cbegin(), output.cend()};
 
   EXPECT_EQ(traces.size(), 1);
   EXPECT_OUTPUT(
@@ -199,15 +198,16 @@ TEST(JSONSchema_output_error_trace, fail_string_with_non_matching_base) {
   const sourcemeta::jsontoolkit::JSON instance{5};
   const std::string foo = "foo";
   const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(foo)};
-  SchemaCompilerErrorTraceOutput output{instance, pointer};
+  sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance,
+                                                                 pointer};
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
       sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
       std::ref(output))};
 
   EXPECT_FALSE(result);
-  std::vector<SchemaCompilerErrorTraceOutput::Entry> traces{output.cbegin(),
-                                                            output.cend()};
+  std::vector<sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput::Entry>
+      traces{output.cbegin(), output.cend()};
 
   EXPECT_EQ(traces.size(), 2);
   EXPECT_OUTPUT(
@@ -235,15 +235,16 @@ TEST(JSONSchema_output_error_trace, fail_oneof_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   const sourcemeta::jsontoolkit::WeakPointer empty_pointer;
-  SchemaCompilerErrorTraceOutput output{instance, empty_pointer};
+  sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance,
+                                                                 empty_pointer};
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
       sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
       std::ref(output))};
 
   EXPECT_FALSE(result);
-  std::vector<SchemaCompilerErrorTraceOutput::Entry> traces{output.cbegin(),
-                                                            output.cend()};
+  std::vector<sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput::Entry>
+      traces{output.cbegin(), output.cend()};
 
   EXPECT_EQ(traces.size(), 1);
   EXPECT_OUTPUT(traces, 0, "", "/oneOf",
@@ -267,15 +268,16 @@ TEST(JSONSchema_output_error_trace, fail_not_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
   const sourcemeta::jsontoolkit::WeakPointer empty_pointer;
-  SchemaCompilerErrorTraceOutput output{instance, empty_pointer};
+  sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance,
+                                                                 empty_pointer};
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
       sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
       std::ref(output))};
 
   EXPECT_FALSE(result);
-  std::vector<SchemaCompilerErrorTraceOutput::Entry> traces{output.cbegin(),
-                                                            output.cend()};
+  std::vector<sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput::Entry>
+      traces{output.cbegin(), output.cend()};
 
   EXPECT_EQ(traces.size(), 1);
   EXPECT_OUTPUT(traces, 0, "", "/not",
@@ -301,15 +303,16 @@ TEST(JSONSchema_output_error_trace, fail_not_not_1) {
 
   const sourcemeta::jsontoolkit::JSON instance{1};
   const sourcemeta::jsontoolkit::WeakPointer empty_pointer;
-  SchemaCompilerErrorTraceOutput output{instance, empty_pointer};
+  sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance,
+                                                                 empty_pointer};
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
       sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
       std::ref(output))};
 
   EXPECT_FALSE(result);
-  std::vector<SchemaCompilerErrorTraceOutput::Entry> traces{output.cbegin(),
-                                                            output.cend()};
+  std::vector<sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput::Entry>
+      traces{output.cbegin(), output.cend()};
 
   EXPECT_EQ(traces.size(), 1);
   EXPECT_OUTPUT(traces, 0, "", "/not",

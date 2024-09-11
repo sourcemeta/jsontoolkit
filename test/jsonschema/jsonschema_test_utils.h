@@ -10,12 +10,9 @@ std::string flatten_pointer(const auto &pointer) {
   std::string flat_representation;
   for (const auto &token : pointer) {
     if (token.is_property()) {
-      flat_representation +=
-          "/" + token.to_property(); // Add '/' followed by the property name.
+      flat_representation += "/" + token.to_property();
     } else if (token.is_index()) {
-      flat_representation +=
-          "/" +
-          std::to_string(token.to_index()); // Add '/' followed by the index.
+      flat_representation += "/" + std::to_string(token.to_index());
     }
   }
   return flat_representation;
