@@ -12,6 +12,16 @@
 #include <utility>          // std::move
 #include <vector>           // std::vector
 
+namespace {
+template <typename T>
+concept HasGetMethod = requires(T t) {
+  { t.get() } -> std::same_as<decltype(t.get())>;
+};
+
+template <typename T>
+concept DoesNotHaveGetMethod = !HasGetMethod<T>;
+} // namespace
+
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonpointer
@@ -203,6 +213,13 @@ public:
     this->data.reserve(this->data.size() + other.size());
     std::copy(other.data.cbegin(), other.data.cend(),
               std::back_inserter(this->data));
+  }
+
+  template <typename OtherT>
+    requires HasGetMethod<PropertyT> && DoesNotHaveGetMethod<OtherT>
+  auto push_back(const GenericPointer<OtherT> &) -> void {
+    // TODO: Implementation
+    return;
   }
 
   /// Move a JSON Pointer into the back of a JSON Pointer. For example:
