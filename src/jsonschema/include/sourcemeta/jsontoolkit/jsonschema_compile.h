@@ -535,6 +535,8 @@ struct SchemaCompilerSchemaContext {
   const URI &base;
   /// The set of labels registered so far
   std::set<std::size_t> labels;
+  /// The set of references destinations traversed so far
+  std::set<std::string> references;
 };
 
 /// @ingroup jsonschema_compiler

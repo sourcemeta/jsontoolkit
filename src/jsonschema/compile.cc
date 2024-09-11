@@ -43,7 +43,7 @@ auto compile_subschema(
              {schema_context.relative_pointer.concat({keyword}),
               schema_context.schema, entry.vocabularies, schema_context.base,
               // TODO: This represents a copy
-              schema_context.labels},
+              schema_context.labels, schema_context.references},
              {keyword, dynamic_context.base_schema_location,
               dynamic_context.base_instance_location})) {
       // Just a sanity check to ensure every keyword location is indeed valid
@@ -112,6 +112,7 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
       result,
       vocabularies(schema, resolver, root_frame_entry.dialect).get(),
       root_frame_entry.base,
+      {},
       {}};
   const sourcemeta::jsontoolkit::SchemaCompilerDynamicContext dynamic_context{
       relative_dynamic_context};
@@ -147,6 +148,7 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
                                 std::move(subschema),
                                 std::move(nested_vocabularies),
                                 entry.second.base,
+                                {},
                                 {}};
 
       compiler_template.push_back(make<SchemaCompilerControlMark>(
@@ -206,7 +208,7 @@ auto compile(const SchemaCompilerContext &context,
        vocabularies(new_schema, context.resolver, entry.dialect).get(),
        entry.base,
        // TODO: This represents a copy
-       schema_context.labels},
+       schema_context.labels, schema_context.references},
       {dynamic_context.keyword, destination_pointer,
        dynamic_context.base_instance_location.concat(instance_suffix)},
       entry.dialect);

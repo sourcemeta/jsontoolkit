@@ -33,40 +33,7 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
   }
 
   const auto &reference{context.references.at({type, entry.pointer})};
-  assert(context.frame.contains({type, reference.destination}));
   const auto label{std::hash<std::string>{}(reference.destination)};
-
-  // TODO: Cleanup this
-  std::size_t references_to_parent{0};
-  const bool recursive_for_sure{entry.pointer.starts_with(
-      context.frame.at({type, reference.destination}).pointer)};
-  for (const auto &reference_entry : context.references) {
-    if (context.frame.contains(
-            {ReferenceType::Static, reference_entry.second.destination})) {
-      const auto &destination_entry{context.frame.at(
-          {ReferenceType::Static, reference_entry.second.destination})};
-      if (entry.pointer.starts_with(destination_entry.pointer)) {
-        references_to_parent += 1;
-      }
-    }
-  }
-
-  // Here we detect whether a schema is recursive in terms of the reference
-  // we are compiling right now. We do so by checking if there is any
-  // reference in the schema (including the current one) that will point
-  // to one of the parents of the current reference.
-  const bool is_recursive{recursive_for_sure || references_to_parent > 1};
-
-  // If the reference is not a recursive one, we can avoid the extra
-  // overhead of marking the location for future jumps, and pretty much
-  // just expand the reference destination in place.
-  if (!is_recursive) {
-    return {make<SchemaCompilerLogicalAnd>(
-        true, context, schema_context, dynamic_context,
-        SchemaCompilerValueNone{},
-        compile(context, schema_context, relative_dynamic_context,
-                empty_pointer, empty_pointer, reference.destination))};
-  }
 
   // The label is already registered, so just jump to it
   if (schema_context.labels.contains(label)) {
@@ -75,8 +42,26 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
         SchemaCompilerValueUnsignedInteger{label})};
   }
 
-  // TODO: Avoid this copy
   auto new_schema_context{schema_context};
+  new_schema_context.references.insert(reference.destination);
+
+  // If the reference is not a recursive one, we can avoid the extra
+  // overhead of marking the location for future jumps, and pretty much
+  // just expand the reference destination in place.
+  const bool is_recursive{
+      // This means the reference is directly recursive, by jumping to
+      // a parent of the reference itself.
+      (context.frame.contains({type, reference.destination}) &&
+       entry.pointer.starts_with(
+           context.frame.at({type, reference.destination}).pointer)) ||
+      schema_context.references.contains(reference.destination)};
+  if (!is_recursive) {
+    return {make<SchemaCompilerLogicalAnd>(
+        true, context, schema_context, dynamic_context,
+        SchemaCompilerValueNone{},
+        compile(context, new_schema_context, relative_dynamic_context,
+                empty_pointer, empty_pointer, reference.destination))};
+  }
 
   // The idea to handle recursion is to expand the reference once, and when
   // doing so, create a "checkpoint" that we can jump back to in a subsequent
