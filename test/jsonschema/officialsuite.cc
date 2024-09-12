@@ -179,8 +179,8 @@ static auto test_resolver(std::string_view identifier)
 static auto callback_noop(
     const sourcemeta::jsontoolkit::SchemaCompilerEvaluationType, bool,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &,
-    const sourcemeta::jsontoolkit::Pointer &,
-    const sourcemeta::jsontoolkit::Pointer &,
+    const sourcemeta::jsontoolkit::WeakPointer &,
+    const sourcemeta::jsontoolkit::WeakPointer &,
     const sourcemeta::jsontoolkit::JSON &) noexcept -> void {}
 
 static auto slugify(const std::string &input, std::ostream &output) -> void {

@@ -179,14 +179,14 @@ inline auto FIRST_PROPERTY_IS(const sourcemeta::jsontoolkit::JSON &document,
 
 #define EVALUATE_WITH_TRACE(mode, schema_template, instance, count)            \
   std::vector<                                                                 \
-      std::tuple<bool, sourcemeta::jsontoolkit::Pointer,                       \
-                 sourcemeta::jsontoolkit::Pointer,                             \
+      std::tuple<bool, sourcemeta::jsontoolkit::WeakPointer,                   \
+                 sourcemeta::jsontoolkit::WeakPointer,                         \
                  sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type,  \
                  sourcemeta::jsontoolkit::JSON>>                               \
       trace_pre;                                                               \
   std::vector<                                                                 \
-      std::tuple<bool, sourcemeta::jsontoolkit::Pointer,                       \
-                 sourcemeta::jsontoolkit::Pointer,                             \
+      std::tuple<bool, sourcemeta::jsontoolkit::WeakPointer,                   \
+                 sourcemeta::jsontoolkit::WeakPointer,                         \
                  sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type,  \
                  sourcemeta::jsontoolkit::JSON>>                               \
       trace_post;                                                              \
@@ -198,8 +198,8 @@ inline auto FIRST_PROPERTY_IS(const sourcemeta::jsontoolkit::JSON &document,
           const bool valid,                                                    \
           const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type    \
               &step,                                                           \
-          const sourcemeta::jsontoolkit::Pointer &evaluate_path,               \
-          const sourcemeta::jsontoolkit::Pointer &instance_location,           \
+          const sourcemeta::jsontoolkit::WeakPointer &evaluate_path,           \
+          const sourcemeta::jsontoolkit::WeakPointer &instance_location,       \
           const sourcemeta::jsontoolkit::JSON &annotation) {                   \
         if (type ==                                                            \
             sourcemeta::jsontoolkit::SchemaCompilerEvaluationType::Pre) {      \
@@ -237,9 +237,12 @@ inline auto FIRST_PROPERTY_IS(const sourcemeta::jsontoolkit::JSON &document,
                            expected_instance_location)                         \
   EXPECT_TRUE(index < trace_pre.size());                                       \
   EXPECT_TRUE(std::get<0>(trace_pre.at(index)));                               \
-  EXPECT_EQ(std::get<1>(trace_pre.at(index)), TO_POINTER(evaluate_path));      \
-  EXPECT_EQ(std::get<2>(trace_pre.at(index)),                                  \
-            TO_POINTER(expected_instance_location));                           \
+  EXPECT_EQ(                                                                   \
+      sourcemeta::jsontoolkit::to_string(std::get<1>(trace_pre.at(index))),    \
+      evaluate_path);                                                          \
+  EXPECT_EQ(                                                                   \
+      sourcemeta::jsontoolkit::to_string(std::get<2>(trace_pre.at(index))),    \
+      expected_instance_location);                                             \
   EXPECT_TRUE(std::holds_alternative<                                          \
               sourcemeta::jsontoolkit::SchemaCompiler##step_type>(             \
       std::get<3>(trace_pre.at(index))));                                      \
@@ -252,9 +255,12 @@ inline auto FIRST_PROPERTY_IS(const sourcemeta::jsontoolkit::JSON &document,
 #define EVALUATE_TRACE_POST(index, step_type, evaluate_path,                   \
                             expected_keyword_location,                         \
                             expected_instance_location)                        \
-  EXPECT_EQ(std::get<1>(trace_post.at(index)), TO_POINTER(evaluate_path));     \
-  EXPECT_EQ(std::get<2>(trace_post.at(index)),                                 \
-            TO_POINTER(expected_instance_location));                           \
+  EXPECT_EQ(                                                                   \
+      sourcemeta::jsontoolkit::to_string(std::get<1>(trace_post.at(index))),   \
+      evaluate_path);                                                          \
+  EXPECT_EQ(                                                                   \
+      sourcemeta::jsontoolkit::to_string(std::get<2>(trace_post.at(index))),   \
+      expected_instance_location);                                             \
   EXPECT_TRUE(std::holds_alternative<                                          \
               sourcemeta::jsontoolkit::SchemaCompiler##step_type>(             \
       std::get<3>(trace_post.at(index))));                                     \

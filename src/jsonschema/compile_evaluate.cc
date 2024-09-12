@@ -19,7 +19,7 @@ namespace {
 
 class EvaluationContext {
 public:
-  using Pointer = sourcemeta::jsontoolkit::Pointer;
+  using Pointer = sourcemeta::jsontoolkit::WeakPointer;
   using JSON = sourcemeta::jsontoolkit::JSON;
   using Template = sourcemeta::jsontoolkit::SchemaCompilerTemplate;
   EvaluationContext(const JSON &instance) : instances_{instance} {};

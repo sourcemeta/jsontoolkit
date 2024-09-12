@@ -38,6 +38,10 @@ using WeakPointer = GenericPointer<std::reference_wrapper<const std::string>>;
 const Pointer empty_pointer;
 
 /// @ingroup jsonpointer
+/// A global constant instance of the empty JSON WeakPointer.
+const WeakPointer empty_weak_pointer;
+
+/// @ingroup jsonpointer
 /// Get a value from a JSON document using a JSON Pointer (`const` overload).
 ///
 /// ```cpp
@@ -318,6 +322,26 @@ auto stringify(const WeakPointer &pointer,
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto to_string(const Pointer &pointer)
+    -> std::basic_string<JSON::Char, JSON::CharTraits,
+                         std::allocator<JSON::Char>>;
+
+/// @ingroup jsonpointer
+///
+/// Stringify the input JSON WeakPointer into a C++ standard string. For
+/// example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <string>
+/// #include <iostream>
+///
+/// const std::string foo = "foo";
+/// const sourcemeta::jsontoolkit::WeakPointer pointer{foo};
+/// const std::string result{sourcemeta::jsontoolkit::to_string(pointer)};
+/// std::cout << result << std::endl;
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto to_string(const WeakPointer &pointer)
     -> std::basic_string<JSON::Char, JSON::CharTraits,
                          std::allocator<JSON::Char>>;
 
