@@ -186,6 +186,16 @@ auto to_string(const Pointer &pointer)
   return result.str();
 }
 
+auto to_string(const WeakPointer &pointer)
+    -> std::basic_string<JSON::Char, JSON::CharTraits,
+                         std::allocator<JSON::Char>> {
+  std::basic_ostringstream<JSON::Char, JSON::CharTraits,
+                           std::allocator<JSON::Char>>
+      result;
+  stringify(pointer, result);
+  return result.str();
+}
+
 auto to_uri(const Pointer &pointer) -> URI {
   std::basic_ostringstream<JSON::Char, JSON::CharTraits,
                            std::allocator<JSON::Char>>

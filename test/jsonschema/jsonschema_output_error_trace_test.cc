@@ -1,16 +1,18 @@
 #include <gtest/gtest.h>
 
+#include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
 #define EXPECT_OUTPUT(traces, index, expected_instance_location,               \
                       expected_evaluate_path, expected_message)                \
   EXPECT_TRUE(traces.size() > index);                                          \
   EXPECT_EQ(traces.at((index)).message, (expected_message));                   \
+  EXPECT_EQ(sourcemeta::jsontoolkit::to_string(                                \
+                traces.at((index)).instance_location),                         \
+            expected_instance_location);                                       \
   EXPECT_EQ(                                                                   \
-      traces.at((index)).instance_location,                                    \
-      sourcemeta::jsontoolkit::to_pointer((expected_instance_location)));      \
-  EXPECT_EQ(traces.at((index)).evaluate_path,                                  \
-            sourcemeta::jsontoolkit::to_pointer((expected_evaluate_path)));
+      sourcemeta::jsontoolkit::to_string(traces.at((index)).evaluate_path),    \
+      expected_evaluate_path);
 
 TEST(JSONSchema_output_error_trace, success_string_1) {
   const sourcemeta::jsontoolkit::JSON schema{
@@ -154,8 +156,10 @@ TEST(JSONSchema_output_error_trace, fail_string_with_matching_base) {
 
   const sourcemeta::jsontoolkit::JSON instance{5};
 
+  const std::string ref = "$ref";
+  const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(ref)};
   sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance,
-                                                                 {"$ref"}};
+                                                                 pointer};
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
       sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
@@ -189,9 +193,10 @@ TEST(JSONSchema_output_error_trace, fail_string_with_non_matching_base) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-
+  const std::string foo = "foo";
+  const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(foo)};
   sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output{instance,
-                                                                 {"foo"}};
+                                                                 pointer};
   const auto result{sourcemeta::jsontoolkit::evaluate(
       schema_template, instance,
       sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,

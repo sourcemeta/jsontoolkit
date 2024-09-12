@@ -215,7 +215,7 @@ auto compile(const SchemaCompilerContext &context,
 }
 
 SchemaCompilerErrorTraceOutput::SchemaCompilerErrorTraceOutput(
-    const JSON &instance, const Pointer &base)
+    const JSON &instance, const WeakPointer &base)
     : instance_{instance}, base_{base} {}
 
 auto SchemaCompilerErrorTraceOutput::begin() const -> const_iterator {
@@ -237,7 +237,7 @@ auto SchemaCompilerErrorTraceOutput::cend() const -> const_iterator {
 auto SchemaCompilerErrorTraceOutput::operator()(
     const SchemaCompilerEvaluationType type, const bool result,
     const SchemaCompilerTemplate::value_type &step,
-    const Pointer &evaluate_path, const Pointer &instance_location,
+    const WeakPointer &evaluate_path, const WeakPointer &instance_location,
     const JSON &annotation) -> void {
   assert(!evaluate_path.empty());
   assert(evaluate_path.back().is_property());
