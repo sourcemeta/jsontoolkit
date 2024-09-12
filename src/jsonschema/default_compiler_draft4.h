@@ -470,13 +470,21 @@ auto compiler_draft4_applicator_patternproperties_conditional_annotation(
           SchemaCompilerValueNone{}));
     }
 
-    // Loop over the instance properties
-    children.push_back(make<SchemaCompilerLoopPropertiesRegex>(
-        // Treat this as an internal step
-        false, context, schema_context, relative_dynamic_context,
-        SchemaCompilerValueRegex{std::regex{pattern, std::regex::ECMAScript},
-                                 pattern},
-        std::move(substeps)));
+    // If the `patternProperties` subschema for the given pattern does
+    // nothing, then we can avoid generating an entire loop for it
+    if (!substeps.empty()) {
+      // Loop over the instance properties
+      children.push_back(make<SchemaCompilerLoopPropertiesRegex>(
+          // Treat this as an internal step
+          false, context, schema_context, relative_dynamic_context,
+          SchemaCompilerValueRegex{std::regex{pattern, std::regex::ECMAScript},
+                                   pattern},
+          std::move(substeps)));
+    }
+  }
+
+  if (children.empty()) {
+    return {};
   }
 
   // If the instance is an object...

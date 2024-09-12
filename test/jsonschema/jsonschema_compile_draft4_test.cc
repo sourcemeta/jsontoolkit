@@ -1391,16 +1391,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
-  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
-                     "#/patternProperties", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/patternProperties",
-                              "#/patternProperties", "");
-
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The object value was expected to validate against the single defined "
-      "pattern property subschema");
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_3) {
@@ -1420,17 +1411,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
-
-  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
-                     "#/patternProperties", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/patternProperties",
-                              "#/patternProperties", "");
-
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 0,
-      "The object value was expected to validate against the single defined "
-      "pattern property subschema");
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
 TEST(JSONSchema_compile_draft4, patternProperties_4) {
@@ -1613,6 +1594,43 @@ TEST(JSONSchema_compile_draft4, patternProperties_7) {
       instance, 2,
       "The object value was expected to validate against the single defined "
       "pattern property subschema");
+}
+
+TEST(JSONSchema_compile_draft4, patternProperties_8) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "patternProperties": { "^@": true },
+    "additionalProperties": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"@foo\": 1, \"bar\": \"baz\" }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LoopPropertiesExcept, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/additionalProperties/type",
+                     "#/additionalProperties/type", "/bar");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
+                              "/additionalProperties/type",
+                              "#/additionalProperties/type", "/bar");
+  EVALUATE_TRACE_POST_SUCCESS(1, LoopPropertiesExcept, "/additionalProperties",
+                              "#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object properties not covered by other adjacent object keywords "
+      "were expected to validate against this subschema");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_1) {
