@@ -557,6 +557,48 @@ JSONSchema_Validate_Draft4_Non_Recursive_Ref(benchmark::State &state) {
   }
 }
 
+static void
+JSONSchema_Validate_Draft4_Pattern_Properties_True(benchmark::State &state) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "patternProperties": { "^@": true },
+    "additionalProperties": { "type": "string" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "@a": true,
+    "@b": true,
+    "@c": true,
+    "@d": true,
+    "@e": true,
+    "@f": true,
+    "a": "test",
+    "b": "test",
+    "c": "test",
+    "d": "test",
+    "e": "test",
+    "f": "test",
+    "g": "test",
+    "h": "test",
+    "i": "test",
+    "j": "test",
+    "k": "test"
+  })JSON")};
+
+  const auto schema_template{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  for (auto _ : state) {
+    auto result{sourcemeta::jsontoolkit::evaluate(schema_template, instance)};
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
 BENCHMARK(JSONSchema_Validate_Draft4_Meta_1_No_Callback);
 BENCHMARK(JSONSchema_Validate_Draft4_Required_Properties);
 BENCHMARK(JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match);
@@ -566,3 +608,4 @@ BENCHMARK(JSONSchema_Validate_Draft4_Properties_Triad_Optional);
 BENCHMARK(JSONSchema_Validate_Draft4_Properties_Triad_Closed);
 BENCHMARK(JSONSchema_Validate_Draft4_Properties_Triad_Required);
 BENCHMARK(JSONSchema_Validate_Draft4_Non_Recursive_Ref);
+BENCHMARK(JSONSchema_Validate_Draft4_Pattern_Properties_True);
