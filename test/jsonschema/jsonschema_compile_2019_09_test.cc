@@ -3656,3 +3656,64 @@ TEST(JSONSchema_compile_2019_09, patternProperties_4) {
       "The object value was expected to validate against the single defined "
       "pattern property subschema");
 }
+
+TEST(JSONSchema_compile_2019_09, patternProperties_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "patternProperties": { "^@": true },
+    "additionalProperties": { "type": "string" }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"@foo\": 1, \"bar\": \"baz\" }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
+                     "#/patternProperties", "");
+  EVALUATE_TRACE_PRE_ANNOTATION(1, "/patternProperties", "#/patternProperties",
+                                "");
+  EVALUATE_TRACE_PRE(2, LoopPropertiesExcept, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/additionalProperties/type",
+                     "#/additionalProperties/type", "/bar");
+  EVALUATE_TRACE_PRE_ANNOTATION(4, "/additionalProperties",
+                                "#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_ANNOTATION(0, "/patternProperties", "#/patternProperties",
+                                 "", "@foo");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalWhenType, "/patternProperties",
+                              "#/patternProperties", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict,
+                              "/additionalProperties/type",
+                              "#/additionalProperties/type", "/bar");
+  EVALUATE_TRACE_POST_ANNOTATION(3, "/additionalProperties",
+                                 "#/additionalProperties", "", "bar");
+  EVALUATE_TRACE_POST_SUCCESS(4, LoopPropertiesExcept, "/additionalProperties",
+                              "#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The object property \"@foo\" successfully validated against its pattern "
+      "property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object property \"bar\" successfully validated against the "
+      "additional properties subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object properties not covered by other adjacent object keywords "
+      "were expected to validate against this subschema");
+}
