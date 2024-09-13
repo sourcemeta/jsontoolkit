@@ -608,6 +608,35 @@ auto evaluate_step(
     }
 
     EVALUATE_END(assertion, SchemaCompilerAssertionStringType);
+  } else if (IS_STEP(SchemaCompilerAssertionPropertyType)) {
+    EVALUATE_BEGIN_NO_TARGET(
+        assertion, SchemaCompilerAssertionPropertyType,
+        // Note that here are are referring to the parent object that
+        // might hold the given property, before traversing into the
+        // actual property
+        context.resolve_target().is_object() &&
+            context.resolve_target().defines(
+                assertion.relative_instance_location.back().to_property()));
+    // Now here we refer to the actual property
+    const auto &target{context.resolve_target()};
+    // In non-strict mode, we consider a real number that represents an
+    // integer to be an integer
+    result =
+        target.type() == assertion.value ||
+        (assertion.value == JSON::Type::Integer && target.is_integer_real());
+    EVALUATE_END(assertion, SchemaCompilerAssertionPropertyType);
+  } else if (IS_STEP(SchemaCompilerAssertionPropertyTypeStrict)) {
+    EVALUATE_BEGIN_NO_TARGET(
+        assertion, SchemaCompilerAssertionPropertyTypeStrict,
+        // Note that here are are referring to the parent object that
+        // might hold the given property, before traversing into the
+        // actual property
+        context.resolve_target().is_object() &&
+            context.resolve_target().defines(
+                assertion.relative_instance_location.back().to_property()));
+    // Now here we refer to the actual property
+    result = context.resolve_target().type() == assertion.value;
+    EVALUATE_END(assertion, SchemaCompilerAssertionPropertyTypeStrict);
   } else if (IS_STEP(SchemaCompilerLogicalOr)) {
     EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalOr);
     result = logical.children.empty();

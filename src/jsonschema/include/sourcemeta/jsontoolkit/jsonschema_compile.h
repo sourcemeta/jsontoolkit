@@ -147,6 +147,8 @@ struct SchemaCompilerAssertionLess;
 struct SchemaCompilerAssertionUnique;
 struct SchemaCompilerAssertionDivisible;
 struct SchemaCompilerAssertionStringType;
+struct SchemaCompilerAssertionPropertyType;
+struct SchemaCompilerAssertionPropertyTypeStrict;
 struct SchemaCompilerAnnotationEmit;
 struct SchemaCompilerAnnotationWhenArraySizeEqual;
 struct SchemaCompilerAnnotationWhenArraySizeGreater;
@@ -197,7 +199,9 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionLessEqual, SchemaCompilerAssertionGreater,
     SchemaCompilerAssertionLess, SchemaCompilerAssertionUnique,
     SchemaCompilerAssertionDivisible, SchemaCompilerAssertionStringType,
-    SchemaCompilerAnnotationEmit, SchemaCompilerAnnotationWhenArraySizeEqual,
+    SchemaCompilerAssertionPropertyType,
+    SchemaCompilerAssertionPropertyTypeStrict, SchemaCompilerAnnotationEmit,
+    SchemaCompilerAnnotationWhenArraySizeEqual,
     SchemaCompilerAnnotationWhenArraySizeGreater,
     SchemaCompilerAnnotationToParent, SchemaCompilerAnnotationBasenameToParent,
     SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
@@ -371,6 +375,16 @@ DEFINE_STEP_WITH_VALUE(Assertion, Divisible, SchemaCompilerValueJSON)
 /// @brief Represents a compiler assertion step that checks that a string is of
 /// a certain type
 DEFINE_STEP_WITH_VALUE(Assertion, StringType, SchemaCompilerValueStringType)
+
+/// @ingroup jsonschema_compiler_instructions
+/// @brief Represents a compiler assertion step that checks that an instance
+/// property is of a given type if present
+DEFINE_STEP_WITH_VALUE(Assertion, PropertyType, SchemaCompilerValueType)
+
+/// @ingroup jsonschema_compiler_instructions
+/// @brief Represents a compiler assertion step that checks that an instance
+/// property is of a given type if present (strict mode)
+DEFINE_STEP_WITH_VALUE(Assertion, PropertyTypeStrict, SchemaCompilerValueType)
 
 /// @ingroup jsonschema_compiler_instructions
 /// @brief Represents a compiler step that emits an annotation

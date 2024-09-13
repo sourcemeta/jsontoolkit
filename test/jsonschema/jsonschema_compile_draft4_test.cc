@@ -1053,15 +1053,17 @@ TEST(JSONSchema_compile_draft4, properties_1) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
+  EVALUATE_TRACE_PRE(1, AssertionPropertyTypeStrict, "/properties/bar/type",
                      "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/foo/type",
+  EVALUATE_TRACE_PRE(2, AssertionPropertyTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
 
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
-                              "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/properties/foo/type",
-                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionPropertyTypeStrict,
+                              "/properties/bar/type", "#/properties/bar/type",
+                              "/bar");
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionPropertyTypeStrict,
+                              "/properties/foo/type", "#/properties/foo/type",
+                              "/foo");
   EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -1095,15 +1097,17 @@ TEST(JSONSchema_compile_draft4, properties_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
+  EVALUATE_TRACE_PRE(1, AssertionPropertyTypeStrict, "/properties/bar/type",
                      "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/foo/type",
+  EVALUATE_TRACE_PRE(2, AssertionPropertyTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
 
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
-                              "#/properties/bar/type", "/bar");
-  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/properties/foo/type",
-                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionPropertyTypeStrict,
+                              "/properties/bar/type", "#/properties/bar/type",
+                              "/bar");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionPropertyTypeStrict,
+                              "/properties/foo/type", "#/properties/foo/type",
+                              "/foo");
   EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -1169,12 +1173,12 @@ TEST(JSONSchema_compile_draft4, properties_4) {
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties/foo/properties",
                      "#/properties/foo/properties", "/foo");
-  EVALUATE_TRACE_PRE(2, AssertionTypeStrict,
+  EVALUATE_TRACE_PRE(2, AssertionPropertyTypeStrict,
                      "/properties/foo/properties/bar/type",
                      "#/properties/foo/properties/bar/type", "/foo/bar");
 
   EVALUATE_TRACE_POST_SUCCESS(
-      0, AssertionTypeStrict, "/properties/foo/properties/bar/type",
+      0, AssertionPropertyTypeStrict, "/properties/foo/properties/bar/type",
       "#/properties/foo/properties/bar/type", "/foo/bar");
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/properties/foo/properties",
                               "#/properties/foo/properties", "/foo");
@@ -1672,15 +1676,16 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
+  EVALUATE_TRACE_PRE(1, AssertionPropertyTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE(2, LoopPropertiesExcept, "/additionalProperties",
                      "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/additionalProperties/type",
                      "#/additionalProperties/type", "/bar");
 
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
-                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionPropertyTypeStrict,
+                              "/properties/foo/type", "#/properties/foo/type",
+                              "/foo");
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict,
                               "/additionalProperties/type",
@@ -1824,7 +1829,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
                      "#/patternProperties/%5Ebar$/type", "/bar");
 
   EVALUATE_TRACE_PRE(2, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/type",
+  EVALUATE_TRACE_PRE(3, AssertionPropertyTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
 
   EVALUATE_TRACE_PRE(4, LoopPropertiesExcept, "/additionalProperties",
@@ -1841,8 +1846,9 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
                               "#/patternProperties", "");
 
   // `properties`
-  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/properties/foo/type",
-                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionPropertyTypeStrict,
+                              "/properties/foo/type", "#/properties/foo/type",
+                              "/foo");
   EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/properties", "#/properties", "");
 
   // `additionalProperties`
@@ -1894,15 +1900,16 @@ TEST(JSONSchema_compile_draft4, additionalProperties_5) {
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
+  EVALUATE_TRACE_PRE(1, AssertionPropertyTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE(2, LoopPropertiesExcept, "/additionalProperties",
                      "#/additionalProperties", "");
   EVALUATE_TRACE_PRE(3, AssertionFail, "/additionalProperties",
                      "#/additionalProperties", "/bar");
 
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
-                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionPropertyTypeStrict,
+                              "/properties/foo/type", "#/properties/foo/type",
+                              "/foo");
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_POST_FAILURE(2, AssertionFail, "/additionalProperties",
                               "#/additionalProperties", "/bar");
@@ -2013,14 +2020,14 @@ TEST(JSONSchema_compile_draft4, not_3) {
 
   EVALUATE_TRACE_PRE(0, LogicalNot, "/not", "#/not", "");
   EVALUATE_TRACE_PRE(1, LogicalAnd, "/not/properties", "#/not/properties", "");
-  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/not/properties/foo/type",
+  EVALUATE_TRACE_PRE(2, AssertionPropertyTypeStrict, "/not/properties/foo/type",
                      "#/not/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE(3, LoopPropertiesExcept, "/not/additionalProperties",
                      "#/not/additionalProperties", "");
   EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/not/additionalProperties/type",
                      "#/not/additionalProperties/type", "/bar");
 
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionPropertyTypeStrict,
                               "/not/properties/foo/type",
                               "#/not/properties/foo/type", "/foo");
   EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/not/properties",
