@@ -420,26 +420,20 @@ TEST(JSONSchema_compile_draft4, ref_1) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
-  EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/$ref", "#/allOf/0/$ref", "");
-  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/$ref/type",
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/allOf/0/$ref/type",
                      "#/definitions/string/type", "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/allOf/0/$ref/type",
                               "#/definitions/string/type", "");
-  EVALUATE_TRACE_POST_FAILURE(1, LogicalAnd, "/allOf/0/$ref", "#/allOf/0/$ref",
-                              "");
-  EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_POST_FAILURE(1, LogicalAnd, "/allOf", "#/allOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The value was expected to be of type string but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The integer value was expected to validate "
-                               "against the statically referenced schema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The integer value was expected to validate "
                                "against the given subschema");
 }
@@ -461,26 +455,20 @@ TEST(JSONSchema_compile_draft4, ref_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
-  EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/$ref", "#/allOf/0/$ref", "");
-  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/$ref/type",
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/allOf/0/$ref/type",
                      "#/definitions/string/type", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/$ref/type",
                               "#/definitions/string/type", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/allOf/0/$ref", "#/allOf/0/$ref",
-                              "");
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/allOf", "#/allOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The string value was expected to validate "
-                               "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
+      instance, 1,
       "The string value was expected to validate against the given subschema");
 }
 
@@ -824,12 +812,7 @@ TEST(JSONSchema_compile_draft4, ref_8) {
 
   const sourcemeta::jsontoolkit::JSON instance{true};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/$ref", "#/$ref", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/$ref", "#/$ref", "");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The boolean value was expected to validate "
-                               "against the statically referenced schema");
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
 TEST(JSONSchema_compile_draft4, ref_9) {
@@ -851,38 +834,24 @@ TEST(JSONSchema_compile_draft4, ref_9) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
   EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
                      "#/additionalProperties", "");
-  EVALUATE_TRACE_PRE(1, LogicalAnd, "/additionalProperties/$ref",
-                     "#/additionalProperties/$ref", "/foo");
-  EVALUATE_TRACE_PRE(2, LogicalAnd, "/additionalProperties/$ref/$ref",
-                     "#/definitions/one/$ref", "/foo");
-  EVALUATE_TRACE_PRE(3, AssertionTypeStrict,
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict,
                      "/additionalProperties/$ref/$ref/type",
                      "#/definitions/two/type", "/foo");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
                               "/additionalProperties/$ref/$ref/type",
                               "#/definitions/two/type", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/additionalProperties/$ref/$ref",
-                              "#/definitions/one/$ref", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/additionalProperties/$ref",
-                              "#/additionalProperties/$ref", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(3, LoopProperties, "/additionalProperties",
+  EVALUATE_TRACE_POST_SUCCESS(1, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The boolean value was expected to validate "
-                               "against the statically referenced schema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "The boolean value was expected to validate "
-                               "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      instance, 1,
       "The object properties not covered by other adjacent object keywords "
       "were expected to validate against this subschema");
 }
@@ -907,38 +876,24 @@ TEST(JSONSchema_compile_draft4, ref_10) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
   EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
                      "#/additionalProperties", "");
-  EVALUATE_TRACE_PRE(1, LogicalAnd, "/additionalProperties/$ref",
-                     "#/additionalProperties/$ref", "/foo");
-  EVALUATE_TRACE_PRE(2, LogicalAnd, "/additionalProperties/$ref/$ref",
-                     "#/definitions/one/$ref", "/foo");
-  EVALUATE_TRACE_PRE(3, AssertionTypeStrict,
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict,
                      "/additionalProperties/$ref/$ref/type",
                      "#/definitions/two/type", "/foo");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
                               "/additionalProperties/$ref/$ref/type",
                               "#/definitions/two/type", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/additionalProperties/$ref/$ref",
-                              "#/definitions/one/$ref", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/additionalProperties/$ref",
-                              "#/additionalProperties/$ref", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(3, LoopProperties, "/additionalProperties",
+  EVALUATE_TRACE_POST_SUCCESS(1, LoopProperties, "/additionalProperties",
                               "#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The boolean value was expected to validate "
-                               "against the statically referenced schema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "The boolean value was expected to validate "
-                               "against the statically referenced schema");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
+      instance, 1,
       "The object properties not covered by other adjacent object keywords "
       "were expected to validate against this subschema");
 }
