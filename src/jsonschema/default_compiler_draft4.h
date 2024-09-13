@@ -414,6 +414,28 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
       for (auto &&substep : substeps) {
         children.push_back(std::move(substep));
       }
+
+      // Optimize `properties` where its subschemas just include a type check,
+      // as that's a very common pattern
+    } else if (substeps.size() == 1 &&
+               std::holds_alternative<SchemaCompilerAssertionTypeStrict>(
+                   substeps.front())) {
+      const auto &type_step{
+          std::get<SchemaCompilerAssertionTypeStrict>(substeps.front())};
+      children.push_back(SchemaCompilerAssertionPropertyTypeStrict{
+          type_step.relative_schema_location,
+          type_step.relative_instance_location, type_step.keyword_location,
+          type_step.schema_resource, type_step.dynamic, true, type_step.value});
+    } else if (substeps.size() == 1 &&
+               std::holds_alternative<SchemaCompilerAssertionType>(
+                   substeps.front())) {
+      const auto &type_step{
+          std::get<SchemaCompilerAssertionType>(substeps.front())};
+      children.push_back(SchemaCompilerAssertionPropertyType{
+          type_step.relative_schema_location,
+          type_step.relative_instance_location, type_step.keyword_location,
+          type_step.schema_resource, type_step.dynamic, true, type_step.value});
+
     } else {
       children.push_back(make<SchemaCompilerLogicalWhenDefines>(
           false, context, schema_context, relative_dynamic_context,

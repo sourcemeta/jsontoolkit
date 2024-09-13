@@ -1267,6 +1267,44 @@ struct DescribeVisitor {
     return message.str();
   }
 
+  auto operator()(const SchemaCompilerAssertionPropertyType &step) const
+      -> std::string {
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    if (!this->valid && value == JSON::Type::Real &&
+        this->target.type() == JSON::Type::Integer) {
+      message
+          << "The value was expected to be a real number but it was an integer";
+    } else if (!this->valid && value == JSON::Type::Integer &&
+               this->target.type() == JSON::Type::Real) {
+      message
+          << "The value was expected to be an integer but it was a real number";
+    } else {
+      describe_type_check(this->valid, this->target.type(), value, message);
+    }
+
+    return message.str();
+  }
+
+  auto operator()(const SchemaCompilerAssertionPropertyTypeStrict &step) const
+      -> std::string {
+    std::ostringstream message;
+    const auto &value{step_value(step)};
+    if (!this->valid && value == JSON::Type::Real &&
+        this->target.type() == JSON::Type::Integer) {
+      message
+          << "The value was expected to be a real number but it was an integer";
+    } else if (!this->valid && value == JSON::Type::Integer &&
+               this->target.type() == JSON::Type::Real) {
+      message
+          << "The value was expected to be an integer but it was a real number";
+    } else {
+      describe_type_check(this->valid, this->target.type(), value, message);
+    }
+
+    return message.str();
+  }
+
   auto operator()(const SchemaCompilerLoopPropertiesMatch &step) const
       -> std::string {
     assert(!step.children.empty());
