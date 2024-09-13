@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726244681158,
+  "lastUpdate": 1726254598097,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -7918,6 +7918,94 @@ window.BENCHMARK_DATA = {
             "value": 2249.832567782541,
             "unit": "ns/iter",
             "extra": "iterations: 311105\ncpu: 2249.795454910722 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "8a89db2c8b6b3c0e6ea4576037e92939d726d657",
+          "message": "Print the compiled schema in `benchmark/validator_helper.cc` (#1192)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-13T16:16:49Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/8a89db2c8b6b3c0e6ea4576037e92939d726d657"
+        },
+        "date": 1726254597654,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1151.3654614607178,
+            "unit": "ns/iter",
+            "extra": "iterations: 612869\ncpu: 1151.351001600668 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2136.099208191638,
+            "unit": "ns/iter",
+            "extra": "iterations: 327352\ncpu: 2136.072979544954 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match",
+            "value": 185.89934287032037,
+            "unit": "ns/iter",
+            "extra": "iterations: 3746749\ncpu: 185.89844449147785 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match",
+            "value": 230.15035655441366,
+            "unit": "ns/iter",
+            "extra": "iterations: 3039648\ncpu: 230.15133331227818 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 3560.115481017128,
+            "unit": "ns/iter",
+            "extra": "iterations: 195097\ncpu: 3560.0970901654055 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 1693.155398530578,
+            "unit": "ns/iter",
+            "extra": "iterations: 408852\ncpu: 1693.1628046334613 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 1683.093667016685,
+            "unit": "ns/iter",
+            "extra": "iterations: 413486\ncpu: 1682.999247858454 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 1379.544871534301,
+            "unit": "ns/iter",
+            "extra": "iterations: 516597\ncpu: 1379.4917217870009 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 1755.3788756819658,
+            "unit": "ns/iter",
+            "extra": "iterations: 394995\ncpu: 1755.2776136406783 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Non_Recursive_Ref",
+            "value": 2622.4614402258044,
+            "unit": "ns/iter",
+            "extra": "iterations: 266236\ncpu: 2622.3490023888553 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Pattern_Properties_True",
+            "value": 2231.5811121629476,
+            "unit": "ns/iter",
+            "extra": "iterations: 314774\ncpu: 2231.400112461638 ns\nthreads: 1"
           }
         ]
       }
