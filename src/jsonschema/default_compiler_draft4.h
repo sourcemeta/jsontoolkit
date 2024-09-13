@@ -360,8 +360,14 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
   // or whether most of the properties are optional. Each shines
   // in the corresponding case.
 
-  // This strategy only makes sense if most of the properties are "optional"
-  if (is_required <= (size / 2)) {
+  const auto prefer_loop_over_instance{
+      // This strategy only makes sense if most of the properties are "optional"
+      is_required <= (size / 2) &&
+      // If `properties` only defines a relatively small amount of properties,
+      // then its probably still faster to unroll
+      schema_context.schema.at(dynamic_context.keyword).size() > 3};
+
+  if (prefer_loop_over_instance) {
     SchemaCompilerValueNamedIndexes indexes;
     SchemaCompilerTemplate children;
     std::size_t cursor = 0;
