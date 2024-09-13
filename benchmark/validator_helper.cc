@@ -29,6 +29,14 @@ auto main(int argc, char **argv) noexcept -> int {
   const auto compile_duration{
       std::chrono::duration_cast<std::chrono::milliseconds>(compile_end -
                                                             compile_start)};
+
+  const sourcemeta::jsontoolkit::JSON template_json{
+      sourcemeta::jsontoolkit::to_json(schema_template)};
+  sourcemeta::jsontoolkit::prettify(
+      template_json, std::cout,
+      sourcemeta::jsontoolkit::compiler_template_format_compare);
+  std::cout << std::endl;
+
   std::cout << compile_duration.count() << "ms\n";
 
   // Get the instance/s
