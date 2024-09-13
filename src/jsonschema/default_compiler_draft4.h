@@ -56,11 +56,22 @@ auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
            context.frame.at({type, reference.destination}).pointer)) ||
       schema_context.references.contains(reference.destination)};
   if (!is_recursive) {
-    return {make<SchemaCompilerLogicalAnd>(
-        true, context, schema_context, dynamic_context,
-        SchemaCompilerValueNone{},
-        compile(context, new_schema_context, relative_dynamic_context,
-                empty_pointer, empty_pointer, reference.destination))};
+    // TODO: Enable this optimization for 2019-09 on-wards
+    if (schema_context.vocabularies.contains(
+            "http://json-schema.org/draft-04/schema#") ||
+        schema_context.vocabularies.contains(
+            "http://json-schema.org/draft-06/schema#") ||
+        schema_context.vocabularies.contains(
+            "http://json-schema.org/draft-07/schema#")) {
+      return compile(context, new_schema_context, dynamic_context,
+                     empty_pointer, empty_pointer, reference.destination);
+    } else {
+      return {make<SchemaCompilerLogicalAnd>(
+          true, context, schema_context, dynamic_context,
+          SchemaCompilerValueNone{},
+          compile(context, new_schema_context, relative_dynamic_context,
+                  empty_pointer, empty_pointer, reference.destination))};
+    }
   }
 
   // The idea to handle recursion is to expand the reference once, and when
