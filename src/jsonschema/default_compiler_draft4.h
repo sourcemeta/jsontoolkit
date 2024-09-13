@@ -446,11 +446,34 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
           type_step.relative_schema_location,
           type_step.relative_instance_location, type_step.keyword_location,
           type_step.schema_resource, type_step.dynamic, true, type_step.value});
-
     } else {
       children.push_back(make<SchemaCompilerLogicalWhenDefines>(
           false, context, schema_context, relative_dynamic_context,
           SchemaCompilerValueString{name}, std::move(substeps)));
+    }
+  }
+
+  if (children.size() == 1) {
+    if (std::holds_alternative<SchemaCompilerAssertionPropertyTypeStrict>(
+            children.front())) {
+      const auto &type_step{std::get<SchemaCompilerAssertionPropertyTypeStrict>(
+          children.front())};
+      return {SchemaCompilerAssertionPropertyTypeStrict{
+          dynamic_context.base_schema_location.concat({dynamic_context.keyword})
+              .concat(type_step.relative_schema_location),
+          type_step.relative_instance_location, type_step.keyword_location,
+          type_step.schema_resource, type_step.dynamic, type_step.report,
+          type_step.value}};
+    } else if (std::holds_alternative<SchemaCompilerAssertionPropertyType>(
+                   children.front())) {
+      const auto &type_step{
+          std::get<SchemaCompilerAssertionPropertyType>(children.front())};
+      return {SchemaCompilerAssertionPropertyType{
+          dynamic_context.base_schema_location.concat({dynamic_context.keyword})
+              .concat(type_step.relative_schema_location),
+          type_step.relative_instance_location, type_step.keyword_location,
+          type_step.schema_resource, type_step.dynamic, type_step.report,
+          type_step.value}};
     }
   }
 
