@@ -1050,49 +1050,28 @@ TEST(JSONSchema_compile_draft4, properties_1) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
 
-  if (FIRST_PROPERTY_IS(instance, "foo")) {
-    EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
 
-    EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
-    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
-                       "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
+                     "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
 
-    EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/properties/foo/type",
-                                "#/properties/foo/type", "/foo");
-    EVALUATE_TRACE_POST_FAILURE(1, LogicalAnd, "/properties", "#/properties",
-                                "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
+                              "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/properties/foo/type",
+                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/properties", "#/properties", "");
 
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                                 "The value was expected to be of type string "
-                                 "but it was of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                                 "The object value was expected to validate "
-                                 "against the defined properties subschemas");
-  } else {
-    EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
-
-    EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
-    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
-                       "#/properties/bar/type", "/bar");
-    EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/foo/type",
-                       "#/properties/foo/type", "/foo");
-
-    EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
-                                "#/properties/bar/type", "/bar");
-    EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/properties/foo/type",
-                                "#/properties/foo/type", "/foo");
-    EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/properties", "#/properties",
-                                "");
-
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 0, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                                 "The value was expected to be of type string "
-                                 "but it was of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                                 "The object value was expected to validate "
-                                 "against the defined properties subschemas");
-  }
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type string "
+                               "but it was of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the defined properties subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, properties_2) {
@@ -1115,49 +1094,25 @@ TEST(JSONSchema_compile_draft4, properties_2) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
-  if (FIRST_PROPERTY_IS(instance, "foo")) {
-    EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
-    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
-                       "#/properties/foo/type", "/foo");
-    EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/bar/type",
-                       "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
+                     "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
 
-    EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
-                                "#/properties/foo/type", "/foo");
-    EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/properties/bar/type",
-                                "#/properties/bar/type", "/bar");
-    EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties",
-                                "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
+                              "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/properties/foo/type",
+                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
 
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                                 "The value was expected to be of type string");
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 1, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                                 "The object value was expected to validate "
-                                 "against the 2 defined properties subschemas");
-  } else {
-    EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
-    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
-                       "#/properties/bar/type", "/bar");
-    EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/foo/type",
-                       "#/properties/foo/type", "/foo");
-
-    EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
-                                "#/properties/bar/type", "/bar");
-    EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/properties/foo/type",
-                                "#/properties/foo/type", "/foo");
-    EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties",
-                                "");
-
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 0, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                                 "The value was expected to be of type string");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                                 "The object value was expected to validate "
-                                 "against the defined properties subschemas");
-  }
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the defined properties subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, properties_3) {
