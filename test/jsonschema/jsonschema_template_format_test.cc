@@ -9,6 +9,7 @@ TEST(JSONSchema_compiler_template_format, example_1) {
     "absoluteKeywordLocation": "#/properties",
     "category": "annotation",
     "report": true,
+    "unknown": 1,
     "dynamic": true,
     "type": "public",
     "relativeSchemaLocation": "",
@@ -36,6 +37,7 @@ TEST(JSONSchema_compiler_template_format, example_1) {
   "relativeSchemaLocation": "",
   "relativeInstanceLocation": "",
   "report": true,
-  "dynamic": true
+  "dynamic": true,
+  "unknown": 1
 })JSON");
 }

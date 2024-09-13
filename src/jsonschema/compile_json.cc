@@ -310,17 +310,14 @@ auto compiler_template_format_compare(const JSON::String &left,
                    {"absoluteKeywordLocation", 4},
                    {"relativeSchemaLocation", 5},
                    {"relativeInstanceLocation", 6},
-                   {"location", 7},
-                   {"report", 8},
-                   {"dynamic", 9},
-                   {"children", 10}};
+                   {"report", 7},
+                   {"dynamic", 8},
+                   {"children", 9}};
 
-  // We define and control all of these keywords, so if we are missing
-  // some here, then we did something wrong?
-  assert(rank.contains(left));
-  assert(rank.contains(right));
-
-  return rank.at(left) < rank.at(right);
+  constexpr std::uint64_t DEFAULT_RANK{999};
+  const auto left_rank{rank.contains(left) ? rank.at(left) : DEFAULT_RANK};
+  const auto right_rank{rank.contains(right) ? rank.at(right) : DEFAULT_RANK};
+  return left_rank < right_rank;
 }
 
 } // namespace sourcemeta::jsontoolkit
