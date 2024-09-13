@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726258887262,
+  "lastUpdate": 1726262957009,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -8166,6 +8166,96 @@ window.BENCHMARK_DATA = {
             "value": 6316.006535298522,
             "unit": "ns/iter",
             "extra": "iterations: 110783\ncpu: 6315.952582977535 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dcf4042039449479b985ddcd7aa30446682bf342",
+          "message": "Don't emit a wrapper instruction when unrolling `$ref` (#1195)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-13T17:22:36-04:00",
+          "tree_id": "b117ef5c42037a7c908b5dc585a7f9d22436d854",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/dcf4042039449479b985ddcd7aa30446682bf342"
+        },
+        "date": 1726262956520,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 16833.121800551013,
+            "unit": "ns/iter",
+            "extra": "iterations: 41765\ncpu: 16831.83519693523 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 6809.32363554991,
+            "unit": "ns/iter",
+            "extra": "iterations: 102807\ncpu: 6809.178645422976 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match",
+            "value": 1833.900873740563,
+            "unit": "ns/iter",
+            "extra": "iterations: 381120\ncpu: 1833.8141136649874 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match",
+            "value": 1675.0226049284238,
+            "unit": "ns/iter",
+            "extra": "iterations: 417785\ncpu: 1674.9495553933236 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 116508.2859520654,
+            "unit": "ns/iter",
+            "extra": "iterations: 6008\ncpu: 116499.24550599205 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 55064.04756689419,
+            "unit": "ns/iter",
+            "extra": "iterations: 12782\ncpu: 55059.30730715071 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 8755.03643531494,
+            "unit": "ns/iter",
+            "extra": "iterations: 79648\ncpu: 8754.649231619123 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 8241.29031116628,
+            "unit": "ns/iter",
+            "extra": "iterations: 84778\ncpu: 8241.005709028286 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 8931.41894669521,
+            "unit": "ns/iter",
+            "extra": "iterations: 78325\ncpu: 8931.007698691355 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Non_Recursive_Ref",
+            "value": 4263.087363902186,
+            "unit": "ns/iter",
+            "extra": "iterations: 164679\ncpu: 4262.886573272851 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Pattern_Properties_True",
+            "value": 6257.374410972485,
+            "unit": "ns/iter",
+            "extra": "iterations: 111837\ncpu: 6257.059309530836 ns\nthreads: 1"
           }
         ]
       }
