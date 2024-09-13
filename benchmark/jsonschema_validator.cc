@@ -112,7 +112,7 @@ JSONSchema_Validate_Draft4_Required_Properties(benchmark::State &state) {
   }
 }
 
-static void JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match(
+static void JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match(
     benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -150,6 +150,58 @@ static void JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match(
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "p": true
+  })JSON")};
+
+  const auto schema_template{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  for (auto _ : state) {
+    auto result{sourcemeta::jsontoolkit::evaluate(schema_template, instance)};
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
+static void JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match(
+    benchmark::State &state) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "a": { "type": "boolean" }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "a": true,
+    "b": true,
+    "c": true,
+    "d": true,
+    "e": true,
+    "f": true,
+    "g": true,
+    "h": true,
+    "i": true,
+    "j": true,
+    "k": true,
+    "l": true,
+    "m": true,
+    "n": true,
+    "o": true,
+    "p": true,
+    "q": true,
+    "r": true,
+    "s": true,
+    "t": true,
+    "u": true,
+    "v": true,
+    "w": true,
+    "x": true,
+    "y": true,
+    "z": true
   })JSON")};
 
   const auto schema_template{sourcemeta::jsontoolkit::compile(
@@ -601,7 +653,8 @@ JSONSchema_Validate_Draft4_Pattern_Properties_True(benchmark::State &state) {
 
 BENCHMARK(JSONSchema_Validate_Draft4_Meta_1_No_Callback);
 BENCHMARK(JSONSchema_Validate_Draft4_Required_Properties);
-BENCHMARK(JSONSchema_Validate_Draft4_Optional_Properties_Minimal_Match);
+BENCHMARK(JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match);
+BENCHMARK(JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match);
 BENCHMARK(JSONSchema_Validate_Draft4_Items_Schema);
 BENCHMARK(JSONSchema_Validate_Draft4_Nested_Object);
 BENCHMARK(JSONSchema_Validate_Draft4_Properties_Triad_Optional);
