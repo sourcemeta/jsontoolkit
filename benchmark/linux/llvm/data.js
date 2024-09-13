@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726254521193,
+  "lastUpdate": 1726258887262,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -8076,6 +8076,96 @@ window.BENCHMARK_DATA = {
             "value": 5811.508245814585,
             "unit": "ns/iter",
             "extra": "iterations: 119879\ncpu: 5811.341369213957 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7051a3c836cebfa9e3b6c8d612877616f1ed1d75",
+          "message": "Implement new `AssertionPropertyType(Strict)` instructions (#1193)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-13T16:15:04-04:00",
+          "tree_id": "a818160d7697d154c45e185dfc84051fbce7c761",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/7051a3c836cebfa9e3b6c8d612877616f1ed1d75"
+        },
+        "date": 1726258886768,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 18738.397387306384,
+            "unit": "ns/iter",
+            "extra": "iterations: 37203\ncpu: 18738.385049592773 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 6745.660101126747,
+            "unit": "ns/iter",
+            "extra": "iterations: 104028\ncpu: 6745.593224900986 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match",
+            "value": 1855.125569531411,
+            "unit": "ns/iter",
+            "extra": "iterations: 375967\ncpu: 1855.0767062002783 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match",
+            "value": 1714.63948698158,
+            "unit": "ns/iter",
+            "extra": "iterations: 409264\ncpu: 1714.6233433676066 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 117959.43342872064,
+            "unit": "ns/iter",
+            "extra": "iterations: 5941\ncpu: 117959.26426527527 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 55505.83595863165,
+            "unit": "ns/iter",
+            "extra": "iterations: 12570\ncpu: 55504.57661097853 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 8905.249773720694,
+            "unit": "ns/iter",
+            "extra": "iterations: 78443\ncpu: 8905.136748976964 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 8307.983551847952,
+            "unit": "ns/iter",
+            "extra": "iterations: 83900\ncpu: 8307.891156138265 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 9039.830202078834,
+            "unit": "ns/iter",
+            "extra": "iterations: 77445\ncpu: 9039.665285040985 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Non_Recursive_Ref",
+            "value": 86459.62164846073,
+            "unit": "ns/iter",
+            "extra": "iterations: 8056\ncpu: 86458.73237338632 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Pattern_Properties_True",
+            "value": 6316.006535298522,
+            "unit": "ns/iter",
+            "extra": "iterations: 110783\ncpu: 6315.952582977535 ns\nthreads: 1"
           }
         ]
       }
