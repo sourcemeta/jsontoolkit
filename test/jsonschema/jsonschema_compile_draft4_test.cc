@@ -509,13 +509,13 @@ TEST(JSONSchema_compile_draft4, ref_3) {
 
   EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type",
                      "https://example.com#/type", "");
-  EVALUATE_TRACE_PRE(1, LoopPropertiesMatch, "/properties",
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties",
                      "https://example.com#/properties", "");
   EVALUATE_TRACE_PRE(2, ControlLabel, "/properties/foo/$ref",
                      "https://example.com#/properties/foo/$ref", "/foo");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/$ref/type",
                      "https://example.com#/type", "/foo");
-  EVALUATE_TRACE_PRE(4, LoopPropertiesMatch, "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_PRE(4, LogicalAnd, "/properties/foo/$ref/properties",
                      "https://example.com#/properties", "/foo");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type",
@@ -523,13 +523,12 @@ TEST(JSONSchema_compile_draft4, ref_3) {
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
                               "/properties/foo/$ref/type",
                               "https://example.com#/type", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch,
-                              "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties/foo/$ref/properties",
                               "https://example.com#/properties", "/foo");
   EVALUATE_TRACE_POST_SUCCESS(3, ControlLabel, "/properties/foo/$ref",
                               "https://example.com#/properties/foo/$ref",
                               "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(4, LoopPropertiesMatch, "/properties",
+  EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/properties",
                               "https://example.com#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -572,20 +571,20 @@ TEST(JSONSchema_compile_draft4, ref_4) {
 
   EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type",
                      "https://example.com#/type", "");
-  EVALUATE_TRACE_PRE(1, LoopPropertiesMatch, "/properties",
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties",
                      "https://example.com#/properties", "");
   EVALUATE_TRACE_PRE(2, ControlLabel, "/properties/foo/$ref",
                      "https://example.com#/properties/foo/$ref", "/foo");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/$ref/type",
                      "https://example.com#/type", "/foo");
-  EVALUATE_TRACE_PRE(4, LoopPropertiesMatch, "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_PRE(4, LogicalAnd, "/properties/foo/$ref/properties",
                      "https://example.com#/properties", "/foo");
   EVALUATE_TRACE_PRE(5, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
                      "https://example.com#/properties/foo/$ref", "/foo/foo");
   EVALUATE_TRACE_PRE(6, AssertionTypeStrict,
                      "/properties/foo/$ref/properties/foo/$ref/type",
                      "https://example.com#/type", "/foo/foo");
-  EVALUATE_TRACE_PRE(7, LoopPropertiesMatch,
+  EVALUATE_TRACE_PRE(7, LogicalAnd,
                      "/properties/foo/$ref/properties/foo/$ref/properties",
                      "https://example.com#/properties", "/foo/foo");
 
@@ -598,19 +597,17 @@ TEST(JSONSchema_compile_draft4, ref_4) {
                               "/properties/foo/$ref/properties/foo/$ref/type",
                               "https://example.com#/type", "/foo/foo");
   EVALUATE_TRACE_POST_SUCCESS(
-      3, LoopPropertiesMatch,
-      "/properties/foo/$ref/properties/foo/$ref/properties",
+      3, LogicalAnd, "/properties/foo/$ref/properties/foo/$ref/properties",
       "https://example.com#/properties", "/foo/foo");
   EVALUATE_TRACE_POST_SUCCESS(
       4, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
       "https://example.com#/properties/foo/$ref", "/foo/foo");
-  EVALUATE_TRACE_POST_SUCCESS(5, LoopPropertiesMatch,
-                              "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_POST_SUCCESS(5, LogicalAnd, "/properties/foo/$ref/properties",
                               "https://example.com#/properties", "/foo");
   EVALUATE_TRACE_POST_SUCCESS(6, ControlLabel, "/properties/foo/$ref",
                               "https://example.com#/properties/foo/$ref",
                               "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(7, LoopPropertiesMatch, "/properties",
+  EVALUATE_TRACE_POST_SUCCESS(7, LogicalAnd, "/properties",
                               "https://example.com#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -661,13 +658,13 @@ TEST(JSONSchema_compile_draft4, ref_5) {
 
   EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type",
                      "https://example.com#/type", "");
-  EVALUATE_TRACE_PRE(1, LoopPropertiesMatch, "/properties",
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties",
                      "https://example.com#/properties", "");
   EVALUATE_TRACE_PRE(2, ControlLabel, "/properties/foo/$ref",
                      "https://example.com#/properties/foo/$ref", "/foo");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/$ref/type",
                      "https://example.com#/type", "/foo");
-  EVALUATE_TRACE_PRE(4, LoopPropertiesMatch, "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_PRE(4, LogicalAnd, "/properties/foo/$ref/properties",
                      "https://example.com#/properties", "/foo");
   EVALUATE_TRACE_PRE(5, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
                      "https://example.com#/properties/foo/$ref", "/foo/foo");
@@ -686,13 +683,12 @@ TEST(JSONSchema_compile_draft4, ref_5) {
   EVALUATE_TRACE_POST_FAILURE(
       3, ControlJump, "/properties/foo/$ref/properties/foo/$ref",
       "https://example.com#/properties/foo/$ref", "/foo/foo");
-  EVALUATE_TRACE_POST_FAILURE(4, LoopPropertiesMatch,
-                              "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_POST_FAILURE(4, LogicalAnd, "/properties/foo/$ref/properties",
                               "https://example.com#/properties", "/foo");
   EVALUATE_TRACE_POST_FAILURE(5, ControlLabel, "/properties/foo/$ref",
                               "https://example.com#/properties/foo/$ref",
                               "/foo");
-  EVALUATE_TRACE_POST_FAILURE(6, LoopPropertiesMatch, "/properties",
+  EVALUATE_TRACE_POST_FAILURE(6, LogicalAnd, "/properties",
                               "https://example.com#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
@@ -739,24 +735,22 @@ TEST(JSONSchema_compile_draft4, ref_6) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
-  EVALUATE_TRACE_PRE(1, LoopPropertiesMatch, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(2, ControlLabel, "/properties/foo/$ref",
                      "#/properties/foo/$ref", "/foo");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/$ref/type",
                      "#/type", "/foo");
-  EVALUATE_TRACE_PRE(4, LoopPropertiesMatch, "/properties/foo/$ref/properties",
+  EVALUATE_TRACE_PRE(4, LogicalAnd, "/properties/foo/$ref/properties",
                      "#/properties", "/foo");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
   EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
                               "/properties/foo/$ref/type", "#/type", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch,
-                              "/properties/foo/$ref/properties", "#/properties",
-                              "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties/foo/$ref/properties",
+                              "#/properties", "/foo");
   EVALUATE_TRACE_POST_SUCCESS(3, ControlLabel, "/properties/foo/$ref",
                               "#/properties/foo/$ref", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(4, LoopPropertiesMatch, "/properties",
-                              "#/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type object");
@@ -1056,51 +1050,28 @@ TEST(JSONSchema_compile_draft4, properties_1) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
 
-  if (FIRST_PROPERTY_IS(instance, "foo")) {
-    EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
 
-    EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties",
-                       "");
-    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
-                       "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
+                     "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
 
-    EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/properties/foo/type",
-                                "#/properties/foo/type", "/foo");
-    EVALUATE_TRACE_POST_FAILURE(1, LoopPropertiesMatch, "/properties",
-                                "#/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
+                              "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/properties/foo/type",
+                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/properties", "#/properties", "");
 
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                                 "The value was expected to be of type string "
-                                 "but it was of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                                 "The object value was expected to validate "
-                                 "against the 2 defined properties subschemas");
-  } else {
-    EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
-
-    EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties",
-                       "");
-    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
-                       "#/properties/bar/type", "/bar");
-    EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/foo/type",
-                       "#/properties/foo/type", "/foo");
-
-    EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
-                                "#/properties/bar/type", "/bar");
-    EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/properties/foo/type",
-                                "#/properties/foo/type", "/foo");
-    EVALUATE_TRACE_POST_FAILURE(2, LoopPropertiesMatch, "/properties",
-                                "#/properties", "");
-
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 0, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                                 "The value was expected to be of type string "
-                                 "but it was of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                                 "The object value was expected to validate "
-                                 "against the 2 defined properties subschemas");
-  }
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type string "
+                               "but it was of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the defined properties subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, properties_2) {
@@ -1123,51 +1094,25 @@ TEST(JSONSchema_compile_draft4, properties_2) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
-  if (FIRST_PROPERTY_IS(instance, "foo")) {
-    EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties",
-                       "");
-    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
-                       "#/properties/foo/type", "/foo");
-    EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/bar/type",
-                       "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
+                     "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
 
-    EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
-                                "#/properties/foo/type", "/foo");
-    EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/properties/bar/type",
-                                "#/properties/bar/type", "/bar");
-    EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch, "/properties",
-                                "#/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
+                              "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/properties/foo/type",
+                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
 
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                                 "The value was expected to be of type string");
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 1, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                                 "The object value was expected to validate "
-                                 "against the 2 defined properties subschemas");
-  } else {
-    EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties",
-                       "");
-    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
-                       "#/properties/bar/type", "/bar");
-    EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/foo/type",
-                       "#/properties/foo/type", "/foo");
-
-    EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
-                                "#/properties/bar/type", "/bar");
-    EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/properties/foo/type",
-                                "#/properties/foo/type", "/foo");
-    EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch, "/properties",
-                                "#/properties", "");
-
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 0, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                                 "The value was expected to be of type string");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                                 "The object value was expected to validate "
-                                 "against the 2 defined properties subschemas");
-  }
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the defined properties subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, properties_3) {
@@ -1189,12 +1134,11 @@ TEST(JSONSchema_compile_draft4, properties_3) {
       sourcemeta::jsontoolkit::parse("{ \"baz\": [] }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
-  EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
-  EVALUATE_TRACE_POST_SUCCESS(0, LoopPropertiesMatch, "/properties",
-                              "#/properties", "");
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The object value was expected to validate "
-                               "against the 2 defined properties subschemas");
+                               "against the defined properties subschemas");
 }
 
 TEST(JSONSchema_compile_draft4, properties_4) {
@@ -1222,8 +1166,8 @@ TEST(JSONSchema_compile_draft4, properties_4) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 
-  EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(1, LoopPropertiesMatch, "/properties/foo/properties",
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties/foo/properties",
                      "#/properties/foo/properties", "/foo");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict,
                      "/properties/foo/properties/bar/type",
@@ -1232,11 +1176,9 @@ TEST(JSONSchema_compile_draft4, properties_4) {
   EVALUATE_TRACE_POST_SUCCESS(
       0, AssertionTypeStrict, "/properties/foo/properties/bar/type",
       "#/properties/foo/properties/bar/type", "/foo/bar");
-  EVALUATE_TRACE_POST_SUCCESS(1, LoopPropertiesMatch,
-                              "/properties/foo/properties",
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/properties/foo/properties",
                               "#/properties/foo/properties", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesMatch, "/properties",
-                              "#/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
@@ -1729,7 +1671,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE(2, LoopPropertiesExcept, "/additionalProperties",
@@ -1739,8 +1681,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(1, LoopPropertiesMatch, "/properties",
-                              "#/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict,
                               "/additionalProperties/type",
                               "#/additionalProperties/type", "/bar");
@@ -1785,8 +1726,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
 
   if (FIRST_PROPERTY_IS(instance, "foo")) {
-    EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties",
-                       "");
+    EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
     EVALUATE_TRACE_PRE(1, LoopPropertiesExcept, "/additionalProperties",
                        "#/additionalProperties", "");
     EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/additionalProperties/type",
@@ -1794,8 +1734,8 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
     EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/additionalProperties/type",
                        "#/additionalProperties/type", "/bar");
 
-    EVALUATE_TRACE_POST_SUCCESS(0, LoopPropertiesMatch, "/properties",
-                                "#/properties", "");
+    EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/properties", "#/properties",
+                                "");
     EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
                                 "/additionalProperties/type",
                                 "#/additionalProperties/type", "/foo");
@@ -1819,8 +1759,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
                                  "adjacent object keywords were "
                                  "expected to validate against this subschema");
   } else {
-    EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties",
-                       "");
+    EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
     EVALUATE_TRACE_PRE(1, LoopPropertiesExcept, "/additionalProperties",
                        "#/additionalProperties", "");
     EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/additionalProperties/type",
@@ -1828,8 +1767,8 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
     EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/additionalProperties/type",
                        "#/additionalProperties/type", "/foo");
 
-    EVALUATE_TRACE_POST_SUCCESS(0, LoopPropertiesMatch, "/properties",
-                                "#/properties", "");
+    EVALUATE_TRACE_POST_SUCCESS(0, LogicalAnd, "/properties", "#/properties",
+                                "");
     EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
                                 "/additionalProperties/type",
                                 "#/additionalProperties/type", "/bar");
@@ -1884,7 +1823,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
                      // Note that the caret needs to be URI escaped
                      "#/patternProperties/%5Ebar$/type", "/bar");
 
-  EVALUATE_TRACE_PRE(2, LoopPropertiesMatch, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(2, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
 
@@ -1904,8 +1843,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
   // `properties`
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(3, LoopPropertiesMatch, "/properties",
-                              "#/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/properties", "#/properties", "");
 
   // `additionalProperties`
   EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict,
@@ -1955,7 +1893,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_5) {
 
   EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
 
-  EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE(2, LoopPropertiesExcept, "/additionalProperties",
@@ -1965,8 +1903,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_5) {
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
                               "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(1, LoopPropertiesMatch, "/properties",
-                              "#/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_POST_FAILURE(2, AssertionFail, "/additionalProperties",
                               "#/additionalProperties", "/bar");
   EVALUATE_TRACE_POST_FAILURE(3, LoopPropertiesExcept, "/additionalProperties",
@@ -2075,8 +2012,7 @@ TEST(JSONSchema_compile_draft4, not_3) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LogicalNot, "/not", "#/not", "");
-  EVALUATE_TRACE_PRE(1, LoopPropertiesMatch, "/not/properties",
-                     "#/not/properties", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/not/properties", "#/not/properties", "");
   EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/not/properties/foo/type",
                      "#/not/properties/foo/type", "/foo");
   EVALUATE_TRACE_PRE(3, LoopPropertiesExcept, "/not/additionalProperties",
@@ -2087,7 +2023,7 @@ TEST(JSONSchema_compile_draft4, not_3) {
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
                               "/not/properties/foo/type",
                               "#/not/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(1, LoopPropertiesMatch, "/not/properties",
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/not/properties",
                               "#/not/properties", "");
   EVALUATE_TRACE_POST_FAILURE(2, AssertionTypeStrict,
                               "/not/additionalProperties/type",

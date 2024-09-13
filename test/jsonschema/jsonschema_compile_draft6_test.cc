@@ -501,14 +501,13 @@ TEST(JSONSchema_compile_draft6, propertyNames_4) {
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
-  EVALUATE_TRACE_PRE(0, LoopPropertiesMatch, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, LoopKeys, "/properties/foo/propertyNames",
                      "#/properties/foo/propertyNames", "/foo");
 
   EVALUATE_TRACE_POST_SUCCESS(0, LoopKeys, "/properties/foo/propertyNames",
                               "#/properties/foo/propertyNames", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(1, LoopPropertiesMatch, "/properties",
-                              "#/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/properties", "#/properties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
