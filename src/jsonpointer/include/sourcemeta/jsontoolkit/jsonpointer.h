@@ -88,6 +88,43 @@ SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
 auto get(const JSON &document, const WeakPointer &pointer) -> const JSON &;
 
 /// @ingroup jsonpointer
+/// Check that a path represented by a JSON Pointer exists in the given
+/// document. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <cassert>
+/// #include <sstream>
+///
+/// std::istringstream stream{"[ { \"foo\": 1 }, { \"bar\": 2 } ]"};
+/// const auto document{sourcemeta::jsontoolkit::parse(stream)};
+/// const sourcemeta::jsontoolkit::Pointer pointer{1, "bar"};
+/// assert(sourcemeta::jsontoolkit::has(document, pointer));
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto has(const JSON &document, const Pointer &pointer) -> bool;
+
+/// @ingroup jsonpointer
+/// Check that a path represented by a JSON WeakPointer exists in the given
+/// document. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonpointer.h>
+/// #include <cassert>
+/// #include <sstream>
+///
+/// std::istringstream stream{"[ { \"foo\": 1 }, { \"bar\": 2 } ]"};
+/// const auto document{sourcemeta::jsontoolkit::parse(stream)};
+/// const std::string bar = "bar";
+/// const sourcemeta::jsontoolkit::WeakPointer pointer{1, std::cref(bar)};
+/// assert(sourcemeta::jsontoolkit::has(document, pointer));
+/// ```
+SOURCEMETA_JSONTOOLKIT_JSONPOINTER_EXPORT
+auto has(const JSON &document, const WeakPointer &pointer) -> bool;
+
+/// @ingroup jsonpointer
 /// Get a value from a JSON document using a JSON Pointer (non-`const`
 /// overload).
 ///

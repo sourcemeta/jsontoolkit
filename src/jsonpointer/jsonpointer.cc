@@ -54,6 +54,39 @@ auto traverse(V &document, typename PointerT::const_iterator begin,
   return current.get();
 }
 
+template <typename PointerT>
+auto check(const sourcemeta::jsontoolkit::JSON &document,
+           typename PointerT::const_iterator begin,
+           typename PointerT::const_iterator end) -> bool {
+  std::reference_wrapper<const sourcemeta::jsontoolkit::JSON> current{document};
+  for (auto iterator = begin; iterator != end; ++iterator) {
+    const auto &token{*iterator};
+    const auto &instance{current.get()};
+    const bool is_last{std::next(iterator) == end};
+    if (token.is_property()) {
+      const auto &property{token.to_property()};
+      if (is_last) {
+        return instance.defines(property);
+      } else if (instance.defines(property)) {
+        current = instance.at(property);
+      } else {
+        return false;
+      }
+    } else {
+      const auto index{token.to_index()};
+      if (is_last) {
+        return index < instance.size();
+      } else if (index < instance.size()) {
+        current = instance.at(index);
+      } else {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 } // namespace
 
 namespace sourcemeta::jsontoolkit {
@@ -71,6 +104,14 @@ auto get(const JSON &document, const WeakPointer &pointer) -> const JSON & {
 auto get(JSON &document, const Pointer &pointer) -> JSON & {
   return traverse<std::allocator, JSON>(document, std::cbegin(pointer),
                                         std::cend(pointer));
+}
+
+auto has(const JSON &document, const Pointer &pointer) -> bool {
+  return check<Pointer>(document, std::cbegin(pointer), std::cend(pointer));
+}
+
+auto has(const JSON &document, const WeakPointer &pointer) -> bool {
+  return check<WeakPointer>(document, std::cbegin(pointer), std::cend(pointer));
 }
 
 auto get(const JSON &document, const Pointer::Token &token) -> const JSON & {
