@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726262795620,
+  "lastUpdate": 1726513616660,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos/llvm)": [
@@ -2986,6 +2986,94 @@ window.BENCHMARK_DATA = {
             "value": 1303.6389069387455,
             "unit": "ns/iter",
             "extra": "iterations: 541708\ncpu: 1303.5934488691305 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "dcf4042039449479b985ddcd7aa30446682bf342",
+          "message": "Don't emit a wrapper instruction when unrolling `$ref` (#1195)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-13T21:22:36Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/dcf4042039449479b985ddcd7aa30446682bf342"
+        },
+        "date": 1726513614524,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 755.2151278959831,
+            "unit": "ns/iter",
+            "extra": "iterations: 968912\ncpu: 754.918919365226 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 896.7819386282173,
+            "unit": "ns/iter",
+            "extra": "iterations: 779675\ncpu: 896.5671593933373 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match",
+            "value": 159.10936150738064,
+            "unit": "ns/iter",
+            "extra": "iterations: 4429511\ncpu: 159.08370020979734 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match",
+            "value": 157.21127531976913,
+            "unit": "ns/iter",
+            "extra": "iterations: 4438526\ncpu: 157.1778558917982 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 2167.41386767727,
+            "unit": "ns/iter",
+            "extra": "iterations: 321366\ncpu: 2167.164541364052 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 1397.3149527389085,
+            "unit": "ns/iter",
+            "extra": "iterations: 512896\ncpu: 1396.9011261542307 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 1432.346117536231,
+            "unit": "ns/iter",
+            "extra": "iterations: 486199\ncpu: 1431.5784277631171 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 1088.5747732385807,
+            "unit": "ns/iter",
+            "extra": "iterations: 654432\ncpu: 1088.5042296220236 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 1479.2515105819662,
+            "unit": "ns/iter",
+            "extra": "iterations: 474155\ncpu: 1478.837089137514 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Non_Recursive_Ref",
+            "value": 534.38882846031,
+            "unit": "ns/iter",
+            "extra": "iterations: 1306409\ncpu: 533.9744291412572 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Pattern_Properties_True",
+            "value": 1495.8576912058984,
+            "unit": "ns/iter",
+            "extra": "iterations: 471285\ncpu: 1477.9019064897027 ns\nthreads: 1"
           }
         ]
       }
