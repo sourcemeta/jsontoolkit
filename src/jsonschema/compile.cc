@@ -70,9 +70,8 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
 
   // Make sure the input schema is bundled, otherwise we won't be able to
   // resolve remote references here
-  const JSON result{
-      bundle(schema, walker, resolver, BundleOptions::Default, default_dialect)
-          .get()};
+  const JSON result{bundle(schema, walker, resolver, BundleOptions::Default,
+                           default_dialect)};
 
   // Perform framing to resolve references later on
   ReferenceFrame frame;
