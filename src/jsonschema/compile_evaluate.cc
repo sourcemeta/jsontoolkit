@@ -176,16 +176,13 @@ public:
           "likely due to infinite recursion");
     }
 
-    assert(step.relative_instance_location.size() <= 1);
     this->frame_sizes.emplace_back(step.relative_schema_location.size(),
                                    step.relative_instance_location.size());
     this->evaluate_path_.push_back(step.relative_schema_location);
     this->instance_location_.push_back(step.relative_instance_location);
-    assert(step.relative_instance_location.size() <= 1);
     if (!step.relative_instance_location.empty()) {
       this->instances_.emplace_back(
-          get(this->instances_.back().get(),
-              step.relative_instance_location.back()));
+          get(this->instances_.back().get(), step.relative_instance_location));
     }
 
     if (step.dynamic) {
@@ -202,8 +199,7 @@ public:
     const auto &sizes{this->frame_sizes.back()};
     this->evaluate_path_.pop_back(sizes.first);
     this->instance_location_.pop_back(sizes.second);
-    assert(sizes.second <= 1);
-    if (sizes.second == 1) {
+    if (sizes.second > 0) {
       this->instances_.pop_back();
     }
 
