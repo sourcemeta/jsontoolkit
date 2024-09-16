@@ -283,3 +283,27 @@ TEST(JSONWeakPointer_pointer, push_back_pointer) {
   EXPECT_TRUE(destination.at(2).is_property());
   EXPECT_EQ(destination.at(2).to_property(), "baz");
 }
+
+TEST(JSONWeakPointer_has, complex_true) {
+  const auto document{sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": {
+      "bar": [ 1, 2, { "baz": "qux" } ]
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::WeakPointer pointer{
+      std::cref(foo), std::cref(bar), 2, std::cref(baz)};
+  EXPECT_TRUE(sourcemeta::jsontoolkit::has(document, pointer));
+}
+
+TEST(JSONWeakPointer_has, complex_false) {
+  const auto document{sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": {
+      "bar": [ 1, 2, { "baz": "qux" } ]
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::WeakPointer pointer{std::cref(foo), 2,
+                                                     std::cref(baz)};
+  EXPECT_FALSE(sourcemeta::jsontoolkit::has(document, pointer));
+}
