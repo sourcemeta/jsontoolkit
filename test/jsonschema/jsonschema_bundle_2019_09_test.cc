@@ -99,8 +99,7 @@ TEST(JSONSchema_bundle_2019_09, no_references_no_id) {
   })JSON");
 
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -116,11 +115,8 @@ TEST(JSONSchema_bundle_2019_09, const_no_references_no_id) {
     "$schema": "https://json-schema.org/draft/2019-09/schema"
   })JSON");
 
-  const auto result =
-      sourcemeta::jsontoolkit::bundle(
-          document, sourcemeta::jsontoolkit::default_schema_walker,
-          test_resolver)
-          .get();
+  const auto result = sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -144,8 +140,7 @@ TEST(JSONSchema_bundle_2019_09, simple_with_id) {
   })JSON");
 
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -197,8 +192,7 @@ TEST(JSONSchema_bundle_2019_09, simple_without_id) {
   })JSON");
 
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -263,14 +257,11 @@ TEST(JSONSchema_bundle_2019_09, idempotency) {
   })JSON");
 
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -319,8 +310,7 @@ TEST(JSONSchema_bundle_2019_09, pre_embedded) {
   })JSON");
 
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -369,8 +359,7 @@ TEST(JSONSchema_bundle_2019_09, taken_definitions_entry) {
   })JSON");
 
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -409,8 +398,7 @@ TEST(JSONSchema_bundle_2019_09, recursive) {
   })JSON");
 
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -438,8 +426,7 @@ TEST(JSONSchema_bundle_2019_09, recursive_empty_fragment) {
   })JSON");
 
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -468,8 +455,7 @@ TEST(JSONSchema_bundle_2019_09, anonymous_no_dialect) {
   sourcemeta::jsontoolkit::bundle(
       document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
       sourcemeta::jsontoolkit::BundleOptions::Default,
-      "https://json-schema.org/draft/2019-09/schema")
-      .wait();
+      "https://json-schema.org/draft/2019-09/schema");
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -502,8 +488,7 @@ TEST(JSONSchema_bundle_2019_09, without_id) {
 
   sourcemeta::jsontoolkit::bundle(
       document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers)
-      .wait();
+      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -547,8 +532,7 @@ TEST(JSONSchema_bundle_2019_09, metaschema) {
   })JSON");
 
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -580,8 +564,7 @@ TEST(JSONSchema_bundle_2019_09, metaschema_without_id) {
 
   sourcemeta::jsontoolkit::bundle(
       document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers)
-      .wait();
+      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
