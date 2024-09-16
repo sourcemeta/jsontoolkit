@@ -189,6 +189,7 @@ auto encode_step(const std::string_view category, const std::string_view type,
   result.assign("dynamic", JSON{step.dynamic});
   result.assign("report", JSON{step.report});
   result.assign("value", value_to_json(step.value));
+  result.assign("evaluatePathDepth", JSON{step.evaluate_path_depth});
 
   if constexpr (requires { step.children; }) {
     result.assign("children", JSON::make_array());
@@ -310,10 +311,11 @@ auto compiler_template_format_compare(const JSON::String &left,
                    {"absoluteKeywordLocation", 4},
                    {"relativeSchemaLocation", 5},
                    {"relativeInstanceLocation", 6},
-                   {"location", 7},
-                   {"report", 8},
-                   {"dynamic", 9},
-                   {"children", 10}};
+                   {"evaluatePathDepth", 7},
+                   {"location", 8},
+                   {"report", 9},
+                   {"dynamic", 10},
+                   {"children", 11}};
 
   // We define and control all of these keywords, so if we are missing
   // some here, then we did something wrong?

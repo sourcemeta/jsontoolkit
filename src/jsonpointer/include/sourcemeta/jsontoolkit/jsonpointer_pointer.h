@@ -374,6 +374,9 @@ public:
     this->data.pop_back();
   }
 
+  // TODO: Test & document
+  auto reserve(const std::size_t count) -> void { this->data.reserve(count); }
+
   /// Remove a number of tokens from the back of a JSON Pointer. For example:
   ///
   /// ```cpp

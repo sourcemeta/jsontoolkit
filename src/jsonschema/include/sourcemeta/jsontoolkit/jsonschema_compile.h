@@ -228,6 +228,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const bool dynamic;                                                        \
     const bool report;                                                         \
     const type value;                                                          \
+    const std::size_t evaluate_path_depth;                                     \
   };
 
 #define DEFINE_STEP_APPLICATOR(category, name, type)                           \
@@ -240,6 +241,7 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     const bool report;                                                         \
     const type value;                                                          \
     const SchemaCompilerTemplate children;                                     \
+    const std::size_t evaluate_path_depth;                                     \
   };
 
 /// @defgroup jsonschema_compiler_instructions Instruction Set

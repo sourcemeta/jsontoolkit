@@ -178,6 +178,7 @@ public:
 
     this->frame_sizes.emplace_back(step.relative_schema_location.size(),
                                    step.relative_instance_location.size());
+    this->evaluate_path_.reserve(step.evaluate_path_depth);
     this->evaluate_path_.push_back(step.relative_schema_location);
     this->instance_location_.push_back(step.relative_instance_location);
     if (!step.relative_instance_location.empty()) {

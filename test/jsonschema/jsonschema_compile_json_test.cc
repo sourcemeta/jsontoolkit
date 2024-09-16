@@ -7,7 +7,7 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionDefines{Pointer{}, Pointer{}, "#", "", true, true,
-                                     SchemaCompilerValueString{"foo"}}};
+                                     SchemaCompilerValueString{"foo"}, 0}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -20,6 +20,7 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
+      "evaluatePathDepth": 0,
       "value": {
         "category": "value",
         "type": "string",
@@ -35,7 +36,7 @@ TEST(JSONSchema_compile_json, defines_basic_nested) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionDefines{
       Pointer{"foo", "bar"}, Pointer{}, "#/foo/bar", "", true, true,
-      SchemaCompilerValueString{"foo"}}};
+      SchemaCompilerValueString{"foo"}, 0}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -48,6 +49,7 @@ TEST(JSONSchema_compile_json, defines_basic_nested) {
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#/foo/bar",
+      "evaluatePathDepth": 0,
       "value": {
         "category": "value",
         "type": "string",
@@ -62,7 +64,7 @@ TEST(JSONSchema_compile_json, defines_basic_nested) {
 TEST(JSONSchema_compile_json, fail_basic_root) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionFail{
-      Pointer{}, Pointer{}, "#", "", true, true, SchemaCompilerValueNone{}}};
+      Pointer{}, Pointer{}, "#", "", true, true, SchemaCompilerValueNone{}, 0}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -75,6 +77,7 @@ TEST(JSONSchema_compile_json, fail_basic_root) {
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
+      "evaluatePathDepth": 0,
       "value": null
     }
   ])EOF")};
@@ -86,7 +89,7 @@ TEST(JSONSchema_compile_json, type_basic_root) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -99,6 +102,7 @@ TEST(JSONSchema_compile_json, type_basic_root) {
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
+      "evaluatePathDepth": 0,
       "value": {
         "category": "value",
         "type": "type",
@@ -113,7 +117,7 @@ TEST(JSONSchema_compile_json, type_basic_root) {
 TEST(JSONSchema_compile_json, or_empty) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      Pointer{}, Pointer{}, "#", "", true, true, false, {}}};
+      Pointer{}, Pointer{}, "#", "", true, true, false, {}, 0}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -131,6 +135,7 @@ TEST(JSONSchema_compile_json, or_empty) {
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
+      "evaluatePathDepth": 0,
       "children": []
     }
   ])EOF")};
@@ -143,10 +148,10 @@ TEST(JSONSchema_compile_json, or_single_child) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      Pointer{}, Pointer{}, "#", "", true, true, false, children}};
+      Pointer{}, Pointer{}, "#", "", true, true, false, children, 0}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -164,6 +169,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
+      "evaluatePathDepth": 0,
       "children": [
         {
           "category": "assertion",
@@ -174,6 +180,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
+          "evaluatePathDepth": 0,
           "value": {
             "category": "value",
             "type": "type",
@@ -193,13 +200,13 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionTypeStrict{
           Pointer{}, Pointer{}, "#", "", true, true,
-          SchemaCompilerValueType{JSON::Type::String}},
+          SchemaCompilerValueType{JSON::Type::String}, 0},
       SchemaCompilerAssertionTypeStrict{
           Pointer{}, Pointer{}, "#", "", true, true,
-          SchemaCompilerValueType{JSON::Type::Array}}};
+          SchemaCompilerValueType{JSON::Type::Array}, 0}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      Pointer{}, Pointer{}, "#", "", true, true, false, children}};
+      Pointer{}, Pointer{}, "#", "", true, true, false, children, 0}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -217,6 +224,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
+      "evaluatePathDepth": 0,
       "children": [
         {
           "category": "assertion",
@@ -227,6 +235,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
+          "evaluatePathDepth": 0,
           "value": {
             "category": "value",
             "type": "type",
@@ -242,6 +251,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
+          "evaluatePathDepth": 0,
           "value": {
             "category": "value",
             "type": "type",
@@ -265,7 +275,8 @@ TEST(JSONSchema_compile_json, and_empty) {
                                true,
                                true,
                                SchemaCompilerValueNone{},
-                               {}}};
+                               {},
+                               0}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -279,6 +290,7 @@ TEST(JSONSchema_compile_json, and_empty) {
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
+      "evaluatePathDepth": 0,
       "children": []
     }
   ])EOF")};
@@ -291,11 +303,11 @@ TEST(JSONSchema_compile_json, and_single_child) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLogicalAnd{Pointer{}, Pointer{}, "#", "", true, true,
-                               SchemaCompilerValueNone{}, children}};
+                               SchemaCompilerValueNone{}, children, 0}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -309,6 +321,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
+      "evaluatePathDepth": 0,
       "children": [
         {
           "category": "assertion",
@@ -319,6 +332,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
+          "evaluatePathDepth": 0,
           "value": {
             "category": "value",
             "type": "type",
@@ -338,14 +352,14 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionTypeStrict{
           Pointer{}, Pointer{}, "#", "", true, true,
-          SchemaCompilerValueType{JSON::Type::String}},
+          SchemaCompilerValueType{JSON::Type::String}, 0},
       SchemaCompilerAssertionTypeStrict{
           Pointer{}, Pointer{}, "#", "", true, true,
-          SchemaCompilerValueType{JSON::Type::Array}}};
+          SchemaCompilerValueType{JSON::Type::Array}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLogicalAnd{Pointer{}, Pointer{}, "#", "", true, true,
-                               SchemaCompilerValueNone{}, children}};
+                               SchemaCompilerValueNone{}, children, 0}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -359,6 +373,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
+      "evaluatePathDepth": 0,
       "children": [
         {
           "category": "assertion",
@@ -369,6 +384,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
+          "evaluatePathDepth": 0,
           "value": {
             "category": "value",
             "type": "type",
@@ -384,6 +400,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
+          "evaluatePathDepth": 0,
           "value": {
             "category": "value",
             "type": "type",
@@ -401,8 +418,8 @@ TEST(JSONSchema_compile_json, regex_basic) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionRegex{
       Pointer{}, Pointer{}, "#", "", true, true,
-      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript},
-                               "^a"}}};
+      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
+      0}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -415,6 +432,7 @@ TEST(JSONSchema_compile_json, regex_basic) {
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
+      "evaluatePathDepth": 0,
       "value": {
         "category": "value",
         "type": "regex",

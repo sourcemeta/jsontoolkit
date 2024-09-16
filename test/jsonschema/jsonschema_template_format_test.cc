@@ -11,6 +11,7 @@ TEST(JSONSchema_compiler_template_format, example_1) {
     "report": true,
     "dynamic": true,
     "type": "public",
+    "evaluatePathDepth": 5,
     "relativeSchemaLocation": "",
     "relativeInstanceLocation": "",
     "value": {
@@ -35,6 +36,7 @@ TEST(JSONSchema_compiler_template_format, example_1) {
   "absoluteKeywordLocation": "#/properties",
   "relativeSchemaLocation": "",
   "relativeInstanceLocation": "",
+  "evaluatePathDepth": 5,
   "report": true,
   "dynamic": true
 })JSON");

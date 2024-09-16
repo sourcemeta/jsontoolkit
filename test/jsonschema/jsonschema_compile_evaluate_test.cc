@@ -11,7 +11,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_true) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionDefines{Pointer{}, Pointer{}, "#", "", true, true,
-                                     SchemaCompilerValueString{"foo"}}};
+                                     SchemaCompilerValueString{"foo"}, 0}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -22,7 +22,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_false) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionDefines{Pointer{}, Pointer{}, "#", "", true, true,
-                                     SchemaCompilerValueString{"bar"}}};
+                                     SchemaCompilerValueString{"bar"}, 0}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -32,7 +32,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_false) {
 TEST(JSONSchema_compile_evaluate, fast_step_fail) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionFail{
-      Pointer{}, Pointer{}, "#", "", true, true, SchemaCompilerValueNone{}}};
+      Pointer{}, Pointer{}, "#", "", true, true, SchemaCompilerValueNone{}, 0}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -43,7 +43,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_type_true) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#", "", true, true,
-      SchemaCompilerValueType{JSON::Type::Object}}};
+      SchemaCompilerValueType{JSON::Type::Object}, 0}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -54,7 +54,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_type_false) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -64,7 +64,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_type_false) {
 TEST(JSONSchema_compile_evaluate, fast_step_or_empty) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      Pointer{}, Pointer{}, "#", "", true, true, false, {}}};
+      Pointer{}, Pointer{}, "#", "", true, true, false, {}, 0}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -77,13 +77,13 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_false) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionTypeStrict{
           Pointer{}, Pointer{}, "#", "", true, true,
-          SchemaCompilerValueType{JSON::Type::String}},
+          SchemaCompilerValueType{JSON::Type::String}, 0},
       SchemaCompilerAssertionTypeStrict{
           Pointer{}, Pointer{}, "#", "", true, true,
-          SchemaCompilerValueType{JSON::Type::Array}}};
+          SchemaCompilerValueType{JSON::Type::Array}, 0}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      Pointer{}, Pointer{}, "#", "", true, true, false, children}};
+      Pointer{}, Pointer{}, "#", "", true, true, false, children, 0}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -100,7 +100,8 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_empty) {
                                true,
                                true,
                                SchemaCompilerValueNone{},
-                               {}}};
+                               {},
+                               0}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -113,14 +114,14 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_false) {
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionTypeStrict{
           Pointer{}, Pointer{}, "#", "", true, true,
-          SchemaCompilerValueType{JSON::Type::String}},
+          SchemaCompilerValueType{JSON::Type::String}, 0},
       SchemaCompilerAssertionTypeStrict{
           Pointer{}, Pointer{}, "#", "", true, true,
-          SchemaCompilerValueType{JSON::Type::Array}}};
+          SchemaCompilerValueType{JSON::Type::Array}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLogicalAnd{Pointer{}, Pointer{}, "#", "", true, true,
-                               SchemaCompilerValueNone{}, children}};
+                               SchemaCompilerValueNone{}, children, 0}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -132,7 +133,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_empty) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopProperties{{"loop"},
@@ -142,7 +143,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_empty) {
                                    true,
                                    true,
                                    SchemaCompilerValueNone{},
-                                   children}};
+                                   children,
+                                   0}};
 
   const JSON instance{parse("{}")};
   const auto result{evaluate(steps, instance)};
@@ -154,7 +156,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_true) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{"loop", "type"}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::Integer}}};
+      SchemaCompilerValueType{JSON::Type::Integer}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopProperties{{"loop"},
@@ -164,7 +166,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_true) {
                                    true,
                                    true,
                                    SchemaCompilerValueNone{},
-                                   children}};
+                                   children,
+                                   0}};
 
   const JSON instance{parse("{ \"foo\": 1 }")};
   const auto result{evaluate(steps, instance)};
@@ -176,7 +179,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_false) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{"loop", "type"}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::Integer}}};
+      SchemaCompilerValueType{JSON::Type::Integer}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopProperties{{"loop"},
@@ -186,7 +189,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_false) {
                                    true,
                                    true,
                                    SchemaCompilerValueNone{},
-                                   children}};
+                                   children,
+                                   0}};
 
   const JSON instance{parse("{ \"foo\": true }")};
   const auto result{evaluate(steps, instance)};
@@ -198,7 +202,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_true) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{"loop", "type"}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::Integer}}};
+      SchemaCompilerValueType{JSON::Type::Integer}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopProperties{{"loop"},
@@ -208,7 +212,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_true) {
                                    true,
                                    true,
                                    SchemaCompilerValueNone{},
-                                   children}};
+                                   children,
+                                   0}};
 
   const JSON instance{parse("{ \"foo\": 1, \"bar\": 2 }")};
   const auto result{evaluate(steps, instance)};
@@ -220,7 +225,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_false) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{"loop", "type"}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::Integer}}};
+      SchemaCompilerValueType{JSON::Type::Integer}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopProperties{{"loop"},
@@ -230,7 +235,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_false) {
                                    true,
                                    true,
                                    SchemaCompilerValueNone{},
-                                   children}};
+                                   children,
+                                   0}};
 
   const JSON instance{parse("{ \"foo\": 1, \"bar\": true }")};
   const auto result{evaluate(steps, instance)};
@@ -242,8 +248,8 @@ TEST(JSONSchema_compile_evaluate, fast_regex_true) {
 
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionRegex{
       Pointer{}, Pointer{}, "#", "", true, true,
-      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript},
-                               "^a"}}};
+      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
+      0}};
 
   const JSON instance{"abc"};
   const auto result{evaluate(steps, instance)};
@@ -255,8 +261,8 @@ TEST(JSONSchema_compile_evaluate, fast_regex_false) {
 
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionRegex{
       Pointer{}, Pointer{}, "#", "", true, true,
-      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript},
-                               "^a"}}};
+      SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript}, "^a"},
+      0}};
 
   const JSON instance{"foo"};
   const auto result{evaluate(steps, instance)};
@@ -267,11 +273,11 @@ TEST(JSONSchema_compile_evaluate, fast_step_not_type_true) {
   using namespace sourcemeta::jsontoolkit;
   SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#", "", true, true,
-      SchemaCompilerValueType{JSON::Type::Integer}}};
+      SchemaCompilerValueType{JSON::Type::Integer}, 0}};
 
-  const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalNot{Pointer{}, Pointer{}, "#", "", true, true,
-                               SchemaCompilerValueNone{}, std::move(children)}};
+  const SchemaCompilerTemplate steps{SchemaCompilerLogicalNot{
+      Pointer{}, Pointer{}, "#", "", true, true, SchemaCompilerValueNone{},
+      std::move(children), 0}};
 
   const JSON instance{"foo"};
   const auto result{evaluate(steps, instance)};
@@ -282,11 +288,11 @@ TEST(JSONSchema_compile_evaluate, fast_step_not_type_false) {
   using namespace sourcemeta::jsontoolkit;
   SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#", "", true, true,
-      SchemaCompilerValueType{JSON::Type::Integer}}};
+      SchemaCompilerValueType{JSON::Type::Integer}, 0}};
 
-  const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalNot{Pointer{}, Pointer{}, "#", "", true, true,
-                               SchemaCompilerValueNone{}, std::move(children)}};
+  const SchemaCompilerTemplate steps{SchemaCompilerLogicalNot{
+      Pointer{}, Pointer{}, "#", "", true, true, SchemaCompilerValueNone{},
+      std::move(children), 0}};
 
   const JSON instance{5};
   const auto result{evaluate(steps, instance)};
@@ -298,7 +304,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_empty) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopItems{{"loop"},
@@ -308,7 +314,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_empty) {
                               true,
                               true,
                               SchemaCompilerValueUnsignedInteger{0},
-                              children}};
+                              children,
+                              0}};
 
   const JSON instance{parse("[]")};
   const auto result{evaluate(steps, instance)};
@@ -320,7 +327,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_true) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopItems{{"loop"},
@@ -330,7 +337,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_true) {
                               true,
                               true,
                               SchemaCompilerValueUnsignedInteger{0},
-                              children}};
+                              children,
+                              0}};
 
   const JSON instance{parse("[ \"foo\" ]")};
   const auto result{evaluate(steps, instance)};
@@ -342,7 +350,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_false) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopItems{{"loop"},
@@ -352,7 +360,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_false) {
                               true,
                               true,
                               SchemaCompilerValueUnsignedInteger{0},
-                              children}};
+                              children,
+                              0}};
 
   const JSON instance{parse("[ 5 ]")};
   const auto result{evaluate(steps, instance)};
@@ -364,7 +373,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_true) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopItems{{"loop"},
@@ -374,7 +383,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_true) {
                               true,
                               true,
                               SchemaCompilerValueUnsignedInteger{0},
-                              children}};
+                              children,
+                              0}};
 
   const JSON instance{parse("[ \"foo\", \"bar\", \"baz\" ]")};
   const auto result{evaluate(steps, instance)};
@@ -386,7 +396,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_false) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopItems{{"loop"},
@@ -396,7 +406,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_false) {
                               true,
                               true,
                               SchemaCompilerValueUnsignedInteger{0},
-                              children}};
+                              children,
+                              0}};
 
   const JSON instance{parse("[ \"foo\", 4, \"baz\" ]")};
   const auto result{evaluate(steps, instance)};
@@ -408,7 +419,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_empty) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopItems{{"loop"},
@@ -418,7 +429,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_empty) {
                               true,
                               true,
                               SchemaCompilerValueUnsignedInteger{2},
-                              children}};
+                              children,
+                              0}};
 
   const JSON instance{parse("[]")};
   const auto result{evaluate(steps, instance)};
@@ -430,7 +442,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_less) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopItems{{"loop"},
@@ -440,7 +452,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_less) {
                               true,
                               true,
                               SchemaCompilerValueUnsignedInteger{2},
-                              children}};
+                              children,
+                              0}};
 
   const JSON instance{parse("[ 1, 2 ]")};
   const auto result{evaluate(steps, instance)};
@@ -452,7 +465,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_match) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopItems{{"loop"},
@@ -462,7 +475,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_match) {
                               true,
                               true,
                               SchemaCompilerValueUnsignedInteger{2},
-                              children}};
+                              children,
+                              0}};
 
   const JSON instance{parse("[ 1, 2, \"foo\", \"bar\" ]")};
   const auto result{evaluate(steps, instance)};
@@ -474,7 +488,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_no_match) {
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#/loop/type", "", true, true,
-      SchemaCompilerValueType{JSON::Type::String}}};
+      SchemaCompilerValueType{JSON::Type::String}, 0}};
 
   const SchemaCompilerTemplate steps{
       SchemaCompilerLoopItems{{"loop"},
@@ -484,7 +498,8 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_no_match) {
                               true,
                               true,
                               SchemaCompilerValueUnsignedInteger{2},
-                              children}};
+                              children,
+                              0}};
 
   const JSON instance{parse("[ 1, 2, 3, \"foo\" ]")};
   const auto result{evaluate(steps, instance)};
