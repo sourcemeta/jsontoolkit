@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726567527393,
+  "lastUpdate": 1726600140984,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -8920,6 +8920,100 @@ window.BENCHMARK_DATA = {
             "value": 927.9816460548135,
             "unit": "ns/iter",
             "extra": "iterations: 755151\ncpu: 927.9754247825921 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Tony Gorez",
+            "username": "tony-go",
+            "email": "gorez.tony@gmail.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "e86ad1e333c11b6fc2659a0f32ae883ef1040e20",
+          "message": "refactor: clean bundle from std::future (#1197)\n\nSigned-off-by: Tony Gorez <gorez.tony@gmail.com>",
+          "timestamp": "2024-09-17T09:59:00Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/e86ad1e333c11b6fc2659a0f32ae883ef1040e20"
+        },
+        "date": 1726600139244,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 17655.303614880777,
+            "unit": "ns/iter",
+            "extra": "iterations: 39863\ncpu: 17654.930286230334 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 7173.284877640675,
+            "unit": "ns/iter",
+            "extra": "iterations: 100401\ncpu: 7173.134231730761 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match",
+            "value": 1883.3037968887504,
+            "unit": "ns/iter",
+            "extra": "iterations: 371146\ncpu: 1883.1825588851823 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match",
+            "value": 946.1662966102728,
+            "unit": "ns/iter",
+            "extra": "iterations: 743130\ncpu: 946.1400306810385 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 117983.70471380395,
+            "unit": "ns/iter",
+            "extra": "iterations: 5940\ncpu: 117975.50050505053 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 56509.986760317646,
+            "unit": "ns/iter",
+            "extra": "iterations: 12387\ncpu: 56507.668927101 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 8915.65890407357,
+            "unit": "ns/iter",
+            "extra": "iterations: 78582\ncpu: 8915.092692983126 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 8332.387811864635,
+            "unit": "ns/iter",
+            "extra": "iterations: 84131\ncpu: 8332.085307437208 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 9069.155591823404,
+            "unit": "ns/iter",
+            "extra": "iterations: 77202\ncpu: 9068.871790886247 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Non_Recursive_Ref",
+            "value": 4470.470516431879,
+            "unit": "ns/iter",
+            "extra": "iterations: 157291\ncpu: 4470.279564628616 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Pattern_Properties_True",
+            "value": 6466.679900262881,
+            "unit": "ns/iter",
+            "extra": "iterations: 108285\ncpu: 6466.574077665407 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Ref_To_Single_Property",
+            "value": 945.1329429867546,
+            "unit": "ns/iter",
+            "extra": "iterations: 740197\ncpu: 945.0805420719072 ns\nthreads: 1"
           }
         ]
       }
