@@ -59,8 +59,7 @@ TEST(JSONSchema_bundle, across_dialects) {
   })JSON");
 
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver)
-      .wait();
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -97,11 +96,8 @@ TEST(JSONSchema_bundle, across_dialects_const) {
     "items": { "$ref": "https://www.sourcemeta.com/test-2" }
   })JSON");
 
-  const auto result =
-      sourcemeta::jsontoolkit::bundle(
-          document, sourcemeta::jsontoolkit::default_schema_walker,
-          test_resolver)
-          .get();
+  const auto result = sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -141,8 +137,7 @@ TEST(JSONSchema_bundle, with_default_dialect) {
   sourcemeta::jsontoolkit::bundle(
       document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
       sourcemeta::jsontoolkit::BundleOptions::Default,
-      "https://json-schema.org/draft/2020-12/schema")
-      .wait();
+      "https://json-schema.org/draft/2020-12/schema");
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
