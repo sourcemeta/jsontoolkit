@@ -428,6 +428,7 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
 
       // Optimize `properties` where its subschemas just include a type check,
       // as that's a very common pattern
+
     } else if (substeps.size() == 1 &&
                std::holds_alternative<SchemaCompilerAssertionTypeStrict>(
                    substeps.front())) {
@@ -435,8 +436,10 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
           std::get<SchemaCompilerAssertionTypeStrict>(substeps.front())};
       children.push_back(SchemaCompilerAssertionPropertyTypeStrict{
           type_step.relative_schema_location,
-          type_step.relative_instance_location, type_step.keyword_location,
-          type_step.schema_resource, type_step.dynamic, true, type_step.value});
+          dynamic_context.base_instance_location.concat(
+              type_step.relative_instance_location),
+          type_step.keyword_location, type_step.schema_resource,
+          type_step.dynamic, type_step.report, type_step.value});
     } else if (substeps.size() == 1 &&
                std::holds_alternative<SchemaCompilerAssertionType>(
                    substeps.front())) {
@@ -444,14 +447,37 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
           std::get<SchemaCompilerAssertionType>(substeps.front())};
       children.push_back(SchemaCompilerAssertionPropertyType{
           type_step.relative_schema_location,
-          type_step.relative_instance_location, type_step.keyword_location,
-          type_step.schema_resource, type_step.dynamic, true, type_step.value});
+          dynamic_context.base_instance_location.concat(
+              type_step.relative_instance_location),
+          type_step.keyword_location, type_step.schema_resource,
+          type_step.dynamic, type_step.report, type_step.value});
+    } else if (substeps.size() == 1 &&
+               std::holds_alternative<
+                   SchemaCompilerAssertionPropertyTypeStrict>(
+                   substeps.front())) {
+      children.push_back(unroll<SchemaCompilerAssertionPropertyTypeStrict>(
+          relative_dynamic_context, substeps.front(),
+          dynamic_context.base_instance_location));
+    } else if (substeps.size() == 1 &&
+               std::holds_alternative<SchemaCompilerAssertionPropertyType>(
+                   substeps.front())) {
+      children.push_back(unroll<SchemaCompilerAssertionPropertyType>(
+          relative_dynamic_context, substeps.front(),
+          dynamic_context.base_instance_location));
 
     } else {
       children.push_back(make<SchemaCompilerLogicalWhenDefines>(
           false, context, schema_context, relative_dynamic_context,
           SchemaCompilerValueString{name}, std::move(substeps)));
     }
+  }
+
+  // Optimize away the wrapper when emitting a single instruction
+  if (children.size() == 1 &&
+      std::holds_alternative<SchemaCompilerAssertionPropertyTypeStrict>(
+          children.front())) {
+    return {unroll<SchemaCompilerAssertionPropertyTypeStrict>(
+        dynamic_context, children.front())};
   }
 
   return {make<SchemaCompilerLogicalAnd>(
