@@ -275,14 +275,14 @@ public:
       } else {
         this->data.emplace_back(token.to_index());
       }
-    } else {
-      this->data.reserve(this->data.size() + other.size());
-      for (const auto &token : other) {
-        if (token.is_property()) {
-          this->data.emplace_back(token.to_property());
-        } else {
-          this->data.emplace_back(token.to_index());
-        }
+      return;
+    }
+
+    for (const auto &token : other) {
+      if (token.is_property()) {
+        this->push_back(token.to_property());
+      } else {
+        this->push_back(token.to_index());
       }
     }
   }
