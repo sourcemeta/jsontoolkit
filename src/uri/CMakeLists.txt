@@ -3,7 +3,7 @@ noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME uri
   PRIVATE_HEADERS error.h
   SOURCES uri.cc escaping.cc)
 
-target_compile_options(sourcemeta_jsontoolkit_uri PRIVATE -O2)
+target_compile_options(sourcemeta_jsontoolkit_uri PRIVATE -O1)
 
 if(JSONTOOLKIT_INSTALL)
   noa_library_install(NAMESPACE sourcemeta PROJECT jsontoolkit NAME uri)
