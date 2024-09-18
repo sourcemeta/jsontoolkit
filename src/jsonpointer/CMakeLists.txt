@@ -3,6 +3,8 @@ noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonpointer
   PRIVATE_HEADERS pointer.h error.h token.h walker.h subpointer_walker.h
   SOURCES jsonpointer.cc stringify.h parser.h grammar.h)
 
+noa_add_default_options(PUBLIC sourcemeta_jsontoolkit_jsonpointer)
+
 if(JSONTOOLKIT_INSTALL)
   noa_library_install(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonpointer)
 endif()

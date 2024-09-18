@@ -20,6 +20,8 @@ noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
 
     "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 
+noa_add_default_options(PUBLIC sourcemeta_jsontoolkit_jsonschema)
+
 if(JSONTOOLKIT_INSTALL)
   noa_library_install(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema)
 endif()
