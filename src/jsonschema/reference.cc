@@ -5,10 +5,10 @@
 
 #include <algorithm>  // std::sort
 #include <cassert>    // assert
+#include <format>     // std::format
 #include <functional> // std::less
 #include <map>        // std::map
 #include <optional>   // std::optional
-#include <sstream>    // std::ostringstream
 #include <utility>    // std::pair, std::move
 #include <vector>     // std::vector
 
@@ -109,9 +109,8 @@ static auto store(sourcemeta::jsontoolkit::ReferenceFrame &frame,
                     pointer_from_base, dialect}})
           .second};
   if (!ignore_if_present && !inserted) {
-    std::ostringstream error;
-    error << "Schema identifier already exists: " << uri;
-    throw sourcemeta::jsontoolkit::SchemaError(error.str());
+    throw sourcemeta::jsontoolkit::SchemaError(
+        std::format("Schema identifier already exists: {}", uri));
   }
 }
 
@@ -290,18 +289,16 @@ auto sourcemeta::jsontoolkit::frame(
       } else {
         bool is_first = true;
         for (const auto &base_string : bases.first) {
-          // TODO: All this dance is necessary because we don't have a
-          // URI::fragment setter
-          std::ostringstream anchor_uri_string;
-          anchor_uri_string << sourcemeta::jsontoolkit::URI{base_string}
-                                   .recompose_without_fragment()
-                                   .value_or("");
-          anchor_uri_string << '#';
-          anchor_uri_string << name;
-          const auto anchor_uri{
-              sourcemeta::jsontoolkit::URI{anchor_uri_string.str()}
-                  .canonicalize()
-                  .recompose()};
+          const auto anchor_uri{sourcemeta::jsontoolkit::URI{
+              // TODO: All this dance is necessary because we don't have a
+              // URI::fragment setter
+              std::format("{}#{}",
+                          sourcemeta::jsontoolkit::URI{base_string}
+                              .recompose_without_fragment()
+                              .value_or(""),
+                          name)}
+                                    .canonicalize()
+                                    .recompose()};
 
           if (!is_first &&
               frame.contains({ReferenceType::Static, anchor_uri})) {
@@ -409,9 +406,8 @@ auto sourcemeta::jsontoolkit::frame(
         // See
         // https://json-schema.org/draft/2019-09/draft-handrews-json-schema-02#rfc.section.8.2.4.2.1
         if (ref != "#") {
-          std::ostringstream error;
-          error << "Invalid recursive reference: " << ref;
-          throw sourcemeta::jsontoolkit::SchemaError(error.str());
+          throw sourcemeta::jsontoolkit::SchemaError(
+              std::format("Invalid recursive reference: {}", ref));
         }
 
         auto anchor_uri_string{

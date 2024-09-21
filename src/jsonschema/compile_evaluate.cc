@@ -6,6 +6,7 @@
 
 #include <algorithm>   // std::min, std::any_of
 #include <cassert>     // assert
+#include <format>      // std::format
 #include <functional>  // std::reference_wrapper
 #include <iterator>    // std::distance, std::advance
 #include <limits>      // std::numeric_limits
@@ -283,11 +284,8 @@ public:
   auto find_dynamic_anchor(const std::string &anchor) const
       -> std::optional<std::size_t> {
     for (const auto &resource : this->resources()) {
-      std::ostringstream name;
-      name << resource;
-      name << '#';
-      name << anchor;
-      const auto label{std::hash<std::string>{}(name.str())};
+      const auto label{
+          std::hash<std::string>{}(std::format("{}#{}", resource, anchor))};
       if (this->labels.contains(label)) {
         return label;
       }

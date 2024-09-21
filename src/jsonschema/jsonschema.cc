@@ -3,10 +3,10 @@
 
 #include <cassert>     // assert
 #include <cstdint>     // std::uint64_t
+#include <format>      // std::format
 #include <functional>  // std::less
 #include <future>      // std::future
 #include <limits>      // std::numeric_limits
-#include <sstream>     // std::ostringstream
 #include <type_traits> // std::remove_reference_t
 #include <utility>     // std::move
 
@@ -52,9 +52,8 @@ static auto id_keyword(const std::string &base_dialect) -> std::string {
     return "id";
   }
 
-  std::ostringstream error;
-  error << "Unrecognized base dialect: " << base_dialect;
-  throw sourcemeta::jsontoolkit::SchemaError(error.str());
+  throw sourcemeta::jsontoolkit::SchemaError(
+      std::format("Unrecognized base dialect: {}", base_dialect));
 }
 
 auto sourcemeta::jsontoolkit::identify(
@@ -130,9 +129,8 @@ auto sourcemeta::jsontoolkit::identify(
 
   const auto &identifier{schema.at(keyword)};
   if (!identifier.is_string() || identifier.empty()) {
-    std::ostringstream error;
-    error << "The value of the " << keyword << " property is not valid";
-    throw sourcemeta::jsontoolkit::SchemaError(error.str());
+    throw sourcemeta::jsontoolkit::SchemaError(
+        std::format("The value of the {} property is not valid", keyword));
   }
 
   // In older drafts, the presence of `$ref` would override any sibling
@@ -301,9 +299,8 @@ auto core_vocabulary(std::string_view base_dialect) -> std::string {
                  "https://json-schema.org/draft/2019-09/hyper-schema") {
     return "https://json-schema.org/draft/2019-09/vocab/core";
   } else {
-    std::ostringstream error;
-    error << "Unrecognized base dialect: " << base_dialect;
-    throw sourcemeta::jsontoolkit::SchemaError(error.str());
+    throw sourcemeta::jsontoolkit::SchemaError(
+        std::format("Unrecognized base dialect: {}", base_dialect));
   }
 }
 } // namespace

@@ -8,7 +8,6 @@
 #include <functional>       // std::reference_wrapper
 #include <initializer_list> // std::initializer_list
 #include <iterator>         // std::advance, std::back_inserter
-#include <sstream>          // std::basic_ostringstream
 #include <stdexcept>        // std::runtime_error
 #include <type_traits>      // std::enable_if_t, std::is_same_v
 #include <utility>          // std::move

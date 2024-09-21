@@ -2,7 +2,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 
 #include <cassert> // assert
-#include <sstream> // std::ostringstream
+#include <format>  // std::format
 
 namespace sourcemeta::jsontoolkit {
 
@@ -60,9 +60,8 @@ auto MapSchemaResolver::add(
 
     const auto result{this->schemas.emplace(key.second, subschema)};
     if (!result.second && result.first->second != schema) {
-      std::ostringstream error;
-      error << "Cannot register the same identifier twice: " << key.second;
-      throw SchemaError(error.str());
+      throw SchemaError(std::format(
+          "Cannot register the same identifier twice: {}", key.second));
     }
   }
 }
