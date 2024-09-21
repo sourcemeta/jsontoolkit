@@ -55,8 +55,8 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
   return result;
 }
 
-static auto
-ref_overrides_adjacent_keywords(const std::string &base_dialect) -> bool {
+static auto ref_overrides_adjacent_keywords(const std::string &base_dialect)
+    -> bool {
   // In older drafts, the presence of `$ref` would override any sibling
   // keywords
   // See

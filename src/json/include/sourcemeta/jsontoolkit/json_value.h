@@ -650,8 +650,8 @@ public:
   ///   sourcemeta::jsontoolkit::parse("{ \"1\": "foo" }");
   /// assert(my_array.at(1).to_string() == "foo");
   /// ```
-  [[nodiscard]] auto
-  at(const typename Array::size_type index) const -> const JSON &;
+  [[nodiscard]] auto at(const typename Array::size_type index) const
+      -> const JSON &;
 
   /// This method retrieves a element by its index. If the input JSON instance
   /// is an object, a property that corresponds to the stringified integer will
@@ -873,8 +873,8 @@ public:
   /// assert(document.defines(0));
   /// assert(!document.defines(1));
   /// ```
-  [[nodiscard]] auto
-  defines(const typename Array::size_type index) const -> bool;
+  [[nodiscard]] auto defines(const typename Array::size_type index) const
+      -> bool;
 
   /// This method checks whether an input JSON object defines at least one given
   /// key.
@@ -910,8 +910,8 @@ public:
   ///
   /// assert(document.defines_any({ "foo", "qux" }));
   /// ```
-  [[nodiscard]] auto
-  defines_any(std::initializer_list<String> keys) const -> bool;
+  [[nodiscard]] auto defines_any(std::initializer_list<String> keys) const
+      -> bool;
 
   /// This method checks if an JSON array contains a given JSON instance. For
   /// example:

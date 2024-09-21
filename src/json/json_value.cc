@@ -284,8 +284,8 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
   }
 }
 
-[[nodiscard]] auto
-JSON::at(const typename JSON::Array::size_type index) const -> const JSON & {
+[[nodiscard]] auto JSON::at(const typename JSON::Array::size_type index) const
+    -> const JSON & {
   // In practice, this case only applies in some edge cases when
   // using JSON Pointers
   if (this->is_object()) [[unlikely]] {
@@ -297,8 +297,8 @@ JSON::at(const typename JSON::Array::size_type index) const -> const JSON & {
   return std::get<JSON::Array>(this->data).data.at(index);
 }
 
-[[nodiscard]] auto
-JSON::at(const typename JSON::Array::size_type index) -> JSON & {
+[[nodiscard]] auto JSON::at(const typename JSON::Array::size_type index)
+    -> JSON & {
   // In practice, this case only applies in some edge cases when
   // using JSON Pointers
   if (this->is_object()) [[unlikely]] {
@@ -534,8 +534,8 @@ auto JSON::assign(const JSON::String &key, JSON &&value) -> void {
   std::get<Object>(this->data).data.insert_or_assign(key, std::move(value));
 }
 
-auto JSON::assign_if_missing(const JSON::String &key,
-                             const JSON &value) -> void {
+auto JSON::assign_if_missing(const JSON::String &key, const JSON &value)
+    -> void {
   assert(this->is_object());
   if (!this->defines(key)) {
     this->assign(key, value);

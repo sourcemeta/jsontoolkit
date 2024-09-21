@@ -316,8 +316,8 @@ auto vocabularies(const SchemaResolver &resolver,
 /// std::cout << stream.str() << std::endl;
 /// ```
 SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
-auto schema_format_compare(const JSON::String &left,
-                           const JSON::String &right) -> bool;
+auto schema_format_compare(const JSON::String &left, const JSON::String &right)
+    -> bool;
 
 } // namespace sourcemeta::jsontoolkit
 
