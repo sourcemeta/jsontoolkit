@@ -637,6 +637,22 @@ struct DescribeVisitor {
     return message.str();
   }
 
+  auto operator()(const SchemaCompilerLoopPropertiesType &step) const
+      -> std::string {
+    std::ostringstream message;
+    message << "The object properties were expected to be of type "
+            << to_string(step.value);
+    return message.str();
+  }
+
+  auto operator()(const SchemaCompilerLoopPropertiesTypeStrict &step) const
+      -> std::string {
+    std::ostringstream message;
+    message << "The object properties were expected to be of type "
+            << to_string(step.value);
+    return message.str();
+  }
+
   auto operator()(const SchemaCompilerLoopKeys &) const -> std::string {
     assert(this->keyword == "propertyNames");
     assert(this->target.is_object());

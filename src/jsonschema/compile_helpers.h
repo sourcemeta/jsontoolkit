@@ -17,7 +17,7 @@ auto make(const bool report, const SchemaCompilerContext &context,
           const SchemaCompilerSchemaContext &schema_context,
           const SchemaCompilerDynamicContext &dynamic_context,
           // Take the value type from the "type" property of the step struct
-          decltype(std::declval<Step>().value) &&value) -> Step {
+          const decltype(std::declval<Step>().value) &value) -> Step {
   return {
       dynamic_context.keyword.empty()
           ? dynamic_context.base_schema_location
@@ -28,7 +28,7 @@ auto make(const bool report, const SchemaCompilerContext &context,
       schema_context.base.recompose(),
       context.uses_dynamic_scopes,
       report,
-      std::move(value)};
+      value};
 }
 
 // Instantiate an applicator step

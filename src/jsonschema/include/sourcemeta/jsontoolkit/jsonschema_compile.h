@@ -171,6 +171,8 @@ struct SchemaCompilerLoopProperties;
 struct SchemaCompilerLoopPropertiesRegex;
 struct SchemaCompilerLoopPropertiesNoAnnotation;
 struct SchemaCompilerLoopPropertiesExcept;
+struct SchemaCompilerLoopPropertiesType;
+struct SchemaCompilerLoopPropertiesTypeStrict;
 struct SchemaCompilerLoopKeys;
 struct SchemaCompilerLoopItems;
 struct SchemaCompilerLoopItemsUnmarked;
@@ -214,7 +216,8 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerLogicalWhenArraySizeEqual, SchemaCompilerLoopPropertiesMatch,
     SchemaCompilerLoopProperties, SchemaCompilerLoopPropertiesRegex,
     SchemaCompilerLoopPropertiesNoAnnotation,
-    SchemaCompilerLoopPropertiesExcept, SchemaCompilerLoopKeys,
+    SchemaCompilerLoopPropertiesExcept, SchemaCompilerLoopPropertiesType,
+    SchemaCompilerLoopPropertiesTypeStrict, SchemaCompilerLoopKeys,
     SchemaCompilerLoopItems, SchemaCompilerLoopItemsUnmarked,
     SchemaCompilerLoopItemsUnevaluated, SchemaCompilerLoopContains,
     SchemaCompilerControlLabel, SchemaCompilerControlMark,
@@ -489,6 +492,16 @@ DEFINE_STEP_APPLICATOR(Loop, PropertiesNoAnnotation, SchemaCompilerValueStrings)
 /// do not match the given property filters
 DEFINE_STEP_APPLICATOR(Loop, PropertiesExcept,
                        SchemaCompilerValuePropertyFilter)
+
+/// @ingroup jsonschema_compiler_instructions
+/// @brief Represents a compiler step that checks every object property is of a
+/// given type
+DEFINE_STEP_WITH_VALUE(Loop, PropertiesType, SchemaCompilerValueType)
+
+/// @ingroup jsonschema_compiler_instructions
+/// @brief Represents a compiler step that checks every object property is of a
+/// given type (strict mode)
+DEFINE_STEP_WITH_VALUE(Loop, PropertiesTypeStrict, SchemaCompilerValueType)
 
 /// @ingroup jsonschema_compiler_instructions
 /// @brief Represents a compiler step that loops over object property keys

@@ -613,6 +613,24 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
         true, context, schema_context, dynamic_context, std::move(filter),
         std::move(children))};
   } else {
+    if (children.size() == 1) {
+      // Optimize `additionalProperties` set to just `type`, which is a
+      // pretty common pattern
+      if (std::holds_alternative<SchemaCompilerAssertionTypeStrict>(
+              children.front())) {
+        const auto &type_step{
+            std::get<SchemaCompilerAssertionTypeStrict>(children.front())};
+        return {make<SchemaCompilerLoopPropertiesTypeStrict>(
+            true, context, schema_context, dynamic_context, type_step.value)};
+      } else if (std::holds_alternative<SchemaCompilerAssertionType>(
+                     children.front())) {
+        const auto &type_step{
+            std::get<SchemaCompilerAssertionType>(children.front())};
+        return {make<SchemaCompilerLoopPropertiesType>(
+            true, context, schema_context, dynamic_context, type_step.value)};
+      }
+    }
+
     return {make<SchemaCompilerLoopProperties>(
         true, context, schema_context, dynamic_context,
         SchemaCompilerValueNone{}, std::move(children))};
