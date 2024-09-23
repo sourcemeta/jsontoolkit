@@ -15,10 +15,11 @@
 namespace internal {
 using namespace sourcemeta::jsontoolkit;
 
-auto compiler_draft4_core_ref(const SchemaCompilerContext &context,
-                              const SchemaCompilerSchemaContext &schema_context,
-                              const SchemaCompilerDynamicContext
-                                  &dynamic_context) -> SchemaCompilerTemplate {
+auto compiler_draft4_core_ref(
+    const SchemaCompilerContext &context,
+    const SchemaCompilerSchemaContext &schema_context,
+    const SchemaCompilerDynamicContext &dynamic_context)
+    -> SchemaCompilerTemplate {
   // Determine the label
   const auto type{ReferenceType::Static};
   const auto current{
@@ -257,8 +258,8 @@ auto compiler_draft4_applicator_allof(
 auto compiler_draft4_applicator_anyof_conditional_exhaustive(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context,
-    const bool exhaustive) -> SchemaCompilerTemplate {
+    const SchemaCompilerDynamicContext &dynamic_context, const bool exhaustive)
+    -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_array());
   assert(!schema_context.schema.at(dynamic_context.keyword).empty());
 
@@ -314,8 +315,8 @@ auto compiler_draft4_applicator_oneof(
 auto compiler_draft4_applicator_properties_conditional_annotation(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context,
-    const bool annotate) -> SchemaCompilerTemplate {
+    const SchemaCompilerDynamicContext &dynamic_context, const bool annotate)
+    -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_object());
   if (schema_context.schema.at(dynamic_context.keyword).empty()) {
     return {};
@@ -497,8 +498,8 @@ auto compiler_draft4_applicator_properties(
 auto compiler_draft4_applicator_patternproperties_conditional_annotation(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context,
-    const bool annotate) -> SchemaCompilerTemplate {
+    const SchemaCompilerDynamicContext &dynamic_context, const bool annotate)
+    -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_object());
   if (schema_context.schema.at(dynamic_context.keyword).empty()) {
     return {};
@@ -570,8 +571,8 @@ auto compiler_draft4_applicator_patternproperties(
 auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context,
-    const bool annotate) -> SchemaCompilerTemplate {
+    const SchemaCompilerDynamicContext &dynamic_context, const bool annotate)
+    -> SchemaCompilerTemplate {
   if (schema_context.schema.defines("type") &&
       schema_context.schema.at("type").is_string() &&
       schema_context.schema.at("type").to_string() != "object") {
@@ -709,8 +710,8 @@ auto compiler_draft4_applicator_not(
 auto compiler_draft4_applicator_items_array(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context,
-    const bool annotate) -> SchemaCompilerTemplate {
+    const SchemaCompilerDynamicContext &dynamic_context, const bool annotate)
+    -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_array());
   const auto items_size{
       schema_context.schema.at(dynamic_context.keyword).size()};
@@ -789,8 +790,8 @@ auto compiler_draft4_applicator_items_array(
 auto compiler_draft4_applicator_items_conditional_annotation(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context,
-    const bool annotate) -> SchemaCompilerTemplate {
+    const SchemaCompilerDynamicContext &dynamic_context, const bool annotate)
+    -> SchemaCompilerTemplate {
   if (schema_context.schema.defines("type") &&
       schema_context.schema.at("type").is_string() &&
       schema_context.schema.at("type").to_string() != "array") {
@@ -863,8 +864,8 @@ auto compiler_draft4_applicator_additionalitems_from_cursor(
 auto compiler_draft4_applicator_additionalitems_conditional_annotation(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context,
-    const bool annotate) -> SchemaCompilerTemplate {
+    const SchemaCompilerDynamicContext &dynamic_context, const bool annotate)
+    -> SchemaCompilerTemplate {
   if (schema_context.schema.defines("type") &&
       schema_context.schema.at("type").is_string() &&
       schema_context.schema.at("type").to_string() != "array") {

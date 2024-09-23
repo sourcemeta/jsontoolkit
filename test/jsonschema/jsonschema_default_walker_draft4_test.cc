@@ -62,7 +62,7 @@ TEST(JSONSchema_default_walker_draft4, oneOf) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft4, not ) {
+TEST(JSONSchema_default_walker_draft4, not) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("not", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
