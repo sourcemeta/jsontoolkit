@@ -3,10 +3,10 @@
 
 #include "jsonschema_export.h"
 
-#include <cstdint>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 
+#include <cstdint>  // std::uint8_t
 #include <future>   // std::promise, std::future
 #include <map>      // std::map
 #include <optional> // std::optional

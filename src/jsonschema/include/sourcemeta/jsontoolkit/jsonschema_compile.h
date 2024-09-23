@@ -11,6 +11,7 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/uri.h>
 
+#include <cstdint>       // std::uint8_t
 #include <functional>    // std::function
 #include <map>           // std::map
 #include <optional>      // std::optional, std::nullopt

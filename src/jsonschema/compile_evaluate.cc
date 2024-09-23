@@ -1,4 +1,3 @@
-#include <cstdint>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 #include <sourcemeta/jsontoolkit/uri.h>
@@ -7,6 +6,7 @@
 
 #include <algorithm>   // std::min, std::any_of
 #include <cassert>     // assert
+#include <cstdint>     // std::uint8_t
 #include <functional>  // std::reference_wrapper
 #include <iterator>    // std::distance, std::advance
 #include <limits>      // std::numeric_limits

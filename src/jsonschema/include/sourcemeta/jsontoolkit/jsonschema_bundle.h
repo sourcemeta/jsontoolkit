@@ -7,6 +7,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
+#include <cstdint>  // std::uint8_t
 #include <future>   // std::future
 #include <optional> // std::optional, std::nullopt
 #include <string>   // std::string
