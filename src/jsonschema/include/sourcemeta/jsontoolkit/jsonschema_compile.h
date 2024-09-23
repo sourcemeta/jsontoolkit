@@ -691,8 +691,8 @@ public:
   auto operator()(const SchemaCompilerEvaluationType type, const bool result,
                   const SchemaCompilerTemplate::value_type &step,
                   const WeakPointer &evaluate_path,
-                  const WeakPointer &instance_location,
-                  const JSON &annotation) -> void;
+                  const WeakPointer &instance_location, const JSON &annotation)
+      -> void;
 
   using container_type = typename std::vector<Entry>;
   using const_iterator = typename container_type::const_iterator;

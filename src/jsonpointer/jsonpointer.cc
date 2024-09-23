@@ -122,8 +122,8 @@ auto get(const JSON &document, const Pointer::Token &token) -> const JSON & {
   }
 }
 
-auto get(const JSON &document,
-         const WeakPointer::Token &token) -> const JSON & {
+auto get(const JSON &document, const WeakPointer::Token &token)
+    -> const JSON & {
   if (token.is_property()) {
     return document.at(token.to_property());
   } else {

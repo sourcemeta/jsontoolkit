@@ -45,8 +45,8 @@ auto escape_string(const std::string &input) -> std::string {
 }
 
 auto describe_type_check(const bool valid, const JSON::Type current,
-                         const JSON::Type expected,
-                         std::ostringstream &message) -> void {
+                         const JSON::Type expected, std::ostringstream &message)
+    -> void {
   message << "The value was expected to be of type ";
   message << to_string(expected);
   if (!valid) {
@@ -524,8 +524,8 @@ struct DescribeVisitor {
     return unknown();
   }
 
-  auto
-  operator()(const SchemaCompilerAnnotationToParent &) const -> std::string {
+  auto operator()(const SchemaCompilerAnnotationToParent &) const
+      -> std::string {
     if (this->keyword == "unevaluatedItems" && this->annotation.is_boolean() &&
         this->annotation.to_boolean()) {
       assert(this->target.is_array());
@@ -583,8 +583,8 @@ struct DescribeVisitor {
     return unknown();
   }
 
-  auto
-  operator()(const SchemaCompilerLoopProperties &step) const -> std::string {
+  auto operator()(const SchemaCompilerLoopProperties &step) const
+      -> std::string {
     assert(this->keyword == "additionalProperties");
     std::ostringstream message;
     if (step.children.size() == 1 &&
@@ -682,8 +682,8 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto
-  operator()(const SchemaCompilerLoopItemsUnmarked &) const -> std::string {
+  auto operator()(const SchemaCompilerLoopItemsUnmarked &) const
+      -> std::string {
     return unknown();
   }
 
@@ -742,8 +742,8 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionDefines &step) const -> std::string {
+  auto operator()(const SchemaCompilerAssertionDefines &step) const
+      -> std::string {
     std::ostringstream message;
     message << "The object value was expected to define the property "
             << escape_string(step_value(step));
@@ -795,8 +795,8 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionType &step) const -> std::string {
+  auto operator()(const SchemaCompilerAssertionType &step) const
+      -> std::string {
     std::ostringstream message;
     describe_type_check(this->valid, this->target.type(), step_value(step),
                         message);
@@ -822,8 +822,8 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionTypeAny &step) const -> std::string {
+  auto operator()(const SchemaCompilerAssertionTypeAny &step) const
+      -> std::string {
     std::ostringstream message;
     describe_types_check(this->valid, this->target.type(), step_value(step),
                          message);
@@ -838,8 +838,8 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionRegex &step) const -> std::string {
+  auto operator()(const SchemaCompilerAssertionRegex &step) const
+      -> std::string {
     assert(this->target.is_string());
     std::ostringstream message;
     message << "The string value " << escape_string(this->target.to_string())
@@ -1096,8 +1096,8 @@ struct DescribeVisitor {
     return unknown();
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionEqual &step) const -> std::string {
+  auto operator()(const SchemaCompilerAssertionEqual &step) const
+      -> std::string {
     std::ostringstream message;
     const auto &value{step_value(step)};
     message << "The " << to_string(this->target.type()) << " value ";
@@ -1131,8 +1131,8 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionGreater &step) const -> std::string {
+  auto operator()(const SchemaCompilerAssertionGreater &step) const
+      -> std::string {
     std::ostringstream message;
     const auto &value{step_value(step)};
     message << "The " << to_string(this->target.type()) << " value ";
@@ -1147,8 +1147,8 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto
-  operator()(const SchemaCompilerAssertionLess &step) const -> std::string {
+  auto operator()(const SchemaCompilerAssertionLess &step) const
+      -> std::string {
     std::ostringstream message;
     const auto &value{step_value(step)};
     message << "The " << to_string(this->target.type()) << " value ";
@@ -1320,8 +1320,8 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto
-  operator()(const SchemaCompilerLogicalWhenType &step) const -> std::string {
+  auto operator()(const SchemaCompilerLogicalWhenType &step) const
+      -> std::string {
     if (this->keyword == "patternProperties") {
       assert(!step.children.empty());
       assert(this->target.is_object());
@@ -1677,12 +1677,12 @@ struct DescribeVisitor {
       -> std::string {
     return unknown();
   }
-  auto
-  operator()(const SchemaCompilerLogicalWhenDefines &) const -> std::string {
+  auto operator()(const SchemaCompilerLogicalWhenDefines &) const
+      -> std::string {
     return unknown();
   }
-  auto
-  operator()(const SchemaCompilerLoopPropertiesRegex &) const -> std::string {
+  auto operator()(const SchemaCompilerLoopPropertiesRegex &) const
+      -> std::string {
     return unknown();
   }
 };

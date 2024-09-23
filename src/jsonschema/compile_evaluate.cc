@@ -1227,8 +1227,8 @@ auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
   return evaluate_internal(steps, instance, mode, callback);
 }
 
-auto evaluate(const SchemaCompilerTemplate &steps,
-              const JSON &instance) -> bool {
+auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance)
+    -> bool {
   return evaluate_internal(steps, instance,
                            // Otherwise what's the point of an exhaustive
                            // evaluation if you don't get the results?
