@@ -6,6 +6,7 @@
 
 #include <algorithm>   // std::min, std::any_of
 #include <cassert>     // assert
+#include <cstdint>     // std::uint8_t
 #include <functional>  // std::reference_wrapper
 #include <iterator>    // std::distance, std::advance
 #include <limits>      // std::numeric_limits
@@ -242,7 +243,7 @@ public:
     return this->instance_location_;
   }
 
-  enum class TargetType { Key, Value };
+  enum class TargetType : std::uint8_t { Key, Value };
   auto target_type(const TargetType type) noexcept -> void {
     this->property_as_instance = (type == TargetType::Key);
   }
