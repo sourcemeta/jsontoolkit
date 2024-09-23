@@ -4219,3 +4219,36 @@ TEST(JSONSchema_compile_draft4, format_uri_3) {
       instance, 0,
       "The string value \"!!!x::://\" was expected to represent a valid URI");
 }
+
+TEST(JSONSchema_compile_draft4, ref_to_non_schema) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+      "array": {
+        "items": [
+          { "type": "string" },
+          { "type": "array" }
+        ]
+      }
+    },
+    "additionalProperties": {
+      "$ref": "#/definitions/array/items"
+    }
+  })JSON")};
+
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+    FAIL() << "The compile function was expected to throw";
+  } catch (const sourcemeta::jsontoolkit::SchemaReferenceError &error) {
+    EXPECT_EQ(error.id(), "#/definitions/array/items");
+    EXPECT_EQ(sourcemeta::jsontoolkit::to_string(error.location()),
+              "/additionalProperties/$ref");
+    SUCCEED();
+  } catch (...) {
+    FAIL();
+  }
+}
