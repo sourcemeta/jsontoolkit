@@ -1005,6 +1005,42 @@ auto evaluate_step(
 
   evaluate_loop_properties_except_end:
     EVALUATE_END(loop, SchemaCompilerLoopPropertiesExcept);
+  } else if (IS_STEP(SchemaCompilerLoopPropertiesType)) {
+    EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesType, target.is_object());
+    result = true;
+    for (const auto &entry : target.as_object()) {
+      context.enter(entry.first);
+      const auto &entry_target{context.resolve_target()};
+      // In non-strict mode, we consider a real number that represents an
+      // integer to be an integer
+      if (entry_target.type() != loop.value &&
+          (loop.value != JSON::Type::Integer ||
+           entry_target.is_integer_real())) {
+        result = false;
+        context.leave();
+        break;
+      }
+
+      context.leave();
+    }
+
+    EVALUATE_END(loop, SchemaCompilerLoopPropertiesType);
+  } else if (IS_STEP(SchemaCompilerLoopPropertiesTypeStrict)) {
+    EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesTypeStrict,
+                   target.is_object());
+    result = true;
+    for (const auto &entry : target.as_object()) {
+      context.enter(entry.first);
+      if (context.resolve_target().type() != loop.value) {
+        result = false;
+        context.leave();
+        break;
+      }
+
+      context.leave();
+    }
+
+    EVALUATE_END(loop, SchemaCompilerLoopPropertiesTypeStrict);
   } else if (IS_STEP(SchemaCompilerLoopKeys)) {
     EVALUATE_BEGIN(loop, SchemaCompilerLoopKeys, target.is_object());
     result = true;

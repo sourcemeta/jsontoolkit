@@ -271,6 +271,9 @@ struct StepVisitor {
   HANDLE_STEP("loop", "properties-no-annotation",
               SchemaCompilerLoopPropertiesNoAnnotation)
   HANDLE_STEP("loop", "properties-except", SchemaCompilerLoopPropertiesExcept)
+  HANDLE_STEP("loop", "properties-type", SchemaCompilerLoopPropertiesType)
+  HANDLE_STEP("loop", "properties-type-strict",
+              SchemaCompilerLoopPropertiesTypeStrict)
   HANDLE_STEP("loop", "keys", SchemaCompilerLoopKeys)
   HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)
   HANDLE_STEP("loop", "items-unmarked", SchemaCompilerLoopItemsUnmarked)

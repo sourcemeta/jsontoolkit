@@ -834,26 +834,15 @@ TEST(JSONSchema_compile_draft4, ref_9) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+  EVALUATE_TRACE_PRE(0, LoopPropertiesTypeStrict, "/additionalProperties",
                      "#/additionalProperties", "");
-  EVALUATE_TRACE_PRE(1, AssertionTypeStrict,
-                     "/additionalProperties/$ref/$ref/type",
-                     "#/definitions/two/type", "/foo");
-
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
-                              "/additionalProperties/$ref/$ref/type",
-                              "#/definitions/two/type", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(1, LoopProperties, "/additionalProperties",
-                              "#/additionalProperties", "");
-
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_SUCCESS(0, LoopPropertiesTypeStrict,
+                              "/additionalProperties", "#/additionalProperties",
+                              "");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "The object properties not covered by other adjacent object keywords "
-      "were expected to validate against this subschema");
+      instance, 0, "The object properties were expected to be of type boolean");
 }
 
 TEST(JSONSchema_compile_draft4, ref_10) {
@@ -876,26 +865,15 @@ TEST(JSONSchema_compile_draft4, ref_10) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": true }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+  EVALUATE_TRACE_PRE(0, LoopPropertiesTypeStrict, "/additionalProperties",
                      "#/additionalProperties", "");
-  EVALUATE_TRACE_PRE(1, AssertionTypeStrict,
-                     "/additionalProperties/$ref/$ref/type",
-                     "#/definitions/two/type", "/foo");
-
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
-                              "/additionalProperties/$ref/$ref/type",
-                              "#/definitions/two/type", "/foo");
-  EVALUATE_TRACE_POST_SUCCESS(1, LoopProperties, "/additionalProperties",
-                              "#/additionalProperties", "");
-
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
-                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_SUCCESS(0, LoopPropertiesTypeStrict,
+                              "/additionalProperties", "#/additionalProperties",
+                              "");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "The object properties not covered by other adjacent object keywords "
-      "were expected to validate against this subschema");
+      instance, 0, "The object properties were expected to be of type boolean");
 }
 
 TEST(JSONSchema_compile_draft4, ref_11) {
@@ -1539,59 +1517,15 @@ TEST(JSONSchema_compile_draft4, additionalProperties_1) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  if (FIRST_PROPERTY_IS(instance, "foo")) {
-    EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
-                       "#/additionalProperties", "");
-    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/additionalProperties/type",
-                       "#/additionalProperties/type", "/foo");
-    EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/additionalProperties/type",
-                       "#/additionalProperties/type", "/bar");
-
-    EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
-                                "/additionalProperties/type",
-                                "#/additionalProperties/type", "/foo");
-    EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
-                                "/additionalProperties/type",
-                                "#/additionalProperties/type", "/bar");
-    EVALUATE_TRACE_POST_SUCCESS(2, LoopProperties, "/additionalProperties",
-                                "#/additionalProperties", "");
-
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 0, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 1, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                                 "The object properties not covered by other "
-                                 "adjacent object keywords were "
-                                 "expected to validate against this subschema");
-  } else {
-    EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
-                       "#/additionalProperties", "");
-    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/additionalProperties/type",
-                       "#/additionalProperties/type", "/bar");
-    EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/additionalProperties/type",
-                       "#/additionalProperties/type", "/foo");
-
-    EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
-                                "/additionalProperties/type",
-                                "#/additionalProperties/type", "/bar");
-    EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
-                                "/additionalProperties/type",
-                                "#/additionalProperties/type", "/foo");
-    EVALUATE_TRACE_POST_SUCCESS(2, LoopProperties, "/additionalProperties",
-                                "#/additionalProperties", "");
-
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 0, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 1, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                                 "The object properties not covered by other "
-                                 "adjacent object keywords were "
-                                 "expected to validate against this subschema");
-  }
+  EVALUATE_TRACE_PRE(0, LoopPropertiesTypeStrict, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LoopPropertiesTypeStrict,
+                              "/additionalProperties", "#/additionalProperties",
+                              "");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0, "The object properties were expected to be of type integer");
 }
 
 TEST(JSONSchema_compile_draft4, additionalProperties_2) {
