@@ -92,7 +92,7 @@ using SchemaCompilerValueNamedIndexes =
 
 /// @ingroup jsonschema_compiler
 /// Represents a compiler step string logical type
-enum class SchemaCompilerValueStringType { URI };
+enum class SchemaCompilerValueStringType : std::uint8_t { URI };
 
 /// @ingroup jsonschema_compiler
 /// Represents an array loop compiler step annotation keywords
@@ -600,7 +600,7 @@ struct SchemaCompilerContext {
 
 /// @ingroup jsonschema_compiler
 /// Represents the mode of evalution
-enum class SchemaCompilerEvaluationMode {
+enum class SchemaCompilerEvaluationMode : std::uint8_t {
   /// Attempt to get to a boolean result as fast as possible
   Fast,
   /// Perform a full schema evaluation
@@ -609,7 +609,7 @@ enum class SchemaCompilerEvaluationMode {
 
 /// @ingroup jsonschema_compiler
 /// Represents the state of a step evaluation
-enum class SchemaCompilerEvaluationType { Pre, Post };
+enum class SchemaCompilerEvaluationType : std::uint8_t { Pre, Post };
 
 /// @ingroup jsonschema_compiler
 /// A callback of this type is invoked after evaluating any keyword. The

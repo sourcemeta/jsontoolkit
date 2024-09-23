@@ -46,7 +46,7 @@ auto is_schema(const JSON &schema) -> bool;
 
 /// @ingroup jsonschema
 /// The strategy to follow when attempting to identify a schema
-enum class IdentificationStrategy {
+enum class IdentificationStrategy : std::uint8_t {
   /// Only proceed if we can guarantee the identifier is valid
   Strict,
 

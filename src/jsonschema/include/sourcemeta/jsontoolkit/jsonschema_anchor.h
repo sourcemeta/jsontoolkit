@@ -3,6 +3,7 @@
 
 #include "jsonschema_export.h"
 
+#include <cstdint>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 
@@ -15,7 +16,7 @@ namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
 /// The anchor type
-enum class AnchorType { Static, Dynamic, All };
+enum class AnchorType : std::uint8_t { Static, Dynamic, All };
 
 /// @ingroup jsonschema
 ///

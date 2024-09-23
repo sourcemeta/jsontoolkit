@@ -17,7 +17,7 @@ namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
 /// A set of options that modify the behavior of bundling
-enum class BundleOptions {
+enum class BundleOptions : std::uint8_t {
   /// Perform standard JSON Schema bundling
   Default,
 

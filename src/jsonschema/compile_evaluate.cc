@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 #include <sourcemeta/jsontoolkit/uri.h>
@@ -242,7 +243,7 @@ public:
     return this->instance_location_;
   }
 
-  enum class TargetType { Key, Value };
+  enum class TargetType : std::uint8_t { Key, Value };
   auto target_type(const TargetType type) noexcept -> void {
     this->property_as_instance = (type == TargetType::Key);
   }

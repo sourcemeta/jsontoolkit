@@ -18,7 +18,7 @@ namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
 /// The reference type
-enum class ReferenceType { Static, Dynamic };
+enum class ReferenceType : std::uint8_t { Static, Dynamic };
 
 #if defined(__GNUC__)
 #pragma GCC diagnostic push
@@ -28,7 +28,7 @@ enum class ReferenceType { Static, Dynamic };
 #endif
 /// @ingroup jsonschema
 /// The reference entry type
-enum class ReferenceEntryType { Resource, Anchor, Pointer };
+enum class ReferenceEntryType : std::uint8_t { Resource, Anchor, Pointer };
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop
 #endif
