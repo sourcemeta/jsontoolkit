@@ -771,3 +771,108 @@ TEST(JSONSchema_compile_draft6, maxLength_3) {
       instance, 0,
       "The value was expected to consist of a string of 1 to 2 characters");
 }
+
+TEST(JSONSchema_compile_draft6, minItems_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "type": "array",
+    "minItems": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeArrayBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeArrayBounded, "/type", "#/type",
+                              "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an array of at least 2 items");
+}
+
+TEST(JSONSchema_compile_draft6, maxItems_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "type": "array",
+    "maxItems": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeArrayBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeArrayBounded, "/type", "#/type",
+                              "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an array of at most 2 items");
+}
+
+TEST(JSONSchema_compile_draft6, maxItems_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "type": "array",
+    "maxItems": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeArrayBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeArrayBounded, "/type", "#/type",
+                              "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an array of at most 2 items");
+}
+
+TEST(JSONSchema_compile_draft6, maxItems_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "type": "array",
+    "minItems": 1,
+    "maxItems": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeArrayBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeArrayBounded, "/type", "#/type",
+                              "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an array of 1 to 2 items");
+}

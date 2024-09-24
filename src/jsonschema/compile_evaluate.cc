@@ -554,19 +554,30 @@ auto evaluate_step(
         (std::find(assertion.value.cbegin(), assertion.value.cend(),
                    context.resolve_target().type()) != assertion.value.cend());
     EVALUATE_END(assertion, SchemaCompilerAssertionTypeStrictAny);
-
   } else if (IS_STEP(SchemaCompilerAssertionTypeStringBounded)) {
     EVALUATE_BEGIN_NO_PRECONDITION(assertion,
                                    SchemaCompilerAssertionTypeStringBounded);
     const auto &target{context.resolve_target()};
     const auto minimum{std::get<0>(assertion.value)};
     const auto maximum{std::get<1>(assertion.value)};
-    // Require early breaking
     assert(!maximum.has_value() || maximum.value() >= minimum);
+    // Require early breaking
     assert(!std::get<2>(assertion.value));
     result = target.type() == JSON::Type::String && target.size() >= minimum &&
              (!maximum.has_value() || target.size() <= maximum.value());
     EVALUATE_END(assertion, SchemaCompilerAssertionTypeStringBounded);
+  } else if (IS_STEP(SchemaCompilerAssertionTypeArrayBounded)) {
+    EVALUATE_BEGIN_NO_PRECONDITION(assertion,
+                                   SchemaCompilerAssertionTypeArrayBounded);
+    const auto &target{context.resolve_target()};
+    const auto minimum{std::get<0>(assertion.value)};
+    const auto maximum{std::get<1>(assertion.value)};
+    assert(!maximum.has_value() || maximum.value() >= minimum);
+    // Require early breaking
+    assert(!std::get<2>(assertion.value));
+    result = target.type() == JSON::Type::Array && target.size() >= minimum &&
+             (!maximum.has_value() || target.size() <= maximum.value());
+    EVALUATE_END(assertion, SchemaCompilerAssertionTypeArrayBounded);
   } else if (IS_STEP(SchemaCompilerAssertionRegex)) {
     EVALUATE_BEGIN(assertion, SchemaCompilerAssertionRegex, target.is_string());
     result = std::regex_search(target.to_string(), assertion.value.first);
