@@ -134,6 +134,7 @@ struct SchemaCompilerAssertionTypeStrict;
 struct SchemaCompilerAssertionTypeStrictAny;
 struct SchemaCompilerAssertionTypeStringBounded;
 struct SchemaCompilerAssertionTypeArrayBounded;
+struct SchemaCompilerAssertionTypeObjectBounded;
 struct SchemaCompilerAssertionRegex;
 struct SchemaCompilerAssertionStringSizeLess;
 struct SchemaCompilerAssertionStringSizeGreater;
@@ -195,7 +196,8 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAssertionTypeAny, SchemaCompilerAssertionTypeStrict,
     SchemaCompilerAssertionTypeStrictAny,
     SchemaCompilerAssertionTypeStringBounded,
-    SchemaCompilerAssertionTypeArrayBounded, SchemaCompilerAssertionRegex,
+    SchemaCompilerAssertionTypeArrayBounded,
+    SchemaCompilerAssertionTypeObjectBounded, SchemaCompilerAssertionRegex,
     SchemaCompilerAssertionStringSizeLess,
     SchemaCompilerAssertionStringSizeGreater,
     SchemaCompilerAssertionArraySizeLess,
@@ -307,6 +309,11 @@ DEFINE_STEP_WITH_VALUE(Assertion, TypeStringBounded, SchemaCompilerValueRange)
 /// @brief Represents a compiler assertion step that checks if a document is of
 /// type array and adheres to the given bounds
 DEFINE_STEP_WITH_VALUE(Assertion, TypeArrayBounded, SchemaCompilerValueRange)
+
+/// @ingroup jsonschema_compiler_instructions
+/// @brief Represents a compiler assertion step that checks if a document is of
+/// type object and adheres to the given bounds
+DEFINE_STEP_WITH_VALUE(Assertion, TypeObjectBounded, SchemaCompilerValueRange)
 
 /// @ingroup jsonschema_compiler_instructions
 /// @brief Represents a compiler assertion step that checks a string against an

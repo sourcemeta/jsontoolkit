@@ -104,6 +104,16 @@ auto compiler_draft4_validation_type(
       return {make<SchemaCompilerAssertionTypeStrict>(
           true, context, schema_context, dynamic_context, JSON::Type::Boolean)};
     } else if (type == "object") {
+      const auto minimum{
+          unsigned_integer_property(schema_context.schema, "minProperties", 0)};
+      const auto maximum{
+          unsigned_integer_property(schema_context.schema, "maxProperties")};
+      if (minimum > 0 || maximum.has_value()) {
+        return {make<SchemaCompilerAssertionTypeObjectBounded>(
+            true, context, schema_context, dynamic_context,
+            {minimum, maximum, false})};
+      }
+
       return {make<SchemaCompilerAssertionTypeStrict>(
           true, context, schema_context, dynamic_context, JSON::Type::Object)};
     } else if (type == "array") {
@@ -1164,8 +1174,13 @@ auto compiler_draft4_validation_maxproperties(
     return {};
   }
 
-  // TODO: As an optimization, if `minProperties` is set to the same number, do
-  // a single size equality assertion
+  // We'll handle it at the type level as an optimization
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() == "object") {
+    return {};
+  }
+
   return {make<SchemaCompilerAssertionObjectSizeLess>(
       true, context, schema_context, dynamic_context,
       SchemaCompilerValueUnsignedInteger{
@@ -1189,8 +1204,13 @@ auto compiler_draft4_validation_minproperties(
     return {};
   }
 
-  // TODO: As an optimization, if `maxProperties` is set to the same number, do
-  // a single size equality assertion
+  // We'll handle it at the type level as an optimization
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() == "object") {
+    return {};
+  }
+
   return {make<SchemaCompilerAssertionObjectSizeGreater>(
       true, context, schema_context, dynamic_context,
       SchemaCompilerValueUnsignedInteger{
