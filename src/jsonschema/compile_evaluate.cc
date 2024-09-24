@@ -611,8 +611,9 @@ auto evaluate_step(
                              // object that might hold the given property,
                              // before traversing into the actual property
                              context.resolve_target().is_object() &&
-                                 has(context.resolve_target(),
-                                     assertion.relative_instance_location));
+                                 try_get(context.resolve_target(),
+                                         assertion.relative_instance_location)
+                                     .has_value());
     // Now here we refer to the actual property
     const auto &target{context.resolve_target()};
     // In non-strict mode, we consider a real number that represents an
@@ -628,8 +629,9 @@ auto evaluate_step(
                              // object that might hold the given property,
                              // before traversing into the actual property
                              context.resolve_target().is_object() &&
-                                 has(context.resolve_target(),
-                                     assertion.relative_instance_location));
+                                 try_get(context.resolve_target(),
+                                         assertion.relative_instance_location)
+                                     .has_value());
     // Now here we refer to the actual property
     result = context.resolve_target().type() == assertion.value;
     EVALUATE_END(assertion, SchemaCompilerAssertionPropertyTypeStrict);
