@@ -178,8 +178,7 @@ auto sourcemeta::jsontoolkit::frame(
         entry.pointer.empty() ? default_id : std::nullopt)};
 
     // Store information
-    subschema_entries.emplace_back(
-        InternalEntry{std::move(entry), std::move(id)});
+    subschema_entries.emplace_back(InternalEntry{entry, std::move(id)});
   }
 
   for (const auto &entry : subschema_entries) {
