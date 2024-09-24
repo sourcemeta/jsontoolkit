@@ -854,6 +854,28 @@ struct DescribeVisitor {
     return message.str();
   }
 
+  auto operator()(const SchemaCompilerAssertionTypeStringBounded &step) const
+      -> std::string {
+    std::ostringstream message;
+
+    const auto minimum{std::get<0>(step.value)};
+    const auto maximum{std::get<1>(step.value)};
+    if (minimum == 0 && maximum.has_value()) {
+      message << "The value was expected to consist of a string of at most "
+              << maximum.value()
+              << (maximum.value() == 1 ? " character" : " characters");
+    } else if (maximum.has_value()) {
+      message << "The value was expected to consist of a string of " << minimum
+              << " to " << maximum.value()
+              << (maximum.value() == 1 ? " character" : " characters");
+    } else {
+      message << "The value was expected to consist of a string of at least "
+              << minimum << (minimum == 1 ? " character" : " characters");
+    }
+
+    return message.str();
+  }
+
   auto operator()(const SchemaCompilerAssertionRegex &step) const
       -> std::string {
     assert(this->target.is_string());

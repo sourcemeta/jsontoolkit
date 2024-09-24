@@ -37,6 +37,23 @@ auto compiler_draft6_validation_type(
       return {make<SchemaCompilerAssertionType>(
           true, context, schema_context, dynamic_context, JSON::Type::Integer)};
     } else if (type == "string") {
+      const auto minimum{
+          (schema_context.schema.defines("minLength") &&
+           schema_context.schema.at("minLength").is_integer())
+              ? schema_context.schema.at("minLength").to_integer()
+              : 0};
+      const std::optional<std::size_t> maximum{
+          (schema_context.schema.defines("maxLength") &&
+           schema_context.schema.at("maxLength").is_integer())
+              ? std::optional<std::size_t>{schema_context.schema.at("maxLength")
+                                               .to_integer()}
+              : std::nullopt};
+      if (minimum > 0 || maximum.has_value()) {
+        return {make<SchemaCompilerAssertionTypeStringBounded>(
+            true, context, schema_context, dynamic_context,
+            {minimum, maximum, false})};
+      }
+
       return {make<SchemaCompilerAssertionTypeStrict>(
           true, context, schema_context, dynamic_context, JSON::Type::String)};
     } else {
