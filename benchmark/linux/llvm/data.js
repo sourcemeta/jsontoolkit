@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727204191659,
+  "lastUpdate": 1727204942939,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -10902,6 +10902,106 @@ window.BENCHMARK_DATA = {
             "value": 2280.5242343494624,
             "unit": "ns/iter",
             "extra": "iterations: 307353\ncpu: 2280.50244832489 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "8bc8744a66238e783c2786f24e60588fef19e37c",
+          "message": "Introduce a new `AssertionTypeStringBounded` instruction (#1221)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-09-24T18:49:55Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/8bc8744a66238e783c2786f24e60588fef19e37c"
+        },
+        "date": 1727204942170,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 17058.76736754783,
+            "unit": "ns/iter",
+            "extra": "iterations: 40996\ncpu: 17057.916772368033 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 6303.386085778532,
+            "unit": "ns/iter",
+            "extra": "iterations: 110750\ncpu: 6303.00936343115 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match",
+            "value": 1828.9796225700106,
+            "unit": "ns/iter",
+            "extra": "iterations: 379832\ncpu: 1828.8574290739064 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match",
+            "value": 911.7843782735797,
+            "unit": "ns/iter",
+            "extra": "iterations: 770363\ncpu: 911.7471685426227 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 119147.3176510436,
+            "unit": "ns/iter",
+            "extra": "iterations: 5909\ncpu: 119138.22998815356 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 54365.198795647855,
+            "unit": "ns/iter",
+            "extra": "iterations: 12953\ncpu: 54362.14143441673 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 8667.219806793446,
+            "unit": "ns/iter",
+            "extra": "iterations: 81053\ncpu: 8666.966725475933 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 8120.969615906273,
+            "unit": "ns/iter",
+            "extra": "iterations: 85604\ncpu: 8120.449254707724 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 8819.854685668899,
+            "unit": "ns/iter",
+            "extra": "iterations: 79359\ncpu: 8819.5246789904 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Non_Recursive_Ref",
+            "value": 2143.3305726739213,
+            "unit": "ns/iter",
+            "extra": "iterations: 326975\ncpu: 2143.17092744094 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Pattern_Properties_True",
+            "value": 6054.730728033001,
+            "unit": "ns/iter",
+            "extra": "iterations: 115764\ncpu: 6054.477825576176 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Ref_To_Single_Property",
+            "value": 913.868942790063,
+            "unit": "ns/iter",
+            "extra": "iterations: 768939\ncpu: 913.8234632396073 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Additional_Properties_Type",
+            "value": 2288.492950228722,
+            "unit": "ns/iter",
+            "extra": "iterations: 311003\ncpu: 2288.493847326229 ns\nthreads: 1"
           }
         ]
       }
