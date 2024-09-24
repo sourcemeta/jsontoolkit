@@ -377,7 +377,7 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
       is_required <= (size / 2) &&
       // If `properties` only defines a relatively small amount of properties,
       // then its probably still faster to unroll
-      schema_context.schema.at(dynamic_context.keyword).size() > 3};
+      schema_context.schema.at(dynamic_context.keyword).size() > 5};
 
   if (prefer_loop_over_instance) {
     SchemaCompilerValueNamedIndexes indexes;
