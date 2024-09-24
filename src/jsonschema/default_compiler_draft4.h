@@ -85,7 +85,7 @@ auto compiler_draft4_core_ref(
   return {make<SchemaCompilerControlLabel>(
       true, context, schema_context, dynamic_context,
       SchemaCompilerValueUnsignedInteger{label},
-      compile(context, std::move(new_schema_context), relative_dynamic_context,
+      compile(context, new_schema_context, relative_dynamic_context,
               empty_pointer, empty_pointer, reference.destination))};
 }
 
