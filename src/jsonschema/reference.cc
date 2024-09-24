@@ -80,7 +80,7 @@ static auto supports_id_anchors(const std::string &base_dialect) -> bool {
          base_dialect == "http://json-schema.org/draft-04/hyper-schema#";
 }
 
-static auto fragment_string(const sourcemeta::jsontoolkit::URI uri)
+static auto fragment_string(const sourcemeta::jsontoolkit::URI &uri)
     -> std::optional<std::string> {
   const auto fragment{uri.fragment()};
   if (fragment.has_value()) {
