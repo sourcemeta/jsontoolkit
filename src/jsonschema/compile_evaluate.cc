@@ -166,7 +166,7 @@ public:
     return result;
   }
 
-  template <typename T> auto push(const T &step) -> void {
+  template <typename T> auto push_without_traverse(const T &step) -> void {
     // Guard against infinite recursion in a cheap manner, as
     // infinite recursion will manifest itself through huge
     // ever-growing evaluate paths
@@ -181,10 +181,6 @@ public:
                                    step.relative_instance_location.size());
     this->evaluate_path_.push_back(step.relative_schema_location);
     this->instance_location_.push_back(step.relative_instance_location);
-    if (!step.relative_instance_location.empty()) {
-      this->instances_.emplace_back(
-          get(this->instances_.back().get(), step.relative_instance_location));
-    }
 
     if (step.dynamic) {
       // Note that we are potentially repeatedly pushing back the
@@ -193,6 +189,24 @@ public:
       // computation power. Being silly seems faster.
       this->resources_.push_back(step.schema_resource);
     }
+  }
+
+  template <typename T> auto push(const T &step) -> void {
+    this->push_without_traverse(step);
+    if (!step.relative_instance_location.empty()) {
+      this->instances_.emplace_back(
+          get(this->instances_.back().get(), step.relative_instance_location));
+    }
+  }
+
+  // A performance shortcut for pushing without re-traversing the target
+  // if we already know that the destination target will be
+  template <typename T>
+  auto push(const T &step, std::reference_wrapper<const JSON> &&new_instance)
+      -> void {
+    this->push_without_traverse(step);
+    assert(!step.relative_instance_location.empty());
+    this->instances_.emplace_back(std::move(new_instance));
   }
 
   template <typename T> auto pop(const T &step) -> void {
@@ -352,6 +366,32 @@ auto evaluate_step(
     return true;                                                               \
   }                                                                            \
   context.push(step_category);                                                 \
+  if (step_category.report && callback.has_value()) {                          \
+    callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
+                     context.evaluate_path(), context.instance_location(),     \
+                     context.null);                                            \
+  }                                                                            \
+  bool result{false};
+
+  // This is a slightly complicated dance to avoid traversing the relative
+  // instance location twice. We first need to traverse it to check if its
+  // valid in the document as part of the condition, but if it is, we can
+  // pass it to `.push()` so that it doesn't need to traverse it again.
+#define EVALUATE_BEGIN_TRY_TARGET(step_category, step_type, precondition)      \
+  SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
+  const auto &target{context.resolve_target()};                                \
+  const auto &step_category{std::get<step_type>(step)};                        \
+  if (!(precondition)) {                                                       \
+    SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
+    return true;                                                               \
+  }                                                                            \
+  auto target_check{                                                           \
+      try_get(target, step_category.relative_instance_location)};              \
+  if (!target_check.has_value()) {                                             \
+    SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
+    return true;                                                               \
+  }                                                                            \
+  context.push(step_category, std::move(target_check.value()));                \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
@@ -606,32 +646,26 @@ auto evaluate_step(
 
     EVALUATE_END(assertion, SchemaCompilerAssertionStringType);
   } else if (IS_STEP(SchemaCompilerAssertionPropertyType)) {
-    EVALUATE_BEGIN_NO_TARGET(assertion, SchemaCompilerAssertionPropertyType,
-                             // Note that here are are referring to the parent
-                             // object that might hold the given property,
-                             // before traversing into the actual property
-                             context.resolve_target().is_object() &&
-                                 try_get(context.resolve_target(),
-                                         assertion.relative_instance_location)
-                                     .has_value());
+    EVALUATE_BEGIN_TRY_TARGET(assertion, SchemaCompilerAssertionPropertyType,
+                              // Note that here are are referring to the parent
+                              // object that might hold the given property,
+                              // before traversing into the actual property
+                              target.is_object());
     // Now here we refer to the actual property
-    const auto &target{context.resolve_target()};
+    const auto &effective_target{context.resolve_target()};
     // In non-strict mode, we consider a real number that represents an
     // integer to be an integer
-    result =
-        target.type() == assertion.value ||
-        (assertion.value == JSON::Type::Integer && target.is_integer_real());
+    result = effective_target.type() == assertion.value ||
+             (assertion.value == JSON::Type::Integer &&
+              effective_target.is_integer_real());
     EVALUATE_END(assertion, SchemaCompilerAssertionPropertyType);
   } else if (IS_STEP(SchemaCompilerAssertionPropertyTypeStrict)) {
-    EVALUATE_BEGIN_NO_TARGET(assertion,
-                             SchemaCompilerAssertionPropertyTypeStrict,
-                             // Note that here are are referring to the parent
-                             // object that might hold the given property,
-                             // before traversing into the actual property
-                             context.resolve_target().is_object() &&
-                                 try_get(context.resolve_target(),
-                                         assertion.relative_instance_location)
-                                     .has_value());
+    EVALUATE_BEGIN_TRY_TARGET(assertion,
+                              SchemaCompilerAssertionPropertyTypeStrict,
+                              // Note that here are are referring to the parent
+                              // object that might hold the given property,
+                              // before traversing into the actual property
+                              target.is_object());
     // Now here we refer to the actual property
     result = context.resolve_target().type() == assertion.value;
     EVALUATE_END(assertion, SchemaCompilerAssertionPropertyTypeStrict);
@@ -1221,6 +1255,7 @@ auto evaluate_step(
 #undef IS_STEP
 #undef EVALUATE_BEGIN
 #undef EVALUATE_BEGIN_NO_TARGET
+#undef EVALUATE_BEGIN_TRY_TARGET
 #undef EVALUATE_BEGIN_NO_PRECONDITION
 #undef EVALUATE_END
 #undef EVALUATE_ANNOTATION
