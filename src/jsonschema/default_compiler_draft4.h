@@ -107,6 +107,16 @@ auto compiler_draft4_validation_type(
       return {make<SchemaCompilerAssertionTypeStrict>(
           true, context, schema_context, dynamic_context, JSON::Type::Object)};
     } else if (type == "array") {
+      const auto minimum{
+          unsigned_integer_property(schema_context.schema, "minItems", 0)};
+      const auto maximum{
+          unsigned_integer_property(schema_context.schema, "maxItems")};
+      if (minimum > 0 || maximum.has_value()) {
+        return {make<SchemaCompilerAssertionTypeArrayBounded>(
+            true, context, schema_context, dynamic_context,
+            {minimum, maximum, false})};
+      }
+
       return {make<SchemaCompilerAssertionTypeStrict>(
           true, context, schema_context, dynamic_context, JSON::Type::Array)};
     } else if (type == "number") {
@@ -118,16 +128,9 @@ auto compiler_draft4_validation_type(
           true, context, schema_context, dynamic_context, JSON::Type::Integer)};
     } else if (type == "string") {
       const auto minimum{
-          (schema_context.schema.defines("minLength") &&
-           schema_context.schema.at("minLength").is_integer())
-              ? schema_context.schema.at("minLength").to_integer()
-              : 0};
-      const std::optional<std::size_t> maximum{
-          (schema_context.schema.defines("maxLength") &&
-           schema_context.schema.at("maxLength").is_integer())
-              ? std::optional<std::size_t>{schema_context.schema.at("maxLength")
-                                               .to_integer()}
-              : std::nullopt};
+          unsigned_integer_property(schema_context.schema, "minLength", 0)};
+      const auto maximum{
+          unsigned_integer_property(schema_context.schema, "maxLength")};
       if (minimum > 0 || maximum.has_value()) {
         return {make<SchemaCompilerAssertionTypeStringBounded>(
             true, context, schema_context, dynamic_context,
@@ -1101,8 +1104,13 @@ auto compiler_draft4_validation_maxitems(
     return {};
   }
 
-  // TODO: As an optimization, if `minItems` is set to the same number, do
-  // a single size equality assertion
+  // We'll handle it at the type level as an optimization
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() == "array") {
+    return {};
+  }
+
   return {make<SchemaCompilerAssertionArraySizeLess>(
       true, context, schema_context, dynamic_context,
       SchemaCompilerValueUnsignedInteger{
@@ -1126,8 +1134,13 @@ auto compiler_draft4_validation_minitems(
     return {};
   }
 
-  // TODO: As an optimization, if `maxItems` is set to the same number, do
-  // a single size equality assertion
+  // We'll handle it at the type level as an optimization
+  if (schema_context.schema.defines("type") &&
+      schema_context.schema.at("type").is_string() &&
+      schema_context.schema.at("type").to_string() == "array") {
+    return {};
+  }
+
   return {make<SchemaCompilerAssertionArraySizeGreater>(
       true, context, schema_context, dynamic_context,
       SchemaCompilerValueUnsignedInteger{

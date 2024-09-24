@@ -219,6 +219,8 @@ struct StepVisitor {
               SchemaCompilerAssertionTypeStrictAny)
   HANDLE_STEP("assertion", "type-string-bounded",
               SchemaCompilerAssertionTypeStringBounded)
+  HANDLE_STEP("assertion", "type-array-bounded",
+              SchemaCompilerAssertionTypeArrayBounded)
   HANDLE_STEP("assertion", "regex", SchemaCompilerAssertionRegex)
   HANDLE_STEP("assertion", "string-size-less",
               SchemaCompilerAssertionStringSizeLess)
