@@ -474,6 +474,10 @@ JSON::defines_any(std::initializer_list<JSON::String> keys) const -> bool {
 [[nodiscard]] auto JSON::unique() const -> bool {
   assert(this->is_array());
   const auto &items{std::get<JSON::Array>(this->data).data};
+  // Arrays of 0 or 1 item are unique by definition
+  if (items.size() <= 1) {
+    return true;
+  }
 
   // Otherwise std::unique would require us to create a copy of the contents
   for (auto iterator = items.cbegin(); iterator != items.cend(); ++iterator) {
