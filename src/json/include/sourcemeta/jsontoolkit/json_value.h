@@ -12,6 +12,7 @@
 #include <functional>       // std::less, std::reference_wrapper
 #include <initializer_list> // std::initializer_list
 #include <memory>           // std::allocator
+#include <optional>         // std::optional
 #include <set>              // std::set
 #include <sstream>          // std::basic_istringstream
 #include <string>           // std::basic_string, std::char_traits
