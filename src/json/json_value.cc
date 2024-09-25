@@ -457,7 +457,7 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
   const auto &object{std::get<Object>(this->data)};
   const auto value{object.data.find(key)};
 
-  if (value == object.data.end()) {
+  if (value == object.data.cend()) {
     return std::nullopt;
   }
   return value->second;
