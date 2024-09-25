@@ -453,13 +453,14 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
 [[nodiscard]] auto JSON::try_at(const JSON::String &key) const
     -> std::optional<JSON> {
   assert(this->is_object());
+
   const auto &object{std::get<Object>(this->data)};
   const auto value{object.data.find(key)};
+
   if (value == object.data.end()) {
     return std::nullopt;
-  } else {
-    return value->second;
   }
+  return value->second;
 }
 
 [[nodiscard]] auto JSON::defines(const JSON::String &key) const -> bool {
