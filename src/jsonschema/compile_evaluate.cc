@@ -335,13 +335,16 @@ auto evaluate_step(
     const std::optional<
         sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback> &callback,
     EvaluationContext &context) -> bool {
+  SOURCEMETA_TRACE_REGISTER_ID(trace_dispatch_id);
   SOURCEMETA_TRACE_REGISTER_ID(trace_id);
+  SOURCEMETA_TRACE_START(trace_dispatch_id, "Dispatch");
   using namespace sourcemeta::jsontoolkit;
 
 #define STRINGIFY(x) #x
 #define IS_STEP(step_type) std::holds_alternative<step_type>(step)
 
 #define EVALUATE_BEGIN(step_category, step_type, precondition)                 \
+  SOURCEMETA_TRACE_END(trace_dispatch_id, "Dispatch");                         \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
   context.push(step_category);                                                 \
@@ -359,6 +362,7 @@ auto evaluate_step(
   bool result{false};
 
 #define EVALUATE_BEGIN_NO_TARGET(step_category, step_type, precondition)       \
+  SOURCEMETA_TRACE_END(trace_dispatch_id, "Dispatch");                         \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
   if (!(precondition)) {                                                       \
@@ -378,6 +382,7 @@ auto evaluate_step(
   // valid in the document as part of the condition, but if it is, we can
   // pass it to `.push()` so that it doesn't need to traverse it again.
 #define EVALUATE_BEGIN_TRY_TARGET(step_category, step_type, precondition)      \
+  SOURCEMETA_TRACE_END(trace_dispatch_id, "Dispatch");                         \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &target{context.resolve_target()};                                \
   const auto &step_category{std::get<step_type>(step)};                        \
@@ -400,6 +405,7 @@ auto evaluate_step(
   bool result{false};
 
 #define EVALUATE_BEGIN_NO_PRECONDITION(step_category, step_type)               \
+  SOURCEMETA_TRACE_END(trace_dispatch_id, "Dispatch");                         \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
   context.push(step_category);                                                 \
@@ -1308,7 +1314,11 @@ inline auto evaluate_internal(
     const std::optional<
         sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback> &callback)
     -> bool {
+  SOURCEMETA_TRACE_REGISTER_ID(trace_evaluation_context_id);
+  SOURCEMETA_TRACE_START(trace_evaluation_context_id, "EvaluationContext");
   EvaluationContext context{instance};
+  SOURCEMETA_TRACE_END(trace_evaluation_context_id, "EvaluationContext");
+
   bool overall{true};
   for (const auto &step : steps) {
     if (!evaluate_step(step, mode, callback, context)) {
