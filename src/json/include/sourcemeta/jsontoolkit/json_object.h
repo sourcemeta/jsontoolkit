@@ -65,9 +65,29 @@ public:
   auto operator>=(const JSONObject<Key, Value> &other) const noexcept -> bool {
     return this->data >= other.data;
   }
+
   auto operator==(const JSONObject<Key, Value> &other) const noexcept -> bool {
-    return this->data == other.data;
+    if (this->data.size() != other.data.size()) {
+      return false;
+    }
+
+    for (const auto &entry : this->data) {
+      const auto result = other.data.find(entry.first);
+      if (result == other.data.cend()) {
+        return false;
+      }
+    }
+
+    for (const auto &entry : this->data) {
+      const auto result = other.data.find(entry.first);
+      if (result->second != entry.second) {
+        return false;
+      }
+    }
+
+    return true;
   }
+
   auto operator!=(const JSONObject<Key, Value> &other) const noexcept -> bool {
     return this->data != other.data;
   }
