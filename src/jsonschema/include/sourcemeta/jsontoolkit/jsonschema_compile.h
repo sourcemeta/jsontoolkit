@@ -3,6 +3,7 @@
 
 #include "jsonschema_export.h"
 
+#include <sourcemeta/jsontoolkit/jsonschema_error.h>
 #include <sourcemeta/jsontoolkit/jsonschema_reference.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
@@ -12,6 +13,7 @@
 #include <sourcemeta/jsontoolkit/uri.h>
 
 #include <cstdint>       // std::uint8_t
+#include <functional>    // std::reference_wrapper
 #include <functional>    // std::function
 #include <map>           // std::map
 #include <optional>      // std::optional, std::nullopt
@@ -828,6 +830,333 @@ auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 describe(const bool valid, const SchemaCompilerTemplate::value_type &step,
          const WeakPointer &evaluate_path, const WeakPointer &instance_location,
          const JSON &instance, const JSON &annotation) -> std::string;
+
+class SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT EvaluationContext {
+public:
+  using Pointer = sourcemeta::jsontoolkit::WeakPointer;
+  using JSON = sourcemeta::jsontoolkit::JSON;
+  using Template = sourcemeta::jsontoolkit::SchemaCompilerTemplate;
+
+  auto annotate(const Pointer &current_instance_location, const JSON &value)
+      -> std::pair<std::reference_wrapper<const JSON>, bool> {
+    const auto result{this->annotations_.insert({current_instance_location, {}})
+                          .first->second.insert({this->evaluate_path(), {}})
+                          .first->second.insert(value)};
+    return {*(result.first), result.second};
+  }
+
+private:
+  auto annotations(const Pointer &current_instance_location,
+                   const Pointer &schema_location) const -> const auto & {
+    static const decltype(this->annotations_)::mapped_type::mapped_type
+        placeholder;
+    // Use `.find()` instead of `.contains()` and `.at()` for performance
+    // reasons
+    const auto instance_location_result{
+        this->annotations_.find(current_instance_location)};
+    if (instance_location_result == this->annotations_.end()) {
+      return placeholder;
+    }
+
+    const auto schema_location_result{
+        instance_location_result->second.find(schema_location)};
+    if (schema_location_result == instance_location_result->second.end()) {
+      return placeholder;
+    }
+
+    return schema_location_result->second;
+  }
+
+  auto annotations(const Pointer &current_instance_location) const -> const
+      auto & {
+    static const decltype(this->annotations_)::mapped_type placeholder;
+    // Use `.find()` instead of `.contains()` and `.at()` for performance
+    // reasons
+    const auto instance_location_result{
+        this->annotations_.find(current_instance_location)};
+    if (instance_location_result == this->annotations_.end()) {
+      return placeholder;
+    }
+
+    return instance_location_result->second;
+  }
+
+public:
+  auto
+  defines_any_adjacent_annotation(const Pointer &expected_instance_location,
+                                  const Pointer &base_evaluate_path,
+                                  const std::string &keyword) const -> bool {
+    // TODO: We should be taking masks into account
+    // TODO: How can we avoid this expensive pointer manipulation?
+    auto expected_evaluate_path{base_evaluate_path};
+    expected_evaluate_path.push_back({keyword});
+    return !this->annotations(expected_instance_location,
+                              expected_evaluate_path)
+                .empty();
+  }
+
+  auto defines_any_adjacent_annotation(
+      const Pointer &expected_instance_location,
+      const Pointer &base_evaluate_path,
+      const std::vector<std::string> &keywords) const -> bool {
+    for (const auto &keyword : keywords) {
+      if (this->defines_any_adjacent_annotation(expected_instance_location,
+                                                base_evaluate_path, keyword)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  auto defines_annotation(const Pointer &expected_instance_location,
+                          const Pointer &base_evaluate_path,
+                          const std::vector<std::string> &keywords,
+                          const JSON &value) const -> bool {
+    if (keywords.empty()) {
+      return false;
+    }
+
+    const auto instance_annotations{
+        this->annotations(expected_instance_location)};
+    for (const auto &[schema_location, schema_annotations] :
+         instance_annotations) {
+      assert(!schema_location.empty());
+      const auto &keyword{schema_location.back()};
+
+      if (keyword.is_property() &&
+          std::find(keywords.cbegin(), keywords.cend(),
+                    keyword.to_property()) != keywords.cend() &&
+          schema_annotations.contains(value) &&
+          schema_location.initial().starts_with(base_evaluate_path)) {
+        bool blacklisted = false;
+        for (const auto &masked : this->annotation_blacklist) {
+          if (schema_location.starts_with(masked) &&
+              !this->evaluate_path_.starts_with(masked)) {
+            blacklisted = true;
+            break;
+          }
+        }
+
+        if (!blacklisted) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  auto largest_annotation_index(const Pointer &expected_instance_location,
+                                const std::vector<std::string> &keywords,
+                                const std::uint64_t default_value) const
+      -> std::uint64_t {
+    // TODO: We should be taking masks into account
+
+    std::uint64_t result{default_value};
+    for (const auto &[schema_location, schema_annotations] :
+         this->annotations(expected_instance_location)) {
+      assert(!schema_location.empty());
+      const auto &keyword{schema_location.back()};
+      if (!keyword.is_property()) {
+        continue;
+      }
+
+      if (std::find(keywords.cbegin(), keywords.cend(),
+                    keyword.to_property()) == keywords.cend()) {
+        continue;
+      }
+
+      for (const auto &annotation : schema_annotations) {
+        if (annotation.is_integer() && annotation.is_positive()) {
+          result = std::max(
+              result, static_cast<std::uint64_t>(annotation.to_integer()) + 1);
+        }
+      }
+    }
+
+    return result;
+  }
+
+  template <typename T> auto push_without_traverse(const T &step) -> void {
+    // Guard against infinite recursion in a cheap manner, as
+    // infinite recursion will manifest itself through huge
+    // ever-growing evaluate paths
+    constexpr auto EVALUATE_PATH_LIMIT{400};
+    if (this->evaluate_path_.size() > EVALUATE_PATH_LIMIT) [[unlikely]] {
+      throw sourcemeta::jsontoolkit::SchemaEvaluationError(
+          "The evaluation path depth limit was reached "
+          "likely due to infinite recursion");
+    }
+
+    this->frame_sizes.emplace_back(step.relative_schema_location.size(),
+                                   step.relative_instance_location.size());
+    this->evaluate_path_.push_back(step.relative_schema_location);
+    this->instance_location_.push_back(step.relative_instance_location);
+
+    if (step.dynamic) {
+      // Note that we are potentially repeatedly pushing back the
+      // same schema resource over and over again. However, the
+      // logic for making sure this list is "pure" takes a lot of
+      // computation power. Being silly seems faster.
+      this->resources_.push_back(step.schema_resource);
+    }
+  }
+
+  template <typename T> auto push(const T &step) -> void {
+    this->push_without_traverse(step);
+    if (!step.relative_instance_location.empty()) {
+      this->instances_.emplace_back(
+          get(this->instances_.back().get(), step.relative_instance_location));
+    }
+  }
+
+  // A performance shortcut for pushing without re-traversing the target
+  // if we already know that the destination target will be
+  template <typename T>
+  auto push(const T &step, std::reference_wrapper<const JSON> &&new_instance)
+      -> void {
+    this->push_without_traverse(step);
+    assert(!step.relative_instance_location.empty());
+    this->instances_.emplace_back(std::move(new_instance));
+  }
+
+  template <typename T> auto pop(const T &step) -> void {
+    assert(!this->frame_sizes.empty());
+    const auto &sizes{this->frame_sizes.back()};
+    this->evaluate_path_.pop_back(sizes.first);
+    this->instance_location_.pop_back(sizes.second);
+    if (sizes.second > 0) {
+      this->instances_.pop_back();
+    }
+
+    this->frame_sizes.pop_back();
+
+    // TODO: Do schema resource management using hashes to avoid
+    // expensive string comparisons
+    if (step.dynamic) {
+      assert(!this->resources_.empty());
+      this->resources_.pop_back();
+    }
+  }
+
+  auto enter(const Pointer::Token::Property &property) -> void {
+    this->instance_location_.push_back(property);
+    this->instances_.emplace_back(this->instances_.back().get().at(property));
+  }
+
+  auto enter(const Pointer::Token::Index &index) -> void {
+    this->instance_location_.push_back(index);
+    this->instances_.emplace_back(this->instances_.back().get().at(index));
+  }
+
+  auto leave() -> void {
+    this->instance_location_.pop_back();
+    this->instances_.pop_back();
+  }
+
+  auto instances() const noexcept -> const auto & { return this->instances_; }
+
+  auto resources() const noexcept -> const std::vector<std::string> & {
+    return this->resources_;
+  }
+
+  auto evaluate_path() const noexcept -> const Pointer & {
+    return this->evaluate_path_;
+  }
+
+  auto instance_location() const noexcept -> const Pointer & {
+    return this->instance_location_;
+  }
+
+  enum class TargetType : std::uint8_t { Key, Value };
+  auto target_type(const TargetType type) noexcept -> void {
+    this->property_as_instance = (type == TargetType::Key);
+  }
+
+  auto resolve_target() -> const JSON & {
+    if (this->property_as_instance) [[unlikely]] {
+      assert(!this->instance_location().empty());
+      assert(this->instance_location().back().is_property());
+      // For efficiency, as we likely reference the same JSON values
+      // over and over again
+      // TODO: Get rid of this once we have weak pointers
+      static std::set<JSON> property_values;
+      return *(property_values
+                   .emplace(this->instance_location().back().to_property())
+                   .first);
+    }
+
+    return this->instances_.back().get();
+  }
+
+  auto mark(const std::size_t id, const Template &children) -> void {
+    this->labels.try_emplace(id, children);
+  }
+
+  // TODO: At least currently, we only need to mask if a schema
+  // makes use of `unevaluatedProperties` or `unevaluatedItems`
+  // Detect if a schema does need this so if not, we avoid
+  // an unnecessary copy
+  auto mask() -> void {
+    this->annotation_blacklist.push_back(this->evaluate_path_);
+  }
+
+  auto jump(const std::size_t id) const noexcept -> const Template & {
+    assert(this->labels.contains(id));
+    return this->labels.at(id).get();
+  }
+
+  auto find_dynamic_anchor(const std::string &anchor) const
+      -> std::optional<std::size_t> {
+    for (const auto &resource : this->resources()) {
+      std::ostringstream name;
+      name << resource;
+      name << '#';
+      name << anchor;
+      const auto label{std::hash<std::string>{}(name.str())};
+      if (this->labels.contains(label)) {
+        return label;
+      }
+    }
+
+    return std::nullopt;
+  }
+
+  auto reset(const JSON &instance) {
+    assert(this->evaluate_path_.empty());
+    assert(this->instance_location_.empty());
+    assert(this->frame_sizes.empty());
+    assert(this->resources_.empty());
+    this->instances_.clear();
+    this->instances_.emplace_back(instance);
+    this->annotation_blacklist.clear();
+    this->annotations_.clear();
+    this->labels.clear();
+    this->property_as_instance = false;
+  }
+
+public:
+  const JSON null{nullptr};
+
+private:
+  std::vector<std::reference_wrapper<const JSON>> instances_;
+  Pointer evaluate_path_;
+  Pointer instance_location_;
+  std::vector<std::pair<std::size_t, std::size_t>> frame_sizes;
+  // TODO: Keep hashes of schema resources URI instead for performance reasons
+  std::vector<std::string> resources_;
+  std::vector<Pointer> annotation_blacklist;
+  // We don't use a pair for holding the two pointers for runtime
+  // efficiency when resolving keywords like `unevaluatedProperties`
+  std::map<Pointer, std::map<Pointer, std::set<JSON>>> annotations_;
+  std::map<std::size_t, const std::reference_wrapper<const Template>> labels;
+  bool property_as_instance{false};
+};
+
+// TODO
+auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT evaluate(
+    const SchemaCompilerTemplate &steps, EvaluationContext &context) -> bool;
 
 /// @ingroup jsonschema_compiler
 ///

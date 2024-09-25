@@ -53,11 +53,13 @@ auto main(int argc, char **argv) noexcept -> int {
   }
   std::cerr << "Number of instances: " << instances.size() << "\n";
 
+  sourcemeta::jsontoolkit::EvaluationContext context;
   // Validate and measure
   const auto timestamp_start{std::chrono::high_resolution_clock::now()};
   for (const auto &instance : instances) {
+    context.reset(instance);
     const auto result{
-        sourcemeta::jsontoolkit::evaluate(schema_template, instance)};
+        sourcemeta::jsontoolkit::evaluate(schema_template, context)};
     if (!result) {
       return EXIT_FAILURE;
     }
