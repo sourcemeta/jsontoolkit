@@ -310,9 +310,6 @@ public:
     return std::nullopt;
   }
 
-public:
-  const JSON null{nullptr};
-
 private:
   std::vector<std::reference_wrapper<const JSON>> instances_;
   Pointer evaluate_path_;
@@ -355,7 +352,7 @@ auto evaluate_step(
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
+                     JSON{nullptr});                                           \
   }                                                                            \
   bool result{false};
 
@@ -371,7 +368,7 @@ auto evaluate_step(
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
+                     JSON{nullptr});                                           \
   }                                                                            \
   bool result{false};
 
@@ -398,7 +395,7 @@ auto evaluate_step(
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
+                     JSON{nullptr});                                           \
   }                                                                            \
   bool result{false};
 
@@ -410,7 +407,7 @@ auto evaluate_step(
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
+                     JSON{nullptr});                                           \
   }                                                                            \
   bool result{false};
 
@@ -418,7 +415,7 @@ auto evaluate_step(
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Post, result, step,         \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
+                     JSON{nullptr});                                           \
   }                                                                            \
   context.pop(step_category);                                                  \
   SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                        \
@@ -443,7 +440,7 @@ auto evaluate_step(
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
-                     context.evaluate_path(), destination, context.null);      \
+                     context.evaluate_path(), destination, JSON{nullptr});     \
     callback.value()(SchemaCompilerEvaluationType::Post, true, step,           \
                      context.evaluate_path(), destination,                     \
                      annotation_result.first);                                 \
@@ -462,7 +459,7 @@ auto evaluate_step(
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
-                     context.evaluate_path(), destination, context.null);      \
+                     context.evaluate_path(), destination, JSON{nullptr});     \
     callback.value()(SchemaCompilerEvaluationType::Post, true, step,           \
                      context.evaluate_path(), destination,                     \
                      annotation_result.first);                                 \
