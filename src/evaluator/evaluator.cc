@@ -1,5 +1,4 @@
-#include <sourcemeta/jsontoolkit/jsonschema.h>
-#include <sourcemeta/jsontoolkit/jsonschema_compile.h>
+#include <sourcemeta/jsontoolkit/evaluator.h>
 #include <sourcemeta/jsontoolkit/uri.h>
 
 #include "trace.h"
@@ -169,7 +168,7 @@ public:
     // Guard against infinite recursion in a cheap manner, as
     // infinite recursion will manifest itself through huge
     // ever-growing evaluate paths
-    constexpr auto EVALUATE_PATH_LIMIT{400};
+    constexpr auto EVALUATE_PATH_LIMIT{300};
     if (this->evaluate_path_.size() > EVALUATE_PATH_LIMIT) [[unlikely]] {
       throw sourcemeta::jsontoolkit::SchemaEvaluationError(
           "The evaluation path depth limit was reached "

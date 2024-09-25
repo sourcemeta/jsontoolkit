@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 
+#include <sourcemeta/jsontoolkit/evaluator.h>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-#include "jsonschema_test_utils.h"
+#include "evaluator_utils.h"
 
-TEST(JSONSchema_compile_2020_12, unknown_1) {
+TEST(JSONSchema_evaluator_2020_12, unknown_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -28,7 +29,7 @@ TEST(JSONSchema_compile_2020_12, unknown_1) {
                                "collected as the annotation \"baz\"");
 }
 
-TEST(JSONSchema_compile_2020_12, unknown_2) {
+TEST(JSONSchema_evaluator_2020_12, unknown_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -51,7 +52,7 @@ TEST(JSONSchema_compile_2020_12, unknown_2) {
       "The unrecognized keyword \"x-test\" was collected as the annotation 1");
 }
 
-TEST(JSONSchema_compile_2020_12, items_1) {
+TEST(JSONSchema_evaluator_2020_12, items_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -69,7 +70,7 @@ TEST(JSONSchema_compile_2020_12, items_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_2020_12, items_2) {
+TEST(JSONSchema_evaluator_2020_12, items_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -120,7 +121,7 @@ TEST(JSONSchema_compile_2020_12, items_2) {
       "given subschema");
 }
 
-TEST(JSONSchema_compile_2020_12, items_3) {
+TEST(JSONSchema_evaluator_2020_12, items_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -160,7 +161,7 @@ TEST(JSONSchema_compile_2020_12, items_3) {
                                "validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_2020_12, items_4) {
+TEST(JSONSchema_evaluator_2020_12, items_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -208,7 +209,7 @@ TEST(JSONSchema_compile_2020_12, items_4) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_compile_2020_12, items_5) {
+TEST(JSONSchema_evaluator_2020_12, items_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -281,7 +282,7 @@ TEST(JSONSchema_compile_2020_12, items_5) {
       "given subschema");
 }
 
-TEST(JSONSchema_compile_2020_12, items_6) {
+TEST(JSONSchema_evaluator_2020_12, items_6) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -343,7 +344,7 @@ TEST(JSONSchema_compile_2020_12, items_6) {
       "validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_2020_12, prefixItems_1) {
+TEST(JSONSchema_evaluator_2020_12, prefixItems_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -359,7 +360,7 @@ TEST(JSONSchema_compile_2020_12, prefixItems_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_2020_12, prefixItems_2) {
+TEST(JSONSchema_evaluator_2020_12, prefixItems_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -385,7 +386,7 @@ TEST(JSONSchema_compile_2020_12, prefixItems_2) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_compile_2020_12, prefixItems_3) {
+TEST(JSONSchema_evaluator_2020_12, prefixItems_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -424,7 +425,7 @@ TEST(JSONSchema_compile_2020_12, prefixItems_3) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_compile_2020_12, prefixItems_4) {
+TEST(JSONSchema_evaluator_2020_12, prefixItems_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -469,7 +470,7 @@ TEST(JSONSchema_compile_2020_12, prefixItems_4) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_compile_2020_12, prefixItems_5) {
+TEST(JSONSchema_evaluator_2020_12, prefixItems_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -509,7 +510,7 @@ TEST(JSONSchema_compile_2020_12, prefixItems_5) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_compile_2020_12, prefixItems_6) {
+TEST(JSONSchema_evaluator_2020_12, prefixItems_6) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -553,7 +554,7 @@ TEST(JSONSchema_compile_2020_12, prefixItems_6) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_compile_2020_12, contains_1) {
+TEST(JSONSchema_evaluator_2020_12, contains_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -569,7 +570,7 @@ TEST(JSONSchema_compile_2020_12, contains_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_2020_12, contains_2) {
+TEST(JSONSchema_evaluator_2020_12, contains_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -621,7 +622,7 @@ TEST(JSONSchema_compile_2020_12, contains_2) {
       "against the given subschema");
 }
 
-TEST(JSONSchema_compile_2020_12, contains_3) {
+TEST(JSONSchema_evaluator_2020_12, contains_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -668,7 +669,7 @@ TEST(JSONSchema_compile_2020_12, contains_3) {
       "against the given subschema");
 }
 
-TEST(JSONSchema_compile_2020_12, contains_4) {
+TEST(JSONSchema_evaluator_2020_12, contains_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -732,7 +733,7 @@ TEST(JSONSchema_compile_2020_12, contains_4) {
       "against the given subschema");
 }
 
-TEST(JSONSchema_compile_2020_12, contains_5) {
+TEST(JSONSchema_evaluator_2020_12, contains_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -783,7 +784,7 @@ TEST(JSONSchema_compile_2020_12, contains_5) {
       "against the given subschema");
 }
 
-TEST(JSONSchema_compile_2020_12, reference_from_unknown_keyword) {
+TEST(JSONSchema_evaluator_2020_12, reference_from_unknown_keyword) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -812,7 +813,7 @@ TEST(JSONSchema_compile_2020_12, reference_from_unknown_keyword) {
   }
 }
 
-TEST(JSONSchema_compile_2020_12, dynamicRef_1) {
+TEST(JSONSchema_evaluator_2020_12, dynamicRef_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
