@@ -328,6 +328,35 @@ private:
   bool property_as_instance{false};
 };
 
+template <typename T>
+inline auto callback_pre(
+    const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step,
+    const T &specific_step, const EvaluationContext &context,
+    const std::optional<
+        sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback> &callback)
+    -> void {
+  if (specific_step.report && callback.has_value()) {
+    callback.value()(sourcemeta::jsontoolkit::SchemaCompilerEvaluationType::Pre,
+                     true, step, context.evaluate_path(),
+                     context.instance_location(), context.null);
+  }
+}
+
+template <typename T>
+inline auto callback_post(
+    const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step,
+    const T &specific_step, const EvaluationContext &context, const bool result,
+    const std::optional<
+        sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback> &callback)
+    -> void {
+  if (specific_step.report && callback.has_value()) {
+    callback.value()(
+        sourcemeta::jsontoolkit::SchemaCompilerEvaluationType::Post, result,
+        step, context.evaluate_path(), context.instance_location(),
+        context.null);
+  }
+}
+
 auto evaluate_step(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step,
     const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode,
@@ -338,6 +367,7 @@ auto evaluate_step(
   SOURCEMETA_TRACE_REGISTER_ID(trace_id);
   SOURCEMETA_TRACE_START(trace_dispatch_id, "Dispatch");
   using namespace sourcemeta::jsontoolkit;
+  bool result{false};
 
 #define STRINGIFY(x) #x
 
@@ -352,12 +382,7 @@ auto evaluate_step(
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
   }                                                                            \
-  if (step_category.report && callback.has_value()) {                          \
-    callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
-                     context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
-  }                                                                            \
-  bool result{false};
+  callback_pre(step, step_category, context, callback);
 
 #define EVALUATE_BEGIN_NO_TARGET(step_category, step_type, precondition)       \
   SOURCEMETA_TRACE_END(trace_dispatch_id, "Dispatch");                         \
@@ -368,12 +393,7 @@ auto evaluate_step(
     return true;                                                               \
   }                                                                            \
   context.push(step_category);                                                 \
-  if (step_category.report && callback.has_value()) {                          \
-    callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
-                     context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
-  }                                                                            \
-  bool result{false};
+  callback_pre(step, step_category, context, callback);
 
   // This is a slightly complicated dance to avoid traversing the relative
   // instance location twice. We first need to traverse it to check if its
@@ -395,34 +415,19 @@ auto evaluate_step(
     return true;                                                               \
   }                                                                            \
   context.push(step_category, std::move(target_check.value()));                \
-  if (step_category.report && callback.has_value()) {                          \
-    callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
-                     context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
-  }                                                                            \
-  bool result{false};
+  callback_pre(step, step_category, context, callback);
 
 #define EVALUATE_BEGIN_NO_PRECONDITION(step_category, step_type)               \
   SOURCEMETA_TRACE_END(trace_dispatch_id, "Dispatch");                         \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
   context.push(step_category);                                                 \
-  if (step_category.report && callback.has_value()) {                          \
-    callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
-                     context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
-  }                                                                            \
-  bool result{false};
+  callback_pre(step, step_category, context, callback);
 
 #define EVALUATE_END(step_category, step_type)                                 \
-  if (step_category.report && callback.has_value()) {                          \
-    callback.value()(SchemaCompilerEvaluationType::Post, result, step,         \
-                     context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
-  }                                                                            \
+  callback_post(step, step_category, context, result, callback);               \
   context.pop(step_category);                                                  \
-  SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                        \
-  return result;
+  SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));
 
   // As a safety guard, only emit the annotation if it didn't exist already.
   // Otherwise we risk confusing consumers
@@ -1439,8 +1444,10 @@ auto evaluate_step(
     default:
       // We should never get here
       assert(false);
-      return false;
+      break;
   }
+
+  return result;
 }
 
 inline auto evaluate_internal(
