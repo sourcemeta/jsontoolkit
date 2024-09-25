@@ -77,3 +77,34 @@ TEST(JSONSchema_evaluator, boolean_false) {
       instance, 0,
       "No instance is expected to succeed against the false schema");
 }
+
+TEST(JSONSchema_evaluator, reusable_context) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "string"
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  sourcemeta::jsontoolkit::EvaluationContext context;
+
+  const sourcemeta::jsontoolkit::JSON instance_1{"foo bar"};
+  context.prepare(instance_1);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::evaluate(compiled_schema, context));
+
+  const sourcemeta::jsontoolkit::JSON instance_2{"baz"};
+  context.prepare(instance_2);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::evaluate(compiled_schema, context));
+
+  const sourcemeta::jsontoolkit::JSON instance_3{4};
+  context.prepare(instance_3);
+  EXPECT_FALSE(sourcemeta::jsontoolkit::evaluate(compiled_schema, context));
+
+  const sourcemeta::jsontoolkit::JSON instance_4{"qux"};
+  context.prepare(instance_4);
+  EXPECT_TRUE(sourcemeta::jsontoolkit::evaluate(compiled_schema, context));
+}

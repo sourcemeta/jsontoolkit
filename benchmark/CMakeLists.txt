@@ -3,7 +3,7 @@ set(BENCHMARK_SOURCES)
 if(JSONTOOLKIT_JSON)
   list(APPEND BENCHMARK_SOURCES json.cc)
 endif()
-if(JSONTOOLKIT_JSONSCHEMA)
+if(JSONTOOLKIT_EVALUATOR AND JSONTOOLKIT_JSONSCHEMA)
   list(APPEND BENCHMARK_SOURCES jsonschema_validator.cc)
 endif()
 
@@ -19,7 +19,9 @@ if(BENCHMARK_SOURCES)
     target_link_libraries(sourcemeta_jsontoolkit_benchmark
       PRIVATE sourcemeta::jsontoolkit::json)
   endif()
-  if(JSONTOOLKIT_JSONSCHEMA)
+  if(JSONTOOLKIT_EVALUATOR AND JSONTOOLKIT_JSONSCHEMA)
+    target_link_libraries(sourcemeta_jsontoolkit_benchmark
+      PRIVATE sourcemeta::jsontoolkit::evaluator)
     target_link_libraries(sourcemeta_jsontoolkit_benchmark
       PRIVATE sourcemeta::jsontoolkit::jsonschema)
   endif()

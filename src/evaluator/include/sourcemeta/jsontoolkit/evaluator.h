@@ -55,8 +55,6 @@ using SchemaCompilerEvaluationCallback =
                        const SchemaCompilerTemplate::value_type &,
                        const WeakPointer &, const WeakPointer &, const JSON &)>;
 
-// TODO: Support standard output formats too
-
 /// @ingroup evaluator
 ///
 /// This function evaluates a schema compiler template in validation mode,
@@ -142,6 +140,41 @@ auto SOURCEMETA_JSONTOOLKIT_EVALUATOR_EXPORT
 evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
          const SchemaCompilerEvaluationMode mode,
          const SchemaCompilerEvaluationCallback &callback) -> bool;
+
+/// @ingroup evaluator
+///
+/// This function evaluates a schema compiler template from an evaluation
+/// context, returning a boolean without error information. The evaluation
+/// context can be re-used among evaluations (as long as its always loaded with
+/// the new instance first) for performance reasons. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/jsonschema.h>
+/// #include <sourcemeta/jsontoolkit/evaluator.h>
+/// #include <cassert>
+///
+/// const sourcemeta::jsontoolkit::JSON schema =
+///     sourcemeta::jsontoolkit::parse(R"JSON({
+///   "$schema": "https://json-schema.org/draft/2020-12/schema",
+///   "type": "string"
+/// })JSON");
+///
+/// const auto schema_template{sourcemeta::jsontoolkit::compile(
+///     schema, sourcemeta::jsontoolkit::default_schema_walker,
+///     sourcemeta::jsontoolkit::official_resolver,
+///     sourcemeta::jsontoolkit::default_schema_compiler)};
+///
+/// const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
+/// sourcemeta::jsontoolkit::EvaluationContext context;
+/// context.prepare(instance);
+///
+/// const auto result{sourcemeta::jsontoolkit::evaluate(
+///   schema_template, context)};
+/// assert(result);
+/// ```
+auto SOURCEMETA_JSONTOOLKIT_EVALUATOR_EXPORT evaluate(
+    const SchemaCompilerTemplate &steps, EvaluationContext &context) -> bool;
 
 } // namespace sourcemeta::jsontoolkit
 

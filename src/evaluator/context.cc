@@ -6,7 +6,17 @@
 namespace sourcemeta::jsontoolkit {
 
 auto EvaluationContext::prepare(const JSON &instance) -> void {
+  // Do a full reset for the next run
+  assert(this->evaluate_path_.empty());
+  assert(this->instance_location_.empty());
+  assert(this->frame_sizes.empty());
+  assert(this->resources_.empty());
+  this->instances_.clear();
   this->instances_.emplace_back(instance);
+  this->annotation_blacklist.clear();
+  this->annotations_.clear();
+  this->labels.clear();
+  this->property_as_instance = false;
 }
 
 auto EvaluationContext::push_without_traverse(
