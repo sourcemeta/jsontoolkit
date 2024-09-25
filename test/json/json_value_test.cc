@@ -395,3 +395,12 @@ TEST(JSON_value, try_at_fail) {
   const auto result = document.try_at("boo");
   EXPECT_FALSE(result.has_value());
 }
+
+TEST(JSON_value, try_at_for_index) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{\"0\":5}");
+  EXPECT_TRUE(document.is_object());
+  const auto result = document.try_at(0);
+  EXPECT_TRUE(result.has_value());
+  EXPECT_EQ(result.value().to_integer(), 5);
+}
