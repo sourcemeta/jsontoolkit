@@ -1,7 +1,12 @@
-#ifndef SOURCEMETA_JSONTOOLKIT_EVALUATOR_CONTEXT_H_
-#define SOURCEMETA_JSONTOOLKIT_EVALUATOR_CONTEXT_H_
+#ifndef SOURCEMETA_JSONTOOLKIT_EVALUATOR_CONTEXT_H
+#define SOURCEMETA_JSONTOOLKIT_EVALUATOR_CONTEXT_H
 
-#include <sourcemeta/jsontoolkit/evaluator.h>
+#include "evaluator_export.h"
+
+#include <sourcemeta/jsontoolkit/evaluator_template.h>
+
+#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/jsonpointer.h>
 
 #include <cassert>    // assert
 #include <cstdint>    // std::uint8_t
@@ -13,11 +18,17 @@
 
 namespace sourcemeta::jsontoolkit {
 
-class EvaluationContext {
+/// @ingroup evaluator
+/// Represents a stateful schema evaluation context
+class SOURCEMETA_JSONTOOLKIT_EVALUATOR_EXPORT EvaluationContext {
 public:
+  /// Prepare the schema evaluation context with a given instance.
+  /// Performing evaluation on a context without preparing it with
+  /// an instance is undefined behavior.
   auto prepare(const JSON &instance) -> void;
 
-  // All of these methods are considered internal
+  // All of these methods are considered internal and no
+  // client must depend on them
 #ifndef DOXYGEN
 
   ///////////////////////////////////////////////
@@ -109,6 +120,12 @@ public:
   const JSON null{nullptr};
 
 private:
+// Exporting symbols that depends on the standard C++ library is considered
+// safe.
+// https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4275?view=msvc-170&redirectedfrom=MSDN
+#if defined(_MSC_VER)
+#pragma warning(disable : 4251 4275)
+#endif
   std::vector<std::reference_wrapper<const JSON>> instances_;
   WeakPointer evaluate_path_;
   WeakPointer instance_location_;
@@ -123,6 +140,9 @@ private:
            const std::reference_wrapper<const SchemaCompilerTemplate>>
       labels;
   bool property_as_instance{false};
+#if defined(_MSC_VER)
+#pragma warning(default : 4251 4275)
+#endif
 #endif
 };
 
