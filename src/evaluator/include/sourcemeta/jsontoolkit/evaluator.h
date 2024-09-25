@@ -3,6 +3,7 @@
 
 #include "evaluator_export.h"
 
+#include <sourcemeta/jsontoolkit/evaluator_context.h>
 #include <sourcemeta/jsontoolkit/evaluator_error.h>
 #include <sourcemeta/jsontoolkit/evaluator_template.h>
 

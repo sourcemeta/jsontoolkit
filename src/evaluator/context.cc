@@ -1,6 +1,5 @@
-#include <sourcemeta/jsontoolkit/evaluator.h>
-
-#include "context.h"
+#include <sourcemeta/jsontoolkit/evaluator_context.h>
+#include <sourcemeta/jsontoolkit/evaluator_error.h>
 
 #include <cassert> // assert
 

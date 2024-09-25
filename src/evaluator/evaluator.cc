@@ -1,7 +1,6 @@
 #include <sourcemeta/jsontoolkit/evaluator.h>
 #include <sourcemeta/jsontoolkit/uri.h>
 
-#include "context.h"
 #include "trace.h"
 
 #include <algorithm> // std::min, std::any_of
