@@ -15,7 +15,68 @@ namespace sourcemeta::jsontoolkit {
 
 class EvaluationContext {
 public:
-  EvaluationContext(const JSON &instance);
+  auto prepare(const JSON &instance) -> void;
+
+  // All of these methods are considered internal
+#ifndef DOXYGEN
+
+  ///////////////////////////////////////////////
+  // Evaluation stack
+  ///////////////////////////////////////////////
+
+  auto evaluate_path() const noexcept -> const WeakPointer &;
+  auto instance_location() const noexcept -> const WeakPointer &;
+  auto push(const Pointer &relative_schema_location,
+            const Pointer &relative_instance_location,
+            const std::string &schema_resource, const bool dynamic) -> void;
+  // A performance shortcut for pushing without re-traversing the target
+  // if we already know that the destination target will be
+  auto push(const Pointer &relative_schema_location,
+            const Pointer &relative_instance_location,
+            const std::string &schema_resource, const bool dynamic,
+            std::reference_wrapper<const JSON> &&new_instance) -> void;
+  auto pop(const bool dynamic) -> void;
+  auto enter(const WeakPointer::Token::Property &property) -> void;
+  auto enter(const WeakPointer::Token::Index &index) -> void;
+  auto leave() -> void;
+
+private:
+  auto push_without_traverse(const Pointer &relative_schema_location,
+                             const Pointer &relative_instance_location,
+                             const std::string &schema_resource,
+                             const bool dynamic) -> void;
+
+public:
+  ///////////////////////////////////////////////
+  // Target resolution
+  ///////////////////////////////////////////////
+
+  auto instances() const noexcept
+      -> const std::vector<std::reference_wrapper<const JSON>> &;
+  enum class TargetType : std::uint8_t { Key, Value };
+  auto target_type(const TargetType type) noexcept -> void;
+  auto resolve_target() -> const JSON &;
+
+  ///////////////////////////////////////////////
+  // References and anchors
+  ///////////////////////////////////////////////
+
+  auto resources() const noexcept -> const std::vector<std::string> &;
+  auto mark(const std::size_t id, const SchemaCompilerTemplate &children)
+      -> void;
+  // TODO: At least currently, we only need to mask if a schema
+  // makes use of `unevaluatedProperties` or `unevaluatedItems`
+  // Detect if a schema does need this so if not, we avoid
+  // an unnecessary copy
+  auto mask() -> void;
+  auto jump(const std::size_t id) const noexcept
+      -> const SchemaCompilerTemplate &;
+  auto find_dynamic_anchor(const std::string &anchor) const
+      -> std::optional<std::size_t>;
+
+  ///////////////////////////////////////////////
+  // Annotations
+  ///////////////////////////////////////////////
 
   auto annotate(const WeakPointer &current_instance_location, const JSON &value)
       -> std::pair<std::reference_wrapper<const JSON>, bool>;
@@ -36,98 +97,6 @@ public:
                                 const std::uint64_t default_value) const
       -> std::uint64_t;
 
-  template <typename T> auto push_without_traverse(const T &step) -> void {
-    // Guard against infinite recursion in a cheap manner, as
-    // infinite recursion will manifest itself through huge
-    // ever-growing evaluate paths
-    constexpr auto EVALUATE_PATH_LIMIT{300};
-    if (this->evaluate_path_.size() > EVALUATE_PATH_LIMIT) [[unlikely]] {
-      throw sourcemeta::jsontoolkit::SchemaEvaluationError(
-          "The evaluation path depth limit was reached "
-          "likely due to infinite recursion");
-    }
-
-    this->frame_sizes.emplace_back(step.relative_schema_location.size(),
-                                   step.relative_instance_location.size());
-    this->evaluate_path_.push_back(step.relative_schema_location);
-    this->instance_location_.push_back(step.relative_instance_location);
-
-    if (step.dynamic) {
-      // Note that we are potentially repeatedly pushing back the
-      // same schema resource over and over again. However, the
-      // logic for making sure this list is "pure" takes a lot of
-      // computation power. Being silly seems faster.
-      this->resources_.push_back(step.schema_resource);
-    }
-  }
-
-  template <typename T> auto push(const T &step) -> void {
-    this->push_without_traverse(step);
-    if (!step.relative_instance_location.empty()) {
-      this->instances_.emplace_back(
-          get(this->instances_.back().get(), step.relative_instance_location));
-    }
-  }
-
-  // A performance shortcut for pushing without re-traversing the target
-  // if we already know that the destination target will be
-  template <typename T>
-  auto push(const T &step, std::reference_wrapper<const JSON> &&new_instance)
-      -> void {
-    this->push_without_traverse(step);
-    assert(!step.relative_instance_location.empty());
-    this->instances_.emplace_back(std::move(new_instance));
-  }
-
-  template <typename T> auto pop(const T &step) -> void {
-    assert(!this->frame_sizes.empty());
-    const auto &sizes{this->frame_sizes.back()};
-    this->evaluate_path_.pop_back(sizes.first);
-    this->instance_location_.pop_back(sizes.second);
-    if (sizes.second > 0) {
-      this->instances_.pop_back();
-    }
-
-    this->frame_sizes.pop_back();
-
-    // TODO: Do schema resource management using hashes to avoid
-    // expensive string comparisons
-    if (step.dynamic) {
-      assert(!this->resources_.empty());
-      this->resources_.pop_back();
-    }
-  }
-
-  auto enter(const WeakPointer::Token::Property &property) -> void;
-  auto enter(const WeakPointer::Token::Index &index) -> void;
-  auto leave() -> void;
-  auto instances() const noexcept
-      -> const std::vector<std::reference_wrapper<const JSON>> &;
-  auto resources() const noexcept -> const std::vector<std::string> &;
-  auto evaluate_path() const noexcept -> const WeakPointer &;
-  auto instance_location() const noexcept -> const WeakPointer &;
-
-  enum class TargetType : std::uint8_t { Key, Value };
-  auto target_type(const TargetType type) noexcept -> void;
-
-  auto resolve_target() -> const JSON &;
-  auto mark(const std::size_t id, const SchemaCompilerTemplate &children)
-      -> void;
-
-  // TODO: At least currently, we only need to mask if a schema
-  // makes use of `unevaluatedProperties` or `unevaluatedItems`
-  // Detect if a schema does need this so if not, we avoid
-  // an unnecessary copy
-  auto mask() -> void;
-
-  auto jump(const std::size_t id) const noexcept
-      -> const SchemaCompilerTemplate &;
-  auto find_dynamic_anchor(const std::string &anchor) const
-      -> std::optional<std::size_t>;
-
-  // TODO: Remove this
-  const JSON null{nullptr};
-
 private:
   auto annotations(const WeakPointer &current_instance_location,
                    const WeakPointer &schema_location) const
@@ -135,6 +104,11 @@ private:
   auto annotations(const WeakPointer &current_instance_location) const
       -> const std::map<WeakPointer, std::set<JSON>> &;
 
+public:
+  // TODO: Remove this
+  const JSON null{nullptr};
+
+private:
   std::vector<std::reference_wrapper<const JSON>> instances_;
   WeakPointer evaluate_path_;
   WeakPointer instance_location_;
@@ -149,6 +123,7 @@ private:
            const std::reference_wrapper<const SchemaCompilerTemplate>>
       labels;
   bool property_as_instance{false};
+#endif
 };
 
 } // namespace sourcemeta::jsontoolkit

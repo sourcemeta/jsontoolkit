@@ -29,10 +29,12 @@ auto evaluate_step(
   SOURCEMETA_TRACE_END(trace_dispatch_id, "Dispatch");                         \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
-  context.push(step_category);                                                 \
+  context.push(step_category.relative_schema_location,                         \
+               step_category.relative_instance_location,                       \
+               step_category.schema_resource, step_category.dynamic);          \
   const auto &target{context.resolve_target()};                                \
   if (!(precondition)) {                                                       \
-    context.pop(step_category);                                                \
+    context.pop(step_category.dynamic);                                        \
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
   }                                                                            \
@@ -51,7 +53,9 @@ auto evaluate_step(
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
   }                                                                            \
-  context.push(step_category);                                                 \
+  context.push(step_category.relative_schema_location,                         \
+               step_category.relative_instance_location,                       \
+               step_category.schema_resource, step_category.dynamic);          \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
@@ -78,7 +82,10 @@ auto evaluate_step(
     SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
     return true;                                                               \
   }                                                                            \
-  context.push(step_category, std::move(target_check.value()));                \
+  context.push(step_category.relative_schema_location,                         \
+               step_category.relative_instance_location,                       \
+               step_category.schema_resource, step_category.dynamic,           \
+               std::move(target_check.value()));                               \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
@@ -90,7 +97,9 @@ auto evaluate_step(
   SOURCEMETA_TRACE_END(trace_dispatch_id, "Dispatch");                         \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
   const auto &step_category{std::get<step_type>(step)};                        \
-  context.push(step_category);                                                 \
+  context.push(step_category.relative_schema_location,                         \
+               step_category.relative_instance_location,                       \
+               step_category.schema_resource, step_category.dynamic);          \
   if (step_category.report && callback.has_value()) {                          \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
@@ -104,7 +113,7 @@ auto evaluate_step(
                      context.evaluate_path(), context.instance_location(),     \
                      context.null);                                            \
   }                                                                            \
-  context.pop(step_category);                                                  \
+  context.pop(step_category.dynamic);                                          \
   SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                        \
   return result;
 
@@ -123,7 +132,9 @@ auto evaluate_step(
   }                                                                            \
   const auto annotation_result{                                                \
       context.annotate(destination, annotation_value)};                        \
-  context.push(step_category);                                                 \
+  context.push(step_category.relative_schema_location,                         \
+               step_category.relative_instance_location,                       \
+               step_category.schema_resource, step_category.dynamic);          \
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
@@ -132,7 +143,7 @@ auto evaluate_step(
                      context.evaluate_path(), destination,                     \
                      annotation_result.first);                                 \
   }                                                                            \
-  context.pop(step_category);                                                  \
+  context.pop(step_category.dynamic);                                          \
   SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                        \
   return true;
 
@@ -142,7 +153,9 @@ auto evaluate_step(
   const auto &step_category{std::get<step_type>(step)};                        \
   const auto annotation_result{                                                \
       context.annotate(destination, annotation_value)};                        \
-  context.push(step_category);                                                 \
+  context.push(step_category.relative_schema_location,                         \
+               step_category.relative_instance_location,                       \
+               step_category.schema_resource, step_category.dynamic);          \
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
@@ -151,7 +164,7 @@ auto evaluate_step(
                      context.evaluate_path(), destination,                     \
                      annotation_result.first);                                 \
   }                                                                            \
-  context.pop(step_category);                                                  \
+  context.pop(step_category.dynamic);                                          \
   SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                        \
   return true;
 
@@ -1138,7 +1151,8 @@ inline auto evaluate_internal(
     -> bool {
   SOURCEMETA_TRACE_REGISTER_ID(trace_evaluation_context_id);
   SOURCEMETA_TRACE_START(trace_evaluation_context_id, "EvaluationContext");
-  sourcemeta::jsontoolkit::EvaluationContext context{instance};
+  sourcemeta::jsontoolkit::EvaluationContext context;
+  context.prepare(instance);
   SOURCEMETA_TRACE_END(trace_evaluation_context_id, "EvaluationContext");
 
   bool overall{true};
