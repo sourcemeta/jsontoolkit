@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 
+#include <sourcemeta/jsontoolkit/evaluator.h>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-#include "jsonschema_test_utils.h"
+#include "evaluator_utils.h"
 
-TEST(JSONSchema_compile_draft4, metaschema) {
+TEST(JSONSchema_evaluator_draft4, metaschema) {
   const auto metaschema{sourcemeta::jsontoolkit::official_resolver(
                             "http://json-schema.org/draft-04/schema#")
                             .get()};
@@ -21,7 +22,7 @@ TEST(JSONSchema_compile_draft4, metaschema) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
 }
 
-TEST(JSONSchema_compile_draft4, unknown_keyword) {
+TEST(JSONSchema_evaluator_draft4, unknown_keyword) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -37,7 +38,7 @@ TEST(JSONSchema_compile_draft4, unknown_keyword) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, type_1) {
+TEST(JSONSchema_evaluator_draft4, type_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -59,7 +60,7 @@ TEST(JSONSchema_compile_draft4, type_1) {
                                "The value was expected to be of type string");
 }
 
-TEST(JSONSchema_compile_draft4, type_2) {
+TEST(JSONSchema_evaluator_draft4, type_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -82,7 +83,7 @@ TEST(JSONSchema_compile_draft4, type_2) {
                                "but it was of type integer");
 }
 
-TEST(JSONSchema_compile_draft4, type_3) {
+TEST(JSONSchema_evaluator_draft4, type_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -102,7 +103,7 @@ TEST(JSONSchema_compile_draft4, type_3) {
                                "The value was expected to be of type number");
 }
 
-TEST(JSONSchema_compile_draft4, type_4) {
+TEST(JSONSchema_evaluator_draft4, type_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -122,7 +123,7 @@ TEST(JSONSchema_compile_draft4, type_4) {
                                "The value was expected to be of type number");
 }
 
-TEST(JSONSchema_compile_draft4, type_5) {
+TEST(JSONSchema_evaluator_draft4, type_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -143,7 +144,7 @@ TEST(JSONSchema_compile_draft4, type_5) {
       "The value was expected to be of type number but it was of type string");
 }
 
-TEST(JSONSchema_compile_draft4, type_6) {
+TEST(JSONSchema_evaluator_draft4, type_6) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -163,7 +164,7 @@ TEST(JSONSchema_compile_draft4, type_6) {
                                "The value was expected to be of type string");
 }
 
-TEST(JSONSchema_compile_draft4, type_7) {
+TEST(JSONSchema_evaluator_draft4, type_7) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -184,7 +185,7 @@ TEST(JSONSchema_compile_draft4, type_7) {
       "The value was expected to be of type string but it was of type integer");
 }
 
-TEST(JSONSchema_compile_draft4, type_8) {
+TEST(JSONSchema_evaluator_draft4, type_8) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -205,7 +206,7 @@ TEST(JSONSchema_compile_draft4, type_8) {
                                "number, or object and it was of type number");
 }
 
-TEST(JSONSchema_compile_draft4, type_9) {
+TEST(JSONSchema_evaluator_draft4, type_9) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -226,7 +227,7 @@ TEST(JSONSchema_compile_draft4, type_9) {
                                "number, or object but it was of type boolean");
 }
 
-TEST(JSONSchema_compile_draft4, required_1) {
+TEST(JSONSchema_evaluator_draft4, required_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -242,7 +243,7 @@ TEST(JSONSchema_compile_draft4, required_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, required_2) {
+TEST(JSONSchema_evaluator_draft4, required_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -265,7 +266,7 @@ TEST(JSONSchema_compile_draft4, required_2) {
       "The object value was expected to define the property \"foo\"");
 }
 
-TEST(JSONSchema_compile_draft4, required_3) {
+TEST(JSONSchema_evaluator_draft4, required_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -290,7 +291,7 @@ TEST(JSONSchema_compile_draft4, required_3) {
       "but did not define the property \"baz\"");
 }
 
-TEST(JSONSchema_compile_draft4, required_4) {
+TEST(JSONSchema_evaluator_draft4, required_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -319,7 +320,7 @@ TEST(JSONSchema_compile_draft4, required_4) {
                                "properties \"foo\", and \"bar\"");
 }
 
-TEST(JSONSchema_compile_draft4, allOf_1) {
+TEST(JSONSchema_evaluator_draft4, allOf_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -361,7 +362,7 @@ TEST(JSONSchema_compile_draft4, allOf_1) {
                                "against the 2 given subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, allOf_2) {
+TEST(JSONSchema_evaluator_draft4, allOf_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -404,7 +405,7 @@ TEST(JSONSchema_compile_draft4, allOf_2) {
                                "against the 2 given subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, ref_1) {
+TEST(JSONSchema_evaluator_draft4, ref_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -438,7 +439,7 @@ TEST(JSONSchema_compile_draft4, ref_1) {
                                "against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft4, ref_2) {
+TEST(JSONSchema_evaluator_draft4, ref_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -472,7 +473,7 @@ TEST(JSONSchema_compile_draft4, ref_2) {
       "The string value was expected to validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft4, ref_3) {
+TEST(JSONSchema_evaluator_draft4, ref_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "id": "https://example.com",
@@ -534,7 +535,7 @@ TEST(JSONSchema_compile_draft4, ref_3) {
                                "against the single defined property subschema");
 }
 
-TEST(JSONSchema_compile_draft4, ref_4) {
+TEST(JSONSchema_evaluator_draft4, ref_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "id": "https://example.com",
@@ -621,7 +622,7 @@ TEST(JSONSchema_compile_draft4, ref_4) {
                                "against the single defined property subschema");
 }
 
-TEST(JSONSchema_compile_draft4, ref_5) {
+TEST(JSONSchema_evaluator_draft4, ref_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "id": "https://example.com",
@@ -700,7 +701,7 @@ TEST(JSONSchema_compile_draft4, ref_5) {
                                "against the single defined property subschema");
 }
 
-TEST(JSONSchema_compile_draft4, ref_6) {
+TEST(JSONSchema_evaluator_draft4, ref_6) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -755,7 +756,7 @@ TEST(JSONSchema_compile_draft4, ref_6) {
                                "against the single defined property subschema");
 }
 
-TEST(JSONSchema_compile_draft4, ref_7) {
+TEST(JSONSchema_evaluator_draft4, ref_7) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -786,7 +787,7 @@ TEST(JSONSchema_compile_draft4, ref_7) {
                                "against the 6 defined properties subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, ref_8) {
+TEST(JSONSchema_evaluator_draft4, ref_8) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -815,7 +816,7 @@ TEST(JSONSchema_compile_draft4, ref_8) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, ref_9) {
+TEST(JSONSchema_evaluator_draft4, ref_9) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -845,7 +846,7 @@ TEST(JSONSchema_compile_draft4, ref_9) {
       instance, 0, "The object properties were expected to be of type boolean");
 }
 
-TEST(JSONSchema_compile_draft4, ref_10) {
+TEST(JSONSchema_evaluator_draft4, ref_10) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -876,7 +877,7 @@ TEST(JSONSchema_compile_draft4, ref_10) {
       instance, 0, "The object properties were expected to be of type boolean");
 }
 
-TEST(JSONSchema_compile_draft4, ref_11) {
+TEST(JSONSchema_evaluator_draft4, ref_11) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -890,7 +891,7 @@ TEST(JSONSchema_compile_draft4, ref_11) {
                sourcemeta::jsontoolkit::SchemaReferenceError);
 }
 
-TEST(JSONSchema_compile_draft4, ref_12) {
+TEST(JSONSchema_evaluator_draft4, ref_12) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -917,7 +918,7 @@ TEST(JSONSchema_compile_draft4, ref_12) {
                sourcemeta::jsontoolkit::SchemaReferenceError);
 }
 
-TEST(JSONSchema_compile_draft4, ref_13) {
+TEST(JSONSchema_evaluator_draft4, ref_13) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -944,7 +945,7 @@ TEST(JSONSchema_compile_draft4, ref_13) {
                sourcemeta::jsontoolkit::SchemaReferenceError);
 }
 
-TEST(JSONSchema_compile_draft4, ref_14) {
+TEST(JSONSchema_evaluator_draft4, ref_14) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -965,7 +966,7 @@ TEST(JSONSchema_compile_draft4, ref_14) {
                sourcemeta::jsontoolkit::SchemaEvaluationError);
 }
 
-TEST(JSONSchema_compile_draft4, properties_1) {
+TEST(JSONSchema_evaluator_draft4, properties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1009,7 +1010,7 @@ TEST(JSONSchema_compile_draft4, properties_1) {
                                "against the defined properties subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, properties_2) {
+TEST(JSONSchema_evaluator_draft4, properties_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1052,7 +1053,7 @@ TEST(JSONSchema_compile_draft4, properties_2) {
                                "against the defined properties subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, properties_3) {
+TEST(JSONSchema_evaluator_draft4, properties_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1078,7 +1079,7 @@ TEST(JSONSchema_compile_draft4, properties_3) {
                                "against the defined properties subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, properties_4) {
+TEST(JSONSchema_evaluator_draft4, properties_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1115,7 +1116,7 @@ TEST(JSONSchema_compile_draft4, properties_4) {
                                "The value was expected to be of type string");
 }
 
-TEST(JSONSchema_compile_draft4, properties_5) {
+TEST(JSONSchema_evaluator_draft4, properties_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1163,7 +1164,7 @@ TEST(JSONSchema_compile_draft4, properties_5) {
                                "against the defined properties subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, pattern_1) {
+TEST(JSONSchema_evaluator_draft4, pattern_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1185,7 +1186,7 @@ TEST(JSONSchema_compile_draft4, pattern_1) {
                                "the regular expression \"^x\"");
 }
 
-TEST(JSONSchema_compile_draft4, pattern_2) {
+TEST(JSONSchema_evaluator_draft4, pattern_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1207,7 +1208,7 @@ TEST(JSONSchema_compile_draft4, pattern_2) {
                                "the regular expression \"^x\"");
 }
 
-TEST(JSONSchema_compile_draft4, pattern_3) {
+TEST(JSONSchema_evaluator_draft4, pattern_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1223,7 +1224,7 @@ TEST(JSONSchema_compile_draft4, pattern_3) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, patternProperties_1) {
+TEST(JSONSchema_evaluator_draft4, patternProperties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1241,7 +1242,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, patternProperties_2) {
+TEST(JSONSchema_evaluator_draft4, patternProperties_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1261,7 +1262,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, patternProperties_3) {
+TEST(JSONSchema_evaluator_draft4, patternProperties_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1281,7 +1282,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_3) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, patternProperties_4) {
+TEST(JSONSchema_evaluator_draft4, patternProperties_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1321,7 +1322,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_4) {
       "pattern property subschema");
 }
 
-TEST(JSONSchema_compile_draft4, patternProperties_5) {
+TEST(JSONSchema_evaluator_draft4, patternProperties_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1362,7 +1363,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_5) {
       "pattern property subschema");
 }
 
-TEST(JSONSchema_compile_draft4, patternProperties_6) {
+TEST(JSONSchema_evaluator_draft4, patternProperties_6) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1410,7 +1411,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_6) {
       "properties subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, patternProperties_7) {
+TEST(JSONSchema_evaluator_draft4, patternProperties_7) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1463,7 +1464,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_7) {
       "pattern property subschema");
 }
 
-TEST(JSONSchema_compile_draft4, patternProperties_8) {
+TEST(JSONSchema_evaluator_draft4, patternProperties_8) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1500,7 +1501,7 @@ TEST(JSONSchema_compile_draft4, patternProperties_8) {
       "were expected to validate against this subschema");
 }
 
-TEST(JSONSchema_compile_draft4, additionalProperties_1) {
+TEST(JSONSchema_evaluator_draft4, additionalProperties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1528,7 +1529,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_1) {
       instance, 0, "The object properties were expected to be of type integer");
 }
 
-TEST(JSONSchema_compile_draft4, additionalProperties_2) {
+TEST(JSONSchema_evaluator_draft4, additionalProperties_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1578,7 +1579,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_2) {
                                "expected to validate against this subschema")
 }
 
-TEST(JSONSchema_compile_draft4, additionalProperties_3) {
+TEST(JSONSchema_evaluator_draft4, additionalProperties_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1657,7 +1658,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_3) {
   }
 }
 
-TEST(JSONSchema_compile_draft4, additionalProperties_4) {
+TEST(JSONSchema_evaluator_draft4, additionalProperties_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1730,7 +1731,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_4) {
                                "expected to validate against this subschema");
 }
 
-TEST(JSONSchema_compile_draft4, additionalProperties_5) {
+TEST(JSONSchema_evaluator_draft4, additionalProperties_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1777,7 +1778,7 @@ TEST(JSONSchema_compile_draft4, additionalProperties_5) {
       "The object value was not expected to define additional properties")
 }
 
-TEST(JSONSchema_compile_draft4, not_1) {
+TEST(JSONSchema_evaluator_draft4, not_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1809,7 +1810,7 @@ TEST(JSONSchema_compile_draft4, not_1) {
                                "against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft4, not_2) {
+TEST(JSONSchema_evaluator_draft4, not_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1840,7 +1841,7 @@ TEST(JSONSchema_compile_draft4, not_2) {
                                "against the given subschema, but it did");
 }
 
-TEST(JSONSchema_compile_draft4, not_3) {
+TEST(JSONSchema_evaluator_draft4, not_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1899,7 +1900,7 @@ TEST(JSONSchema_compile_draft4, not_3) {
                                "against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft4, items_1) {
+TEST(JSONSchema_evaluator_draft4, items_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1917,7 +1918,7 @@ TEST(JSONSchema_compile_draft4, items_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, items_2) {
+TEST(JSONSchema_evaluator_draft4, items_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1962,7 +1963,7 @@ TEST(JSONSchema_compile_draft4, items_2) {
                                "validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft4, items_3) {
+TEST(JSONSchema_evaluator_draft4, items_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2002,7 +2003,7 @@ TEST(JSONSchema_compile_draft4, items_3) {
                                "validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft4, items_4) {
+TEST(JSONSchema_evaluator_draft4, items_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2018,7 +2019,7 @@ TEST(JSONSchema_compile_draft4, items_4) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, items_5) {
+TEST(JSONSchema_evaluator_draft4, items_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2043,7 +2044,7 @@ TEST(JSONSchema_compile_draft4, items_5) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, items_6) {
+TEST(JSONSchema_evaluator_draft4, items_6) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2075,7 +2076,7 @@ TEST(JSONSchema_compile_draft4, items_6) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, items_7) {
+TEST(JSONSchema_evaluator_draft4, items_7) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2113,7 +2114,7 @@ TEST(JSONSchema_compile_draft4, items_7) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, items_8) {
+TEST(JSONSchema_evaluator_draft4, items_8) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2152,7 +2153,7 @@ TEST(JSONSchema_compile_draft4, items_8) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, additionalItems_1) {
+TEST(JSONSchema_evaluator_draft4, additionalItems_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2171,7 +2172,7 @@ TEST(JSONSchema_compile_draft4, additionalItems_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, additionalItems_2) {
+TEST(JSONSchema_evaluator_draft4, additionalItems_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2215,7 +2216,7 @@ TEST(JSONSchema_compile_draft4, additionalItems_2) {
                                "validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft4, additionalItems_3) {
+TEST(JSONSchema_evaluator_draft4, additionalItems_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2257,7 +2258,7 @@ TEST(JSONSchema_compile_draft4, additionalItems_3) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, additionalItems_4) {
+TEST(JSONSchema_evaluator_draft4, additionalItems_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2318,7 +2319,7 @@ TEST(JSONSchema_compile_draft4, additionalItems_4) {
       "validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft4, additionalItems_5) {
+TEST(JSONSchema_evaluator_draft4, additionalItems_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2374,7 +2375,7 @@ TEST(JSONSchema_compile_draft4, additionalItems_5) {
       "validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft4, anyOf_1) {
+TEST(JSONSchema_evaluator_draft4, anyOf_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2416,7 +2417,7 @@ TEST(JSONSchema_compile_draft4, anyOf_1) {
       "3 given subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, anyOf_2) {
+TEST(JSONSchema_evaluator_draft4, anyOf_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2466,7 +2467,7 @@ TEST(JSONSchema_compile_draft4, anyOf_2) {
       "3 given subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, oneOf_1) {
+TEST(JSONSchema_evaluator_draft4, oneOf_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2502,7 +2503,7 @@ TEST(JSONSchema_compile_draft4, oneOf_1) {
       "the 4 given subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, oneOf_2) {
+TEST(JSONSchema_evaluator_draft4, oneOf_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2552,7 +2553,7 @@ TEST(JSONSchema_compile_draft4, oneOf_2) {
       "the 4 given subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, oneOf_3) {
+TEST(JSONSchema_evaluator_draft4, oneOf_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2608,7 +2609,7 @@ TEST(JSONSchema_compile_draft4, oneOf_3) {
       "the 4 given subschemas");
 }
 
-TEST(JSONSchema_compile_draft4, oneOf_4) {
+TEST(JSONSchema_evaluator_draft4, oneOf_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2640,7 +2641,7 @@ TEST(JSONSchema_compile_draft4, oneOf_4) {
       "The number value was expected to validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft4, dependencies_1) {
+TEST(JSONSchema_evaluator_draft4, dependencies_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2659,7 +2660,7 @@ TEST(JSONSchema_compile_draft4, dependencies_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, dependencies_2) {
+TEST(JSONSchema_evaluator_draft4, dependencies_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2688,7 +2689,7 @@ TEST(JSONSchema_compile_draft4, dependencies_2) {
       "expected to define the properties \"bar\", and \"baz\"");
 }
 
-TEST(JSONSchema_compile_draft4, dependencies_3) {
+TEST(JSONSchema_evaluator_draft4, dependencies_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2715,7 +2716,7 @@ TEST(JSONSchema_compile_draft4, dependencies_3) {
       "expected to define the property \"bar\"");
 }
 
-TEST(JSONSchema_compile_draft4, dependencies_4) {
+TEST(JSONSchema_evaluator_draft4, dependencies_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2753,7 +2754,7 @@ TEST(JSONSchema_compile_draft4, dependencies_4) {
       "subschema");
 }
 
-TEST(JSONSchema_compile_draft4, dependencies_5) {
+TEST(JSONSchema_evaluator_draft4, dependencies_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2791,7 +2792,7 @@ TEST(JSONSchema_compile_draft4, dependencies_5) {
       "subschema");
 }
 
-TEST(JSONSchema_compile_draft4, dependencies_6) {
+TEST(JSONSchema_evaluator_draft4, dependencies_6) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2817,7 +2818,7 @@ TEST(JSONSchema_compile_draft4, dependencies_6) {
       "The object value did not define the properties \"foo\", or \"qux\"");
 }
 
-TEST(JSONSchema_compile_draft4, dependencies_7) {
+TEST(JSONSchema_evaluator_draft4, dependencies_7) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2841,7 +2842,7 @@ TEST(JSONSchema_compile_draft4, dependencies_7) {
       instance, 0, "The object value did not define the property \"foo\"");
 }
 
-TEST(JSONSchema_compile_draft4, dependencies_8) {
+TEST(JSONSchema_evaluator_draft4, dependencies_8) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2879,7 +2880,7 @@ TEST(JSONSchema_compile_draft4, dependencies_8) {
       "\"qux\" subschema");
 }
 
-TEST(JSONSchema_compile_draft4, enum_1) {
+TEST(JSONSchema_evaluator_draft4, enum_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2903,7 +2904,7 @@ TEST(JSONSchema_compile_draft4, enum_1) {
       "The object value {} was expected to equal one of the 3 declared values");
 }
 
-TEST(JSONSchema_compile_draft4, enum_2) {
+TEST(JSONSchema_evaluator_draft4, enum_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2928,7 +2929,7 @@ TEST(JSONSchema_compile_draft4, enum_2) {
       "values: 1, {}, and \"foo\"");
 }
 
-TEST(JSONSchema_compile_draft4, enum_3) {
+TEST(JSONSchema_evaluator_draft4, enum_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2951,7 +2952,7 @@ TEST(JSONSchema_compile_draft4, enum_3) {
       "The integer value 1 was expected to equal the integer constant 1");
 }
 
-TEST(JSONSchema_compile_draft4, uniqueItems_1) {
+TEST(JSONSchema_evaluator_draft4, uniqueItems_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2976,7 +2977,7 @@ TEST(JSONSchema_compile_draft4, uniqueItems_1) {
       "The array value was expected to not contain duplicate items");
 }
 
-TEST(JSONSchema_compile_draft4, uniqueItems_2) {
+TEST(JSONSchema_evaluator_draft4, uniqueItems_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -2993,7 +2994,7 @@ TEST(JSONSchema_compile_draft4, uniqueItems_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, uniqueItems_3) {
+TEST(JSONSchema_evaluator_draft4, uniqueItems_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3018,7 +3019,7 @@ TEST(JSONSchema_compile_draft4, uniqueItems_3) {
       "The array value was expected to not contain duplicate items");
 }
 
-TEST(JSONSchema_compile_draft4, uniqueItems_4) {
+TEST(JSONSchema_evaluator_draft4, uniqueItems_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3042,7 +3043,7 @@ TEST(JSONSchema_compile_draft4, uniqueItems_4) {
       instance, 0, "The array value contained the following duplicate item: 2");
 }
 
-TEST(JSONSchema_compile_draft4, uniqueItems_5) {
+TEST(JSONSchema_evaluator_draft4, uniqueItems_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3059,7 +3060,7 @@ TEST(JSONSchema_compile_draft4, uniqueItems_5) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, uniqueItems_6) {
+TEST(JSONSchema_evaluator_draft4, uniqueItems_6) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3083,7 +3084,7 @@ TEST(JSONSchema_compile_draft4, uniqueItems_6) {
       instance, 0, "The array value contained the following duplicate item: 2");
 }
 
-TEST(JSONSchema_compile_draft4, uniqueItems_7) {
+TEST(JSONSchema_evaluator_draft4, uniqueItems_7) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3108,7 +3109,7 @@ TEST(JSONSchema_compile_draft4, uniqueItems_7) {
       "The array value contained the following duplicate items: 1, and 2");
 }
 
-TEST(JSONSchema_compile_draft4, minLength_1) {
+TEST(JSONSchema_evaluator_draft4, minLength_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3124,7 +3125,7 @@ TEST(JSONSchema_compile_draft4, minLength_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, minLength_2) {
+TEST(JSONSchema_evaluator_draft4, minLength_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3150,7 +3151,7 @@ TEST(JSONSchema_compile_draft4, minLength_2) {
       "characters and it consisted of 2 characters");
 }
 
-TEST(JSONSchema_compile_draft4, minLength_3) {
+TEST(JSONSchema_evaluator_draft4, minLength_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3176,7 +3177,53 @@ TEST(JSONSchema_compile_draft4, minLength_3) {
       "but it consisted of 1 character");
 }
 
-TEST(JSONSchema_compile_draft4, maxLength_1) {
+TEST(JSONSchema_evaluator_draft4, minLength_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "string",
+    "minLength": 1
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"xx"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStringBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStringBounded, "/type", "#/type",
+                              "");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of a string of at least 1 character");
+}
+
+TEST(JSONSchema_evaluator_draft4, minLength_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "string",
+    "minLength": 0
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"xx"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxLength_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3192,7 +3239,7 @@ TEST(JSONSchema_compile_draft4, maxLength_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, maxLength_2) {
+TEST(JSONSchema_evaluator_draft4, maxLength_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3218,7 +3265,7 @@ TEST(JSONSchema_compile_draft4, maxLength_2) {
       "and it consisted of 2 characters");
 }
 
-TEST(JSONSchema_compile_draft4, maxLength_3) {
+TEST(JSONSchema_evaluator_draft4, maxLength_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3244,7 +3291,80 @@ TEST(JSONSchema_compile_draft4, maxLength_3) {
       "characters but it consisted of 3 characters");
 }
 
-TEST(JSONSchema_compile_draft4, minItems_1) {
+TEST(JSONSchema_evaluator_draft4, maxLength_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "string",
+    "maxLength": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"xx"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStringBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStringBounded, "/type", "#/type",
+                              "");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of a string of at most 2 characters");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxLength_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "string",
+    "maxLength": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"xxx"};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStringBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStringBounded, "/type", "#/type",
+                              "");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of a string of at most 2 characters");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxLength_6) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"xx"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStringBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStringBounded, "/type", "#/type",
+                              "");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of a string of 1 to 2 characters");
+}
+
+TEST(JSONSchema_evaluator_draft4, minItems_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3260,7 +3380,7 @@ TEST(JSONSchema_compile_draft4, minItems_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, minItems_2) {
+TEST(JSONSchema_evaluator_draft4, minItems_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3286,7 +3406,7 @@ TEST(JSONSchema_compile_draft4, minItems_2) {
                                "least 2 items and it contained 2 items");
 }
 
-TEST(JSONSchema_compile_draft4, minItems_3) {
+TEST(JSONSchema_evaluator_draft4, minItems_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3312,7 +3432,7 @@ TEST(JSONSchema_compile_draft4, minItems_3) {
                                "least 2 items but it contained 1 item");
 }
 
-TEST(JSONSchema_compile_draft4, minItems_4) {
+TEST(JSONSchema_evaluator_draft4, minItems_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3336,7 +3456,57 @@ TEST(JSONSchema_compile_draft4, minItems_4) {
                                "The value was expected to be of type object");
 }
 
-TEST(JSONSchema_compile_draft4, maxItems_1) {
+TEST(JSONSchema_evaluator_draft4, minItems_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "minItems": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeArrayBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeArrayBounded, "/type", "#/type",
+                              "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an array of at least 2 items");
+}
+
+TEST(JSONSchema_evaluator_draft4, minItems_6) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "minItems": 0
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type array");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxItems_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3352,7 +3522,7 @@ TEST(JSONSchema_compile_draft4, maxItems_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, maxItems_2) {
+TEST(JSONSchema_evaluator_draft4, maxItems_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3377,7 +3547,7 @@ TEST(JSONSchema_compile_draft4, maxItems_2) {
                                "most 2 items and it contained 2 items");
 }
 
-TEST(JSONSchema_compile_draft4, maxItems_3) {
+TEST(JSONSchema_evaluator_draft4, maxItems_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3402,7 +3572,7 @@ TEST(JSONSchema_compile_draft4, maxItems_3) {
                                "most 2 items but it contained 3 items");
 }
 
-TEST(JSONSchema_compile_draft4, maxItems_4) {
+TEST(JSONSchema_evaluator_draft4, maxItems_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3426,7 +3596,86 @@ TEST(JSONSchema_compile_draft4, maxItems_4) {
                                "The value was expected to be of type object");
 }
 
-TEST(JSONSchema_compile_draft4, minProperties_1) {
+TEST(JSONSchema_evaluator_draft4, maxItems_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "maxItems": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeArrayBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeArrayBounded, "/type", "#/type",
+                              "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an array of at most 2 items");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxItems_6) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "maxItems": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeArrayBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeArrayBounded, "/type", "#/type",
+                              "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an array of at most 2 items");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxItems_7) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "minItems": 1,
+    "maxItems": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeArrayBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeArrayBounded, "/type", "#/type",
+                              "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an array of 1 to 2 items");
+}
+
+TEST(JSONSchema_evaluator_draft4, minProperties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3442,7 +3691,7 @@ TEST(JSONSchema_compile_draft4, minProperties_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, minProperties_2) {
+TEST(JSONSchema_evaluator_draft4, minProperties_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3469,7 +3718,7 @@ TEST(JSONSchema_compile_draft4, minProperties_2) {
       "contained 2 properties: \"bar\", and \"foo\"");
 }
 
-TEST(JSONSchema_compile_draft4, minProperties_3) {
+TEST(JSONSchema_evaluator_draft4, minProperties_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3496,7 +3745,55 @@ TEST(JSONSchema_compile_draft4, minProperties_3) {
       "contained 1 property: \"foo\"");
 }
 
-TEST(JSONSchema_compile_draft4, maxProperties_1) {
+TEST(JSONSchema_evaluator_draft4, minProperties_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "minProperties": 1
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeObjectBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeObjectBounded, "/type", "#/type",
+                              "");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an object of at least 1 property");
+}
+
+TEST(JSONSchema_evaluator_draft4, minProperties_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "minProperties": 0
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type object");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxProperties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3512,7 +3809,7 @@ TEST(JSONSchema_compile_draft4, maxProperties_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, maxProperties_2) {
+TEST(JSONSchema_evaluator_draft4, maxProperties_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3539,7 +3836,7 @@ TEST(JSONSchema_compile_draft4, maxProperties_2) {
       "contained 2 properties: \"bar\", and \"foo\"");
 }
 
-TEST(JSONSchema_compile_draft4, maxProperties_3) {
+TEST(JSONSchema_evaluator_draft4, maxProperties_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3566,7 +3863,86 @@ TEST(JSONSchema_compile_draft4, maxProperties_3) {
       "contained 3 properties: \"bar\", \"baz\", and \"foo\"");
 }
 
-TEST(JSONSchema_compile_draft4, minimum_1) {
+TEST(JSONSchema_evaluator_draft4, maxProperties_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "maxProperties": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeObjectBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeObjectBounded, "/type", "#/type",
+                              "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an object of at most 2 properties");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxProperties_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "maxProperties": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1, \"baz\": 3 }")};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeObjectBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeObjectBounded, "/type", "#/type",
+                              "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an object of at most 2 properties");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxProperties_6) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "minProperties": 1,
+    "maxProperties": 2
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeObjectBounded, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeObjectBounded, "/type", "#/type",
+                              "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The value was expected to consist of an object of 1 to 2 properties");
+}
+
+TEST(JSONSchema_evaluator_draft4, minimum_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3582,7 +3958,7 @@ TEST(JSONSchema_compile_draft4, minimum_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, minimum_2) {
+TEST(JSONSchema_evaluator_draft4, minimum_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3606,7 +3982,7 @@ TEST(JSONSchema_compile_draft4, minimum_2) {
                                "greater than or equal to the integer 2");
 }
 
-TEST(JSONSchema_compile_draft4, minimum_3) {
+TEST(JSONSchema_evaluator_draft4, minimum_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3630,7 +4006,7 @@ TEST(JSONSchema_compile_draft4, minimum_3) {
                                "than or equal to the integer 2");
 }
 
-TEST(JSONSchema_compile_draft4, minimum_4) {
+TEST(JSONSchema_evaluator_draft4, minimum_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3654,7 +4030,7 @@ TEST(JSONSchema_compile_draft4, minimum_4) {
                                "greater than or equal to the integer 2");
 }
 
-TEST(JSONSchema_compile_draft4, maximum_1) {
+TEST(JSONSchema_evaluator_draft4, maximum_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3670,7 +4046,7 @@ TEST(JSONSchema_compile_draft4, maximum_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, maximum_2) {
+TEST(JSONSchema_evaluator_draft4, maximum_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3694,7 +4070,7 @@ TEST(JSONSchema_compile_draft4, maximum_2) {
                                "than or equal to the integer 2");
 }
 
-TEST(JSONSchema_compile_draft4, maximum_3) {
+TEST(JSONSchema_evaluator_draft4, maximum_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3718,7 +4094,7 @@ TEST(JSONSchema_compile_draft4, maximum_3) {
                                "than or equal to the integer 2");
 }
 
-TEST(JSONSchema_compile_draft4, maximum_4) {
+TEST(JSONSchema_evaluator_draft4, maximum_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3742,7 +4118,7 @@ TEST(JSONSchema_compile_draft4, maximum_4) {
                                "than or equal to the integer 2");
 }
 
-TEST(JSONSchema_compile_draft4, exclusiveMinimum_1) {
+TEST(JSONSchema_evaluator_draft4, exclusiveMinimum_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3766,7 +4142,7 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_1) {
       "The number value 2.1 was expected to be greater than the integer 2");
 }
 
-TEST(JSONSchema_compile_draft4, exclusiveMinimum_2) {
+TEST(JSONSchema_evaluator_draft4, exclusiveMinimum_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3790,7 +4166,7 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_2) {
                                "than the integer 2, but they were equal");
 }
 
-TEST(JSONSchema_compile_draft4, exclusiveMinimum_3) {
+TEST(JSONSchema_evaluator_draft4, exclusiveMinimum_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3815,7 +4191,7 @@ TEST(JSONSchema_compile_draft4, exclusiveMinimum_3) {
                                "than or equal to the integer 2");
 }
 
-TEST(JSONSchema_compile_draft4, exclusiveMaximum_1) {
+TEST(JSONSchema_evaluator_draft4, exclusiveMaximum_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3839,7 +4215,7 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_1) {
       "The number value 1.9 was expected to be less than the integer 2");
 }
 
-TEST(JSONSchema_compile_draft4, exclusiveMaximum_2) {
+TEST(JSONSchema_evaluator_draft4, exclusiveMaximum_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3863,7 +4239,7 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_2) {
                                "than the integer 2, but they were equal");
 }
 
-TEST(JSONSchema_compile_draft4, exclusiveMaximum_3) {
+TEST(JSONSchema_evaluator_draft4, exclusiveMaximum_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3888,7 +4264,7 @@ TEST(JSONSchema_compile_draft4, exclusiveMaximum_3) {
                                "than or equal to the integer 2");
 }
 
-TEST(JSONSchema_compile_draft4, multipleOf_1) {
+TEST(JSONSchema_evaluator_draft4, multipleOf_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3904,7 +4280,7 @@ TEST(JSONSchema_compile_draft4, multipleOf_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, multipleOf_2) {
+TEST(JSONSchema_evaluator_draft4, multipleOf_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3928,7 +4304,7 @@ TEST(JSONSchema_compile_draft4, multipleOf_2) {
       "The integer value 6 was expected to be divisible by the integer 3");
 }
 
-TEST(JSONSchema_compile_draft4, multipleOf_3) {
+TEST(JSONSchema_evaluator_draft4, multipleOf_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3952,7 +4328,7 @@ TEST(JSONSchema_compile_draft4, multipleOf_3) {
       "The integer value 7 was expected to be divisible by the integer 3");
 }
 
-TEST(JSONSchema_compile_draft4, multipleOf_4) {
+TEST(JSONSchema_evaluator_draft4, multipleOf_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -3976,7 +4352,7 @@ TEST(JSONSchema_compile_draft4, multipleOf_4) {
       "The number value 6.4 was expected to be divisible by the number 3.2");
 }
 
-TEST(JSONSchema_compile_draft4, multipleOf_5) {
+TEST(JSONSchema_evaluator_draft4, multipleOf_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -4000,7 +4376,7 @@ TEST(JSONSchema_compile_draft4, multipleOf_5) {
       "The number value 6 was expected to be divisible by the number 3.2");
 }
 
-TEST(JSONSchema_compile_draft4, invalid_ref_top_level) {
+TEST(JSONSchema_evaluator_draft4, invalid_ref_top_level) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -4020,7 +4396,7 @@ TEST(JSONSchema_compile_draft4, invalid_ref_top_level) {
   }
 }
 
-TEST(JSONSchema_compile_draft4, invalid_ref_nested) {
+TEST(JSONSchema_evaluator_draft4, invalid_ref_nested) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -4044,7 +4420,7 @@ TEST(JSONSchema_compile_draft4, invalid_ref_nested) {
   }
 }
 
-TEST(JSONSchema_compile_draft4, invalid_ref_embedded) {
+TEST(JSONSchema_evaluator_draft4, invalid_ref_embedded) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "id": "https://example.com",
@@ -4077,7 +4453,7 @@ TEST(JSONSchema_compile_draft4, invalid_ref_embedded) {
   }
 }
 
-TEST(JSONSchema_compile_draft4, metadata) {
+TEST(JSONSchema_evaluator_draft4, metadata) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -4095,7 +4471,7 @@ TEST(JSONSchema_compile_draft4, metadata) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, unknown_1) {
+TEST(JSONSchema_evaluator_draft4, unknown_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -4111,7 +4487,7 @@ TEST(JSONSchema_compile_draft4, unknown_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, unknown_2) {
+TEST(JSONSchema_evaluator_draft4, unknown_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -4127,7 +4503,7 @@ TEST(JSONSchema_compile_draft4, unknown_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, reference_from_unknown_keyword) {
+TEST(JSONSchema_evaluator_draft4, reference_from_unknown_keyword) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -4156,7 +4532,7 @@ TEST(JSONSchema_compile_draft4, reference_from_unknown_keyword) {
   }
 }
 
-TEST(JSONSchema_compile_draft4, format_uri_1) {
+TEST(JSONSchema_evaluator_draft4, format_uri_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -4172,7 +4548,7 @@ TEST(JSONSchema_compile_draft4, format_uri_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft4, format_uri_2) {
+TEST(JSONSchema_evaluator_draft4, format_uri_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -4196,7 +4572,7 @@ TEST(JSONSchema_compile_draft4, format_uri_2) {
                                "was expected to represent a valid URI");
 }
 
-TEST(JSONSchema_compile_draft4, format_uri_3) {
+TEST(JSONSchema_evaluator_draft4, format_uri_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -4220,7 +4596,7 @@ TEST(JSONSchema_compile_draft4, format_uri_3) {
       "The string value \"!!!x::://\" was expected to represent a valid URI");
 }
 
-TEST(JSONSchema_compile_draft4, ref_to_non_schema) {
+TEST(JSONSchema_evaluator_draft4, ref_to_non_schema) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",

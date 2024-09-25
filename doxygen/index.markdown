@@ -82,18 +82,19 @@ CMake
 
 ### Options
 
-| Option                            | Type    | Default | Description                                 |
-|-----------------------------------|---------|---------|---------------------------------------------|
-| `JSONTOOLKIT_URI`                 | Boolean | `ON`    | Build the JSON Toolkit URI library          |
-| `JSONTOOLKIT_JSON`                | Boolean | `ON`    | Build the JSON Toolkit JSON library         |
-| `JSONTOOLKIT_JSONSCHEMA`          | Boolean | `ON`    | Build the JSON Toolkit JSON Schema library  |
-| `JSONTOOLKIT_JSONPOINTER`         | Boolean | `ON`    | Build the JSON Toolkit JSON Pointer library |
-| `JSONTOOLKIT_JSONL`               | Boolean | `ON`    | Build the JSON Toolkit JSONL library        |
-| `JSONTOOLKIT_TESTS`               | Boolean | `OFF`   | Build the JSON Toolkit tests                |
-| `JSONTOOLKIT_DOCS`                | Boolean | `OFF`   | Build the JSON Toolkit docs                 |
-| `JSONTOOLKIT_INSTALL`             | Boolean | `ON`    | Install the JSON Toolkit library            |
-| `JSONTOOLKIT_ADDRESS_SANITIZER`   | Boolean | `OFF`   | Enable the address sanitizer                |
-| `JSONTOOLKIT_UNDEFINED_SANITIZER` | Boolean | `OFF`   | Enable the undefined behavior sanitizer     |
+| Option                            | Type    | Default | Description                                           |
+|-----------------------------------|---------|---------|-------------------------------------------------------|
+| `JSONTOOLKIT_URI`                 | Boolean | `ON`    | Build the JSON Toolkit URI library                    |
+| `JSONTOOLKIT_JSON`                | Boolean | `ON`    | Build the JSON Toolkit JSON library                   |
+| `JSONTOOLKIT_JSONSCHEMA`          | Boolean | `ON`    | Build the JSON Toolkit JSON Schema library            |
+| `JSONTOOLKIT_EVALUATOR`           | Boolean | `ON`    | Build the JSON Toolkit JSON Schema evaluator library  |
+| `JSONTOOLKIT_JSONPOINTER`         | Boolean | `ON`    | Build the JSON Toolkit JSON Pointer library           |
+| `JSONTOOLKIT_JSONL`               | Boolean | `ON`    | Build the JSON Toolkit JSONL library                  |
+| `JSONTOOLKIT_TESTS`               | Boolean | `OFF`   | Build the JSON Toolkit tests                          |
+| `JSONTOOLKIT_DOCS`                | Boolean | `OFF`   | Build the JSON Toolkit docs                           |
+| `JSONTOOLKIT_INSTALL`             | Boolean | `ON`    | Install the JSON Toolkit library                      |
+| `JSONTOOLKIT_ADDRESS_SANITIZER`   | Boolean | `OFF`   | Enable the address sanitizer                          |
+| `JSONTOOLKIT_UNDEFINED_SANITIZER` | Boolean | `OFF`   | Enable the undefined behavior sanitizer               |
 
 ### Components
 

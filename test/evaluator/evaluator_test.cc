@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
 
+#include <sourcemeta/jsontoolkit/evaluator.h>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-#include "jsonschema_test_utils.h"
+#include "evaluator_utils.h"
 
 static auto test_resolver(std::string_view identifier)
     -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
@@ -25,7 +26,7 @@ static auto test_resolver(std::string_view identifier)
   return promise.get_future();
 }
 
-TEST(JSONSchema_compile, unknown_vocabulary_required) {
+TEST(JSONSchema_evaluator, unknown_vocabulary_required) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://example.com/metaschema"
@@ -44,7 +45,7 @@ TEST(JSONSchema_compile, unknown_vocabulary_required) {
   }
 }
 
-TEST(JSONSchema_compile, boolean_true) {
+TEST(JSONSchema_evaluator, boolean_true) {
   const sourcemeta::jsontoolkit::JSON schema{true};
 
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(
@@ -57,7 +58,7 @@ TEST(JSONSchema_compile, boolean_true) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile, boolean_false) {
+TEST(JSONSchema_evaluator, boolean_false) {
   const sourcemeta::jsontoolkit::JSON schema{false};
 
   const auto compiled_schema{sourcemeta::jsontoolkit::compile(

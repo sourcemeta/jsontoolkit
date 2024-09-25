@@ -13,6 +13,7 @@
 #include <string_view>
 #include <utility>
 
+#include <sourcemeta/jsontoolkit/evaluator.h>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 

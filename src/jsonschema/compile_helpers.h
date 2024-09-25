@@ -72,6 +72,25 @@ auto unroll(const SchemaCompilerDynamicContext &dynamic_context,
           std::get<Type>(step).value};
 }
 
+inline auto unsigned_integer_property(const JSON &document,
+                                      const JSON::String &property)
+    -> std::optional<std::size_t> {
+  if (document.defines(property) && document.at(property).is_integer()) {
+    const auto value{document.at(property).to_integer()};
+    assert(value >= 0);
+    return static_cast<std::size_t>(value);
+  }
+
+  return std::nullopt;
+}
+
+inline auto unsigned_integer_property(const JSON &document,
+                                      const JSON::String &property,
+                                      const std::size_t otherwise)
+    -> std::size_t {
+  return unsigned_integer_property(document, property).value_or(otherwise);
+}
+
 } // namespace sourcemeta::jsontoolkit
 
 #endif
