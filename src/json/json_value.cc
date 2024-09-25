@@ -461,12 +461,6 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
   }
 }
 
-[[nodiscard]] auto
-JSON::try_at(const typename JSON::Array::size_type index) const
-    -> std::optional<JSON> {
-  return this->try_at(std::to_string(index));
-}
-
 [[nodiscard]] auto JSON::defines(const JSON::String &key) const -> bool {
   assert(this->is_object());
   return std::get<Object>(this->data).data.contains(key);

@@ -863,21 +863,6 @@ public:
   /// EXPECT_EQ(result.value().to_integer(), 1);
   [[nodiscard]] auto try_at(const String &key) const -> std::optional<JSON>;
 
-  /// This method checks whether an input JSON object defines a specific key
-  /// and returns the value if it does. For example:
-  ///
-  /// ```cpp
-  /// #include <sourcemeta/jsontoolkit/json.h>
-  /// #include <cassert>
-  ///
-  /// const sourcemeta::jsontoolkit::JSON document =
-  ///   sourcemeta::jsontoolkit::parse("{ \"0\": 1 }");
-  /// const auto result = document.try_at(0);
-  /// EXPECT_TRUE(result.has_value());
-  /// EXPECT_EQ(result.value().to_integer(), 1);
-  [[nodiscard]] auto try_at(const typename Array::size_type index) const
-      -> std::optional<JSON>;
-
   /// This method checks whether an input JSON object defines a specific key.
   /// For example:
   ///
