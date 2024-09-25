@@ -1,7 +1,7 @@
 noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME evaluator
   FOLDER "JSON Toolkit/Evaluator"
   PRIVATE_HEADERS error.h value.h template.h
-  SOURCES evaluator.cc trace.h)
+  SOURCES evaluator.cc context.cc context.h trace.h)
 
 if(JSONTOOLKIT_INSTALL)
   noa_library_install(NAMESPACE sourcemeta PROJECT jsontoolkit NAME evaluator)
