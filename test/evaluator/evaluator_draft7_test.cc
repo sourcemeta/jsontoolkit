@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 
+#include <sourcemeta/jsontoolkit/evaluator.h>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-#include "jsonschema_test_utils.h"
+#include "evaluator_utils.h"
 
-TEST(JSONSchema_compile_draft7, metaschema) {
+TEST(JSONSchema_evaluator_draft7, metaschema) {
   const auto metaschema{sourcemeta::jsontoolkit::official_resolver(
                             "http://json-schema.org/draft-07/schema#")
                             .get()};
@@ -21,7 +22,7 @@ TEST(JSONSchema_compile_draft7, metaschema) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 }
 
-TEST(JSONSchema_compile_draft7, if_1) {
+TEST(JSONSchema_evaluator_draft7, if_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -50,7 +51,7 @@ TEST(JSONSchema_compile_draft7, if_1) {
       "The integer value was tested against the conditional subschema");
 }
 
-TEST(JSONSchema_compile_draft7, if_2) {
+TEST(JSONSchema_evaluator_draft7, if_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -79,7 +80,7 @@ TEST(JSONSchema_compile_draft7, if_2) {
       "The integer value was tested against the conditional subschema");
 }
 
-TEST(JSONSchema_compile_draft7, then_1) {
+TEST(JSONSchema_evaluator_draft7, then_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -95,7 +96,7 @@ TEST(JSONSchema_compile_draft7, then_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft7, then_2) {
+TEST(JSONSchema_evaluator_draft7, then_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -139,7 +140,7 @@ TEST(JSONSchema_compile_draft7, then_2) {
       "validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft7, then_3) {
+TEST(JSONSchema_evaluator_draft7, then_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -169,7 +170,7 @@ TEST(JSONSchema_compile_draft7, then_3) {
       "The integer value was tested against the conditional subschema");
 }
 
-TEST(JSONSchema_compile_draft7, else_1) {
+TEST(JSONSchema_evaluator_draft7, else_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -185,7 +186,7 @@ TEST(JSONSchema_compile_draft7, else_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft7, else_2) {
+TEST(JSONSchema_evaluator_draft7, else_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -215,7 +216,7 @@ TEST(JSONSchema_compile_draft7, else_2) {
       "The integer value was tested against the conditional subschema");
 }
 
-TEST(JSONSchema_compile_draft7, else_3) {
+TEST(JSONSchema_evaluator_draft7, else_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -259,7 +260,7 @@ TEST(JSONSchema_compile_draft7, else_3) {
       "validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft7, else_4) {
+TEST(JSONSchema_evaluator_draft7, else_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -303,7 +304,7 @@ TEST(JSONSchema_compile_draft7, else_4) {
       "validate against the given subschema");
 }
 
-TEST(JSONSchema_compile_draft7, invalid_ref_top_level) {
+TEST(JSONSchema_evaluator_draft7, invalid_ref_top_level) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -323,7 +324,7 @@ TEST(JSONSchema_compile_draft7, invalid_ref_top_level) {
   }
 }
 
-TEST(JSONSchema_compile_draft7, invalid_ref_nested) {
+TEST(JSONSchema_evaluator_draft7, invalid_ref_nested) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -347,7 +348,7 @@ TEST(JSONSchema_compile_draft7, invalid_ref_nested) {
   }
 }
 
-TEST(JSONSchema_compile_draft7, invalid_ref_embedded) {
+TEST(JSONSchema_evaluator_draft7, invalid_ref_embedded) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$id": "https://example.com",
@@ -380,7 +381,7 @@ TEST(JSONSchema_compile_draft7, invalid_ref_embedded) {
   }
 }
 
-TEST(JSONSchema_compile_draft7, metadata) {
+TEST(JSONSchema_evaluator_draft7, metadata) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -401,7 +402,7 @@ TEST(JSONSchema_compile_draft7, metadata) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft7, content) {
+TEST(JSONSchema_evaluator_draft7, content) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -418,7 +419,7 @@ TEST(JSONSchema_compile_draft7, content) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft7, unknown_1) {
+TEST(JSONSchema_evaluator_draft7, unknown_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -434,7 +435,7 @@ TEST(JSONSchema_compile_draft7, unknown_1) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft7, unknown_2) {
+TEST(JSONSchema_evaluator_draft7, unknown_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -450,7 +451,7 @@ TEST(JSONSchema_compile_draft7, unknown_2) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
-TEST(JSONSchema_compile_draft7, reference_from_unknown_keyword) {
+TEST(JSONSchema_evaluator_draft7, reference_from_unknown_keyword) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",

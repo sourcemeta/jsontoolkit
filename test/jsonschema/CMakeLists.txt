@@ -79,14 +79,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_walker_none_test.cc
   jsonschema_walker_test.cc
   jsonschema_error_test.cc
-  jsonschema_compile_test.cc
-  jsonschema_compile_evaluate_test.cc
   jsonschema_compile_json_test.cc
-  jsonschema_compile_2020_12_test.cc
-  jsonschema_compile_2019_09_test.cc
-  jsonschema_compile_draft7_test.cc
-  jsonschema_compile_draft6_test.cc
-  jsonschema_compile_draft4_test.cc
   jsonschema_keyword_iterator_test.cc
   jsonschema_official_resolver_test.cc
   jsonschema_map_resolver_test.cc
@@ -124,16 +117,3 @@ target_link_libraries(sourcemeta_jsontoolkit_jsonschema_referencing_suite PRIVAT
 set_target_properties(sourcemeta_jsontoolkit_jsonschema_referencing_suite
   PROPERTIES FOLDER "JSON Toolkit/JSON Schema")
 add_test(NAME JSONSchemaReferencingSuite COMMAND sourcemeta_jsontoolkit_jsonschema_referencing_suite --gtest_brief=1)
-
-# JSON Schema Test Suite
-# See https://github.com/json-schema-org/JSON-Schema-Test-Suite
-add_executable(sourcemeta_jsontoolkit_jsonschema_official_suite officialsuite.cc)
-noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_jsonschema_official_suite)
-target_compile_definitions(sourcemeta_jsontoolkit_jsonschema_official_suite
-  PRIVATE OFFICIAL_SUITE_PATH="${PROJECT_SOURCE_DIR}/vendor/jsonschema-test-suite")
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_official_suite PRIVATE GTest::gtest)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_official_suite PRIVATE sourcemeta::jsontoolkit::json)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_official_suite PRIVATE sourcemeta::jsontoolkit::jsonschema)
-set_target_properties(sourcemeta_jsontoolkit_jsonschema_official_suite
-  PROPERTIES FOLDER "JSON Toolkit/JSON Schema")
-add_test(NAME JSONSchemaOfficialSuite COMMAND sourcemeta_jsontoolkit_jsonschema_official_suite --gtest_brief=1)

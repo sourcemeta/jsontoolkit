@@ -3,11 +3,12 @@
 #include <tuple>
 #include <vector>
 
+#include <sourcemeta/jsontoolkit/evaluator.h>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-TEST(JSONSchema_compile_evaluate, fast_step_defines_true) {
+TEST(JSONSchema_evaluator_evaluate, fast_step_defines_true) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionDefines{Pointer{}, Pointer{}, "#", "", true, true,
@@ -18,7 +19,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_true) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_step_defines_false) {
+TEST(JSONSchema_evaluator_evaluate, fast_step_defines_false) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionDefines{Pointer{}, Pointer{}, "#", "", true, true,
@@ -29,7 +30,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_defines_false) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_step_fail) {
+TEST(JSONSchema_evaluator_evaluate, fast_step_fail) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionFail{
       Pointer{}, Pointer{}, "#", "", true, true, SchemaCompilerValueNone{}}};
@@ -39,7 +40,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_fail) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_step_type_true) {
+TEST(JSONSchema_evaluator_evaluate, fast_step_type_true) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#", "", true, true,
@@ -50,7 +51,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_type_true) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_step_type_false) {
+TEST(JSONSchema_evaluator_evaluate, fast_step_type_false) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#", "", true, true,
@@ -61,7 +62,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_type_false) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_step_or_empty) {
+TEST(JSONSchema_evaluator_evaluate, fast_step_or_empty) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
       Pointer{}, Pointer{}, "#", "", true, true, false, {}}};
@@ -71,7 +72,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_empty) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_step_or_false) {
+TEST(JSONSchema_evaluator_evaluate, fast_step_or_false) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{
@@ -90,7 +91,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_or_false) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_step_and_empty) {
+TEST(JSONSchema_evaluator_evaluate, fast_step_and_empty) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
       SchemaCompilerLogicalAnd{Pointer{},
@@ -107,7 +108,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_empty) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_step_and_false) {
+TEST(JSONSchema_evaluator_evaluate, fast_step_and_false) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{
@@ -127,7 +128,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_and_false) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_properties_empty) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_properties_empty) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -149,7 +150,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_empty) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_true) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_properties_single_true) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -171,7 +172,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_true) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_false) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_properties_single_false) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -193,7 +194,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_single_false) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_true) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_properties_multi_true) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -215,7 +216,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_true) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_false) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_properties_multi_false) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -237,7 +238,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_properties_multi_false) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_regex_true) {
+TEST(JSONSchema_evaluator_evaluate, fast_regex_true) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionRegex{
@@ -250,7 +251,7 @@ TEST(JSONSchema_compile_evaluate, fast_regex_true) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_regex_false) {
+TEST(JSONSchema_evaluator_evaluate, fast_regex_false) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionRegex{
@@ -263,7 +264,7 @@ TEST(JSONSchema_compile_evaluate, fast_regex_false) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_step_not_type_true) {
+TEST(JSONSchema_evaluator_evaluate, fast_step_not_type_true) {
   using namespace sourcemeta::jsontoolkit;
   SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#", "", true, true,
@@ -278,7 +279,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_not_type_true) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_step_not_type_false) {
+TEST(JSONSchema_evaluator_evaluate, fast_step_not_type_false) {
   using namespace sourcemeta::jsontoolkit;
   SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
       Pointer{}, Pointer{}, "#", "", true, true,
@@ -293,7 +294,7 @@ TEST(JSONSchema_compile_evaluate, fast_step_not_type_false) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_items_empty) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_items_empty) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -315,7 +316,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_empty) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_items_single_true) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_items_single_true) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -337,7 +338,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_true) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_items_single_false) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_items_single_false) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -359,7 +360,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_single_false) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_true) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_items_multi_true) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -381,7 +382,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_true) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_false) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_items_multi_false) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -403,7 +404,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_multi_false) {
   EXPECT_FALSE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_empty) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_items_with_index_empty) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -425,7 +426,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_empty) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_less) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_items_with_index_less) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -447,7 +448,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_less) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_match) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_items_with_index_match) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
@@ -469,7 +470,7 @@ TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_match) {
   EXPECT_TRUE(result);
 }
 
-TEST(JSONSchema_compile_evaluate, fast_loop_items_with_index_no_match) {
+TEST(JSONSchema_evaluator_evaluate, fast_loop_items_with_index_no_match) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
