@@ -1142,18 +1142,12 @@ auto evaluate_step(
 }
 
 inline auto evaluate_internal(
+    sourcemeta::jsontoolkit::EvaluationContext &context,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &steps,
-    const sourcemeta::jsontoolkit::JSON &instance,
     const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode,
     const std::optional<
         sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback> &callback)
     -> bool {
-  SOURCEMETA_TRACE_REGISTER_ID(trace_evaluation_context_id);
-  SOURCEMETA_TRACE_START(trace_evaluation_context_id, "EvaluationContext");
-  sourcemeta::jsontoolkit::EvaluationContext context;
-  context.prepare(instance);
-  SOURCEMETA_TRACE_END(trace_evaluation_context_id, "EvaluationContext");
-
   bool overall{true};
   for (const auto &step : steps) {
     if (!evaluate_step(step, mode, callback, context)) {
@@ -1179,12 +1173,24 @@ namespace sourcemeta::jsontoolkit {
 auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
               const SchemaCompilerEvaluationMode mode,
               const SchemaCompilerEvaluationCallback &callback) -> bool {
-  return evaluate_internal(steps, instance, mode, callback);
+  EvaluationContext context;
+  context.prepare(instance);
+  return evaluate_internal(context, steps, mode, callback);
 }
 
 auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance)
     -> bool {
-  return evaluate_internal(steps, instance,
+  EvaluationContext context;
+  context.prepare(instance);
+  return evaluate_internal(context, steps,
+                           // Otherwise what's the point of an exhaustive
+                           // evaluation if you don't get the results?
+                           SchemaCompilerEvaluationMode::Fast, std::nullopt);
+}
+
+auto evaluate(const SchemaCompilerTemplate &steps, EvaluationContext &context)
+    -> bool {
+  return evaluate_internal(context, steps,
                            // Otherwise what's the point of an exhaustive
                            // evaluation if you don't get the results?
                            SchemaCompilerEvaluationMode::Fast, std::nullopt);
