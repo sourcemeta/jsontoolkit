@@ -860,7 +860,7 @@ public:
   /// EXPECT_TRUE(document.is_object());
   /// const auto result = document.try_at("foo");
   /// EXPECT_TRUE(result.has_value());
-  /// EXPECT_EQ(result.value().to_integer(), 1);
+  /// EXPECT_EQ(result.value().get().to_integer(), 1);
   [[nodiscard]] auto try_at(const String &key) const
       -> std::optional<std::reference_wrapper<const JSON>>;
 
