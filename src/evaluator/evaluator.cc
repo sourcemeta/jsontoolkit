@@ -38,9 +38,10 @@ auto evaluate_step(
     return true;                                                               \
   }                                                                            \
   if (step_category.report && callback.has_value()) {                          \
+    const JSON value{nullptr};                                                 \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
+                     value);                                                   \
   }                                                                            \
   bool result{false};
 
@@ -56,9 +57,10 @@ auto evaluate_step(
                step_category.relative_instance_location,                       \
                step_category.schema_resource, step_category.dynamic);          \
   if (step_category.report && callback.has_value()) {                          \
+    const JSON value{nullptr};                                                 \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
+                     value);                                                   \
   }                                                                            \
   bool result{false};
 
@@ -86,9 +88,10 @@ auto evaluate_step(
                step_category.schema_resource, step_category.dynamic,           \
                std::move(target_check.value()));                               \
   if (step_category.report && callback.has_value()) {                          \
+    const JSON value{nullptr};                                                 \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
+                     value);                                                   \
   }                                                                            \
   bool result{false};
 
@@ -100,17 +103,19 @@ auto evaluate_step(
                step_category.relative_instance_location,                       \
                step_category.schema_resource, step_category.dynamic);          \
   if (step_category.report && callback.has_value()) {                          \
+    const JSON value{nullptr};                                                 \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
+                     value);                                                   \
   }                                                                            \
   bool result{false};
 
 #define EVALUATE_END(step_category, step_type)                                 \
   if (step_category.report && callback.has_value()) {                          \
+    const JSON value{nullptr};                                                 \
     callback.value()(SchemaCompilerEvaluationType::Post, result, step,         \
                      context.evaluate_path(), context.instance_location(),     \
-                     context.null);                                            \
+                     value);                                                   \
   }                                                                            \
   context.pop(step_category.dynamic);                                          \
   SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                        \
@@ -136,8 +141,9 @@ auto evaluate_step(
                step_category.schema_resource, step_category.dynamic);          \
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
+    const JSON value{nullptr};                                                 \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
-                     context.evaluate_path(), destination, context.null);      \
+                     context.evaluate_path(), destination, value);             \
     callback.value()(SchemaCompilerEvaluationType::Post, true, step,           \
                      context.evaluate_path(), destination,                     \
                      annotation_result.first);                                 \
@@ -157,8 +163,9 @@ auto evaluate_step(
                step_category.schema_resource, step_category.dynamic);          \
   if (annotation_result.second && step_category.report &&                      \
       callback.has_value()) {                                                  \
+    const JSON value{nullptr};                                                 \
     callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
-                     context.evaluate_path(), destination, context.null);      \
+                     context.evaluate_path(), destination, value);             \
     callback.value()(SchemaCompilerEvaluationType::Post, true, step,           \
                      context.evaluate_path(), destination,                     \
                      annotation_result.first);                                 \

@@ -115,10 +115,6 @@ private:
   auto annotations(const WeakPointer &current_instance_location) const
       -> const std::map<WeakPointer, std::set<JSON>> &;
 
-public:
-  // TODO: Remove this
-  const JSON null{nullptr};
-
 private:
 // Exporting symbols that depends on the standard C++ library is considered
 // safe.
