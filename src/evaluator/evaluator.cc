@@ -172,14 +172,14 @@ auto evaluate_step(
     case IS_STEP(SchemaCompilerAssertionFail): {
       EVALUATE_BEGIN_NO_PRECONDITION(assertion, SchemaCompilerAssertionFail);
       EVALUATE_END(assertion, SchemaCompilerAssertionFail);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionDefines): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionDefines,
                      target.is_object());
       result = target.defines(assertion.value);
       EVALUATE_END(assertion, SchemaCompilerAssertionDefines);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionDefinesAll): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionDefinesAll,
@@ -196,7 +196,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(assertion, SchemaCompilerAssertionDefinesAll);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionPropertyDependencies): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionPropertyDependencies,
@@ -221,7 +221,7 @@ auto evaluate_step(
 
     evaluate_assertion_property_dependencies_end:
       EVALUATE_END(assertion, SchemaCompilerAssertionPropertyDependencies);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionType): {
       EVALUATE_BEGIN_NO_PRECONDITION(assertion, SchemaCompilerAssertionType);
@@ -232,7 +232,7 @@ auto evaluate_step(
           target.type() == assertion.value ||
           (assertion.value == JSON::Type::Integer && target.is_integer_real());
       EVALUATE_END(assertion, SchemaCompilerAssertionType);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionTypeAny): {
       EVALUATE_BEGIN_NO_PRECONDITION(assertion, SchemaCompilerAssertionTypeAny);
@@ -252,14 +252,14 @@ auto evaluate_step(
       }
 
       EVALUATE_END(assertion, SchemaCompilerAssertionTypeAny);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionTypeStrict): {
       EVALUATE_BEGIN_NO_PRECONDITION(assertion,
                                      SchemaCompilerAssertionTypeStrict);
       result = context.resolve_target().type() == assertion.value;
       EVALUATE_END(assertion, SchemaCompilerAssertionTypeStrict);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionTypeStrictAny): {
       EVALUATE_BEGIN_NO_PRECONDITION(assertion,
@@ -270,7 +270,7 @@ auto evaluate_step(
                           context.resolve_target().type()) !=
                 assertion.value.cend());
       EVALUATE_END(assertion, SchemaCompilerAssertionTypeStrictAny);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionTypeStringBounded): {
       EVALUATE_BEGIN_NO_PRECONDITION(assertion,
@@ -285,7 +285,7 @@ auto evaluate_step(
                target.size() >= minimum &&
                (!maximum.has_value() || target.size() <= maximum.value());
       EVALUATE_END(assertion, SchemaCompilerAssertionTypeStringBounded);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionTypeArrayBounded): {
       EVALUATE_BEGIN_NO_PRECONDITION(assertion,
@@ -299,7 +299,7 @@ auto evaluate_step(
       result = target.type() == JSON::Type::Array && target.size() >= minimum &&
                (!maximum.has_value() || target.size() <= maximum.value());
       EVALUATE_END(assertion, SchemaCompilerAssertionTypeArrayBounded);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionTypeObjectBounded): {
       EVALUATE_BEGIN_NO_PRECONDITION(assertion,
@@ -314,62 +314,62 @@ auto evaluate_step(
                target.size() >= minimum &&
                (!maximum.has_value() || target.size() <= maximum.value());
       EVALUATE_END(assertion, SchemaCompilerAssertionTypeObjectBounded);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionRegex): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionRegex,
                      target.is_string());
       result = std::regex_search(target.to_string(), assertion.value.first);
       EVALUATE_END(assertion, SchemaCompilerAssertionRegex);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionStringSizeLess): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionStringSizeLess,
                      target.is_string());
       result = (target.size() < assertion.value);
       EVALUATE_END(assertion, SchemaCompilerAssertionStringSizeLess);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionStringSizeGreater): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionStringSizeGreater,
                      target.is_string());
       result = (target.size() > assertion.value);
       EVALUATE_END(assertion, SchemaCompilerAssertionStringSizeGreater);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionArraySizeLess): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionArraySizeLess,
                      target.is_array());
       result = (target.size() < assertion.value);
       EVALUATE_END(assertion, SchemaCompilerAssertionArraySizeLess);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionArraySizeGreater): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionArraySizeGreater,
                      target.is_array());
       result = (target.size() > assertion.value);
       EVALUATE_END(assertion, SchemaCompilerAssertionArraySizeGreater);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionObjectSizeLess): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionObjectSizeLess,
                      target.is_object());
       result = (target.size() < assertion.value);
       EVALUATE_END(assertion, SchemaCompilerAssertionObjectSizeLess);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionObjectSizeGreater): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionObjectSizeGreater,
                      target.is_object());
       result = (target.size() > assertion.value);
       EVALUATE_END(assertion, SchemaCompilerAssertionObjectSizeGreater);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionEqual): {
       EVALUATE_BEGIN_NO_PRECONDITION(assertion, SchemaCompilerAssertionEqual);
       result = (context.resolve_target() == assertion.value);
       EVALUATE_END(assertion, SchemaCompilerAssertionEqual);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionEqualsAny): {
       EVALUATE_BEGIN_NO_PRECONDITION(assertion,
@@ -377,42 +377,42 @@ auto evaluate_step(
       result = (std::find(assertion.value.cbegin(), assertion.value.cend(),
                           context.resolve_target()) != assertion.value.cend());
       EVALUATE_END(assertion, SchemaCompilerAssertionEqualsAny);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionGreaterEqual): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionGreaterEqual,
                      target.is_number());
       result = target >= assertion.value;
       EVALUATE_END(assertion, SchemaCompilerAssertionGreaterEqual);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionLessEqual): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionLessEqual,
                      target.is_number());
       result = target <= assertion.value;
       EVALUATE_END(assertion, SchemaCompilerAssertionLessEqual);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionGreater): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionGreater,
                      target.is_number());
       result = target > assertion.value;
       EVALUATE_END(assertion, SchemaCompilerAssertionGreater);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionLess): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionLess,
                      target.is_number());
       result = target < assertion.value;
       EVALUATE_END(assertion, SchemaCompilerAssertionLess);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionUnique): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionUnique,
                      target.is_array());
       result = target.unique();
       EVALUATE_END(assertion, SchemaCompilerAssertionUnique);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionDivisible): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionDivisible,
@@ -420,7 +420,7 @@ auto evaluate_step(
       assert(assertion.value.is_number());
       result = target.divisible_by(assertion.value);
       EVALUATE_END(assertion, SchemaCompilerAssertionDivisible);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionStringType): {
       EVALUATE_BEGIN(assertion, SchemaCompilerAssertionStringType,
@@ -441,7 +441,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(assertion, SchemaCompilerAssertionStringType);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionPropertyType): {
       EVALUATE_BEGIN_TRY_TARGET(
@@ -458,7 +458,7 @@ auto evaluate_step(
                (assertion.value == JSON::Type::Integer &&
                 effective_target.is_integer_real());
       EVALUATE_END(assertion, SchemaCompilerAssertionPropertyType);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAssertionPropertyTypeStrict): {
       EVALUATE_BEGIN_TRY_TARGET(
@@ -470,7 +470,7 @@ auto evaluate_step(
       // Now here we refer to the actual property
       result = context.resolve_target().type() == assertion.value;
       EVALUATE_END(assertion, SchemaCompilerAssertionPropertyTypeStrict);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLogicalOr): {
       EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalOr);
@@ -487,7 +487,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(logical, SchemaCompilerLogicalOr);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLogicalAnd): {
       EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalAnd);
@@ -500,7 +500,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(logical, SchemaCompilerLogicalAnd);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLogicalWhenType): {
       EVALUATE_BEGIN(logical, SchemaCompilerLogicalWhenType,
@@ -514,7 +514,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(logical, SchemaCompilerLogicalWhenType);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLogicalWhenDefines): {
       EVALUATE_BEGIN(logical, SchemaCompilerLogicalWhenDefines,
@@ -528,7 +528,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(logical, SchemaCompilerLogicalWhenDefines);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLogicalWhenAdjacentUnmarked): {
       EVALUATE_BEGIN_NO_TARGET(
@@ -545,7 +545,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(logical, SchemaCompilerLogicalWhenAdjacentUnmarked);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLogicalWhenAdjacentMarked): {
       EVALUATE_BEGIN_NO_TARGET(logical, SchemaCompilerLogicalWhenAdjacentMarked,
@@ -561,7 +561,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(logical, SchemaCompilerLogicalWhenAdjacentMarked);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLogicalWhenArraySizeGreater): {
       EVALUATE_BEGIN(logical, SchemaCompilerLogicalWhenArraySizeGreater,
@@ -575,7 +575,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(logical, SchemaCompilerLogicalWhenArraySizeGreater);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLogicalWhenArraySizeEqual): {
       EVALUATE_BEGIN(logical, SchemaCompilerLogicalWhenArraySizeEqual,
@@ -589,7 +589,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(logical, SchemaCompilerLogicalWhenArraySizeEqual);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLogicalXor): {
       EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalXor);
@@ -628,7 +628,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(logical, SchemaCompilerLogicalXor);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLogicalTryMark): {
       EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalTryMark);
@@ -648,7 +648,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(logical, SchemaCompilerLogicalTryMark);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLogicalNot): {
       EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalNot);
@@ -665,7 +665,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(logical, SchemaCompilerLogicalNot);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerControlLabel): {
       EVALUATE_BEGIN_NO_PRECONDITION(control, SchemaCompilerControlLabel);
@@ -679,7 +679,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(control, SchemaCompilerControlLabel);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerControlMark): {
       SOURCEMETA_TRACE_START(trace_id, "SchemaCompilerControlMark");
@@ -687,7 +687,7 @@ auto evaluate_step(
       context.mark(control.value, control.children);
       SOURCEMETA_TRACE_END(trace_id, "SchemaCompilerControlMark");
       return true;
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerControlJump): {
       EVALUATE_BEGIN_NO_PRECONDITION(control, SchemaCompilerControlJump);
@@ -700,7 +700,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(control, SchemaCompilerControlJump);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerControlDynamicAnchorJump): {
       EVALUATE_BEGIN_NO_PRECONDITION(control,
@@ -717,34 +717,34 @@ auto evaluate_step(
       }
 
       EVALUATE_END(control, SchemaCompilerControlDynamicAnchorJump);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAnnotationEmit): {
       EVALUATE_ANNOTATION_NO_PRECONDITION(
           annotation, SchemaCompilerAnnotationEmit, context.instance_location(),
           annotation.value);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAnnotationWhenArraySizeEqual): {
       EVALUATE_ANNOTATION(
           annotation, SchemaCompilerAnnotationWhenArraySizeEqual,
           target.is_array() && target.size() == annotation.value.first,
           context.instance_location(), annotation.value.second);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAnnotationWhenArraySizeGreater): {
       EVALUATE_ANNOTATION(
           annotation, SchemaCompilerAnnotationWhenArraySizeGreater,
           target.is_array() && target.size() > annotation.value.first,
           context.instance_location(), annotation.value.second);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAnnotationToParent): {
       EVALUATE_ANNOTATION_NO_PRECONDITION(
           annotation, SchemaCompilerAnnotationToParent,
           // TODO: Can we avoid a copy of the instance location here?
           context.instance_location().initial(), annotation.value);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerAnnotationBasenameToParent): {
       EVALUATE_ANNOTATION_NO_PRECONDITION(
@@ -752,7 +752,7 @@ auto evaluate_step(
           // TODO: Can we avoid a copy of the instance location here?
           context.instance_location().initial(),
           context.instance_location().back().to_json());
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopPropertiesMatch): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesMatch,
@@ -779,7 +779,7 @@ auto evaluate_step(
 
     evaluate_loop_properties_match_end:
       EVALUATE_END(loop, SchemaCompilerLoopPropertiesMatch);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopProperties): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopProperties, target.is_object());
@@ -800,7 +800,7 @@ auto evaluate_step(
 
     evaluate_loop_properties_end:
       EVALUATE_END(loop, SchemaCompilerLoopProperties);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopPropertiesRegex): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesRegex,
@@ -826,7 +826,7 @@ auto evaluate_step(
 
     evaluate_loop_properties_regex_end:
       EVALUATE_END(loop, SchemaCompilerLoopPropertiesRegex);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopPropertiesNoAnnotation): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesNoAnnotation,
@@ -862,7 +862,7 @@ auto evaluate_step(
 
     evaluate_loop_properties_no_annotation_end:
       EVALUATE_END(loop, SchemaCompilerLoopPropertiesNoAnnotation);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopPropertiesExcept): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesExcept,
@@ -895,7 +895,7 @@ auto evaluate_step(
 
     evaluate_loop_properties_except_end:
       EVALUATE_END(loop, SchemaCompilerLoopPropertiesExcept);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopPropertiesType): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesType,
@@ -918,7 +918,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(loop, SchemaCompilerLoopPropertiesType);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopPropertiesTypeStrict): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesTypeStrict,
@@ -936,7 +936,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(loop, SchemaCompilerLoopPropertiesTypeStrict);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopKeys): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopKeys, target.is_object());
@@ -960,7 +960,7 @@ auto evaluate_step(
       context.target_type(
           sourcemeta::jsontoolkit::EvaluationContext::TargetType::Value);
       EVALUATE_END(loop, SchemaCompilerLoopKeys);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopItems): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopItems, target.is_array());
@@ -991,7 +991,7 @@ auto evaluate_step(
 
     evaluate_compiler_loop_items_end:
       EVALUATE_END(loop, SchemaCompilerLoopItems);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopItemsUnmarked): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopItemsUnmarked,
@@ -1021,7 +1021,7 @@ auto evaluate_step(
 
     evaluate_compiler_loop_items_unmarked_end:
       EVALUATE_END(loop, SchemaCompilerLoopItemsUnmarked);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopItemsUnevaluated): {
       // TODO: This precondition is very expensive due to pointer manipulation
@@ -1071,7 +1071,7 @@ auto evaluate_step(
 
     evaluate_compiler_loop_items_unevaluated_end:
       EVALUATE_END(loop, SchemaCompilerLoopItemsUnevaluated);
-    } break;
+    }
 
     case IS_STEP(SchemaCompilerLoopContains): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopContains, target.is_array());
@@ -1122,7 +1122,7 @@ auto evaluate_step(
       }
 
       EVALUATE_END(loop, SchemaCompilerLoopContains);
-    } break;
+    }
 
 #undef IS_STEP
 #undef STRINGIFY
