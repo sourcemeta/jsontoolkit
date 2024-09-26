@@ -378,3 +378,20 @@ TEST(JSON_value, class_member_initializer_list) {
   EXPECT_EQ(container.get().to_integer(), 5);
   EXPECT_EQ(container.get(), document);
 }
+
+TEST(JSON_value, try_at) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{\"foo\":5}");
+  EXPECT_TRUE(document.is_object());
+  const auto result = document.try_at("foo");
+  EXPECT_TRUE(result.has_value());
+  EXPECT_EQ(result.value().get().to_integer(), 5);
+}
+
+TEST(JSON_value, try_at_fail) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{\"foo\":5}");
+  EXPECT_TRUE(document.is_object());
+  const auto result = document.try_at("boo");
+  EXPECT_FALSE(result.has_value());
+}

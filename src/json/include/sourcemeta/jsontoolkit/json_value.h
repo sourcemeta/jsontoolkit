@@ -12,6 +12,7 @@
 #include <functional>       // std::less, std::reference_wrapper
 #include <initializer_list> // std::initializer_list
 #include <memory>           // std::allocator
+#include <optional>         // std::optional
 #include <set>              // std::set
 #include <sstream>          // std::basic_istringstream
 #include <string>           // std::basic_string, std::char_traits
@@ -846,6 +847,22 @@ public:
   /// assert(my_string.empty());
   /// ```
   [[nodiscard]] auto empty() const -> bool;
+
+  /// This method checks whether an input JSON object defines a specific key
+  /// and returns the value if it does. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON document =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
+  /// EXPECT_TRUE(document.is_object());
+  /// const auto result = document.try_at("foo");
+  /// EXPECT_TRUE(result.has_value());
+  /// EXPECT_EQ(result.value().get().to_integer(), 1);
+  [[nodiscard]] auto try_at(const String &key) const
+      -> std::optional<std::reference_wrapper<const JSON>>;
 
   /// This method checks whether an input JSON object defines a specific key.
   /// For example:
