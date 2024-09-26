@@ -1,3 +1,4 @@
+#include <sourcemeta/jsontoolkit/evaluator.h>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonl.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
@@ -54,10 +55,12 @@ auto main(int argc, char **argv) noexcept -> int {
   std::cerr << "Number of instances: " << instances.size() << "\n";
 
   // Validate and measure
+  sourcemeta::jsontoolkit::EvaluationContext context;
   const auto timestamp_start{std::chrono::high_resolution_clock::now()};
   for (const auto &instance : instances) {
+    context.prepare(instance);
     const auto result{
-        sourcemeta::jsontoolkit::evaluate(schema_template, instance)};
+        sourcemeta::jsontoolkit::evaluate(schema_template, context)};
     if (!result) {
       return EXIT_FAILURE;
     }

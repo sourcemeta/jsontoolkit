@@ -1,13 +1,97 @@
-#include <sourcemeta/jsontoolkit/evaluator.h>
-
-#include "context.h"
+#include <sourcemeta/jsontoolkit/evaluator_context.h>
+#include <sourcemeta/jsontoolkit/evaluator_error.h>
 
 #include <cassert> // assert
 
 namespace sourcemeta::jsontoolkit {
 
-EvaluationContext::EvaluationContext(const JSON &instance)
-    : instances_{instance} {};
+auto EvaluationContext::prepare(const JSON &instance) -> void {
+  // Do a full reset for the next run
+  assert(this->evaluate_path_.empty());
+  assert(this->instance_location_.empty());
+  assert(this->frame_sizes.empty());
+  assert(this->resources_.empty());
+  this->instances_.clear();
+  this->instances_.emplace_back(instance);
+  this->annotation_blacklist.clear();
+  this->annotations_.clear();
+  this->labels.clear();
+  this->property_as_instance = false;
+}
+
+auto EvaluationContext::push_without_traverse(
+    const Pointer &relative_schema_location,
+    const Pointer &relative_instance_location,
+    const std::string &schema_resource, const bool dynamic) -> void {
+  // Guard against infinite recursion in a cheap manner, as
+  // infinite recursion will manifest itself through huge
+  // ever-growing evaluate paths
+  constexpr auto EVALUATE_PATH_LIMIT{300};
+  if (this->evaluate_path_.size() > EVALUATE_PATH_LIMIT) [[unlikely]] {
+    throw sourcemeta::jsontoolkit::SchemaEvaluationError(
+        "The evaluation path depth limit was reached "
+        "likely due to infinite recursion");
+  }
+
+  this->frame_sizes.emplace_back(relative_schema_location.size(),
+                                 relative_instance_location.size());
+  this->evaluate_path_.push_back(relative_schema_location);
+  this->instance_location_.push_back(relative_instance_location);
+
+  if (dynamic) {
+    // Note that we are potentially repeatedly pushing back the
+    // same schema resource over and over again. However, the
+    // logic for making sure this list is "pure" takes a lot of
+    // computation power. Being silly seems faster.
+    this->resources_.push_back(schema_resource);
+  }
+}
+
+auto EvaluationContext::push(const Pointer &relative_schema_location,
+                             const Pointer &relative_instance_location,
+                             const std::string &schema_resource,
+                             const bool dynamic) -> void {
+  this->push_without_traverse(relative_schema_location,
+                              relative_instance_location, schema_resource,
+                              dynamic);
+  if (!relative_instance_location.empty()) {
+    assert(!this->instances_.empty());
+    this->instances_.emplace_back(
+        get(this->instances_.back().get(), relative_instance_location));
+  }
+}
+
+auto EvaluationContext::push(const Pointer &relative_schema_location,
+                             const Pointer &relative_instance_location,
+                             const std::string &schema_resource,
+                             const bool dynamic,
+                             std::reference_wrapper<const JSON> &&new_instance)
+    -> void {
+  this->push_without_traverse(relative_schema_location,
+                              relative_instance_location, schema_resource,
+                              dynamic);
+  assert(!relative_instance_location.empty());
+  this->instances_.emplace_back(std::move(new_instance));
+}
+
+auto EvaluationContext::pop(const bool dynamic) -> void {
+  assert(!this->frame_sizes.empty());
+  const auto &sizes{this->frame_sizes.back()};
+  this->evaluate_path_.pop_back(sizes.first);
+  this->instance_location_.pop_back(sizes.second);
+  if (sizes.second > 0) {
+    this->instances_.pop_back();
+  }
+
+  this->frame_sizes.pop_back();
+
+  // TODO: Do schema resource management using hashes to avoid
+  // expensive string comparisons
+  if (dynamic) {
+    assert(!this->resources_.empty());
+    this->resources_.pop_back();
+  }
+}
 
 auto EvaluationContext::annotate(const WeakPointer &current_instance_location,
                                  const JSON &value)
