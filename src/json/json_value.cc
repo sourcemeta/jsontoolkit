@@ -451,7 +451,7 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
 }
 
 [[nodiscard]] auto JSON::try_at(const JSON::String &key) const
-    -> std::optional<JSON> {
+    -> std::optional<std::reference_wrapper<const JSON>> {
   assert(this->is_object());
 
   const auto &object{std::get<Object>(this->data)};
