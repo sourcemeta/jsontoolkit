@@ -71,7 +71,7 @@ auto EvaluationContext::push(const Pointer &relative_schema_location,
                               relative_instance_location, schema_resource,
                               dynamic);
   assert(!relative_instance_location.empty());
-  this->instances_.emplace_back(std::move(new_instance));
+  this->instances_.emplace_back(new_instance);
 }
 
 auto EvaluationContext::pop(const bool dynamic) -> void {
