@@ -596,7 +596,7 @@ auto internal_parse(
     std::uint64_t &line, std::uint64_t &column) -> JSON {
   // Globals
   using Result = JSON;
-  enum class Container { Array, Object };
+  enum class Container : std::uint8_t { Array, Object };
   std::stack<Container> levels;
   std::stack<std::reference_wrapper<Result>> frames;
   std::optional<Result> result;
