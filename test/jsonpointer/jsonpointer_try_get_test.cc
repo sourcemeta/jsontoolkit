@@ -113,3 +113,41 @@ TEST(JSONPointer_try_get, complex_false) {
   const auto result{sourcemeta::jsontoolkit::try_get(document, pointer)};
   EXPECT_FALSE(result.has_value());
 }
+
+TEST(JSONPointer_try_get, complex_non_existent_property) {
+  const auto document{sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": {
+      "bar": [ 1, 2, { "baz": "qux" } ]
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", 2, "xxx"};
+  const auto result{sourcemeta::jsontoolkit::try_get(document, pointer)};
+  EXPECT_FALSE(result.has_value());
+}
+
+TEST(JSONPointer_try_get, complex_non_existent_index) {
+  const auto document{sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": {
+      "bar": [ 1, 2, { "baz": "qux" } ]
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", 9, "xxx"};
+  const auto result{sourcemeta::jsontoolkit::try_get(document, pointer)};
+  EXPECT_FALSE(result.has_value());
+}
+
+TEST(JSONPointer_try_get, non_object) {
+  const sourcemeta::jsontoolkit::JSON document{"foo"};
+  const sourcemeta::jsontoolkit::Pointer pointer{"bar"};
+  const auto result{sourcemeta::jsontoolkit::try_get(document, pointer)};
+  EXPECT_FALSE(result.has_value());
+}
+
+TEST(JSONPointer_try_get, non_array) {
+  const sourcemeta::jsontoolkit::JSON document{"foo"};
+  const sourcemeta::jsontoolkit::Pointer pointer{2};
+  const auto result{sourcemeta::jsontoolkit::try_get(document, pointer)};
+  EXPECT_FALSE(result.has_value());
+}

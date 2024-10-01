@@ -359,7 +359,7 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
   }
 
   const auto size{schema_context.schema.at(dynamic_context.keyword).size()};
-  const auto imports_required_keyword =
+  const auto imports_validation_vocabulary =
       schema_context.vocabularies.contains(
           "http://json-schema.org/draft-04/schema#") ||
       schema_context.vocabularies.contains(
@@ -371,7 +371,8 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
       schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2020-12/vocab/validation");
   std::set<std::string> required;
-  if (imports_required_keyword && schema_context.schema.defines("required") &&
+  if (imports_validation_vocabulary &&
+      schema_context.schema.defines("required") &&
       schema_context.schema.at("required").is_array()) {
     for (const auto &property :
          schema_context.schema.at("required").as_array()) {
@@ -448,8 +449,15 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
           true, context, schema_context, relative_dynamic_context, JSON{name}));
     }
 
+    const auto assume_object{imports_validation_vocabulary &&
+                             schema_context.schema.defines("type") &&
+                             schema_context.schema.at("type").is_string() &&
+                             schema_context.schema.at("type").to_string() ==
+                                 "object"};
+
     // We can avoid this "defines" condition if the property is a required one
-    if (imports_required_keyword && schema_context.schema.defines("required") &&
+    if (imports_validation_vocabulary && assume_object &&
+        schema_context.schema.defines("required") &&
         schema_context.schema.at("required").is_array() &&
         schema_context.schema.at("required").contains(JSON{name})) {
       // We can avoid the container too and just inline these steps
