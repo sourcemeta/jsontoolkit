@@ -66,14 +66,21 @@ auto try_traverse(const sourcemeta::jsontoolkit::JSON &document,
     const auto &instance{current.get()};
     if (token.is_property()) {
       const auto &property{token.to_property()};
+      if (!instance.is_object()) {
+        return std::nullopt;
+      }
+
       auto json_value{instance.try_at(property)};
       if (json_value.has_value()) {
         current = std::move(json_value.value());
-
       } else {
         return std::nullopt;
       }
     } else {
+      if (!instance.is_array() && !instance.is_object()) {
+        return std::nullopt;
+      }
+
       const auto index{token.to_index()};
       if (index < instance.size()) {
         current = instance.at(index);
