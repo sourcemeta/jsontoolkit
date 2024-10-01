@@ -57,11 +57,14 @@ auto main(int argc, char **argv) noexcept -> int {
   // Validate and measure
   sourcemeta::jsontoolkit::EvaluationContext context;
   const auto timestamp_start{std::chrono::high_resolution_clock::now()};
+  std::size_t cursor{0};
   for (const auto &instance : instances) {
     context.prepare(instance);
+    cursor += 1;
     const auto result{
         sourcemeta::jsontoolkit::evaluate(schema_template, context)};
     if (!result) {
+      std::cerr << "Fail to validate instance #" << cursor << "\n";
       return EXIT_FAILURE;
     }
   }
