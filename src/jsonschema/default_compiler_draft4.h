@@ -573,8 +573,9 @@ auto compiler_draft4_applicator_patternproperties_conditional_annotation(
       children.push_back(make<SchemaCompilerLoopPropertiesRegex>(
           // Treat this as an internal step
           false, context, schema_context, relative_dynamic_context,
-          SchemaCompilerValueRegex{std::regex{pattern, std::regex::ECMAScript},
-                                   pattern},
+          SchemaCompilerValueRegex{
+              std::regex{pattern, std::regex::ECMAScript | std::regex::nosubs},
+              pattern},
           std::move(substeps)));
     }
   }
@@ -634,7 +635,8 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
     for (const auto &entry :
          schema_context.schema.at("patternProperties").as_object()) {
       filter.second.push_back(
-          {std::regex{entry.first, std::regex::ECMAScript}, entry.first});
+          {std::regex{entry.first, std::regex::ECMAScript | std::regex::nosubs},
+           entry.first});
     }
   }
 
