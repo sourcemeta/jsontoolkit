@@ -3652,3 +3652,44 @@ TEST(JSONSchema_evaluator_2019_09, patternProperties_5) {
       "The object properties not covered by other adjacent object keywords "
       "were expected to validate against this subschema");
 }
+
+TEST(JSONSchema_evaluator_2019_09, definitions_1) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$ref": "#/definitions/middle",
+    "definitions": {
+      "middle": { "$ref": "#/definitions/string" },
+      "string": { "type": "string" }
+    }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/$ref", "#/$ref", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/$ref/$ref", "#/definitions/middle/$ref",
+                     "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/$ref/$ref/type",
+                     "#/definitions/string/type", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/$ref/$ref/type",
+                              "#/definitions/string/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/$ref/$ref",
+                              "#/definitions/middle/$ref", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/$ref", "#/$ref", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The string value was expected to validate "
+                               "against the statically referenced schema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The string value was expected to validate "
+                               "against the statically referenced schema");
+}
