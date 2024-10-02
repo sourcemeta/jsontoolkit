@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727896215039,
+  "lastUpdate": 1727903976934,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -13838,6 +13838,120 @@ window.BENCHMARK_DATA = {
             "value": 3211.479216716602,
             "unit": "ns/iter",
             "extra": "iterations: 217699\ncpu: 3211.4241131103054 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c20211d8027ed50197b88ebca6cceff021a4e588",
+          "message": "Support `definitions` in 2019-09 and 2020-12 (#1249)\n\nJSON Schema actually defines it for backwards compatibility reasons.\r\n\r\nKudos to @michaelmior for catching this.\r\n\r\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-10-02T17:11:03-04:00",
+          "tree_id": "55c55a1dd55aaf5071c5bcabefb0175b76aeb6cb",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/c20211d8027ed50197b88ebca6cceff021a4e588"
+        },
+        "date": 1727903976029,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSONSchema_Compiler_Draft6_AdaptiveCard",
+            "value": 6518421861.999969,
+            "unit": "ns/iter",
+            "extra": "iterations: 1\ncpu: 6518197264 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Meta_1_No_Callback",
+            "value": 1128.5621375265289,
+            "unit": "ns/iter",
+            "extra": "iterations: 619183\ncpu: 1128.549756695516 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Required_Properties",
+            "value": 2260.3115214784,
+            "unit": "ns/iter",
+            "extra": "iterations: 307096\ncpu: 2260.2880792976775 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match",
+            "value": 213.1348599138475,
+            "unit": "ns/iter",
+            "extra": "iterations: 3286692\ncpu: 213.13219005614133 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match",
+            "value": 141.74171616748504,
+            "unit": "ns/iter",
+            "extra": "iterations: 4951603\ncpu: 141.73602710071862 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Items_Schema",
+            "value": 3487.7402570760864,
+            "unit": "ns/iter",
+            "extra": "iterations: 199863\ncpu: 3487.27461310998 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Nested_Object",
+            "value": 1746.7578535278442,
+            "unit": "ns/iter",
+            "extra": "iterations: 399502\ncpu: 1746.5598069596656 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Optional",
+            "value": 1760.917649068303,
+            "unit": "ns/iter",
+            "extra": "iterations: 392236\ncpu: 1760.8367768384346 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Closed",
+            "value": 1479.508470136093,
+            "unit": "ns/iter",
+            "extra": "iterations: 480984\ncpu: 1479.4200202085717 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Properties_Triad_Required",
+            "value": 1869.3550736405944,
+            "unit": "ns/iter",
+            "extra": "iterations: 381718\ncpu: 1869.2146768032956 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Non_Recursive_Ref",
+            "value": 483.25862303052196,
+            "unit": "ns/iter",
+            "extra": "iterations: 1450969\ncpu: 483.2448522332322 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Pattern_Properties_True",
+            "value": 2332.125677121718,
+            "unit": "ns/iter",
+            "extra": "iterations: 301829\ncpu: 2332.066464786348 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Ref_To_Single_Property",
+            "value": 151.92738708260106,
+            "unit": "ns/iter",
+            "extra": "iterations: 4569490\ncpu: 151.92761052108645 ns\nthreads: 1"
+          },
+          {
+            "name": "JSONSchema_Validate_Draft4_Additional_Properties_Type",
+            "value": 1132.2903879934393,
+            "unit": "ns/iter",
+            "extra": "iterations: 619392\ncpu: 1132.270618606633 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 3536.7091618192053,
+            "unit": "ns/iter",
+            "extra": "iterations: 198203\ncpu: 3536.7184906383977 ns\nthreads: 1"
           }
         ]
       }
