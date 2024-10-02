@@ -1260,6 +1260,91 @@ TEST(JSONSchema_evaluator_draft4, pattern_3) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
 }
 
+TEST(JSONSchema_evaluator_draft4, pattern_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "pattern": "^[a-zA-Z0-9\\/\\_]{1,32}$"
+  })JSON")};
+
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+    // The pattern might succeed in some standard library implementations
+    SUCCEED();
+  } catch (const sourcemeta::jsontoolkit::SchemaCompilationError &error) {
+    EXPECT_STREQ(error.what(),
+                 "Invalid regular expression: ^[a-zA-Z0-9\\/\\_]{1,32}$");
+    EXPECT_EQ(error.location(), sourcemeta::jsontoolkit::Pointer({"pattern"}));
+    EXPECT_EQ(error.base().recompose(), "");
+    SUCCEED();
+  } catch (const std::exception &) {
+    FAIL() << "The compile function was expected to throw a schema error";
+  }
+}
+
+TEST(JSONSchema_evaluator_draft4, pattern_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "foo": {
+        "pattern": "^[a-zA-Z0-9\\/\\_]{1,32}$"
+      }
+    }
+  })JSON")};
+
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+    // The pattern might succeed in some standard library implementations
+    SUCCEED();
+  } catch (const sourcemeta::jsontoolkit::SchemaCompilationError &error) {
+    EXPECT_STREQ(error.what(),
+                 "Invalid regular expression: ^[a-zA-Z0-9\\/\\_]{1,32}$");
+    EXPECT_EQ(error.location(), sourcemeta::jsontoolkit::Pointer(
+                                    {"properties", "foo", "pattern"}));
+    EXPECT_EQ(error.base().recompose(), "");
+    SUCCEED();
+  } catch (const std::exception &) {
+    FAIL() << "The compile function was expected to throw a schema error";
+  }
+}
+
+TEST(JSONSchema_evaluator_draft4, pattern_6) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "foo": {
+        "id": "https://nested.com",
+        "pattern": "^[a-zA-Z0-9\\/\\_]{1,32}$"
+      }
+    }
+  })JSON")};
+
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+    // The pattern might succeed in some standard library implementations
+    SUCCEED();
+  } catch (const sourcemeta::jsontoolkit::SchemaCompilationError &error) {
+    EXPECT_STREQ(error.what(),
+                 "Invalid regular expression: ^[a-zA-Z0-9\\/\\_]{1,32}$");
+    EXPECT_EQ(error.location(), sourcemeta::jsontoolkit::Pointer({"pattern"}));
+    EXPECT_EQ(error.base().recompose(), "https://nested.com");
+    SUCCEED();
+  } catch (const std::exception &) {
+    FAIL() << "The compile function was expected to throw a schema error";
+  }
+}
+
 TEST(JSONSchema_evaluator_draft4, patternProperties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -1535,6 +1620,34 @@ TEST(JSONSchema_evaluator_draft4, patternProperties_8) {
       instance, 1,
       "The object properties not covered by other adjacent object keywords "
       "were expected to validate against this subschema");
+}
+
+TEST(JSONSchema_evaluator_draft4, patternProperties_9) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "patternProperties": {
+      "^[a-zA-Z0-9\\_\\.\\-]*$": { "type": "string" }
+    }
+  })JSON")};
+
+  try {
+    sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler);
+    // The pattern might succeed in some standard library implementations
+    SUCCEED();
+  } catch (const sourcemeta::jsontoolkit::SchemaCompilationError &error) {
+    EXPECT_STREQ(error.what(),
+                 "Invalid regular expression: ^[a-zA-Z0-9\\_\\.\\-]*$");
+    EXPECT_EQ(error.location(),
+              sourcemeta::jsontoolkit::Pointer({"patternProperties"}));
+    EXPECT_EQ(error.base().recompose(), "");
+    SUCCEED();
+  } catch (const std::exception &) {
+    FAIL() << "The compile function was expected to throw a schema error";
+  }
 }
 
 TEST(JSONSchema_evaluator_draft4, additionalProperties_1) {
