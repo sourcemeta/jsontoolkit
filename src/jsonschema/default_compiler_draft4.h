@@ -6,11 +6,26 @@
 
 #include <algorithm> // std::sort, std::any_of
 #include <cassert>   // assert
-#include <regex>     // std::regex
+#include <regex>     // std::regex, std::regex_error
 #include <set>       // std::set
+#include <sstream>   // std::ostringstream
 #include <utility>   // std::move
 
 #include "compile_helpers.h"
+
+static auto parse_regex(const std::string &pattern,
+                        const sourcemeta::jsontoolkit::URI &base,
+                        const sourcemeta::jsontoolkit::Pointer &schema_location)
+    -> std::regex {
+  try {
+    return std::regex{pattern, std::regex::ECMAScript | std::regex::nosubs};
+  } catch (const std::regex_error &) {
+    std::ostringstream message;
+    message << "Invalid regular expression: " << pattern;
+    throw sourcemeta::jsontoolkit::SchemaCompilationError(base, schema_location,
+                                                          message.str());
+  }
+}
 
 namespace internal {
 using namespace sourcemeta::jsontoolkit;
@@ -592,9 +607,9 @@ auto compiler_draft4_applicator_patternproperties_conditional_annotation(
       children.push_back(make<SchemaCompilerLoopPropertiesRegex>(
           // Treat this as an internal step
           false, context, schema_context, relative_dynamic_context,
-          SchemaCompilerValueRegex{
-              std::regex{pattern, std::regex::ECMAScript | std::regex::nosubs},
-              pattern},
+          SchemaCompilerValueRegex{parse_regex(pattern, schema_context.base,
+                                               schema_context.relative_pointer),
+                                   pattern},
           std::move(substeps)));
     }
   }
@@ -654,7 +669,9 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
     for (const auto &entry :
          schema_context.schema.at("patternProperties").as_object()) {
       filter.second.push_back(
-          {std::regex{entry.first, std::regex::ECMAScript | std::regex::nosubs},
+          {parse_regex(entry.first, schema_context.base,
+                       schema_context.relative_pointer.initial().concat(
+                           {"patternProperties"})),
            entry.first});
     }
   }
@@ -714,7 +731,8 @@ auto compiler_draft4_validation_pattern(
       schema_context.schema.at(dynamic_context.keyword).to_string()};
   return {make<SchemaCompilerAssertionRegex>(
       true, context, schema_context, dynamic_context,
-      SchemaCompilerValueRegex{std::regex{regex_string, std::regex::ECMAScript},
+      SchemaCompilerValueRegex{parse_regex(regex_string, schema_context.base,
+                                           schema_context.relative_pointer),
                                regex_string})};
 }
 
@@ -753,9 +771,10 @@ auto compiler_draft4_validation_format(
   if (format == (name)) {                                                      \
     return {make<SchemaCompilerAssertionRegex>(                                \
         true, context, schema_context, dynamic_context,                        \
-        SchemaCompilerValueRegex{                                              \
-            std::regex{(regular_expression), std::regex::ECMAScript},          \
-            (regular_expression)})};                                           \
+        SchemaCompilerValueRegex{parse_regex(regular_expression,               \
+                                             schema_context.base,              \
+                                             schema_context.relative_pointer), \
+                                 (regular_expression)})};                      \
   }
 
   COMPILE_FORMAT_REGEX("ipv4", FORMAT_REGEX_IPV4)
