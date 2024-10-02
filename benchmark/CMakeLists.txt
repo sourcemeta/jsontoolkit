@@ -4,7 +4,7 @@ if(JSONTOOLKIT_JSON)
   list(APPEND BENCHMARK_SOURCES json.cc)
 endif()
 if(JSONTOOLKIT_EVALUATOR AND JSONTOOLKIT_JSONSCHEMA)
-  list(APPEND BENCHMARK_SOURCES jsonschema_validator.cc)
+  list(APPEND BENCHMARK_SOURCES jsonschema_validator.cc jsonschema_compiler.cc)
 endif()
 
 if(BENCHMARK_SOURCES)
@@ -14,6 +14,8 @@ if(BENCHMARK_SOURCES)
     PRIVATE benchmark::benchmark)
   target_link_libraries(sourcemeta_jsontoolkit_benchmark
     PRIVATE benchmark::benchmark_main)
+  target_compile_definitions(sourcemeta_jsontoolkit_benchmark
+    PRIVATE CURRENT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}")
 
   if(JSONTOOLKIT_JSON)
     target_link_libraries(sourcemeta_jsontoolkit_benchmark

@@ -46,6 +46,16 @@ auto compiler_draft4_core_ref(
   auto new_schema_context{schema_context};
   new_schema_context.references.insert(reference.destination);
 
+  std::size_t direct_children_references{0};
+  if (context.frame.contains({type, reference.destination})) {
+    for (const auto &reference_entry : context.references) {
+      if (reference_entry.first.second.starts_with(
+              context.frame.at({type, reference.destination}).pointer)) {
+        direct_children_references += 1;
+      }
+    }
+  }
+
   // If the reference is not a recursive one, we can avoid the extra
   // overhead of marking the location for future jumps, and pretty much
   // just expand the reference destination in place.
@@ -56,7 +66,8 @@ auto compiler_draft4_core_ref(
        entry.pointer.starts_with(
            context.frame.at({type, reference.destination}).pointer)) ||
       schema_context.references.contains(reference.destination)};
-  if (!is_recursive) {
+
+  if (!is_recursive && direct_children_references <= 5) {
     // TODO: Enable this optimization for 2019-09 on-wards
     if (schema_context.vocabularies.contains(
             "http://json-schema.org/draft-04/schema#") ||
