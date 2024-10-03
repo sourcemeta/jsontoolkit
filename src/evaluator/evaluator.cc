@@ -595,13 +595,16 @@ auto evaluate_step(
       EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalXor);
       result = false;
 
-      // TODO: Cache results of a given branch so we can avoid
-      // computing it multiple times
+      auto cache = std::map<std::size_t, bool>{};
       for (auto iterator{logical.children.cbegin()};
            iterator != logical.children.cend(); ++iterator) {
-        if (!evaluate_step(*iterator, mode, callback, context)) {
-          continue;
+        auto index = static_cast<std::size_t>(
+            std::distance(logical.children.cbegin(), iterator));
+        if (cache.find(index) == cache.end()) {
+          cache[index] = evaluate_step(*iterator, mode, callback, context);
         }
+        if (cache[index] == false)
+          continue;
 
         // Check if another one matches
         bool subresult{true};
