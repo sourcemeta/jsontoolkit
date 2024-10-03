@@ -125,10 +125,8 @@ auto EvaluationContext::defines_annotation(
     return false;
   }
 
-  const auto instance_annotations{
-      this->annotations(expected_instance_location)};
   for (const auto &[schema_location, schema_annotations] :
-       instance_annotations) {
+       this->annotations(expected_instance_location)) {
     assert(!schema_location.empty());
     const auto &keyword{schema_location.back()};
 
