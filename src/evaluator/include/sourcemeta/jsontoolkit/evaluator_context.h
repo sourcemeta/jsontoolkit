@@ -93,14 +93,6 @@ public:
 
   auto annotate(const WeakPointer &current_instance_location, const JSON &value)
       -> std::pair<std::reference_wrapper<const JSON>, bool>;
-  auto
-  defines_any_adjacent_annotation(const WeakPointer &expected_instance_location,
-                                  const WeakPointer &base_evaluate_path,
-                                  const std::string &keyword) const -> bool;
-  auto defines_any_adjacent_annotation(
-      const WeakPointer &expected_instance_location,
-      const WeakPointer &base_evaluate_path,
-      const std::vector<std::string> &keywords) const -> bool;
   auto defines_annotation(const WeakPointer &expected_instance_location,
                           const WeakPointer &base_evaluate_path,
                           const std::vector<std::string> &keywords,
@@ -111,9 +103,6 @@ public:
       -> std::uint64_t;
 
 private:
-  auto annotations(const WeakPointer &current_instance_location,
-                   const WeakPointer &schema_location) const
-      -> const std::set<JSON> &;
   auto annotations(const WeakPointer &current_instance_location) const
       -> const std::map<WeakPointer, std::set<JSON>> &;
 

@@ -103,28 +103,6 @@ auto EvaluationContext::annotate(const WeakPointer &current_instance_location,
 }
 
 auto EvaluationContext::annotations(
-    const WeakPointer &current_instance_location,
-    const WeakPointer &schema_location) const -> const std::set<JSON> & {
-  static const decltype(this->annotations_)::mapped_type::mapped_type
-      placeholder;
-  // Use `.find()` instead of `.contains()` and `.at()` for performance
-  // reasons
-  const auto instance_location_result{
-      this->annotations_.find(current_instance_location)};
-  if (instance_location_result == this->annotations_.end()) {
-    return placeholder;
-  }
-
-  const auto schema_location_result{
-      instance_location_result->second.find(schema_location)};
-  if (schema_location_result == instance_location_result->second.end()) {
-    return placeholder;
-  }
-
-  return schema_location_result->second;
-}
-
-auto EvaluationContext::annotations(
     const WeakPointer &current_instance_location) const
     -> const std::map<WeakPointer, std::set<JSON>> & {
   static const decltype(this->annotations_)::mapped_type placeholder;
@@ -137,32 +115,6 @@ auto EvaluationContext::annotations(
   }
 
   return instance_location_result->second;
-}
-
-auto EvaluationContext::defines_any_adjacent_annotation(
-    const WeakPointer &expected_instance_location,
-    const WeakPointer &base_evaluate_path, const std::string &keyword) const
-    -> bool {
-  // TODO: We should be taking masks into account
-  // TODO: How can we avoid this expensive pointer manipulation?
-  auto expected_evaluate_path{base_evaluate_path};
-  expected_evaluate_path.push_back({keyword});
-  return !this->annotations(expected_instance_location, expected_evaluate_path)
-              .empty();
-}
-
-auto EvaluationContext::defines_any_adjacent_annotation(
-    const WeakPointer &expected_instance_location,
-    const WeakPointer &base_evaluate_path,
-    const std::vector<std::string> &keywords) const -> bool {
-  for (const auto &keyword : keywords) {
-    if (this->defines_any_adjacent_annotation(expected_instance_location,
-                                              base_evaluate_path, keyword)) {
-      return true;
-    }
-  }
-
-  return false;
 }
 
 auto EvaluationContext::defines_annotation(
