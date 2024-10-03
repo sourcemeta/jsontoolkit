@@ -612,40 +612,22 @@ auto evaluate_step(
 
     case IS_STEP(SchemaCompilerLogicalXor): {
       EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalXor);
-      result = false;
-
-      // TODO: Cache results of a given branch so we can avoid
-      // computing it multiple times
-      for (auto iterator{logical.children.cbegin()};
-           iterator != logical.children.cend(); ++iterator) {
-        if (!evaluate_step(*iterator, mode, callback, context)) {
-          continue;
-        }
-
-        // Check if another one matches
-        bool subresult{true};
-        for (auto subiterator{logical.children.cbegin()};
-             subiterator != logical.children.cend(); ++subiterator) {
-          // Don't compare the element against itself
-          if (std::distance(logical.children.cbegin(), iterator) ==
-              std::distance(logical.children.cbegin(), subiterator)) {
-            continue;
+      result = true;
+      bool has_matched{false};
+      for (const auto &child : logical.children) {
+        if (evaluate_step(child, mode, callback, context)) {
+          if (has_matched) {
+            result = false;
+            if (mode == SchemaCompilerEvaluationMode::Fast) {
+              break;
+            }
+          } else {
+            has_matched = true;
           }
-
-          // We don't need to report traces that part of the exhaustive
-          // XOR search. We can treat those as internal
-          if (evaluate_step(*subiterator, mode, std::nullopt, context)) {
-            subresult = false;
-            break;
-          }
-        }
-
-        result = result || subresult;
-        if (result && mode == SchemaCompilerEvaluationMode::Fast) {
-          break;
         }
       }
 
+      result = result && has_matched;
       EVALUATE_END(logical, SchemaCompilerLogicalXor);
     }
 
