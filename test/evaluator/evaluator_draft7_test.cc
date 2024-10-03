@@ -35,20 +35,13 @@ TEST(JSONSchema_evaluator_draft7, if_1) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{1};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
-  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-
+  EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
-
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The integer value 1 was expected to equal the integer constant 1");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "The integer value was tested against the conditional subschema");
 }
 
 TEST(JSONSchema_evaluator_draft7, if_2) {
@@ -64,20 +57,13 @@ TEST(JSONSchema_evaluator_draft7, if_2) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{2};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
-  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-
+  EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
-
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The integer value 2 was expected to equal the integer constant 1");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "The integer value was tested against the conditional subschema");
 }
 
 TEST(JSONSchema_evaluator_draft7, then_1) {
@@ -110,34 +96,22 @@ TEST(JSONSchema_evaluator_draft7, then_2) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{10};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
-  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
-  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE(2, LogicalWhenAdjacentMarked, "/then", "#/then", "");
-  EVALUATE_TRACE_PRE(3, AssertionDivisible, "/then/multipleOf",
+  EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_PRE(1, AssertionDivisible, "/then/multipleOf",
                      "#/then/multipleOf", "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
-  EVALUATE_TRACE_POST_SUCCESS(2, AssertionDivisible, "/then/multipleOf",
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionDivisible, "/then/multipleOf",
                               "#/then/multipleOf", "");
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenAdjacentMarked, "/then", "#/then",
-                              "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The integer value 10 was expected to equal the integer constant 10");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The integer value was tested against the conditional subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
       "The integer value 10 was expected to be divisible by the integer 5");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
-      "Because of the conditional outcome, the integer value was expected to "
-      "validate against the given subschema");
 }
 
 TEST(JSONSchema_evaluator_draft7, then_3) {
@@ -154,20 +128,67 @@ TEST(JSONSchema_evaluator_draft7, then_3) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
-  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-
+  EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The integer value 5 was expected to equal the integer constant 10");
+}
+
+TEST(JSONSchema_evaluator_draft7, then_4) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "if": true,
+    "then": { "multipleOf": 5 },
+    "else": { "multipleOf": 8 }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionDivisible, "/then/multipleOf",
+                     "#/then/multipleOf", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionDivisible, "/then/multipleOf",
+                              "#/then/multipleOf", "");
+
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "The integer value was tested against the conditional subschema");
+      instance, 0,
+      "The integer value 5 was expected to be divisible by the integer 5");
+}
+
+TEST(JSONSchema_evaluator_draft7, then_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "if": true,
+    "then": { "multipleOf": 5 }
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{2};
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionDivisible, "/then/multipleOf",
+                     "#/then/multipleOf", "");
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionDivisible, "/then/multipleOf",
+                              "#/then/multipleOf", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value 2 was expected to be divisible by the integer 5");
 }
 
 TEST(JSONSchema_evaluator_draft7, else_1) {
@@ -200,20 +221,13 @@ TEST(JSONSchema_evaluator_draft7, else_2) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{1};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
 
-  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
-  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-
+  EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
-
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The integer value 1 was expected to equal the integer constant 1");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 1,
-      "The integer value was tested against the conditional subschema");
 }
 
 TEST(JSONSchema_evaluator_draft7, else_3) {
@@ -230,34 +244,22 @@ TEST(JSONSchema_evaluator_draft7, else_3) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{10};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
 
-  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
-  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE(2, LogicalWhenAdjacentUnmarked, "/else", "#/else", "");
-  EVALUATE_TRACE_PRE(3, AssertionDivisible, "/else/multipleOf",
+  EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_PRE(1, AssertionDivisible, "/else/multipleOf",
                      "#/else/multipleOf", "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
-  EVALUATE_TRACE_POST_SUCCESS(2, AssertionDivisible, "/else/multipleOf",
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionDivisible, "/else/multipleOf",
                               "#/else/multipleOf", "");
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalWhenAdjacentUnmarked, "/else", "#/else",
-                              "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The integer value 10 was expected to equal the integer constant 1");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The integer value was tested against the conditional subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
       "The integer value 10 was expected to be divisible by the integer 5");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
-      "Because of the conditional outcome, the integer value was expected to "
-      "validate against the given subschema");
 }
 
 TEST(JSONSchema_evaluator_draft7, else_4) {
@@ -274,34 +276,22 @@ TEST(JSONSchema_evaluator_draft7, else_4) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{8};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
 
-  EVALUATE_TRACE_PRE(0, LogicalTryMark, "/if", "#/if", "");
-  EVALUATE_TRACE_PRE(1, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_PRE(2, LogicalWhenAdjacentUnmarked, "/else", "#/else", "");
-  EVALUATE_TRACE_PRE(3, AssertionDivisible, "/else/multipleOf",
+  EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
+  EVALUATE_TRACE_PRE(1, AssertionDivisible, "/else/multipleOf",
                      "#/else/multipleOf", "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalTryMark, "/if", "#/if", "");
-  EVALUATE_TRACE_POST_FAILURE(2, AssertionDivisible, "/else/multipleOf",
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionDivisible, "/else/multipleOf",
                               "#/else/multipleOf", "");
-  EVALUATE_TRACE_POST_FAILURE(3, LogicalWhenAdjacentUnmarked, "/else", "#/else",
-                              "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The integer value 8 was expected to equal the integer constant 1");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
-      "The integer value was tested against the conditional subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 2,
       "The integer value 8 was expected to be divisible by the integer 5");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 3,
-      "Because of the conditional outcome, the integer value was expected to "
-      "validate against the given subschema");
 }
 
 TEST(JSONSchema_evaluator_draft7, invalid_ref_top_level) {

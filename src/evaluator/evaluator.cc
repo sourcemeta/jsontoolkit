@@ -549,39 +549,6 @@ auto evaluate_step(
       EVALUATE_END(logical, SchemaCompilerLogicalWhenDefines);
     }
 
-    case IS_STEP(SchemaCompilerLogicalWhenAdjacentUnmarked): {
-      EVALUATE_BEGIN_NO_TARGET(
-          logical, SchemaCompilerLogicalWhenAdjacentUnmarked,
-          !context.defines_any_adjacent_annotation(context.instance_location(),
-                                                   context.evaluate_path(),
-                                                   logical.value));
-      result = true;
-      for (const auto &child : logical.children) {
-        if (!evaluate_step(child, mode, callback, context)) {
-          result = false;
-          break;
-        }
-      }
-
-      EVALUATE_END(logical, SchemaCompilerLogicalWhenAdjacentUnmarked);
-    }
-
-    case IS_STEP(SchemaCompilerLogicalWhenAdjacentMarked): {
-      EVALUATE_BEGIN_NO_TARGET(logical, SchemaCompilerLogicalWhenAdjacentMarked,
-                               context.defines_any_adjacent_annotation(
-                                   context.instance_location(),
-                                   context.evaluate_path(), logical.value));
-      result = true;
-      for (const auto &child : logical.children) {
-        if (!evaluate_step(child, mode, callback, context)) {
-          result = false;
-          break;
-        }
-      }
-
-      EVALUATE_END(logical, SchemaCompilerLogicalWhenAdjacentMarked);
-    }
-
     case IS_STEP(SchemaCompilerLogicalWhenArraySizeGreater): {
       EVALUATE_BEGIN(logical, SchemaCompilerLogicalWhenArraySizeGreater,
                      target.is_array() && target.size() > logical.value);
@@ -649,24 +616,45 @@ auto evaluate_step(
       EVALUATE_END(logical, SchemaCompilerLogicalXor);
     }
 
-    case IS_STEP(SchemaCompilerLogicalTryMark): {
-      EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalTryMark);
+    case IS_STEP(SchemaCompilerLogicalCondition): {
+      EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalCondition);
       result = true;
-      for (const auto &child : logical.children) {
-        if (!evaluate_step(child, mode, callback, context)) {
+      const auto children_size{logical.children.size()};
+      assert(children_size >= logical.value.first);
+      assert(children_size >= logical.value.second);
+
+      auto condition_end{children_size};
+      if (logical.value.first > 0) {
+        condition_end = logical.value.first;
+      } else if (logical.value.second > 0) {
+        condition_end = logical.value.second;
+      }
+
+      for (std::size_t cursor = 0; cursor < condition_end; cursor++) {
+        if (!evaluate_step(logical.children[cursor], mode, callback, context)) {
           result = false;
           break;
         }
       }
 
-      if (result) {
-        // TODO: This implies an allocation of a JSON boolean
-        context.annotate(context.instance_location(), JSON{true});
-      } else {
-        result = true;
+      const auto consequence_start{result ? logical.value.first
+                                          : logical.value.second};
+      const auto consequence_end{(result && logical.value.second > 0)
+                                     ? logical.value.second
+                                     : children_size};
+      result = true;
+      if (consequence_start > 0) {
+        for (auto cursor = consequence_start; cursor < consequence_end;
+             cursor++) {
+          if (!evaluate_step(logical.children[cursor], mode, callback,
+                             context)) {
+            result = false;
+            break;
+          }
+        }
       }
 
-      EVALUATE_END(logical, SchemaCompilerLogicalTryMark);
+      EVALUATE_END(logical, SchemaCompilerLogicalCondition);
     }
 
     case IS_STEP(SchemaCompilerLogicalNot): {
