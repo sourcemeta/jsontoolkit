@@ -8,9 +8,9 @@
 ![Draft 6](https://img.shields.io/endpoint?url=https%3A%2F%2Fbowtie.report%2Fbadges%2Fc%2B%2B-jsontoolkit%2Fcompliance%2Fdraft6.json)
 ![Draft 4](https://img.shields.io/endpoint?url=https%3A%2F%2Fbowtie.report%2Fbadges%2Fc%2B%2B-jsontoolkit%2Fcompliance%2Fdraft4.json)
 
-JSON Toolkit is a swiss-army knife for [JSON](https://www.json.org) programming
-in modern C++. It comes with a built-in parser and growing support for
-standards such as [JSON Schema](http://json-schema.org), [JSON
+JSON Toolkit is a high-performance [JSON Schema](http://json-schema.org)
+evaluator and related JSON utilities for modern C++. It comes with a built-in
+parser and growing support for standards such [JSON
 Pointer](https://www.rfc-editor.org/rfc/rfc6901),
 [JSONL](https://jsonlines.org), and more. For example:
 
