@@ -616,9 +616,15 @@ auto evaluate_step(
             continue;
           }
 
-          // We don't need to report traces that part of the exhaustive
-          // XOR search. We can treat those as internal
-          if (evaluate_step(*subiterator, mode, std::nullopt, context)) {
+          auto subindex = static_cast<std::size_t>(
+              std::distance(logical.children.cbegin(), subiterator));
+          if (cache.find(subindex) == cache.end()) {
+            // We don't need to report traces that part of the exhaustive
+            // XOR search. We can treat those as internal
+            cache[subindex] =
+                evaluate_step(*subiterator, mode, callback, context);
+          }
+          if (cache[subindex] == true) {
             subresult = false;
             break;
           }
