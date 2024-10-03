@@ -761,6 +761,48 @@ JSONSchema_Validate_Draft4_Additional_Properties_Type(benchmark::State &state) {
   }
 }
 
+static void JSONSchema_Validate_Draft4_Nested_Oneof(benchmark::State &state) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "oneOf": [
+          {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" }
+            ]
+          },
+          {
+            "oneOf": [
+              { "type": "boolean" },
+              { "type": "null" }
+            ]
+          },
+          {
+            "oneOf": [
+              { "type": "array" },
+              { "type": "object" }
+            ]
+          }
+        ]
+      })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+        "key": "value"
+      })JSON")};
+
+  const auto schema_template{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+  for (auto _ : state) {
+    auto result{sourcemeta::jsontoolkit::evaluate(schema_template, instance)};
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
 BENCHMARK(JSONSchema_Validate_Draft4_Meta_1_No_Callback);
 BENCHMARK(JSONSchema_Validate_Draft4_Required_Properties);
 BENCHMARK(JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match);
@@ -774,3 +816,4 @@ BENCHMARK(JSONSchema_Validate_Draft4_Non_Recursive_Ref);
 BENCHMARK(JSONSchema_Validate_Draft4_Pattern_Properties_True);
 BENCHMARK(JSONSchema_Validate_Draft4_Ref_To_Single_Property);
 BENCHMARK(JSONSchema_Validate_Draft4_Additional_Properties_Type);
+BENCHMARK(JSONSchema_Validate_Draft4_Nested_Oneof);
