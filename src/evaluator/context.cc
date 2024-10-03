@@ -275,18 +275,31 @@ auto EvaluationContext::target_type(const TargetType type) noexcept -> void {
 
 auto EvaluationContext::resolve_target() -> const JSON & {
   if (this->property_as_instance) [[unlikely]] {
-    assert(!this->instance_location().empty());
-    assert(this->instance_location().back().is_property());
-    // For efficiency, as we likely reference the same JSON values
-    // over and over again
-    // TODO: Get rid of this once we have weak pointers
-    static std::set<JSON> property_values;
-    return *(
-        property_values.emplace(this->instance_location().back().to_property())
-            .first);
+    // In this case, we still need to return a string in order
+    // to cope with non-string keywords inside `propertyNames`
+    // that need to fail validation. But then, the actual string
+    // we return doesn't matter, so we can always return a dummy one.
+    static const JSON empty_string{""};
+    return empty_string;
   }
 
   return this->instances_.back().get();
+}
+
+auto EvaluationContext::resolve_string_target()
+    -> std::optional<std::reference_wrapper<const JSON::String>> {
+  if (this->property_as_instance) [[unlikely]] {
+    assert(!this->instance_location().empty());
+    assert(this->instance_location().back().is_property());
+    return this->instance_location().back().to_property();
+  } else {
+    const auto &result{this->instances_.back().get()};
+    if (!result.is_string()) {
+      return std::nullopt;
+    }
+
+    return result.to_string();
+  }
 }
 
 auto EvaluationContext::mark(const std::size_t id,
