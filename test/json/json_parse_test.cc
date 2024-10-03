@@ -99,6 +99,7 @@ TEST(JSON_parse, string_empty) {
       sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 0);
+  EXPECT_EQ(sourcemeta::jsontoolkit::JSON::size(document.to_string()), 0);
   EXPECT_EQ(document.to_string(), "");
 }
 
@@ -108,6 +109,7 @@ TEST(JSON_parse, string_with_null) {
       sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 9);
+  EXPECT_EQ(sourcemeta::jsontoolkit::JSON::size(document.to_string()), 9);
 
   // See https://stackoverflow.com/a/164274
   using namespace std::string_literals;
@@ -120,6 +122,7 @@ TEST(JSON_parse, string_foo) {
       sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::JSON::size(document.to_string()), 3);
   EXPECT_EQ(document.to_string(), "foo");
 }
 
@@ -129,6 +132,7 @@ TEST(JSON_parse, string_foo_with_spacing) {
       sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(sourcemeta::jsontoolkit::JSON::size(document.to_string()), 3);
   EXPECT_EQ(document.to_string(), "foo");
 }
 
@@ -138,6 +142,7 @@ TEST(JSON_parse, string_foo_padded) {
       sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 9);
+  EXPECT_EQ(sourcemeta::jsontoolkit::JSON::size(document.to_string()), 9);
   EXPECT_EQ(document.to_string(), "   foo   ");
 }
 
@@ -147,6 +152,7 @@ TEST(JSON_parse, string_escape_quote) {
       sourcemeta::jsontoolkit::parse(input);
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.size(), 7);
+  EXPECT_EQ(sourcemeta::jsontoolkit::JSON::size(document.to_string()), 7);
   EXPECT_EQ(document.to_string(), "foo\"bar");
 }
 

@@ -69,6 +69,24 @@ auto JSON::make_array() -> JSON { return JSON{Array{}}; }
 
 auto JSON::make_object() -> JSON { return JSON{Object{}}; }
 
+auto JSON::size(const String &value) noexcept -> std::size_t {
+  std::size_t result{0};
+
+  // We want to count the number of logical characters,
+  // not the number of bytes
+  for (const auto character : value) {
+    // In UTF-8, continuation bytes (i.e. not the first) are
+    // encoded as `10xxxxxx`, so this means we are at the start
+    // of a code-point
+    // See https://en.wikipedia.org/wiki/UTF-8#Encoding
+    if ((character & 0b11000000) != 0b10000000) {
+      result += 1;
+    }
+  }
+
+  return result;
+}
+
 auto JSON::operator<(const JSON &other) const noexcept -> bool {
   if ((this->type() == Type::Integer && other.type() == Type::Real) ||
       (this->type() == Type::Real && other.type() == Type::Integer)) {
@@ -353,21 +371,7 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
     return std::get<JSON::Array>(this->data).data.size();
   } else {
     assert(this->is_string());
-    std::size_t result{0};
-
-    // We want to count the number of logical characters,
-    // not the number of bytes
-    for (const auto character : std::get<JSON::String>(this->data)) {
-      // In UTF-8, continuation bytes (i.e. not the first) are
-      // encoded as `10xxxxxx`, so this means we are at the start
-      // of a code-point
-      // See https://en.wikipedia.org/wiki/UTF-8#Encoding
-      if ((character & 0b11000000) != 0b10000000) {
-        result += 1;
-      }
-    }
-
-    return result;
+    return JSON::size(std::get<JSON::String>(this->data));
   }
 }
 
