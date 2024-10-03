@@ -102,21 +102,6 @@ auto EvaluationContext::annotate(const WeakPointer &current_instance_location,
   return {*(result.first), result.second};
 }
 
-auto EvaluationContext::annotations(
-    const WeakPointer &current_instance_location) const
-    -> const std::map<WeakPointer, std::set<JSON>> & {
-  static const decltype(this->annotations_)::mapped_type placeholder;
-  // Use `.find()` instead of `.contains()` and `.at()` for performance
-  // reasons
-  const auto instance_location_result{
-      this->annotations_.find(current_instance_location)};
-  if (instance_location_result == this->annotations_.end()) {
-    return placeholder;
-  }
-
-  return instance_location_result->second;
-}
-
 auto EvaluationContext::defines_annotation(
     const WeakPointer &expected_instance_location,
     const WeakPointer &base_evaluate_path,
@@ -125,10 +110,14 @@ auto EvaluationContext::defines_annotation(
     return false;
   }
 
-  const auto instance_annotations{
-      this->annotations(expected_instance_location)};
+  const auto instance_location_result{
+      this->annotations_.find(expected_instance_location)};
+  if (instance_location_result == this->annotations_.end()) {
+    return false;
+  }
+
   for (const auto &[schema_location, schema_annotations] :
-       instance_annotations) {
+       instance_location_result->second) {
     assert(!schema_location.empty());
     const auto &keyword{schema_location.back()};
 
@@ -162,8 +151,15 @@ auto EvaluationContext::largest_annotation_index(
   // TODO: We should be taking masks into account
 
   std::uint64_t result{default_value};
+
+  const auto instance_location_result{
+      this->annotations_.find(expected_instance_location)};
+  if (instance_location_result == this->annotations_.end()) {
+    return result;
+  }
+
   for (const auto &[schema_location, schema_annotations] :
-       this->annotations(expected_instance_location)) {
+       instance_location_result->second) {
     assert(!schema_location.empty());
     const auto &keyword{schema_location.back()};
     if (!keyword.is_property()) {
