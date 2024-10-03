@@ -762,9 +762,30 @@ JSONSchema_Validate_Draft4_Additional_Properties_Type(benchmark::State &state) {
 }
 
 static void JSONSchema_Validate_Draft4_Nested_Oneof(benchmark::State &state) {
-  const auto schema{sourcemeta::jsontoolkit::from_file(
-      std::filesystem::path{CURRENT_DIRECTORY} / "schemas" /
-      "draft4_nested_oneof.json")};
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "oneOf": [
+          {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" }
+            ]
+          },
+          {
+            "oneOf": [
+              { "type": "boolean" },
+              { "type": "null" }
+            ]
+          },
+          {
+            "oneOf": [
+              { "type": "array" },
+              { "type": "object" }
+            ]
+          }
+        ]
+      })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse(R"JSON({
