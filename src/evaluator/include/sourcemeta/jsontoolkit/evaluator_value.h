@@ -7,10 +7,10 @@
 #include <cstdint>       // std::uint8_t
 #include <optional>      // std::optional, std::nullopt
 #include <regex>         // std::regex
-#include <set>           // std::set
 #include <string>        // std::string
 #include <tuple>         // std::tuple
 #include <unordered_map> // std::unordered_map
+#include <unordered_set> // std::unordered_set
 #include <utility>       // std::pair
 #include <vector>        // std::vector
 
@@ -98,12 +98,10 @@ using SchemaCompilerValueStringMap =
 using SchemaCompilerValueIndexedJSON =
     std::pair<SchemaCompilerValueUnsignedInteger, JSON>;
 
-// Note that while we generally avoid sets, in this case, we want
-// hash-based lookups on string collections that might get large.
 /// @ingroup evaluator
 /// Represents a compiler step value that consist of object property filters
 using SchemaCompilerValuePropertyFilter =
-    std::pair<std::set<SchemaCompilerValueString>,
+    std::pair<std::unordered_set<SchemaCompilerValueString>,
               std::vector<SchemaCompilerValueRegex>>;
 
 } // namespace sourcemeta::jsontoolkit

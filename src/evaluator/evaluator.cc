@@ -44,6 +44,27 @@ auto evaluate_step(
   }                                                                            \
   bool result{false};
 
+#define EVALUATE_BEGIN_IF_STRING(step_category, step_type)                     \
+  SOURCEMETA_TRACE_END(trace_dispatch_id, "Dispatch");                         \
+  SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
+  const auto &step_category{std::get<step_type>(step)};                        \
+  context.push(step_category.relative_schema_location,                         \
+               step_category.relative_instance_location,                       \
+               step_category.schema_resource, step_category.dynamic);          \
+  const auto &maybe_target{context.resolve_string_target()};                   \
+  if (!maybe_target.has_value()) {                                             \
+    context.pop(step_category.dynamic);                                        \
+    SOURCEMETA_TRACE_END(trace_id, STRINGIFY(step_type));                      \
+    return true;                                                               \
+  }                                                                            \
+  if (step_category.report && callback.has_value()) {                          \
+    callback.value()(SchemaCompilerEvaluationType::Pre, true, step,            \
+                     context.evaluate_path(), context.instance_location(),     \
+                     context.null);                                            \
+  }                                                                            \
+  const auto &target{maybe_target.value().get()};                              \
+  bool result{false};
+
 #define EVALUATE_BEGIN_NO_TARGET(step_category, step_type, precondition)       \
   SOURCEMETA_TRACE_END(trace_dispatch_id, "Dispatch");                         \
   SOURCEMETA_TRACE_START(trace_id, STRINGIFY(step_type));                      \
@@ -317,23 +338,22 @@ auto evaluate_step(
     }
 
     case IS_STEP(SchemaCompilerAssertionRegex): {
-      EVALUATE_BEGIN(assertion, SchemaCompilerAssertionRegex,
-                     target.is_string());
-      result = std::regex_search(target.to_string(), assertion.value.first);
+      EVALUATE_BEGIN_IF_STRING(assertion, SchemaCompilerAssertionRegex);
+      result = std::regex_search(target, assertion.value.first);
       EVALUATE_END(assertion, SchemaCompilerAssertionRegex);
     }
 
     case IS_STEP(SchemaCompilerAssertionStringSizeLess): {
-      EVALUATE_BEGIN(assertion, SchemaCompilerAssertionStringSizeLess,
-                     target.is_string());
-      result = (target.size() < assertion.value);
+      EVALUATE_BEGIN_IF_STRING(assertion,
+                               SchemaCompilerAssertionStringSizeLess);
+      result = (JSON::size(target) < assertion.value);
       EVALUATE_END(assertion, SchemaCompilerAssertionStringSizeLess);
     }
 
     case IS_STEP(SchemaCompilerAssertionStringSizeGreater): {
-      EVALUATE_BEGIN(assertion, SchemaCompilerAssertionStringSizeGreater,
-                     target.is_string());
-      result = (target.size() > assertion.value);
+      EVALUATE_BEGIN_IF_STRING(assertion,
+                               SchemaCompilerAssertionStringSizeGreater);
+      result = (JSON::size(target) > assertion.value);
       EVALUATE_END(assertion, SchemaCompilerAssertionStringSizeGreater);
     }
 
@@ -423,13 +443,12 @@ auto evaluate_step(
     }
 
     case IS_STEP(SchemaCompilerAssertionStringType): {
-      EVALUATE_BEGIN(assertion, SchemaCompilerAssertionStringType,
-                     target.is_string());
+      EVALUATE_BEGIN_IF_STRING(assertion, SchemaCompilerAssertionStringType);
       switch (assertion.value) {
         case SchemaCompilerValueStringType::URI:
           try {
             // TODO: This implies a string copy
-            result = URI{target.to_string()}.is_absolute();
+            result = URI{target}.is_absolute();
           } catch (const URIParseError &) {
             result = false;
           }
@@ -1109,6 +1128,7 @@ auto evaluate_step(
 #undef IS_STEP
 #undef STRINGIFY
 #undef EVALUATE_BEGIN
+#undef EVALUATE_BEGIN_IF_STRING
 #undef EVALUATE_BEGIN_NO_TARGET
 #undef EVALUATE_BEGIN_TRY_TARGET
 #undef EVALUATE_BEGIN_NO_PRECONDITION

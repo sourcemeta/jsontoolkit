@@ -67,6 +67,8 @@ public:
   enum class TargetType : std::uint8_t { Key, Value };
   auto target_type(const TargetType type) noexcept -> void;
   auto resolve_target() -> const JSON &;
+  auto resolve_string_target()
+      -> std::optional<std::reference_wrapper<const JSON::String>>;
 
   ///////////////////////////////////////////////
   // References and anchors
