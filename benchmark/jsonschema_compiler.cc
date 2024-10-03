@@ -7,7 +7,8 @@
 
 static void JSONSchema_Compiler_Draft6_AdaptiveCard(benchmark::State &state) {
   const auto schema{sourcemeta::jsontoolkit::from_file(
-      std::filesystem::path{CURRENT_DIRECTORY} / "draft6_adaptivecard.json")};
+      std::filesystem::path{CURRENT_DIRECTORY} / "schemas" /
+      "draft6_adaptivecard.json")};
 
   for (auto _ : state) {
     auto result{sourcemeta::jsontoolkit::compile(
