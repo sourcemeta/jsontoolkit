@@ -761,6 +761,27 @@ JSONSchema_Validate_Draft4_Additional_Properties_Type(benchmark::State &state) {
   }
 }
 
+static void JSONSchema_Validate_Draft7_Nested_Oneof(benchmark::State &state) {
+  const auto schema{sourcemeta::jsontoolkit::from_file(
+      std::filesystem::path{CURRENT_DIRECTORY} / "schemas" /
+      "draft7_nested_oneof.json")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+        "fieldA1": "example string"
+      })JSON")};
+
+  const auto schema_template{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+  for (auto _ : state) {
+    auto result{sourcemeta::jsontoolkit::evaluate(schema_template, instance)};
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
 BENCHMARK(JSONSchema_Validate_Draft4_Meta_1_No_Callback);
 BENCHMARK(JSONSchema_Validate_Draft4_Required_Properties);
 BENCHMARK(JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match);
@@ -774,3 +795,4 @@ BENCHMARK(JSONSchema_Validate_Draft4_Non_Recursive_Ref);
 BENCHMARK(JSONSchema_Validate_Draft4_Pattern_Properties_True);
 BENCHMARK(JSONSchema_Validate_Draft4_Ref_To_Single_Property);
 BENCHMARK(JSONSchema_Validate_Draft4_Additional_Properties_Type);
+BENCHMARK(JSONSchema_Validate_Draft7_Nested_Oneof);
