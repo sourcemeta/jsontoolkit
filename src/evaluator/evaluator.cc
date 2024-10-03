@@ -593,49 +593,22 @@ auto evaluate_step(
 
     case IS_STEP(SchemaCompilerLogicalXor): {
       EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalXor);
-      result = false;
-
-      auto cache = std::map<std::size_t, bool>{};
-      for (auto iterator{logical.children.cbegin()};
-           iterator != logical.children.cend(); ++iterator) {
-        auto index = static_cast<std::size_t>(
-            std::distance(logical.children.cbegin(), iterator));
-        if (cache.find(index) == cache.end()) {
-          cache[index] = evaluate_step(*iterator, mode, callback, context);
-        }
-        if (cache[index] == false)
-          continue;
-
-        // Check if another one matches
-        bool subresult{true};
-        for (auto subiterator{logical.children.cbegin()};
-             subiterator != logical.children.cend(); ++subiterator) {
-          // Don't compare the element against itself
-          if (std::distance(logical.children.cbegin(), iterator) ==
-              std::distance(logical.children.cbegin(), subiterator)) {
-            continue;
+      result = true;
+      bool has_matched{false};
+      for (const auto &child : logical.children) {
+        if (evaluate_step(child, mode, callback, context)) {
+          if (has_matched) {
+            result = false;
+            if (mode == SchemaCompilerEvaluationMode::Fast) {
+              break;
+            }
+          } else {
+            has_matched = true;
           }
-
-          auto subindex = static_cast<std::size_t>(
-              std::distance(logical.children.cbegin(), subiterator));
-          if (cache.find(subindex) == cache.end()) {
-            // We don't need to report traces that part of the exhaustive
-            // XOR search. We can treat those as internal
-            cache[subindex] =
-                evaluate_step(*subiterator, mode, callback, context);
-          }
-          if (cache[subindex] == true) {
-            subresult = false;
-            break;
-          }
-        }
-
-        result = result || subresult;
-        if (result && mode == SchemaCompilerEvaluationMode::Fast) {
-          break;
         }
       }
 
+      result = result && has_matched;
       EVALUATE_END(logical, SchemaCompilerLogicalXor);
     }
 

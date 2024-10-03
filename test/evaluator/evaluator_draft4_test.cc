@@ -2634,20 +2634,41 @@ TEST(JSONSchema_evaluator_draft4, oneOf_1) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LogicalXor, "/oneOf", "#/oneOf", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/oneOf/0/type", "#/oneOf/0/type",
                      "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/oneOf/1/type", "#/oneOf/1/type",
+                     "");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrictAny, "/oneOf/2/type",
+                     "#/oneOf/2/type", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/oneOf/3/type", "#/oneOf/3/type",
+                     "");
 
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/oneOf/0/type",
                               "#/oneOf/0/type", "");
-  EVALUATE_TRACE_POST_SUCCESS(1, LogicalXor, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/oneOf/1/type",
+                              "#/oneOf/1/type", "");
+  EVALUATE_TRACE_POST_FAILURE(2, AssertionTypeStrictAny, "/oneOf/2/type",
+                              "#/oneOf/2/type", "");
+  EVALUATE_TRACE_POST_FAILURE(3, AssertionTypeStrict, "/oneOf/3/type",
+                              "#/oneOf/3/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(4, LogicalXor, "/oneOf", "#/oneOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 1,
+      "The value was expected to be of type integer but it was of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The value was expected to be of type number but it was of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The value was expected to be of type boolean but it was of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
       "The string value was expected to validate against one and only one of "
       "the 4 given subschemas");
 }
@@ -2670,7 +2691,7 @@ TEST(JSONSchema_evaluator_draft4, oneOf_2) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{3.14};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LogicalXor, "/oneOf", "#/oneOf", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/oneOf/0/type", "#/oneOf/0/type",
@@ -2679,6 +2700,8 @@ TEST(JSONSchema_evaluator_draft4, oneOf_2) {
                      "");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrictAny, "/oneOf/2/type",
                      "#/oneOf/2/type", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/oneOf/3/type", "#/oneOf/3/type",
+                     "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/oneOf/0/type",
                               "#/oneOf/0/type", "");
@@ -2686,7 +2709,9 @@ TEST(JSONSchema_evaluator_draft4, oneOf_2) {
                               "#/oneOf/1/type", "");
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrictAny, "/oneOf/2/type",
                               "#/oneOf/2/type", "");
-  EVALUATE_TRACE_POST_SUCCESS(3, LogicalXor, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_POST_FAILURE(3, AssertionTypeStrict, "/oneOf/3/type",
+                              "#/oneOf/3/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(4, LogicalXor, "/oneOf", "#/oneOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -2698,6 +2723,9 @@ TEST(JSONSchema_evaluator_draft4, oneOf_2) {
                                "The value was expected to be of type number");
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 3,
+      "The value was expected to be of type boolean but it was of type number");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
       "The number value was expected to validate against one and only one of "
       "the 4 given subschemas");
 }
@@ -2720,7 +2748,7 @@ TEST(JSONSchema_evaluator_draft4, oneOf_3) {
       sourcemeta::jsontoolkit::default_schema_compiler)};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LogicalXor, "/oneOf", "#/oneOf", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/oneOf/0/type", "#/oneOf/0/type",
@@ -2729,8 +2757,6 @@ TEST(JSONSchema_evaluator_draft4, oneOf_3) {
                      "");
   EVALUATE_TRACE_PRE(3, AssertionTypeStrictAny, "/oneOf/2/type",
                      "#/oneOf/2/type", "");
-  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/oneOf/3/type", "#/oneOf/3/type",
-                     "");
 
   EVALUATE_TRACE_POST_FAILURE(0, AssertionTypeStrict, "/oneOf/0/type",
                               "#/oneOf/0/type", "");
@@ -2738,9 +2764,7 @@ TEST(JSONSchema_evaluator_draft4, oneOf_3) {
                               "#/oneOf/1/type", "");
   EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrictAny, "/oneOf/2/type",
                               "#/oneOf/2/type", "");
-  EVALUATE_TRACE_POST_FAILURE(3, AssertionTypeStrict, "/oneOf/3/type",
-                              "#/oneOf/3/type", "");
-  EVALUATE_TRACE_POST_FAILURE(4, LogicalXor, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_POST_FAILURE(3, LogicalXor, "/oneOf", "#/oneOf", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
@@ -2749,11 +2773,8 @@ TEST(JSONSchema_evaluator_draft4, oneOf_3) {
                                "The value was expected to be of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The value was expected to be of type number");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
-                               "The value was expected to be of type boolean "
-                               "but it was of type integer");
   EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4,
+      instance, 3,
       "The integer value was expected to validate against one and only one of "
       "the 4 given subschemas");
 }
