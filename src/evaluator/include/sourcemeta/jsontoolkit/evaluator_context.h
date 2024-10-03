@@ -102,10 +102,6 @@ public:
                                 const std::uint64_t default_value) const
       -> std::uint64_t;
 
-private:
-  auto annotations(const WeakPointer &current_instance_location) const
-      -> const std::map<WeakPointer, std::set<JSON>> &;
-
 public:
   // TODO: Remove this
   const JSON null{nullptr};
