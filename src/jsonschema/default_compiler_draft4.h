@@ -423,10 +423,15 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
     }
   }
 
-  // To guarantee order
+  // In many cases, `properties` have some subschemas that are small
+  // and some subschemas that are large. To attempt to improve performance,
+  // we prefer to evaluate smaller subschemas first, in the hope of failing
+  // earlier without spending a lot of time on other subschemas
   std::sort(properties.begin(), properties.end(),
             [](const auto &left, const auto &right) {
-              return left.first < right.first;
+              return (left.second.size() == right.second.size())
+                         ? (left.first < right.first)
+                         : (left.second.size() < right.second.size());
             });
 
   // There are two ways to compile `properties` depending on whether
