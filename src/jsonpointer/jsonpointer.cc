@@ -87,7 +87,11 @@ auto try_traverse(const sourcemeta::jsontoolkit::JSON &document,
 
       const auto index{token.to_index()};
       if (index < instance.size()) {
-        current = instance.at(index);
+        if (instance.is_object()) {
+          current = instance.at(std::to_string(index));
+        } else {
+          current = instance.at(index);
+        }
       } else {
         return std::nullopt;
       }
@@ -172,7 +176,11 @@ auto set(JSON &document, const Pointer &pointer, const JSON &value) -> void {
   } else if (last.is_property()) {
     current.at(last.to_property()).into(value);
   } else {
-    current.at(last.to_index()).into(value);
+    if (current.is_object()) {
+      current.at(std::to_string(last.to_index())).into(value);
+    } else {
+      current.at(last.to_index()).into(value);
+    }
   }
 }
 
