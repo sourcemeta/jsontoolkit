@@ -412,17 +412,22 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
   }
 
   std::size_t is_required = 0;
-  std::vector<std::string> properties;
+  std::vector<std::pair<std::string, SchemaCompilerTemplate>> properties;
   for (const auto &entry :
        schema_context.schema.at(dynamic_context.keyword).as_object()) {
-    properties.push_back(entry.first);
+    properties.push_back(
+        {entry.first, compile(context, schema_context, relative_dynamic_context,
+                              {entry.first}, {entry.first})});
     if (required.contains(entry.first)) {
       is_required += 1;
     }
   }
 
   // To guarantee order
-  std::sort(properties.begin(), properties.end());
+  std::sort(properties.begin(), properties.end(),
+            [](const auto &left, const auto &right) {
+              return left.first < right.first;
+            });
 
   // There are two ways to compile `properties` depending on whether
   // most of the properties are marked as required using `required`
@@ -441,11 +446,8 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
     SchemaCompilerTemplate children;
     std::size_t cursor = 0;
 
-    for (const auto &name : properties) {
+    for (auto &&[name, substeps] : properties) {
       indexes.emplace(name, cursor);
-      auto substeps{compile(context, schema_context, relative_dynamic_context,
-                            {name}, {name})};
-
       if (annotate) {
         substeps.push_back(make<SchemaCompilerAnnotationEmit>(
             true, context, schema_context, relative_dynamic_context,
@@ -466,10 +468,7 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
 
   SchemaCompilerTemplate children;
 
-  for (const auto &name : properties) {
-    auto substeps{compile(context, schema_context, relative_dynamic_context,
-                          {name}, {name})};
-
+  for (auto &&[name, substeps] : properties) {
     if (annotate) {
       substeps.push_back(make<SchemaCompilerAnnotationEmit>(
           true, context, schema_context, relative_dynamic_context, JSON{name}));
