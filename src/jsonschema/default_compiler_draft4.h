@@ -434,17 +434,32 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
                          : (left.second.size() < right.second.size());
             });
 
+  assert(schema_context.relative_pointer.back().is_property());
+  assert(schema_context.relative_pointer.back().to_property() ==
+         dynamic_context.keyword);
+  const auto relative_pointer_size{schema_context.relative_pointer.size()};
+  const auto is_directly_inside_oneof{
+      relative_pointer_size > 2 &&
+      schema_context.relative_pointer.at(relative_pointer_size - 2)
+          .is_index() &&
+      schema_context.relative_pointer.at(relative_pointer_size - 3)
+          .is_property() &&
+      schema_context.relative_pointer.at(relative_pointer_size - 3)
+              .to_property() == "oneOf"};
+
   // There are two ways to compile `properties` depending on whether
   // most of the properties are marked as required using `required`
   // or whether most of the properties are optional. Each shines
   // in the corresponding case.
-
   const auto prefer_loop_over_instance{
       // This strategy only makes sense if most of the properties are "optional"
       is_required <= (size / 2) &&
       // If `properties` only defines a relatively small amount of properties,
       // then its probably still faster to unroll
-      schema_context.schema.at(dynamic_context.keyword).size() > 5};
+      schema_context.schema.at(dynamic_context.keyword).size() > 5 &&
+      // Always unroll inside `oneOf`, to have a better chance at
+      // short-circuiting quickly
+      !is_directly_inside_oneof};
 
   if (prefer_loop_over_instance) {
     SchemaCompilerValueNamedIndexes indexes;

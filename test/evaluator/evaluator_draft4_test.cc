@@ -2925,7 +2925,14 @@ TEST(JSONSchema_evaluator_draft4, oneOf_5) {
           "version": { "enum": [ 1 ] },
           "one": { "items": { "type": "integer" } },
           "two": { "items": { "type": "boolean" } },
-          "three": { "items": { "type": "object" } }
+          "three": { "items": { "type": "object" } },
+          "four": { "items": { "type": "integer" } },
+          "five": { "items": { "type": "boolean" } },
+          "six": { "items": { "type": "object" } },
+          "seven": { "items": { "type": "object" } },
+          "eight": { "items": { "type": "object" } },
+          "nine": { "items": { "type": "object" } },
+          "then": { "items": { "type": "object" } }
         }
       },
       {
