@@ -47,7 +47,11 @@ auto traverse(V &document, typename PointerT::const_iterator begin,
       // array element with the zero-based index identified by the
       // token.
       // See https://www.rfc-editor.org/rfc/rfc6901#section-4
-      current = current.get().at(iterator->to_index());
+      if (current.get().is_object()) {
+        current = current.get().at(std::to_string(iterator->to_index()));
+      } else {
+        current = current.get().at(iterator->to_index());
+      }
     }
   }
 
