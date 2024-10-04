@@ -3,11 +3,11 @@ Getting Started
 
 @tableofcontents
 
-JSON Toolkit is a swiss-army knife for [JSON](https://www.json.org) programming
-in modern C++. It comes with a built-in parser and growing support for
-standards such as [JSON Schema](http://json-schema.org), [JSON
+JSON Toolkit is a high-performance [JSON Schema](http://json-schema.org)
+evaluator and related JSON utilities for modern C++. It comes with a built-in
+parser and growing support for standards such [JSON
 Pointer](https://www.rfc-editor.org/rfc/rfc6901),
-[JSONL](https://jsonlines.org), and more.  It targets C++20 and supports the
+[JSONL](https://jsonlines.org), and more. It targets C++20 and supports the
 Clang, GCC, and MSVC compilers on macOS, GNU/Linux, FreeBSD, Windows, and
 Unikraft (through the ELF loader).
 
