@@ -2915,6 +2915,109 @@ TEST(JSONSchema_evaluator_draft4, oneOf_4) {
       "The number value was expected to validate against the given subschema");
 }
 
+TEST(JSONSchema_evaluator_draft4, oneOf_5) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "oneOf": [
+      {
+        "properties": {
+          "version": { "enum": [ 1 ] },
+          "one": { "items": { "type": "integer" } },
+          "two": { "items": { "type": "boolean" } },
+          "three": { "items": { "type": "object" } }
+        }
+      },
+      {
+        "properties": {
+          "version": { "enum": [ 2 ] },
+          "one": { "type": "string" }
+        }
+      },
+      {
+        "properties": {
+          "version": { "enum": [ 3 ] },
+          "one": { "items": { "type": "integer" } },
+          "two": { "items": { "type": "boolean" } },
+          "three": { "items": { "type": "object" } }
+        }
+      }
+    ]
+  })JSON")};
+
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::default_schema_compiler)};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"version\": 2, \"one\": \"two\" }")};
+
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 8);
+
+  EVALUATE_TRACE_PRE(0, LogicalXor, "/oneOf", "#/oneOf", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/oneOf/0/properties",
+                     "#/oneOf/0/properties", "");
+  EVALUATE_TRACE_PRE(2, AssertionEqual, "/oneOf/0/properties/version/enum",
+                     "#/oneOf/0/properties/version/enum", "/version");
+  EVALUATE_TRACE_PRE(3, LogicalAnd, "/oneOf/1/properties",
+                     "#/oneOf/1/properties", "");
+  EVALUATE_TRACE_PRE(4, AssertionPropertyTypeStrict,
+                     "/oneOf/1/properties/one/type",
+                     "#/oneOf/1/properties/one/type", "/one");
+  EVALUATE_TRACE_PRE(5, AssertionEqual, "/oneOf/1/properties/version/enum",
+                     "#/oneOf/1/properties/version/enum", "/version");
+  EVALUATE_TRACE_PRE(6, LogicalAnd, "/oneOf/2/properties",
+                     "#/oneOf/2/properties", "");
+  EVALUATE_TRACE_PRE(7, AssertionEqual, "/oneOf/2/properties/version/enum",
+                     "#/oneOf/2/properties/version/enum", "/version");
+
+  EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual,
+                              "/oneOf/0/properties/version/enum",
+                              "#/oneOf/0/properties/version/enum", "/version");
+  EVALUATE_TRACE_POST_FAILURE(1, LogicalAnd, "/oneOf/0/properties",
+                              "#/oneOf/0/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionPropertyTypeStrict,
+                              "/oneOf/1/properties/one/type",
+                              "#/oneOf/1/properties/one/type", "/one");
+  EVALUATE_TRACE_POST_SUCCESS(3, AssertionEqual,
+                              "/oneOf/1/properties/version/enum",
+                              "#/oneOf/1/properties/version/enum", "/version");
+  EVALUATE_TRACE_POST_SUCCESS(4, LogicalAnd, "/oneOf/1/properties",
+                              "#/oneOf/1/properties", "");
+  EVALUATE_TRACE_POST_FAILURE(5, AssertionEqual,
+                              "/oneOf/2/properties/version/enum",
+                              "#/oneOf/2/properties/version/enum", "/version");
+  EVALUATE_TRACE_POST_FAILURE(6, LogicalAnd, "/oneOf/2/properties",
+                              "#/oneOf/2/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(7, LogicalXor, "/oneOf", "#/oneOf", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value 2 was expected to equal the integer constant 1");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object value was expected to validate "
+                               "against the defined properties subschemas");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The integer value 2 was expected to equal the integer constant 2");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The object value was expected to validate "
+                               "against the defined properties subschemas");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The integer value 2 was expected to equal the integer constant 3");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 6,
+                               "The object value was expected to validate "
+                               "against the defined properties subschemas");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 7,
+      "The object value was expected to validate against one and only one of "
+      "the 3 given subschemas");
+}
+
 TEST(JSONSchema_evaluator_draft4, dependencies_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
