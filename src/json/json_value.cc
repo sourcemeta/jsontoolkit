@@ -304,12 +304,6 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
 
 [[nodiscard]] auto JSON::at(const typename JSON::Array::size_type index) const
     -> const JSON & {
-  // In practice, this case only applies in some edge cases when
-  // using JSON Pointers
-  if (this->is_object()) [[unlikely]] {
-    return this->at(std::to_string(index));
-  }
-
   assert(this->is_array());
   assert(index < this->size());
   return std::get<JSON::Array>(this->data).data.at(index);
@@ -317,12 +311,6 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
 
 [[nodiscard]] auto JSON::at(const typename JSON::Array::size_type index)
     -> JSON & {
-  // In practice, this case only applies in some edge cases when
-  // using JSON Pointers
-  if (this->is_object()) [[unlikely]] {
-    return this->at(std::to_string(index));
-  }
-
   assert(this->is_array());
   assert(index < this->size());
   return std::get<JSON::Array>(this->data).data.at(index);
