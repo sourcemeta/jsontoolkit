@@ -53,3 +53,20 @@ TEST(JSON_string, estimated_byte_size_empty) {
   const sourcemeta::jsontoolkit::JSON document{""};
   EXPECT_EQ(document.estimated_byte_size(), 0);
 }
+
+TEST(JSON_string, unicode_length_1) {
+  // This unicode string corresponds to 简律纯
+  const auto document = sourcemeta::jsontoolkit::parse(R"JSON({
+    "name": "\u7b80\u5f8b\u7eaf"
+  })JSON");
+
+  EXPECT_TRUE(document.is_object());
+  EXPECT_TRUE(document.defines("name"));
+  EXPECT_TRUE(document.at("name").is_string());
+  EXPECT_EQ(document.at("name").size(), 3);
+
+  // https://unicodeplus.com/U+7B80 (UTF-8: 0xE7 0xAE 0x80)
+  // https://unicodeplus.com/U+5F8B (UTF-8: 0xE5 0xBE 0x8B)
+  // https://unicodeplus.com/U+7EAF (UTF-8: 0xE7 0xBA 0xAF)
+  EXPECT_EQ(document.at("name").byte_size(), 9);
+}
