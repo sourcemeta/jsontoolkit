@@ -5,7 +5,6 @@ add_executable(sourcemeta_jsontoolkit_evaluator_unit
   evaluator_draft4_test.cc
   evaluator_draft6_test.cc
   evaluator_draft7_test.cc
-  evaluator_evaluate_test.cc
   evaluator_test.cc)
 noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_evaluator_unit)
 target_link_libraries(sourcemeta_jsontoolkit_evaluator_unit

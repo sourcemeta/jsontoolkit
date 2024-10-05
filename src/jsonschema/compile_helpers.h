@@ -24,11 +24,11 @@ auto make(const bool report, const SchemaCompilerContext &context,
           : dynamic_context.base_schema_location.concat(
                 {dynamic_context.keyword}),
       dynamic_context.base_instance_location,
-      to_uri(schema_context.relative_pointer, schema_context.base).recompose(),
       schema_context.base.recompose(),
       context.uses_dynamic_scopes,
       report,
-      value};
+      value,
+      to_uri(schema_context.relative_pointer, schema_context.base).recompose()};
 }
 
 // Instantiate an applicator step
@@ -45,12 +45,12 @@ auto make(const bool report, const SchemaCompilerContext &context,
           : dynamic_context.base_schema_location.concat(
                 {dynamic_context.keyword}),
       dynamic_context.base_instance_location,
-      to_uri(schema_context.relative_pointer, schema_context.base).recompose(),
       schema_context.base.recompose(),
       context.uses_dynamic_scopes,
       report,
       std::move(value),
-      std::move(children)};
+      std::move(children),
+      to_uri(schema_context.relative_pointer, schema_context.base).recompose()};
 }
 
 template <typename Type, typename Step>
@@ -65,11 +65,11 @@ auto unroll(const SchemaCompilerDynamicContext &dynamic_context,
                     .concat(std::get<Type>(step).relative_schema_location),
           base_instance_location.concat(
               std::get<Type>(step).relative_instance_location),
-          std::get<Type>(step).keyword_location,
           std::get<Type>(step).schema_resource,
           std::get<Type>(step).dynamic,
           std::get<Type>(step).report,
-          std::get<Type>(step).value};
+          std::get<Type>(step).value,
+          std::get<Type>(step).keyword_location};
 }
 
 inline auto unsigned_integer_property(const JSON &document,

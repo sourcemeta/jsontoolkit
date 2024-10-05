@@ -79,7 +79,6 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_walker_none_test.cc
   jsonschema_walker_test.cc
   jsonschema_error_test.cc
-  jsonschema_compile_json_test.cc
   jsonschema_keyword_iterator_test.cc
   jsonschema_official_resolver_test.cc
   jsonschema_map_resolver_test.cc

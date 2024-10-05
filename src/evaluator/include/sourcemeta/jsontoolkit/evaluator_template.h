@@ -185,23 +185,23 @@ enum class SchemaCompilerTemplateIndex : std::uint8_t {
   struct SchemaCompiler##category##name {                                      \
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
-    const std::string keyword_location;                                        \
     const std::string schema_resource;                                         \
     const bool dynamic;                                                        \
     const bool report;                                                         \
     const type value;                                                          \
+    const std::string keyword_location;                                        \
   };
 
 #define DEFINE_STEP_APPLICATOR(category, name, type)                           \
   struct SchemaCompiler##category##name {                                      \
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
-    const std::string keyword_location;                                        \
     const std::string schema_resource;                                         \
     const bool dynamic;                                                        \
     const bool report;                                                         \
     const type value;                                                          \
     const SchemaCompilerTemplate children;                                     \
+    const std::string keyword_location;                                        \
   };
 
 /// @defgroup evaluator_instructions Instruction Set
