@@ -1,5 +1,5 @@
 vendorpull https://github.com/sourcemeta/vendorpull 70342aaf458e6cb80baeb5b718901075fc42ede6
-noa https://github.com/sourcemeta/noa 3b98a611b647926dd32065c4ac5011a40b5d8b20
+noa https://github.com/sourcemeta/noa 5e78f6b6ebd9e2061f0f2022d665d08a539dcac1
 jsontestsuite https://github.com/nst/JSONTestSuite d64aefb55228d9584d3e5b2433f720ea8fd00c82
 googletest https://github.com/google/googletest a7f443b80b105f940225332ed3c31f2790092f47
 jsonschema-2020-12 https://github.com/json-schema-org/json-schema-spec 769daad75a9553562333a8937a187741cb708c72
