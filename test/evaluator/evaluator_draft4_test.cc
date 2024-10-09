@@ -4757,7 +4757,7 @@ TEST(JSONSchema_evaluator_draft4, multipleOf_5) {
 
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
-      "The number value 6 was expected to be divisible by the number 3.2");
+      "The number value 6.0 was expected to be divisible by the number 3.2");
 }
 
 TEST(JSONSchema_evaluator_draft4, invalid_ref_top_level) {

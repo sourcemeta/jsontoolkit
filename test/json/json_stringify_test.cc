@@ -80,6 +80,20 @@ TEST(JSON_stringify, real_minus_zero) {
   EXPECT_EQ(stream.str(), "0.0");
 }
 
+TEST(JSON_stringify, integer_real_positive) {
+  const sourcemeta::jsontoolkit::JSON document{2.0};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "2.0");
+}
+
+TEST(JSON_stringify, integer_real_negative) {
+  const sourcemeta::jsontoolkit::JSON document{-2.0};
+  std::ostringstream stream;
+  sourcemeta::jsontoolkit::stringify(document, stream);
+  EXPECT_EQ(stream.str(), "-2.0");
+}
+
 TEST(JSON_stringify, empty_string) {
   const sourcemeta::jsontoolkit::JSON document{""};
   std::ostringstream stream;
