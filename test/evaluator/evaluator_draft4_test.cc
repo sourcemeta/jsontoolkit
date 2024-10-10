@@ -1547,6 +1547,62 @@ TEST(JSONSchema_evaluator_draft4, additionalProperties_1) {
       instance, 0, "The object properties were expected to be of type integer");
 }
 
+TEST(JSONSchema_evaluator_draft4, additionalProperties_1_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": {
+      "type": "integer"
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+                     "#/additionalProperties", "");
+
+  if (FIRST_PROPERTY_IS(instance, "foo")) {
+    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/additionalProperties/type",
+                       "#/additionalProperties/type", "/foo");
+    EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/additionalProperties/type",
+                       "#/additionalProperties/type", "/bar");
+
+    EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
+                                "/additionalProperties/type",
+                                "#/additionalProperties/type", "/foo");
+    EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
+                                "/additionalProperties/type",
+                                "#/additionalProperties/type", "/bar");
+  } else {
+    EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/additionalProperties/type",
+                       "#/additionalProperties/type", "/bar");
+    EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/additionalProperties/type",
+                       "#/additionalProperties/type", "/foo");
+
+    EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
+                                "/additionalProperties/type",
+                                "#/additionalProperties/type", "/bar");
+    EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict,
+                                "/additionalProperties/type",
+                                "#/additionalProperties/type", "/foo");
+  }
+
+  EVALUATE_TRACE_POST_SUCCESS(2, LoopProperties, "/additionalProperties",
+                              "#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object properties not covered by other adjacent object keywords "
+      "were expected to validate against this subschema");
+}
+
 TEST(JSONSchema_evaluator_draft4, additionalProperties_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({

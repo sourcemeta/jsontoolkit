@@ -708,7 +708,8 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
         true, context, schema_context, dynamic_context, std::move(filter),
         std::move(children))};
   } else {
-    if (children.size() == 1) {
+    if (context.mode == SchemaCompilerMode::FastValidation &&
+        children.size() == 1) {
       // Optimize `additionalProperties` set to just `type`, which is a
       // pretty common pattern
       if (std::holds_alternative<SchemaCompilerAssertionTypeStrict>(
