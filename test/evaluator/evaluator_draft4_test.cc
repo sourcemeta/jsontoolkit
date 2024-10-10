@@ -3283,6 +3283,33 @@ TEST(JSONSchema_evaluator_draft4, minLength_4) {
       "The value was expected to consist of a string of at least 1 character");
 }
 
+TEST(JSONSchema_evaluator_draft4, minLength_4_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "string",
+    "minLength": 1
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"xx"};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_PRE(1, AssertionStringSizeGreater, "/minLength", "#/minLength",
+                     "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionStringSizeGreater, "/minLength",
+                              "#/minLength", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The string value \"xx\" was expected to consist of at least 1 character "
+      "and it consisted of 2 characters");
+}
+
 TEST(JSONSchema_evaluator_draft4, minLength_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -3370,6 +3397,33 @@ TEST(JSONSchema_evaluator_draft4, maxLength_4) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The value was expected to consist of a string of at most 2 characters");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxLength_4_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "string",
+    "maxLength": 2
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"xx"};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_PRE(1, AssertionStringSizeLess, "/maxLength", "#/maxLength",
+                     "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionStringSizeLess, "/maxLength",
+                              "#/maxLength", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The string value \"xx\" was expected to consist of at most 2 characters "
+      "and it consisted of 2 characters");
 }
 
 TEST(JSONSchema_evaluator_draft4, maxLength_5) {
@@ -3504,6 +3558,33 @@ TEST(JSONSchema_evaluator_draft4, minItems_5) {
       "The value was expected to consist of an array of at least 2 items");
 }
 
+TEST(JSONSchema_evaluator_draft4, minItems_5_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "minItems": 2
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_PRE(1, AssertionArraySizeGreater, "/minItems", "#/minItems",
+                     "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionArraySizeGreater, "/minItems",
+                              "#/minItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type array");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The array value was expected to contain at "
+                               "least 2 items and it contained 3 items");
+}
+
 TEST(JSONSchema_evaluator_draft4, minItems_6) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -3612,6 +3693,32 @@ TEST(JSONSchema_evaluator_draft4, maxItems_5) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The value was expected to consist of an array of at most 2 items");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxItems_5_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "maxItems": 2
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 1, 2 ]")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_PRE(1, AssertionArraySizeLess, "/maxItems", "#/maxItems", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionArraySizeLess, "/maxItems",
+                              "#/maxItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type array");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The array value was expected to contain at "
+                               "most 2 items and it contained 2 items");
 }
 
 TEST(JSONSchema_evaluator_draft4, maxItems_6) {
@@ -3732,6 +3839,34 @@ TEST(JSONSchema_evaluator_draft4, minProperties_4) {
       "The value was expected to consist of an object of at least 1 property");
 }
 
+TEST(JSONSchema_evaluator_draft4, minProperties_4_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "minProperties": 1
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_PRE(1, AssertionObjectSizeGreater, "/minProperties",
+                     "#/minProperties", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionObjectSizeGreater, "/minProperties",
+                              "#/minProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object value was expected to contain at least 1 property and it "
+      "contained 1 property: \"foo\"");
+}
+
 TEST(JSONSchema_evaluator_draft4, minProperties_5) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -3824,6 +3959,34 @@ TEST(JSONSchema_evaluator_draft4, maxProperties_4) {
   EVALUATE_TRACE_POST_DESCRIBE(
       instance, 0,
       "The value was expected to consist of an object of at most 2 properties");
+}
+
+TEST(JSONSchema_evaluator_draft4, maxProperties_4_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "maxProperties": 2
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_PRE(1, AssertionObjectSizeLess, "/maxProperties",
+                     "#/maxProperties", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/type", "#/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionObjectSizeLess, "/maxProperties",
+                              "#/maxProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type object");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object value was expected to contain at most 2 properties and it "
+      "contained 2 properties: \"bar\", and \"foo\"");
 }
 
 TEST(JSONSchema_evaluator_draft4, maxProperties_5) {
