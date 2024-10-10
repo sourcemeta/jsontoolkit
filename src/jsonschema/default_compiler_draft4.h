@@ -695,6 +695,12 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
     }
   }
 
+  // For performance, if a schema sets `additionalProperties: true` (or its
+  // variants), we don't need to do anything
+  if (children.empty()) {
+    return {};
+  }
+
   if (!filter.first.empty() || !filter.second.empty()) {
     return {make<SchemaCompilerLoopPropertiesExcept>(
         true, context, schema_context, dynamic_context, std::move(filter),
