@@ -378,6 +378,41 @@ TEST(JSONSchema_evaluator_draft4, ref_2) {
       "The string value was expected to validate against the given subschema");
 }
 
+TEST(JSONSchema_evaluator_draft4, ref_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "allOf": [ { "$ref": "#/definitions/string" } ],
+    "definitions": {
+      "string": { "type": "string" }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/$ref", "#/allOf/0/$ref", "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/$ref/type",
+                     "#/definitions/string/type", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/$ref/type",
+                              "#/definitions/string/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/allOf/0/$ref", "#/allOf/0/$ref",
+                              "");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/allOf", "#/allOf", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The string value was expected to validate "
+                               "against the statically referenced schema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The string value was expected to validate against the given subschema");
+}
+
 TEST(JSONSchema_evaluator_draft4, ref_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({

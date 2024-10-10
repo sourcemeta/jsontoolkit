@@ -66,6 +66,8 @@ auto compiler_draft7_applicator_if(
 }
 
 // We handle `then` as part of `if`
+// TODO: Stop collapsing this keyword on exhaustive mode for debuggability
+// purposes
 auto compiler_draft7_applicator_then(const SchemaCompilerContext &,
                                      const SchemaCompilerSchemaContext &,
                                      const SchemaCompilerDynamicContext &)
@@ -74,6 +76,8 @@ auto compiler_draft7_applicator_then(const SchemaCompilerContext &,
 }
 
 // We handle `else` as part of `if`
+// TODO: Stop collapsing this keyword on exhaustive mode for debuggability
+// purposes
 auto compiler_draft7_applicator_else(const SchemaCompilerContext &,
                                      const SchemaCompilerSchemaContext &,
                                      const SchemaCompilerDynamicContext &)
