@@ -908,6 +908,42 @@ TEST(JSONSchema_evaluator_draft4, properties_2) {
                                "against the defined properties subschemas");
 }
 
+TEST(JSONSchema_evaluator_draft4, properties_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "foo": { "type": "string" },
+      "bar": { "type": "integer" }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": \"xxx\" }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/bar/type",
+                     "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/bar/type",
+                              "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/properties/foo/type",
+                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the defined properties subschemas");
+}
+
 TEST(JSONSchema_evaluator_draft4, properties_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -959,6 +995,50 @@ TEST(JSONSchema_evaluator_draft4, properties_4) {
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type string");
+}
+
+TEST(JSONSchema_evaluator_draft4, properties_4_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+      "foo": {
+        "properties": {
+          "bar": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": { \"bar\": \"baz\" } }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/properties/foo/properties",
+                     "#/properties/foo/properties", "/foo");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict,
+                     "/properties/foo/properties/bar/type",
+                     "#/properties/foo/properties/bar/type", "/foo/bar");
+
+  EVALUATE_TRACE_POST_SUCCESS(
+      0, AssertionTypeStrict, "/properties/foo/properties/bar/type",
+      "#/properties/foo/properties/bar/type", "/foo/bar");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalAnd, "/properties/foo/properties",
+                              "#/properties/foo/properties", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object value was expected to validate "
+                               "against the single defined property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the single defined property subschema");
 }
 
 TEST(JSONSchema_evaluator_draft4, properties_5) {

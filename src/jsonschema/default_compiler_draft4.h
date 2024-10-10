@@ -516,7 +516,8 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
       // Optimize `properties` where its subschemas just include a type check,
       // as that's a very common pattern
 
-    } else if (substeps.size() == 1 &&
+    } else if (context.mode == SchemaCompilerMode::FastValidation &&
+               substeps.size() == 1 &&
                std::holds_alternative<SchemaCompilerAssertionTypeStrict>(
                    substeps.front())) {
       const auto &type_step{
@@ -528,7 +529,8 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
           type_step.keyword_location, type_step.schema_resource,
           type_step.dynamic, type_step.report, type_step.exhaustive,
           type_step.value});
-    } else if (substeps.size() == 1 &&
+    } else if (context.mode == SchemaCompilerMode::FastValidation &&
+               substeps.size() == 1 &&
                std::holds_alternative<SchemaCompilerAssertionType>(
                    substeps.front())) {
       const auto &type_step{
@@ -540,14 +542,16 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
           type_step.keyword_location, type_step.schema_resource,
           type_step.dynamic, type_step.report, type_step.exhaustive,
           type_step.value});
-    } else if (substeps.size() == 1 &&
+    } else if (context.mode == SchemaCompilerMode::FastValidation &&
+               substeps.size() == 1 &&
                std::holds_alternative<
                    SchemaCompilerAssertionPropertyTypeStrict>(
                    substeps.front())) {
       children.push_back(unroll<SchemaCompilerAssertionPropertyTypeStrict>(
           relative_dynamic_context, substeps.front(),
           dynamic_context.base_instance_location));
-    } else if (substeps.size() == 1 &&
+    } else if (context.mode == SchemaCompilerMode::FastValidation &&
+               substeps.size() == 1 &&
                std::holds_alternative<SchemaCompilerAssertionPropertyType>(
                    substeps.front())) {
       children.push_back(unroll<SchemaCompilerAssertionPropertyType>(
@@ -562,7 +566,8 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
   }
 
   // Optimize away the wrapper when emitting a single instruction
-  if (children.size() == 1 &&
+  if (context.mode == SchemaCompilerMode::FastValidation &&
+      children.size() == 1 &&
       std::holds_alternative<SchemaCompilerAssertionPropertyTypeStrict>(
           children.front())) {
     return {unroll<SchemaCompilerAssertionPropertyTypeStrict>(
