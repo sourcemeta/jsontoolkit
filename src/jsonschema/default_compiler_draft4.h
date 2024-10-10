@@ -134,7 +134,8 @@ auto compiler_draft4_validation_type(
           unsigned_integer_property(schema_context.schema, "minProperties", 0)};
       const auto maximum{
           unsigned_integer_property(schema_context.schema, "maxProperties")};
-      if (minimum > 0 || maximum.has_value()) {
+      if (context.mode == SchemaCompilerMode::FastValidation &&
+          (minimum > 0 || maximum.has_value())) {
         return {make<SchemaCompilerAssertionTypeObjectBounded>(
             true, context, schema_context, dynamic_context,
             {minimum, maximum, false})};
@@ -147,7 +148,8 @@ auto compiler_draft4_validation_type(
           unsigned_integer_property(schema_context.schema, "minItems", 0)};
       const auto maximum{
           unsigned_integer_property(schema_context.schema, "maxItems")};
-      if (minimum > 0 || maximum.has_value()) {
+      if (context.mode == SchemaCompilerMode::FastValidation &&
+          (minimum > 0 || maximum.has_value())) {
         return {make<SchemaCompilerAssertionTypeArrayBounded>(
             true, context, schema_context, dynamic_context,
             {minimum, maximum, false})};
@@ -167,7 +169,8 @@ auto compiler_draft4_validation_type(
           unsigned_integer_property(schema_context.schema, "minLength", 0)};
       const auto maximum{
           unsigned_integer_property(schema_context.schema, "maxLength")};
-      if (minimum > 0 || maximum.has_value()) {
+      if (context.mode == SchemaCompilerMode::FastValidation &&
+          (minimum > 0 || maximum.has_value())) {
         return {make<SchemaCompilerAssertionTypeStringBounded>(
             true, context, schema_context, dynamic_context,
             {minimum, maximum, false})};
@@ -1123,7 +1126,8 @@ auto compiler_draft4_validation_maxlength(
   }
 
   // We'll handle it at the type level as an optimization
-  if (schema_context.schema.defines("type") &&
+  if (context.mode == SchemaCompilerMode::FastValidation &&
+      schema_context.schema.defines("type") &&
       schema_context.schema.at("type").is_string() &&
       schema_context.schema.at("type").to_string() == "string") {
     return {};
@@ -1153,7 +1157,8 @@ auto compiler_draft4_validation_minlength(
   }
 
   // We'll handle it at the type level as an optimization
-  if (schema_context.schema.defines("type") &&
+  if (context.mode == SchemaCompilerMode::FastValidation &&
+      schema_context.schema.defines("type") &&
       schema_context.schema.at("type").is_string() &&
       schema_context.schema.at("type").to_string() == "string") {
     return {};
@@ -1183,7 +1188,8 @@ auto compiler_draft4_validation_maxitems(
   }
 
   // We'll handle it at the type level as an optimization
-  if (schema_context.schema.defines("type") &&
+  if (context.mode == SchemaCompilerMode::FastValidation &&
+      schema_context.schema.defines("type") &&
       schema_context.schema.at("type").is_string() &&
       schema_context.schema.at("type").to_string() == "array") {
     return {};
@@ -1213,7 +1219,8 @@ auto compiler_draft4_validation_minitems(
   }
 
   // We'll handle it at the type level as an optimization
-  if (schema_context.schema.defines("type") &&
+  if (context.mode == SchemaCompilerMode::FastValidation &&
+      schema_context.schema.defines("type") &&
       schema_context.schema.at("type").is_string() &&
       schema_context.schema.at("type").to_string() == "array") {
     return {};
@@ -1243,7 +1250,8 @@ auto compiler_draft4_validation_maxproperties(
   }
 
   // We'll handle it at the type level as an optimization
-  if (schema_context.schema.defines("type") &&
+  if (context.mode == SchemaCompilerMode::FastValidation &&
+      schema_context.schema.defines("type") &&
       schema_context.schema.at("type").is_string() &&
       schema_context.schema.at("type").to_string() == "object") {
     return {};
@@ -1273,7 +1281,8 @@ auto compiler_draft4_validation_minproperties(
   }
 
   // We'll handle it at the type level as an optimization
-  if (schema_context.schema.defines("type") &&
+  if (context.mode == SchemaCompilerMode::FastValidation &&
+      schema_context.schema.defines("type") &&
       schema_context.schema.at("type").is_string() &&
       schema_context.schema.at("type").to_string() == "object") {
     return {};
