@@ -3,7 +3,7 @@
 
 #include "trace.h"
 
-#include <algorithm> // std::min, std::any_of
+#include <algorithm> // std::min, std::any_of, std::find
 #include <cassert>   // assert
 #include <iterator>  // std::distance, std::advance
 #include <limits>    // std::numeric_limits
@@ -861,7 +861,8 @@ auto evaluate_step(
       assert(!loop.value.first.empty() || !loop.value.second.empty());
 
       for (const auto &entry : target.as_object()) {
-        if (loop.value.first.contains(entry.first) ||
+        if (std::find(loop.value.first.cbegin(), loop.value.first.cend(),
+                      entry.first) != loop.value.first.cend() ||
             std::any_of(loop.value.second.cbegin(), loop.value.second.cend(),
                         [&entry](const auto &pattern) {
                           return std::regex_search(entry.first, pattern.first);
