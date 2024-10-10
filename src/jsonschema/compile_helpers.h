@@ -25,10 +25,9 @@ auto make(const bool report, const SchemaCompilerContext &context,
                 {dynamic_context.keyword}),
       dynamic_context.base_instance_location,
       to_uri(schema_context.relative_pointer, schema_context.base).recompose(),
-      schema_context.base.recompose(),
-      context.uses_dynamic_scopes,
-      report,
-      value};
+      schema_context.base.recompose(), context.uses_dynamic_scopes, report,
+      // TODO: Get value from the selected compilation mode
+      false, value};
 }
 
 // Instantiate an applicator step
@@ -46,11 +45,9 @@ auto make(const bool report, const SchemaCompilerContext &context,
                 {dynamic_context.keyword}),
       dynamic_context.base_instance_location,
       to_uri(schema_context.relative_pointer, schema_context.base).recompose(),
-      schema_context.base.recompose(),
-      context.uses_dynamic_scopes,
-      report,
-      std::move(value),
-      std::move(children)};
+      schema_context.base.recompose(), context.uses_dynamic_scopes, report,
+      // TODO: Get value from the selected compilation mode
+      false, std::move(value), std::move(children)};
 }
 
 template <typename Type, typename Step>
@@ -69,6 +66,7 @@ auto unroll(const SchemaCompilerDynamicContext &dynamic_context,
           std::get<Type>(step).schema_resource,
           std::get<Type>(step).dynamic,
           std::get<Type>(step).report,
+          std::get<Type>(step).exhaustive,
           std::get<Type>(step).value};
 }
 

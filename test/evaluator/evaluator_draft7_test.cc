@@ -12,14 +12,9 @@ TEST(JSONSchema_evaluator_draft7, metaschema) {
                             .get()};
   EXPECT_TRUE(metaschema.has_value());
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      metaschema.value(), sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{}")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(metaschema.value(), instance, 2);
 }
 
 TEST(JSONSchema_evaluator_draft7, if_1) {
@@ -29,13 +24,8 @@ TEST(JSONSchema_evaluator_draft7, if_1) {
     "if": { "const": 1 }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{1};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
@@ -51,13 +41,8 @@ TEST(JSONSchema_evaluator_draft7, if_2) {
     "if": { "const": 1 }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{2};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
@@ -73,13 +58,8 @@ TEST(JSONSchema_evaluator_draft7, then_1) {
     "then": { "multipleOf": 5 }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{3};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
 }
 
 TEST(JSONSchema_evaluator_draft7, then_2) {
@@ -90,13 +70,8 @@ TEST(JSONSchema_evaluator_draft7, then_2) {
     "then": { "multipleOf": 5 }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{10};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 2);
 
   EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_PRE(1, AssertionDivisible, "/then/multipleOf",
@@ -122,13 +97,8 @@ TEST(JSONSchema_evaluator_draft7, then_3) {
     "then": { "multipleOf": 5 }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionEqual, "/if/const", "#/if/const", "");
@@ -147,13 +117,8 @@ TEST(JSONSchema_evaluator_draft7, then_4) {
     "else": { "multipleOf": 8 }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE(0, AssertionDivisible, "/then/multipleOf",
                      "#/then/multipleOf", "");
@@ -173,13 +138,8 @@ TEST(JSONSchema_evaluator_draft7, then_5) {
     "then": { "multipleOf": 5 }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{2};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 1);
 
   EVALUATE_TRACE_PRE(0, AssertionDivisible, "/then/multipleOf",
                      "#/then/multipleOf", "");
@@ -198,13 +158,8 @@ TEST(JSONSchema_evaluator_draft7, else_1) {
     "else": { "multipleOf": 5 }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{3};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
 }
 
 TEST(JSONSchema_evaluator_draft7, else_2) {
@@ -215,13 +170,8 @@ TEST(JSONSchema_evaluator_draft7, else_2) {
     "else": { "multipleOf": 5 }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{1};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_POST_SUCCESS(0, AssertionEqual, "/if/const", "#/if/const", "");
@@ -238,13 +188,8 @@ TEST(JSONSchema_evaluator_draft7, else_3) {
     "else": { "multipleOf": 5 }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{10};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 2);
 
   EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_PRE(1, AssertionDivisible, "/else/multipleOf",
@@ -270,13 +215,8 @@ TEST(JSONSchema_evaluator_draft7, else_4) {
     "else": { "multipleOf": 5 }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{8};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 2);
 
   EVALUATE_TRACE_PRE(0, AssertionEqual, "/if/const", "#/if/const", "");
   EVALUATE_TRACE_PRE(1, AssertionDivisible, "/else/multipleOf",
@@ -383,13 +323,8 @@ TEST(JSONSchema_evaluator_draft7, metadata) {
     "examples": [ 1, 2, 3 ]
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
 }
 
 TEST(JSONSchema_evaluator_draft7, content) {
@@ -400,13 +335,8 @@ TEST(JSONSchema_evaluator_draft7, content) {
     "contentMediaType": "application/json"
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{"test"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
 }
 
 TEST(JSONSchema_evaluator_draft7, unknown_1) {
@@ -416,13 +346,8 @@ TEST(JSONSchema_evaluator_draft7, unknown_1) {
     "fooBar": "baz"
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
 }
 
 TEST(JSONSchema_evaluator_draft7, unknown_2) {
@@ -432,13 +357,8 @@ TEST(JSONSchema_evaluator_draft7, unknown_2) {
     "x-test": 1
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
 }
 
 TEST(JSONSchema_evaluator_draft7, reference_from_unknown_keyword) {

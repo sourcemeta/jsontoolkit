@@ -11,7 +11,7 @@ inline auto FIRST_PROPERTY_IS(const sourcemeta::jsontoolkit::JSON &document,
   return document.as_object().cbegin()->first == check;
 }
 
-#define EVALUATE_WITH_TRACE(mode, schema_template, instance, count)            \
+#define EVALUATE_WITH_TRACE(schema_template, instance, count)                  \
   std::vector<                                                                 \
       std::tuple<bool, sourcemeta::jsontoolkit::WeakPointer,                   \
                  sourcemeta::jsontoolkit::WeakPointer,                         \
@@ -26,7 +26,6 @@ inline auto FIRST_PROPERTY_IS(const sourcemeta::jsontoolkit::JSON &document,
       trace_post;                                                              \
   const auto result{sourcemeta::jsontoolkit::evaluate(                         \
       schema_template, instance,                                               \
-      sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::mode,             \
       [&trace_pre, &trace_post](                                               \
           const sourcemeta::jsontoolkit::SchemaCompilerEvaluationType type,    \
           const bool valid,                                                    \
@@ -48,22 +47,40 @@ inline auto FIRST_PROPERTY_IS(const sourcemeta::jsontoolkit::JSON &document,
   EXPECT_EQ(trace_pre.size(), count);                                          \
   EXPECT_EQ(trace_post.size(), count);
 
-#define EVALUATE_WITH_TRACE_FAST_SUCCESS(schema_template, instance, count)     \
-  EVALUATE_WITH_TRACE(Fast, schema_template, instance, count)                  \
+#define EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, count)              \
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(                 \
+      schema, sourcemeta::jsontoolkit::default_schema_walker,                  \
+      sourcemeta::jsontoolkit::official_resolver,                              \
+      sourcemeta::jsontoolkit::default_schema_compiler,                        \
+      sourcemeta::jsontoolkit::SchemaCompilerMode::FastValidation)};           \
+  EVALUATE_WITH_TRACE(compiled_schema, instance, count)                        \
   EXPECT_TRUE(result);
 
-#define EVALUATE_WITH_TRACE_FAST_FAILURE(schema_template, instance, count)     \
-  EVALUATE_WITH_TRACE(Fast, schema_template, instance, count)                  \
+#define EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, count)              \
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(                 \
+      schema, sourcemeta::jsontoolkit::default_schema_walker,                  \
+      sourcemeta::jsontoolkit::official_resolver,                              \
+      sourcemeta::jsontoolkit::default_schema_compiler,                        \
+      sourcemeta::jsontoolkit::SchemaCompilerMode::FastValidation)};           \
+  EVALUATE_WITH_TRACE(compiled_schema, instance, count)                        \
   EXPECT_FALSE(result);
 
-#define EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema_template, instance,      \
-                                               count)                          \
-  EVALUATE_WITH_TRACE(Exhaustive, schema_template, instance, count)            \
+#define EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, count)        \
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(                 \
+      schema, sourcemeta::jsontoolkit::default_schema_walker,                  \
+      sourcemeta::jsontoolkit::official_resolver,                              \
+      sourcemeta::jsontoolkit::default_schema_compiler,                        \
+      sourcemeta::jsontoolkit::SchemaCompilerMode::Exhaustive)};               \
+  EVALUATE_WITH_TRACE(compiled_schema, instance, count)                        \
   EXPECT_TRUE(result);
 
-#define EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(schema_template, instance,      \
-                                               count)                          \
-  EVALUATE_WITH_TRACE(Exhaustive, schema_template, instance, count)            \
+#define EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(schema, instance, count)        \
+  const auto compiled_schema{sourcemeta::jsontoolkit::compile(                 \
+      schema, sourcemeta::jsontoolkit::default_schema_walker,                  \
+      sourcemeta::jsontoolkit::official_resolver,                              \
+      sourcemeta::jsontoolkit::default_schema_compiler,                        \
+      sourcemeta::jsontoolkit::SchemaCompilerMode::Exhaustive)};               \
+  EVALUATE_WITH_TRACE(compiled_schema, instance, count)                        \
   EXPECT_FALSE(result);
 
 #define EVALUATE_TRACE_PRE(index, step_type, evaluate_path,                    \

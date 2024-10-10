@@ -12,6 +12,7 @@
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/uri.h>
 
+#include <cstdint>    // std::uint8_t
 #include <functional> // std::function
 #include <map>        // std::map
 #include <optional>   // std::optional, std::nullopt
@@ -68,6 +69,15 @@ using SchemaCompiler = std::function<SchemaCompilerTemplate(
     const SchemaCompilerContext &, const SchemaCompilerSchemaContext &,
     const SchemaCompilerDynamicContext &)>;
 
+/// @ingroup evaluator
+/// Represents the mode of compilation
+enum class SchemaCompilerMode : std::uint8_t {
+  /// Attempt to get to a boolean result as fast as possible
+  FastValidation,
+  /// Perform exhaustive evaluation, including annotations
+  Exhaustive
+};
+
 /// @ingroup jsonschema_compiler
 /// The static compiler context is the information you have at your
 /// disposal to implement a keyword that will never change throughout
@@ -85,6 +95,8 @@ struct SchemaCompilerContext {
   const SchemaResolver &resolver;
   /// The schema compiler in use
   const SchemaCompiler &compiler;
+  /// The mode of the schema compiler
+  const SchemaCompilerMode mode;
   /// Whether the schema makes use of dynamic scoping
   const bool uses_dynamic_scopes;
 };
@@ -115,9 +127,7 @@ struct SchemaCompilerContext {
 ///
 /// sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput output;
 /// const auto result{sourcemeta::jsontoolkit::evaluate(
-///   schema_template, instance,
-///   sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
-///   std::ref(output))};
+///   schema_template, instance, std::ref(output))};
 ///
 /// if (!result) {
 ///   for (const auto &trace : output) {
@@ -216,6 +226,7 @@ auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT default_schema_compiler(
 auto SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 compile(const JSON &schema, const SchemaWalker &walker,
         const SchemaResolver &resolver, const SchemaCompiler &compiler,
+        const SchemaCompilerMode mode = SchemaCompilerMode::FastValidation,
         const std::optional<std::string> &default_dialect = std::nullopt)
     -> SchemaCompilerTemplate;
 
