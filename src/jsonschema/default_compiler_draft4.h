@@ -679,7 +679,7 @@ auto compiler_draft4_applicator_additionalproperties_conditional_annotation(
       schema_context.schema.at("properties").is_object()) {
     for (const auto &entry :
          schema_context.schema.at("properties").as_object()) {
-      filter.first.insert(entry.first);
+      filter.first.push_back(entry.first);
     }
   }
 

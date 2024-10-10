@@ -7,7 +7,6 @@
 #include <cstdint>       // std::uint8_t
 #include <optional>      // std::optional, std::nullopt
 #include <regex>         // std::regex
-#include <set>           // std::set
 #include <string>        // std::string
 #include <tuple>         // std::tuple
 #include <unordered_map> // std::unordered_map
@@ -103,7 +102,7 @@ using SchemaCompilerValueIndexedJSON =
 /// @ingroup evaluator
 /// Represents a compiler step value that consist of object property filters
 using SchemaCompilerValuePropertyFilter =
-    std::pair<std::set<SchemaCompilerValueString>,
+    std::pair<std::vector<SchemaCompilerValueString>,
               std::vector<SchemaCompilerValueRegex>>;
 
 /// @ingroup evaluator
