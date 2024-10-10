@@ -25,15 +25,6 @@
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup evaluator
-/// Represents the mode of evalution
-enum class SchemaCompilerEvaluationMode : std::uint8_t {
-  /// Attempt to get to a boolean result as fast as possible
-  Fast,
-  /// Perform a full schema evaluation
-  Exhaustive
-};
-
-/// @ingroup evaluator
 /// Represents the state of a step evaluation
 enum class SchemaCompilerEvaluationType : std::uint8_t { Pre, Post };
 
@@ -57,8 +48,8 @@ using SchemaCompilerEvaluationCallback =
 
 /// @ingroup evaluator
 ///
-/// This function evaluates a schema compiler template in validation mode,
-/// returning a boolean without error information. For example:
+/// This function evaluates a schema compiler template, returning a boolean
+/// without error information. For example:
 ///
 /// ```cpp
 /// #include <sourcemeta/jsontoolkit/json.h>
@@ -130,15 +121,12 @@ evaluate(const SchemaCompilerTemplate &steps, const JSON &instance) -> bool;
 ///
 /// const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
 /// const auto result{sourcemeta::jsontoolkit::evaluate(
-///   schema_template, instance,
-///   sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
-///   callback)};
+///   schema_template, instance, callback)};
 ///
 /// assert(result);
 /// ```
 auto SOURCEMETA_JSONTOOLKIT_EVALUATOR_EXPORT
 evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
-         const SchemaCompilerEvaluationMode mode,
          const SchemaCompilerEvaluationCallback &callback) -> bool;
 
 /// @ingroup evaluator

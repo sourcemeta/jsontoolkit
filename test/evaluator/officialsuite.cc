@@ -194,15 +194,14 @@ class OfficialTest : public testing::Test {
 public:
   explicit OfficialTest(
       bool test_valid,
-      sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode test_mode,
       sourcemeta::jsontoolkit::SchemaCompilerTemplate test_schema,
       sourcemeta::jsontoolkit::JSON test_instance)
-      : valid{test_valid}, mode{test_mode}, schema{std::move(test_schema)},
+      : valid{test_valid}, schema{std::move(test_schema)},
         instance{std::move(test_instance)} {}
 
   auto TestBody() -> void override {
     const auto result{sourcemeta::jsontoolkit::evaluate(
-        this->schema, this->instance, this->mode, callback_noop)};
+        this->schema, this->instance, callback_noop)};
     if (this->valid) {
       EXPECT_TRUE(result);
     } else {
@@ -212,7 +211,6 @@ public:
 
 private:
   const bool valid;
-  const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode;
   const sourcemeta::jsontoolkit::SchemaCompilerTemplate schema;
   const sourcemeta::jsontoolkit::JSON instance;
 };
@@ -250,39 +248,37 @@ static auto register_tests(const std::filesystem::path &subdirectory,
       std::cerr << "    Compiling: " << test.at("description").to_string()
                 << "\n";
 
-      const auto schema_template{sourcemeta::jsontoolkit::compile(
-          test.at("schema"), sourcemeta::jsontoolkit::default_schema_walker,
-          test_resolver, sourcemeta::jsontoolkit::default_schema_compiler,
-          default_dialect)};
+      for (const auto mode :
+           {sourcemeta::jsontoolkit::SchemaCompilerMode::FastValidation,
+            sourcemeta::jsontoolkit::SchemaCompilerMode::Exhaustive}) {
+        const auto schema_template{sourcemeta::jsontoolkit::compile(
+            test.at("schema"), sourcemeta::jsontoolkit::default_schema_walker,
+            test_resolver, sourcemeta::jsontoolkit::default_schema_compiler,
+            mode, default_dialect)};
 
-      for (const auto &test_case : test.at("tests").as_array()) {
-        assert(test_case.is_object());
-        assert(test_case.defines("data"));
-        assert(test_case.defines("description"));
-        assert(test_case.defines("valid"));
-        assert(test_case.at("description").is_string());
-        assert(test_case.at("valid").is_boolean());
+        std::ostringstream title;
+        switch (mode) {
+          case sourcemeta::jsontoolkit::SchemaCompilerMode::FastValidation:
+            title << "fast_validation";
+            break;
+          case sourcemeta::jsontoolkit::SchemaCompilerMode::Exhaustive:
+            title << "exhaustive";
+            break;
+          default:
+            // We should never get here
+            assert(false);
+        }
 
-        const auto &instance{test_case.at("data")};
-        const bool valid{test_case.at("valid").to_boolean()};
+        for (const auto &test_case : test.at("tests").as_array()) {
+          assert(test_case.is_object());
+          assert(test_case.defines("data"));
+          assert(test_case.defines("description"));
+          assert(test_case.defines("valid"));
+          assert(test_case.at("description").is_string());
+          assert(test_case.at("valid").is_boolean());
 
-        for (const auto evaluation_mode :
-             {sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast,
-              sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::
-                  Exhaustive}) {
-          std::ostringstream title;
-          switch (evaluation_mode) {
-            case sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::Fast:
-              title << "fast";
-              break;
-            case sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode::
-                Exhaustive:
-              title << "exhaustive";
-              break;
-            default:
-              // We should never get here
-              assert(false);
-          }
+          const auto &instance{test_case.at("data")};
+          const bool valid{test_case.at("valid").to_boolean()};
 
           title << "_";
           slugify(test.at("description").to_string(), title);
@@ -292,8 +288,7 @@ static auto register_tests(const std::filesystem::path &subdirectory,
           testing::RegisterTest(
               suite_name.c_str(), title.str().c_str(), nullptr, nullptr,
               __FILE__, __LINE__, [=]() -> OfficialTest * {
-                return new OfficialTest(valid, evaluation_mode, schema_template,
-                                        instance);
+                return new OfficialTest(valid, schema_template, instance);
               });
         }
       }

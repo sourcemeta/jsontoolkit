@@ -52,10 +52,12 @@ TEST(JSONSchema_evaluator, boolean_true) {
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
       sourcemeta::jsontoolkit::default_schema_compiler,
+      sourcemeta::jsontoolkit::SchemaCompilerMode::FastValidation,
       "https://json-schema.org/draft/2020-12/schema")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+  EVALUATE_WITH_TRACE(compiled_schema, instance, 0)
+  EXPECT_TRUE(result);
 }
 
 TEST(JSONSchema_evaluator, boolean_false) {
@@ -65,10 +67,12 @@ TEST(JSONSchema_evaluator, boolean_false) {
       schema, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver,
       sourcemeta::jsontoolkit::default_schema_compiler,
+      sourcemeta::jsontoolkit::SchemaCompilerMode::FastValidation,
       "https://json-schema.org/draft/2020-12/schema")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 1);
+  EVALUATE_WITH_TRACE(compiled_schema, instance, 1)
+  EXPECT_FALSE(result);
 
   EVALUATE_TRACE_PRE(0, AssertionFail, "", "", "");
   EVALUATE_TRACE_POST_FAILURE(0, AssertionFail, "", "", "");

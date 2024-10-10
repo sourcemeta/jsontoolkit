@@ -7,7 +7,7 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
       SchemaCompilerAssertionDefines{Pointer{}, Pointer{}, "#", "", true, true,
-                                     SchemaCompilerValueString{"foo"}}};
+                                     false, SchemaCompilerValueString{"foo"}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -34,7 +34,7 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
 TEST(JSONSchema_compile_json, defines_basic_nested) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionDefines{
-      Pointer{"foo", "bar"}, Pointer{}, "#/foo/bar", "", true, true,
+      Pointer{"foo", "bar"}, Pointer{}, "#/foo/bar", "", true, true, false,
       SchemaCompilerValueString{"foo"}}};
 
   const JSON result{to_json(steps)};
@@ -61,8 +61,9 @@ TEST(JSONSchema_compile_json, defines_basic_nested) {
 
 TEST(JSONSchema_compile_json, fail_basic_root) {
   using namespace sourcemeta::jsontoolkit;
-  const SchemaCompilerTemplate steps{SchemaCompilerAssertionFail{
-      Pointer{}, Pointer{}, "#", "", true, true, SchemaCompilerValueNone{}}};
+  const SchemaCompilerTemplate steps{
+      SchemaCompilerAssertionFail{Pointer{}, Pointer{}, "#", "", true, true,
+                                  false, SchemaCompilerValueNone{}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -85,7 +86,7 @@ TEST(JSONSchema_compile_json, fail_basic_root) {
 TEST(JSONSchema_compile_json, type_basic_root) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionTypeStrict{
-      Pointer{}, Pointer{}, "#", "", true, true,
+      Pointer{}, Pointer{}, "#", "", true, true, false,
       SchemaCompilerValueType{JSON::Type::String}}};
 
   const JSON result{to_json(steps)};
@@ -113,7 +114,7 @@ TEST(JSONSchema_compile_json, type_basic_root) {
 TEST(JSONSchema_compile_json, or_empty) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      Pointer{}, Pointer{}, "#", "", true, true, false, {}}};
+      Pointer{}, Pointer{}, "#", "", true, true, false, false, {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -142,11 +143,11 @@ TEST(JSONSchema_compile_json, or_single_child) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
-      Pointer{}, Pointer{}, "#", "", true, true,
+      Pointer{}, Pointer{}, "#", "", true, true, false,
       SchemaCompilerValueType{JSON::Type::String}}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      Pointer{}, Pointer{}, "#", "", true, true, false, children}};
+      Pointer{}, Pointer{}, "#", "", true, true, false, false, children}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -192,14 +193,14 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
 
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionTypeStrict{
-          Pointer{}, Pointer{}, "#", "", true, true,
+          Pointer{}, Pointer{}, "#", "", true, true, false,
           SchemaCompilerValueType{JSON::Type::String}},
       SchemaCompilerAssertionTypeStrict{
-          Pointer{}, Pointer{}, "#", "", true, true,
+          Pointer{}, Pointer{}, "#", "", true, true, false,
           SchemaCompilerValueType{JSON::Type::Array}}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      Pointer{}, Pointer{}, "#", "", true, true, false, children}};
+      Pointer{}, Pointer{}, "#", "", true, true, false, false, children}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -264,6 +265,7 @@ TEST(JSONSchema_compile_json, and_empty) {
                                "",
                                true,
                                true,
+                               false,
                                SchemaCompilerValueNone{},
                                {}}};
 
@@ -290,11 +292,11 @@ TEST(JSONSchema_compile_json, and_single_child) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
-      Pointer{}, Pointer{}, "#", "", true, true,
+      Pointer{}, Pointer{}, "#", "", true, true, false,
       SchemaCompilerValueType{JSON::Type::String}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalAnd{Pointer{}, Pointer{}, "#", "", true, true,
+      SchemaCompilerLogicalAnd{Pointer{}, Pointer{}, "#", "", true, true, false,
                                SchemaCompilerValueNone{}, children}};
 
   const JSON result{to_json(steps)};
@@ -337,14 +339,14 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
 
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionTypeStrict{
-          Pointer{}, Pointer{}, "#", "", true, true,
+          Pointer{}, Pointer{}, "#", "", true, true, false,
           SchemaCompilerValueType{JSON::Type::String}},
       SchemaCompilerAssertionTypeStrict{
-          Pointer{}, Pointer{}, "#", "", true, true,
+          Pointer{}, Pointer{}, "#", "", true, true, false,
           SchemaCompilerValueType{JSON::Type::Array}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalAnd{Pointer{}, Pointer{}, "#", "", true, true,
+      SchemaCompilerLogicalAnd{Pointer{}, Pointer{}, "#", "", true, true, false,
                                SchemaCompilerValueNone{}, children}};
 
   const JSON result{to_json(steps)};
@@ -400,7 +402,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
 TEST(JSONSchema_compile_json, regex_basic) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionRegex{
-      Pointer{}, Pointer{}, "#", "", true, true,
+      Pointer{}, Pointer{}, "#", "", true, true, false,
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript},
                                "^a"}}};
 

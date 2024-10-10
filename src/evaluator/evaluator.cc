@@ -13,7 +13,6 @@ namespace {
 
 auto evaluate_step(
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate::value_type &step,
-    const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode,
     const std::optional<
         sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback> &callback,
     sourcemeta::jsontoolkit::EvaluationContext &context) -> bool {
@@ -495,11 +494,11 @@ auto evaluate_step(
       EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalOr);
       result = logical.children.empty();
       for (const auto &child : logical.children) {
-        if (evaluate_step(child, mode, callback, context)) {
+        if (evaluate_step(child, callback, context)) {
           result = true;
           // This boolean value controls whether we should still evaluate
           // every disjunction even on fast mode
-          if (mode == SchemaCompilerEvaluationMode::Fast && !logical.value) {
+          if (!logical.exhaustive && !logical.value) {
             break;
           }
         }
@@ -512,7 +511,7 @@ auto evaluate_step(
       EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalAnd);
       result = true;
       for (const auto &child : logical.children) {
-        if (!evaluate_step(child, mode, callback, context)) {
+        if (!evaluate_step(child, callback, context)) {
           result = false;
           break;
         }
@@ -526,7 +525,7 @@ auto evaluate_step(
                      target.type() == logical.value);
       result = true;
       for (const auto &child : logical.children) {
-        if (!evaluate_step(child, mode, callback, context)) {
+        if (!evaluate_step(child, callback, context)) {
           result = false;
           break;
         }
@@ -540,7 +539,7 @@ auto evaluate_step(
                      target.is_object() && target.defines(logical.value));
       result = true;
       for (const auto &child : logical.children) {
-        if (!evaluate_step(child, mode, callback, context)) {
+        if (!evaluate_step(child, callback, context)) {
           result = false;
           break;
         }
@@ -554,7 +553,7 @@ auto evaluate_step(
                      target.is_array() && target.size() > logical.value);
       result = true;
       for (const auto &child : logical.children) {
-        if (!evaluate_step(child, mode, callback, context)) {
+        if (!evaluate_step(child, callback, context)) {
           result = false;
           break;
         }
@@ -568,7 +567,7 @@ auto evaluate_step(
                      target.is_array() && target.size() == logical.value);
       result = true;
       for (const auto &child : logical.children) {
-        if (!evaluate_step(child, mode, callback, context)) {
+        if (!evaluate_step(child, callback, context)) {
           result = false;
           break;
         }
@@ -582,10 +581,10 @@ auto evaluate_step(
       result = true;
       bool has_matched{false};
       for (const auto &child : logical.children) {
-        if (evaluate_step(child, mode, callback, context)) {
+        if (evaluate_step(child, callback, context)) {
           if (has_matched) {
             result = false;
-            if (mode == SchemaCompilerEvaluationMode::Fast) {
+            if (!logical.exhaustive) {
               break;
             }
           } else {
@@ -613,7 +612,7 @@ auto evaluate_step(
       }
 
       for (std::size_t cursor = 0; cursor < condition_end; cursor++) {
-        if (!evaluate_step(logical.children[cursor], mode, callback, context)) {
+        if (!evaluate_step(logical.children[cursor], callback, context)) {
           result = false;
           break;
         }
@@ -628,8 +627,7 @@ auto evaluate_step(
       if (consequence_start > 0) {
         for (auto cursor = consequence_start; cursor < consequence_end;
              cursor++) {
-          if (!evaluate_step(logical.children[cursor], mode, callback,
-                             context)) {
+          if (!evaluate_step(logical.children[cursor], callback, context)) {
             result = false;
             break;
           }
@@ -645,9 +643,9 @@ auto evaluate_step(
       context.mask();
       result = false;
       for (const auto &child : logical.children) {
-        if (!evaluate_step(child, mode, callback, context)) {
+        if (!evaluate_step(child, callback, context)) {
           result = true;
-          if (mode == SchemaCompilerEvaluationMode::Fast) {
+          if (!logical.exhaustive) {
             break;
           }
         }
@@ -661,7 +659,7 @@ auto evaluate_step(
       context.mark(control.value, control.children);
       result = true;
       for (const auto &child : control.children) {
-        if (!evaluate_step(child, mode, callback, context)) {
+        if (!evaluate_step(child, callback, context)) {
           result = false;
           break;
         }
@@ -682,7 +680,7 @@ auto evaluate_step(
       EVALUATE_BEGIN_NO_PRECONDITION(control, SchemaCompilerControlJump);
       result = true;
       for (const auto &child : context.jump(control.value)) {
-        if (!evaluate_step(child, mode, callback, context)) {
+        if (!evaluate_step(child, callback, context)) {
           result = false;
           break;
         }
@@ -698,7 +696,7 @@ auto evaluate_step(
       result = id.has_value();
       if (id.has_value()) {
         for (const auto &child : context.jump(id.value())) {
-          if (!evaluate_step(child, mode, callback, context)) {
+          if (!evaluate_step(child, callback, context)) {
             result = false;
             break;
           }
@@ -758,7 +756,7 @@ auto evaluate_step(
         assert(std::holds_alternative<SchemaCompilerLogicalAnd>(substep));
         for (const auto &child :
              std::get<SchemaCompilerLogicalAnd>(substep).children) {
-          if (!evaluate_step(child, mode, callback, context)) {
+          if (!evaluate_step(child, callback, context)) {
             result = false;
             // For efficiently breaking from the outer loop too
             goto evaluate_loop_properties_match_end;
@@ -776,7 +774,7 @@ auto evaluate_step(
       for (const auto &entry : target.as_object()) {
         context.enter(entry.first);
         for (const auto &child : loop.children) {
-          if (!evaluate_step(child, mode, callback, context)) {
+          if (!evaluate_step(child, callback, context)) {
             result = false;
             context.leave();
             // For efficiently breaking from the outer loop too
@@ -802,7 +800,7 @@ auto evaluate_step(
 
         context.enter(entry.first);
         for (const auto &child : loop.children) {
-          if (!evaluate_step(child, mode, callback, context)) {
+          if (!evaluate_step(child, callback, context)) {
             result = false;
             context.leave();
             // For efficiently breaking from the outer loop too
@@ -838,7 +836,7 @@ auto evaluate_step(
 
         context.enter(entry.first);
         for (const auto &child : loop.children) {
-          if (!evaluate_step(child, mode, callback, context)) {
+          if (!evaluate_step(child, callback, context)) {
             result = false;
             context.leave();
             // For efficiently breaking from the outer loop too
@@ -872,7 +870,7 @@ auto evaluate_step(
 
         context.enter(entry.first);
         for (const auto &child : loop.children) {
-          if (!evaluate_step(child, mode, callback, context)) {
+          if (!evaluate_step(child, callback, context)) {
             result = false;
             context.leave();
             // For efficiently breaking from the outer loop too
@@ -936,7 +934,7 @@ auto evaluate_step(
       for (const auto &entry : target.as_object()) {
         context.enter(entry.first);
         for (const auto &child : loop.children) {
-          if (!evaluate_step(child, mode, callback, context)) {
+          if (!evaluate_step(child, callback, context)) {
             result = false;
             context.leave();
             goto evaluate_loop_keys_end;
@@ -969,7 +967,7 @@ auto evaluate_step(
         const auto index{std::distance(array.cbegin(), iterator)};
         context.enter(static_cast<Pointer::Token::Index>(index));
         for (const auto &child : loop.children) {
-          if (!evaluate_step(child, mode, callback, context)) {
+          if (!evaluate_step(child, callback, context)) {
             result = false;
             context.leave();
             goto evaluate_compiler_loop_items_end;
@@ -999,7 +997,7 @@ auto evaluate_step(
         const auto index{std::distance(array.cbegin(), iterator)};
         context.enter(static_cast<Pointer::Token::Index>(index));
         for (const auto &child : loop.children) {
-          if (!evaluate_step(child, mode, callback, context)) {
+          if (!evaluate_step(child, callback, context)) {
             result = false;
             context.leave();
             goto evaluate_compiler_loop_items_unmarked_end;
@@ -1049,7 +1047,7 @@ auto evaluate_step(
 
         context.enter(static_cast<Pointer::Token::Index>(index));
         for (const auto &child : loop.children) {
-          if (!evaluate_step(child, mode, callback, context)) {
+          if (!evaluate_step(child, callback, context)) {
             result = false;
             context.leave();
             goto evaluate_compiler_loop_items_unevaluated_end;
@@ -1078,7 +1076,7 @@ auto evaluate_step(
         context.enter(static_cast<Pointer::Token::Index>(index));
         bool subresult{true};
         for (const auto &child : loop.children) {
-          if (!evaluate_step(child, mode, callback, context)) {
+          if (!evaluate_step(child, callback, context)) {
             subresult = false;
             break;
           }
@@ -1135,13 +1133,12 @@ auto evaluate_step(
 inline auto evaluate_internal(
     sourcemeta::jsontoolkit::EvaluationContext &context,
     const sourcemeta::jsontoolkit::SchemaCompilerTemplate &steps,
-    const sourcemeta::jsontoolkit::SchemaCompilerEvaluationMode mode,
     const std::optional<
         sourcemeta::jsontoolkit::SchemaCompilerEvaluationCallback> &callback)
     -> bool {
   bool overall{true};
   for (const auto &step : steps) {
-    if (!evaluate_step(step, mode, callback, context)) {
+    if (!evaluate_step(step, callback, context)) {
       overall = false;
       break;
     }
@@ -1162,29 +1159,22 @@ inline auto evaluate_internal(
 namespace sourcemeta::jsontoolkit {
 
 auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance,
-              const SchemaCompilerEvaluationMode mode,
               const SchemaCompilerEvaluationCallback &callback) -> bool {
   EvaluationContext context;
   context.prepare(instance);
-  return evaluate_internal(context, steps, mode, callback);
+  return evaluate_internal(context, steps, callback);
 }
 
 auto evaluate(const SchemaCompilerTemplate &steps, const JSON &instance)
     -> bool {
   EvaluationContext context;
   context.prepare(instance);
-  return evaluate_internal(context, steps,
-                           // Otherwise what's the point of an exhaustive
-                           // evaluation if you don't get the results?
-                           SchemaCompilerEvaluationMode::Fast, std::nullopt);
+  return evaluate_internal(context, steps, std::nullopt);
 }
 
 auto evaluate(const SchemaCompilerTemplate &steps, EvaluationContext &context)
     -> bool {
-  return evaluate_internal(context, steps,
-                           // Otherwise what's the point of an exhaustive
-                           // evaluation if you don't get the results?
-                           SchemaCompilerEvaluationMode::Fast, std::nullopt);
+  return evaluate_internal(context, steps, std::nullopt);
 }
 
 } // namespace sourcemeta::jsontoolkit

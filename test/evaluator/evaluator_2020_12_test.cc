@@ -13,13 +13,8 @@ TEST(JSONSchema_evaluator_2020_12, unknown_1) {
     "fooBar": "baz"
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/fooBar", "#/fooBar", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/fooBar", "#/fooBar", "", "baz");
@@ -36,13 +31,8 @@ TEST(JSONSchema_evaluator_2020_12, unknown_2) {
     "x-test": 1
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/x-test", "#/x-test", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/x-test", "#/x-test", "", 1);
@@ -61,13 +51,8 @@ TEST(JSONSchema_evaluator_2020_12, items_1) {
     }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
 }
 
 TEST(JSONSchema_evaluator_2020_12, items_2) {
@@ -79,14 +64,9 @@ TEST(JSONSchema_evaluator_2020_12, items_2) {
     }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
@@ -130,14 +110,9 @@ TEST(JSONSchema_evaluator_2020_12, items_3) {
     }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", 5, \"baz\" ]")};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
@@ -172,14 +147,9 @@ TEST(JSONSchema_evaluator_2020_12, items_4) {
     ]
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ true, 5 ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/prefixItems/0/type",
@@ -220,14 +190,9 @@ TEST(JSONSchema_evaluator_2020_12, items_5) {
     ]
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ true, 5, \"foo\", \"bar\" ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 8);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 8);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/prefixItems/0/type",
@@ -293,14 +258,9 @@ TEST(JSONSchema_evaluator_2020_12, items_6) {
     ]
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ true, 5, 6, \"bar\" ]")};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 6);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 6);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/prefixItems/0/type",
@@ -351,13 +311,8 @@ TEST(JSONSchema_evaluator_2020_12, prefixItems_1) {
     "prefixItems": [ { "type": "string" } ]
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
 }
 
 TEST(JSONSchema_evaluator_2020_12, prefixItems_2) {
@@ -367,14 +322,9 @@ TEST(JSONSchema_evaluator_2020_12, prefixItems_2) {
     "prefixItems": [ { "type": "integer" }, { "type": "boolean" } ]
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_POST_SUCCESS(0, LogicalWhenType, "/prefixItems",
@@ -393,14 +343,9 @@ TEST(JSONSchema_evaluator_2020_12, prefixItems_3) {
     "prefixItems": [ { "type": "integer" }, { "type": "boolean" } ]
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5 ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/prefixItems/0/type",
@@ -432,14 +377,9 @@ TEST(JSONSchema_evaluator_2020_12, prefixItems_4) {
     "prefixItems": [ { "type": "integer" }, { "type": "boolean" } ]
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5, true, \"extra\" ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/prefixItems/0/type",
@@ -477,14 +417,9 @@ TEST(JSONSchema_evaluator_2020_12, prefixItems_5) {
     "prefixItems": [ { "type": "integer" }, { "type": "boolean" } ]
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5, 1, \"extra\" ]")};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/prefixItems/0/type",
@@ -517,14 +452,9 @@ TEST(JSONSchema_evaluator_2020_12, prefixItems_6) {
     "prefixItems": [ { "type": "integer" }, { "type": "boolean" } ]
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5, true ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/prefixItems", "#/prefixItems", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/prefixItems/0/type",
@@ -561,13 +491,8 @@ TEST(JSONSchema_evaluator_2020_12, contains_1) {
     "contains": { "type": "string" }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{2};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 0);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
 }
 
 TEST(JSONSchema_evaluator_2020_12, contains_2) {
@@ -577,14 +502,9 @@ TEST(JSONSchema_evaluator_2020_12, contains_2) {
     "contains": { "type": "string" }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 1, \"bar\", 3 ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
@@ -629,14 +549,9 @@ TEST(JSONSchema_evaluator_2020_12, contains_3) {
     "contains": { "type": "string" }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]")};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
@@ -676,14 +591,9 @@ TEST(JSONSchema_evaluator_2020_12, contains_4) {
     "contains": { "type": "string" }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 7);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 7);
 
   EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
@@ -741,14 +651,9 @@ TEST(JSONSchema_evaluator_2020_12, contains_5) {
     "contains": { "type": "string" }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(compiled_schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LoopContains, "/contains", "#/contains", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/contains/type",
@@ -826,13 +731,8 @@ TEST(JSONSchema_evaluator_2020_12, dynamicRef_1) {
     }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 2);
 
   EVALUATE_TRACE_PRE(0, ControlDynamicAnchorJump, "/$dynamicRef",
                      "#/$dynamicRef", "");
@@ -863,13 +763,8 @@ TEST(JSONSchema_evaluator_2020_12, definitions_1) {
     }
   })JSON")};
 
-  const auto compiled_schema{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(compiled_schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/$ref", "#/$ref", "");
   EVALUATE_TRACE_PRE(1, LogicalAnd, "/$ref/$ref", "#/definitions/middle/$ref",

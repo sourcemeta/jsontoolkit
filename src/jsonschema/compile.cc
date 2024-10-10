@@ -64,6 +64,7 @@ namespace sourcemeta::jsontoolkit {
 
 auto compile(const JSON &schema, const SchemaWalker &walker,
              const SchemaResolver &resolver, const SchemaCompiler &compiler,
+             const SchemaCompilerMode mode,
              const std::optional<std::string> &default_dialect)
     -> SchemaCompilerTemplate {
   assert(is_schema(schema));
@@ -104,8 +105,8 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
   }
 
   const sourcemeta::jsontoolkit::SchemaCompilerContext context{
-      result,   frame,    references,         walker,
-      resolver, compiler, uses_dynamic_scopes};
+      result,   frame,    references, walker,
+      resolver, compiler, mode,       uses_dynamic_scopes};
   sourcemeta::jsontoolkit::SchemaCompilerSchemaContext schema_context{
       empty_pointer,
       result,
