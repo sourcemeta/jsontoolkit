@@ -583,7 +583,8 @@ auto evaluate_step(
         if (evaluate_step(child, callback, context)) {
           if (has_matched) {
             result = false;
-            if (!logical.exhaustive) {
+            // This boolean value controls whether we should be exhaustive
+            if (!logical.value) {
               break;
             }
           } else {
