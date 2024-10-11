@@ -22,6 +22,12 @@ target_link_libraries(sourcemeta_jsontoolkit_evaluator_unit
   PRIVATE sourcemeta::jsontoolkit::uri)
 target_link_libraries(sourcemeta_jsontoolkit_evaluator_unit
   PRIVATE sourcemeta::jsontoolkit::evaluator)
+
+if(MSVC)
+  # error C1128: number of sections exceeded object file format limit: compile with /bigobj
+  target_compile_options(sourcemeta_jsontoolkit_evaluator_unit PRIVATE "/bigobj")
+endif()
+
 add_test(NAME Evaluator COMMAND sourcemeta_jsontoolkit_evaluator_unit --gtest_brief=1)
 set_target_properties(sourcemeta_jsontoolkit_evaluator_unit
   PROPERTIES FOLDER "JSON Toolkit/Evaluator")
