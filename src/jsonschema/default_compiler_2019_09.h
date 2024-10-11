@@ -315,20 +315,6 @@ auto compiler_2019_09_core_recursiveref(
       true, context, schema_context, dynamic_context, "")};
 }
 
-auto compiler_2019_09_applicator_anyof(
-    const SchemaCompilerContext &context,
-    const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context)
-    -> SchemaCompilerTemplate {
-  return compiler_draft4_applicator_anyof_conditional_exhaustive(
-      context, schema_context, dynamic_context,
-      // TODO: This set to true means that every disjunction of `anyOf`
-      // is always evaluated. In fact, we only need to enable this if
-      // the schema makes any use of `unevaluatedItems` or
-      // `unevaluatedProperties`
-      true);
-}
-
 auto compiler_2019_09_applicator_properties(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
