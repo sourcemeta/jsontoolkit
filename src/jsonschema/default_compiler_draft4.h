@@ -83,14 +83,11 @@ auto compiler_draft4_core_ref(
       schema_context.references.contains(reference.destination)};
 
   if (!is_recursive && direct_children_references <= 5) {
-    // TODO: Enable this optimization for 2019-09 on-wards
     if (context.mode == SchemaCompilerMode::FastValidation &&
-        (schema_context.vocabularies.contains(
-             "http://json-schema.org/draft-04/schema#") ||
-         schema_context.vocabularies.contains(
-             "http://json-schema.org/draft-06/schema#") ||
-         schema_context.vocabularies.contains(
-             "http://json-schema.org/draft-07/schema#"))) {
+        // Expanding references inline when dynamic scoping is required
+        // may not work, as we might omit the instruction that introduces
+        // one of the necessary schema resources to the evaluator
+        !context.uses_dynamic_scopes) {
       return compile(context, new_schema_context, dynamic_context,
                      empty_pointer, empty_pointer, reference.destination);
     } else {

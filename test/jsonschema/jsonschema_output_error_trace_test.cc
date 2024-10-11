@@ -121,13 +121,10 @@ TEST(JSONSchema_output_error_trace, fail_string_over_ref) {
   std::vector<sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput::Entry>
       traces{output.cbegin(), output.cend()};
 
-  EXPECT_EQ(traces.size(), 2);
+  EXPECT_EQ(traces.size(), 1);
   EXPECT_OUTPUT(
       traces, 0, "", "/$ref/type",
       "The value was expected to be of type string but it was of type integer");
-  EXPECT_OUTPUT(traces, 1, "", "/$ref",
-                "The integer value was expected to validate against the "
-                "statically referenced schema");
 }
 
 TEST(JSONSchema_output_error_trace, fail_string_with_matching_base) {
@@ -195,13 +192,10 @@ TEST(JSONSchema_output_error_trace, fail_string_with_non_matching_base) {
   std::vector<sourcemeta::jsontoolkit::SchemaCompilerErrorTraceOutput::Entry>
       traces{output.cbegin(), output.cend()};
 
-  EXPECT_EQ(traces.size(), 2);
+  EXPECT_EQ(traces.size(), 1);
   EXPECT_OUTPUT(
       traces, 0, "", "/$ref/type",
       "The value was expected to be of type string but it was of type integer");
-  EXPECT_OUTPUT(traces, 1, "", "/$ref",
-                "The integer value was expected to validate against the "
-                "statically referenced schema");
 }
 
 TEST(JSONSchema_output_error_trace, fail_oneof_1) {
