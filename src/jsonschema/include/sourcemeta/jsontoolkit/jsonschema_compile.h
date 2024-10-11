@@ -99,6 +99,10 @@ struct SchemaCompilerContext {
   const SchemaCompilerMode mode;
   /// Whether the schema makes use of dynamic scoping
   const bool uses_dynamic_scopes;
+  /// Whether the schema makes use of unevaluated properties
+  const bool uses_unevaluated_properties;
+  /// Whether the schema makes use of unevaluated items
+  const bool uses_unevaluated_items;
 };
 
 /// @ingroup jsonschema_compiler

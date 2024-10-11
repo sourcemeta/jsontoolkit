@@ -191,7 +191,9 @@ auto compiler_2019_09_applicator_additionalproperties(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   return compiler_draft4_applicator_additionalproperties_conditional_annotation(
-      context, schema_context, dynamic_context, true);
+      context, schema_context, dynamic_context,
+      context.uses_unevaluated_properties ||
+          context.mode == SchemaCompilerMode::Exhaustive);
 }
 
 auto compiler_2019_09_applicator_items(
@@ -200,7 +202,9 @@ auto compiler_2019_09_applicator_items(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   return compiler_draft4_applicator_items_conditional_annotation(
-      context, schema_context, dynamic_context, true);
+      context, schema_context, dynamic_context,
+      context.uses_unevaluated_items ||
+          context.mode == SchemaCompilerMode::Exhaustive);
 }
 
 auto compiler_2019_09_applicator_additionalitems(
@@ -209,7 +213,9 @@ auto compiler_2019_09_applicator_additionalitems(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   return compiler_draft4_applicator_additionalitems_conditional_annotation(
-      context, schema_context, dynamic_context, true);
+      context, schema_context, dynamic_context,
+      context.uses_unevaluated_items ||
+          context.mode == SchemaCompilerMode::Exhaustive);
 }
 
 auto compiler_2019_09_applicator_unevaluateditems(
@@ -329,7 +335,9 @@ auto compiler_2019_09_applicator_properties(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   return compiler_draft4_applicator_properties_conditional_annotation(
-      context, schema_context, dynamic_context, true);
+      context, schema_context, dynamic_context,
+      context.uses_unevaluated_properties ||
+          context.mode == SchemaCompilerMode::Exhaustive);
 }
 
 auto compiler_2019_09_applicator_patternproperties(
@@ -338,7 +346,9 @@ auto compiler_2019_09_applicator_patternproperties(
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   return compiler_draft4_applicator_patternproperties_conditional_annotation(
-      context, schema_context, dynamic_context, true);
+      context, schema_context, dynamic_context,
+      context.uses_unevaluated_properties ||
+          context.mode == SchemaCompilerMode::Exhaustive);
 }
 
 } // namespace internal

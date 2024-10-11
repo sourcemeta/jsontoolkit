@@ -104,9 +104,6 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
     }
   }
 
-  const sourcemeta::jsontoolkit::SchemaCompilerContext context{
-      result,   frame,    references, walker,
-      resolver, compiler, mode,       uses_dynamic_scopes};
   sourcemeta::jsontoolkit::SchemaCompilerSchemaContext schema_context{
       empty_pointer,
       result,
@@ -114,6 +111,29 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
       root_frame_entry.base,
       {},
       {}};
+
+  // TODO: Do an actual detection here
+  bool uses_unevaluated_properties{false};
+  bool uses_unevaluated_items{false};
+  if (schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2019-09/vocab/core") ||
+      schema_context.vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/core")) {
+    uses_unevaluated_properties = true;
+    uses_unevaluated_items = true;
+  }
+
+  const sourcemeta::jsontoolkit::SchemaCompilerContext context{
+      result,
+      frame,
+      references,
+      walker,
+      resolver,
+      compiler,
+      mode,
+      uses_dynamic_scopes,
+      uses_unevaluated_properties,
+      uses_unevaluated_items};
   const sourcemeta::jsontoolkit::SchemaCompilerDynamicContext dynamic_context{
       relative_dynamic_context};
   sourcemeta::jsontoolkit::SchemaCompilerTemplate compiler_template;
