@@ -237,14 +237,14 @@ auto compiler_2019_09_applicator_unevaluateditems(
 
   if (schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/applicator")) {
-    return {make<SchemaCompilerLoopItemsUnevaluated>(
+    return {make<SchemaCompilerAnnotationLoopItemsUnevaluated>(
         true, context, schema_context, dynamic_context,
         SchemaCompilerValueItemsAnnotationKeywords{
             "items", {}, {"items", "additionalItems", "unevaluatedItems"}},
         std::move(children))};
   } else if (schema_context.vocabularies.contains(
                  "https://json-schema.org/draft/2020-12/vocab/applicator")) {
-    return {make<SchemaCompilerLoopItemsUnevaluated>(
+    return {make<SchemaCompilerAnnotationLoopItemsUnevaluated>(
         true, context, schema_context, dynamic_context,
         SchemaCompilerValueItemsAnnotationKeywords{
             "prefixItems",
@@ -252,7 +252,7 @@ auto compiler_2019_09_applicator_unevaluateditems(
             {"prefixItems", "items", "contains", "unevaluatedItems"}},
         std::move(children))};
   } else {
-    return {make<SchemaCompilerLoopItemsUnmarked>(
+    return {make<SchemaCompilerAnnotationLoopItemsUnmarked>(
         true, context, schema_context, dynamic_context,
         SchemaCompilerValueStrings{"unevaluatedItems"}, std::move(children))};
   }
@@ -292,7 +292,7 @@ auto compiler_2019_09_applicator_unevaluatedproperties(
       true, context, schema_context, relative_dynamic_context,
       SchemaCompilerValueNone{}));
 
-  return {make<SchemaCompilerLoopPropertiesNoAnnotation>(
+  return {make<SchemaCompilerAnnotationLoopPropertiesUnevaluated>(
       true, context, schema_context, dynamic_context, std::move(dependencies),
       std::move(children))};
 }

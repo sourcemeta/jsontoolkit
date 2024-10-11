@@ -48,6 +48,9 @@ struct SchemaCompilerAnnotationWhenArraySizeEqual;
 struct SchemaCompilerAnnotationWhenArraySizeGreater;
 struct SchemaCompilerAnnotationToParent;
 struct SchemaCompilerAnnotationBasenameToParent;
+struct SchemaCompilerAnnotationLoopPropertiesUnevaluated;
+struct SchemaCompilerAnnotationLoopItemsUnmarked;
+struct SchemaCompilerAnnotationLoopItemsUnevaluated;
 struct SchemaCompilerLogicalOr;
 struct SchemaCompilerLogicalAnd;
 struct SchemaCompilerLogicalXor;
@@ -60,14 +63,11 @@ struct SchemaCompilerLogicalWhenArraySizeEqual;
 struct SchemaCompilerLoopPropertiesMatch;
 struct SchemaCompilerLoopProperties;
 struct SchemaCompilerLoopPropertiesRegex;
-struct SchemaCompilerLoopPropertiesNoAnnotation;
 struct SchemaCompilerLoopPropertiesExcept;
 struct SchemaCompilerLoopPropertiesType;
 struct SchemaCompilerLoopPropertiesTypeStrict;
 struct SchemaCompilerLoopKeys;
 struct SchemaCompilerLoopItems;
-struct SchemaCompilerLoopItemsUnmarked;
-struct SchemaCompilerLoopItemsUnevaluated;
 struct SchemaCompilerLoopContains;
 struct SchemaCompilerControlLabel;
 struct SchemaCompilerControlMark;
@@ -101,17 +101,18 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAnnotationWhenArraySizeEqual,
     SchemaCompilerAnnotationWhenArraySizeGreater,
     SchemaCompilerAnnotationToParent, SchemaCompilerAnnotationBasenameToParent,
-    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerAnnotationLoopPropertiesUnevaluated,
+    SchemaCompilerAnnotationLoopItemsUnmarked,
+    SchemaCompilerAnnotationLoopItemsUnevaluated, SchemaCompilerLogicalOr,
+    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
     SchemaCompilerLogicalCondition, SchemaCompilerLogicalNot,
     SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
     SchemaCompilerLogicalWhenArraySizeGreater,
     SchemaCompilerLogicalWhenArraySizeEqual, SchemaCompilerLoopPropertiesMatch,
     SchemaCompilerLoopProperties, SchemaCompilerLoopPropertiesRegex,
-    SchemaCompilerLoopPropertiesNoAnnotation,
     SchemaCompilerLoopPropertiesExcept, SchemaCompilerLoopPropertiesType,
     SchemaCompilerLoopPropertiesTypeStrict, SchemaCompilerLoopKeys,
-    SchemaCompilerLoopItems, SchemaCompilerLoopItemsUnmarked,
-    SchemaCompilerLoopItemsUnevaluated, SchemaCompilerLoopContains,
+    SchemaCompilerLoopItems, SchemaCompilerLoopContains,
     SchemaCompilerControlLabel, SchemaCompilerControlMark,
     SchemaCompilerControlJump, SchemaCompilerControlDynamicAnchorJump>>;
 
@@ -153,6 +154,9 @@ enum class SchemaCompilerTemplateIndex : std::uint8_t {
   SchemaCompilerAnnotationWhenArraySizeGreater,
   SchemaCompilerAnnotationToParent,
   SchemaCompilerAnnotationBasenameToParent,
+  SchemaCompilerAnnotationLoopPropertiesUnevaluated,
+  SchemaCompilerAnnotationLoopItemsUnmarked,
+  SchemaCompilerAnnotationLoopItemsUnevaluated,
   SchemaCompilerLogicalOr,
   SchemaCompilerLogicalAnd,
   SchemaCompilerLogicalXor,
@@ -165,14 +169,11 @@ enum class SchemaCompilerTemplateIndex : std::uint8_t {
   SchemaCompilerLoopPropertiesMatch,
   SchemaCompilerLoopProperties,
   SchemaCompilerLoopPropertiesRegex,
-  SchemaCompilerLoopPropertiesNoAnnotation,
   SchemaCompilerLoopPropertiesExcept,
   SchemaCompilerLoopPropertiesType,
   SchemaCompilerLoopPropertiesTypeStrict,
   SchemaCompilerLoopKeys,
   SchemaCompilerLoopItems,
-  SchemaCompilerLoopItemsUnmarked,
-  SchemaCompilerLoopItemsUnevaluated,
   SchemaCompilerLoopContains,
   SchemaCompilerControlLabel,
   SchemaCompilerControlMark,
@@ -389,6 +390,23 @@ DEFINE_STEP_WITH_VALUE(Annotation, ToParent, SchemaCompilerValueJSON)
 DEFINE_STEP_WITH_VALUE(Annotation, BasenameToParent, SchemaCompilerValueNone)
 
 /// @ingroup evaluator_instructions
+/// @brief Represents a compiler step that loops over object properties that
+/// were not collected as annotations
+DEFINE_STEP_APPLICATOR(Annotation, LoopPropertiesUnevaluated,
+                       SchemaCompilerValueStrings)
+
+/// @ingroup evaluator_instructions
+/// @brief Represents a compiler step that loops over array items when the array
+/// is considered unmarked
+DEFINE_STEP_APPLICATOR(Annotation, LoopItemsUnmarked,
+                       SchemaCompilerValueStrings)
+
+/// @ingroup evaluator_instructions
+/// @brief Represents a compiler step that loops over unevaluated array items
+DEFINE_STEP_APPLICATOR(Annotation, LoopItemsUnevaluated,
+                       SchemaCompilerValueItemsAnnotationKeywords)
+
+/// @ingroup evaluator_instructions
 /// @brief Represents a compiler logical step that represents a disjunction
 DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueBoolean)
 
@@ -446,11 +464,6 @@ DEFINE_STEP_APPLICATOR(Loop, PropertiesRegex, SchemaCompilerValueRegex)
 
 /// @ingroup evaluator_instructions
 /// @brief Represents a compiler step that loops over object properties that
-/// were not collected as annotations
-DEFINE_STEP_APPLICATOR(Loop, PropertiesNoAnnotation, SchemaCompilerValueStrings)
-
-/// @ingroup evaluator_instructions
-/// @brief Represents a compiler step that loops over object properties that
 /// do not match the given property filters
 DEFINE_STEP_APPLICATOR(Loop, PropertiesExcept,
                        SchemaCompilerValuePropertyFilter)
@@ -473,16 +486,6 @@ DEFINE_STEP_APPLICATOR(Loop, Keys, SchemaCompilerValueNone)
 /// @brief Represents a compiler step that loops over array items starting from
 /// a given index
 DEFINE_STEP_APPLICATOR(Loop, Items, SchemaCompilerValueUnsignedInteger)
-
-/// @ingroup evaluator_instructions
-/// @brief Represents a compiler step that loops over array items when the array
-/// is considered unmarked
-DEFINE_STEP_APPLICATOR(Loop, ItemsUnmarked, SchemaCompilerValueStrings)
-
-/// @ingroup evaluator_instructions
-/// @brief Represents a compiler step that loops over unevaluated array items
-DEFINE_STEP_APPLICATOR(Loop, ItemsUnevaluated,
-                       SchemaCompilerValueItemsAnnotationKeywords)
 
 /// @ingroup evaluator_instructions
 /// @brief Represents a compiler step that checks array items match a given

@@ -596,8 +596,8 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto operator()(const SchemaCompilerLoopPropertiesNoAnnotation &step) const
-      -> std::string {
+  auto operator()(const SchemaCompilerAnnotationLoopPropertiesUnevaluated &step)
+      const -> std::string {
     if (this->keyword == "unevaluatedProperties") {
       std::ostringstream message;
       if (!step.children.empty() &&
@@ -694,12 +694,13 @@ struct DescribeVisitor {
     return message.str();
   }
 
-  auto operator()(const SchemaCompilerLoopItemsUnmarked &) const
+  auto operator()(const SchemaCompilerAnnotationLoopItemsUnmarked &) const
       -> std::string {
     return unknown();
   }
 
-  auto operator()(const SchemaCompilerLoopItemsUnevaluated &step) const
+  auto
+  operator()(const SchemaCompilerAnnotationLoopItemsUnevaluated &step) const
       -> std::string {
     assert(this->keyword == "unevaluatedItems");
     const auto &value{step_value(step)};
