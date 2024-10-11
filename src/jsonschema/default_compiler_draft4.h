@@ -359,9 +359,13 @@ auto compiler_draft4_applicator_oneof(
                 {static_cast<Pointer::Token::Index>(index)})));
   }
 
+  const auto requires_exhaustive{
+      context.mode == SchemaCompilerMode::Exhaustive ||
+      context.uses_unevaluated_properties || context.uses_unevaluated_items};
+
   return {make<SchemaCompilerLogicalXor>(
-      true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
-      std::move(disjunctors))};
+      true, context, schema_context, dynamic_context,
+      SchemaCompilerValueBoolean{requires_exhaustive}, std::move(disjunctors))};
 }
 
 auto compiler_draft4_applicator_properties_conditional_annotation(

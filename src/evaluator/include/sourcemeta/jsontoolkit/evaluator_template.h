@@ -404,7 +404,7 @@ DEFINE_STEP_APPLICATOR(Logical, And, SchemaCompilerValueNone)
 /// @ingroup evaluator_instructions
 /// @brief Represents a compiler logical step that represents an exclusive
 /// disjunction
-DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueNone)
+DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueBoolean)
 
 /// @ingroup evaluator_instructions
 /// @brief Represents an imperative conditional compiler logical step
