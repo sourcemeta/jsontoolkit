@@ -181,9 +181,6 @@ enum class SchemaCompilerTemplateIndex : std::uint8_t {
 };
 #endif
 
-// TODO: Do we really need "dynamic", "report", and "exhaustive" on
-// non-applicators?
-
 #define DEFINE_STEP_WITH_VALUE(category, name, type)                           \
   struct SchemaCompiler##category##name {                                      \
     const Pointer relative_schema_location;                                    \
@@ -192,7 +189,6 @@ enum class SchemaCompilerTemplateIndex : std::uint8_t {
     const std::string schema_resource;                                         \
     const bool dynamic;                                                        \
     const bool report;                                                         \
-    const bool exhaustive;                                                     \
     const type value;                                                          \
   };
 
@@ -204,7 +200,6 @@ enum class SchemaCompilerTemplateIndex : std::uint8_t {
     const std::string schema_resource;                                         \
     const bool dynamic;                                                        \
     const bool report;                                                         \
-    const bool exhaustive;                                                     \
     const type value;                                                          \
     const SchemaCompilerTemplate children;                                     \
   };

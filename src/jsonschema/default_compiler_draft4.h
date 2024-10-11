@@ -524,8 +524,7 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
           dynamic_context.base_instance_location.concat(
               type_step.relative_instance_location),
           type_step.keyword_location, type_step.schema_resource,
-          type_step.dynamic, type_step.report, type_step.exhaustive,
-          type_step.value});
+          type_step.dynamic, type_step.report, type_step.value});
     } else if (context.mode == SchemaCompilerMode::FastValidation &&
                substeps.size() == 1 &&
                std::holds_alternative<SchemaCompilerAssertionType>(
@@ -537,8 +536,7 @@ auto compiler_draft4_applicator_properties_conditional_annotation(
           dynamic_context.base_instance_location.concat(
               type_step.relative_instance_location),
           type_step.keyword_location, type_step.schema_resource,
-          type_step.dynamic, type_step.report, type_step.exhaustive,
-          type_step.value});
+          type_step.dynamic, type_step.report, type_step.value});
     } else if (context.mode == SchemaCompilerMode::FastValidation &&
                substeps.size() == 1 &&
                std::holds_alternative<
