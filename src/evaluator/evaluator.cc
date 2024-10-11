@@ -645,9 +645,7 @@ auto evaluate_step(
       for (const auto &child : logical.children) {
         if (!evaluate_step(child, callback, context)) {
           result = true;
-          if (!logical.exhaustive) {
-            break;
-          }
+          break;
         }
       }
 
