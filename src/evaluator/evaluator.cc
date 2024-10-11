@@ -892,11 +892,11 @@ auto evaluate_step(
       for (const auto &entry : target.as_object()) {
         context.enter(entry.first);
         const auto &entry_target{context.resolve_target()};
-        // In non-strict mode, we consider a real number that represents an
-        // integer to be an integer
         if (entry_target.type() != loop.value &&
+            // In non-strict mode, we consider a real number that represents an
+            // integer to be an integer
             (loop.value != JSON::Type::Integer ||
-             entry_target.is_integer_real())) {
+             !entry_target.is_integer_real())) {
           result = false;
           context.leave();
           break;
