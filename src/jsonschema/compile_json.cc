@@ -263,6 +263,12 @@ struct StepVisitor {
   HANDLE_STEP("annotation", "to-parent", SchemaCompilerAnnotationToParent)
   HANDLE_STEP("annotation", "basename-to-parent",
               SchemaCompilerAnnotationBasenameToParent)
+  HANDLE_STEP("annotation", "loop-properties-unevaluated",
+              SchemaCompilerAnnotationLoopPropertiesUnevaluated)
+  HANDLE_STEP("annotation", "loop-items-unmarked",
+              SchemaCompilerAnnotationLoopItemsUnmarked)
+  HANDLE_STEP("annotation", "loop-items-unevaluated",
+              SchemaCompilerAnnotationLoopItemsUnevaluated)
   HANDLE_STEP("logical", "or", SchemaCompilerLogicalOr)
   HANDLE_STEP("logical", "and", SchemaCompilerLogicalAnd)
   HANDLE_STEP("logical", "xor", SchemaCompilerLogicalXor)
@@ -277,16 +283,12 @@ struct StepVisitor {
   HANDLE_STEP("loop", "properties-match", SchemaCompilerLoopPropertiesMatch)
   HANDLE_STEP("loop", "properties", SchemaCompilerLoopProperties)
   HANDLE_STEP("loop", "properties-regex", SchemaCompilerLoopPropertiesRegex)
-  HANDLE_STEP("loop", "properties-no-annotation",
-              SchemaCompilerLoopPropertiesNoAnnotation)
   HANDLE_STEP("loop", "properties-except", SchemaCompilerLoopPropertiesExcept)
   HANDLE_STEP("loop", "properties-type", SchemaCompilerLoopPropertiesType)
   HANDLE_STEP("loop", "properties-type-strict",
               SchemaCompilerLoopPropertiesTypeStrict)
   HANDLE_STEP("loop", "keys", SchemaCompilerLoopKeys)
   HANDLE_STEP("loop", "items", SchemaCompilerLoopItems)
-  HANDLE_STEP("loop", "items-unmarked", SchemaCompilerLoopItemsUnmarked)
-  HANDLE_STEP("loop", "items-unevaluated", SchemaCompilerLoopItemsUnevaluated)
   HANDLE_STEP("loop", "contains", SchemaCompilerLoopContains)
   HANDLE_STEP("control", "label", SchemaCompilerControlLabel)
   HANDLE_STEP("control", "mark", SchemaCompilerControlMark)

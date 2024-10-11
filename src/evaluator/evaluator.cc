@@ -739,6 +739,122 @@ auto evaluate_step(
           context.instance_location().back().to_json());
     }
 
+    case IS_STEP(SchemaCompilerAnnotationLoopPropertiesUnevaluated): {
+      EVALUATE_BEGIN(loop, SchemaCompilerAnnotationLoopPropertiesUnevaluated,
+                     target.is_object());
+      result = true;
+      assert(!loop.value.empty());
+
+      for (const auto &entry : target.as_object()) {
+        // TODO: It might be more efficient to get all the annotations we
+        // potentially care about as a set first, and the make the loop
+        // check for O(1) containment in that set?
+        if (context.defines_annotation(
+                context.instance_location(),
+                // TODO: Can we avoid doing this expensive operation on a loop?
+                context.evaluate_path().initial(), loop.value,
+                // TODO: This conversion implies a string copy
+                JSON{entry.first})) {
+          continue;
+        }
+
+        context.enter(entry.first);
+        for (const auto &child : loop.children) {
+          if (!evaluate_step(child, callback, context)) {
+            result = false;
+            context.leave();
+            // For efficiently breaking from the outer loop too
+            goto evaluate_annotation_loop_properties_unevaluated_end;
+          }
+        }
+
+        context.leave();
+      }
+
+    evaluate_annotation_loop_properties_unevaluated_end:
+      EVALUATE_END(loop, SchemaCompilerAnnotationLoopPropertiesUnevaluated);
+    }
+
+    case IS_STEP(SchemaCompilerAnnotationLoopItemsUnmarked): {
+      EVALUATE_BEGIN(loop, SchemaCompilerAnnotationLoopItemsUnmarked,
+                     target.is_array() &&
+                         !context.defines_annotation(
+                             context.instance_location(),
+                             context.evaluate_path(), loop.value, JSON{true}));
+      // Otherwise you shouldn't be using this step?
+      assert(!loop.value.empty());
+      const auto &array{target.as_array()};
+      result = true;
+
+      for (auto iterator = array.cbegin(); iterator != array.cend();
+           ++iterator) {
+        const auto index{std::distance(array.cbegin(), iterator)};
+        context.enter(static_cast<Pointer::Token::Index>(index));
+        for (const auto &child : loop.children) {
+          if (!evaluate_step(child, callback, context)) {
+            result = false;
+            context.leave();
+            goto evaluate_compiler_annotation_loop_items_unmarked_end;
+          }
+        }
+
+        context.leave();
+      }
+
+    evaluate_compiler_annotation_loop_items_unmarked_end:
+      EVALUATE_END(loop, SchemaCompilerAnnotationLoopItemsUnmarked);
+    }
+
+    case IS_STEP(SchemaCompilerAnnotationLoopItemsUnevaluated): {
+      // TODO: This precondition is very expensive due to pointer manipulation
+      EVALUATE_BEGIN(loop, SchemaCompilerAnnotationLoopItemsUnevaluated,
+                     target.is_array() && !context.defines_annotation(
+                                              context.instance_location(),
+                                              context.evaluate_path().initial(),
+                                              loop.value.mask, JSON{true}));
+      const auto &array{target.as_array()};
+      result = true;
+      auto iterator{array.cbegin()};
+
+      // Determine the proper start based on integer annotations collected for
+      // the current instance location by the keyword requested by the user.
+      const std::uint64_t start{context.largest_annotation_index(
+          context.instance_location(), {loop.value.index}, 0)};
+
+      // We need this check, as advancing an iterator past its bounds
+      // is considered undefined behavior
+      // See https://en.cppreference.com/w/cpp/iterator/advance
+      std::advance(iterator,
+                   std::min(static_cast<std::ptrdiff_t>(start),
+                            static_cast<std::ptrdiff_t>(target.size())));
+
+      for (; iterator != array.cend(); ++iterator) {
+        const auto index{std::distance(array.cbegin(), iterator)};
+
+        if (context.defines_annotation(
+                context.instance_location(),
+                // TODO: Can we avoid doing this expensive operation on a loop?
+                context.evaluate_path().initial(), loop.value.filter,
+                JSON{static_cast<std::size_t>(index)})) {
+          continue;
+        }
+
+        context.enter(static_cast<Pointer::Token::Index>(index));
+        for (const auto &child : loop.children) {
+          if (!evaluate_step(child, callback, context)) {
+            result = false;
+            context.leave();
+            goto evaluate_compiler_annotation_loop_items_unevaluated_end;
+          }
+        }
+
+        context.leave();
+      }
+
+    evaluate_compiler_annotation_loop_items_unevaluated_end:
+      EVALUATE_END(loop, SchemaCompilerAnnotationLoopItemsUnevaluated);
+    }
+
     case IS_STEP(SchemaCompilerLoopPropertiesMatch): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesMatch,
                      target.is_object());
@@ -811,42 +927,6 @@ auto evaluate_step(
 
     evaluate_loop_properties_regex_end:
       EVALUATE_END(loop, SchemaCompilerLoopPropertiesRegex);
-    }
-
-    case IS_STEP(SchemaCompilerLoopPropertiesNoAnnotation): {
-      EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesNoAnnotation,
-                     target.is_object());
-      result = true;
-      assert(!loop.value.empty());
-
-      for (const auto &entry : target.as_object()) {
-        // TODO: It might be more efficient to get all the annotations we
-        // potentially care about as a set first, and the make the loop
-        // check for O(1) containment in that set?
-        if (context.defines_annotation(
-                context.instance_location(),
-                // TODO: Can we avoid doing this expensive operation on a loop?
-                context.evaluate_path().initial(), loop.value,
-                // TODO: This conversion implies a string copy
-                JSON{entry.first})) {
-          continue;
-        }
-
-        context.enter(entry.first);
-        for (const auto &child : loop.children) {
-          if (!evaluate_step(child, callback, context)) {
-            result = false;
-            context.leave();
-            // For efficiently breaking from the outer loop too
-            goto evaluate_loop_properties_no_annotation_end;
-          }
-        }
-
-        context.leave();
-      }
-
-    evaluate_loop_properties_no_annotation_end:
-      EVALUATE_END(loop, SchemaCompilerLoopPropertiesNoAnnotation);
     }
 
     case IS_STEP(SchemaCompilerLoopPropertiesExcept): {
@@ -977,86 +1057,6 @@ auto evaluate_step(
 
     evaluate_compiler_loop_items_end:
       EVALUATE_END(loop, SchemaCompilerLoopItems);
-    }
-
-    case IS_STEP(SchemaCompilerLoopItemsUnmarked): {
-      EVALUATE_BEGIN(loop, SchemaCompilerLoopItemsUnmarked,
-                     target.is_array() &&
-                         !context.defines_annotation(
-                             context.instance_location(),
-                             context.evaluate_path(), loop.value, JSON{true}));
-      // Otherwise you shouldn't be using this step?
-      assert(!loop.value.empty());
-      const auto &array{target.as_array()};
-      result = true;
-
-      for (auto iterator = array.cbegin(); iterator != array.cend();
-           ++iterator) {
-        const auto index{std::distance(array.cbegin(), iterator)};
-        context.enter(static_cast<Pointer::Token::Index>(index));
-        for (const auto &child : loop.children) {
-          if (!evaluate_step(child, callback, context)) {
-            result = false;
-            context.leave();
-            goto evaluate_compiler_loop_items_unmarked_end;
-          }
-        }
-
-        context.leave();
-      }
-
-    evaluate_compiler_loop_items_unmarked_end:
-      EVALUATE_END(loop, SchemaCompilerLoopItemsUnmarked);
-    }
-
-    case IS_STEP(SchemaCompilerLoopItemsUnevaluated): {
-      // TODO: This precondition is very expensive due to pointer manipulation
-      EVALUATE_BEGIN(loop, SchemaCompilerLoopItemsUnevaluated,
-                     target.is_array() && !context.defines_annotation(
-                                              context.instance_location(),
-                                              context.evaluate_path().initial(),
-                                              loop.value.mask, JSON{true}));
-      const auto &array{target.as_array()};
-      result = true;
-      auto iterator{array.cbegin()};
-
-      // Determine the proper start based on integer annotations collected for
-      // the current instance location by the keyword requested by the user.
-      const std::uint64_t start{context.largest_annotation_index(
-          context.instance_location(), {loop.value.index}, 0)};
-
-      // We need this check, as advancing an iterator past its bounds
-      // is considered undefined behavior
-      // See https://en.cppreference.com/w/cpp/iterator/advance
-      std::advance(iterator,
-                   std::min(static_cast<std::ptrdiff_t>(start),
-                            static_cast<std::ptrdiff_t>(target.size())));
-
-      for (; iterator != array.cend(); ++iterator) {
-        const auto index{std::distance(array.cbegin(), iterator)};
-
-        if (context.defines_annotation(
-                context.instance_location(),
-                // TODO: Can we avoid doing this expensive operation on a loop?
-                context.evaluate_path().initial(), loop.value.filter,
-                JSON{static_cast<std::size_t>(index)})) {
-          continue;
-        }
-
-        context.enter(static_cast<Pointer::Token::Index>(index));
-        for (const auto &child : loop.children) {
-          if (!evaluate_step(child, callback, context)) {
-            result = false;
-            context.leave();
-            goto evaluate_compiler_loop_items_unevaluated_end;
-          }
-        }
-
-        context.leave();
-      }
-
-    evaluate_compiler_loop_items_unevaluated_end:
-      EVALUATE_END(loop, SchemaCompilerLoopItemsUnevaluated);
     }
 
     case IS_STEP(SchemaCompilerLoopContains): {
