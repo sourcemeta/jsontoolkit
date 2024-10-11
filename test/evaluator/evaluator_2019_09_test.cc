@@ -19,7 +19,44 @@ TEST(JSONSchema_evaluator_2019_09, properties_1) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": \"xxx\" }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionPropertyType, "/properties/bar/type",
+                     "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_PRE(2, AssertionPropertyTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionPropertyType, "/properties/bar/type",
+                              "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionPropertyTypeStrict,
+                              "/properties/foo/type", "#/properties/foo/type",
+                              "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the defined properties subschemas");
+}
+
+TEST(JSONSchema_evaluator_2019_09, properties_1_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "properties": {
+      "foo": { "type": "string" },
+      "bar": { "type": "integer" }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": \"xxx\" }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/properties/bar/type",
@@ -52,7 +89,45 @@ TEST(JSONSchema_evaluator_2019_09, properties_1) {
                                "against the defined properties subschemas");
 }
 
-TEST(JSONSchema_evaluator_2019_09, properties_1_exhaustive) {
+TEST(JSONSchema_evaluator_2019_09, properties_2) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "properties": {
+      "foo": { "type": "string" },
+      "bar": { "type": "integer" }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionPropertyType, "/properties/bar/type",
+                     "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_PRE(2, AssertionPropertyTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionPropertyType, "/properties/bar/type",
+                              "#/properties/bar/type", "/bar");
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionPropertyTypeStrict,
+                              "/properties/foo/type", "#/properties/foo/type",
+                              "/foo");
+  EVALUATE_TRACE_POST_FAILURE(2, LogicalAnd, "/properties", "#/properties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The value was expected to be of type string but it was of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the defined properties subschemas");
+}
+
+TEST(JSONSchema_evaluator_2019_09, properties_2_exhaustive) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -318,7 +393,7 @@ TEST(JSONSchema_evaluator_2019_09, dependentSchemas_4) {
       "it was also expected to validate against the corresponding subschemas");
 }
 
-TEST(JSONSchema_evaluator_2019_09, additionalProperties_1_fast) {
+TEST(JSONSchema_evaluator_2019_09, additionalProperties_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -330,87 +405,14 @@ TEST(JSONSchema_evaluator_2019_09, additionalProperties_1_fast) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
 
-  if (FIRST_PROPERTY_IS(instance, "foo")) {
-    EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
-                       "#/additionalProperties", "");
-    EVALUATE_TRACE_PRE(1, AssertionType, "/additionalProperties/type",
-                       "#/additionalProperties/type", "/foo");
-    EVALUATE_TRACE_PRE_ANNOTATION(2, "/additionalProperties",
-                                  "#/additionalProperties", "");
-    EVALUATE_TRACE_PRE(3, AssertionType, "/additionalProperties/type",
-                       "#/additionalProperties/type", "/bar");
-    EVALUATE_TRACE_PRE_ANNOTATION(4, "/additionalProperties",
-                                  "#/additionalProperties", "");
-
-    EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/additionalProperties/type",
-                                "#/additionalProperties/type", "/foo");
-    EVALUATE_TRACE_POST_ANNOTATION(1, "/additionalProperties",
-                                   "#/additionalProperties", "", "foo");
-    EVALUATE_TRACE_POST_SUCCESS(2, AssertionType, "/additionalProperties/type",
-                                "#/additionalProperties/type", "/bar");
-    EVALUATE_TRACE_POST_ANNOTATION(3, "/additionalProperties",
-                                   "#/additionalProperties", "", "bar");
-    EVALUATE_TRACE_POST_SUCCESS(4, LoopProperties, "/additionalProperties",
-                                "#/additionalProperties", "");
-
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 0, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 1,
-        "The object property \"foo\" successfully validated against the "
-        "additional properties subschema");
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 2, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 3,
-        "The object property \"bar\" successfully validated against the "
-        "additional properties subschema");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
-                                 "The object properties not covered by other "
-                                 "adjacent object keywords were "
-                                 "expected to validate against this subschema");
-  } else {
-    EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
-                       "#/additionalProperties", "");
-    EVALUATE_TRACE_PRE(1, AssertionType, "/additionalProperties/type",
-                       "#/additionalProperties/type", "/bar");
-    EVALUATE_TRACE_PRE_ANNOTATION(2, "/additionalProperties",
-                                  "#/additionalProperties", "");
-    EVALUATE_TRACE_PRE(3, AssertionType, "/additionalProperties/type",
-                       "#/additionalProperties/type", "/foo");
-    EVALUATE_TRACE_PRE_ANNOTATION(4, "/additionalProperties",
-                                  "#/additionalProperties", "");
-
-    EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/additionalProperties/type",
-                                "#/additionalProperties/type", "/bar");
-    EVALUATE_TRACE_POST_ANNOTATION(1, "/additionalProperties",
-                                   "#/additionalProperties", "", "bar");
-    EVALUATE_TRACE_POST_SUCCESS(2, AssertionType, "/additionalProperties/type",
-                                "#/additionalProperties/type", "/foo");
-    EVALUATE_TRACE_POST_ANNOTATION(3, "/additionalProperties",
-                                   "#/additionalProperties", "", "foo");
-    EVALUATE_TRACE_POST_SUCCESS(4, LoopProperties, "/additionalProperties",
-                                "#/additionalProperties", "");
-
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 0, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 1,
-        "The object property \"bar\" successfully validated against the "
-        "additional properties subschema");
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 2, "The value was expected to be of type integer");
-    EVALUATE_TRACE_POST_DESCRIBE(
-        instance, 3,
-        "The object property \"foo\" successfully validated against the "
-        "additional properties subschema");
-    EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
-                                 "The object properties not covered by other "
-                                 "adjacent object keywords were "
-                                 "expected to validate against this subschema");
-  }
+  EVALUATE_TRACE_PRE(0, LoopPropertiesType, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, LoopPropertiesType, "/additionalProperties",
+                              "#/additionalProperties", "");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0, "The object properties were expected to be of type integer");
 }
 
 TEST(JSONSchema_evaluator_2019_09, additionalProperties_1_exhaustive) {
@@ -508,7 +510,7 @@ TEST(JSONSchema_evaluator_2019_09, additionalProperties_1_exhaustive) {
   }
 }
 
-TEST(JSONSchema_evaluator_2019_09, additionalProperties_2_fast) {
+TEST(JSONSchema_evaluator_2019_09, additionalProperties_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -525,45 +527,28 @@ TEST(JSONSchema_evaluator_2019_09, additionalProperties_2_fast) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": true }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 6);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
 
-  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
+  EVALUATE_TRACE_PRE(0, AssertionPropertyTypeStrict, "/properties/foo/type",
                      "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
-  EVALUATE_TRACE_PRE(3, LoopPropertiesExcept, "/additionalProperties",
+  EVALUATE_TRACE_PRE(1, LoopPropertiesExcept, "/additionalProperties",
                      "#/additionalProperties", "");
-  EVALUATE_TRACE_PRE(4, AssertionType, "/additionalProperties/type",
+  EVALUATE_TRACE_PRE(2, AssertionType, "/additionalProperties/type",
                      "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_PRE_ANNOTATION(5, "/additionalProperties",
-                                "#/additionalProperties", "");
 
-  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
-                              "#/properties/foo/type", "/foo");
-  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "foo");
-  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
-  EVALUATE_TRACE_POST_SUCCESS(3, AssertionType, "/additionalProperties/type",
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionPropertyTypeStrict,
+                              "/properties/foo/type", "#/properties/foo/type",
+                              "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/additionalProperties/type",
                               "#/additionalProperties/type", "/bar");
-  EVALUATE_TRACE_POST_ANNOTATION(4, "/additionalProperties",
-                                 "#/additionalProperties", "", "bar");
-  EVALUATE_TRACE_POST_SUCCESS(5, LoopPropertiesExcept, "/additionalProperties",
+  EVALUATE_TRACE_POST_SUCCESS(2, LoopPropertiesExcept, "/additionalProperties",
                               "#/additionalProperties", "");
 
   EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
                                "The value was expected to be of type boolean");
   EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
-                               "The object property \"foo\" successfully "
-                               "validated against its property subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
-                               "The object value was expected to validate "
-                               "against the single defined property subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
                                "The value was expected to be of type integer");
-  EVALUATE_TRACE_POST_DESCRIBE(
-      instance, 4,
-      "The object property \"bar\" successfully validated against the "
-      "additional properties subschema");
-  EVALUATE_TRACE_POST_DESCRIBE(instance, 5,
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
                                "The object properties not covered by other "
                                "adjacent object keywords were "
                                "expected to validate against this subschema");
@@ -630,7 +615,29 @@ TEST(JSONSchema_evaluator_2019_09, additionalProperties_2_exhaustive) {
                                "expected to validate against this subschema");
 }
 
-TEST(JSONSchema_evaluator_2019_09, additionalProperties_3_fast) {
+TEST(JSONSchema_evaluator_2019_09, additionalProperties_3) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalProperties": {
+      "type": "integer"
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"bar\": \"baz\", \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, LoopPropertiesType, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_POST_FAILURE(0, LoopPropertiesType, "/additionalProperties",
+                              "#/additionalProperties", "");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0, "The object properties were expected to be of type integer");
+}
+
+TEST(JSONSchema_evaluator_2019_09, additionalProperties_3_exhaustive) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -643,7 +650,7 @@ TEST(JSONSchema_evaluator_2019_09, additionalProperties_3_fast) {
       sourcemeta::jsontoolkit::parse("{ \"bar\": \"baz\", \"foo\": 1 }")};
 
   if (FIRST_PROPERTY_IS(instance, "foo")) {
-    EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 4);
+    EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(schema, instance, 4);
 
     EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
                        "#/additionalProperties", "");
@@ -677,7 +684,7 @@ TEST(JSONSchema_evaluator_2019_09, additionalProperties_3_fast) {
                                  "adjacent object keywords were "
                                  "expected to validate against this subschema");
   } else {
-    EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 2);
+    EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(schema, instance, 2);
 
     EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
                        "#/additionalProperties", "");
@@ -715,7 +722,74 @@ TEST(JSONSchema_evaluator_2019_09, additionalProperties_4) {
   const sourcemeta::jsontoolkit::JSON instance{sourcemeta::jsontoolkit::parse(
       "{ \"foo\": true, \"bar\": 2, \"baz\": \"qux\" }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 9);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
+                     "#/patternProperties", "");
+  EVALUATE_TRACE_PRE(1, AssertionType, "/patternProperties/^bar$/type",
+                     // Note that the caret needs to be URI escaped
+                     "#/patternProperties/%5Ebar$/type", "/bar");
+
+  EVALUATE_TRACE_PRE(2, AssertionPropertyTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+
+  EVALUATE_TRACE_PRE(3, LoopPropertiesExcept, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/additionalProperties/type",
+                     "#/additionalProperties/type", "/baz");
+
+  // `patternProperties`
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/patternProperties/^bar$/type",
+                              // Note that the caret needs to be URI escaped
+                              "#/patternProperties/%5Ebar$/type", "/bar");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalWhenType, "/patternProperties",
+                              "#/patternProperties", "");
+
+  // `properties`
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionPropertyTypeStrict,
+                              "/properties/foo/type", "#/properties/foo/type",
+                              "/foo");
+
+  // `additionalProperties`
+  EVALUATE_TRACE_POST_SUCCESS(3, AssertionTypeStrict,
+                              "/additionalProperties/type",
+                              "#/additionalProperties/type", "/baz");
+  EVALUATE_TRACE_POST_SUCCESS(4, LoopPropertiesExcept, "/additionalProperties",
+                              "#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, additionalProperties_4_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "properties": {
+      "foo": { "type": "boolean" }
+    },
+    "patternProperties": {
+      "^bar$": { "type": "integer" }
+    },
+    "additionalProperties": { "type": "string" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{sourcemeta::jsontoolkit::parse(
+      "{ \"foo\": true, \"bar\": 2, \"baz\": \"qux\" }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 9);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
                      "#/patternProperties", "");
@@ -1712,7 +1786,47 @@ TEST(JSONSchema_evaluator_2019_09, items_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/2");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/2");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopItems, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, items_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": {
+      "type": "string"
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
@@ -1782,6 +1896,41 @@ TEST(JSONSchema_evaluator_2019_09, items_3) {
                                "validate against the given subschema");
 }
 
+TEST(JSONSchema_evaluator_2019_09, items_3_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": {
+      "type": "string"
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", 5, \"baz\" ]")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/1");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/0");
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/1");
+  EVALUATE_TRACE_POST_FAILURE(2, LoopItems, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The value was expected to be of type string but it was of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
+}
+
 TEST(JSONSchema_evaluator_2019_09, items_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -1822,7 +1971,33 @@ TEST(JSONSchema_evaluator_2019_09, items_6) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5 ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalWhenType, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
+}
+
+TEST(JSONSchema_evaluator_2019_09, items_6_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "integer" }, { "type": "boolean" } ]
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 5 ]")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
@@ -1854,7 +2029,39 @@ TEST(JSONSchema_evaluator_2019_09, items_7) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5, true, \"extra\" ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
+                     "/1");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/1/type",
+                              "#/items/1/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
+}
+
+TEST(JSONSchema_evaluator_2019_09, items_7_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "integer" }, { "type": "boolean" } ]
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 5, true, \"extra\" ]")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
@@ -1916,7 +2123,40 @@ TEST(JSONSchema_evaluator_2019_09, items_8) {
       "the corresponding subschemas");
 }
 
-TEST(JSONSchema_evaluator_2019_09, items_9) {
+TEST(JSONSchema_evaluator_2019_09, items_8_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "integer" }, { "type": "boolean" } ]
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ 5, 1, \"extra\" ]")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/1/type", "#/items/1/type",
+                     "/1");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_FAILURE(1, AssertionTypeStrict, "/items/1/type",
+                              "#/items/1/type", "/1");
+  EVALUATE_TRACE_POST_FAILURE(2, LogicalWhenType, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type boolean "
+                               "but it was of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
+}
+
+TEST(JSONSchema_evaluator_2019_09, items_9_exhaustive) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -1925,7 +2165,7 @@ TEST(JSONSchema_evaluator_2019_09, items_9) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ 5, true ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionType, "/items/0/type", "#/items/0/type", "/0");
@@ -1978,7 +2218,46 @@ TEST(JSONSchema_evaluator_2019_09, additionalItems_2) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/1");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/2");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/2");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopItems, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, additionalItems_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalItems": { "type": "integer" },
+    "items": { "type": "string" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\", \"baz\" ]")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
@@ -2026,7 +2305,43 @@ TEST(JSONSchema_evaluator_2019_09, additionalItems_3) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ true, 5 ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionType, "/items/1/type", "#/items/1/type", "/1");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/items/1/type",
+                              "#/items/1/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
+}
+
+TEST(JSONSchema_evaluator_2019_09, additionalItems_3_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalItems": { "type": "string" },
+    "items": [
+      { "type": "boolean" },
+      { "type": "integer" }
+    ]
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ true, 5 ]")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
@@ -2068,7 +2383,62 @@ TEST(JSONSchema_evaluator_2019_09, additionalItems_4) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ true, 5, \"foo\", \"bar\" ]")};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 8);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 6);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionType, "/items/1/type", "#/items/1/type", "/1");
+  EVALUATE_TRACE_PRE(3, LoopItems, "/additionalItems", "#/additionalItems", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/additionalItems/type",
+                     "#/additionalItems/type", "/2");
+  EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/additionalItems/type",
+                     "#/additionalItems/type", "/3");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/items/1/type",
+                              "#/items/1/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, AssertionTypeStrict, "/additionalItems/type",
+                              "#/additionalItems/type", "/2");
+  EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict, "/additionalItems/type",
+                              "#/additionalItems/type", "/3");
+  EVALUATE_TRACE_POST_SUCCESS(5, LoopItems, "/additionalItems",
+                              "#/additionalItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "Every item in the array value except for the first 2 was expected to "
+      "validate against the given subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, additionalItems_4_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalItems": { "type": "string" },
+    "items": [
+      { "type": "boolean" },
+      { "type": "integer" }
+    ]
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ true, 5, \"foo\", \"bar\" ]")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 8);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
@@ -2136,7 +2506,57 @@ TEST(JSONSchema_evaluator_2019_09, additionalItems_5) {
 
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ true, 5, 6, \"bar\" ]")};
-  EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 6);
+  EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE(2, AssertionType, "/items/1/type", "#/items/1/type", "/1");
+  EVALUATE_TRACE_PRE(3, LoopItems, "/additionalItems", "#/additionalItems", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/additionalItems/type",
+                     "#/additionalItems/type", "/2");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/items/1/type",
+                              "#/items/1/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_FAILURE(3, AssertionTypeStrict, "/additionalItems/type",
+                              "#/additionalItems/type", "/2");
+  EVALUATE_TRACE_POST_FAILURE(4, LoopItems, "/additionalItems",
+                              "#/additionalItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The value was expected to be of type string but it was of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "Every item in the array value except for the first 2 was expected to "
+      "validate against the given subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, additionalItems_5_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalItems": { "type": "string" },
+    "items": [
+      { "type": "boolean" },
+      { "type": "integer" }
+    ]
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ true, 5, 6, \"bar\" ]")};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(schema, instance, 6);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
@@ -2238,6 +2658,65 @@ TEST(JSONSchema_evaluator_2019_09, unevaluatedProperties_1) {
       "expected to validate against this subschema");
 }
 
+TEST(JSONSchema_evaluator_2019_09, unevaluatedProperties_1_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedProperties": { "type": "boolean" },
+    "properties": {
+      "foo": { "type": "string" }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"baz\", \"bar\": true }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 6);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(3, LoopPropertiesNoAnnotation, "/unevaluatedProperties",
+                     "#/unevaluatedProperties", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/unevaluatedProperties/type",
+                     "#/unevaluatedProperties/type", "/bar");
+  EVALUATE_TRACE_PRE_ANNOTATION(5, "/unevaluatedProperties",
+                                "#/unevaluatedProperties", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
+                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, AssertionTypeStrict,
+                              "/unevaluatedProperties/type",
+                              "#/unevaluatedProperties/type", "/bar");
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/unevaluatedProperties",
+                                 "#/unevaluatedProperties", "", "bar");
+  EVALUATE_TRACE_POST_SUCCESS(5, LoopPropertiesNoAnnotation,
+                              "/unevaluatedProperties",
+                              "#/unevaluatedProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the single defined property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object property \"bar\" successfully validated against the "
+      "subschema for unevaluated properties");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object properties not covered by other object keywords were "
+      "expected to validate against this subschema");
+}
+
 TEST(JSONSchema_evaluator_2019_09, unevaluatedProperties_2) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -2256,6 +2735,79 @@ TEST(JSONSchema_evaluator_2019_09, unevaluatedProperties_2) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": \"baz\", \"bar\": true }")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 7);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/properties",
+                     "#/allOf/0/properties", "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/properties/foo/type",
+                     "#/allOf/0/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/properties",
+                                "#/allOf/0/properties", "");
+  EVALUATE_TRACE_PRE(4, LoopPropertiesNoAnnotation, "/unevaluatedProperties",
+                     "#/unevaluatedProperties", "");
+  EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedProperties/type",
+                     "#/unevaluatedProperties/type", "/bar");
+  EVALUATE_TRACE_PRE_ANNOTATION(6, "/unevaluatedProperties",
+                                "#/unevaluatedProperties", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
+                              "/allOf/0/properties/foo/type",
+                              "#/allOf/0/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/allOf/0/properties",
+                                 "#/allOf/0/properties", "", "foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/allOf/0/properties",
+                              "#/allOf/0/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict,
+                              "/unevaluatedProperties/type",
+                              "#/unevaluatedProperties/type", "/bar");
+  EVALUATE_TRACE_POST_ANNOTATION(5, "/unevaluatedProperties",
+                                 "#/unevaluatedProperties", "", "bar");
+  EVALUATE_TRACE_POST_SUCCESS(6, LoopPropertiesNoAnnotation,
+                              "/unevaluatedProperties",
+                              "#/unevaluatedProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the single defined property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object value was expected to validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object property \"bar\" successfully validated against the "
+      "subschema for unevaluated properties");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 6,
+      "The object properties not covered by other object keywords were "
+      "expected to validate against this subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, unevaluatedProperties_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedProperties": { "type": "boolean" },
+    "allOf": [
+      {
+        "properties": {
+          "foo": { "type": "string" }
+        }
+      }
+    ]
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"baz\", \"bar\": true }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 7);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
   EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/properties",
@@ -2377,6 +2929,72 @@ TEST(JSONSchema_evaluator_2019_09, unevaluatedProperties_3) {
       "expected to validate against this subschema");
 }
 
+TEST(JSONSchema_evaluator_2019_09, unevaluatedProperties_3_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedProperties": { "type": "boolean" },
+    "allOf": [
+      {
+        "properties": {
+          "foo": { "type": "string" }
+        }
+      }
+    ]
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"baz\", \"bar\": 1 }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(schema, instance, 6);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_PRE(1, LogicalAnd, "/allOf/0/properties",
+                     "#/allOf/0/properties", "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/properties/foo/type",
+                     "#/allOf/0/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/properties",
+                                "#/allOf/0/properties", "");
+  EVALUATE_TRACE_PRE(4, LoopPropertiesNoAnnotation, "/unevaluatedProperties",
+                     "#/unevaluatedProperties", "");
+  EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedProperties/type",
+                     "#/unevaluatedProperties/type", "/bar");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
+                              "/allOf/0/properties/foo/type",
+                              "#/allOf/0/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/allOf/0/properties",
+                                 "#/allOf/0/properties", "", "foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/allOf/0/properties",
+                              "#/allOf/0/properties", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_POST_FAILURE(4, AssertionTypeStrict,
+                              "/unevaluatedProperties/type",
+                              "#/unevaluatedProperties/type", "/bar");
+  EVALUATE_TRACE_POST_FAILURE(5, LoopPropertiesNoAnnotation,
+                              "/unevaluatedProperties",
+                              "#/unevaluatedProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the single defined property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object value was expected to validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The value was expected to be of type boolean "
+                               "but it was of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The object properties not covered by other object keywords were "
+      "expected to validate against this subschema");
+}
+
 TEST(JSONSchema_evaluator_2019_09, unevaluatedProperties_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -2391,6 +3009,56 @@ TEST(JSONSchema_evaluator_2019_09, unevaluatedProperties_4) {
       sourcemeta::jsontoolkit::parse("{ \"foo\": \"baz\", \"bar\": true }")};
 
   EVALUATE_WITH_TRACE_FAST_FAILURE(schema, instance, 5);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
+                     "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/properties", "#/properties", "");
+  EVALUATE_TRACE_PRE(3, LoopPropertiesNoAnnotation, "/unevaluatedProperties",
+                     "#/unevaluatedProperties", "");
+  EVALUATE_TRACE_PRE(4, AssertionFail, "/unevaluatedProperties",
+                     "#/unevaluatedProperties", "/bar");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/properties/foo/type",
+                              "#/properties/foo/type", "/foo");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/properties", "#/properties", "", "foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalAnd, "/properties", "#/properties", "");
+  EVALUATE_TRACE_POST_FAILURE(3, AssertionFail, "/unevaluatedProperties",
+                              "#/unevaluatedProperties", "/bar");
+  EVALUATE_TRACE_POST_FAILURE(4, LoopPropertiesNoAnnotation,
+                              "/unevaluatedProperties",
+                              "#/unevaluatedProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object property \"foo\" successfully "
+                               "validated against its property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object value was expected to validate "
+                               "against the single defined property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The object value was not expected to define the property \"bar\"");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "The object value was not expected to define unevaluated properties");
+}
+
+TEST(JSONSchema_evaluator_2019_09, unevaluatedProperties_4_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedProperties": false,
+    "properties": {
+      "foo": { "type": "string" }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": \"baz\", \"bar\": true }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/properties", "#/properties", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/properties/foo/type",
@@ -2493,6 +3161,49 @@ TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_2) {
       "expected to validate against this subschema");
 }
 
+TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ true, false ]")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 4);
+  EVALUATE_TRACE_PRE(0, LoopItemsUnevaluated, "/unevaluatedItems",
+                     "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/unevaluatedItems/type",
+                     "#/unevaluatedItems/type", "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/unevaluatedItems", "#/unevaluatedItems",
+                                "");
+  EVALUATE_TRACE_PRE(3, AssertionTypeStrict, "/unevaluatedItems/type",
+                     "#/unevaluatedItems/type", "/1");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/unevaluatedItems/type",
+                              "#/unevaluatedItems/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/unevaluatedItems", "#/unevaluatedItems",
+                                 "", true);
+  EVALUATE_TRACE_POST_SUCCESS(2, AssertionTypeStrict, "/unevaluatedItems/type",
+                              "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopItemsUnevaluated, "/unevaluatedItems",
+                              "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "At least one item of the array value successfully validated against the "
+      "subschema for unevaluated items");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
+}
+
 TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_3) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -2527,6 +3238,40 @@ TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_3) {
       "given subschema");
 }
 
+TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_3_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": { "type": "string" },
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\" ]")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/type", "#/items/type",
+                     "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/type",
+                              "#/items/type", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, LoopItems, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_ANNOTATION(2, "/items", "#/items", "", true);
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
+}
+
 TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_4) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -2539,6 +3284,49 @@ TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_4) {
       sourcemeta::jsontoolkit::parse("[ \"foo\" ]")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(3, LoopItemsUnevaluated, "/unevaluatedItems",
+                     "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/items", "#/items", "", 0);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LoopItemsUnevaluated, "/unevaluatedItems",
+                              "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first 2 items of the array value were expected to validate against "
+      "the corresponding subschemas");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_4_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "string" }, { "type": "string" } ],
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\" ]")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
@@ -2605,6 +3393,41 @@ TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_5) {
       "corresponding subschemas");
 }
 
+TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_5_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "string" } ],
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\" ]")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/items", "#/items", "", true);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "At least one item of the array value successfully validated against the "
+      "given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first item of the array value was expected to validate against the "
+      "corresponding subschemas");
+}
+
 TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_6) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -2617,6 +3440,63 @@ TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_6) {
       sourcemeta::jsontoolkit::parse("[ \"foo\", true ]")};
 
   EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 6);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
+                     "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION(2, "/items", "#/items", "");
+  EVALUATE_TRACE_PRE(3, LoopItemsUnevaluated, "/unevaluatedItems",
+                     "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE(4, AssertionTypeStrict, "/unevaluatedItems/type",
+                     "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_PRE_ANNOTATION(5, "/unevaluatedItems", "#/unevaluatedItems",
+                                "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/items/0/type",
+                              "#/items/0/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/items", "#/items", "", 0);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/items", "#/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, AssertionTypeStrict, "/unevaluatedItems/type",
+                              "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_POST_ANNOTATION(4, "/unevaluatedItems", "#/unevaluatedItems",
+                                 "", true);
+  EVALUATE_TRACE_POST_SUCCESS(5, LoopItemsUnevaluated, "/unevaluatedItems",
+                              "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first item of the array value was expected to validate against the "
+      "corresponding subschemas");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 4,
+      "At least one item of the array value successfully validated against the "
+      "subschema for unevaluated items");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_6_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": [ { "type": "string" } ],
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", true ]")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 6);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/items", "#/items", "");
   EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/items/0/type", "#/items/0/type",
@@ -2728,6 +3608,72 @@ TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_7) {
       "expected to validate against this subschema");
 }
 
+TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_7_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "allOf": [
+      { "items": [ { "type": "string" } ] }
+    ],
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", true ]")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 7);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_PRE(1, LogicalWhenType, "/allOf/0/items", "#/allOf/0/items",
+                     "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/items/0/type",
+                     "#/allOf/0/items/0/type", "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/items", "#/allOf/0/items", "");
+  EVALUATE_TRACE_PRE(4, LoopItemsUnevaluated, "/unevaluatedItems",
+                     "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedItems/type",
+                     "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_PRE_ANNOTATION(6, "/unevaluatedItems", "#/unevaluatedItems",
+                                "");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/items/0/type",
+                              "#/allOf/0/items/0/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/allOf/0/items", "#/allOf/0/items", "", 0);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/allOf/0/items",
+                              "#/allOf/0/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_POST_SUCCESS(4, AssertionTypeStrict, "/unevaluatedItems/type",
+                              "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_POST_ANNOTATION(5, "/unevaluatedItems", "#/unevaluatedItems",
+                                 "", true);
+  EVALUATE_TRACE_POST_SUCCESS(6, LoopItemsUnevaluated, "/unevaluatedItems",
+                              "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first item of the array value was expected to validate against the "
+      "corresponding subschemas");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The array value was expected to validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The value was expected to be of type boolean");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "At least one item of the array value successfully validated against the "
+      "subschema for unevaluated items");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 6,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
+}
+
 TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_8) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -2787,6 +3733,65 @@ TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_8) {
       "expected to validate against this subschema");
 }
 
+TEST(JSONSchema_evaluator_2019_09, unevaluatedItems_8_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "allOf": [
+      { "items": [ { "type": "string" } ] }
+    ],
+    "unevaluatedItems": { "type": "boolean" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ \"foo\", 1 ]")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_FAILURE(schema, instance, 6);
+
+  EVALUATE_TRACE_PRE(0, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_PRE(1, LogicalWhenType, "/allOf/0/items", "#/allOf/0/items",
+                     "");
+  EVALUATE_TRACE_PRE(2, AssertionTypeStrict, "/allOf/0/items/0/type",
+                     "#/allOf/0/items/0/type", "/0");
+  EVALUATE_TRACE_PRE_ANNOTATION(3, "/allOf/0/items", "#/allOf/0/items", "");
+  EVALUATE_TRACE_PRE(4, LoopItemsUnevaluated, "/unevaluatedItems",
+                     "#/unevaluatedItems", "");
+  EVALUATE_TRACE_PRE(5, AssertionTypeStrict, "/unevaluatedItems/type",
+                     "#/unevaluatedItems/type", "/1");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/allOf/0/items/0/type",
+                              "#/allOf/0/items/0/type", "/0");
+  EVALUATE_TRACE_POST_ANNOTATION(1, "/allOf/0/items", "#/allOf/0/items", "", 0);
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/allOf/0/items",
+                              "#/allOf/0/items", "");
+  EVALUATE_TRACE_POST_SUCCESS(3, LogicalAnd, "/allOf", "#/allOf", "");
+  EVALUATE_TRACE_POST_FAILURE(4, AssertionTypeStrict, "/unevaluatedItems/type",
+                              "#/unevaluatedItems/type", "/1");
+  EVALUATE_TRACE_POST_FAILURE(5, LoopItemsUnevaluated, "/unevaluatedItems",
+                              "#/unevaluatedItems", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value successfully validated against the "
+      "first positional subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The first item of the array value was expected to validate against the "
+      "corresponding subschemas");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 3,
+      "The array value was expected to validate against the given subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 4,
+                               "The value was expected to be of type boolean "
+                               "but it was of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 5,
+      "The array items not evaluated by the keyword \"items\", if any, were "
+      "expected to validate against this subschema");
+}
+
 TEST(JSONSchema_evaluator_2019_09, recursiveRef_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -2801,7 +3806,46 @@ TEST(JSONSchema_evaluator_2019_09, recursiveRef_1) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+                     "https://example.com/schema#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(
+      1, ControlDynamicAnchorJump, "/additionalProperties/$recursiveRef",
+      "https://example.com/schema#/additionalProperties/$recursiveRef", "/foo");
+
+  EVALUATE_TRACE_POST_SUCCESS(
+      0, ControlDynamicAnchorJump, "/additionalProperties/$recursiveRef",
+      "https://example.com/schema#/additionalProperties/$recursiveRef", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(
+      1, LoopProperties, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, recursiveRef_1_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$recursiveAnchor": true,
+    "additionalProperties": {
+      "$recursiveRef": "#"
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
                      "https://example.com/schema#/additionalProperties", "");
@@ -2851,7 +3895,56 @@ TEST(JSONSchema_evaluator_2019_09, recursiveRef_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+                     "https://example.com/schema#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(
+      1, ControlDynamicAnchorJump, "/additionalProperties/$recursiveRef",
+      "https://example.com/schema#/additionalProperties/$recursiveRef", "/foo");
+  EVALUATE_TRACE_PRE(2, AssertionGreaterEqual,
+                     "/additionalProperties/$recursiveRef/minimum",
+                     "https://example.com/schema#/minimum", "/foo");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreaterEqual,
+                              "/additionalProperties/$recursiveRef/minimum",
+                              "https://example.com/schema#/minimum", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(
+      1, ControlDynamicAnchorJump, "/additionalProperties/$recursiveRef",
+      "https://example.com/schema#/additionalProperties/$recursiveRef", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(
+      2, LoopProperties, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The integer value 1 was expected to be greater "
+                               "than or equal to the integer 1");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, recursiveRef_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$recursiveAnchor": true,
+    "minimum": 1,
+    "additionalProperties": {
+      "$recursiveRef": "#"
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
                      "https://example.com/schema#/additionalProperties", "");
@@ -2913,7 +4006,48 @@ TEST(JSONSchema_evaluator_2019_09, recursiveRef_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+                     "https://example.com/schema#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(1, AssertionGreaterEqual, "/additionalProperties/minimum",
+                     "https://example.com/nested#/minimum", "/foo");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionGreaterEqual,
+                              "/additionalProperties/minimum",
+                              "https://example.com/nested#/minimum", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(
+      1, LoopProperties, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The integer value 1 was expected to be greater "
+                               "than or equal to the integer 1");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, recursiveRef_3_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalProperties": {
+      "$id": "nested",
+      "$recursiveAnchor": true,
+      "minimum": 1,
+      "additionalProperties": {
+        "$recursiveRef": "#"
+      }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
                      "https://example.com/schema#/additionalProperties", "");
@@ -2964,7 +4098,75 @@ TEST(JSONSchema_evaluator_2019_09, recursiveRef_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"bar\": 1 } }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 6);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
+
+  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+                     "https://example.com/schema#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(
+      1, LoopProperties, "/additionalProperties/additionalProperties",
+      "https://example.com/nested#/additionalProperties", "/foo");
+  EVALUATE_TRACE_PRE(
+      2, ControlDynamicAnchorJump,
+      "/additionalProperties/additionalProperties/$recursiveRef",
+      "https://example.com/nested#/additionalProperties/$recursiveRef",
+      "/foo/bar");
+  EVALUATE_TRACE_PRE(
+      3, AssertionGreaterEqual,
+      "/additionalProperties/additionalProperties/$recursiveRef/minimum",
+      "https://example.com/nested#/minimum", "/foo/bar");
+
+  EVALUATE_TRACE_POST_SUCCESS(
+      0, AssertionGreaterEqual,
+      "/additionalProperties/additionalProperties/$recursiveRef/minimum",
+      "https://example.com/nested#/minimum", "/foo/bar");
+  EVALUATE_TRACE_POST_SUCCESS(
+      1, ControlDynamicAnchorJump,
+      "/additionalProperties/additionalProperties/$recursiveRef",
+      "https://example.com/nested#/additionalProperties/$recursiveRef",
+      "/foo/bar");
+  EVALUATE_TRACE_POST_SUCCESS(
+      2, LoopProperties, "/additionalProperties/additionalProperties",
+      "https://example.com/nested#/additionalProperties", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(
+      3, LoopProperties, "/additionalProperties",
+      "https://example.com/schema#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The integer value 1 was expected to be greater "
+                               "than or equal to the integer 1");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 3,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, recursiveRef_4_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalProperties": {
+      "$id": "nested",
+      "$recursiveAnchor": true,
+      "minimum": 1,
+      "additionalProperties": {
+        "$recursiveRef": "#"
+      }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": { \"bar\": 1 } }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 6);
 
   EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
                      "https://example.com/schema#/additionalProperties", "");
@@ -3051,7 +4253,55 @@ TEST(JSONSchema_evaluator_2019_09, recursiveRef_5) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("[ [ 1 ] ]")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LoopItems, "/items",
+                     "https://example.com/schema#/items", "");
+  EVALUATE_TRACE_PRE(1, LogicalWhenType, "/items/items",
+                     "https://example.com/nested#/items", "/0");
+  EVALUATE_TRACE_PRE(
+      2, ControlDynamicAnchorJump, "/items/items/0/$recursiveRef",
+      "https://example.com/nested#/items/0/$recursiveRef", "/0/0");
+
+  EVALUATE_TRACE_POST_SUCCESS(
+      0, ControlDynamicAnchorJump, "/items/items/0/$recursiveRef",
+      "https://example.com/nested#/items/0/$recursiveRef", "/0/0");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalWhenType, "/items/items",
+                              "https://example.com/nested#/items", "/0");
+  EVALUATE_TRACE_POST_SUCCESS(2, LoopItems, "/items",
+                              "https://example.com/schema#/items", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The first item of the array value was expected to validate against the "
+      "corresponding subschemas");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 2,
+                               "Every item in the array value was expected to "
+                               "validate against the given subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, recursiveRef_5_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "items": {
+      "$id": "nested",
+      "$recursiveAnchor": true,
+      "items": [
+        { "$recursiveRef": "#" }
+      ]
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("[ [ 1 ] ]")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LoopItems, "/items",
                      "https://example.com/schema#/items", "");
@@ -3111,7 +4361,44 @@ TEST(JSONSchema_evaluator_2019_09, recursiveRef_6) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(1, ControlDynamicAnchorJump,
+                     "/additionalProperties/$recursiveRef",
+                     "#/additionalProperties/$recursiveRef", "/foo");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, ControlDynamicAnchorJump,
+                              "/additionalProperties/$recursiveRef",
+                              "#/additionalProperties/$recursiveRef", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(1, LoopProperties, "/additionalProperties",
+                              "#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 0,
+      "The integer value was expected to validate against the first subschema "
+      "in scope that declared a recursive anchor");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The object properties not covered by other "
+                               "adjacent object keywords were "
+                               "expected to validate against this subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, recursiveRef_6_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$recursiveAnchor": true,
+    "additionalProperties": {
+      "$recursiveRef": "#"
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LoopProperties, "/additionalProperties",
                      "#/additionalProperties", "");
@@ -3184,7 +4471,22 @@ TEST(JSONSchema_evaluator_2019_09, patternProperties_1) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 2);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, patternProperties_1_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "patternProperties": {
+      "^f": true
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 2);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
                      "#/patternProperties", "");
@@ -3218,7 +4520,41 @@ TEST(JSONSchema_evaluator_2019_09, patternProperties_2) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
+                     "#/patternProperties", "");
+  EVALUATE_TRACE_PRE(1, AssertionType, "/patternProperties/^f/type",
+                     // Note that the caret needs to be URI escaped
+                     "#/patternProperties/%5Ef/type", "/foo");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/patternProperties/^f/type",
+                              // Note that the caret needs to be URI escaped
+                              "#/patternProperties/%5Ef/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(1, LogicalWhenType, "/patternProperties",
+                              "#/patternProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, patternProperties_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "patternProperties": {
+      "^f": { "type": "integer" }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
                      "#/patternProperties", "");
@@ -3261,7 +4597,48 @@ TEST(JSONSchema_evaluator_2019_09, patternProperties_3) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 4);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
+                     "#/patternProperties", "");
+  EVALUATE_TRACE_PRE(1, AssertionType, "/patternProperties/^f/type",
+                     // Note that the caret needs to be URI escaped
+                     "#/patternProperties/%5Ef/type", "/foo");
+  EVALUATE_TRACE_PRE(2, AssertionType, "/patternProperties/o$/type",
+                     "#/patternProperties/o$/type", "/foo");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionType, "/patternProperties/^f/type",
+                              // Note that the caret needs to be URI escaped
+                              "#/patternProperties/%5Ef/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(1, AssertionType, "/patternProperties/o$/type",
+                              "#/patternProperties/o$/type", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/patternProperties",
+                              "#/patternProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 1,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object value was expected to validate against the 2 defined pattern "
+      "properties subschemas");
+}
+
+TEST(JSONSchema_evaluator_2019_09, patternProperties_3_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "patternProperties": {
+      "o$": { "type": "integer" },
+      "^f": { "type": "integer" }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"bar\": 2, \"foo\": 1 }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 4);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
                      "#/patternProperties", "");
@@ -3313,7 +4690,55 @@ TEST(JSONSchema_evaluator_2019_09, patternProperties_4) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"foo\": { \"bar\": 2 } }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+
+  EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
+                     "#/patternProperties", "");
+  EVALUATE_TRACE_PRE(1, LogicalWhenType,
+                     "/patternProperties/^f/patternProperties",
+                     "#/patternProperties/%5Ef/patternProperties", "/foo");
+  EVALUATE_TRACE_PRE(
+      2, AssertionType, "/patternProperties/^f/patternProperties/^b/type",
+      "#/patternProperties/%5Ef/patternProperties/%5Eb/type", "/foo/bar");
+
+  EVALUATE_TRACE_POST_SUCCESS(
+      0, AssertionType, "/patternProperties/^f/patternProperties/^b/type",
+      "#/patternProperties/%5Ef/patternProperties/%5Eb/type", "/foo/bar");
+  EVALUATE_TRACE_POST_SUCCESS(
+      1, LogicalWhenType, "/patternProperties/^f/patternProperties",
+      "#/patternProperties/%5Ef/patternProperties", "/foo");
+  EVALUATE_TRACE_POST_SUCCESS(2, LogicalWhenType, "/patternProperties",
+                              "#/patternProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type integer");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 2,
+      "The object value was expected to validate against the single defined "
+      "pattern property subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, patternProperties_4_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "patternProperties": {
+      "^f": {
+        "patternProperties": {
+          "^b": { "type": "integer" }
+        }
+      }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"foo\": { \"bar\": 2 } }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
                      "#/patternProperties", "");
@@ -3374,7 +4799,39 @@ TEST(JSONSchema_evaluator_2019_09, patternProperties_5) {
   const sourcemeta::jsontoolkit::JSON instance{
       sourcemeta::jsontoolkit::parse("{ \"@foo\": 1, \"bar\": \"baz\" }")};
 
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 5);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 2);
+
+  EVALUATE_TRACE_PRE(0, LoopPropertiesExcept, "/additionalProperties",
+                     "#/additionalProperties", "");
+  EVALUATE_TRACE_PRE(1, AssertionTypeStrict, "/additionalProperties/type",
+                     "#/additionalProperties/type", "/bar");
+
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict,
+                              "/additionalProperties/type",
+                              "#/additionalProperties/type", "/bar");
+  EVALUATE_TRACE_POST_SUCCESS(1, LoopPropertiesExcept, "/additionalProperties",
+                              "#/additionalProperties", "");
+
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+  EVALUATE_TRACE_POST_DESCRIBE(
+      instance, 1,
+      "The object properties not covered by other adjacent object keywords "
+      "were expected to validate against this subschema");
+}
+
+TEST(JSONSchema_evaluator_2019_09, patternProperties_5_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "patternProperties": { "^@": true },
+    "additionalProperties": { "type": "string" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{
+      sourcemeta::jsontoolkit::parse("{ \"@foo\": 1, \"bar\": \"baz\" }")};
+
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 5);
 
   EVALUATE_TRACE_PRE(0, LogicalWhenType, "/patternProperties",
                      "#/patternProperties", "");

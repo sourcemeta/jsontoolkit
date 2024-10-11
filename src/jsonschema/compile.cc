@@ -112,15 +112,40 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
       {},
       {}};
 
-  // TODO: Do an actual detection here
   bool uses_unevaluated_properties{false};
   bool uses_unevaluated_items{false};
   if (schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2019-09/vocab/core") ||
       schema_context.vocabularies.contains(
           "https://json-schema.org/draft/2020-12/vocab/core")) {
-    uses_unevaluated_properties = true;
-    uses_unevaluated_items = true;
+    for (const auto &entry : sourcemeta::jsontoolkit::SchemaIterator{
+             result, walker, resolver, default_dialect}) {
+      if (!entry.vocabularies.contains(
+              "https://json-schema.org/draft/2019-09/vocab/applicator") &&
+          !entry.vocabularies.contains(
+              "https://json-schema.org/draft/2020-12/vocab/unevaluated")) {
+        continue;
+      }
+
+      const auto &subschema{
+          sourcemeta::jsontoolkit::get(result, entry.pointer)};
+      if (!subschema.is_object()) {
+        continue;
+      }
+
+      if (!uses_unevaluated_properties &&
+          subschema.defines("unevaluatedProperties") &&
+          sourcemeta::jsontoolkit::is_schema(
+              subschema.at("unevaluatedProperties"))) {
+        uses_unevaluated_properties = true;
+      }
+
+      if (!uses_unevaluated_items && subschema.defines("unevaluatedItems") &&
+          sourcemeta::jsontoolkit::is_schema(
+              subschema.at("unevaluatedItems"))) {
+        uses_unevaluated_items = true;
+      }
+    }
   }
 
   const sourcemeta::jsontoolkit::SchemaCompilerContext context{
