@@ -28,7 +28,6 @@ auto make(const bool report, const SchemaCompilerContext &context,
       schema_context.base.recompose(),
       context.uses_dynamic_scopes,
       report,
-      context.mode != SchemaCompilerMode::FastValidation,
       value};
 }
 
@@ -50,7 +49,6 @@ auto make(const bool report, const SchemaCompilerContext &context,
       schema_context.base.recompose(),
       context.uses_dynamic_scopes,
       report,
-      context.mode != SchemaCompilerMode::FastValidation,
       std::move(value),
       std::move(children)};
 }
@@ -71,7 +69,6 @@ auto unroll(const SchemaCompilerDynamicContext &dynamic_context,
           std::get<Type>(step).schema_resource,
           std::get<Type>(step).dynamic,
           std::get<Type>(step).report,
-          std::get<Type>(step).exhaustive,
           std::get<Type>(step).value};
 }
 
