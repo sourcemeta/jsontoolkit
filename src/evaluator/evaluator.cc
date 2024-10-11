@@ -496,9 +496,8 @@ auto evaluate_step(
       for (const auto &child : logical.children) {
         if (evaluate_step(child, callback, context)) {
           result = true;
-          // This boolean value controls whether we should still evaluate
-          // every disjunction even on fast mode
-          if (!logical.exhaustive && !logical.value) {
+          // This boolean value controls whether we should be exhaustive
+          if (!logical.value) {
             break;
           }
         }

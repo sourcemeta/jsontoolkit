@@ -312,10 +312,10 @@ auto compiler_draft4_applicator_allof(
       std::move(children))};
 }
 
-auto compiler_draft4_applicator_anyof_conditional_exhaustive(
+auto compiler_draft4_applicator_anyof(
     const SchemaCompilerContext &context,
     const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context, const bool exhaustive)
+    const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
   assert(schema_context.schema.at(dynamic_context.keyword).is_array());
   assert(!schema_context.schema.at(dynamic_context.keyword).empty());
@@ -331,18 +331,13 @@ auto compiler_draft4_applicator_anyof_conditional_exhaustive(
                 {static_cast<Pointer::Token::Index>(index)})));
   }
 
+  const auto requires_exhaustive{
+      context.mode == SchemaCompilerMode::Exhaustive ||
+      context.uses_unevaluated_properties || context.uses_unevaluated_items};
+
   return {make<SchemaCompilerLogicalOr>(
       true, context, schema_context, dynamic_context,
-      SchemaCompilerValueBoolean{exhaustive}, std::move(disjunctors))};
-}
-
-auto compiler_draft4_applicator_anyof(
-    const SchemaCompilerContext &context,
-    const SchemaCompilerSchemaContext &schema_context,
-    const SchemaCompilerDynamicContext &dynamic_context)
-    -> SchemaCompilerTemplate {
-  return compiler_draft4_applicator_anyof_conditional_exhaustive(
-      context, schema_context, dynamic_context, false);
+      SchemaCompilerValueBoolean{requires_exhaustive}, std::move(disjunctors))};
 }
 
 auto compiler_draft4_applicator_oneof(
