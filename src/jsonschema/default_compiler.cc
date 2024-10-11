@@ -512,6 +512,10 @@ auto sourcemeta::jsontoolkit::default_schema_compiler(
       return {};
     }
 
+    if (context.mode == SchemaCompilerMode::FastValidation) {
+      return {};
+    }
+
     return internal::compiler_2019_09_core_annotation(context, schema_context,
                                                       dynamic_context);
   }

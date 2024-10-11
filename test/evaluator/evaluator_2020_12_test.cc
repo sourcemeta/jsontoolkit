@@ -14,7 +14,18 @@ TEST(JSONSchema_evaluator_2020_12, unknown_1) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2020_12, unknown_1_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "fooBar": "baz"
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/fooBar", "#/fooBar", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/fooBar", "#/fooBar", "", "baz");
@@ -32,7 +43,18 @@ TEST(JSONSchema_evaluator_2020_12, unknown_2) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2020_12, unknown_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "x-test": 1
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/x-test", "#/x-test", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/x-test", "#/x-test", "", 1);
