@@ -13,10 +13,10 @@ auto EvaluationContext::prepare(const JSON &instance) -> void {
   assert(this->resources_.empty());
   this->instances_.clear();
   this->instances_.emplace_back(instance);
-  this->annotation_blacklist.clear();
-  this->annotations_.clear();
   this->labels.clear();
   this->property_as_instance = false;
+  this->annotation_blacklist.clear();
+  this->annotations_.clear();
 }
 
 auto EvaluationContext::push_without_traverse(
@@ -93,6 +93,14 @@ auto EvaluationContext::pop(const bool dynamic) -> void {
   }
 }
 
+// TODO: At least currently, we only need to mask if a schema
+// makes use of `unevaluatedProperties` or `unevaluatedItems`
+// Detect if a schema does need this so if not, we avoid
+// an unnecessary copy
+auto EvaluationContext::mask() -> void {
+  this->annotation_blacklist.push_back(this->evaluate_path_);
+}
+
 auto EvaluationContext::annotate(const WeakPointer &current_instance_location,
                                  const JSON &value)
     -> std::pair<std::reference_wrapper<const JSON>, bool> {
@@ -102,16 +110,48 @@ auto EvaluationContext::annotate(const WeakPointer &current_instance_location,
   return {*(result.first), result.second};
 }
 
-auto EvaluationContext::defines_annotation(
-    const WeakPointer &expected_instance_location,
-    const WeakPointer &base_evaluate_path,
+auto EvaluationContext::defines_any_annotation(
+    const std::string &expected_keyword) const -> bool {
+  const auto instance_location_result{
+      this->annotations_.find(this->instance_location_)};
+  if (instance_location_result == this->annotations_.end()) {
+    return false;
+  }
+
+  for (const auto &[schema_location, schema_annotations] :
+       instance_location_result->second) {
+    assert(!schema_location.empty());
+    const auto &keyword{schema_location.back()};
+
+    if (keyword.is_property() && expected_keyword == keyword.to_property() &&
+        !schema_annotations.empty() &&
+        schema_location.initial().starts_with(this->evaluate_path_)) {
+      bool blacklisted = false;
+      for (const auto &masked : this->annotation_blacklist) {
+        if (schema_location.starts_with(masked) &&
+            !this->evaluate_path_.starts_with(masked)) {
+          blacklisted = true;
+          break;
+        }
+      }
+
+      if (!blacklisted) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+auto EvaluationContext::defines_sibling_annotation(
     const std::vector<std::string> &keywords, const JSON &value) const -> bool {
   if (keywords.empty()) {
     return false;
   }
 
   const auto instance_location_result{
-      this->annotations_.find(expected_instance_location)};
+      this->annotations_.find(this->instance_location_)};
   if (instance_location_result == this->annotations_.end()) {
     return false;
   }
@@ -125,7 +165,7 @@ auto EvaluationContext::defines_annotation(
         std::find(keywords.cbegin(), keywords.cend(), keyword.to_property()) !=
             keywords.cend() &&
         schema_annotations.contains(value) &&
-        schema_location.initial().starts_with(base_evaluate_path)) {
+        schema_location.initial().starts_with(this->evaluate_path_.initial())) {
       bool blacklisted = false;
       for (const auto &masked : this->annotation_blacklist) {
         if (schema_location.starts_with(masked) &&
@@ -145,15 +185,12 @@ auto EvaluationContext::defines_annotation(
 }
 
 auto EvaluationContext::largest_annotation_index(
-    const WeakPointer &expected_instance_location,
-    const std::vector<std::string> &keywords,
-    const std::uint64_t default_value) const -> std::uint64_t {
+    const std::string &expected_keyword) const -> std::uint64_t {
   // TODO: We should be taking masks into account
-
-  std::uint64_t result{default_value};
+  std::uint64_t result{0};
 
   const auto instance_location_result{
-      this->annotations_.find(expected_instance_location)};
+      this->annotations_.find(this->instance_location_)};
   if (instance_location_result == this->annotations_.end()) {
     return result;
   }
@@ -162,12 +199,7 @@ auto EvaluationContext::largest_annotation_index(
        instance_location_result->second) {
     assert(!schema_location.empty());
     const auto &keyword{schema_location.back()};
-    if (!keyword.is_property()) {
-      continue;
-    }
-
-    if (std::find(keywords.cbegin(), keywords.cend(), keyword.to_property()) ==
-        keywords.cend()) {
+    if (!keyword.is_property() || expected_keyword != keyword.to_property()) {
       continue;
     }
 
@@ -253,14 +285,6 @@ auto EvaluationContext::resolve_string_target()
 auto EvaluationContext::mark(const std::size_t id,
                              const SchemaCompilerTemplate &children) -> void {
   this->labels.try_emplace(id, children);
-}
-
-// TODO: At least currently, we only need to mask if a schema
-// makes use of `unevaluatedProperties` or `unevaluatedItems`
-// Detect if a schema does need this so if not, we avoid
-// an unnecessary copy
-auto EvaluationContext::mask() -> void {
-  this->annotation_blacklist.push_back(this->evaluate_path_);
 }
 
 auto EvaluationContext::jump(const std::size_t id) const noexcept
