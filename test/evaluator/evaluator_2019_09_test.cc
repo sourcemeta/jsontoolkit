@@ -4888,7 +4888,29 @@ TEST(JSONSchema_evaluator_2019_09, definitions_1) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 3);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+
+  EVALUATE_TRACE_PRE(0, AssertionTypeStrict, "/$ref/$ref/type",
+                     "#/definitions/string/type", "");
+  EVALUATE_TRACE_POST_SUCCESS(0, AssertionTypeStrict, "/$ref/$ref/type",
+                              "#/definitions/string/type", "");
+  EVALUATE_TRACE_POST_DESCRIBE(instance, 0,
+                               "The value was expected to be of type string");
+}
+
+TEST(JSONSchema_evaluator_2019_09, definitions_1_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$ref": "#/definitions/middle",
+    "definitions": {
+      "middle": { "$ref": "#/definitions/string" },
+      "string": { "type": "string" }
+    }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 3);
 
   EVALUATE_TRACE_PRE(0, LogicalAnd, "/$ref", "#/$ref", "");
   EVALUATE_TRACE_PRE(1, LogicalAnd, "/$ref/$ref", "#/definitions/middle/$ref",
