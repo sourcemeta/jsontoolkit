@@ -25,9 +25,11 @@ auto make(const bool report, const SchemaCompilerContext &context,
                 {dynamic_context.keyword}),
       dynamic_context.base_instance_location,
       to_uri(schema_context.relative_pointer, schema_context.base).recompose(),
-      schema_context.base.recompose(), context.uses_dynamic_scopes, report,
-      // TODO: Get value from the selected compilation mode
-      false, value};
+      schema_context.base.recompose(),
+      context.uses_dynamic_scopes,
+      report,
+      context.mode != SchemaCompilerMode::FastValidation,
+      value};
 }
 
 // Instantiate an applicator step
@@ -45,9 +47,12 @@ auto make(const bool report, const SchemaCompilerContext &context,
                 {dynamic_context.keyword}),
       dynamic_context.base_instance_location,
       to_uri(schema_context.relative_pointer, schema_context.base).recompose(),
-      schema_context.base.recompose(), context.uses_dynamic_scopes, report,
-      // TODO: Get value from the selected compilation mode
-      false, std::move(value), std::move(children)};
+      schema_context.base.recompose(),
+      context.uses_dynamic_scopes,
+      report,
+      context.mode != SchemaCompilerMode::FastValidation,
+      std::move(value),
+      std::move(children)};
 }
 
 template <typename Type, typename Step>
