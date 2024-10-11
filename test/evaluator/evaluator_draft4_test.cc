@@ -28,6 +28,28 @@ TEST(JSONSchema_evaluator_draft4, unknown_keyword) {
   EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
 }
 
+TEST(JSONSchema_evaluator_draft4, annotation_keyword) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "foo"
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_draft4, annotation_keyword_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "foo"
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo bar"};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 0);
+}
+
 TEST(JSONSchema_evaluator_draft4, type_1) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({

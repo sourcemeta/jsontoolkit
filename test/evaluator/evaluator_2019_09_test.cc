@@ -1222,7 +1222,18 @@ TEST(JSONSchema_evaluator_2019_09, title) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, title_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "title": "My title"
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/title", "#/title", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/title", "#/title", "", "My title");
@@ -1242,7 +1253,21 @@ TEST(JSONSchema_evaluator_2019_09, title_with_core_keywords) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, title_with_core_keywords_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "https://example.com",
+    "$comment": "My comment",
+    "$anchor": "main",
+    "title": "My title"
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/title", "https://example.com#/title", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/title", "https://example.com#/title", "",
@@ -1260,7 +1285,18 @@ TEST(JSONSchema_evaluator_2019_09, description) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, description_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "description": "My description"
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/description", "#/description", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/description", "#/description", "",
@@ -1278,7 +1314,18 @@ TEST(JSONSchema_evaluator_2019_09, default) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, default_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "default": 1
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/default", "#/default", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/default", "#/default", "", 1);
@@ -1295,7 +1342,18 @@ TEST(JSONSchema_evaluator_2019_09, deprecated_1) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, deprecated_1_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "deprecated": true
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/deprecated", "#/deprecated", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/deprecated", "#/deprecated", "", true);
@@ -1312,7 +1370,18 @@ TEST(JSONSchema_evaluator_2019_09, deprecated_2) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, deprecated_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "deprecated": false
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/deprecated", "#/deprecated", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/deprecated", "#/deprecated", "", false);
@@ -1329,7 +1398,18 @@ TEST(JSONSchema_evaluator_2019_09, readOnly_1) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, readOnly_1_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "readOnly": false
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/readOnly", "#/readOnly", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/readOnly", "#/readOnly", "", false);
@@ -1346,7 +1426,18 @@ TEST(JSONSchema_evaluator_2019_09, readOnly_2) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, readOnly_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "readOnly": true
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/readOnly", "#/readOnly", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/readOnly", "#/readOnly", "", true);
@@ -1363,7 +1454,18 @@ TEST(JSONSchema_evaluator_2019_09, writeOnly_1) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, writeOnly_1_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "writeOnly": false
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/writeOnly", "#/writeOnly", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/writeOnly", "#/writeOnly", "", false);
@@ -1380,7 +1482,18 @@ TEST(JSONSchema_evaluator_2019_09, writeOnly_2) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, writeOnly_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "writeOnly": true
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/writeOnly", "#/writeOnly", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/writeOnly", "#/writeOnly", "", true);
@@ -1397,7 +1510,18 @@ TEST(JSONSchema_evaluator_2019_09, examples) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{5};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, examples_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "examples": [ 1, 2, 3 ]
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{5};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   auto examples{sourcemeta::jsontoolkit::JSON::make_array()};
   examples.push_back(sourcemeta::jsontoolkit::JSON{1});
@@ -1419,7 +1543,18 @@ TEST(JSONSchema_evaluator_2019_09, contentEncoding) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, contentEncoding_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "contentEncoding": "base64"
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/contentEncoding", "#/contentEncoding", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/contentEncoding", "#/contentEncoding", "",
@@ -1437,7 +1572,18 @@ TEST(JSONSchema_evaluator_2019_09, contentMediaType) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, contentMediaType_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "contentMediaType": "application/json"
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/contentMediaType", "#/contentMediaType",
                                 "");
@@ -1457,7 +1603,18 @@ TEST(JSONSchema_evaluator_2019_09, contentSchema) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, contentSchema_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "contentSchema": { "type": "string" }
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/contentSchema", "#/contentSchema", "");
 
@@ -1481,7 +1638,18 @@ TEST(JSONSchema_evaluator_2019_09, unknown_1) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, unknown_1_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "fooBar": "baz"
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/fooBar", "#/fooBar", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/fooBar", "#/fooBar", "", "baz");
@@ -1499,7 +1667,18 @@ TEST(JSONSchema_evaluator_2019_09, unknown_2) {
   })JSON")};
 
   const sourcemeta::jsontoolkit::JSON instance{"foo"};
-  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 1);
+  EVALUATE_WITH_TRACE_FAST_SUCCESS(schema, instance, 0);
+}
+
+TEST(JSONSchema_evaluator_2019_09, unknown_2_exhaustive) {
+  const sourcemeta::jsontoolkit::JSON schema{
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "x-test": 1
+  })JSON")};
+
+  const sourcemeta::jsontoolkit::JSON instance{"foo"};
+  EVALUATE_WITH_TRACE_EXHAUSTIVE_SUCCESS(schema, instance, 1);
 
   EVALUATE_TRACE_PRE_ANNOTATION(0, "/x-test", "#/x-test", "");
   EVALUATE_TRACE_POST_ANNOTATION(0, "/x-test", "#/x-test", "", 1);
