@@ -97,12 +97,10 @@ using SchemaCompilerValueStringMap =
 using SchemaCompilerValueIndexedJSON =
     std::pair<SchemaCompilerValueUnsignedInteger, JSON>;
 
-// Note that while we generally avoid sets, in this case, we want
-// hash-based lookups on string collections that might get large.
 /// @ingroup evaluator
 /// Represents a compiler step value that consist of object property filters
 using SchemaCompilerValuePropertyFilter =
-    std::pair<std::vector<SchemaCompilerValueString>,
+    std::pair<SchemaCompilerValueStrings,
               std::vector<SchemaCompilerValueRegex>>;
 
 /// @ingroup evaluator
