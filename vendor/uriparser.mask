@@ -12,3 +12,6 @@ make-distcheck.sh
 README.md
 THANKS
 TODO.txt
+CMakeLists.txt
+liburiparser.pc.in
+cmake
