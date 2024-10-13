@@ -77,11 +77,6 @@ public:
   auto resources() const noexcept -> const std::vector<std::string> &;
   auto mark(const std::size_t id, const SchemaCompilerTemplate &children)
       -> void;
-  // TODO: At least currently, we only need to mask if a schema
-  // makes use of `unevaluatedProperties` or `unevaluatedItems`
-  // Detect if a schema does need this so if not, we avoid
-  // an unnecessary copy
-  auto mask() -> void;
   auto jump(const std::size_t id) const noexcept
       -> const SchemaCompilerTemplate &;
   auto find_dynamic_anchor(const std::string &anchor) const
@@ -91,15 +86,17 @@ public:
   // Annotations
   ///////////////////////////////////////////////
 
+  // TODO: At least currently, we only need to mask if a schema
+  // makes use of `unevaluatedProperties` or `unevaluatedItems`
+  // Detect if a schema does need this so if not, we avoid
+  // an unnecessary copy
+  auto mask() -> void;
   auto annotate(const WeakPointer &current_instance_location, const JSON &value)
       -> std::pair<std::reference_wrapper<const JSON>, bool>;
-  auto defines_annotation(const WeakPointer &expected_instance_location,
-                          const WeakPointer &base_evaluate_path,
-                          const std::vector<std::string> &keywords,
-                          const JSON &value) const -> bool;
-  auto largest_annotation_index(const WeakPointer &expected_instance_location,
-                                const std::vector<std::string> &keywords,
-                                const std::uint64_t default_value) const
+  auto defines_any_annotation(const std::string &keyword) const -> bool;
+  auto defines_sibling_annotation(const std::vector<std::string> &keywords,
+                                  const JSON &value) const -> bool;
+  auto largest_annotation_index(const std::string &keyword) const
       -> std::uint64_t;
 
 public:
@@ -119,14 +116,15 @@ private:
   std::vector<std::pair<std::size_t, std::size_t>> frame_sizes;
   // TODO: Keep hashes of schema resources URI instead for performance reasons
   std::vector<std::string> resources_;
-  std::vector<WeakPointer> annotation_blacklist;
-  // We don't use a pair for holding the two pointers for runtime
-  // efficiency when resolving keywords like `unevaluatedProperties`
-  std::map<WeakPointer, std::map<WeakPointer, std::set<JSON>>> annotations_;
+  // TODO: Try unordered_map
   std::map<std::size_t,
            const std::reference_wrapper<const SchemaCompilerTemplate>>
       labels;
   bool property_as_instance{false};
+
+  // For annotations
+  std::vector<WeakPointer> annotation_blacklist;
+  std::map<WeakPointer, std::map<WeakPointer, std::set<JSON>>> annotations_;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251 4275)
 #endif

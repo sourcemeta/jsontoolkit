@@ -254,7 +254,7 @@ auto compiler_2019_09_applicator_unevaluateditems(
   } else {
     return {make<SchemaCompilerAnnotationLoopItemsUnmarked>(
         true, context, schema_context, dynamic_context,
-        SchemaCompilerValueStrings{"unevaluatedItems"}, std::move(children))};
+        SchemaCompilerValueString{"unevaluatedItems"}, std::move(children))};
   }
 }
 

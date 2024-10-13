@@ -398,8 +398,7 @@ DEFINE_STEP_APPLICATOR(Annotation, LoopPropertiesUnevaluated,
 /// @ingroup evaluator_instructions
 /// @brief Represents a compiler step that loops over array items when the array
 /// is considered unmarked
-DEFINE_STEP_APPLICATOR(Annotation, LoopItemsUnmarked,
-                       SchemaCompilerValueStrings)
+DEFINE_STEP_APPLICATOR(Annotation, LoopItemsUnmarked, SchemaCompilerValueString)
 
 /// @ingroup evaluator_instructions
 /// @brief Represents a compiler step that loops over unevaluated array items

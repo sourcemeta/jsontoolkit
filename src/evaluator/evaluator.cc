@@ -749,10 +749,8 @@ auto evaluate_step(
         // TODO: It might be more efficient to get all the annotations we
         // potentially care about as a set first, and the make the loop
         // check for O(1) containment in that set?
-        if (context.defines_annotation(
-                context.instance_location(),
-                // TODO: Can we avoid doing this expensive operation on a loop?
-                context.evaluate_path().initial(), loop.value,
+        if (context.defines_sibling_annotation(
+                loop.value,
                 // TODO: This conversion implies a string copy
                 JSON{entry.first})) {
           continue;
@@ -778,9 +776,7 @@ auto evaluate_step(
     case IS_STEP(SchemaCompilerAnnotationLoopItemsUnmarked): {
       EVALUATE_BEGIN(loop, SchemaCompilerAnnotationLoopItemsUnmarked,
                      target.is_array() &&
-                         !context.defines_annotation(
-                             context.instance_location(),
-                             context.evaluate_path(), loop.value, JSON{true}));
+                         !context.defines_any_annotation(loop.value));
       // Otherwise you shouldn't be using this step?
       assert(!loop.value.empty());
       const auto &array{target.as_array()};
@@ -808,9 +804,7 @@ auto evaluate_step(
     case IS_STEP(SchemaCompilerAnnotationLoopItemsUnevaluated): {
       // TODO: This precondition is very expensive due to pointer manipulation
       EVALUATE_BEGIN(loop, SchemaCompilerAnnotationLoopItemsUnevaluated,
-                     target.is_array() && !context.defines_annotation(
-                                              context.instance_location(),
-                                              context.evaluate_path().initial(),
+                     target.is_array() && !context.defines_sibling_annotation(
                                               loop.value.mask, JSON{true}));
       const auto &array{target.as_array()};
       result = true;
@@ -818,8 +812,8 @@ auto evaluate_step(
 
       // Determine the proper start based on integer annotations collected for
       // the current instance location by the keyword requested by the user.
-      const std::uint64_t start{context.largest_annotation_index(
-          context.instance_location(), {loop.value.index}, 0)};
+      const std::uint64_t start{
+          context.largest_annotation_index(loop.value.index)};
 
       // We need this check, as advancing an iterator past its bounds
       // is considered undefined behavior
@@ -831,11 +825,9 @@ auto evaluate_step(
       for (; iterator != array.cend(); ++iterator) {
         const auto index{std::distance(array.cbegin(), iterator)};
 
-        if (context.defines_annotation(
-                context.instance_location(),
-                // TODO: Can we avoid doing this expensive operation on a loop?
-                context.evaluate_path().initial(), loop.value.filter,
-                JSON{static_cast<std::size_t>(index)})) {
+        // TODO: Can we avoid doing this expensive operation on a loop?
+        if (context.defines_sibling_annotation(
+                loop.value.filter, JSON{static_cast<std::size_t>(index)})) {
           continue;
         }
 
