@@ -152,3 +152,18 @@ jobs:
           alert-threshold: '5%'
           comment-always: true
           fail-on-alert: false
+
+  bindings:
+    strategy:
+      fail-fast: false
+      matrix:
+        binding:
+          - name: nodejs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt update
+      - run: sudo apt install -y emscripten
+        if: matrix.binding.name == 'nodejs'
+      - run: make -C bindings/${{ matrix.binding.name }} compile
+      - run: make -C bindings/${{ matrix.binding.name }} test
