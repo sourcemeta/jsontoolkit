@@ -32,12 +32,3 @@ target_link_libraries(sourcemeta_jsontoolkit_jsonschema PRIVATE
   sourcemeta::jsontoolkit::uri)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
   sourcemeta::jsontoolkit::evaluator)
-
-# GCC does not allow the use of std::promise, std::future
-# without compiling with pthreads support.
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-  set(THREADS_PREFER_PTHREAD_FLAG TRUE)
-  find_package(Threads REQUIRED)
-  target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC Threads::Threads)
-endif()

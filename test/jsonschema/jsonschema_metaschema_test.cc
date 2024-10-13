@@ -14,11 +14,9 @@ TEST(JSONSchema_metaschema, example_2020_12) {
   EXPECT_TRUE(metaschema.is_object());
   EXPECT_TRUE(sourcemeta::jsontoolkit::official_resolver(
                   "https://json-schema.org/draft/2020-12/schema")
-                  .get()
                   .has_value());
   EXPECT_EQ(metaschema, sourcemeta::jsontoolkit::official_resolver(
                             "https://json-schema.org/draft/2020-12/schema")
-                            .get()
                             .value());
 }
 
@@ -33,11 +31,10 @@ TEST(JSONSchema_metaschema, with_default_dialect) {
   EXPECT_TRUE(metaschema.is_object());
   EXPECT_TRUE(sourcemeta::jsontoolkit::official_resolver(
                   "https://json-schema.org/draft/2020-12/schema")
-                  .get()
+
                   .has_value());
   EXPECT_EQ(metaschema, sourcemeta::jsontoolkit::official_resolver(
                             "https://json-schema.org/draft/2020-12/schema")
-                            .get()
                             .value());
 }
 

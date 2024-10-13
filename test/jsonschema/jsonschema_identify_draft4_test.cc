@@ -3,19 +3,15 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
 static auto test_resolver(std::string_view identifier)
-    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
-  std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
-
+    -> std::optional<sourcemeta::jsontoolkit::JSON> {
   if (identifier == "https://sourcemeta.com/metaschema") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "id": "https://sourcemeta.com/metaschema",
       "$schema": "http://json-schema.org/draft-04/schema#"
-    })JSON"));
+    })JSON");
   } else {
     return sourcemeta::jsontoolkit::official_resolver(identifier);
   }
-
-  return promise.get_future();
 }
 
 TEST(JSONSchema_identify_draft4, valid_one_hop) {
@@ -25,7 +21,7 @@ TEST(JSONSchema_identify_draft4, valid_one_hop) {
     "$schema": "https://sourcemeta.com/metaschema"
   })JSON");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::identify(document, test_resolver).get()};
+      sourcemeta::jsontoolkit::identify(document, test_resolver)};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
@@ -37,30 +33,26 @@ TEST(JSONSchema_identify_draft4, new_one_hop) {
     "$schema": "https://sourcemeta.com/metaschema"
   })JSON");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::identify(document, test_resolver).get()};
+      sourcemeta::jsontoolkit::identify(document, test_resolver)};
   EXPECT_FALSE(id.has_value());
 }
 
 TEST(JSONSchema_identify_draft4, id_boolean_default_dialect) {
   const sourcemeta::jsontoolkit::JSON document{true};
-  std::optional<std::string> id{
-      sourcemeta::jsontoolkit::identify(
-          document, sourcemeta::jsontoolkit::official_resolver,
-          sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
-          "http://json-schema.org/draft-04/schema#")
-          .get()};
+  std::optional<std::string> id{sourcemeta::jsontoolkit::identify(
+      document, sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
+      "http://json-schema.org/draft-04/schema#")};
   EXPECT_FALSE(id.has_value());
 }
 
 TEST(JSONSchema_identify_draft4, empty_object_default_dialect) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("{}");
-  std::optional<std::string> id{
-      sourcemeta::jsontoolkit::identify(
-          document, sourcemeta::jsontoolkit::official_resolver,
-          sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
-          "http://json-schema.org/draft-04/schema#")
-          .get()};
+  std::optional<std::string> id{sourcemeta::jsontoolkit::identify(
+      document, sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
+      "http://json-schema.org/draft-04/schema#")};
   EXPECT_FALSE(id.has_value());
 }
 
@@ -70,10 +62,8 @@ TEST(JSONSchema_identify_draft4, valid_id) {
     "id": "https://example.com/my-schema",
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
-  std::optional<std::string> id{
-      sourcemeta::jsontoolkit::identify(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+  std::optional<std::string> id{sourcemeta::jsontoolkit::identify(
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
@@ -84,10 +74,8 @@ TEST(JSONSchema_identify_draft4, new_id) {
     "$id": "https://example.com/my-schema",
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
-  std::optional<std::string> id{
-      sourcemeta::jsontoolkit::identify(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+  std::optional<std::string> id{sourcemeta::jsontoolkit::identify(
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_FALSE(id.has_value());
 }
 
@@ -97,12 +85,10 @@ TEST(JSONSchema_identify_draft4, default_dialect_precedence) {
     "id": "https://example.com/my-schema",
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
-  std::optional<std::string> id{
-      sourcemeta::jsontoolkit::identify(
-          document, sourcemeta::jsontoolkit::official_resolver,
-          sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
-          "https://json-schema.org/draft/2020-12/schema")
-          .get()};
+  std::optional<std::string> id{sourcemeta::jsontoolkit::identify(
+      document, sourcemeta::jsontoolkit::official_resolver,
+      sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
+      "https://json-schema.org/draft/2020-12/schema")};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
@@ -126,10 +112,8 @@ TEST(JSONSchema_identify_draft4, anonymize_with_base_dialect) {
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
-  const auto base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+  const auto base_dialect{sourcemeta::jsontoolkit::base_dialect(
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   sourcemeta::jsontoolkit::anonymize(document, base_dialect.value());
 
@@ -147,10 +131,8 @@ TEST(JSONSchema_identify_draft4, anonymize_with_base_dialect_no_id) {
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
-  const auto base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+  const auto base_dialect{sourcemeta::jsontoolkit::base_dialect(
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   sourcemeta::jsontoolkit::anonymize(document, base_dialect.value());
 
@@ -170,7 +152,7 @@ TEST(JSONSchema_identify_draft4, sibling_ref) {
     "$ref": "#"
   })JSON");
   std::optional<std::string> id{
-      sourcemeta::jsontoolkit::identify(document, test_resolver).get()};
+      sourcemeta::jsontoolkit::identify(document, test_resolver)};
   EXPECT_FALSE(id.has_value());
 }
 
@@ -239,10 +221,8 @@ TEST(JSONSchema_identify_draft4, reidentify_replace_base_dialect_shortcut) {
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
-  const auto base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+  const auto base_dialect{sourcemeta::jsontoolkit::base_dialect(
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
 
   sourcemeta::jsontoolkit::reidentify(document, "https://example.com/my-new-id",

@@ -44,13 +44,11 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
   const std::string &new_dialect{current_dialect.value()};
 
   const std::optional<std::string> base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(subschema, resolver, new_dialect)
-          .get()};
+      sourcemeta::jsontoolkit::base_dialect(subschema, resolver, new_dialect)};
   assert(base_dialect.has_value());
   const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(resolver, base_dialect.value(),
-                                            new_dialect)
-          .get()};
+                                            new_dialect)};
 
   if (type == SchemaWalkerType_t::Deep || level > 0) {
     subschemas.push_back(
@@ -193,13 +191,12 @@ sourcemeta::jsontoolkit::SchemaKeywordIterator::SchemaKeywordIterator(
   const std::optional<std::string> dialect{
       sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
   const std::optional<std::string> base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(schema, resolver, dialect).get()};
+      sourcemeta::jsontoolkit::base_dialect(schema, resolver, dialect)};
 
   std::map<std::string, bool> vocabularies;
   if (base_dialect.has_value() && dialect.has_value()) {
     vocabularies.merge(sourcemeta::jsontoolkit::vocabularies(
-                           resolver, base_dialect.value(), dialect.value())
-                           .get());
+        resolver, base_dialect.value(), dialect.value()));
   }
 
   for (const auto &[key, value] : schema.as_object()) {

@@ -7,37 +7,28 @@
 #include <vector>
 
 static auto test_resolver(std::string_view identifier)
-    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
-  std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
+    -> std::optional<sourcemeta::jsontoolkit::JSON> {
   if (identifier == "https://sourcemeta.com/test-metaschema") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://sourcemeta.com/test-metaschema",
       "$vocabulary": {
         "https://json-schema.org/draft/2020-12/vocab/core": true,
         "https://sourcemeta.com/vocab/test-1": true
       }
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://sourcemeta.com/custom-vocab") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://sourcemeta.com/custom-vocab",
       "$vocabulary": {
         "https://json-schema.org/draft/2020-12/vocab/core": true,
         "https://sourcemeta.com/vocab/test-2": true
       }
-    })JSON"));
+    })JSON");
   } else {
-    const std::optional<sourcemeta::jsontoolkit::JSON> result{
-        sourcemeta::jsontoolkit::official_resolver(identifier).get()};
-    if (result.has_value()) {
-      promise.set_value(result.value());
-    } else {
-      promise.set_value(std::nullopt);
-    }
+    return sourcemeta::jsontoolkit::official_resolver(identifier);
   }
-
-  return promise.get_future();
 }
 
 static auto test_walker(std::string_view keyword,

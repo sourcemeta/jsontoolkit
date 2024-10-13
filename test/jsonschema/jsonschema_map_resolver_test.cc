@@ -4,21 +4,18 @@
 
 TEST(JSONSchema_MapSchemaResolver, empty_no_fallback) {
   sourcemeta::jsontoolkit::MapSchemaResolver resolver;
-  EXPECT_FALSE(resolver("https://json-schema.org/draft/2020-12/schema")
-                   .get()
-                   .has_value());
+  EXPECT_FALSE(
+      resolver("https://json-schema.org/draft/2020-12/schema").has_value());
 }
 
 TEST(JSONSchema_MapSchemaResolver, empty_with_fallback) {
   sourcemeta::jsontoolkit::MapSchemaResolver resolver{
       sourcemeta::jsontoolkit::official_resolver};
-  EXPECT_TRUE(resolver("https://json-schema.org/draft/2020-12/schema")
-                  .get()
-                  .has_value());
-  EXPECT_EQ(resolver("https://json-schema.org/draft/2020-12/schema").get(),
+  EXPECT_TRUE(
+      resolver("https://json-schema.org/draft/2020-12/schema").has_value());
+  EXPECT_EQ(resolver("https://json-schema.org/draft/2020-12/schema"),
             sourcemeta::jsontoolkit::official_resolver(
-                "https://json-schema.org/draft/2020-12/schema")
-                .get());
+                "https://json-schema.org/draft/2020-12/schema"));
 }
 
 TEST(JSONSchema_MapSchemaResolver, single_schema) {
@@ -32,9 +29,8 @@ TEST(JSONSchema_MapSchemaResolver, single_schema) {
 
   resolver.add(document);
 
-  EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").get().has_value());
-  EXPECT_EQ(resolver("https://www.sourcemeta.com/test").get().value(),
-            document);
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").has_value());
+  EXPECT_EQ(resolver("https://www.sourcemeta.com/test").value(), document);
 }
 
 TEST(JSONSchema_MapSchemaResolver, single_schema_with_default_dialect) {
@@ -53,9 +49,8 @@ TEST(JSONSchema_MapSchemaResolver, single_schema_with_default_dialect) {
 
   resolver.add(document, "https://json-schema.org/draft/2020-12/schema");
 
-  EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").get().has_value());
-  EXPECT_EQ(resolver("https://www.sourcemeta.com/test").get().value(),
-            expected);
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").has_value());
+  EXPECT_EQ(resolver("https://www.sourcemeta.com/test").value(), expected);
 }
 
 TEST(JSONSchema_MapSchemaResolver, single_schema_anonymous_with_default) {
@@ -74,9 +69,8 @@ TEST(JSONSchema_MapSchemaResolver, single_schema_anonymous_with_default) {
 
   resolver.add(document, std::nullopt, "https://www.sourcemeta.com/test");
 
-  EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").get().has_value());
-  EXPECT_EQ(resolver("https://www.sourcemeta.com/test").get().value(),
-            expected);
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").has_value());
+  EXPECT_EQ(resolver("https://www.sourcemeta.com/test").value(), expected);
 }
 
 TEST(JSONSchema_MapSchemaResolver, single_schema_idempotent) {
@@ -92,9 +86,8 @@ TEST(JSONSchema_MapSchemaResolver, single_schema_idempotent) {
   resolver.add(document);
   resolver.add(document);
 
-  EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").get().has_value());
-  EXPECT_EQ(resolver("https://www.sourcemeta.com/test").get().value(),
-            document);
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").has_value());
+  EXPECT_EQ(resolver("https://www.sourcemeta.com/test").value(), document);
 }
 
 TEST(JSONSchema_MapSchemaResolver, duplicate_ids) {
@@ -141,10 +134,8 @@ TEST(JSONSchema_MapSchemaResolver, embedded_resource) {
     "type": "string"
   })JSON");
 
-  EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").get().has_value());
-  EXPECT_TRUE(resolver("https://www.sourcemeta.com/string").get().has_value());
-  EXPECT_EQ(resolver("https://www.sourcemeta.com/test").get().value(),
-            document);
-  EXPECT_EQ(resolver("https://www.sourcemeta.com/string").get().value(),
-            embedded);
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").has_value());
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/string").has_value());
+  EXPECT_EQ(resolver("https://www.sourcemeta.com/test").value(), document);
+  EXPECT_EQ(resolver("https://www.sourcemeta.com/string").value(), embedded);
 }

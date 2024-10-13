@@ -31,8 +31,7 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver)
-      .wait();
+                                 sourcemeta::jsontoolkit::official_resolver);
 
   EXPECT_EQ(frame.size(), 21);
 
@@ -173,8 +172,7 @@ TEST(JSONSchema_frame, no_id) {
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver)
-      .wait();
+                                 sourcemeta::jsontoolkit::official_resolver);
 
   EXPECT_EQ(frame.size(), 14);
 
@@ -251,8 +249,7 @@ TEST(JSONSchema_frame, no_id_with_default) {
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver,
                                  "https://json-schema.org/draft/2020-12/schema",
-                                 "https://www.sourcemeta.com/schema")
-      .wait();
+                                 "https://www.sourcemeta.com/schema");
 
   EXPECT_EQ(frame.size(), 4);
   EXPECT_FRAME_STATIC_RESOURCE(frame, "https://www.sourcemeta.com/schema",
@@ -300,8 +297,7 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver)
-      .wait();
+                                 sourcemeta::jsontoolkit::official_resolver);
 
   EXPECT_EQ(frame.size(), 12);
   EXPECT_FRAME_STATIC_RESOURCE(frame, "https://www.example.com",
@@ -382,8 +378,7 @@ TEST(JSONSchema_frame, uri_iterators) {
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver)
-      .wait();
+                                 sourcemeta::jsontoolkit::official_resolver);
 
   std::set<std::string> uris;
   for (const auto &entry : frame) {
@@ -487,8 +482,7 @@ TEST(JSONSchema_frame, no_refs) {
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver)
-      .wait();
+                                 sourcemeta::jsontoolkit::official_resolver);
 
   EXPECT_EQ(references.size(), 1);
 
@@ -523,8 +517,7 @@ TEST(JSONSchema_frame, refs_with_id) {
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver)
-      .wait();
+                                 sourcemeta::jsontoolkit::official_resolver);
 
   EXPECT_EQ(references.size(), 5);
   EXPECT_STATIC_REFERENCE(
@@ -570,8 +563,7 @@ TEST(JSONSchema_frame, refs_with_no_id) {
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver)
-      .wait();
+                                 sourcemeta::jsontoolkit::official_resolver);
 
   EXPECT_EQ(references.size(), 5);
   EXPECT_STATIC_REFERENCE(
@@ -602,8 +594,7 @@ TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver)
-      .wait();
+                                 sourcemeta::jsontoolkit::official_resolver);
 
   EXPECT_EQ(references.size(), 1);
 
@@ -627,8 +618,7 @@ TEST(JSONSchema_frame, remote_refs) {
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver)
-      .wait();
+                                 sourcemeta::jsontoolkit::official_resolver);
 
   EXPECT_EQ(references.size(), 4);
   EXPECT_STATIC_REFERENCE(

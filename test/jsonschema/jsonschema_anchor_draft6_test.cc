@@ -7,9 +7,8 @@ TEST(JSONSchema_anchor_draft6, boolean_schema) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("true");
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver,
-                         "http://json-schema.org/draft-06/schema#")
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver,
+      "http://json-schema.org/draft-06/schema#")};
   EXPECT_TRUE(anchors.empty());
 }
 
@@ -20,8 +19,7 @@ TEST(JSONSchema_anchor_draft6, top_level_no_anchor) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver)
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(anchors.empty());
 }
 
@@ -33,8 +31,7 @@ TEST(JSONSchema_anchor_draft6, top_level_static_anchor) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver)
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_EQ(anchors.size(), 1);
   EXPECT_TRUE(anchors.contains("foo"));
   EXPECT_EQ(anchors.at("foo"), sourcemeta::jsontoolkit::AnchorType::Static);
@@ -47,9 +44,8 @@ TEST(JSONSchema_anchor_draft6, nested_static_with_default_dialect) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver,
-                         "http://json-schema.org/draft-06/schema#")
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver,
+      "http://json-schema.org/draft-06/schema#")};
   EXPECT_EQ(anchors.size(), 1);
   EXPECT_TRUE(anchors.contains("foo"));
   EXPECT_EQ(anchors.at("foo"), sourcemeta::jsontoolkit::AnchorType::Static);
@@ -64,8 +60,7 @@ TEST(JSONSchema_anchor_draft6, vocabularies_shortcut) {
 
   const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(document, vocabularies)};
   EXPECT_EQ(anchors.size(), 1);
@@ -81,8 +76,7 @@ TEST(JSONSchema_anchor_draft6, non_fragment_relative_id) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver)
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(anchors.empty());
 }
 
@@ -94,7 +88,6 @@ TEST(JSONSchema_anchor_draft6, not_only_fragment) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver)
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(anchors.empty());
 }

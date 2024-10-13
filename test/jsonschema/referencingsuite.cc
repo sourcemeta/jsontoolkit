@@ -54,8 +54,7 @@ public:
       sourcemeta::jsontoolkit::frame(
           schema.first, frame, references,
           sourcemeta::jsontoolkit::default_schema_walker,
-          sourcemeta::jsontoolkit::official_resolver, this->dialect, uri)
-          .wait();
+          sourcemeta::jsontoolkit::official_resolver, this->dialect, uri);
       for (const auto &[key, entry] : frame) {
         new_entries.insert(
             {key.second,

@@ -8,8 +8,7 @@
 
 TEST(JSONSchema_evaluator_draft7, metaschema) {
   const auto metaschema{sourcemeta::jsontoolkit::official_resolver(
-                            "http://json-schema.org/draft-07/schema#")
-                            .get()};
+      "http://json-schema.org/draft-07/schema#")};
   EXPECT_TRUE(metaschema.has_value());
 
   const sourcemeta::jsontoolkit::JSON instance{

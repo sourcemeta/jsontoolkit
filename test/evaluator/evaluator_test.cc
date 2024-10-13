@@ -7,23 +7,19 @@
 #include "evaluator_utils.h"
 
 static auto test_resolver(std::string_view identifier)
-    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
-  std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
+    -> std::optional<sourcemeta::jsontoolkit::JSON> {
   if (identifier == "https://example.com/metaschema") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://example.com/metaschema",
       "$vocabulary": {
         "https://json-schema.org/draft/2020-12/vocab/core": true,
         "https://example.com/vocab/custom": true
       }
-    })JSON"));
+    })JSON");
   } else {
-    promise.set_value(
-        sourcemeta::jsontoolkit::official_resolver(identifier).get());
+    return sourcemeta::jsontoolkit::official_resolver(identifier);
   }
-
-  return promise.get_future();
 }
 
 TEST(JSONSchema_evaluator, unknown_vocabulary_required) {

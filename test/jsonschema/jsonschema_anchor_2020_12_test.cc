@@ -6,9 +6,8 @@ TEST(JSONSchema_anchor_2020_12, boolean_schema) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("true");
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver,
-                         "https://json-schema.org/draft/2020-12/schema")
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver,
+      "https://json-schema.org/draft/2020-12/schema")};
   EXPECT_TRUE(anchors.empty());
 }
 
@@ -19,8 +18,7 @@ TEST(JSONSchema_anchor_2020_12, top_level_no_anchor) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver)
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(anchors.empty());
 }
 
@@ -32,8 +30,7 @@ TEST(JSONSchema_anchor_2020_12, top_level_static_anchor) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver)
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_EQ(anchors.size(), 1);
   EXPECT_TRUE(anchors.contains("foo"));
   EXPECT_EQ(anchors.at("foo"), sourcemeta::jsontoolkit::AnchorType::Static);
@@ -47,8 +44,7 @@ TEST(JSONSchema_anchor_2020_12, top_level_dynamic_anchor) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver)
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_EQ(anchors.size(), 1);
   EXPECT_TRUE(anchors.contains("foo"));
   EXPECT_EQ(anchors.at("foo"), sourcemeta::jsontoolkit::AnchorType::Dynamic);
@@ -63,8 +59,7 @@ TEST(JSONSchema_anchor_2020_12, top_level_static_and_dynamic_anchor_different) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver)
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_EQ(anchors.size(), 2);
   EXPECT_TRUE(anchors.contains("foo"));
   EXPECT_TRUE(anchors.contains("bar"));
@@ -81,8 +76,7 @@ TEST(JSONSchema_anchor_2020_12, top_level_static_and_dynamic_anchor_same) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver)
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_EQ(anchors.size(), 1);
   EXPECT_TRUE(anchors.contains("foo"));
   EXPECT_EQ(anchors.at("foo"), sourcemeta::jsontoolkit::AnchorType::All);
@@ -95,9 +89,8 @@ TEST(JSONSchema_anchor_2020_12, nested_static_with_default_dialect) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver,
-                         "https://json-schema.org/draft/2020-12/schema")
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver,
+      "https://json-schema.org/draft/2020-12/schema")};
   EXPECT_EQ(anchors.size(), 1);
   EXPECT_TRUE(anchors.contains("foo"));
   EXPECT_EQ(anchors.at("foo"), sourcemeta::jsontoolkit::AnchorType::Static);
@@ -113,8 +106,7 @@ TEST(JSONSchema_anchor_2020_12, vocabularies_shortcut) {
 
   const std::map<std::string, bool> vocabularies{
       sourcemeta::jsontoolkit::vocabularies(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(document, vocabularies)};
   EXPECT_EQ(anchors.size(), 2);
@@ -132,7 +124,6 @@ TEST(JSONSchema_anchor_2020_12, old_id_anchor_not_recognized) {
   })JSON");
 
   const auto anchors{sourcemeta::jsontoolkit::anchors(
-                         document, sourcemeta::jsontoolkit::official_resolver)
-                         .get()};
+      document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(anchors.empty());
 }

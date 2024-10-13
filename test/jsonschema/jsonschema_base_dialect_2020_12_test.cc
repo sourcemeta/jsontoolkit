@@ -10,8 +10,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_schema) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/schema");
@@ -25,8 +24,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_hyperschema) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/hyper-schema");
@@ -39,8 +37,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_links) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/schema");
@@ -53,8 +50,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_output) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/schema");
@@ -67,8 +63,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_meta_applicator) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/schema");
@@ -81,8 +76,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_meta_content) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/schema");
@@ -95,8 +89,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_meta_core) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/schema");
@@ -109,8 +102,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_meta_format_annotation) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/schema");
@@ -123,8 +115,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_meta_format_assertion) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/schema");
@@ -137,8 +128,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_meta_hyperschema) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/hyper-schema");
@@ -151,8 +141,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_meta_meta_data) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/schema");
@@ -165,8 +154,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_meta_unevaluated) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/schema");
@@ -179,8 +167,7 @@ TEST(JSONSchema_base_dialect_2020_12, jsonschema_meta_validation) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "https://json-schema.org/draft/2020-12/schema");

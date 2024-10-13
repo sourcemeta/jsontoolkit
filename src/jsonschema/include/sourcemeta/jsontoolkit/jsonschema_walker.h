@@ -262,7 +262,7 @@ private:
 ///
 /// const auto vocabularies{
 ///   sourcemeta::jsontoolkit::vocabularies(
-///     document, sourcemeta::jsontoolkit::official_resolver).get()};
+///     document, sourcemeta::jsontoolkit::official_resolver)};
 ///
 /// assert(sourcemeta::jsontoolkit::keyword_priority(
 ///   "prefixItems", vocabularies,
