@@ -8,7 +8,8 @@ if(JSONTOOLKIT_EVALUATOR AND JSONTOOLKIT_JSONSCHEMA)
     compiler_draft6.cc
     evaluator_draft4.cc
     evaluator_draft6.cc
-    evaluator_draft7.cc)
+    evaluator_draft7.cc
+    evaluator_2020_12.cc)
 endif()
 
 if(BENCHMARK_SOURCES)
