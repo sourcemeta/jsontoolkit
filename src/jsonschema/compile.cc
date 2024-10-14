@@ -1,6 +1,8 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
+#include <sourcemeta/jsontoolkit/evaluator_context.h>
+
 #include <algorithm> // std::move, std::any_of, std::sort, std::unique
 #include <cassert>   // assert
 #include <iterator>  // std::back_inserter
@@ -190,11 +192,9 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
       }
 
       const URI anchor_uri{entry.first.second};
-      std::ostringstream name;
-      name << anchor_uri.recompose_without_fragment().value_or("");
-      name << '#';
-      name << anchor_uri.fragment().value_or("");
-      const auto label{std::hash<std::string>{}(name.str())};
+      const auto label{EvaluationContext{}.hash(
+          anchor_uri.recompose_without_fragment().value_or(""),
+          std::string{anchor_uri.fragment().value_or("")})};
       schema_context.labels.insert(label);
 
       // Configure a schema context that corresponds to the

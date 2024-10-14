@@ -235,6 +235,17 @@ auto EvaluationContext::instances() const noexcept
   return this->instances_;
 }
 
+auto EvaluationContext::hash(const std::string &base,
+                             const std::string &fragment) const noexcept
+    -> std::size_t {
+  // TODO: Avoid these string copies
+  std::ostringstream result;
+  result << base;
+  result << '#';
+  result << fragment;
+  return this->hasher_(result.str());
+}
+
 auto EvaluationContext::resources() const noexcept
     -> const std::vector<std::string> & {
   return this->resources_;
@@ -296,11 +307,7 @@ auto EvaluationContext::jump(const std::size_t id) const noexcept
 auto EvaluationContext::find_dynamic_anchor(const std::string &anchor) const
     -> std::optional<std::size_t> {
   for (const auto &resource : this->resources()) {
-    std::ostringstream name;
-    name << resource;
-    name << '#';
-    name << anchor;
-    const auto label{std::hash<std::string>{}(name.str())};
+    const auto label{this->hash(resource, anchor)};
     if (this->labels.contains(label)) {
       return label;
     }
