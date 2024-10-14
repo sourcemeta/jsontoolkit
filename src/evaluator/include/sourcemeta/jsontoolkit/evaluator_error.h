@@ -1,7 +1,9 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_EVALUATOR_ERROR_H
 #define SOURCEMETA_JSONTOOLKIT_EVALUATOR_ERROR_H
 
+#ifndef SOURCEMETA_JSONTOOLKIT_EVALUATOR_EXPORT
 #include "evaluator_export.h"
+#endif
 
 #include <exception> // std::exception
 #include <string>    // std::string
