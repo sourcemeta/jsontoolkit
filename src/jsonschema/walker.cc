@@ -2,10 +2,9 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
-#include <algorithm> // std::max
+#include <algorithm> // std::max, std::sort
 #include <cassert>   // assert
 #include <numeric>   // std::accumulate
-#include <ranges>    // std::ranges::sort
 
 auto sourcemeta::jsontoolkit::keyword_priority(
     std::string_view keyword, const std::map<std::string, bool> &vocabularies,
@@ -205,8 +204,8 @@ sourcemeta::jsontoolkit::SchemaKeywordIterator::SchemaKeywordIterator(
   }
 
   // Sort keywords based on priority for correct evaluation
-  std::ranges::sort(
-      this->entries,
+  std::sort(
+      this->entries.begin(), this->entries.end(),
       [&vocabularies, &walker](const auto &left, const auto &right) -> bool {
         // These cannot be empty or indexes, as we created
         // the entries array from a JSON object
