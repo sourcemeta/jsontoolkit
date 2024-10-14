@@ -270,6 +270,7 @@ struct StepVisitor {
   HANDLE_STEP("annotation", "loop-items-unevaluated",
               SchemaCompilerAnnotationLoopItemsUnevaluated)
   HANDLE_STEP("annotation", "not", SchemaCompilerAnnotationNot)
+  HANDLE_STEP("logical", "not", SchemaCompilerLogicalNot)
   HANDLE_STEP("logical", "or", SchemaCompilerLogicalOr)
   HANDLE_STEP("logical", "and", SchemaCompilerLogicalAnd)
   HANDLE_STEP("logical", "xor", SchemaCompilerLogicalXor)

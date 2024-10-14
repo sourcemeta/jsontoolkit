@@ -824,11 +824,22 @@ auto compiler_draft4_applicator_not(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
-  // TODO: Don't mask annotations if annotations are not needed
-  return {make<SchemaCompilerAnnotationNot>(
-      true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
-      compile(context, schema_context, relative_dynamic_context, empty_pointer,
-              empty_pointer))};
+  // Only emit a `not` instruction that keeps track of
+  // dropping annotations if we really need it
+  if (context.mode != SchemaCompilerMode::FastValidation ||
+      context.uses_unevaluated_properties || context.uses_unevaluated_items) {
+    return {make<SchemaCompilerAnnotationNot>(
+        true, context, schema_context, dynamic_context,
+        SchemaCompilerValueNone{},
+        compile(context, schema_context, relative_dynamic_context,
+                empty_pointer, empty_pointer))};
+  } else {
+    return {make<SchemaCompilerLogicalNot>(
+        true, context, schema_context, dynamic_context,
+        SchemaCompilerValueNone{},
+        compile(context, schema_context, relative_dynamic_context,
+                empty_pointer, empty_pointer))};
+  }
 }
 
 auto compiler_draft4_applicator_items_array(

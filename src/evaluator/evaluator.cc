@@ -846,6 +846,18 @@ auto evaluate_step(
       EVALUATE_END(logical, SchemaCompilerAnnotationNot);
     }
 
+    case IS_STEP(SchemaCompilerLogicalNot): {
+      EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalNot);
+      for (const auto &child : logical.children) {
+        if (!evaluate_step(child, callback, context)) {
+          result = true;
+          break;
+        }
+      }
+
+      EVALUATE_END(logical, SchemaCompilerLogicalNot);
+    }
+
     case IS_STEP(SchemaCompilerLoopPropertiesMatch): {
       EVALUATE_BEGIN(loop, SchemaCompilerLoopPropertiesMatch,
                      target.is_object());

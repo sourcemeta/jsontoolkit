@@ -52,6 +52,7 @@ struct SchemaCompilerAnnotationLoopPropertiesUnevaluated;
 struct SchemaCompilerAnnotationLoopItemsUnmarked;
 struct SchemaCompilerAnnotationLoopItemsUnevaluated;
 struct SchemaCompilerAnnotationNot;
+struct SchemaCompilerLogicalNot;
 struct SchemaCompilerLogicalOr;
 struct SchemaCompilerLogicalAnd;
 struct SchemaCompilerLogicalXor;
@@ -104,9 +105,10 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAnnotationLoopPropertiesUnevaluated,
     SchemaCompilerAnnotationLoopItemsUnmarked,
     SchemaCompilerAnnotationLoopItemsUnevaluated, SchemaCompilerAnnotationNot,
-    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
-    SchemaCompilerLogicalCondition, SchemaCompilerLogicalWhenType,
-    SchemaCompilerLogicalWhenDefines, SchemaCompilerLogicalWhenArraySizeGreater,
+    SchemaCompilerLogicalNot, SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd,
+    SchemaCompilerLogicalXor, SchemaCompilerLogicalCondition,
+    SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
+    SchemaCompilerLogicalWhenArraySizeGreater,
     SchemaCompilerLogicalWhenArraySizeEqual, SchemaCompilerLoopPropertiesMatch,
     SchemaCompilerLoopProperties, SchemaCompilerLoopPropertiesRegex,
     SchemaCompilerLoopPropertiesExcept, SchemaCompilerLoopPropertiesType,
@@ -157,6 +159,7 @@ enum class SchemaCompilerTemplateIndex : std::uint8_t {
   SchemaCompilerAnnotationLoopItemsUnmarked,
   SchemaCompilerAnnotationLoopItemsUnevaluated,
   SchemaCompilerAnnotationNot,
+  SchemaCompilerLogicalNot,
   SchemaCompilerLogicalOr,
   SchemaCompilerLogicalAnd,
   SchemaCompilerLogicalXor,
@@ -405,8 +408,13 @@ DEFINE_STEP_APPLICATOR(Annotation, LoopItemsUnevaluated,
                        SchemaCompilerValueItemsAnnotationKeywords)
 
 /// @ingroup evaluator_instructions
-/// @brief Represents a compiler logical step that represents a negation
+/// @brief Represents an annotation-aware compiler logical step that represents
+/// a negation
 DEFINE_STEP_APPLICATOR(Annotation, Not, SchemaCompilerValueNone)
+
+/// @ingroup evaluator_instructions
+/// @brief Represents a compiler logical step that represents a negation
+DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
 
 /// @ingroup evaluator_instructions
 /// @brief Represents a compiler logical step that represents a disjunction
