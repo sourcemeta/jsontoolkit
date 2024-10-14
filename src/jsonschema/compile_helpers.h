@@ -2,14 +2,31 @@
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_COMPILE_HELPERS_H_
 
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
+#include <sourcemeta/jsontoolkit/uri.h>
 
-#include <cassert> // assert
-#include <utility> // std::declval, std::move
+#include <algorithm> // std::find
+#include <cassert>   // assert
+#include <iterator>  // std::distance
+#include <utility>   // std::declval, std::move
 
 namespace sourcemeta::jsontoolkit {
 
 static const SchemaCompilerDynamicContext relative_dynamic_context{
     "", empty_pointer, empty_pointer};
+
+inline auto schema_resource_id(const SchemaCompilerContext &context,
+                               const std::string &resource) -> std::size_t {
+  const auto iterator{std::find(context.resources.cbegin(),
+                                context.resources.cend(),
+                                URI{resource}.canonicalize().recompose())};
+  if (iterator == context.resources.cend()) {
+    assert(resource.empty());
+    return 0;
+  }
+
+  return 1 + static_cast<std::size_t>(
+                 std::distance(context.resources.cbegin(), iterator));
+}
 
 // Instantiate a value-oriented step
 template <typename Step>
@@ -25,7 +42,7 @@ auto make(const bool report, const SchemaCompilerContext &context,
                 {dynamic_context.keyword}),
       dynamic_context.base_instance_location,
       to_uri(schema_context.relative_pointer, schema_context.base).recompose(),
-      schema_context.base.recompose(),
+      schema_resource_id(context, schema_context.base.recompose()),
       context.uses_dynamic_scopes,
       report,
       value};
@@ -46,7 +63,7 @@ auto make(const bool report, const SchemaCompilerContext &context,
                 {dynamic_context.keyword}),
       dynamic_context.base_instance_location,
       to_uri(schema_context.relative_pointer, schema_context.base).recompose(),
-      schema_context.base.recompose(),
+      schema_resource_id(context, schema_context.base.recompose()),
       context.uses_dynamic_scopes,
       report,
       std::move(value),

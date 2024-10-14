@@ -42,12 +42,12 @@ public:
   auto instance_location() const noexcept -> const WeakPointer &;
   auto push(const Pointer &relative_schema_location,
             const Pointer &relative_instance_location,
-            const std::string &schema_resource, const bool dynamic) -> void;
+            const std::size_t &schema_resource, const bool dynamic) -> void;
   // A performance shortcut for pushing without re-traversing the target
   // if we already know that the destination target will be
   auto push(const Pointer &relative_schema_location,
             const Pointer &relative_instance_location,
-            const std::string &schema_resource, const bool dynamic,
+            const std::size_t &schema_resource, const bool dynamic,
             std::reference_wrapper<const JSON> &&new_instance) -> void;
   auto pop(const bool dynamic) -> void;
   auto enter(const WeakPointer::Token::Property &property) -> void;
@@ -57,7 +57,7 @@ public:
 private:
   auto push_without_traverse(const Pointer &relative_schema_location,
                              const Pointer &relative_instance_location,
-                             const std::string &schema_resource,
+                             const std::size_t &schema_resource,
                              const bool dynamic) -> void;
 
 public:
@@ -77,9 +77,9 @@ public:
   // References and anchors
   ///////////////////////////////////////////////
 
-  auto hash(const std::string &base, const std::string &fragment) const noexcept
-      -> std::size_t;
-  auto resources() const noexcept -> const std::vector<std::string> &;
+  auto hash(const std::size_t &resource,
+            const std::string &fragment) const noexcept -> std::size_t;
+  auto resources() const noexcept -> const std::vector<std::size_t> &;
   auto mark(const std::size_t id, const SchemaCompilerTemplate &children)
       -> void;
   auto jump(const std::size_t id) const noexcept
@@ -120,8 +120,7 @@ private:
   WeakPointer instance_location_;
   std::vector<std::pair<std::size_t, std::size_t>> frame_sizes;
   const std::hash<std::string> hasher_{};
-  // TODO: Keep hashes of schema resources URI instead for performance reasons
-  std::vector<std::string> resources_;
+  std::vector<std::size_t> resources_;
   // TODO: Try unordered_map
   std::map<std::size_t,
            const std::reference_wrapper<const SchemaCompilerTemplate>>
