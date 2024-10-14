@@ -4,7 +4,11 @@ if(JSONTOOLKIT_JSON)
   list(APPEND BENCHMARK_SOURCES json.cc)
 endif()
 if(JSONTOOLKIT_EVALUATOR AND JSONTOOLKIT_JSONSCHEMA)
-  list(APPEND BENCHMARK_SOURCES jsonschema_validator.cc jsonschema_compiler.cc)
+  list(APPEND BENCHMARK_SOURCES
+    compiler_draft6.cc
+    evaluator_draft4.cc
+    evaluator_draft6.cc
+    evaluator_draft7.cc)
 endif()
 
 if(BENCHMARK_SOURCES)

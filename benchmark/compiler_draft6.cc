@@ -5,7 +5,7 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-static void JSONSchema_Compiler_Draft6_AdaptiveCard(benchmark::State &state) {
+static void Compiler_Draft6_AdaptiveCard(benchmark::State &state) {
   const auto schema{sourcemeta::jsontoolkit::from_file(
       std::filesystem::path{CURRENT_DIRECTORY} / "schemas" /
       "draft6_adaptivecard.json")};
@@ -20,4 +20,4 @@ static void JSONSchema_Compiler_Draft6_AdaptiveCard(benchmark::State &state) {
   }
 }
 
-BENCHMARK(JSONSchema_Compiler_Draft6_AdaptiveCard);
+BENCHMARK(Compiler_Draft6_AdaptiveCard);
