@@ -51,11 +51,11 @@ struct SchemaCompilerAnnotationBasenameToParent;
 struct SchemaCompilerAnnotationLoopPropertiesUnevaluated;
 struct SchemaCompilerAnnotationLoopItemsUnmarked;
 struct SchemaCompilerAnnotationLoopItemsUnevaluated;
+struct SchemaCompilerAnnotationNot;
 struct SchemaCompilerLogicalOr;
 struct SchemaCompilerLogicalAnd;
 struct SchemaCompilerLogicalXor;
 struct SchemaCompilerLogicalCondition;
-struct SchemaCompilerLogicalNot;
 struct SchemaCompilerLogicalWhenType;
 struct SchemaCompilerLogicalWhenDefines;
 struct SchemaCompilerLogicalWhenArraySizeGreater;
@@ -103,11 +103,10 @@ using SchemaCompilerTemplate = std::vector<std::variant<
     SchemaCompilerAnnotationToParent, SchemaCompilerAnnotationBasenameToParent,
     SchemaCompilerAnnotationLoopPropertiesUnevaluated,
     SchemaCompilerAnnotationLoopItemsUnmarked,
-    SchemaCompilerAnnotationLoopItemsUnevaluated, SchemaCompilerLogicalOr,
-    SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
-    SchemaCompilerLogicalCondition, SchemaCompilerLogicalNot,
-    SchemaCompilerLogicalWhenType, SchemaCompilerLogicalWhenDefines,
-    SchemaCompilerLogicalWhenArraySizeGreater,
+    SchemaCompilerAnnotationLoopItemsUnevaluated, SchemaCompilerAnnotationNot,
+    SchemaCompilerLogicalOr, SchemaCompilerLogicalAnd, SchemaCompilerLogicalXor,
+    SchemaCompilerLogicalCondition, SchemaCompilerLogicalWhenType,
+    SchemaCompilerLogicalWhenDefines, SchemaCompilerLogicalWhenArraySizeGreater,
     SchemaCompilerLogicalWhenArraySizeEqual, SchemaCompilerLoopPropertiesMatch,
     SchemaCompilerLoopProperties, SchemaCompilerLoopPropertiesRegex,
     SchemaCompilerLoopPropertiesExcept, SchemaCompilerLoopPropertiesType,
@@ -157,11 +156,11 @@ enum class SchemaCompilerTemplateIndex : std::uint8_t {
   SchemaCompilerAnnotationLoopPropertiesUnevaluated,
   SchemaCompilerAnnotationLoopItemsUnmarked,
   SchemaCompilerAnnotationLoopItemsUnevaluated,
+  SchemaCompilerAnnotationNot,
   SchemaCompilerLogicalOr,
   SchemaCompilerLogicalAnd,
   SchemaCompilerLogicalXor,
   SchemaCompilerLogicalCondition,
-  SchemaCompilerLogicalNot,
   SchemaCompilerLogicalWhenType,
   SchemaCompilerLogicalWhenDefines,
   SchemaCompilerLogicalWhenArraySizeGreater,
@@ -406,6 +405,10 @@ DEFINE_STEP_APPLICATOR(Annotation, LoopItemsUnevaluated,
                        SchemaCompilerValueItemsAnnotationKeywords)
 
 /// @ingroup evaluator_instructions
+/// @brief Represents a compiler logical step that represents a negation
+DEFINE_STEP_APPLICATOR(Annotation, Not, SchemaCompilerValueNone)
+
+/// @ingroup evaluator_instructions
 /// @brief Represents a compiler logical step that represents a disjunction
 DEFINE_STEP_APPLICATOR(Logical, Or, SchemaCompilerValueBoolean)
 
@@ -421,10 +424,6 @@ DEFINE_STEP_APPLICATOR(Logical, Xor, SchemaCompilerValueBoolean)
 /// @ingroup evaluator_instructions
 /// @brief Represents an imperative conditional compiler logical step
 DEFINE_STEP_APPLICATOR(Logical, Condition, SchemaCompilerValueIndexPair)
-
-/// @ingroup evaluator_instructions
-/// @brief Represents a compiler logical step that represents a negation
-DEFINE_STEP_APPLICATOR(Logical, Not, SchemaCompilerValueNone)
 
 /// @ingroup evaluator_instructions
 /// @brief Represents a compiler logical step that represents a conjunction when

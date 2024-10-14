@@ -637,21 +637,6 @@ auto evaluate_step(
       EVALUATE_END(logical, SchemaCompilerLogicalCondition);
     }
 
-    case IS_STEP(SchemaCompilerLogicalNot): {
-      EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerLogicalNot);
-      // Ignore annotations produced inside "not"
-      context.mask();
-      result = false;
-      for (const auto &child : logical.children) {
-        if (!evaluate_step(child, callback, context)) {
-          result = true;
-          break;
-        }
-      }
-
-      EVALUATE_END(logical, SchemaCompilerLogicalNot);
-    }
-
     case IS_STEP(SchemaCompilerControlLabel): {
       EVALUATE_BEGIN_NO_PRECONDITION(control, SchemaCompilerControlLabel);
       context.mark(control.value, control.children);
@@ -845,6 +830,20 @@ auto evaluate_step(
 
     evaluate_compiler_annotation_loop_items_unevaluated_end:
       EVALUATE_END(loop, SchemaCompilerAnnotationLoopItemsUnevaluated);
+    }
+
+    case IS_STEP(SchemaCompilerAnnotationNot): {
+      EVALUATE_BEGIN_NO_PRECONDITION(logical, SchemaCompilerAnnotationNot);
+      // Ignore annotations produced inside "not"
+      context.mask();
+      for (const auto &child : logical.children) {
+        if (!evaluate_step(child, callback, context)) {
+          result = true;
+          break;
+        }
+      }
+
+      EVALUATE_END(logical, SchemaCompilerAnnotationNot);
     }
 
     case IS_STEP(SchemaCompilerLoopPropertiesMatch): {
