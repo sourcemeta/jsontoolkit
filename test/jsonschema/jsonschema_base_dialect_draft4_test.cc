@@ -3,24 +3,20 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
 static auto test_resolver(std::string_view identifier)
-    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
-  std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
-
+    -> std::optional<sourcemeta::jsontoolkit::JSON> {
   if (identifier == "https://sourcemeta.com/metaschema_1") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "id": "https://sourcemeta.com/metaschema_1",
       "$schema": "http://json-schema.org/draft-04/schema#"
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://sourcemeta.com/metaschema_2") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "id": "https://sourcemeta.com/metaschema_2",
       "$schema": "https://sourcemeta.com/metaschema_1"
-    })JSON"));
+    })JSON");
   } else {
-    promise.set_value(std::nullopt);
+    return std::nullopt;
   }
-
-  return promise.get_future();
 }
 
 TEST(JSONSchema_base_dialect_draft4, jsonschema_draft_hyperschema) {
@@ -31,8 +27,7 @@ TEST(JSONSchema_base_dialect_draft4, jsonschema_draft_hyperschema) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "http://json-schema.org/draft-04/hyper-schema#");
@@ -46,8 +41,7 @@ TEST(JSONSchema_base_dialect_draft4, jsonschema_draft_schema) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(), "http://json-schema.org/draft-04/schema#");
 }
@@ -59,8 +53,7 @@ TEST(JSONSchema_base_dialect_draft4, jsonschema_draft_links) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "http://json-schema.org/draft-04/hyper-schema#");
@@ -72,7 +65,7 @@ TEST(JSONSchema_base_dialect_draft4, jsonschema_base_one_hop) {
     "$schema": "https://sourcemeta.com/metaschema_1"
   })JSON");
   const std::optional<std::string> base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(document, test_resolver).get()};
+      sourcemeta::jsontoolkit::base_dialect(document, test_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(), "http://json-schema.org/draft-04/schema#");
 }
@@ -83,7 +76,7 @@ TEST(JSONSchema_base_dialect_draft4, jsonschema_base_two_hops) {
     "$schema": "https://sourcemeta.com/metaschema_2"
   })JSON");
   const std::optional<std::string> base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(document, test_resolver).get()};
+      sourcemeta::jsontoolkit::base_dialect(document, test_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(), "http://json-schema.org/draft-04/schema#");
 }

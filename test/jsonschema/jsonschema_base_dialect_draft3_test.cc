@@ -10,8 +10,7 @@ TEST(JSONSchema_base_dialect_draft3, jsonschema_draft_hyperschema) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "http://json-schema.org/draft-03/hyper-schema#");
@@ -25,8 +24,7 @@ TEST(JSONSchema_base_dialect_draft3, jsonschema_draft_schema) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(), "http://json-schema.org/draft-03/schema#");
 }
@@ -38,8 +36,7 @@ TEST(JSONSchema_base_dialect_draft3, jsonschema_draft_jsonref) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "http://json-schema.org/draft-03/hyper-schema#");
@@ -52,8 +49,7 @@ TEST(JSONSchema_base_dialect_draft3, jsonschema_draft_links) {
   })JSON");
   const std::optional<std::string> base_dialect{
       sourcemeta::jsontoolkit::base_dialect(
-          document, sourcemeta::jsontoolkit::official_resolver)
-          .get()};
+          document, sourcemeta::jsontoolkit::official_resolver)};
   EXPECT_TRUE(base_dialect.has_value());
   EXPECT_EQ(base_dialect.value(),
             "http://json-schema.org/draft-03/hyper-schema#");

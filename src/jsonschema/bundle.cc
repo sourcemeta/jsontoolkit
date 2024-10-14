@@ -47,7 +47,7 @@ auto is_official_metaschema_reference(
   return !pointer.empty() && pointer.back().is_property() &&
          pointer.back().to_property() == "$schema" &&
          sourcemeta::jsontoolkit::official_resolver(destination)
-             .get()
+
              .has_value();
 }
 
@@ -60,8 +60,7 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
                    const std::optional<std::string> &default_dialect) -> void {
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(subschema, frame, references, walker, resolver,
-                                 default_dialect)
-      .wait();
+                                 default_dialect);
 
   for (const auto &[key, reference] : references) {
     if (frame.contains({sourcemeta::jsontoolkit::ReferenceType::Static,
@@ -86,7 +85,7 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
 
     assert(reference.base.has_value());
     const auto identifier{reference.base.value()};
-    const auto remote{resolver(identifier).get()};
+    const auto remote{resolver(identifier)};
     if (!remote.has_value()) {
       if (frame.contains(
               {sourcemeta::jsontoolkit::ReferenceType::Static, identifier}) ||
@@ -138,8 +137,7 @@ auto remove_identifiers(sourcemeta::jsontoolkit::JSON &schema,
   sourcemeta::jsontoolkit::ReferenceFrame frame;
   sourcemeta::jsontoolkit::ReferenceMap references;
   sourcemeta::jsontoolkit::frame(schema, frame, references, walker, resolver,
-                                 default_dialect)
-      .wait();
+                                 default_dialect);
 
   // (2) Remove all identifiers and anchors
   for (const auto &entry : sourcemeta::jsontoolkit::SchemaIterator{
@@ -199,8 +197,7 @@ auto bundle(sourcemeta::jsontoolkit::JSON &schema, const SchemaWalker &walker,
             const SchemaResolver &resolver, const BundleOptions options,
             const std::optional<std::string> &default_dialect) -> void {
   const auto vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)
-          .get()};
+      sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)};
   sourcemeta::jsontoolkit::ReferenceFrame frame;
   bundle_schema(schema, definitions_keyword(vocabularies), schema, frame,
                 walker, resolver, default_dialect);

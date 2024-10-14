@@ -3,25 +3,20 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-#include <future>      // std::promise, std::future
 #include <string>      // std::string
 #include <string_view> // std::string_view
 
 static auto test_resolver(std::string_view identifier)
-    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
-  std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
+    -> std::optional<sourcemeta::jsontoolkit::JSON> {
   if (identifier == "https://www.sourcemeta.com/test-1") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "http://json-schema.org/draft-03/schema#",
       "id": "https://www.sourcemeta.com/test-1",
       "type": "string"
-    })JSON"));
+    })JSON");
   } else {
-    promise.set_value(
-        sourcemeta::jsontoolkit::official_resolver(identifier).get());
+    return sourcemeta::jsontoolkit::official_resolver(identifier);
   }
-
-  return promise.get_future();
 }
 
 TEST(JSONSchema_bundle_draft3, no_references_no_id) {

@@ -78,15 +78,13 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
   ReferenceFrame frame;
   ReferenceMap references;
   sourcemeta::jsontoolkit::frame(result, frame, references, walker, resolver,
-                                 default_dialect)
-      .wait();
+                                 default_dialect);
 
   const std::string base{
       URI{sourcemeta::jsontoolkit::identify(
               schema, resolver,
               sourcemeta::jsontoolkit::IdentificationStrategy::Strict,
               default_dialect)
-              .get()
               .value_or("")}
           .canonicalize()
           .recompose()};
@@ -107,7 +105,7 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
   sourcemeta::jsontoolkit::SchemaCompilerSchemaContext schema_context{
       empty_pointer,
       result,
-      vocabularies(schema, resolver, root_frame_entry.dialect).get(),
+      vocabularies(schema, resolver, root_frame_entry.dialect),
       root_frame_entry.base,
       {},
       {}};
@@ -187,7 +185,7 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
       // schema resource that we are precompiling
       auto subschema{get(result, entry.second.pointer)};
       auto nested_vocabularies{
-          vocabularies(subschema, resolver, entry.second.dialect).get()};
+          vocabularies(subschema, resolver, entry.second.dialect)};
       const sourcemeta::jsontoolkit::SchemaCompilerSchemaContext
           nested_schema_context{entry.second.relative_pointer,
                                 std::move(subschema),
@@ -256,8 +254,7 @@ auto compile(const SchemaCompilerContext &context,
   return compile_subschema(
       context,
       {entry.relative_pointer, new_schema,
-       vocabularies(new_schema, context.resolver, entry.dialect).get(),
-       entry.base,
+       vocabularies(new_schema, context.resolver, entry.dialect), entry.base,
        // TODO: This represents a copy
        schema_context.labels, schema_context.references},
       {dynamic_context.keyword, destination_pointer,

@@ -8,8 +8,7 @@
 
 TEST(JSONSchema_evaluator_draft4, metaschema) {
   const auto metaschema{sourcemeta::jsontoolkit::official_resolver(
-                            "http://json-schema.org/draft-04/schema#")
-                            .get()};
+      "http://json-schema.org/draft-04/schema#")};
   EXPECT_TRUE(metaschema.has_value());
 
   const sourcemeta::jsontoolkit::JSON instance{
@@ -820,14 +819,13 @@ TEST(JSONSchema_evaluator_draft4, ref_12) {
     "$ref": "https://example.com#/i-dont-exist"
   })JSON")};
 
-  auto test_resolver = [](const std::string_view identifier) {
+  auto test_resolver = [](const std::string_view identifier)
+      -> std::optional<sourcemeta::jsontoolkit::JSON> {
     if (identifier == "https://example.com") {
-      std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
-      promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      return sourcemeta::jsontoolkit::parse(R"JSON({
                 "$schema": "http://json-schema.org/draft-04/schema#",
                 "id": "https://example.com"
-              })JSON"));
-      return promise.get_future();
+              })JSON");
     }
 
     return sourcemeta::jsontoolkit::official_resolver(identifier);
@@ -847,14 +845,13 @@ TEST(JSONSchema_evaluator_draft4, ref_13) {
     "$ref": "https://example.com#i-dont-exist"
   })JSON")};
 
-  auto test_resolver = [](const std::string_view identifier) {
+  auto test_resolver = [](const std::string_view identifier)
+      -> std::optional<sourcemeta::jsontoolkit::JSON> {
     if (identifier == "https://example.com") {
-      std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
-      promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+      return sourcemeta::jsontoolkit::parse(R"JSON({
                 "$schema": "http://json-schema.org/draft-04/schema#",
                 "id": "https://example.com"
-              })JSON"));
-      return promise.get_future();
+              })JSON");
     }
 
     return sourcemeta::jsontoolkit::official_resolver(identifier);

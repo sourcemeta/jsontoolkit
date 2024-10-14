@@ -18,16 +18,13 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
 static auto test_resolver(std::string_view identifier)
-    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
+    -> std::optional<sourcemeta::jsontoolkit::JSON> {
   const std::filesystem::path remotes_path{
       std::filesystem::path{OFFICIAL_SUITE_PATH} / "remotes"};
 
 #define READ_SCHEMA_FILE(uri, relative_path)                                   \
   if (identifier == (uri)) {                                                   \
-    std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;        \
-    promise.set_value(                                                         \
-        sourcemeta::jsontoolkit::from_file(remotes_path / (relative_path)));   \
-    return promise.get_future();                                               \
+    return sourcemeta::jsontoolkit::from_file(remotes_path / (relative_path)); \
   }
 
   // We keep an explicit list instead of dynamically reading into the directory

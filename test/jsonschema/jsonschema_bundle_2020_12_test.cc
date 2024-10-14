@@ -3,21 +3,19 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-#include <future>      // std::promise, std::future
 #include <string>      // std::string
 #include <string_view> // std::string_view
 
 static auto test_resolver(std::string_view identifier)
-    -> std::future<std::optional<sourcemeta::jsontoolkit::JSON>> {
-  std::promise<std::optional<sourcemeta::jsontoolkit::JSON>> promise;
+    -> std::optional<sourcemeta::jsontoolkit::JSON> {
   if (identifier == "https://example.com/foo/bar") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://example.com/foo/bar",
       "$anchor": "baz"
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://example.com/baz-anchor") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://example.com/baz-anchor",
       "$defs": {
@@ -26,80 +24,77 @@ static auto test_resolver(std::string_view identifier)
           "type": "string"
         }
       }
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://www.sourcemeta.com/test-1") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://www.sourcemeta.com/test-1",
       "type": "string"
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://www.sourcemeta.com/test-2") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://www.sourcemeta.com/test-2",
       "$ref": "test-3"
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://www.sourcemeta.com/test-3") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://www.sourcemeta.com/test-3",
       "$ref": "test-1"
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://www.sourcemeta.com/test-4") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://www.sourcemeta.com/test-4",
       "type": "boolean"
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://www.sourcemeta.com/recursive") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://www.sourcemeta.com/recursive",
       "properties": {
         "foo": { "$ref": "#" }
       }
-    })JSON"));
+    })JSON");
   } else if (identifier ==
              "https://www.sourcemeta.com/recursive-empty-fragment") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://www.sourcemeta.com/recursive-empty-fragment#",
       "properties": {
         "foo": { "$ref": "#" }
       }
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://www.sourcemeta.com/anonymous") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "type": "integer"
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://example.com/nested/ref-string.json") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$ref": "string.json"
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://example.com/nested/string.json") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "string"
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://example.com/meta/1.json") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://example.com/meta/2.json",
       "$id": "https://example.com/meta/1.json",
       "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
-    })JSON"));
+    })JSON");
   } else if (identifier == "https://example.com/meta/2.json") {
-    promise.set_value(sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://example.com/meta/2.json",
       "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
-    })JSON"));
+    })JSON");
   } else {
-    promise.set_value(
-        sourcemeta::jsontoolkit::official_resolver(identifier).get());
+    return sourcemeta::jsontoolkit::official_resolver(identifier);
   }
-
-  return promise.get_future();
 }
 
 TEST(JSONSchema_bundle_2020_12, no_references_no_id) {
