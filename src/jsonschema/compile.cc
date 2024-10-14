@@ -1,7 +1,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
-#include <algorithm> // std::move, std::any_of
+#include <algorithm> // std::move, std::any_of, std::sort, std::unique
 #include <cassert>   // assert
 #include <iterator>  // std::back_inserter
 #include <utility>   // std::move
@@ -146,10 +146,26 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
     }
   }
 
+  std::vector<std::string> resources;
+  for (const auto &entry : frame) {
+    if (entry.second.type == ReferenceEntryType::Resource) {
+      resources.push_back(entry.first.second);
+    }
+  }
+
+  // Rule out any duplicates as we will use this list as the
+  // source for a perfect hash function on schema resources.
+  std::sort(resources.begin(), resources.end());
+  resources.erase(std::unique(resources.begin(), resources.end()),
+                  resources.end());
+  assert(resources.size() ==
+         std::set<std::string>(resources.cbegin(), resources.cend()).size());
+
   const sourcemeta::jsontoolkit::SchemaCompilerContext context{
       result,
       frame,
       references,
+      std::move(resources),
       walker,
       resolver,
       compiler,
