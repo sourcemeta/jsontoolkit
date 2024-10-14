@@ -1,7 +1,9 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_EVALUATOR_CONTEXT_H
 #define SOURCEMETA_JSONTOOLKIT_EVALUATOR_CONTEXT_H
 
+#ifndef SOURCEMETA_JSONTOOLKIT_EVALUATOR_EXPORT
 #include "evaluator_export.h"
+#endif
 
 #include <sourcemeta/jsontoolkit/evaluator_template.h>
 

@@ -1,7 +1,9 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_ERROR_H
 #define SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_ERROR_H
 
+#ifndef SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 #include "jsonschema_export.h"
+#endif
 
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/uri.h>
