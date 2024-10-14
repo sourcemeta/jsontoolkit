@@ -91,6 +91,8 @@ struct SchemaCompilerContext {
   const ReferenceFrame &frame;
   /// The references of the entire schema
   const ReferenceMap &references;
+  /// The set of all schema resources in the schema without duplicates
+  const std::vector<std::string> resources;
   /// The schema walker in use
   const SchemaWalker &walker;
   /// The schema resolver in use
