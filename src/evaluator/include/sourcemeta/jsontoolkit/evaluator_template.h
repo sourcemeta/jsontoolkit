@@ -187,7 +187,7 @@ enum class SchemaCompilerTemplateIndex : std::uint8_t {
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
-    const std::string schema_resource;                                         \
+    const std::size_t schema_resource;                                         \
     const bool dynamic;                                                        \
     const bool report;                                                         \
     const type value;                                                          \
@@ -198,7 +198,7 @@ enum class SchemaCompilerTemplateIndex : std::uint8_t {
     const Pointer relative_schema_location;                                    \
     const Pointer relative_instance_location;                                  \
     const std::string keyword_location;                                        \
-    const std::string schema_resource;                                         \
+    const std::size_t schema_resource;                                         \
     const bool dynamic;                                                        \
     const bool report;                                                         \
     const type value;                                                          \

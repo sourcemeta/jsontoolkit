@@ -6,7 +6,7 @@
 TEST(JSONSchema_compile_json, defines_basic_root) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{
-      SchemaCompilerAssertionDefines{Pointer{}, Pointer{}, "#", "", true, true,
+      SchemaCompilerAssertionDefines{Pointer{}, Pointer{}, "#", 0, true, true,
                                      SchemaCompilerValueString{"foo"}}};
 
   const JSON result{to_json(steps)};
@@ -16,7 +16,7 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
       "type": "defines",
       "relativeSchemaLocation": "",
       "relativeInstanceLocation": "",
-      "schemaResource": "",
+      "schemaResource": 0,
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
@@ -34,7 +34,7 @@ TEST(JSONSchema_compile_json, defines_basic_root) {
 TEST(JSONSchema_compile_json, defines_basic_nested) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionDefines{
-      Pointer{"foo", "bar"}, Pointer{}, "#/foo/bar", "", true, true,
+      Pointer{"foo", "bar"}, Pointer{}, "#/foo/bar", 0, true, true,
       SchemaCompilerValueString{"foo"}}};
 
   const JSON result{to_json(steps)};
@@ -44,7 +44,7 @@ TEST(JSONSchema_compile_json, defines_basic_nested) {
       "type": "defines",
       "relativeSchemaLocation": "/foo/bar",
       "relativeInstanceLocation": "",
-      "schemaResource": "",
+      "schemaResource": 0,
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#/foo/bar",
@@ -62,7 +62,7 @@ TEST(JSONSchema_compile_json, defines_basic_nested) {
 TEST(JSONSchema_compile_json, fail_basic_root) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionFail{
-      Pointer{}, Pointer{}, "#", "", true, true, SchemaCompilerValueNone{}}};
+      Pointer{}, Pointer{}, "#", 0, true, true, SchemaCompilerValueNone{}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -71,7 +71,7 @@ TEST(JSONSchema_compile_json, fail_basic_root) {
       "type": "fail",
       "relativeSchemaLocation": "",
       "relativeInstanceLocation": "",
-      "schemaResource": "",
+      "schemaResource": 0,
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
@@ -85,7 +85,7 @@ TEST(JSONSchema_compile_json, fail_basic_root) {
 TEST(JSONSchema_compile_json, type_basic_root) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionTypeStrict{
-      Pointer{}, Pointer{}, "#", "", true, true,
+      Pointer{}, Pointer{}, "#", 0, true, true,
       SchemaCompilerValueType{JSON::Type::String}}};
 
   const JSON result{to_json(steps)};
@@ -95,7 +95,7 @@ TEST(JSONSchema_compile_json, type_basic_root) {
       "type": "type-strict",
       "relativeSchemaLocation": "",
       "relativeInstanceLocation": "",
-      "schemaResource": "",
+      "schemaResource": 0,
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
@@ -113,7 +113,7 @@ TEST(JSONSchema_compile_json, type_basic_root) {
 TEST(JSONSchema_compile_json, or_empty) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      Pointer{}, Pointer{}, "#", "", true, true, false, {}}};
+      Pointer{}, Pointer{}, "#", 0, true, true, false, {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -127,7 +127,7 @@ TEST(JSONSchema_compile_json, or_empty) {
       },
       "relativeSchemaLocation": "",
       "relativeInstanceLocation": "",
-      "schemaResource": "",
+      "schemaResource": 0,
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
@@ -142,11 +142,11 @@ TEST(JSONSchema_compile_json, or_single_child) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
-      Pointer{}, Pointer{}, "#", "", true, true,
+      Pointer{}, Pointer{}, "#", 0, true, true,
       SchemaCompilerValueType{JSON::Type::String}}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      Pointer{}, Pointer{}, "#", "", true, true, false, children}};
+      Pointer{}, Pointer{}, "#", 0, true, true, false, children}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -160,7 +160,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
       },
       "relativeSchemaLocation": "",
       "relativeInstanceLocation": "",
-      "schemaResource": "",
+      "schemaResource": 0,
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
@@ -170,7 +170,7 @@ TEST(JSONSchema_compile_json, or_single_child) {
           "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
-          "schemaResource": "",
+          "schemaResource": 0,
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
@@ -192,14 +192,14 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
 
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionTypeStrict{
-          Pointer{}, Pointer{}, "#", "", true, true,
+          Pointer{}, Pointer{}, "#", 0, true, true,
           SchemaCompilerValueType{JSON::Type::String}},
       SchemaCompilerAssertionTypeStrict{
-          Pointer{}, Pointer{}, "#", "", true, true,
+          Pointer{}, Pointer{}, "#", 0, true, true,
           SchemaCompilerValueType{JSON::Type::Array}}};
 
   const SchemaCompilerTemplate steps{SchemaCompilerLogicalOr{
-      Pointer{}, Pointer{}, "#", "", true, true, false, children}};
+      Pointer{}, Pointer{}, "#", 0, true, true, false, children}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -213,7 +213,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
       },
       "relativeSchemaLocation": "",
       "relativeInstanceLocation": "",
-      "schemaResource": "",
+      "schemaResource": 0,
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
@@ -223,7 +223,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
           "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
-          "schemaResource": "",
+          "schemaResource": 0,
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
@@ -238,7 +238,7 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
           "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
-          "schemaResource": "",
+          "schemaResource": 0,
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
@@ -257,15 +257,8 @@ TEST(JSONSchema_compile_json, or_multiple_children) {
 
 TEST(JSONSchema_compile_json, and_empty) {
   using namespace sourcemeta::jsontoolkit;
-  const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalAnd{Pointer{},
-                               Pointer{},
-                               "#",
-                               "",
-                               true,
-                               true,
-                               SchemaCompilerValueNone{},
-                               {}}};
+  const SchemaCompilerTemplate steps{SchemaCompilerLogicalAnd{
+      Pointer{}, Pointer{}, "#", 0, true, true, SchemaCompilerValueNone{}, {}}};
 
   const JSON result{to_json(steps)};
   const JSON expected{parse(R"EOF([
@@ -275,7 +268,7 @@ TEST(JSONSchema_compile_json, and_empty) {
       "value": null,
       "relativeSchemaLocation": "",
       "relativeInstanceLocation": "",
-      "schemaResource": "",
+      "schemaResource": 0,
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
@@ -290,11 +283,11 @@ TEST(JSONSchema_compile_json, and_single_child) {
   using namespace sourcemeta::jsontoolkit;
 
   const SchemaCompilerTemplate children{SchemaCompilerAssertionTypeStrict{
-      Pointer{}, Pointer{}, "#", "", true, true,
+      Pointer{}, Pointer{}, "#", 0, true, true,
       SchemaCompilerValueType{JSON::Type::String}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalAnd{Pointer{}, Pointer{}, "#", "", true, true,
+      SchemaCompilerLogicalAnd{Pointer{}, Pointer{}, "#", 0, true, true,
                                SchemaCompilerValueNone{}, children}};
 
   const JSON result{to_json(steps)};
@@ -305,7 +298,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
       "value": null,
       "relativeSchemaLocation": "",
       "relativeInstanceLocation": "",
-      "schemaResource": "",
+      "schemaResource": 0,
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
@@ -315,7 +308,7 @@ TEST(JSONSchema_compile_json, and_single_child) {
           "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
-          "schemaResource": "",
+          "schemaResource": 0,
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
@@ -337,14 +330,14 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
 
   const SchemaCompilerTemplate children{
       SchemaCompilerAssertionTypeStrict{
-          Pointer{}, Pointer{}, "#", "", true, true,
+          Pointer{}, Pointer{}, "#", 0, true, true,
           SchemaCompilerValueType{JSON::Type::String}},
       SchemaCompilerAssertionTypeStrict{
-          Pointer{}, Pointer{}, "#", "", true, true,
+          Pointer{}, Pointer{}, "#", 0, true, true,
           SchemaCompilerValueType{JSON::Type::Array}}};
 
   const SchemaCompilerTemplate steps{
-      SchemaCompilerLogicalAnd{Pointer{}, Pointer{}, "#", "", true, true,
+      SchemaCompilerLogicalAnd{Pointer{}, Pointer{}, "#", 0, true, true,
                                SchemaCompilerValueNone{}, children}};
 
   const JSON result{to_json(steps)};
@@ -355,7 +348,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
       "value": null,
       "relativeSchemaLocation": "",
       "relativeInstanceLocation": "",
-      "schemaResource": "",
+      "schemaResource": 0,
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",
@@ -365,7 +358,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
           "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
-          "schemaResource": "",
+          "schemaResource": 0,
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
@@ -380,7 +373,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
           "type": "type-strict",
           "relativeSchemaLocation": "",
           "relativeInstanceLocation": "",
-          "schemaResource": "",
+          "schemaResource": 0,
           "dynamic": true,
           "report": true,
           "absoluteKeywordLocation": "#",
@@ -400,7 +393,7 @@ TEST(JSONSchema_compile_json, and_multiple_children) {
 TEST(JSONSchema_compile_json, regex_basic) {
   using namespace sourcemeta::jsontoolkit;
   const SchemaCompilerTemplate steps{SchemaCompilerAssertionRegex{
-      Pointer{}, Pointer{}, "#", "", true, true,
+      Pointer{}, Pointer{}, "#", 0, true, true,
       SchemaCompilerValueRegex{std::regex{"^a", std::regex::ECMAScript},
                                "^a"}}};
 
@@ -411,7 +404,7 @@ TEST(JSONSchema_compile_json, regex_basic) {
       "type": "regex",
       "relativeSchemaLocation": "",
       "relativeInstanceLocation": "",
-      "schemaResource": "",
+      "schemaResource": 0,
       "dynamic": true,
       "report": true,
       "absoluteKeywordLocation": "#",

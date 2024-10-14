@@ -22,7 +22,7 @@ auto EvaluationContext::prepare(const JSON &instance) -> void {
 auto EvaluationContext::push_without_traverse(
     const Pointer &relative_schema_location,
     const Pointer &relative_instance_location,
-    const std::string &schema_resource, const bool dynamic) -> void {
+    const std::size_t &schema_resource, const bool dynamic) -> void {
   // Guard against infinite recursion in a cheap manner, as
   // infinite recursion will manifest itself through huge
   // ever-growing evaluate paths
@@ -49,7 +49,7 @@ auto EvaluationContext::push_without_traverse(
 
 auto EvaluationContext::push(const Pointer &relative_schema_location,
                              const Pointer &relative_instance_location,
-                             const std::string &schema_resource,
+                             const std::size_t &schema_resource,
                              const bool dynamic) -> void {
   this->push_without_traverse(relative_schema_location,
                               relative_instance_location, schema_resource,
@@ -63,7 +63,7 @@ auto EvaluationContext::push(const Pointer &relative_schema_location,
 
 auto EvaluationContext::push(const Pointer &relative_schema_location,
                              const Pointer &relative_instance_location,
-                             const std::string &schema_resource,
+                             const std::size_t &schema_resource,
                              const bool dynamic,
                              std::reference_wrapper<const JSON> &&new_instance)
     -> void {
@@ -85,8 +85,6 @@ auto EvaluationContext::pop(const bool dynamic) -> void {
 
   this->frame_sizes.pop_back();
 
-  // TODO: Do schema resource management using hashes to avoid
-  // expensive string comparisons
   if (dynamic) {
     assert(!this->resources_.empty());
     this->resources_.pop_back();
@@ -235,19 +233,14 @@ auto EvaluationContext::instances() const noexcept
   return this->instances_;
 }
 
-auto EvaluationContext::hash(const std::string &base,
+auto EvaluationContext::hash(const std::size_t &resource,
                              const std::string &fragment) const noexcept
     -> std::size_t {
-  // TODO: Avoid these string copies
-  std::ostringstream result;
-  result << base;
-  result << '#';
-  result << fragment;
-  return this->hasher_(result.str());
+  return resource + this->hasher_(fragment);
 }
 
 auto EvaluationContext::resources() const noexcept
-    -> const std::vector<std::string> & {
+    -> const std::vector<std::size_t> & {
   return this->resources_;
 }
 

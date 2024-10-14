@@ -40,6 +40,8 @@ auto compile_subschema(
                              context.resolver, default_dialect}) {
     assert(entry.pointer.back().is_property());
     const auto &keyword{entry.pointer.back().to_property()};
+    // Bases must not contain fragments
+    assert(!schema_context.base.fragment().has_value());
     for (auto &&step : context.compiler(
              context,
              {schema_context.relative_pointer.concat({keyword}),
@@ -108,7 +110,7 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
       empty_pointer,
       result,
       vocabularies(schema, resolver, root_frame_entry.dialect),
-      root_frame_entry.base,
+      URI{root_frame_entry.base}.canonicalize().recompose(),
       {},
       {}};
 
@@ -193,7 +195,8 @@ auto compile(const JSON &schema, const SchemaWalker &walker,
 
       const URI anchor_uri{entry.first.second};
       const auto label{EvaluationContext{}.hash(
-          anchor_uri.recompose_without_fragment().value_or(""),
+          schema_resource_id(
+              context, anchor_uri.recompose_without_fragment().value_or("")),
           std::string{anchor_uri.fragment().value_or("")})};
       schema_context.labels.insert(label);
 
@@ -270,7 +273,8 @@ auto compile(const SchemaCompilerContext &context,
   return compile_subschema(
       context,
       {entry.relative_pointer, new_schema,
-       vocabularies(new_schema, context.resolver, entry.dialect), entry.base,
+       vocabularies(new_schema, context.resolver, entry.dialect),
+       URI{entry.base}.recompose_without_fragment().value_or(""),
        // TODO: This represents a copy
        schema_context.labels, schema_context.references},
       {dynamic_context.keyword, destination_pointer,
