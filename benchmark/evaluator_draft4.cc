@@ -5,8 +5,7 @@
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 
-static void
-JSONSchema_Validate_Draft4_Meta_1_No_Callback(benchmark::State &state) {
+static void Evaluator_Draft4_Meta_1_No_Callback(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -30,8 +29,7 @@ JSONSchema_Validate_Draft4_Meta_1_No_Callback(benchmark::State &state) {
   }
 }
 
-static void
-JSONSchema_Validate_Draft4_Required_Properties(benchmark::State &state) {
+static void Evaluator_Draft4_Required_Properties(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -112,7 +110,7 @@ JSONSchema_Validate_Draft4_Required_Properties(benchmark::State &state) {
   }
 }
 
-static void JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match(
+static void Evaluator_Draft4_Many_Optional_Properties_Minimal_Match(
     benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -164,7 +162,7 @@ static void JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match(
   }
 }
 
-static void JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match(
+static void Evaluator_Draft4_Few_Optional_Properties_Minimal_Match(
     benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -216,7 +214,7 @@ static void JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match(
   }
 }
 
-static void JSONSchema_Validate_Draft4_Items_Schema(benchmark::State &state) {
+static void Evaluator_Draft4_Items_Schema(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -295,7 +293,7 @@ static void JSONSchema_Validate_Draft4_Items_Schema(benchmark::State &state) {
   }
 }
 
-static void JSONSchema_Validate_Draft4_Nested_Object(benchmark::State &state) {
+static void Evaluator_Draft4_Nested_Object(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON(
 {
@@ -433,7 +431,7 @@ static void JSONSchema_Validate_Draft4_Nested_Object(benchmark::State &state) {
 }
 
 static void
-JSONSchema_Validate_Draft4_Properties_Triad_Optional(benchmark::State &state) {
+Evaluator_Draft4_Properties_Triad_Optional(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -477,7 +475,7 @@ JSONSchema_Validate_Draft4_Properties_Triad_Optional(benchmark::State &state) {
 }
 
 static void
-JSONSchema_Validate_Draft4_Properties_Triad_Required(benchmark::State &state) {
+Evaluator_Draft4_Properties_Triad_Required(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -521,8 +519,7 @@ JSONSchema_Validate_Draft4_Properties_Triad_Required(benchmark::State &state) {
   }
 }
 
-static void
-JSONSchema_Validate_Draft4_Properties_Triad_Closed(benchmark::State &state) {
+static void Evaluator_Draft4_Properties_Triad_Closed(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -562,8 +559,7 @@ JSONSchema_Validate_Draft4_Properties_Triad_Closed(benchmark::State &state) {
   }
 }
 
-static void
-JSONSchema_Validate_Draft4_Non_Recursive_Ref(benchmark::State &state) {
+static void Evaluator_Draft4_Non_Recursive_Ref(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -609,8 +605,7 @@ JSONSchema_Validate_Draft4_Non_Recursive_Ref(benchmark::State &state) {
   }
 }
 
-static void
-JSONSchema_Validate_Draft4_Pattern_Properties_True(benchmark::State &state) {
+static void Evaluator_Draft4_Pattern_Properties_True(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -651,8 +646,7 @@ JSONSchema_Validate_Draft4_Pattern_Properties_True(benchmark::State &state) {
   }
 }
 
-static void
-JSONSchema_Validate_Draft4_Ref_To_Single_Property(benchmark::State &state) {
+static void Evaluator_Draft4_Ref_To_Single_Property(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -712,7 +706,7 @@ JSONSchema_Validate_Draft4_Ref_To_Single_Property(benchmark::State &state) {
 }
 
 static void
-JSONSchema_Validate_Draft4_Additional_Properties_Type(benchmark::State &state) {
+Evaluator_Draft4_Additional_Properties_Type(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -761,7 +755,7 @@ JSONSchema_Validate_Draft4_Additional_Properties_Type(benchmark::State &state) {
   }
 }
 
-static void JSONSchema_Validate_Draft4_Nested_Oneof(benchmark::State &state) {
+static void Evaluator_Draft4_Nested_Oneof(benchmark::State &state) {
   const sourcemeta::jsontoolkit::JSON schema{
       sourcemeta::jsontoolkit::parse(R"JSON({
         "$schema": "http://json-schema.org/draft-04/schema#",
@@ -803,101 +797,17 @@ static void JSONSchema_Validate_Draft4_Nested_Oneof(benchmark::State &state) {
   }
 }
 
-static void JSONSchema_Validate_Draft6_Property_Names(benchmark::State &state) {
-  const sourcemeta::jsontoolkit::JSON schema{
-      sourcemeta::jsontoolkit::parse(R"JSON({
-        "$schema": "http://json-schema.org/draft-06/schema#",
-        "propertyNames": {
-          "minLength": 2
-        }
-      })JSON")};
-
-  const sourcemeta::jsontoolkit::JSON instance{
-      sourcemeta::jsontoolkit::parse(R"JSON({
-        "aa": true,
-        "bb": true,
-        "cc": true,
-        "dd": true,
-        "ee": true,
-        "ff": true,
-        "gg": true,
-        "hh": true,
-        "ii": true,
-        "jj": true,
-        "kk": true,
-        "ll": true,
-        "mm": true,
-        "nn": true,
-        "oo": true,
-        "pp": true,
-        "qq": true,
-        "rr": true,
-        "ss": true,
-        "tt": true,
-        "uu": true,
-        "vv": true,
-        "ww": true,
-        "xx": true,
-        "yy": true,
-        "zz": true
-      })JSON")};
-
-  const auto schema_template{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-  for (auto _ : state) {
-    auto result{sourcemeta::jsontoolkit::evaluate(schema_template, instance)};
-    assert(result);
-    benchmark::DoNotOptimize(result);
-  }
-}
-
-static void JSONSchema_Validate_Draft7_If_Then_Else(benchmark::State &state) {
-  const sourcemeta::jsontoolkit::JSON schema{
-      sourcemeta::jsontoolkit::parse(R"JSON({
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "if": {
-          "type": "string"
-        },
-        "then": {
-          "if": { "minLength": 2 },
-          "then": { "maxLength": 5 },
-          "else": { "maxLength": 3 }
-        }, 
-        "else": {
-          "if": { "type": "integer" },
-          "then": { "minimum": 4 },
-          "else": { "maxProperties": 4 }
-        }
-      })JSON")};
-
-  const sourcemeta::jsontoolkit::JSON instance{"foo"};
-
-  const auto schema_template{sourcemeta::jsontoolkit::compile(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      sourcemeta::jsontoolkit::default_schema_compiler)};
-  for (auto _ : state) {
-    auto result{sourcemeta::jsontoolkit::evaluate(schema_template, instance)};
-    assert(result);
-    benchmark::DoNotOptimize(result);
-  }
-}
-
-BENCHMARK(JSONSchema_Validate_Draft4_Meta_1_No_Callback);
-BENCHMARK(JSONSchema_Validate_Draft4_Required_Properties);
-BENCHMARK(JSONSchema_Validate_Draft4_Many_Optional_Properties_Minimal_Match);
-BENCHMARK(JSONSchema_Validate_Draft4_Few_Optional_Properties_Minimal_Match);
-BENCHMARK(JSONSchema_Validate_Draft4_Items_Schema);
-BENCHMARK(JSONSchema_Validate_Draft4_Nested_Object);
-BENCHMARK(JSONSchema_Validate_Draft4_Properties_Triad_Optional);
-BENCHMARK(JSONSchema_Validate_Draft4_Properties_Triad_Closed);
-BENCHMARK(JSONSchema_Validate_Draft4_Properties_Triad_Required);
-BENCHMARK(JSONSchema_Validate_Draft4_Non_Recursive_Ref);
-BENCHMARK(JSONSchema_Validate_Draft4_Pattern_Properties_True);
-BENCHMARK(JSONSchema_Validate_Draft4_Ref_To_Single_Property);
-BENCHMARK(JSONSchema_Validate_Draft4_Additional_Properties_Type);
-BENCHMARK(JSONSchema_Validate_Draft4_Nested_Oneof);
-BENCHMARK(JSONSchema_Validate_Draft6_Property_Names);
-BENCHMARK(JSONSchema_Validate_Draft7_If_Then_Else);
+BENCHMARK(Evaluator_Draft4_Meta_1_No_Callback);
+BENCHMARK(Evaluator_Draft4_Required_Properties);
+BENCHMARK(Evaluator_Draft4_Many_Optional_Properties_Minimal_Match);
+BENCHMARK(Evaluator_Draft4_Few_Optional_Properties_Minimal_Match);
+BENCHMARK(Evaluator_Draft4_Items_Schema);
+BENCHMARK(Evaluator_Draft4_Nested_Object);
+BENCHMARK(Evaluator_Draft4_Properties_Triad_Optional);
+BENCHMARK(Evaluator_Draft4_Properties_Triad_Closed);
+BENCHMARK(Evaluator_Draft4_Properties_Triad_Required);
+BENCHMARK(Evaluator_Draft4_Non_Recursive_Ref);
+BENCHMARK(Evaluator_Draft4_Pattern_Properties_True);
+BENCHMARK(Evaluator_Draft4_Ref_To_Single_Property);
+BENCHMARK(Evaluator_Draft4_Additional_Properties_Type);
+BENCHMARK(Evaluator_Draft4_Nested_Oneof);
