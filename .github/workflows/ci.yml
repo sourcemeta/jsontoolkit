@@ -162,8 +162,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: sudo apt update
-      - run: sudo apt install -y emscripten
+      - run: |
+          git clone https://github.com/emscripten-core/emsdk.git
+          cd emsdk
+          ./emsdk install 3.1.68
+          ./emsdk activate 3.1.68
+          rm -rf upstream/emscripten/cmake
+          echo "$(pwd)/upstream/emscripten" >> $GITHUB_PATH
         if: matrix.binding.name == 'nodejs'
       - run: make -C bindings/${{ matrix.binding.name }} compile
       - run: make -C bindings/${{ matrix.binding.name }} test
