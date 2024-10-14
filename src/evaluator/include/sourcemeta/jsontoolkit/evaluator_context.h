@@ -16,6 +16,7 @@
 #include <map>        // std::map
 #include <optional>   // std::optional
 #include <set>        // std::set
+#include <string>     // std::string
 #include <vector>     // std::vector
 
 namespace sourcemeta::jsontoolkit {
@@ -76,6 +77,8 @@ public:
   // References and anchors
   ///////////////////////////////////////////////
 
+  auto hash(const std::string &base, const std::string &fragment) const noexcept
+      -> std::size_t;
   auto resources() const noexcept -> const std::vector<std::string> &;
   auto mark(const std::size_t id, const SchemaCompilerTemplate &children)
       -> void;
@@ -116,6 +119,7 @@ private:
   WeakPointer evaluate_path_;
   WeakPointer instance_location_;
   std::vector<std::pair<std::size_t, std::size_t>> frame_sizes;
+  const std::hash<std::string> hasher_{};
   // TODO: Keep hashes of schema resources URI instead for performance reasons
   std::vector<std::string> resources_;
   // TODO: Try unordered_map

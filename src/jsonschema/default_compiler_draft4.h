@@ -4,6 +4,8 @@
 #include <sourcemeta/jsontoolkit/jsonschema.h>
 #include <sourcemeta/jsontoolkit/jsonschema_compile.h>
 
+#include <sourcemeta/jsontoolkit/evaluator_context.h>
+
 #include <algorithm> // std::sort, std::any_of
 #include <cassert>   // assert
 #include <regex>     // std::regex, std::regex_error
@@ -49,7 +51,8 @@ auto compiler_draft4_core_ref(
   }
 
   const auto &reference{context.references.at({type, entry.pointer})};
-  const auto label{std::hash<std::string>{}(reference.destination)};
+  const auto label{EvaluationContext{}.hash(reference.base.value_or(""),
+                                            reference.fragment.value_or(""))};
 
   // The label is already registered, so just jump to it
   if (schema_context.labels.contains(label)) {
