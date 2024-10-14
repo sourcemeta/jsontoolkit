@@ -220,7 +220,7 @@ struct DescribeVisitor {
     return unknown();
   }
 
-  auto operator()(const SchemaCompilerLogicalNot &) const -> std::string {
+  auto operator()(const SchemaCompilerAnnotationNot &) const -> std::string {
     std::ostringstream message;
     message
         << "The " << to_string(this->target.type())

@@ -269,11 +269,11 @@ struct StepVisitor {
               SchemaCompilerAnnotationLoopItemsUnmarked)
   HANDLE_STEP("annotation", "loop-items-unevaluated",
               SchemaCompilerAnnotationLoopItemsUnevaluated)
+  HANDLE_STEP("annotation", "not", SchemaCompilerAnnotationNot)
   HANDLE_STEP("logical", "or", SchemaCompilerLogicalOr)
   HANDLE_STEP("logical", "and", SchemaCompilerLogicalAnd)
   HANDLE_STEP("logical", "xor", SchemaCompilerLogicalXor)
   HANDLE_STEP("logical", "condition", SchemaCompilerLogicalCondition)
-  HANDLE_STEP("logical", "not", SchemaCompilerLogicalNot)
   HANDLE_STEP("logical", "when-type", SchemaCompilerLogicalWhenType)
   HANDLE_STEP("logical", "when-defines", SchemaCompilerLogicalWhenDefines)
   HANDLE_STEP("logical", "when-array-size-greater",

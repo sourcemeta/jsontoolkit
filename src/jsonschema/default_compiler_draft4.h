@@ -824,7 +824,8 @@ auto compiler_draft4_applicator_not(
     const SchemaCompilerSchemaContext &schema_context,
     const SchemaCompilerDynamicContext &dynamic_context)
     -> SchemaCompilerTemplate {
-  return {make<SchemaCompilerLogicalNot>(
+  // TODO: Don't mask annotations if annotations are not needed
+  return {make<SchemaCompilerAnnotationNot>(
       true, context, schema_context, dynamic_context, SchemaCompilerValueNone{},
       compile(context, schema_context, relative_dynamic_context, empty_pointer,
               empty_pointer))};
