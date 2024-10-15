@@ -3,14 +3,6 @@ set(BENCHMARK_SOURCES)
 if(JSONTOOLKIT_JSON)
   list(APPEND BENCHMARK_SOURCES json.cc)
 endif()
-if(JSONTOOLKIT_EVALUATOR AND JSONTOOLKIT_JSONSCHEMA)
-  list(APPEND BENCHMARK_SOURCES
-    compiler_draft6.cc
-    evaluator_draft4.cc
-    evaluator_draft6.cc
-    evaluator_draft7.cc
-    evaluator_2020_12.cc)
-endif()
 
 if(BENCHMARK_SOURCES)
   add_executable(sourcemeta_jsontoolkit_benchmark ${BENCHMARK_SOURCES})
@@ -25,12 +17,6 @@ if(BENCHMARK_SOURCES)
   if(JSONTOOLKIT_JSON)
     target_link_libraries(sourcemeta_jsontoolkit_benchmark
       PRIVATE sourcemeta::jsontoolkit::json)
-  endif()
-  if(JSONTOOLKIT_EVALUATOR AND JSONTOOLKIT_JSONSCHEMA)
-    target_link_libraries(sourcemeta_jsontoolkit_benchmark
-      PRIVATE sourcemeta::jsontoolkit::evaluator)
-    target_link_libraries(sourcemeta_jsontoolkit_benchmark
-      PRIVATE sourcemeta::jsontoolkit::jsonschema)
   endif()
 
   add_custom_target(benchmark_all
@@ -50,15 +36,4 @@ else()
   add_custom_target(benchmark_json VERBATIM
     COMMAND "${CMAKE_COMMAND}" -E echo "Nothing to benchmark"
     COMMAND "${CMAKE_COMMAND}" -E false)
-endif()
-
-if(JSONTOOLKIT_JSONSCHEMA)
-  add_executable(sourcemeta_jsontoolkit_benchmark_validator_helper validator_helper.cc)
-  noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_benchmark_validator_helper)
-  target_link_libraries(sourcemeta_jsontoolkit_benchmark_validator_helper
-    PRIVATE sourcemeta::jsontoolkit::json)
-  target_link_libraries(sourcemeta_jsontoolkit_benchmark_validator_helper
-    PRIVATE sourcemeta::jsontoolkit::jsonl)
-  target_link_libraries(sourcemeta_jsontoolkit_benchmark_validator_helper
-    PRIVATE sourcemeta::jsontoolkit::jsonschema)
 endif()

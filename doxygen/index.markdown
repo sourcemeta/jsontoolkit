@@ -3,9 +3,9 @@ Getting Started
 
 @tableofcontents
 
-JSON Toolkit is a high-performance [JSON Schema](http://json-schema.org)
-evaluator and related JSON utilities for modern C++. It comes with a built-in
-parser and growing support for standards such [JSON
+JSON Toolkit is a swiss-army knife for [JSON](https://www.json.org) programming
+in modern C++. It comes with a built-in parser and growing support for
+standards such as [JSON Schema](http://json-schema.org), [JSON
 Pointer](https://www.rfc-editor.org/rfc/rfc6901),
 [JSONL](https://jsonlines.org), and more. It targets C++20 and supports the
 Clang, GCC, and MSVC compilers on macOS, GNU/Linux, FreeBSD, Windows, and
@@ -87,7 +87,6 @@ CMake
 | `JSONTOOLKIT_URI`                 | Boolean | `ON`    | Build the JSON Toolkit URI library                    |
 | `JSONTOOLKIT_JSON`                | Boolean | `ON`    | Build the JSON Toolkit JSON library                   |
 | `JSONTOOLKIT_JSONSCHEMA`          | Boolean | `ON`    | Build the JSON Toolkit JSON Schema library            |
-| `JSONTOOLKIT_EVALUATOR`           | Boolean | `ON`    | Build the JSON Toolkit JSON Schema evaluator library  |
 | `JSONTOOLKIT_JSONPOINTER`         | Boolean | `ON`    | Build the JSON Toolkit JSON Pointer library           |
 | `JSONTOOLKIT_JSONL`               | Boolean | `ON`    | Build the JSON Toolkit JSONL library                  |
 | `JSONTOOLKIT_TESTS`               | Boolean | `OFF`   | Build the JSON Toolkit tests                          |
