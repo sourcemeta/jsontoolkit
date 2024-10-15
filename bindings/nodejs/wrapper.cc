@@ -24,6 +24,19 @@ public:
     return emscripten::val(this->schemas.size() - 1);
   }
 
+  auto compile_with_default_dialect(const std::string &schema_string,
+                                    const std::string &default_dialect)
+      -> emscripten::val {
+    const auto schema{sourcemeta::jsontoolkit::parse(schema_string)};
+    this->schemas.emplace_back(sourcemeta::jsontoolkit::compile(
+        schema, sourcemeta::jsontoolkit::default_schema_walker,
+        sourcemeta::jsontoolkit::official_resolver,
+        sourcemeta::jsontoolkit::default_schema_compiler,
+        sourcemeta::jsontoolkit::SchemaCompilerMode::FastValidation,
+        default_dialect));
+    return emscripten::val(this->schemas.size() - 1);
+  }
+
   auto evaluate(const std::size_t schema, const std::string &instance_string)
       -> emscripten::val {
     assert(schema < this->schemas.size());
@@ -37,7 +50,11 @@ public:
 
   auto remove(const std::size_t schema) -> void {
     assert(schema < this->schemas.size());
-    this->schemas[schema] = std::nullopt;
+    if (schema == this->schemas.size() - 1) {
+      this->schemas.pop_back();
+    } else {
+      this->schemas[schema] = std::nullopt;
+    }
   }
 
 private:
@@ -50,6 +67,8 @@ EMSCRIPTEN_BINDINGS(jsontoolkit) {
   emscripten::class_<Wrapper>("Wrapper")
       .constructor<>()
       .function("compile", &Wrapper::compile)
+      .function("compileWithDefaultDialect",
+                &Wrapper::compile_with_default_dialect)
       .function("evaluate", &Wrapper::evaluate)
       .function("remove", &Wrapper::remove);
 }

@@ -159,16 +159,17 @@ jobs:
       matrix:
         binding:
           - name: nodejs
+    env:
+      EMSDK_VERSION: 3.1.58
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: |
-          git clone https://github.com/emscripten-core/emsdk.git
-          cd emsdk
-          ./emsdk install 3.1.68
-          ./emsdk activate 3.1.68
-          rm -rf upstream/emscripten/cmake
-          echo "$(pwd)/upstream/emscripten" >> $GITHUB_PATH
+          git clone --depth 1 https://github.com/emscripten-core/emsdk.git
+          ./emsdk/emsdk install ${{ env.EMSDK_VERSION }}
+          ./emsdk/emsdk activate ${{ env.EMSDK_VERSION }}
+          rm -rf emsdk/upstream/emscripten/cmake
+          echo "$(pwd)/emsdk/upstream/emscripten" >> $GITHUB_PATH
         if: matrix.binding.name == 'nodejs'
       - run: make -C bindings/${{ matrix.binding.name }} compile
       - run: make -C bindings/${{ matrix.binding.name }} test

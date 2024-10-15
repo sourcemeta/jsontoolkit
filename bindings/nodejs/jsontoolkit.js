@@ -10,8 +10,13 @@ async function singleton() {
   return manager;
 }
 
-export async function compile(schema) {
-  return (await singleton()).compile(JSON.stringify(schema));
+export async function compile(schema, dialect = null) {
+  if (typeof dialect === 'string') {
+    return (await singleton()).compileWithDefaultDialect(
+      JSON.stringify(schema), dialect);
+  } else {
+    return (await singleton()).compile(JSON.stringify(schema));
+  }
 }
 
 export async function evaluate(template, instance) {
