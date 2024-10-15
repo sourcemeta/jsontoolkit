@@ -79,13 +79,10 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_walker_none_test.cc
   jsonschema_walker_test.cc
   jsonschema_error_test.cc
-  jsonschema_compile_json_test.cc
   jsonschema_keyword_iterator_test.cc
   jsonschema_official_resolver_test.cc
   jsonschema_map_resolver_test.cc
-  jsonschema_format_test.cc
-  jsonschema_template_format_test.cc
-  jsonschema_output_error_trace_test.cc)
+  jsonschema_format_test.cc)
 noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_jsonschema_unit)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE GTest::gtest)
