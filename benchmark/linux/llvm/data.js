@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729019422410,
+  "lastUpdate": 1729105631084,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -22956,6 +22956,34 @@ window.BENCHMARK_DATA = {
             "value": 1878.1080111933577,
             "unit": "ns/iter",
             "extra": "iterations: 392376\ncpu: 1878.0352162211757 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "9685d29e2e633d71319c64b1ab2fbceab865dbf3",
+          "message": "Extract the JSON Schema compiler & evaluator out of this repository (#1312)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-10-15T18:30:16Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/9685d29e2e633d71319c64b1ab2fbceab865dbf3"
+        },
+        "date": 1729105630108,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 2073.798027871808,
+            "unit": "ns/iter",
+            "extra": "iterations: 342067\ncpu: 2073.6820388988126 ns\nthreads: 1"
           }
         ]
       }
