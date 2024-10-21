@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729278371428,
+  "lastUpdate": 1729537610389,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos/llvm)": [
@@ -17622,6 +17622,34 @@ window.BENCHMARK_DATA = {
             "value": 4145.3637120985295,
             "unit": "ns/iter",
             "extra": "iterations: 184855\ncpu: 4018.912120310514 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "2d78929faf0f96110edfb67fa3ddf6916cf35ef7",
+          "message": "Use fully qualified includes for export headers (#1313)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-10-18T00:18:13Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/2d78929faf0f96110edfb67fa3ddf6916cf35ef7"
+        },
+        "date": 1729537608045,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 3809.433548879399,
+            "unit": "ns/iter",
+            "extra": "iterations: 186039\ncpu: 3808.4917678551274 ns\nthreads: 1"
           }
         ]
       }
