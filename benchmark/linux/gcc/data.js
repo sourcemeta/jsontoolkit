@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729624301852,
+  "lastUpdate": 1729636335739,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -23056,6 +23056,36 @@ window.BENCHMARK_DATA = {
             "value": 3001.394714907121,
             "unit": "ns/iter",
             "extra": "iterations: 230346\ncpu: 3001.1845484618784 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "415950175681e90af4fba2cf04971cf37ee044a9",
+          "message": "Implement `starts_with_initial` for `GenericPointer` (#1314)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-10-22T18:27:59-04:00",
+          "tree_id": "14d68e22288f939a4d194281bb7cdee638e36b2b",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/415950175681e90af4fba2cf04971cf37ee044a9"
+        },
+        "date": 1729636334860,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 3036.86571127971,
+            "unit": "ns/iter",
+            "extra": "iterations: 215759\ncpu: 3036.7825119693734 ns\nthreads: 1"
           }
         ]
       }
