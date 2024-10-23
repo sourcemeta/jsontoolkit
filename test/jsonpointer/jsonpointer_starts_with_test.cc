@@ -67,3 +67,66 @@ TEST(JSONPointer_starts_with, empty_empty) {
   const sourcemeta::jsontoolkit::Pointer prefix;
   EXPECT_TRUE(pointer.starts_with(prefix));
 }
+
+TEST(JSONPointer_starts_with, tail_equal_initial) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  const sourcemeta::jsontoolkit::Pointer::Token tail{"qux"};
+  const sourcemeta::jsontoolkit::Pointer prefix{"foo", "bar", "baz"};
+  EXPECT_TRUE(pointer.starts_with(prefix, tail));
+}
+
+TEST(JSONPointer_starts_with, tail_subset_initial_true) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  const sourcemeta::jsontoolkit::Pointer::Token tail{"qux"};
+  const sourcemeta::jsontoolkit::Pointer prefix{"foo", "bar"};
+  EXPECT_TRUE(pointer.starts_with(prefix, tail));
+}
+
+TEST(JSONPointer_starts_with, tail_subset_initial_false) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  const sourcemeta::jsontoolkit::Pointer::Token tail{"qux"};
+  const sourcemeta::jsontoolkit::Pointer prefix{"foo", "qux"};
+  EXPECT_FALSE(pointer.starts_with(prefix, tail));
+}
+
+TEST(JSONPointer_starts_with, tail_equal_initial_plus_tail_true) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  const sourcemeta::jsontoolkit::Pointer::Token tail{"qux"};
+  const sourcemeta::jsontoolkit::Pointer prefix{"foo", "bar", "baz", "qux"};
+  EXPECT_TRUE(pointer.starts_with(prefix, tail));
+}
+
+TEST(JSONPointer_starts_with, tail_equal_initial_plus_tail_false) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  const sourcemeta::jsontoolkit::Pointer::Token tail{"qux"};
+  const sourcemeta::jsontoolkit::Pointer prefix{"foo", "bar", "baz", "xxx"};
+  EXPECT_FALSE(pointer.starts_with(prefix, tail));
+}
+
+TEST(JSONPointer_starts_with, tail_equal_tail) {
+  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
+  const sourcemeta::jsontoolkit::Pointer::Token tail{"qux"};
+  const sourcemeta::jsontoolkit::Pointer prefix{"qux"};
+  EXPECT_FALSE(pointer.starts_with(prefix, tail));
+}
+
+TEST(JSONPointer_starts_with, tail_empty_initial_true) {
+  const sourcemeta::jsontoolkit::Pointer pointer;
+  const sourcemeta::jsontoolkit::Pointer::Token tail{"qux"};
+  const sourcemeta::jsontoolkit::Pointer prefix{"qux"};
+  EXPECT_TRUE(pointer.starts_with(prefix, tail));
+}
+
+TEST(JSONPointer_starts_with, tail_empty_initial_false) {
+  const sourcemeta::jsontoolkit::Pointer pointer;
+  const sourcemeta::jsontoolkit::Pointer::Token tail{"qux"};
+  const sourcemeta::jsontoolkit::Pointer prefix{"bar"};
+  EXPECT_FALSE(pointer.starts_with(prefix, tail));
+}
+
+TEST(JSONPointer_starts_with, tail_empty_prefix) {
+  const sourcemeta::jsontoolkit::Pointer pointer;
+  const sourcemeta::jsontoolkit::Pointer::Token tail{"qux"};
+  const sourcemeta::jsontoolkit::Pointer prefix;
+  EXPECT_TRUE(pointer.starts_with(prefix, tail));
+}
