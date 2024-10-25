@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729796923977,
+  "lastUpdate": 1729883516007,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -23242,6 +23242,34 @@ window.BENCHMARK_DATA = {
             "value": 2090.4954432427494,
             "unit": "ns/iter",
             "extra": "iterations: 333790\ncpu: 2090.4052428173404 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "7654c30ef2f0a0ccb36affa810ffebebd6179ebd",
+          "message": "Implement a JSON Pointer `starts_with` variant that takes a token tail (#1315)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-10-23T15:18:39Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/7654c30ef2f0a0ccb36affa810ffebebd6179ebd"
+        },
+        "date": 1729883515018,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 2093.2808673933278,
+            "unit": "ns/iter",
+            "extra": "iterations: 335119\ncpu: 2093.214834133547 ns\nthreads: 1"
           }
         ]
       }
