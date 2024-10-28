@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729883550393,
+  "lastUpdate": 1730123736800,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -23200,6 +23200,36 @@ window.BENCHMARK_DATA = {
             "value": 3031.928940439609,
             "unit": "ns/iter",
             "extra": "iterations: 230539\ncpu: 3031.8171849448468 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "distinct": true,
+          "id": "9a82213f47f0cb7297276016af106cac66b77753",
+          "message": "Simplify README\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-10-28T09:50:52-04:00",
+          "tree_id": "93f4dfb9723398db87c4e013359ef44d6951a18f",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/9a82213f47f0cb7297276016af106cac66b77753"
+        },
+        "date": 1730123735793,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 3047.7349650569386,
+            "unit": "ns/iter",
+            "extra": "iterations: 224793\ncpu: 3047.695978077609 ns\nthreads: 1"
           }
         ]
       }
