@@ -99,7 +99,7 @@ TEST(JSONSchema_default_walker_draft6, properties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("properties", VOCABULARIES_DRAFT6)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
-  const std::set<std::string> expected{"$ref", "type", "required"};
+  const std::set<std::string> expected{"$ref", "required"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -142,7 +142,7 @@ TEST(JSONSchema_default_walker_draft6, type) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("type", VOCABULARIES_DRAFT6)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"properties"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -174,7 +174,7 @@ TEST(JSONSchema_default_walker_draft6, maximum) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("maximum", VOCABULARIES_DRAFT6)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -182,7 +182,7 @@ TEST(JSONSchema_default_walker_draft6, minimum) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("minimum", VOCABULARIES_DRAFT6)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 

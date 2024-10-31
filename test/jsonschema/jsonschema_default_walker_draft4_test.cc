@@ -91,7 +91,7 @@ TEST(JSONSchema_default_walker_draft4, properties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("properties", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
-  const std::set<std::string> expected{"$ref", "type", "required"};
+  const std::set<std::string> expected{"$ref", "required"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -108,7 +108,7 @@ TEST(JSONSchema_default_walker_draft4, dependencies) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("dependencies", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -125,7 +125,7 @@ TEST(JSONSchema_default_walker_draft4, type) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("type", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref"};
+  const std::set<std::string> expected{"properties"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -149,7 +149,7 @@ TEST(JSONSchema_default_walker_draft4, maximum) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("maximum", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -157,7 +157,7 @@ TEST(JSONSchema_default_walker_draft4, minimum) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("minimum", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -183,7 +183,7 @@ TEST(JSONSchema_default_walker_draft4, maxLength) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("maxLength", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -191,7 +191,7 @@ TEST(JSONSchema_default_walker_draft4, minLength) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("minLength", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -199,7 +199,7 @@ TEST(JSONSchema_default_walker_draft4, pattern) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("pattern", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -207,7 +207,7 @@ TEST(JSONSchema_default_walker_draft4, maxItems) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("maxItems", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -215,7 +215,7 @@ TEST(JSONSchema_default_walker_draft4, minItems) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("minItems", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -223,7 +223,7 @@ TEST(JSONSchema_default_walker_draft4, uniqueItems) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("uniqueItems", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -232,7 +232,7 @@ TEST(JSONSchema_default_walker_draft4, maxProperties) {
   const auto result{
       default_schema_walker("maxProperties", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -241,7 +241,7 @@ TEST(JSONSchema_default_walker_draft4, minProperties) {
   const auto result{
       default_schema_walker("minProperties", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -249,7 +249,7 @@ TEST(JSONSchema_default_walker_draft4, required) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("required", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -257,7 +257,7 @@ TEST(JSONSchema_default_walker_draft4, format) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("format", VOCABULARIES_DRAFT4)};
   EXPECT_EQ(result.strategy, SchemaWalkerStrategy::None);
-  const std::set<std::string> expected{"$ref", "type"};
+  const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
 
@@ -478,9 +478,9 @@ TEST(JSONSchema_default_walker_draft4, keyword_priority_object) {
   const auto &vocabularies = VOCABULARIES_DRAFT4;
   const auto &walker = sourcemeta::jsontoolkit::default_schema_walker;
   using namespace sourcemeta::jsontoolkit;
-  EXPECT_EQ(keyword_priority("properties", vocabularies, walker), 3);
+  EXPECT_EQ(keyword_priority("properties", vocabularies, walker), 2);
   EXPECT_EQ(keyword_priority("patternProperties", vocabularies, walker), 1);
-  EXPECT_EQ(keyword_priority("additionalProperties", vocabularies, walker), 4);
+  EXPECT_EQ(keyword_priority("additionalProperties", vocabularies, walker), 3);
 }
 
 TEST(JSONSchema_default_walker_draft4, keyword_priority_unknown) {
