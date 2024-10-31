@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730315421126,
+  "lastUpdate": 1730382513491,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -23314,6 +23314,36 @@ window.BENCHMARK_DATA = {
             "value": 3033.7147404011007,
             "unit": "ns/iter",
             "extra": "iterations: 232185\ncpu: 3033.6248637939575 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3b644bfb012c506b4e5f749f26e789d38bff1254",
+          "message": "Revise default walker keyword dependencies for compiler optimisations (#1316)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-10-31T09:43:49-04:00",
+          "tree_id": "c996e571272ab714d2b652ab16b1527e009ef3a5",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/3b644bfb012c506b4e5f749f26e789d38bff1254"
+        },
+        "date": 1730382512192,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 3018.4237552938216,
+            "unit": "ns/iter",
+            "extra": "iterations: 232344\ncpu: 3018.328598973935 ns\nthreads: 1"
           }
         ]
       }
