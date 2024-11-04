@@ -535,7 +535,7 @@ auto URI::from_fragment(std::string_view fragment) -> URI {
   return {uri.str()};
 }
 
-auto URI::resolve_from_if_absolute(const URI &base) -> URI & {
+auto URI::try_resolve_from(const URI &base) -> URI & {
   if (base.is_absolute()) {
     return this->resolve_from(base);
   } else {
