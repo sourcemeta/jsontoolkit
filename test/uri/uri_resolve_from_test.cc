@@ -42,6 +42,13 @@ TEST(URI_try_resolve_from, relative_base) {
   EXPECT_EQ(relative.recompose(), "../baz");
 }
 
+TEST(URI_try_resolve_from, pointer_fragment_on_relative_path) {
+  const sourcemeta::jsontoolkit::URI base{"foo"};
+  sourcemeta::jsontoolkit::URI relative{"#/bar"};
+  relative.try_resolve_from(base);
+  EXPECT_EQ(relative.recompose(), "foo#/bar");
+}
+
 // RFC 3986, inspired from
 // https://cr.openjdk.org/~dfuchs/writeups/updating-uri/A Section "Resolutuon"
 

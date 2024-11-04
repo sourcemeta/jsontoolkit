@@ -539,6 +539,18 @@ auto URI::from_fragment(std::string_view fragment) -> URI {
 auto URI::try_resolve_from(const URI &base) -> URI & {
   if (base.is_absolute()) {
     return this->resolve_from(base);
+
+    // TODO: This only handles a very specific case. We should generalize this
+    // function to perform proper base resolution on relative bases
+  } else if (this->is_fragment_only() && !base.fragment().has_value()) {
+    this->path_ = base.path_;
+    this->userinfo_ = base.userinfo_;
+    this->host_ = base.host_;
+    this->port_ = base.port_;
+    this->scheme_ = base.scheme_;
+    this->query_ = base.query_;
+    return *this;
+
   } else {
     return *this;
   }
