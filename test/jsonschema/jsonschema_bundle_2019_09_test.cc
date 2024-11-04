@@ -579,3 +579,34 @@ TEST(JSONSchema_bundle_2019_09, metaschema_without_id) {
 
   EXPECT_EQ(document, expected);
 }
+
+TEST(JSONSchema_bundle_2019_09, relative_base_uri_with_ref) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "common",
+    "allOf": [ { "$ref": "#reference" } ],
+    "definitions": {
+      "reference": {
+        "$anchor": "reference"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "common",
+    "allOf": [ { "$ref": "#reference" } ],
+    "definitions": {
+      "reference": {
+        "$anchor": "reference"
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
