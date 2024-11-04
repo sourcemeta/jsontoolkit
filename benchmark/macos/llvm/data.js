@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730730837173,
+  "lastUpdate": 1730732311363,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos/llvm)": [
@@ -18112,6 +18112,36 @@ window.BENCHMARK_DATA = {
             "value": 4029.1647011253103,
             "unit": "ns/iter",
             "extra": "iterations: 175609\ncpu: 3943.0894771908074 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "49e5bf649130d16b46f056ff15bce6a02d7a460a",
+          "message": "Test framing with relative base identifiers (#1321)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-04T10:54:52-04:00",
+          "tree_id": "cd313e2bd4aacd002a653267d1e9897865399643",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/49e5bf649130d16b46f056ff15bce6a02d7a460a"
+        },
+        "date": 1730732309174,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 4799.2133962654725,
+            "unit": "ns/iter",
+            "extra": "iterations: 173944\ncpu: 4794.6350549602175 ns\nthreads: 1"
           }
         ]
       }
