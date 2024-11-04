@@ -1893,3 +1893,97 @@ TEST(JSONSchema_frame_2019_09, ref_from_definitions) {
       "https://www.sourcemeta.com/schema#/definitions/string",
       "https://www.sourcemeta.com/schema", "/definitions/string");
 }
+
+TEST(JSONSchema_frame_2019_09, relative_base_uri_without_ref) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "common"
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver);
+
+  EXPECT_EQ(frame.size(), 3);
+
+  EXPECT_FRAME_STATIC_2019_09_RESOURCE(frame, "common", "common", "", "common",
+                                       "");
+
+  // JSON Pointers
+
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$schema", "common",
+                                      "/$schema", "common", "/$schema");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$id", "common", "/$id",
+                                      "common", "/$id");
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
+}
+
+TEST(JSONSchema_frame_2019_09, relative_base_uri_with_ref) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "common",
+    "allOf": [ { "$ref": "#foo" } ],
+    "$defs": {
+      "foo": {
+        "$anchor": "foo"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver);
+
+  EXPECT_EQ(frame.size(), 10);
+
+  EXPECT_FRAME_STATIC_2019_09_RESOURCE(frame, "common", "common", "", "common",
+                                       "");
+
+  // Anchors
+  EXPECT_FRAME_STATIC_2019_09_ANCHOR(frame, "common#foo", "common",
+                                     "/$defs/foo", "common", "/$defs/foo");
+
+  // JSON Pointers
+
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$schema", "common",
+                                      "/$schema", "common", "/$schema");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$id", "common", "/$id",
+                                      "common", "/$id");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/allOf", "common",
+                                      "/allOf", "common", "/allOf");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/allOf/0", "common",
+                                      "/allOf/0", "common", "/allOf/0");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/allOf/0/$ref", "common",
+                                      "/allOf/0/$ref", "common",
+                                      "/allOf/0/$ref");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$defs", "common",
+                                      "/$defs", "common", "/$defs");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$defs/foo", "common",
+                                      "/$defs/foo", "common", "/$defs/foo");
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$defs/foo/$anchor",
+                                      "common", "/$defs/foo/$anchor", "common",
+                                      "/$defs/foo/$anchor");
+
+  // References
+
+  EXPECT_EQ(references.size(), 2);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
+  EXPECT_STATIC_REFERENCE(references, "/allOf/0/$ref", "common#foo", "common",
+                          "foo");
+}
