@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730488206258,
+  "lastUpdate": 1730730372724,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (windows/msvc)": [
@@ -18128,6 +18128,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "JSON_Array_Of_Objects_Unique",
             "value": 4329.911250000151,
+            "unit": "ns/iter",
+            "extra": "iterations: 160000\ncpu: 4296.875 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9126bc8c7d4e131381eafe8afda8063f04038470",
+          "message": "Correctly canonicalize relative URIs that do not begin with `/` (#1318)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-04T10:19:03-04:00",
+          "tree_id": "c8068366858c972aa35235a8b96069198c9f60e4",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/9126bc8c7d4e131381eafe8afda8063f04038470"
+        },
+        "date": 1730730356957,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 4317.629999999895,
             "unit": "ns/iter",
             "extra": "iterations: 160000\ncpu: 4296.875 ns\nthreads: 1"
           }
