@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730730269370,
+  "lastUpdate": 1730730837173,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos/llvm)": [
@@ -18082,6 +18082,36 @@ window.BENCHMARK_DATA = {
             "value": 3914.7531116047085,
             "unit": "ns/iter",
             "extra": "iterations: 154904\ncpu: 3913.6368331353606 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "688abb095405df69bdf7d6c1605b689ad20677d0",
+          "message": "Support resolving fragments on relative paths (#1320)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-04T10:31:22-04:00",
+          "tree_id": "7ae9ca63307d5d1a91d380c436553d26cf3711c2",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/688abb095405df69bdf7d6c1605b689ad20677d0"
+        },
+        "date": 1730730835479,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 4029.1647011253103,
+            "unit": "ns/iter",
+            "extra": "iterations: 175609\ncpu: 3943.0894771908074 ns\nthreads: 1"
           }
         ]
       }
