@@ -77,7 +77,19 @@ TEST(URI_canonicalize, example_relative_1) {
 TEST(URI_canonicalize, example_relative_2) {
   sourcemeta::jsontoolkit::URI uri{"./foo"};
   uri.canonicalize();
-  EXPECT_EQ(uri.recompose(), "/foo");
+  EXPECT_EQ(uri.recompose(), "foo");
+}
+
+TEST(URI_canonicalize, example_relative_3) {
+  sourcemeta::jsontoolkit::URI uri{"foo"};
+  uri.canonicalize();
+  EXPECT_EQ(uri.recompose(), "foo");
+}
+
+TEST(URI_canonicalize, example_relative_4) {
+  sourcemeta::jsontoolkit::URI uri{"foo/bar"};
+  uri.canonicalize();
+  EXPECT_EQ(uri.recompose(), "foo/bar");
 }
 
 TEST(URI_canonicalize, example_12) {
