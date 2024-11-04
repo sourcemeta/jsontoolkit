@@ -1709,7 +1709,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_on_relative_id) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "", "", "https://json-schema.org/draft/2019-09/schema");
   EXPECT_ANONYMOUS_FRAME_STATIC_RESOURCE(
-      frame, "/middle", "/additionalItems",
+      frame, "middle", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema");
 
   // JSON Pointers
@@ -1739,7 +1739,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_on_relative_id) {
   EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
       frame, "", "", "https://json-schema.org/draft/2019-09/schema");
   EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
-      frame, "/middle", "/additionalItems",
+      frame, "middle", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema");
 
   // References

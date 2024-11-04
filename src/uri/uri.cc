@@ -93,7 +93,8 @@ static auto canonicalize_path(const std::string &path, const bool is_relative)
 
   // Reconstruct the canonical path
   std::string canonical_path;
-  std::string separator = is_relative ? "/" : "";
+  std::string separator = (is_relative && !has_leading_with_word) ? "/" : "";
+
   for (const auto &seg : segments) {
     canonical_path += separator + seg;
     separator = "/";
