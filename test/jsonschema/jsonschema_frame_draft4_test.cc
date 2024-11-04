@@ -20,6 +20,13 @@
                                "http://json-schema.org/draft-04/schema#",      \
                                expected_base, expected_relative_pointer);
 
+#define EXPECT_FRAME_STATIC_DRAFT4_ANCHOR(frame, reference, root_id,           \
+                                          expected_pointer, expected_base,     \
+                                          expected_relative_pointer)           \
+  EXPECT_FRAME_STATIC_ANCHOR(frame, reference, root_id, expected_pointer,      \
+                             "http://json-schema.org/draft-04/schema#",        \
+                             expected_base, expected_relative_pointer);
+
 TEST(JSONSchema_frame_draft4, anonymous_with_nested_schema_resource) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -595,4 +602,100 @@ TEST(JSONSchema_frame_draft4, ref_with_id) {
       "http://json-schema.org/draft-04/schema", std::nullopt);
   EXPECT_STATIC_REFERENCE(references, "/$ref", "#/definitions/string",
                           std::nullopt, "/definitions/string");
+}
+
+TEST(JSONSchema_frame_draft4, relative_base_uri_without_ref) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "common"
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver);
+
+  EXPECT_EQ(frame.size(), 3);
+
+  EXPECT_FRAME_STATIC_DRAFT4_RESOURCE(frame, "common", "common", "", "common",
+                                      "");
+
+  // JSON Pointers
+
+  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/$schema", "common",
+                                     "/$schema", "common", "/$schema");
+  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/id", "common", "/id",
+                                     "common", "/id");
+
+  // References
+
+  EXPECT_EQ(references.size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "http://json-schema.org/draft-04/schema",
+      "http://json-schema.org/draft-04/schema", std::nullopt);
+}
+
+TEST(JSONSchema_frame_draft4, relative_base_uri_with_ref) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "common",
+    "allOf": [ { "$ref": "#foo" } ],
+    "definitions": {
+      "foo": {
+        "id": "#foo"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver);
+
+  EXPECT_EQ(frame.size(), 10);
+
+  EXPECT_FRAME_STATIC_DRAFT4_RESOURCE(frame, "common", "common", "", "common",
+                                      "");
+
+  // Anchors
+  EXPECT_FRAME_STATIC_DRAFT4_ANCHOR(frame, "common#foo", "common",
+                                    "/definitions/foo", "common",
+                                    "/definitions/foo");
+
+  // JSON Pointers
+
+  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/$schema", "common",
+                                     "/$schema", "common", "/$schema");
+  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/id", "common", "/id",
+                                     "common", "/id");
+  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/allOf", "common", "/allOf",
+                                     "common", "/allOf");
+  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/allOf/0", "common",
+                                     "/allOf/0", "common", "/allOf/0");
+  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/allOf/0/$ref", "common",
+                                     "/allOf/0/$ref", "common",
+                                     "/allOf/0/$ref");
+  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/definitions", "common",
+                                     "/definitions", "common", "/definitions");
+  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/definitions/foo", "common",
+                                     "/definitions/foo", "common",
+                                     "/definitions/foo");
+  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/definitions/foo/id",
+                                     "common", "/definitions/foo/id", "common",
+                                     "/definitions/foo/id");
+
+  // References
+
+  EXPECT_EQ(references.size(), 2);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "http://json-schema.org/draft-04/schema",
+      "http://json-schema.org/draft-04/schema", std::nullopt);
+  EXPECT_STATIC_REFERENCE(references, "/allOf/0/$ref", "common#foo", "common",
+                          "foo");
 }
