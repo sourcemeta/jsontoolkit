@@ -1704,7 +1704,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_on_relative_id) {
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver);
 
-  EXPECT_EQ(frame.size(), 10);
+  EXPECT_EQ(frame.size(), 11);
 
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "", "", "https://json-schema.org/draft/2019-09/schema");
@@ -1732,6 +1732,9 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_on_relative_id) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$recursiveAnchor",
       "/additionalItems/$recursiveAnchor",
+      "https://json-schema.org/draft/2019-09/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "middle#/$recursiveAnchor", "/additionalItems/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema");
 
   // Anchors

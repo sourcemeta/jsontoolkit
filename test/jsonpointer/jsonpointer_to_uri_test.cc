@@ -341,5 +341,5 @@ TEST(JSONPointer_to_uri, with_relative_base) {
   const sourcemeta::jsontoolkit::URI base{"../baz"};
   const sourcemeta::jsontoolkit::URI fragment{
       sourcemeta::jsontoolkit::to_uri(pointer, base)};
-  EXPECT_EQ(fragment.recompose(), "#/foo/bar");
+  EXPECT_EQ(fragment.recompose(), "baz#/foo/bar");
 }
