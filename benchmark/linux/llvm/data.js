@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730833786031,
+  "lastUpdate": 1730920146606,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -23676,6 +23676,34 @@ window.BENCHMARK_DATA = {
             "value": 2095.6491959426494,
             "unit": "ns/iter",
             "extra": "iterations: 328397\ncpu: 2095.5671915395087 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "c6d056cc608bf98705ad7700c8c891e1cf6865a0",
+          "message": "Support relative base URIs (#1317)\n\nFixes: https://github.com/sourcemeta/jsontoolkit/issues/960\r\nSee: https://github.com/sourcemeta/jsonschema/issues/185\r\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-04T15:06:33Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/c6d056cc608bf98705ad7700c8c891e1cf6865a0"
+        },
+        "date": 1730920144485,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 2100.0293852197956,
+            "unit": "ns/iter",
+            "extra": "iterations: 329077\ncpu: 2100.008226038283 ns\nthreads: 1"
           }
         ]
       }
