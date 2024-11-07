@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730997944091,
+  "lastUpdate": 1731006533604,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -23734,6 +23734,34 @@ window.BENCHMARK_DATA = {
             "value": 2102.5702270765046,
             "unit": "ns/iter",
             "extra": "iterations: 333632\ncpu: 2102.514192283714 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "7a398224cc2e76ea9ae8541a872b131c7c025267",
+          "message": "Throw if cannot determine base dialect in `frame()` (#1322)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-07T16:41:40Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/7a398224cc2e76ea9ae8541a872b131c7c025267"
+        },
+        "date": 1731006532353,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 2087.648506506935,
+            "unit": "ns/iter",
+            "extra": "iterations: 335790\ncpu: 2087.657860567617 ns\nthreads: 1"
           }
         ]
       }
