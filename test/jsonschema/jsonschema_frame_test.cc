@@ -634,3 +634,18 @@ TEST(JSONSchema_frame, remote_refs) {
                           "https://www.example.com/x/y#/foo/bar",
                           "https://www.example.com/x/y", "/foo/bar");
 }
+
+TEST(JSONSchema_frame, no_dialect) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "type": "string"
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  EXPECT_THROW(sourcemeta::jsontoolkit::frame(
+                   document, frame, references,
+                   sourcemeta::jsontoolkit::default_schema_walker,
+                   sourcemeta::jsontoolkit::official_resolver),
+               sourcemeta::jsontoolkit::SchemaError);
+}
