@@ -25,3 +25,8 @@ TEST(JSON_null, estimated_byte_size) {
   // as this is otherwise 64 bytes?
   EXPECT_EQ(document.estimated_byte_size(), 8);
 }
+
+TEST(JSON_null, fast_hash) {
+  const sourcemeta::jsontoolkit::JSON document{nullptr};
+  EXPECT_EQ(document.fast_hash(), 2);
+}

@@ -77,3 +77,23 @@ TEST(JSON_real, estimated_byte_size_minus_0_0) {
   const sourcemeta::jsontoolkit::JSON document{0.0};
   EXPECT_EQ(document.estimated_byte_size(), 8);
 }
+
+TEST(JSON_real, fast_hash_3_14) {
+  const sourcemeta::jsontoolkit::JSON document{3.14};
+  EXPECT_EQ(document.fast_hash(), 5);
+}
+
+TEST(JSON_real, fast_hash_minus_3_14) {
+  const sourcemeta::jsontoolkit::JSON document{-3.14};
+  EXPECT_EQ(document.fast_hash(), 5);
+}
+
+TEST(JSON_real, fast_hash_minus_5_0) {
+  const sourcemeta::jsontoolkit::JSON document{5.0};
+  EXPECT_EQ(document.fast_hash(), 5);
+}
+
+TEST(JSON_real, fast_hash_minus_0_0) {
+  const sourcemeta::jsontoolkit::JSON document{0.0};
+  EXPECT_EQ(document.fast_hash(), 5);
+}

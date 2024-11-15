@@ -52,3 +52,23 @@ TEST(JSON_integer, estimated_byte_size_1234567) {
   const sourcemeta::jsontoolkit::JSON document{1234567};
   EXPECT_EQ(document.estimated_byte_size(), 8);
 }
+
+TEST(JSON_integer, fast_hash_5) {
+  const sourcemeta::jsontoolkit::JSON document{5};
+  EXPECT_EQ(document.fast_hash(), 9);
+}
+
+TEST(JSON_integer, fast_hash_minus_5) {
+  const sourcemeta::jsontoolkit::JSON document{-5};
+  EXPECT_EQ(document.fast_hash(), 255);
+}
+
+TEST(JSON_integer, fast_hash_0) {
+  const sourcemeta::jsontoolkit::JSON document{0};
+  EXPECT_EQ(document.fast_hash(), 4);
+}
+
+TEST(JSON_integer, fast_hash_1234567) {
+  const sourcemeta::jsontoolkit::JSON document{1234567};
+  EXPECT_EQ(document.fast_hash(), 139);
+}

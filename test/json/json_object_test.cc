@@ -591,3 +591,15 @@ TEST(JSON_object, estimated_byte_size_nested) {
       "{ \"foo\": 1, \"bar\": { \"bar\": true } }");
   EXPECT_EQ(document.estimated_byte_size(), 18);
 }
+
+TEST(JSON_object, fast_hash_integers) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("{ \"foo\": 1, \"bar\": 2 }");
+  EXPECT_EQ(document.fast_hash(), 26);
+}
+
+TEST(JSON_object, fast_hash_nested) {
+  const sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(
+      "{ \"foo\": 1, \"bar\": { \"bar\": true } }");
+  EXPECT_EQ(document.fast_hash(), 32);
+}

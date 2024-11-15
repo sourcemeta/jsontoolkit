@@ -56,3 +56,13 @@ TEST(JSON_boolean, estimated_byte_size_true) {
   const sourcemeta::jsontoolkit::JSON document{true};
   EXPECT_EQ(document.estimated_byte_size(), 1);
 }
+
+TEST(JSON_boolean, fast_hash_false) {
+  const sourcemeta::jsontoolkit::JSON document{false};
+  EXPECT_EQ(document.fast_hash(), 0);
+}
+
+TEST(JSON_boolean, fast_hash_true) {
+  const sourcemeta::jsontoolkit::JSON document{true};
+  EXPECT_EQ(document.fast_hash(), 1);
+}
