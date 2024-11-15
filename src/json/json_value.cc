@@ -8,6 +8,7 @@
 #include <string>    // std::to_string
 #include <utility>   // std::move
 #include <variant>   // std::holds_alternative, std::get
+#include <vector>    // std::vector
 
 namespace sourcemeta::jsontoolkit {
 
@@ -513,16 +514,23 @@ JSON::defines_any(std::initializer_list<JSON::String> keys) const -> bool {
 [[nodiscard]] auto JSON::unique() const -> bool {
   assert(this->is_array());
   const auto &items{std::get<JSON::Array>(this->data).data};
+  const auto size{items.size()};
+
   // Arrays of 0 or 1 item are unique by definition
-  if (items.size() <= 1) {
+  if (size <= 1) {
     return true;
   }
 
-  // Otherwise std::unique would require us to create a copy of the contents
-  for (auto iterator = items.cbegin(); iterator != items.cend(); ++iterator) {
-    for (auto subiterator = std::next(iterator); subiterator != items.cend();
-         ++subiterator) {
-      if (*iterator == *subiterator) {
+  static std::vector<std::uint64_t> cache;
+  cache.reserve(size);
+
+  for (std::size_t index = 0; index < size; index++) {
+    cache[index] = items[index].fast_hash();
+  }
+
+  for (std::size_t index = 0; index < size; index++) {
+    for (std::size_t subindex = index + 1; subindex < size; subindex++) {
+      if (cache[index] == cache[subindex] && items[index] == items[subindex]) {
         return false;
       }
     }
