@@ -403,6 +403,40 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
   }
 }
 
+[[nodiscard]] auto JSON::fast_hash() const -> std::uint64_t {
+  switch (static_cast<Type>(this->data.index())) {
+    case Type::Null:
+      return 2;
+    case Type::Boolean:
+      return this->to_boolean() ? 1 : 0;
+    case Type::Integer:
+      return 4 + (static_cast<std::uint64_t>(this->to_integer()) % 256);
+    case Type::Real:
+      return 5;
+    case Type::String:
+      return 3 + this->byte_size();
+    case Type::Array:
+      return std::accumulate(
+          this->as_array().cbegin(), this->as_array().cend(),
+          static_cast<std::uint64_t>(6),
+          [](const std::uint64_t accumulator, const JSON &item) {
+            return accumulator + 1 + item.fast_hash();
+          });
+    case Type::Object:
+      return std::accumulate(this->as_object().cbegin(),
+                             this->as_object().cend(),
+                             static_cast<std::uint64_t>(7),
+                             [](const std::uint64_t accumulator,
+                                const typename Object::value_type &pair) {
+                               return accumulator + 1 + pair.first.size() +
+                                      pair.second.fast_hash();
+                             });
+    default:
+      assert(false);
+      return 0;
+  }
+}
+
 [[nodiscard]] auto JSON::divisible_by(const JSON &divisor) const -> bool {
   assert(this->is_number());
   assert(divisor.is_number());

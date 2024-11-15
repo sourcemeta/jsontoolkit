@@ -411,6 +411,18 @@ TEST(JSON_array, estimated_byte_size_nested) {
   EXPECT_EQ(document.estimated_byte_size(), 12);
 }
 
+TEST(JSON_array, fast_hash_integers) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  EXPECT_EQ(document.fast_hash(), 27);
+}
+
+TEST(JSON_array, fast_hash_nested) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse("[1,[\"foo\"],[[true]]]");
+  EXPECT_EQ(document.fast_hash(), 42);
+}
+
 TEST(JSON_array, push_back_if_unique_copy_exists) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("[1,2,3]");

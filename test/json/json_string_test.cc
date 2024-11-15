@@ -54,6 +54,21 @@ TEST(JSON_string, estimated_byte_size_empty) {
   EXPECT_EQ(document.estimated_byte_size(), 0);
 }
 
+TEST(JSON_string, fast_hash_foo) {
+  const sourcemeta::jsontoolkit::JSON document{"foo"};
+  EXPECT_EQ(document.fast_hash(), 6);
+}
+
+TEST(JSON_string, fast_hash_foo_bar_baz) {
+  const sourcemeta::jsontoolkit::JSON document{"foo bar baz"};
+  EXPECT_EQ(document.fast_hash(), 14);
+}
+
+TEST(JSON_string, fast_hash_empty) {
+  const sourcemeta::jsontoolkit::JSON document{""};
+  EXPECT_EQ(document.fast_hash(), 3);
+}
+
 TEST(JSON_string, unicode_length_1) {
   // This unicode string corresponds to 简律纯
   const auto document = sourcemeta::jsontoolkit::parse(R"JSON({
