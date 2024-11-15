@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1731611370304,
+  "lastUpdate": 1731688026998,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos/llvm)": [
@@ -18454,6 +18454,36 @@ window.BENCHMARK_DATA = {
             "value": 4053.746585376284,
             "unit": "ns/iter",
             "extra": "iterations: 181572\ncpu: 4047.3255788337415 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "36515ff27cc93056d6bd641aeb30f61cc5950563",
+          "message": "Implement a fast hashing mechanism for JSON values (#1324)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-15T12:23:59-04:00",
+          "tree_id": "e00fbc06496aeb82503552b4df9af961a5e28e94",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/36515ff27cc93056d6bd641aeb30f61cc5950563"
+        },
+        "date": 1731688025044,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 4320.334055314654,
+            "unit": "ns/iter",
+            "extra": "iterations: 150050\ncpu: 4307.577474175277 ns\nthreads: 1"
           }
         ]
       }
