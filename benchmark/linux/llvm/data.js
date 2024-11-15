@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1731688684790,
+  "lastUpdate": 1731690050415,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -23932,6 +23932,36 @@ window.BENCHMARK_DATA = {
             "value": 2182.585242622163,
             "unit": "ns/iter",
             "extra": "iterations: 322415\ncpu: 2182.468849154041 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a64204f6f69b12021bd1802143f61244f5ea9619",
+          "message": "Optimise uniqueness checks by hashing values (#1323)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-15T12:36:47-04:00",
+          "tree_id": "4066e79a91dd38ae09a71633eebd3ebb7c3765b2",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/a64204f6f69b12021bd1802143f61244f5ea9619"
+        },
+        "date": 1731689447846,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 407.84868390179315,
+            "unit": "ns/iter",
+            "extra": "iterations: 1746906\ncpu: 407.8326584258111 ns\nthreads: 1"
           }
         ]
       }
