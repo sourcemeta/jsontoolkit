@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1731698929104,
+  "lastUpdate": 1731727249504,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -23990,6 +23990,36 @@ window.BENCHMARK_DATA = {
             "value": 404.64829354306283,
             "unit": "ns/iter",
             "extra": "iterations: 1742763\ncpu: 404.64139644920164 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "117a478711f0aaec0e77a6bee3af0c5030340bb7",
+          "message": "Implement a fast constant hash function for object keys (#1325)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-15T23:16:40-04:00",
+          "tree_id": "0913bbeb6b316d69716dfc399c005bf7ea2e8860",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/117a478711f0aaec0e77a6bee3af0c5030340bb7"
+        },
+        "date": 1731727247289,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 454.6221706303759,
+            "unit": "ns/iter",
+            "extra": "iterations: 1542879\ncpu: 454.59395778930167 ns\nthreads: 1"
           }
         ]
       }
