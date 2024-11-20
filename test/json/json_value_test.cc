@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <type_traits>
+#include <unordered_set>
 #include <utility>
 
 TEST(JSON_value, general_traits) {
@@ -394,4 +395,19 @@ TEST(JSON_value, try_at_fail) {
   EXPECT_TRUE(document.is_object());
   const auto result = document.try_at("boo");
   EXPECT_FALSE(result.has_value());
+}
+
+TEST(JSON_value, unordered_set_with_custom_hash) {
+  std::unordered_set<sourcemeta::jsontoolkit::JSON,
+                     sourcemeta::jsontoolkit::Hash>
+      value;
+  value.insert(sourcemeta::jsontoolkit::JSON{"foo"});
+  value.insert(sourcemeta::jsontoolkit::JSON{"bar"});
+  value.insert(sourcemeta::jsontoolkit::JSON{"baz"});
+  value.insert(sourcemeta::jsontoolkit::JSON{"bar"});
+
+  EXPECT_EQ(value.size(), 3);
+  EXPECT_TRUE(value.contains(sourcemeta::jsontoolkit::JSON{"foo"}));
+  EXPECT_TRUE(value.contains(sourcemeta::jsontoolkit::JSON{"bar"}));
+  EXPECT_TRUE(value.contains(sourcemeta::jsontoolkit::JSON{"baz"}));
 }
