@@ -86,6 +86,7 @@ CMake
 |-----------------------------------|---------|---------|-------------------------------------------------------|
 | `JSONTOOLKIT_URI`                 | Boolean | `ON`    | Build the JSON Toolkit URI library                    |
 | `JSONTOOLKIT_JSON`                | Boolean | `ON`    | Build the JSON Toolkit JSON library                   |
+| `JSONTOOLKIT_REGEX`               | Boolean | `ON`    | Build the JSON Toolkit Regex library                  |
 | `JSONTOOLKIT_JSONSCHEMA`          | Boolean | `ON`    | Build the JSON Toolkit JSON Schema library            |
 | `JSONTOOLKIT_JSONPOINTER`         | Boolean | `ON`    | Build the JSON Toolkit JSON Pointer library           |
 | `JSONTOOLKIT_JSONL`               | Boolean | `ON`    | Build the JSON Toolkit JSONL library                  |
