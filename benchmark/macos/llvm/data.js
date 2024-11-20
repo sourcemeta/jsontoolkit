@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732043422436,
+  "lastUpdate": 1732122659661,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos/llvm)": [
@@ -18628,6 +18628,36 @@ window.BENCHMARK_DATA = {
             "value": 519.9985438180536,
             "unit": "ns/iter",
             "extra": "iterations: 1365214\ncpu: 519.2790287823007 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "579738816650ab02837a5fdb264901b722793193",
+          "message": "Keep `ObjectKeyHash` available for clients even on older GCC (#1326)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-20T13:06:32-04:00",
+          "tree_id": "3ee6909ec8b820743bc4cd2642fdb43fd96de11d",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/579738816650ab02837a5fdb264901b722793193"
+        },
+        "date": 1732122656669,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 482.98491769418035,
+            "unit": "ns/iter",
+            "extra": "iterations: 1338058\ncpu: 481.025486189687 ns\nthreads: 1"
           }
         ]
       }
