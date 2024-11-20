@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732126866498,
+  "lastUpdate": 1732130069982,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (windows/msvc)": [
@@ -18796,6 +18796,34 @@ window.BENCHMARK_DATA = {
             "value": 518.161100000043,
             "unit": "ns/iter",
             "extra": "iterations: 1000000\ncpu: 531.25 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "bf3fdaad712a6193af503bfdafcf517aca5e6a52",
+          "message": "Expose general-purpose JSON hasher helpers (#1327)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-20T18:11:49Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/bf3fdaad712a6193af503bfdafcf517aca5e6a52"
+        },
+        "date": 1732130062121,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 515.1262500001102,
+            "unit": "ns/iter",
+            "extra": "iterations: 1120000\ncpu: 516.1830357142857 ns\nthreads: 1"
           }
         ]
       }
