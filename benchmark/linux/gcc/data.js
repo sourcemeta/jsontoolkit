@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732130177973,
+  "lastUpdate": 1732132490991,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/gcc)": [
@@ -24094,6 +24094,36 @@ window.BENCHMARK_DATA = {
             "value": 579.569419823376,
             "unit": "ns/iter",
             "extra": "iterations: 1236520\ncpu: 579.5690558988128 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "59f3deca673fad9195e41605e10655b4ede90478",
+          "message": "Implement a new ECMA-262 `src/regex` module (#1329)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-20T15:44:56-04:00",
+          "tree_id": "294e335bc28f1ce0ba3526af0e3989e5b260cd1f",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/59f3deca673fad9195e41605e10655b4ede90478"
+        },
+        "date": 1732132489851,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 575.9902220770259,
+            "unit": "ns/iter",
+            "extra": "iterations: 1236868\ncpu: 575.9736382540417 ns\nthreads: 1"
           }
         ]
       }
