@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732132359914,
+  "lastUpdate": 1732216283023,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (windows/msvc)": [
@@ -18854,6 +18854,36 @@ window.BENCHMARK_DATA = {
             "value": 507.4202000000696,
             "unit": "ns/iter",
             "extra": "iterations: 1000000\ncpu: 515.625 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4829e706f5ae2e1730cfd34fc982d690ba729cfd",
+          "message": "Short-circuit Pointer traversal on empty Pointers (#1330)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-21T14:59:39-04:00",
+          "tree_id": "9a4f8c2dfc41e36cfee3a8e04d7996f9f1a1012d",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/4829e706f5ae2e1730cfd34fc982d690ba729cfd"
+        },
+        "date": 1732216273858,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 523.0976999999939,
+            "unit": "ns/iter",
+            "extra": "iterations: 1000000\ncpu: 531.25 ns\nthreads: 1"
           }
         ]
       }
