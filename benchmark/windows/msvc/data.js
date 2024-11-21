@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732216378307,
+  "lastUpdate": 1732224137601,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (windows/msvc)": [
@@ -18912,6 +18912,36 @@ window.BENCHMARK_DATA = {
             "value": 510.75267857153716,
             "unit": "ns/iter",
             "extra": "iterations: 1120000\ncpu: 502.23214285714283 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aae184d87d6c4efe600cfb3c85163eda61f207c4",
+          "message": "Expose a Pointer method to reserve capacity (#1331)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-21T17:13:33-04:00",
+          "tree_id": "7cbd9deb091af37c3eeca4ccf1f222cadf7cf337",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/aae184d87d6c4efe600cfb3c85163eda61f207c4"
+        },
+        "date": 1732224125778,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 510.0793999999951,
+            "unit": "ns/iter",
+            "extra": "iterations: 1000000\ncpu: 515.625 ns\nthreads: 1"
           }
         ]
       }
