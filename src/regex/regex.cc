@@ -8,7 +8,7 @@ namespace sourcemeta::jsontoolkit {
 auto to_regex(const JSON::String &pattern) noexcept -> std::optional<Regex> {
   if (pattern == ".*" || pattern == "^.*$" || pattern == "^(.*)$") {
     return RegexTypeNoop{};
-  } else if (pattern == ".+") {
+  } else if (pattern == ".+" || pattern == "^.+$" || pattern == "^(.+)$") {
     return RegexTypeNonEmpty{};
   }
 
