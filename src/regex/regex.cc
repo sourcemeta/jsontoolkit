@@ -5,6 +5,8 @@ namespace sourcemeta::jsontoolkit {
 auto to_regex(const JSON::String &pattern) noexcept -> std::optional<Regex> {
   if (pattern == ".*" || pattern == "^.*$" || pattern == "^(.*)$") {
     return RegexTypeNoop{};
+  } else if (pattern == ".+") {
+    return RegexTypeNonEmpty{};
   }
 
   try {
@@ -26,6 +28,8 @@ auto matches(const Regex &regex, const JSON::String &value) -> bool {
       return std::regex_search(value, std::get<RegexTypeEngine>(regex));
     case RegexIndex::Prefix:
       return value.starts_with(std::get<RegexTypePrefix>(regex));
+    case RegexIndex::NonEmpty:
+      return !value.empty();
     case RegexIndex::Noop:
       return true;
   }
