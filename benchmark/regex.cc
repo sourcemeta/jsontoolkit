@@ -16,8 +16,13 @@
   }                                                                            \
   BENCHMARK(name);
 
+BENCHMARK_REGEX(Regex_Lower_S_Or_Upper_S_Asterisk, "[\\s\\S]*", "foo")
+BENCHMARK_REGEX(Regex_Caret_Lower_S_Or_Upper_S_Asterisk_Dollar, "^[\\s\\S]*$",
+                "foo")
 BENCHMARK_REGEX(Regex_Period_Asterisk, ".*", "foo")
+BENCHMARK_REGEX(Regex_Group_Period_Asterisk_Group, "(.*)", "foo")
 BENCHMARK_REGEX(Regex_Period_Plus, ".+", "foo")
+BENCHMARK_REGEX(Regex_Period, ".", "foo")
 BENCHMARK_REGEX(Regex_Caret_Period_Plus_Dollar, "^.+$", "foo")
 BENCHMARK_REGEX(Regex_Caret_Group_Period_Plus_Group_Dollar, "^(.+)$", "foo")
 BENCHMARK_REGEX(Regex_Caret_Period_Asterisk_Dollar, "^.*$", "foo")
