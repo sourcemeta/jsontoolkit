@@ -49,6 +49,7 @@ TEST(JSON_array, initializer_list_2_booleans) {
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 2);
+  EXPECT_EQ(document.array_size(), 2);
   EXPECT_TRUE(document.at(0).is_boolean());
   EXPECT_TRUE(document.at(1).is_boolean());
   EXPECT_FALSE(document.at(0).to_boolean());
@@ -68,6 +69,7 @@ TEST(JSON_array, empty_with_copy_constructor) {
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
+  EXPECT_EQ(document.array_size(), 0);
 }
 
 TEST(JSON_array, empty_with_make_array) {
@@ -75,6 +77,7 @@ TEST(JSON_array, empty_with_make_array) {
       sourcemeta::jsontoolkit::JSON::make_array();
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
+  EXPECT_EQ(document.array_size(), 0);
 }
 
 TEST(JSON_array, push_back_booleans) {
@@ -84,6 +87,7 @@ TEST(JSON_array, push_back_booleans) {
   document.push_back(sourcemeta::jsontoolkit::JSON{false});
   document.push_back(sourcemeta::jsontoolkit::JSON{true});
   EXPECT_EQ(document.size(), 2);
+  EXPECT_EQ(document.array_size(), 2);
   EXPECT_TRUE(document.at(0).is_boolean());
   EXPECT_TRUE(document.at(1).is_boolean());
   EXPECT_FALSE(document.at(0).to_boolean());
@@ -129,6 +133,7 @@ TEST(JSON_array, push_back_json_copy) {
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 2);
+  EXPECT_EQ(document.array_size(), 2);
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
 
@@ -137,6 +142,7 @@ TEST(JSON_array, push_back_json_copy) {
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.array_size(), 3);
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
   EXPECT_EQ(document.at(2).to_integer(), 3);
@@ -148,6 +154,7 @@ TEST(JSON_array, push_back_json_move) {
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 2);
+  EXPECT_EQ(document.array_size(), 2);
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
 
@@ -156,6 +163,7 @@ TEST(JSON_array, push_back_json_move) {
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.array_size(), 3);
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
   EXPECT_EQ(document.at(2).to_integer(), 3);
@@ -167,6 +175,7 @@ TEST(JSON_array, modify_array_after_copy) {
                                          sourcemeta::jsontoolkit::JSON{2},
                                          sourcemeta::jsontoolkit::JSON{3}};
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.array_size(), 3);
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
   EXPECT_EQ(document.at(2).to_integer(), 3);
@@ -174,6 +183,7 @@ TEST(JSON_array, modify_array_after_copy) {
   // Make copy
   sourcemeta::jsontoolkit::JSON copy = document;
   EXPECT_EQ(copy.size(), 3);
+  EXPECT_EQ(copy.array_size(), 3);
   EXPECT_EQ(copy.at(0).to_integer(), 1);
   EXPECT_EQ(copy.at(1).to_integer(), 2);
   EXPECT_EQ(copy.at(2).to_integer(), 3);
@@ -183,6 +193,7 @@ TEST(JSON_array, modify_array_after_copy) {
 
   // Original document must remain intact
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.array_size(), 3);
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
   EXPECT_EQ(document.at(2).to_integer(), 3);
@@ -274,6 +285,7 @@ TEST(JSON_array, int_standard_sort) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse("[3,2,1]");
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.array_size(), 3);
   EXPECT_EQ(document.at(0).to_integer(), 3);
   EXPECT_EQ(document.at(1).to_integer(), 2);
   EXPECT_EQ(document.at(2).to_integer(), 1);
@@ -288,9 +300,11 @@ TEST(JSON_array, erase_many_full) {
       sourcemeta::jsontoolkit::parse("[1,2,3]");
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.array_size(), 3);
   document.erase(document.as_array().begin(), document.as_array().end());
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
+  EXPECT_EQ(document.array_size(), 0);
 }
 
 TEST(JSON_array, erase_many_partial) {
@@ -298,10 +312,12 @@ TEST(JSON_array, erase_many_partial) {
       sourcemeta::jsontoolkit::parse("[1,2,3]");
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.array_size(), 3);
   document.erase(std::next(document.as_array().begin()),
                  document.as_array().end());
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 1);
+  EXPECT_EQ(document.array_size(), 1);
   EXPECT_EQ(document.at(0).to_integer(), 1);
 }
 
@@ -310,9 +326,11 @@ TEST(JSON_array, erase_many_full_const) {
       sourcemeta::jsontoolkit::parse("[1,2,3]");
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.array_size(), 3);
   document.erase(document.as_array().cbegin(), document.as_array().cend());
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
+  EXPECT_EQ(document.array_size(), 0);
 }
 
 TEST(JSON_array, contains_string_key_true) {
@@ -387,6 +405,7 @@ TEST(JSON_array, into_array) {
   document.into_array();
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
+  EXPECT_EQ(document.array_size(), 0);
 }
 
 TEST(JSON_array, clear) {
@@ -394,9 +413,11 @@ TEST(JSON_array, clear) {
       sourcemeta::jsontoolkit::parse("[1,2,3]");
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.array_size(), 3);
   document.clear();
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
+  EXPECT_EQ(document.array_size(), 0);
 }
 
 TEST(JSON_array, estimated_byte_size_integers) {
@@ -436,6 +457,7 @@ TEST(JSON_array, push_back_if_unique_copy_exists) {
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.array_size(), 3);
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
   EXPECT_EQ(document.at(2).to_integer(), 3);
@@ -454,6 +476,7 @@ TEST(JSON_array, push_back_if_unique_copy_not_exist) {
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 4);
+  EXPECT_EQ(document.array_size(), 4);
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
   EXPECT_EQ(document.at(2).to_integer(), 3);
@@ -473,6 +496,7 @@ TEST(JSON_array, push_back_if_unique_move_exists) {
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
+  EXPECT_EQ(document.array_size(), 3);
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
   EXPECT_EQ(document.at(2).to_integer(), 3);
@@ -491,6 +515,7 @@ TEST(JSON_array, push_back_if_unique_move_not_exist) {
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 4);
+  EXPECT_EQ(document.array_size(), 4);
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
   EXPECT_EQ(document.at(2).to_integer(), 3);
