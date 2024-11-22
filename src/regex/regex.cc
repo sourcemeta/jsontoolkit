@@ -2,15 +2,15 @@
 
 namespace sourcemeta::jsontoolkit {
 
-auto compile(const JSON::String &pattern) -> std::optional<Regex> {
+auto to_regex(const JSON::String &pattern) noexcept -> std::optional<Regex> {
   try {
     return std::regex{pattern, std::regex::ECMAScript | std::regex::nosubs};
-  } catch (const std::regex_error &) {
+  } catch (...) {
     return std::nullopt;
   }
 }
 
-auto validate(const Regex &regex, const JSON::String &value) -> bool {
+auto matches(const Regex &regex, const JSON::String &value) -> bool {
   return std::regex_search(value, regex);
 }
 
