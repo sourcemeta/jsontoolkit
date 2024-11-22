@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732294392880,
+  "lastUpdate": 1732300828874,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -24312,6 +24312,66 @@ window.BENCHMARK_DATA = {
             "value": 452.716791971705,
             "unit": "ns/iter",
             "extra": "iterations: 1519226\ncpu: 452.671457044574 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "07f2dcebb9cad6b03101c0754303ef63f6d39b86",
+          "message": "Benchmark common regular expressions (#1333)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-22T14:35:46-04:00",
+          "tree_id": "bc6244e504f21b1cc981a1673fe294cce653ac8a",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/07f2dcebb9cad6b03101c0754303ef63f6d39b86"
+        },
+        "date": 1732300827031,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 455.636858354223,
+            "unit": "ns/iter",
+            "extra": "iterations: 1527225\ncpu: 455.61520011786075 ns\nthreads: 1"
+          },
+          {
+            "name": "Regex_Period_Asterisk",
+            "value": 115.15623799020318,
+            "unit": "ns/iter",
+            "extra": "iterations: 6060165\ncpu: 115.14667999963697 ns\nthreads: 1"
+          },
+          {
+            "name": "Regex_Caret_Period_Asterisk_Dollar",
+            "value": 124.45234278421783,
+            "unit": "ns/iter",
+            "extra": "iterations: 5735270\ncpu: 124.44889429791452 ns\nthreads: 1"
+          },
+          {
+            "name": "Regex_Caret_Group_Period_Asterisk_Group_Dollar",
+            "value": 122.4560619778757,
+            "unit": "ns/iter",
+            "extra": "iterations: 5704615\ncpu: 122.45413774636847 ns\nthreads: 1"
+          },
+          {
+            "name": "Regex_Caret_X_Hyphen",
+            "value": 96.01679144225847,
+            "unit": "ns/iter",
+            "extra": "iterations: 7317537\ncpu: 96.01619014703996 ns\nthreads: 1"
+          },
+          {
+            "name": "Regex_Period_Md_Dollar",
+            "value": 148.71284154478954,
+            "unit": "ns/iter",
+            "extra": "iterations: 4690783\ncpu: 148.70976039607868 ns\nthreads: 1"
           }
         ]
       }
