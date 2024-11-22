@@ -1,6 +1,6 @@
 add_executable(sourcemeta_jsontoolkit_regex_unit
-  regex_compile_test.cc
-  regex_validate_test.cc)
+  regex_to_regex_test.cc
+  regex_matches_test.cc)
 noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_regex_unit)
 target_link_libraries(sourcemeta_jsontoolkit_regex_unit
   PRIVATE GTest::gtest GTest::gtest_main)

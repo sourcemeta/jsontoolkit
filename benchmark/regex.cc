@@ -6,10 +6,10 @@
 
 #define BENCHMARK_REGEX(name, pattern, string)                                 \
   static void name(benchmark::State &state) {                                  \
-    const auto regex{sourcemeta::jsontoolkit::compile(pattern)};               \
+    const auto regex{sourcemeta::jsontoolkit::to_regex(pattern)};              \
     assert(regex.has_value());                                                 \
     for (auto _ : state) {                                                     \
-      auto result{sourcemeta::jsontoolkit::validate(regex.value(), string)};   \
+      auto result{sourcemeta::jsontoolkit::matches(regex.value(), string)};    \
       assert(result);                                                          \
       benchmark::DoNotOptimize(result);                                        \
     }                                                                          \

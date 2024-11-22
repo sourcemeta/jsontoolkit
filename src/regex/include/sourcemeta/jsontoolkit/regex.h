@@ -34,11 +34,11 @@ using Regex = std::regex;
 /// #include <cassert>
 ///
 /// const sourcemeta::jsontoolkit::Regex regex{
-///   sourcemeta::jsontoolkit::compile("^foo")};
+///   sourcemeta::jsontoolkit::to_regex("^foo")};
 /// assert(regex.has_value());
 /// ```
 SOURCEMETA_JSONTOOLKIT_REGEX_EXPORT
-auto compile(const JSON::String &pattern) -> std::optional<Regex>;
+auto to_regex(const JSON::String &pattern) noexcept -> std::optional<Regex>;
 
 /// @ingroup regex
 ///
@@ -49,12 +49,12 @@ auto compile(const JSON::String &pattern) -> std::optional<Regex>;
 /// #include <cassert>
 ///
 /// const sourcemeta::jsontoolkit::Regex regex{
-///   sourcemeta::jsontoolkit::compile("^foo")};
+///   sourcemeta::jsontoolkit::to_regex("^foo")};
 /// assert(regex.has_value());
-/// assert(sourcemeta::jsontoolkit::validate(regex.value(), "foo bar"));
+/// assert(sourcemeta::jsontoolkit::matches(regex.value(), "foo bar"));
 /// ```
 SOURCEMETA_JSONTOOLKIT_REGEX_EXPORT
-auto validate(const Regex &regex, const JSON::String &value) -> bool;
+auto matches(const Regex &regex, const JSON::String &value) -> bool;
 
 } // namespace sourcemeta::jsontoolkit
 
