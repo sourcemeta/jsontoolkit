@@ -18,6 +18,8 @@
 
 BENCHMARK_REGEX(Regex_Period_Asterisk, ".*", "foo")
 BENCHMARK_REGEX(Regex_Period_Plus, ".+", "foo")
+BENCHMARK_REGEX(Regex_Caret_Period_Plus_Dollar, "^.+$", "foo")
+BENCHMARK_REGEX(Regex_Caret_Group_Period_Plus_Group_Dollar, "^(.+)$", "foo")
 BENCHMARK_REGEX(Regex_Caret_Period_Asterisk_Dollar, "^.*$", "foo")
 BENCHMARK_REGEX(Regex_Caret_Group_Period_Asterisk_Group_Dollar, "^(.*)$", "foo")
 BENCHMARK_REGEX(Regex_Caret_X_Hyphen, "^x-", "x-foo")
