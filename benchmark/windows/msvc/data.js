@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732224137601,
+  "lastUpdate": 1732294547666,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (windows/msvc)": [
@@ -18940,6 +18940,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "JSON_Array_Of_Objects_Unique",
             "value": 510.0793999999951,
+            "unit": "ns/iter",
+            "extra": "iterations: 1000000\ncpu: 515.625 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c8c1f6bb8530b0fe0aa83bdfccb8ccb8db5e54ea",
+          "message": "Implement type-specific `size` JSON methods (#1332)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2024-11-22T12:48:09-04:00",
+          "tree_id": "ba13ae5d15450e7e638b159aa0b876f22d3fd4a9",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/c8c1f6bb8530b0fe0aa83bdfccb8ccb8db5e54ea"
+        },
+        "date": 1732294538097,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 515.805200000159,
             "unit": "ns/iter",
             "extra": "iterations: 1000000\ncpu: 515.625 ns\nthreads: 1"
           }
