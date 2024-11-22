@@ -80,6 +80,7 @@ TEST(JSON_string, unicode_length_1) {
   EXPECT_TRUE(document.defines("name"));
   EXPECT_TRUE(document.at("name").is_string());
   EXPECT_EQ(document.at("name").size(), 3);
+  EXPECT_EQ(document.at("name").string_size(), 3);
 
   // https://unicodeplus.com/U+7B80 (UTF-8: 0xE7 0xAE 0x80)
   // https://unicodeplus.com/U+5F8B (UTF-8: 0xE5 0xBE 0x8B)
