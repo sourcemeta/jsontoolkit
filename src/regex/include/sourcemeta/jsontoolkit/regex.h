@@ -7,9 +7,10 @@
 
 #include <sourcemeta/jsontoolkit/json.h>
 
-#include <cstdint>  // std::uint8_t
+#include <cstdint>  // std::uint8_t, std::uint64_t
 #include <optional> // std::optional
 #include <regex>    // std::regex
+#include <utility>  // std::pair
 #include <variant>  // std::variant
 
 /// @defgroup regex Regex
@@ -33,14 +34,23 @@ using RegexTypePrefix = JSON::String;
 struct RegexTypeNonEmpty {};
 
 /// @ingroup regex
+using RegexTypeRange = std::pair<std::uint64_t, std::uint64_t>;
+
+/// @ingroup regex
 struct RegexTypeNoop {};
 
 /// @ingroup regex
 using Regex = std::variant<RegexTypeEngine, RegexTypePrefix, RegexTypeNonEmpty,
-                           RegexTypeNoop>;
+                           RegexTypeRange, RegexTypeNoop>;
 #if !defined(DOXYGEN)
 // For fast internal dispatching. It must stay in sync with the variant above
-enum class RegexIndex : std::uint8_t { Engine = 0, Prefix, NonEmpty, Noop };
+enum class RegexIndex : std::uint8_t {
+  Engine = 0,
+  Prefix,
+  NonEmpty,
+  Range,
+  Noop
+};
 #endif
 
 /// @ingroup regex

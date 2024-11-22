@@ -1,5 +1,8 @@
 #include <sourcemeta/jsontoolkit/regex.h>
 
+#include <cassert> // assert
+#include <string>  // std::stoull
+
 namespace sourcemeta::jsontoolkit {
 
 auto to_regex(const JSON::String &pattern) noexcept -> std::optional<Regex> {
@@ -10,10 +13,19 @@ auto to_regex(const JSON::String &pattern) noexcept -> std::optional<Regex> {
   }
 
   try {
-    static const std::regex PREFIX_REGEX{R"(^\^([a-zA-Z0-9-_/]+)(\.\*)?)"};
-    std::smatch matches;
-    if (std::regex_match(pattern, matches, PREFIX_REGEX)) {
-      return RegexTypePrefix{matches[1].str()};
+    const std::regex PREFIX_REGEX{R"(^\^([a-zA-Z0-9-_/]+)(\.\*)?)"};
+    std::smatch matches_prefix;
+    if (std::regex_match(pattern, matches_prefix, PREFIX_REGEX)) {
+      return RegexTypePrefix{matches_prefix[1].str()};
+    }
+
+    const std::regex RANGE_REGEX{R"(^\^\.\{(\d+),(\d+)\}\$$)"};
+    std::smatch matches_range;
+    if (std::regex_match(pattern, matches_range, RANGE_REGEX)) {
+      const std::uint64_t minimum{std::stoull(matches_range[1].str())};
+      const std::uint64_t maximum{std::stoull(matches_range[2].str())};
+      assert(minimum <= maximum);
+      return RegexTypeRange{minimum, maximum};
     }
 
     return std::regex{pattern, std::regex::ECMAScript | std::regex::nosubs};
@@ -30,6 +42,9 @@ auto matches(const Regex &regex, const JSON::String &value) -> bool {
       return value.starts_with(std::get<RegexTypePrefix>(regex));
     case RegexIndex::NonEmpty:
       return !value.empty();
+    case RegexIndex::Range:
+      return value.size() >= std::get<RegexTypeRange>(regex).first &&
+             value.size() <= std::get<RegexTypeRange>(regex).second;
     case RegexIndex::Noop:
       return true;
   }
