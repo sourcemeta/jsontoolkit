@@ -10,7 +10,7 @@ auto to_regex(const JSON::String &pattern) noexcept -> std::optional<Regex> {
   }
 
   try {
-    static const std::regex PREFIX_REGEX{R"(^\^([a-zA-Z0-9-_/]+)$)"};
+    static const std::regex PREFIX_REGEX{R"(^\^([a-zA-Z0-9-_/]+)(\.\*)?)"};
     std::smatch matches;
     if (std::regex_match(pattern, matches, PREFIX_REGEX)) {
       return RegexTypePrefix{matches[1].str()};
