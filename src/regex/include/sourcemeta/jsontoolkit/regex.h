@@ -30,13 +30,17 @@ using RegexTypeEngine = std::regex;
 using RegexTypePrefix = JSON::String;
 
 /// @ingroup regex
+struct RegexTypeNonEmpty {};
+
+/// @ingroup regex
 struct RegexTypeNoop {};
 
 /// @ingroup regex
-using Regex = std::variant<RegexTypeEngine, RegexTypePrefix, RegexTypeNoop>;
+using Regex = std::variant<RegexTypeEngine, RegexTypePrefix, RegexTypeNonEmpty,
+                           RegexTypeNoop>;
 #if !defined(DOXYGEN)
 // For fast internal dispatching. It must stay in sync with the variant above
-enum class RegexIndex : std::uint8_t { Engine = 0, Prefix, Noop };
+enum class RegexIndex : std::uint8_t { Engine = 0, Prefix, NonEmpty, Noop };
 #endif
 
 /// @ingroup regex
