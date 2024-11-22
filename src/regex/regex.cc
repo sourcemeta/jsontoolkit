@@ -6,9 +6,11 @@
 namespace sourcemeta::jsontoolkit {
 
 auto to_regex(const JSON::String &pattern) noexcept -> std::optional<Regex> {
-  if (pattern == ".*" || pattern == "^.*$" || pattern == "^(.*)$") {
+  if (pattern == ".*" || pattern == "^.*$" || pattern == "^(.*)$" ||
+      pattern == "(.*)" || pattern == "[\\s\\S]*" || pattern == "^[\\s\\S]*$") {
     return RegexTypeNoop{};
-  } else if (pattern == ".+" || pattern == "^.+$" || pattern == "^(.+)$") {
+  } else if (pattern == ".+" || pattern == "^.+$" || pattern == "^(.+)$" ||
+             pattern == ".") {
     return RegexTypeNonEmpty{};
   }
 
