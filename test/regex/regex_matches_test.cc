@@ -63,6 +63,18 @@ TEST(Regex_matches, match_true_10) {
       sourcemeta::jsontoolkit::matches(regex.value(), std::string(256, 'x')));
 }
 
+TEST(Regex_matches, match_true_11) {
+  const auto regex{sourcemeta::jsontoolkit::to_regex("^@")};
+  EXPECT_TRUE(regex.has_value());
+  EXPECT_TRUE(sourcemeta::jsontoolkit::matches(regex.value(), "@foo"));
+}
+
+TEST(Regex_matches, match_true_12) {
+  const auto regex{sourcemeta::jsontoolkit::to_regex("o$")};
+  EXPECT_TRUE(regex.has_value());
+  EXPECT_TRUE(sourcemeta::jsontoolkit::matches(regex.value(), "foo"));
+}
+
 TEST(Regex_matches, match_false_1) {
   const auto regex{sourcemeta::jsontoolkit::to_regex("^foo")};
   EXPECT_TRUE(regex.has_value());
@@ -86,4 +98,16 @@ TEST(Regex_matches, match_false_4) {
   EXPECT_TRUE(regex.has_value());
   EXPECT_FALSE(
       sourcemeta::jsontoolkit::matches(regex.value(), std::string(257, 'x')));
+}
+
+TEST(Regex_matches, match_false_5) {
+  const auto regex{sourcemeta::jsontoolkit::to_regex("^@")};
+  EXPECT_TRUE(regex.has_value());
+  EXPECT_FALSE(sourcemeta::jsontoolkit::matches(regex.value(), "foo"));
+}
+
+TEST(Regex_matches, match_false_6) {
+  const auto regex{sourcemeta::jsontoolkit::to_regex("o$")};
+  EXPECT_TRUE(regex.has_value());
+  EXPECT_FALSE(sourcemeta::jsontoolkit::matches(regex.value(), "bar"));
 }

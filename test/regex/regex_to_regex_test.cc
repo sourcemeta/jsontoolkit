@@ -8,6 +8,6 @@ TEST(Regex_to_regex, valid_1) {
 }
 
 TEST(Regex_to_regex, invalid_1) {
-  const auto regex{sourcemeta::jsontoolkit::to_regex("(?<name>a)(?<name>b)")};
+  const auto regex{sourcemeta::jsontoolkit::to_regex("(abc")};
   EXPECT_FALSE(regex.has_value());
 }
