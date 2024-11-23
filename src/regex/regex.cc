@@ -15,7 +15,7 @@ auto to_regex(const JSON::String &pattern) noexcept -> std::optional<Regex> {
   }
 
   try {
-    const std::regex PREFIX_REGEX{R"(^\^([a-zA-Z0-9-_/]+)(\.\*)?)"};
+    const std::regex PREFIX_REGEX{R"(^\^([a-zA-Z0-9-_/@]+)(\.\*)?)"};
     std::smatch matches_prefix;
     if (std::regex_match(pattern, matches_prefix, PREFIX_REGEX)) {
       return RegexTypePrefix{matches_prefix[1].str()};
