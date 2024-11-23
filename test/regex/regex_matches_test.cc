@@ -75,6 +75,21 @@ TEST(Regex_matches, match_true_12) {
   EXPECT_TRUE(sourcemeta::jsontoolkit::matches(regex.value(), "foo"));
 }
 
+TEST(Regex_matches, match_true_13) {
+  const auto regex{
+      sourcemeta::jsontoolkit::to_regex("^[a-z][a-z0-9-_]{1,63}$")};
+  EXPECT_TRUE(regex.has_value());
+  EXPECT_TRUE(sourcemeta::jsontoolkit::matches(regex.value(), "abcd"));
+}
+
+TEST(Regex_matches, match_true_14) {
+  const auto regex{sourcemeta::jsontoolkit::to_regex(
+      "^(?:@[0-9a-z-_.]+\\/)?[a-z][0-9a-z-_.]*$")};
+  EXPECT_TRUE(regex.has_value());
+  EXPECT_TRUE(
+      sourcemeta::jsontoolkit::matches(regex.value(), "@namespace/mypackage"));
+}
+
 TEST(Regex_matches, match_false_1) {
   const auto regex{sourcemeta::jsontoolkit::to_regex("^foo")};
   EXPECT_TRUE(regex.has_value());
