@@ -4,11 +4,7 @@
 #include <functional>       // std::equal_to, std::less
 #include <initializer_list> // std::initializer_list
 
-#if defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 12)
-#include <map> // std::map
-#else
-#include <unordered_map> // std::unordered_map
-#endif
+#include <sourcemeta/jsontoolkit/json_flat_map.h>
 
 namespace sourcemeta::jsontoolkit {
 
@@ -16,17 +12,7 @@ namespace sourcemeta::jsontoolkit {
 template <typename Key, typename Value, typename Hash> class JSONObject {
 public:
   // Constructors
-
-  // Older versions of GCC don't allow `std::unordered_map` to incomplete
-  // types, and in this case, `Value` is an incomplete type.
-  using Container =
-#if defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 12)
-      std::map<Key, Value, std::less<Key>,
-#else
-      std::unordered_map<Key, Value, Hash, std::equal_to<Key>,
-#endif
-               typename Value::template Allocator<
-                   std::pair<const typename Value::String, Value>>>;
+  using Container = FlatMap<Key, Value, Hash>;
 
   JSONObject() : data{} {}
   JSONObject(std::initializer_list<typename Container::value_type> values)
