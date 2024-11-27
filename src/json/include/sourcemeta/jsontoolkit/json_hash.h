@@ -10,11 +10,12 @@ template <typename T> struct FastHash {
   // most JSON objects don't have a lot of entries, so hash collision
   // is not as common
   inline auto operator()(const typename T::String &value) const noexcept
-      -> std::size_t {
+      -> std::uint8_t {
     return value.empty()
                ? 0
-               : value.size() + static_cast<std::size_t>(value.front()) +
-                     static_cast<std::size_t>(value.back());
+               : static_cast<std::uint8_t>(
+                     value.size() + static_cast<std::size_t>(value.front()) +
+                     static_cast<std::size_t>(value.back()));
   }
 
   inline auto operator()(const T &value) const noexcept -> std::size_t {
