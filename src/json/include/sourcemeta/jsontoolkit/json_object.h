@@ -90,14 +90,8 @@ public:
   using const_reference = typename Container::const_reference;
   using pointer = typename Container::pointer;
   using const_pointer = typename Container::const_pointer;
-  using iterator = typename Container::iterator;
   using const_iterator = typename Container::const_iterator;
 
-  /// Get a mutable begin iterator on the object
-  auto begin() noexcept -> iterator { return this->data.begin(); }
-  /// Get a mutable end iterator on the object
-  auto end() noexcept -> iterator { return this->data.end(); }
-  /// Get a constant begin iterator on the object
   auto begin() const noexcept -> const_iterator { return this->data.begin(); }
   /// Get a constant end iterator on the object
   auto end() const noexcept -> const_iterator { return this->data.end(); }
