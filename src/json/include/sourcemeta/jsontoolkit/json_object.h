@@ -49,7 +49,8 @@ public:
 
     // Otherwise do value comparison for common properties
     for (const auto &[key, value] : this->data) {
-      if (other.data.contains(key) && value < other.data.at(key)) {
+      const auto other_entry{other.find(key)};
+      if (other_entry != other.cend() && value < other_entry->second) {
         return true;
       }
     }
@@ -104,6 +105,11 @@ public:
   auto cbegin() const noexcept -> const_iterator { return this->data.cbegin(); }
   /// Get a constant end iterator on the object
   auto cend() const noexcept -> const_iterator { return this->data.cend(); }
+
+  /// Attempt to find an entry by key
+  auto find(const Key &key) const -> const_iterator {
+    return this->data.find(key);
+  }
 
 private:
   friend Value;

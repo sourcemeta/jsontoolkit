@@ -506,7 +506,8 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
 
 [[nodiscard]] auto JSON::defines(const JSON::String &key) const -> bool {
   assert(this->is_object());
-  return std::get<Object>(this->data).data.contains(key);
+  return std::get<Object>(this->data).find(key) !=
+         std::get<Object>(this->data).cend();
 }
 
 [[nodiscard]] auto
