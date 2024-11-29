@@ -8,6 +8,10 @@ if(JSONTOOLKIT_REGEX)
   list(APPEND BENCHMARK_SOURCES regex.cc)
 endif()
 
+if(JSONTOOLKIT_JSONPOINTER)
+  list(APPEND BENCHMARK_SOURCES jsonpointer.cc)
+endif()
+
 if(BENCHMARK_SOURCES)
   add_executable(sourcemeta_jsontoolkit_benchmark ${BENCHMARK_SOURCES})
   noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_benchmark)
@@ -26,6 +30,11 @@ if(BENCHMARK_SOURCES)
   if(JSONTOOLKIT_REGEX)
     target_link_libraries(sourcemeta_jsontoolkit_benchmark
       PRIVATE sourcemeta::jsontoolkit::regex)
+  endif()
+
+  if(JSONTOOLKIT_JSONPOINTER)
+    target_link_libraries(sourcemeta_jsontoolkit_benchmark
+      PRIVATE sourcemeta::jsontoolkit::jsonpointer)
   endif()
 
   add_custom_target(benchmark_all
