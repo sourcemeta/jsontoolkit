@@ -653,3 +653,12 @@ TEST(JSON_object, fast_hash_nested) {
       "{ \"foo\": 1, \"bar\": { \"bar\": true } }");
   EXPECT_EQ(document.fast_hash(), 32);
 }
+
+TEST(JSON_object, find) {
+  const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":5}")};
+  EXPECT_NE(document.as_object().find("foo"), document.as_object().cend());
+  EXPECT_EQ(document.as_object().find("foo")->first, "foo");
+  EXPECT_TRUE(document.as_object().find("foo")->second.is_integer());
+  EXPECT_EQ(document.as_object().find("foo")->second.to_integer(), 5);
+  EXPECT_EQ(document.as_object().find("bar"), document.as_object().cend());
+}
