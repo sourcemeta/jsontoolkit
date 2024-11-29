@@ -294,3 +294,23 @@ TEST(JSON_flat_map, at_modify_with_hash) {
   EXPECT_FALSE(map.at(0));
   EXPECT_TRUE(map.at(1));
 }
+
+TEST(JSON_flat_map, contains) {
+  sourcemeta::jsontoolkit::FlatMap<std::uint64_t, bool> map;
+
+  const auto hash_1{map.assign(0, true)};
+  const auto hash_2{map.assign(1, false)};
+  const auto hash_3{map.assign(2, true)};
+
+  EXPECT_FALSE(map.empty());
+  EXPECT_EQ(map.size(), 3);
+
+  EXPECT_TRUE(map.contains(0));
+  EXPECT_TRUE(map.contains(1));
+  EXPECT_TRUE(map.contains(2));
+  EXPECT_FALSE(map.contains(3));
+
+  EXPECT_TRUE(map.contains(0, hash_1));
+  EXPECT_TRUE(map.contains(1, hash_2));
+  EXPECT_TRUE(map.contains(2, hash_3));
+}
