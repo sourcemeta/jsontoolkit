@@ -662,3 +662,39 @@ TEST(JSON_object, find) {
   EXPECT_EQ(document.as_object().find("foo")->second.to_integer(), 5);
   EXPECT_EQ(document.as_object().find("bar"), document.as_object().cend());
 }
+
+TEST(JSON_object, at_hash_const) {
+  const sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{false}},
+      {"bar", sourcemeta::jsontoolkit::JSON{true}}};
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 2);
+  EXPECT_EQ(document.object_size(), 2);
+
+  const sourcemeta::jsontoolkit::Hash hasher;
+  const auto hash_foo{hasher("foo")};
+  const auto hash_bar{hasher("bar")};
+
+  EXPECT_TRUE(document.at("foo", hash_foo).is_boolean());
+  EXPECT_TRUE(document.at("bar", hash_bar).is_boolean());
+  EXPECT_FALSE(document.at("foo", hash_foo).to_boolean());
+  EXPECT_TRUE(document.at("bar", hash_bar).to_boolean());
+}
+
+TEST(JSON_object, at_hash_non_const) {
+  sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{false}},
+      {"bar", sourcemeta::jsontoolkit::JSON{true}}};
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 2);
+  EXPECT_EQ(document.object_size(), 2);
+
+  const sourcemeta::jsontoolkit::Hash hasher;
+  const auto hash_foo{hasher("foo")};
+  const auto hash_bar{hasher("bar")};
+
+  EXPECT_TRUE(document.at("foo", hash_foo).is_boolean());
+  EXPECT_TRUE(document.at("bar", hash_bar).is_boolean());
+  EXPECT_FALSE(document.at("foo", hash_foo).to_boolean());
+  EXPECT_TRUE(document.at("bar", hash_bar).to_boolean());
+}

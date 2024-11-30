@@ -93,3 +93,26 @@ TEST(JSONPointer_token, to_json_property) {
   EXPECT_TRUE(result.is_string());
   EXPECT_EQ(result.to_string(), "foo");
 }
+
+TEST(JSONPointer_token, property_hash) {
+  const sourcemeta::jsontoolkit::Pointer::Token first{"foo"};
+  const sourcemeta::jsontoolkit::Pointer::Token second{"bar"};
+  const sourcemeta::jsontoolkit::Pointer::Token third{"foo"};
+  EXPECT_NE(first.property_hash(), second.property_hash());
+  EXPECT_NE(second.property_hash(), third.property_hash());
+  EXPECT_EQ(first.property_hash(), third.property_hash());
+}
+
+TEST(JSONPointer_get, at_property_with_hash) {
+  const auto document = sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": 1,
+    "bar": 2,
+    "baz": 3
+  })JSON");
+
+  const sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
+  EXPECT_TRUE(token.is_property());
+  const auto &result{document.at(token.to_property(), token.property_hash())};
+  EXPECT_TRUE(result.is_integer());
+  EXPECT_EQ(result.to_integer(), 1);
+}
