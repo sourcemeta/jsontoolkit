@@ -25,8 +25,10 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
   /// ```
-  GenericToken(const Property &property)
-      : has_property{true}, data_property{property, this->hasher(property)} {}
+  GenericToken(const Property &property) : has_property{true} {
+    new (&this->data_property)
+        PropertyWrapper{property, this->hasher(property)};
+  }
 
   /// This constructor creates an JSON Pointer token from a string. For
   /// example:
@@ -37,8 +39,10 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
   /// ```
-  GenericToken(const JSON::Char *const property)
-      : has_property{true}, data_property{property, this->hasher(property)} {}
+  GenericToken(const JSON::Char *const property) : has_property{true} {
+    new (&this->data_property)
+        PropertyWrapper{property, this->hasher(property)};
+  }
 
   /// This constructor creates an JSON Pointer token from a character. For
   /// example:
@@ -49,9 +53,10 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::Pointer::Token token{'a'};
   /// ```
-  GenericToken(const JSON::Char character)
-      : has_property{true},
-        data_property{Property{character}, this->hasher(Property{character})} {}
+  GenericToken(const JSON::Char character) : has_property{true} {
+    new (&this->data_property)
+        PropertyWrapper{Property{character}, this->hasher(Property{character})};
+  }
 
   /// This constructor creates an JSON Pointer token from an item index. For
   /// example:
@@ -104,7 +109,8 @@ public:
 
   GenericToken(const GenericToken &other) : has_property{other.has_property} {
     if (this->has_property) {
-      this->data_property = other.data_property;
+      new (&this->data_property)
+          PropertyWrapper{other.to_property(), other.property_hash()};
     } else {
       this->data_index = other.data_index;
     }
@@ -122,7 +128,8 @@ public:
   auto operator=(const GenericToken &other) -> GenericToken & {
     this->has_property = other.has_property;
     if (this->has_property) {
-      this->data_property = other.data_property;
+      new (&this->data_property)
+          PropertyWrapper{other.to_property(), other.property_hash()};
     } else {
       this->data_index = other.data_index;
     }
@@ -133,7 +140,8 @@ public:
   auto operator=(GenericToken &&other) noexcept -> GenericToken & {
     this->has_property = other.has_property;
     if (this->has_property) {
-      this->data_property = std::move(other.data_property);
+      new (&this->data_property)
+          PropertyWrapper{std::move(other.data_property)};
     } else {
       this->data_index = other.data_index;
     }
@@ -236,10 +244,14 @@ public:
   /// ```
   auto to_property() noexcept -> auto & {
     assert(this->is_property());
-    if constexpr (requires { this->data_property.first.get(); }) {
-      return this->data_property.first.get();
+    if constexpr (requires {
+                    reinterpret_cast<PropertyWrapper *>(&this->data_property)
+                        ->first.get();
+                  }) {
+      return reinterpret_cast<PropertyWrapper *>(&this->data_property)
+          ->first.get();
     } else {
-      return this->data_property.first;
+      return reinterpret_cast<PropertyWrapper *>(&this->data_property)->first;
     }
   }
 
