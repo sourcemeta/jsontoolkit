@@ -4,8 +4,7 @@
 #include <sourcemeta/jsontoolkit/json.h>
 
 #include <cassert> // assert
-#include <utility> // std::in_place_type, std::pair
-#include <variant> // std::variant, std::holds_alternative, std::get
+#include <utility> // std::pair
 
 namespace sourcemeta::jsontoolkit {
 
@@ -27,8 +26,7 @@ public:
   /// const sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
   /// ```
   GenericToken(const Property &property)
-      : data{std::in_place_type<PropertyWrapper>, property,
-             this->hasher(property)} {}
+      : has_property{true}, data_property{property, this->hasher(property)} {}
 
   /// This constructor creates an JSON Pointer token from a string. For
   /// example:
@@ -40,8 +38,7 @@ public:
   /// const sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
   /// ```
   GenericToken(const JSON::Char *const property)
-      : data{std::in_place_type<PropertyWrapper>, property,
-             this->hasher(property)} {}
+      : has_property{true}, data_property{property, this->hasher(property)} {}
 
   /// This constructor creates an JSON Pointer token from a character. For
   /// example:
@@ -53,8 +50,8 @@ public:
   /// const sourcemeta::jsontoolkit::Pointer::Token token{'a'};
   /// ```
   GenericToken(const JSON::Char character)
-      : data{std::in_place_type<PropertyWrapper>, Property{character},
-             this->hasher(Property{character})} {}
+      : has_property{true},
+        data_property{Property{character}, this->hasher(Property{character})} {}
 
   /// This constructor creates an JSON Pointer token from an item index. For
   /// example:
@@ -65,7 +62,7 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::Pointer::Token token{1};
   /// ```
-  GenericToken(const Index index) : data{std::in_place_type<Index>, index} {}
+  GenericToken(const Index index) : has_property{false}, data_index{index} {}
 
   /// This constructor creates an JSON Pointer token from an item index. For
   /// example:
@@ -76,7 +73,8 @@ public:
   ///
   /// const sourcemeta::jsontoolkit::Pointer::Token token{1};
   /// ```
-  GenericToken(const int index) : data{std::in_place_type<Index>, index} {}
+  GenericToken(const int index)
+      : has_property{false}, data_index{static_cast<Index>(index)} {}
 
 #if defined(_MSC_VER)
   /// This constructor creates an JSON Pointer token from an item index. For
@@ -89,7 +87,59 @@ public:
   /// const sourcemeta::jsontoolkit::Pointer::Token token{1};
   /// ```
   GenericToken(const unsigned long index)
-      : data{std::in_place_type<Index>, index} {}
+      : has_property{false}, data_index{index} {}
+#endif
+
+  // Boilerplate constructors/members not worth documenting
+#if !defined(DOXYGEN)
+  ~GenericToken() {
+    if (this->has_property) {
+      if constexpr (requires { this->data_property.first.get(); }) {
+        this->data_property.first.~reference_wrapper();
+      } else {
+        this->data_property.first.~basic_string();
+      }
+    }
+  }
+
+  GenericToken(const GenericToken &other) : has_property{other.has_property} {
+    if (this->has_property) {
+      this->data_property = other.data_property;
+    } else {
+      this->data_index = other.data_index;
+    }
+  }
+
+  GenericToken(GenericToken &&other) noexcept
+      : has_property{other.has_property} {
+    if (this->has_property) {
+      this->data_property = std::move(other.data_property);
+    } else {
+      this->data_index = other.data_index;
+    }
+  }
+
+  auto operator=(const GenericToken &other) -> GenericToken & {
+    this->has_property = other.has_property;
+    if (this->has_property) {
+      this->data_property = other.data_property;
+    } else {
+      this->data_index = other.data_index;
+    }
+
+    return *this;
+  }
+
+  auto operator=(GenericToken &&other) noexcept -> GenericToken & {
+    this->has_property = other.has_property;
+    if (this->has_property) {
+      this->data_property = std::move(other.data_property);
+    } else {
+      this->data_index = other.data_index;
+    }
+
+    return *this;
+  }
 #endif
 
   /// Check if a JSON Pointer token represents an object property.
@@ -102,8 +152,8 @@ public:
   /// const sourcemeta::jsontoolkit::Pointer::Token token{"foo"};
   /// assert(token.is_property());
   /// ```
-  [[nodiscard]] auto is_property() const noexcept -> bool {
-    return std::holds_alternative<PropertyWrapper>(this->data);
+  [[nodiscard]] inline auto is_property() const noexcept -> bool {
+    return this->has_property;
   }
 
   /// Check if a JSON Pointer token represents the hyphen constant
@@ -133,8 +183,8 @@ public:
   /// const sourcemeta::jsontoolkit::Pointer::Token token{2};
   /// assert(token.is_index());
   /// ```
-  [[nodiscard]] auto is_index() const noexcept -> bool {
-    return std::holds_alternative<Index>(this->data);
+  [[nodiscard]] inline auto is_index() const noexcept -> bool {
+    return !this->has_property;
   }
 
   /// Get the underlying value of a JSON Pointer object property token (`const`
@@ -150,12 +200,10 @@ public:
   /// ```
   [[nodiscard]] auto to_property() const noexcept -> const auto & {
     assert(this->is_property());
-    if constexpr (requires {
-                    std::get<PropertyWrapper>(this->data).first.get();
-                  }) {
-      return std::get<PropertyWrapper>(this->data).first.get();
+    if constexpr (requires { this->data_property.first.get(); }) {
+      return this->data_property.first.get();
     } else {
-      return std::get<PropertyWrapper>(this->data).first;
+      return this->data_property.first;
     }
   }
 
@@ -172,7 +220,7 @@ public:
   /// ```
   [[nodiscard]] auto property_hash() const noexcept -> std::size_t {
     assert(this->is_property());
-    return std::get<PropertyWrapper>(this->data).second;
+    return this->data_property.second;
   }
 
   /// Get the underlying value of a JSON Pointer object property token
@@ -188,12 +236,10 @@ public:
   /// ```
   auto to_property() noexcept -> auto & {
     assert(this->is_property());
-    if constexpr (requires {
-                    std::get<PropertyWrapper>(this->data).first.get();
-                  }) {
-      return std::get<PropertyWrapper>(this->data).first.get();
+    if constexpr (requires { this->data_property.first.get(); }) {
+      return this->data_property.first.get();
     } else {
-      return std::get<PropertyWrapper>(this->data).first;
+      return this->data_property.first;
     }
   }
 
@@ -210,7 +256,7 @@ public:
   /// ```
   [[nodiscard]] auto to_index() const noexcept -> Index {
     assert(this->is_index());
-    return std::get<Index>(this->data);
+    return this->data_index;
   }
 
   /// Convert a JSON Pointer token into a JSON document, whether it represents a
@@ -240,31 +286,35 @@ public:
   /// Compare JSON Pointer tokens
   auto operator==(const GenericToken<PropertyT, Hash> &other) const noexcept
       -> bool {
-    if (this->data.index() != other.data.index()) {
+    if (this->is_property() && other.is_property()) {
+      return this->to_property() == other.to_property();
+    } else if (this->is_index() && other.is_index()) {
+      return this->to_index() == other.to_index();
+    } else {
       return false;
     }
-    if (this->is_property()) {
-      return this->to_property() == other.to_property();
-    }
-    return this->to_index() == other.to_index();
   }
 
   /// Overload to support ordering of JSON Pointer token. Typically for sorting
   /// reasons.
   auto operator<(const GenericToken<PropertyT, Hash> &other) const noexcept
       -> bool {
-    if (this->data.index() != other.data.index()) {
-      return this->data.index() < other.data.index();
-    }
-    if (this->is_property()) {
+    if (this->is_property() && other.is_property()) {
       return this->to_property() < other.to_property();
+    } else if (this->is_index() && other.is_index()) {
+      return this->to_index() < other.to_index();
+    } else {
+      return this->has_property || other.has_property;
     }
-    return this->to_index() < other.to_index();
   }
 
 private:
   Hash hasher;
-  std::variant<PropertyWrapper, Index> data;
+  bool has_property;
+  union {
+    PropertyWrapper data_property;
+    Index data_index;
+  };
 };
 
 } // namespace sourcemeta::jsontoolkit
