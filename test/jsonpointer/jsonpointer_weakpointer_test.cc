@@ -312,3 +312,21 @@ TEST(JSONWeakPointer_try_get, complex_false) {
   const auto result{sourcemeta::jsontoolkit::try_get(document, pointer)};
   EXPECT_FALSE(result.has_value());
 }
+
+TEST(JSONWeakPointer_pointer, to_pointer) {
+  const sourcemeta::jsontoolkit::WeakPointer weak{std::cref(foo), 0};
+  const sourcemeta::jsontoolkit::Pointer pointer{
+      sourcemeta::jsontoolkit::to_pointer(weak)};
+
+  EXPECT_EQ(weak.size(), 2);
+  EXPECT_TRUE(weak.at(0).is_property());
+  EXPECT_EQ(weak.at(0).to_property(), "foo");
+  EXPECT_TRUE(weak.at(1).is_index());
+  EXPECT_EQ(weak.at(1).to_index(), 0);
+
+  EXPECT_EQ(pointer.size(), 2);
+  EXPECT_TRUE(pointer.at(0).is_property());
+  EXPECT_EQ(pointer.at(0).to_property(), "foo");
+  EXPECT_TRUE(pointer.at(1).is_index());
+  EXPECT_EQ(pointer.at(1).to_index(), 0);
+}
