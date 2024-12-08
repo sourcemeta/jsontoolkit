@@ -698,3 +698,17 @@ TEST(JSON_object, at_hash_non_const) {
   EXPECT_FALSE(document.at("foo", hash_foo).to_boolean());
   EXPECT_TRUE(document.at("bar", hash_bar).to_boolean());
 }
+
+TEST(JSON_object, defines_hash_const) {
+  const sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{false}},
+      {"bar", sourcemeta::jsontoolkit::JSON{true}}};
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 2);
+  EXPECT_EQ(document.object_size(), 2);
+
+  const sourcemeta::jsontoolkit::Hash hasher;
+  EXPECT_TRUE(document.defines("foo", hasher("foo")));
+  EXPECT_TRUE(document.defines("bar", hasher("bar")));
+  EXPECT_FALSE(document.defines("baz", hasher("baz")));
+}
