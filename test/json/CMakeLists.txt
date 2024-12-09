@@ -3,6 +3,7 @@ add_executable(sourcemeta_jsontoolkit_json_unit
   json_boolean_test.cc
   json_error_test.cc
   json_flat_map_test.cc
+  json_hash_test.cc
   json_integer_test.cc
   json_null_test.cc
   json_number_test.cc
