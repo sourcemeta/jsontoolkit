@@ -36,22 +36,11 @@ TEST(JSON_flat_map, set_insert_move) {
   EXPECT_FALSE(map.empty());
   EXPECT_EQ(map.size(), 3);
 
-  EXPECT_NE(map.find("0"), map.cend());
-  EXPECT_NE(map.find("1"), map.cend());
-  EXPECT_NE(map.find("2"), map.cend());
-
   EXPECT_NE(map.find("0", hash_1), map.cend());
   EXPECT_NE(map.find("1", hash_2), map.cend());
   EXPECT_NE(map.find("2", hash_3), map.cend());
 
-  EXPECT_EQ(map.find("3"), map.cend());
-
-  EXPECT_EQ(map.find("0")->first, "0");
-  EXPECT_EQ(map.find("1")->first, "1");
-  EXPECT_EQ(map.find("2")->first, "2");
-  EXPECT_TRUE(map.find("0")->second);
-  EXPECT_FALSE(map.find("1")->second);
-  EXPECT_TRUE(map.find("2")->second);
+  EXPECT_EQ(map.find("3", map.hash("3")), map.cend());
 
   EXPECT_EQ(map.find("0", hash_1)->first, "0");
   EXPECT_EQ(map.find("1", hash_2)->first, "1");
@@ -60,9 +49,6 @@ TEST(JSON_flat_map, set_insert_move) {
   EXPECT_FALSE(map.find("1", hash_2)->second);
   EXPECT_TRUE(map.find("2", hash_3)->second);
 
-  EXPECT_TRUE(map.at("0"));
-  EXPECT_FALSE(map.at("1"));
-  EXPECT_TRUE(map.at("2"));
   EXPECT_TRUE(map.at("0", hash_1));
   EXPECT_FALSE(map.at("1", hash_2));
   EXPECT_TRUE(map.at("2", hash_3));
@@ -82,26 +68,14 @@ TEST(JSON_flat_map, set_assign_move) {
   EXPECT_FALSE(map.empty());
   EXPECT_EQ(map.size(), 2);
 
-  EXPECT_NE(map.find("0"), map.cend());
-  EXPECT_NE(map.find("1"), map.cend());
-
   EXPECT_NE(map.find("0", hash_1), map.cend());
   EXPECT_NE(map.find("1", hash_2), map.cend());
-
-  EXPECT_EQ(map.find("2"), map.cend());
-
-  EXPECT_EQ(map.find("0")->first, "0");
-  EXPECT_EQ(map.find("1")->first, "1");
-  EXPECT_TRUE(map.find("0")->second);
-  EXPECT_TRUE(map.find("1")->second);
 
   EXPECT_EQ(map.find("0", hash_1)->first, "0");
   EXPECT_EQ(map.find("1", hash_2)->first, "1");
   EXPECT_TRUE(map.find("0", hash_1)->second);
   EXPECT_TRUE(map.find("1", hash_2)->second);
 
-  EXPECT_TRUE(map.at("0"));
-  EXPECT_TRUE(map.at("1"));
   EXPECT_TRUE(map.at("0", hash_1));
   EXPECT_TRUE(map.at("1", hash_2));
 }
@@ -126,22 +100,9 @@ TEST(JSON_flat_map, set_insert_copy) {
   EXPECT_FALSE(map.empty());
   EXPECT_EQ(map.size(), 3);
 
-  EXPECT_NE(map.find(key_1), map.cend());
-  EXPECT_NE(map.find(key_2), map.cend());
-  EXPECT_NE(map.find(key_3), map.cend());
-
   EXPECT_NE(map.find(key_1, hash_1), map.cend());
   EXPECT_NE(map.find(key_2, hash_2), map.cend());
   EXPECT_NE(map.find(key_3, hash_3), map.cend());
-
-  EXPECT_EQ(map.find("3"), map.cend());
-
-  EXPECT_EQ(map.find(key_1)->first, key_1);
-  EXPECT_EQ(map.find(key_2)->first, key_2);
-  EXPECT_EQ(map.find(key_3)->first, key_3);
-  EXPECT_TRUE(map.find(key_1)->second);
-  EXPECT_FALSE(map.find(key_2)->second);
-  EXPECT_TRUE(map.find(key_3)->second);
 
   EXPECT_EQ(map.find(key_1, hash_1)->first, key_1);
   EXPECT_EQ(map.find(key_2, hash_2)->first, key_2);
@@ -150,9 +111,6 @@ TEST(JSON_flat_map, set_insert_copy) {
   EXPECT_FALSE(map.find(key_2, hash_2)->second);
   EXPECT_TRUE(map.find(key_3, hash_3)->second);
 
-  EXPECT_TRUE(map.at(key_1));
-  EXPECT_FALSE(map.at(key_2));
-  EXPECT_TRUE(map.at(key_3));
   EXPECT_TRUE(map.at(key_1, hash_1));
   EXPECT_FALSE(map.at(key_2, hash_2));
   EXPECT_TRUE(map.at(key_3, hash_3));
@@ -179,26 +137,14 @@ TEST(JSON_flat_map, set_assign_copy) {
   EXPECT_FALSE(map.empty());
   EXPECT_EQ(map.size(), 2);
 
-  EXPECT_NE(map.find(key_1), map.cend());
-  EXPECT_NE(map.find(key_2), map.cend());
-
   EXPECT_NE(map.find(key_1, hash_1), map.cend());
   EXPECT_NE(map.find(key_2, hash_2), map.cend());
-
-  EXPECT_EQ(map.find("2"), map.cend());
-
-  EXPECT_EQ(map.find(key_1)->first, key_1);
-  EXPECT_EQ(map.find(key_2)->first, key_2);
-  EXPECT_TRUE(map.find(key_1)->second);
-  EXPECT_TRUE(map.find(key_2)->second);
 
   EXPECT_EQ(map.find(key_1, hash_1)->first, key_1);
   EXPECT_EQ(map.find(key_2, hash_2)->first, key_2);
   EXPECT_TRUE(map.find(key_1, hash_1)->second);
   EXPECT_TRUE(map.find(key_2, hash_2)->second);
 
-  EXPECT_TRUE(map.at(key_1));
-  EXPECT_TRUE(map.at(key_2));
   EXPECT_TRUE(map.at(key_1, hash_1));
   EXPECT_TRUE(map.at(key_2, hash_2));
 }
@@ -231,17 +177,17 @@ TEST(JSON_flat_map, initializer_list) {
   EXPECT_FALSE(map.empty());
   EXPECT_EQ(map.size(), 3);
 
-  EXPECT_NE(map.find("0"), map.cend());
-  EXPECT_NE(map.find("1"), map.cend());
-  EXPECT_NE(map.find("2"), map.cend());
+  EXPECT_NE(map.find("0", map.hash("0")), map.cend());
+  EXPECT_NE(map.find("1", map.hash("1")), map.cend());
+  EXPECT_NE(map.find("2", map.hash("2")), map.cend());
 
-  EXPECT_EQ(map.find("0")->first, "0");
-  EXPECT_EQ(map.find("1")->first, "1");
-  EXPECT_EQ(map.find("2")->first, "2");
+  EXPECT_EQ(map.find("0", map.hash("0"))->first, "0");
+  EXPECT_EQ(map.find("1", map.hash("1"))->first, "1");
+  EXPECT_EQ(map.find("2", map.hash("2"))->first, "2");
 
-  EXPECT_TRUE(map.at("0"));
-  EXPECT_FALSE(map.at("1"));
-  EXPECT_TRUE(map.at("2"));
+  EXPECT_TRUE(map.at("0", map.hash("0")));
+  EXPECT_FALSE(map.at("1", map.hash("1")));
+  EXPECT_TRUE(map.at("2", map.hash("2")));
 }
 
 TEST(JSON_flat_map, iterators) {
@@ -259,9 +205,9 @@ TEST(JSON_flat_map, iterators) {
   EXPECT_EQ(keys.size(), 3);
   EXPECT_EQ(values.size(), 3);
 
-  EXPECT_TRUE(map.at("0"));
-  EXPECT_FALSE(map.at("1"));
-  EXPECT_TRUE(map.at("2"));
+  EXPECT_TRUE(map.at("0", map.hash("0")));
+  EXPECT_FALSE(map.at("1", map.hash("1")));
+  EXPECT_TRUE(map.at("2", map.hash("2")));
 }
 
 TEST(JSON_flat_map, equality_same_size_true) {
@@ -303,11 +249,11 @@ TEST(JSON_flat_map, at_modify_without_hash) {
       map;
   map.assign("0", true);
   map.assign("1", false);
-  map.at("0") = false;
-  map.at("1") = true;
+  map.at("0", map.hash("0")) = false;
+  map.at("1", map.hash("1")) = true;
   EXPECT_EQ(map.size(), 2);
-  EXPECT_FALSE(map.at("0"));
-  EXPECT_TRUE(map.at("1"));
+  EXPECT_FALSE(map.at("0", map.hash("0")));
+  EXPECT_TRUE(map.at("1", map.hash("1")));
 }
 
 TEST(JSON_flat_map, at_modify_with_hash) {
@@ -319,8 +265,8 @@ TEST(JSON_flat_map, at_modify_with_hash) {
   map.at("0", hash_1) = false;
   map.at("1", hash_2) = true;
   EXPECT_EQ(map.size(), 2);
-  EXPECT_FALSE(map.at("0"));
-  EXPECT_TRUE(map.at("1"));
+  EXPECT_FALSE(map.at("0", map.hash("0")));
+  EXPECT_TRUE(map.at("1", map.hash("1")));
 }
 
 TEST(JSON_flat_map, contains) {
@@ -335,10 +281,10 @@ TEST(JSON_flat_map, contains) {
   EXPECT_FALSE(map.empty());
   EXPECT_EQ(map.size(), 3);
 
-  EXPECT_TRUE(map.contains("0"));
-  EXPECT_TRUE(map.contains("1"));
-  EXPECT_TRUE(map.contains("2"));
-  EXPECT_FALSE(map.contains("3"));
+  EXPECT_TRUE(map.contains("0", hash_1));
+  EXPECT_TRUE(map.contains("1", hash_2));
+  EXPECT_TRUE(map.contains("2", hash_3));
+  EXPECT_FALSE(map.contains("3", map.hash("3")));
 
   EXPECT_TRUE(map.contains("0", hash_1));
   EXPECT_TRUE(map.contains("1", hash_2));
