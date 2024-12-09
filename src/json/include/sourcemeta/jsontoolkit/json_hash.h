@@ -13,8 +13,10 @@ template <typename T> struct FastHash {
       -> std::size_t {
     return value.empty()
                ? 0
-               : value.size() + static_cast<std::size_t>(value.front()) +
-                     static_cast<std::size_t>(value.back());
+               : ((value.size() + static_cast<std::size_t>(value.front()) +
+                   static_cast<std::size_t>(value.back())) %
+                  // Make sure the property hash can never exceed 8 bits
+                  256);
   }
 
   inline auto operator()(const T &value) const noexcept -> std::size_t {
