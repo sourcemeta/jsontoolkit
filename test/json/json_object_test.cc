@@ -712,3 +712,16 @@ TEST(JSON_object, defines_hash_const) {
   EXPECT_TRUE(document.defines("bar", hasher("bar")));
   EXPECT_FALSE(document.defines("baz", hasher("baz")));
 }
+
+TEST(JSON_object, iterator_hash) {
+  const sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{false}},
+      {"bar", sourcemeta::jsontoolkit::JSON{true}}};
+  EXPECT_TRUE(document.is_object());
+  EXPECT_EQ(document.size(), 2);
+  EXPECT_EQ(document.object_size(), 2);
+
+  for (const auto &entry : document.as_object()) {
+    EXPECT_EQ(document.at(entry.first, entry.hash), entry.second);
+  }
+}

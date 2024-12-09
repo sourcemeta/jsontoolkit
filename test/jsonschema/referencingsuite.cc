@@ -40,9 +40,9 @@ public:
     // (1) Pre-populate the registry
     EXPECT_TRUE(this->suite.defines("registry"));
     EXPECT_TRUE(this->suite.at("registry").is_object());
-    for (const auto &[uri, schema] : this->suite.at("registry").as_object()) {
-      assert(sourcemeta::jsontoolkit::is_schema(schema));
-      this->registry.insert({uri, {schema, uri}});
+    for (const auto &entry : this->suite.at("registry").as_object()) {
+      assert(sourcemeta::jsontoolkit::is_schema(entry.second));
+      this->registry.insert({entry.first, {entry.second, entry.first}});
     }
 
     // (2) Frame every schema and re-populate registry

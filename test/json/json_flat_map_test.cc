@@ -197,9 +197,9 @@ TEST(JSON_flat_map, iterators) {
 
   std::vector<sourcemeta::jsontoolkit::JSON::String> keys;
   std::vector<bool> values;
-  for (const auto &[key, value] : map) {
-    keys.push_back(key);
-    values.push_back(value);
+  for (const auto &entry : map) {
+    keys.push_back(entry.first);
+    values.push_back(entry.second);
   }
 
   EXPECT_EQ(keys.size(), 3);
