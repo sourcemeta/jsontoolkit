@@ -63,6 +63,7 @@ public:
     // TODO: Make sure we either emplace both, or none
     this->data.emplace_back(std::move(key), std::move(value));
     this->hashes.emplace_back(key_hash);
+    this->data_size += 1;
     return key_hash;
   }
 
@@ -80,18 +81,20 @@ public:
     // TODO: Make sure we either emplace both, or none
     this->data.emplace_back(key, value);
     this->hashes.emplace_back(key_hash);
+    this->data_size += 1;
     return key_hash;
   }
 
   // As a performance optimisation if the hash is known
   inline auto find(const key_type &key, const hash_type key_hash) const
       -> const_iterator {
-    assert(this->data.size() == this->hashes.size());
+    assert(this->data_size == this->data.size());
+    assert(this->data_size == this->hashes.size());
     assert(this->hash(key) == key_hash);
 
     // Move the perfect hash condition out of the loop for extra performance
     if (this->hasher.is_perfect_string_hash(key_hash)) {
-      for (size_type index = 0; index < this->hashes.size(); index++) {
+      for (size_type index = 0; index < this->data_size; index++) {
         if (this->hashes[index] == key_hash) {
           auto iterator{this->cbegin()};
           std::advance(iterator, index);
@@ -99,7 +102,7 @@ public:
         }
       }
     } else {
-      for (size_type index = 0; index < this->hashes.size(); index++) {
+      for (size_type index = 0; index < this->data_size; index++) {
         if (this->hashes[index] == key_hash && this->data[index].first == key) {
           auto iterator{this->cbegin()};
           std::advance(iterator, index);
@@ -114,18 +117,19 @@ public:
   // As a performance optimisation if the hash is known
   inline auto contains(const key_type &key, const hash_type key_hash) const
       -> bool {
-    assert(this->data.size() == this->hashes.size());
+    assert(this->data_size == this->data.size());
+    assert(this->data_size == this->hashes.size());
     assert(this->hash(key) == key_hash);
 
     // Move the perfect hash condition out of the loop for extra performance
     if (this->hasher.is_perfect_string_hash(key_hash)) {
-      for (size_type index = 0; index < this->hashes.size(); index++) {
+      for (size_type index = 0; index < this->data_size; index++) {
         if (this->hashes[index] == key_hash) {
           return true;
         }
       }
     } else {
-      for (size_type index = 0; index < this->hashes.size(); index++) {
+      for (size_type index = 0; index < this->data_size; index++) {
         if (this->hashes[index] == key_hash && this->data[index].first == key) {
           return true;
         }
@@ -139,18 +143,19 @@ public:
 
   inline auto at(const key_type &key, const hash_type key_hash) const
       -> const mapped_type & {
-    assert(this->data.size() == this->hashes.size());
+    assert(this->data_size == this->data.size());
+    assert(this->data_size == this->hashes.size());
     assert(this->hash(key) == key_hash);
 
     // Move the perfect hash condition out of the loop for extra performance
     if (this->hasher.is_perfect_string_hash(key_hash)) {
-      for (size_type index = 0; index < this->hashes.size(); index++) {
+      for (size_type index = 0; index < this->data_size; index++) {
         if (this->hashes[index] == key_hash) {
           return this->data[index].second;
         }
       }
     } else {
-      for (size_type index = 0; index < this->hashes.size(); index++) {
+      for (size_type index = 0; index < this->data_size; index++) {
         if (this->hashes[index] == key_hash && this->data[index].first == key) {
           return this->data[index].second;
         }
@@ -167,18 +172,19 @@ public:
 
   inline auto at(const key_type &key, const hash_type key_hash)
       -> mapped_type & {
-    assert(this->data.size() == this->hashes.size());
+    assert(this->data_size == this->data.size());
+    assert(this->data_size == this->hashes.size());
     assert(this->hash(key) == key_hash);
 
     // Move the perfect hash condition out of the loop for extra performance
     if (this->hasher.is_perfect_string_hash(key_hash)) {
-      for (size_type index = 0; index < this->hashes.size(); index++) {
+      for (size_type index = 0; index < this->data_size; index++) {
         if (this->hashes[index] == key_hash) {
           return this->data[index].second;
         }
       }
     } else {
-      for (size_type index = 0; index < this->hashes.size(); index++) {
+      for (size_type index = 0; index < this->data_size; index++) {
         if (this->hashes[index] == key_hash && this->data[index].first == key) {
           return this->data[index].second;
         }
@@ -194,19 +200,19 @@ public:
   }
 
   auto erase(const key_type &key, const hash_type key_hash) -> size_type {
-    const auto current_size{this->size()};
-    for (size_type index = 0; index < current_size; index++) {
+    for (size_type index = 0; index < this->data_size; index++) {
       if (this->hashes[index] == key_hash &&
           this->hasher.equal(this->data[index].first, key, key_hash)) {
         std::swap(this->hashes[index], this->hashes.back());
         std::swap(this->data[index], this->data.back());
         this->hashes.pop_back();
         this->data.pop_back();
-        return current_size - 1;
+        this->data_size -= 1;
+        return this->data_size;
       }
     }
 
-    return current_size;
+    return this->data_size;
   }
 
   inline auto erase(const key_type &key) -> size_type {
@@ -214,18 +220,21 @@ public:
   }
 
   inline auto size() const noexcept -> size_type {
-    assert(this->data.size() == this->hashes.size());
-    return this->data.size();
+    assert(this->data_size == this->data.size());
+    assert(this->data_size == this->hashes.size());
+    return this->data_size;
   }
 
   inline auto empty() const noexcept -> bool {
-    assert(this->data.size() == this->hashes.size());
+    assert(this->data_size == this->data.size());
+    assert(this->data_size == this->hashes.size());
     return this->data.empty();
   }
 
   inline auto clear() noexcept -> void {
     this->data.clear();
     this->hashes.clear();
+    this->data_size = 0;
   }
 
   auto operator!=(const FlatMap &other) const -> bool = default;
@@ -235,7 +244,7 @@ public:
       return false;
     }
 
-    for (size_type index = 0; index < this->hashes.size(); index++) {
+    for (size_type index = 0; index < this->data_size; index++) {
       const auto iterator{
           other.find(this->data[index].first, this->hashes[index])};
       if (iterator == other.cend()) {
@@ -252,6 +261,7 @@ private:
   underlying_type data;
   // So that we can loop over hashes faster, potentially vectorizing loops
   std::vector<hash_type> hashes;
+  std::size_t data_size{0};
   Hash hasher;
 };
 
