@@ -16,3 +16,4 @@ jsonschema-test-suite https://github.com/json-schema-org/JSON-Schema-Test-Suite 
 uriparser https://github.com/uriparser/uriparser bfe94f6e54d0abb5afa7bb0411940b7242cb835a
 googlebenchmark https://github.com/google/benchmark 378fe693a1ef51500db21b11ff05a8018c5f0e55
 boost-regex https://github.com/boostorg/regex boost-1.86.0
+swl-variant https://github.com/groundswellaudio/swl-variant f99acd71c9d9227de517b40684bd94544f2f8179
