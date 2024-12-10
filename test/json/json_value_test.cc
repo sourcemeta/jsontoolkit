@@ -385,8 +385,8 @@ TEST(JSON_value, try_at) {
       sourcemeta::jsontoolkit::parse("{\"foo\":5}");
   EXPECT_TRUE(document.is_object());
   const auto result = document.try_at("foo");
-  EXPECT_TRUE(result.has_value());
-  EXPECT_EQ(result.value().get().to_integer(), 5);
+  EXPECT_TRUE(result);
+  EXPECT_EQ(result->to_integer(), 5);
 }
 
 TEST(JSON_value, try_at_fail) {
@@ -394,7 +394,7 @@ TEST(JSON_value, try_at_fail) {
       sourcemeta::jsontoolkit::parse("{\"foo\":5}");
   EXPECT_TRUE(document.is_object());
   const auto result = document.try_at("boo");
-  EXPECT_FALSE(result.has_value());
+  EXPECT_FALSE(result);
 }
 
 TEST(JSON_value, unordered_set_with_custom_hash) {

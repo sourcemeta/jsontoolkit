@@ -69,9 +69,9 @@ static void Pointer_Object_Try_Traverse(benchmark::State &state) {
 
   for (auto _ : state) {
     auto result{sourcemeta::jsontoolkit::try_get(document, pointer)};
-    assert(result.has_value());
-    assert(result.value().get().is_boolean());
-    assert(result.value().get().to_boolean());
+    assert(result);
+    assert(result->is_boolean());
+    assert(result->to_boolean());
     benchmark::DoNotOptimize(result);
   }
 }
