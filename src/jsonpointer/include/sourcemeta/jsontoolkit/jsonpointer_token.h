@@ -87,13 +87,8 @@ public:
   /// const sourcemeta::jsontoolkit::Pointer::Token token{1};
   /// ```
   GenericToken(const unsigned long value)
-      : as_property{false}, property{""}, hash{0}, index{value} {}
+      : as_property{false}, property{DEFAULT_PROPERTY}, hash{0}, index{value} {}
 #endif
-
-  GenericToken(const GenericToken &) = default;
-  GenericToken(GenericToken &&) = default;
-  auto operator=(const GenericToken &) -> GenericToken & = default;
-  auto operator=(GenericToken &&) -> GenericToken & = default;
 
   /// Check if a JSON Pointer token represents an object property.
   /// For example:
