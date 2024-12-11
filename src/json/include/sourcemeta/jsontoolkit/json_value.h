@@ -183,8 +183,7 @@ public:
   ///
   /// assert(my_object.is_object());
   /// ```
-  explicit JSON(
-      std::initializer_list<typename Object::Container::value_type> values);
+  explicit JSON(std::initializer_list<typename Object::value_type> values);
 
   /// A copy constructor for the object type.
   explicit JSON(const Object &value);
@@ -718,7 +717,7 @@ public:
   /// assert(my_object.at("bar", hasher("bar")).to_integer() == 2);
   /// ```
   [[nodiscard]] auto at(const String &key,
-                        const typename Object::Container::hash_type hash) const
+                        const typename Object::hash_type hash) const
       -> const JSON &;
 
   /// This method retrieves an object element.
@@ -750,8 +749,7 @@ public:
   /// assert(my_object.at("bar", hasher("bar")).to_integer() == 2);
   /// ```
   [[nodiscard]] auto at(const String &key,
-                        const typename Object::Container::hash_type hash)
-      -> JSON &;
+                        const typename Object::hash_type hash) -> JSON &;
 
   /// This method retrieves a reference to the first element of a JSON array.
   /// This method is undefined if the input JSON instance is an empty array. For
@@ -987,9 +985,8 @@ public:
   /// const auto result = document.try_at("foo", hasher("foo"));
   /// EXPECT_TRUE(result);
   /// EXPECT_EQ(result->to_integer(), 1);
-  [[nodiscard]] auto
-  try_at(const String &key,
-         const typename Object::Container::hash_type hash) const
+  [[nodiscard]] auto try_at(const String &key,
+                            const typename Object::hash_type hash) const
       -> const JSON *;
 
   /// This method checks whether an input JSON object defines a specific key.
@@ -1019,9 +1016,9 @@ public:
   /// assert(document.defines("foo", hasher("foo")));
   /// assert(!document.defines("bar", hasher("bar")));
   /// ```
-  [[nodiscard]] auto
-  defines(const String &key,
-          const typename Object::Container::hash_type hash) const -> bool;
+  [[nodiscard]] auto defines(const String &key,
+                             const typename Object::hash_type hash) const
+      -> bool;
 
   /// This method checks whether an input JSON object defines a specific integer
   /// key. For example:
@@ -1285,8 +1282,9 @@ public:
   template <typename Iterator>
   auto erase_keys(Iterator first, Iterator last) -> void {
     assert(this->is_object());
+    auto &object{*std::get_if<Object>(&this->data)};
     for (auto iterator = first; iterator != last; ++iterator) {
-      std::get_if<Object>(&this->data)->data.erase(*iterator);
+      object.erase(*iterator, object.hash(*iterator));
     }
   }
 
