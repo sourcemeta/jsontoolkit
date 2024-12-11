@@ -123,7 +123,6 @@ static void JSON_Fast_Hash_Helm_Chart_Lock(benchmark::State &state) {
 
   for (auto _ : state) {
     auto result{document.fast_hash()};
-    assert(result >= 0);
     benchmark::DoNotOptimize(result);
   }
 }
