@@ -10,8 +10,8 @@
 TEST(JSON_object, general_traits) {
   EXPECT_TRUE(std::is_default_constructible<
               sourcemeta::jsontoolkit::JSON::Object>::value);
-  EXPECT_TRUE(std::is_nothrow_default_constructible<
-              sourcemeta::jsontoolkit::JSON::Object>::value);
+  EXPECT_FALSE(std::is_nothrow_default_constructible<
+               sourcemeta::jsontoolkit::JSON::Object>::value);
   EXPECT_TRUE(
       std::is_destructible<sourcemeta::jsontoolkit::JSON::Object>::value);
   EXPECT_TRUE(std::is_nothrow_destructible<
@@ -656,14 +656,11 @@ TEST(JSON_object, fast_hash_nested) {
 
 TEST(JSON_object, find) {
   const auto document{sourcemeta::jsontoolkit::parse("{\"foo\":5}")};
-  const auto hash{document.as_object().hash("foo")};
-  EXPECT_NE(document.as_object().find("foo", hash),
-            document.as_object().cend());
-  EXPECT_EQ(document.as_object().find("foo", hash)->first, "foo");
-  EXPECT_TRUE(document.as_object().find("foo", hash)->second.is_integer());
-  EXPECT_EQ(document.as_object().find("foo", hash)->second.to_integer(), 5);
-  EXPECT_EQ(document.as_object().find("bar", document.as_object().hash("bar")),
-            document.as_object().cend());
+  EXPECT_NE(document.as_object().find("foo"), document.as_object().cend());
+  EXPECT_EQ(document.as_object().find("foo")->first, "foo");
+  EXPECT_TRUE(document.as_object().find("foo")->second.is_integer());
+  EXPECT_EQ(document.as_object().find("foo")->second.to_integer(), 5);
+  EXPECT_EQ(document.as_object().find("bar"), document.as_object().cend());
 }
 
 TEST(JSON_object, at_hash_const) {

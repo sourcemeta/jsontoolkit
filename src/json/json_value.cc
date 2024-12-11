@@ -61,7 +61,7 @@ JSON::JSON(std::initializer_list<JSON> values)
 
 JSON::JSON(const Array &value) : data{std::in_place_type<Array>, value} {}
 
-JSON::JSON(std::initializer_list<typename Object::value_type> values)
+JSON::JSON(std::initializer_list<typename Object::Container::value_type> values)
     : data{std::in_place_type<Object>, values} {}
 
 JSON::JSON(const Object &value) : data{std::in_place_type<Object>, value} {}
@@ -321,29 +321,31 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
   assert(this->is_object());
   assert(this->defines(key));
   const auto &object{*std::get_if<Object>(&this->data)};
-  return object.at(key, object.hash(key));
+  return object.data.at(key, object.data.hash(key));
 }
 
-[[nodiscard]] auto JSON::at(const String &key,
-                            const typename Object::hash_type hash) const
+[[nodiscard]] auto
+JSON::at(const String &key,
+         const typename Object::Container::hash_type hash) const
     -> const JSON & {
   assert(this->is_object());
   assert(this->defines(key));
-  return std::get_if<Object>(&this->data)->at(key, hash);
+  return std::get_if<Object>(&this->data)->data.at(key, hash);
 }
 
 [[nodiscard]] auto JSON::at(const JSON::String &key) -> JSON & {
   assert(this->is_object());
   assert(this->defines(key));
   auto &object{*std::get_if<Object>(&this->data)};
-  return object.at(key, object.hash(key));
+  return object.data.at(key, object.data.hash(key));
 }
 
 [[nodiscard]] auto JSON::at(const String &key,
-                            const typename Object::hash_type hash) -> JSON & {
+                            const typename Object::Container::hash_type hash)
+    -> JSON & {
   assert(this->is_object());
   assert(this->defines(key));
-  return std::get_if<Object>(&this->data)->at(key, hash);
+  return std::get_if<Object>(&this->data)->data.at(key, hash);
 }
 
 [[nodiscard]] auto JSON::front() -> JSON & {
@@ -392,7 +394,7 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
 
 [[nodiscard]] auto JSON::object_size() const -> std::size_t {
   assert(this->is_object());
-  return std::get_if<Object>(&this->data)->size();
+  return std::get_if<Object>(&this->data)->data.size();
 }
 
 [[nodiscard]] auto JSON::byte_size() const -> std::size_t {
@@ -405,14 +407,14 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
   // which we are not taking into account here, as its typically
   // implementation dependent. This function is just a rough estimate.
   if (this->is_object()) {
-    return std::accumulate(
-        this->as_object().cbegin(), this->as_object().cend(),
-        static_cast<std::uint64_t>(0),
-        [](const std::uint64_t accumulator,
-           const typename Object::underlying_type::value_type &pair) {
-          return accumulator + (pair.first.size() * sizeof(Char)) +
-                 pair.second.estimated_byte_size();
-        });
+    return std::accumulate(this->as_object().cbegin(), this->as_object().cend(),
+                           static_cast<std::uint64_t>(0),
+                           [](const std::uint64_t accumulator,
+                              const typename Object::value_type &pair) {
+                             return accumulator +
+                                    (pair.first.size() * sizeof(Char)) +
+                                    pair.second.estimated_byte_size();
+                           });
   } else if (this->is_array()) {
     return std::accumulate(
         this->as_array().cbegin(), this->as_array().cend(),
@@ -455,14 +457,14 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
             return accumulator + 1 + item.fast_hash();
           });
     case Type::Object:
-      return std::accumulate(
-          this->as_object().cbegin(), this->as_object().cend(),
-          static_cast<std::uint64_t>(7),
-          [](const std::uint64_t accumulator,
-             const typename Object::underlying_type::value_type &pair) {
-            return accumulator + 1 + pair.first.size() +
-                   pair.second.fast_hash();
-          });
+      return std::accumulate(this->as_object().cbegin(),
+                             this->as_object().cend(),
+                             static_cast<std::uint64_t>(7),
+                             [](const std::uint64_t accumulator,
+                                const typename Object::value_type &pair) {
+                               return accumulator + 1 + pair.first.size() +
+                                      pair.second.fast_hash();
+                             });
     default:
       assert(false);
       return 0;
@@ -500,7 +502,7 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
 
 [[nodiscard]] auto JSON::empty() const -> bool {
   if (this->is_object()) {
-    return std::get_if<Object>(&this->data)->empty();
+    return std::get_if<Object>(&this->data)->data.empty();
   } else if (this->is_array()) {
     return std::get_if<Array>(&this->data)->data.empty();
   } else {
@@ -511,30 +513,32 @@ auto JSON::operator-=(const JSON &substractive) -> JSON & {
 [[nodiscard]] auto JSON::try_at(const JSON::String &key) const -> const JSON * {
   assert(this->is_object());
   const auto &object{*std::get_if<Object>(&this->data)};
-  const auto value{object.find(key, object.hash(key))};
+  const auto value{object.data.find(key, object.data.hash(key))};
   return value == object.data.cend() ? nullptr : &value->second;
 }
 
-[[nodiscard]] auto JSON::try_at(const String &key,
-                                const typename Object::hash_type hash) const
+[[nodiscard]] auto
+JSON::try_at(const String &key,
+             const typename Object::Container::hash_type hash) const
     -> const JSON * {
   assert(this->is_object());
   const auto &object{*std::get_if<Object>(&this->data)};
-  const auto value{object.find(key, hash)};
+  const auto value{object.data.find(key, hash)};
   return value == object.data.cend() ? nullptr : &value->second;
 }
 
 [[nodiscard]] auto JSON::defines(const JSON::String &key) const -> bool {
   assert(this->is_object());
   const auto &object{*std::get_if<Object>(&this->data)};
-  return object.contains(key, object.hash(key));
+  return object.data.contains(key, object.data.hash(key));
 }
 
 [[nodiscard]] auto
 JSON::defines(const JSON::String &key,
-              const typename JSON::Object::hash_type hash) const -> bool {
+              const typename JSON::Object::Container::hash_type hash) const
+    -> bool {
   assert(this->is_object());
-  return std::get_if<Object>(&this->data)->contains(key, hash);
+  return std::get_if<Object>(&this->data)->data.contains(key, hash);
 }
 
 [[nodiscard]] auto
@@ -620,12 +624,12 @@ auto JSON::push_back_if_unique(JSON &&value)
 
 auto JSON::assign(const JSON::String &key, const JSON &value) -> void {
   assert(this->is_object());
-  std::get_if<Object>(&this->data)->assign(key, value);
+  std::get_if<Object>(&this->data)->data.assign(key, value);
 }
 
 auto JSON::assign(const JSON::String &key, JSON &&value) -> void {
   assert(this->is_object());
-  std::get_if<Object>(&this->data)->assign(key, std::move(value));
+  std::get_if<Object>(&this->data)->data.assign(key, std::move(value));
 }
 
 auto JSON::assign_if_missing(const JSON::String &key, const JSON &value)
@@ -645,8 +649,7 @@ auto JSON::assign_if_missing(const JSON::String &key, JSON &&value) -> void {
 
 auto JSON::erase(const JSON::String &key) -> typename Object::size_type {
   assert(this->is_object());
-  auto &object{*std::get_if<Object>(&this->data)};
-  return object.erase(key, object.hash(key));
+  return std::get_if<Object>(&this->data)->data.erase(key);
 }
 
 auto JSON::erase_keys(std::initializer_list<JSON::String> keys) -> void {
@@ -668,7 +671,7 @@ auto JSON::erase(typename JSON::Array::const_iterator first,
 
 auto JSON::clear() -> void {
   if (this->is_object()) {
-    std::get_if<Object>(&this->data)->clear();
+    std::get_if<Object>(&this->data)->data.clear();
   } else {
     std::get_if<Array>(&this->data)->data.clear();
   }
