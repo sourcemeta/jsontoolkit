@@ -1,22 +1,47 @@
 #ifndef SOURCEMETA_JSONTOOLKIT_JSON_OBJECT_H_
 #define SOURCEMETA_JSONTOOLKIT_JSON_OBJECT_H_
 
-#include <functional>       // std::equal_to, std::less
+#include <algorithm>        // std::swap
+#include <cassert>          // assert
 #include <initializer_list> // std::initializer_list
-
-#include <sourcemeta/jsontoolkit/json_flat_map.h>
+#include <iterator>         // std::advance
+#include <utility>          // std::pair, std::move
+#include <vector>           // std::vector
 
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup json
 template <typename Key, typename Value, typename Hash> class JSONObject {
 public:
-  // Constructors
-  using Container = FlatMap<Key, Value, Hash>;
+  // Member types
+  using key_type = Key;
+  using mapped_type = Value;
+  using hash_type = typename Hash::hash_type;
+  using value_type = std::pair<key_type, mapped_type>;
 
-  JSONObject() : data{} {}
-  JSONObject(std::initializer_list<typename Container::value_type> values)
-      : data{values} {}
+  struct Entry {
+    key_type first;
+    mapped_type second;
+    hash_type hash;
+  };
+
+  using underlying_type = std::vector<Entry>;
+  using size_type = typename underlying_type::size_type;
+  using difference_type = typename underlying_type::difference_type;
+  using allocator_type = typename underlying_type::allocator_type;
+  using reference = typename underlying_type::reference;
+  using const_reference = typename underlying_type::const_reference;
+  using pointer = typename underlying_type::pointer;
+  using const_pointer = typename underlying_type::const_pointer;
+  using const_iterator = typename underlying_type::const_iterator;
+
+  JSONObject() = default;
+  JSONObject(std::initializer_list<value_type> entries) {
+    this->data.reserve(entries.size());
+    for (auto &&entry : entries) {
+      this->assign(std::move(entry.first), std::move(entry.second));
+    }
+  }
 
   // Operators
   // We cannot default given that this class references
@@ -35,7 +60,7 @@ public:
 
     // Otherwise do value comparison for common properties
     for (const auto &entry : this->data) {
-      const auto other_entry{other.find(entry.first)};
+      const auto other_entry{other.find(entry.first, entry.hash)};
       if (other_entry != other.cend() && entry.second < other_entry->second) {
         return true;
       }
@@ -56,27 +81,31 @@ public:
       -> bool {
     return this->data >= other.data;
   }
+
   auto operator==(const JSONObject<Key, Value, Hash> &other) const noexcept
       -> bool {
-    return this->data == other.data;
-  }
-  auto operator!=(const JSONObject<Key, Value, Hash> &other) const noexcept
-      -> bool {
-    return this->data != other.data;
+    if (this->data.size() != other.data.size()) {
+      return false;
+    }
+
+    for (const auto &entry : this->data) {
+      const auto iterator{other.find(entry.first, entry.hash)};
+      if (iterator == other.cend()) {
+        return false;
+      } else if (iterator->second != entry.second) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
-  // Member types
-  using key_type = typename Container::key_type;
-  using mapped_type = typename Container::mapped_type;
-  using value_type = typename Container::Entry;
-  using size_type = typename Container::size_type;
-  using difference_type = typename Container::difference_type;
-  using allocator_type = typename Container::allocator_type;
-  using reference = typename Container::reference;
-  using const_reference = typename Container::const_reference;
-  using pointer = typename Container::pointer;
-  using const_pointer = typename Container::const_pointer;
-  using const_iterator = typename Container::const_iterator;
+  auto operator!=(const JSONObject<Key, Value, Hash> &other) const noexcept
+      -> bool = default;
+
+  inline auto hash(const key_type &key) const noexcept -> hash_type {
+    return this->hasher(key);
+  }
 
   inline auto begin() const noexcept -> const_iterator {
     return this->data.begin();
@@ -94,9 +123,158 @@ public:
     return this->data.cend();
   }
 
+  inline auto size() const noexcept -> size_type { return this->data.size(); }
+
+  inline auto empty() const noexcept -> bool { return this->data.empty(); }
+
+  inline auto clear() noexcept -> void { this->data.clear(); }
+
   /// Attempt to find an entry by key
-  inline auto find(const Key &key) const -> const_iterator {
-    return this->data.find(key, this->data.hash(key));
+  inline auto find(const key_type &key, const hash_type key_hash) const
+      -> const_iterator {
+    assert(this->hash(key) == key_hash);
+
+    // Move the perfect hash condition out of the loop for extra performance
+    if (this->hasher.is_perfect_string_hash(key_hash)) {
+      for (size_type index = 0; index < this->data.size(); index++) {
+        if (this->data[index].hash == key_hash) {
+          auto iterator{this->data.cbegin()};
+          std::advance(iterator, index);
+          return iterator;
+        }
+      }
+    } else {
+      for (size_type index = 0; index < this->data.size(); index++) {
+        if (this->data[index].hash == key_hash &&
+            this->data[index].first == key) {
+          auto iterator{this->data.cbegin()};
+          std::advance(iterator, index);
+          return iterator;
+        }
+      }
+    }
+
+    return this->data.cend();
+  }
+
+  inline auto contains(const key_type &key, const hash_type key_hash) const
+      -> bool {
+    assert(this->hash(key) == key_hash);
+
+    // Move the perfect hash condition out of the loop for extra performance
+    if (this->hasher.is_perfect_string_hash(key_hash)) {
+      for (const auto &entry : this->data) {
+        if (entry.hash == key_hash) {
+          return true;
+        }
+      }
+    } else {
+      for (const auto &entry : this->data) {
+        if (entry.hash == key_hash && entry.first == key) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  inline auto at(const key_type &key, const hash_type key_hash) const
+      -> const mapped_type & {
+    assert(this->hash(key) == key_hash);
+
+    // Move the perfect hash condition out of the loop for extra performance
+    if (this->hasher.is_perfect_string_hash(key_hash)) {
+      for (const auto &entry : this->data) {
+        if (entry.hash == key_hash) {
+          return entry.second;
+        }
+      }
+    } else {
+      for (const auto &entry : this->data) {
+        if (entry.hash == key_hash && entry.first == key) {
+          return entry.second;
+        }
+      }
+    }
+
+// See https://en.cppreference.com/w/cpp/utility/unreachable
+#if defined(_MSC_VER) && !defined(__clang__)
+    __assume(false);
+#else
+    __builtin_unreachable();
+#endif
+  }
+
+  inline auto at(const key_type &key, const hash_type key_hash)
+      -> mapped_type & {
+    assert(this->hash(key) == key_hash);
+
+    // Move the perfect hash condition out of the loop for extra performance
+    if (this->hasher.is_perfect_string_hash(key_hash)) {
+      for (auto &entry : this->data) {
+        if (entry.hash == key_hash) {
+          return entry.second;
+        }
+      }
+    } else {
+      for (auto &entry : this->data) {
+        if (entry.hash == key_hash && entry.first == key) {
+          return entry.second;
+        }
+      }
+    }
+
+// See https://en.cppreference.com/w/cpp/utility/unreachable
+#if defined(_MSC_VER) && !defined(__clang__)
+    __assume(false);
+#else
+    __builtin_unreachable();
+#endif
+  }
+
+  auto erase(const key_type &key, const hash_type key_hash) -> size_type {
+    const auto current_size{this->size()};
+    for (auto &entry : this->data) {
+      if (entry.hash == key_hash &&
+          this->hasher.equal(entry.first, key, key_hash)) {
+        std::swap(entry, this->data.back());
+        this->data.pop_back();
+        return current_size - 1;
+      }
+    }
+
+    return current_size;
+  }
+
+  // TODO: Add an assign overload for const key, rvalue
+
+  auto assign(key_type &&key, mapped_type &&value) -> hash_type {
+    const auto key_hash{this->hash(key)};
+    for (auto &entry : this->data) {
+      if (entry.hash == key_hash &&
+          this->hasher.equal(entry.first, key, key_hash)) {
+        entry.second = std::move(value);
+        return key_hash;
+      }
+    }
+
+    this->data.push_back({std::move(key), std::move(value), key_hash});
+    return key_hash;
+  }
+
+  auto assign(const key_type &key, const mapped_type &value) -> hash_type {
+    const auto key_hash{this->hash(key)};
+    for (auto &entry : this->data) {
+      if (entry.hash == key_hash &&
+          this->hasher.equal(entry.first, key, key_hash)) {
+        entry.second = value;
+        return key_hash;
+      }
+    }
+
+    this->data.push_back({key, value, key_hash});
+    return key_hash;
   }
 
 private:
@@ -107,7 +285,8 @@ private:
 #if defined(_MSC_VER)
 #pragma warning(disable : 4251)
 #endif
-  Container data;
+  underlying_type data;
+  Hash hasher;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251)
 #endif
