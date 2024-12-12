@@ -725,3 +725,17 @@ TEST(JSON_object, iterator_hash) {
     EXPECT_EQ(document.at(entry.first, entry.hash), entry.second);
   }
 }
+
+TEST(JSON_object, as_object_defines) {
+  const sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{"bar"}}};
+  for (const auto &entry : document.as_object()) {
+    EXPECT_TRUE(document.as_object().defines(entry.first, entry.hash));
+  }
+}
+
+TEST(JSON_object, as_object_size) {
+  const sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{"bar"}}};
+  EXPECT_EQ(document.as_object().size(), 1);
+}
