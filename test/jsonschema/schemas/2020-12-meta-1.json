@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.sourcemeta.com/2020-12-meta-1.json",
+  "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
+}

@@ -82,6 +82,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_keyword_iterator_test.cc
   jsonschema_official_resolver_test.cc
   jsonschema_map_resolver_test.cc
+  jsonschema_flat_file_resolver_test.cc
   jsonschema_format_test.cc)
 noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_jsonschema_unit)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
@@ -96,6 +97,8 @@ target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE sourcemeta::jsontoolkit::jsonschema)
 target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
   PRIVATE sourcemeta::jsontoolkit::uri)
+target_compile_definitions(sourcemeta_jsontoolkit_jsonschema_unit
+  PRIVATE SCHEMAS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/schemas")
 add_test(NAME JSONSchema COMMAND sourcemeta_jsontoolkit_jsonschema_unit --gtest_brief=1)
 set_target_properties(sourcemeta_jsontoolkit_jsonschema_unit
   PROPERTIES FOLDER "JSON Toolkit/JSON Schema")
