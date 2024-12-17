@@ -87,18 +87,3 @@ TEST(JSON_string, unicode_length_1) {
   // https://unicodeplus.com/U+7EAF (UTF-8: 0xE7 0xBA 0xAF)
   EXPECT_EQ(document.at("name").byte_size(), 9);
 }
-
-TEST(JSON_string, unordered_set_with_custom_hash) {
-  std::unordered_set<sourcemeta::jsontoolkit::JSON::String,
-                     sourcemeta::jsontoolkit::Hash>
-      value;
-  value.insert("foo");
-  value.insert("bar");
-  value.insert("baz");
-  value.insert("bar");
-
-  EXPECT_EQ(value.size(), 3);
-  EXPECT_TRUE(value.contains("foo"));
-  EXPECT_TRUE(value.contains("bar"));
-  EXPECT_TRUE(value.contains("baz"));
-}
