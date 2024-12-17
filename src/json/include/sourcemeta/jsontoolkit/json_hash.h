@@ -17,10 +17,13 @@ template <typename T> struct FastHash {
     using type = std::uint64_t;
     type a{0};
     type b{0};
+    type c{0};
+    type d{0};
 
     inline auto operator==(const property_hash_type &other) const noexcept
         -> bool {
-      return this->a == other.a && this->b == other.b;
+      return this->a == other.a && this->b == other.b && this->c == other.c &&
+             this->d == other.d;
     }
 
     inline auto is_perfect() const noexcept -> bool {
@@ -34,35 +37,20 @@ template <typename T> struct FastHash {
       -> property_hash_type {
     const auto size{value.size()};
     property_hash_type result;
-    switch (size) {
-      case 0:
-        return result;
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-      case 9:
-      case 10:
-      case 11:
-      case 12:
-      case 13:
-      case 14:
-      case 15:
-        // Copy starting a byte 2
-        std::memcpy(reinterpret_cast<char *>(&result) + 1, value.data(), size);
-        return result;
-      default:
-        // This case is specifically designed to be constant with regards to
-        // string length, and to exploit the fact that most JSON objects don't
-        // have a lot of entries, so hash collision is not as common
-        return {(size + static_cast<property_hash_type::type>(value.front()) +
-                 static_cast<property_hash_type::type>(value.back())) %
-                // Make sure the property hash can never exceed 8 bits
-                256};
+    if (size == 0) {
+      return result;
+    } else if (size <= 31) {
+      // Copy starting a byte 2
+      std::memcpy(reinterpret_cast<char *>(&result) + 1, value.data(), size);
+      return result;
+    } else {
+      // This case is specifically designed to be constant with regards to
+      // string length, and to exploit the fact that most JSON objects don't
+      // have a lot of entries, so hash collision is not as common
+      return {(size + static_cast<property_hash_type::type>(value.front()) +
+               static_cast<property_hash_type::type>(value.back())) %
+              // Make sure the property hash can never exceed 8 bits
+              256};
     }
   }
 };
