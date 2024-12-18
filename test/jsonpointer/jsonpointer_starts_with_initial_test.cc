@@ -50,10 +50,16 @@ TEST(JSONPointer_starts_with_initial, non_empty_empty) {
   EXPECT_TRUE(pointer.starts_with_initial(prefix));
 }
 
-TEST(JSONPointer_starts_with_initial, empty_non_empty) {
+TEST(JSONPointer_starts_with_initial, empty_non_empty_1) {
   const sourcemeta::jsontoolkit::Pointer pointer;
   const sourcemeta::jsontoolkit::Pointer prefix{"foo"};
   EXPECT_TRUE(pointer.starts_with_initial(prefix));
+}
+
+TEST(JSONPointer_starts_with_initial, empty_non_empty_3) {
+  const sourcemeta::jsontoolkit::Pointer pointer;
+  const sourcemeta::jsontoolkit::Pointer prefix{"foo", 1, "bar"};
+  EXPECT_FALSE(pointer.starts_with_initial(prefix));
 }
 
 TEST(JSONPointer_starts_with_initial, empty_empty) {
