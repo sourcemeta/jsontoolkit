@@ -1182,6 +1182,139 @@ TEST(JSONSchema_frame_2020_12, dynamic_anchor_without_id) {
       "https://json-schema.org/draft/2020-12/schema", std::nullopt);
 }
 
+TEST(JSONSchema_frame_2020_12,
+     dynamic_ref_to_single_dynamic_anchor_standalone) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$dynamicRef": "#test",
+    "$defs": {
+      "test": {
+        "$dynamicAnchor": "test"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver);
+
+  EXPECT_EQ(frame.size(), 8);
+
+  // Dynamic anchors
+
+  EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
+      frame, "#test", "/$defs/test",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_ANCHOR(
+      frame, "#test", "/$defs/test",
+      "https://json-schema.org/draft/2020-12/schema");
+
+  // Static frames
+
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "", "", "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$schema", "/$schema",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$dynamicRef", "/$dynamicRef",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$defs", "/$defs",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$defs/test", "/$defs/test",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$defs/test/$dynamicAnchor", "/$defs/test/$dynamicAnchor",
+      "https://json-schema.org/draft/2020-12/schema");
+
+  // References
+
+  EXPECT_EQ(references.size(), 2);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
+  EXPECT_STATIC_REFERENCE(references, "/$dynamicRef", "#test", std::nullopt,
+                          "test");
+}
+
+TEST(JSONSchema_frame_2020_12, dynamic_ref_to_single_dynamic_anchor_external) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$dynamicRef": "#test",
+    "$defs": {
+      "test": {
+        "$dynamicAnchor": "test"
+      },
+      "foo": {
+        "$ref": "https://sourcemeta.com"
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::frame(document, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver);
+
+  EXPECT_EQ(frame.size(), 10);
+
+  // Dynamic anchors
+
+  EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
+      frame, "#test", "/$defs/test",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_ANCHOR(
+      frame, "#test", "/$defs/test",
+      "https://json-schema.org/draft/2020-12/schema");
+
+  // Static frames
+
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "", "", "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$schema", "/$schema",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$dynamicRef", "/$dynamicRef",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$defs", "/$defs",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$defs/test", "/$defs/test",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$defs/test/$dynamicAnchor", "/$defs/test/$dynamicAnchor",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$defs/foo", "/$defs/foo",
+      "https://json-schema.org/draft/2020-12/schema");
+  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+      frame, "#/$defs/foo/$ref", "/$defs/foo/$ref",
+      "https://json-schema.org/draft/2020-12/schema");
+
+  // References
+
+  EXPECT_EQ(references.size(), 3);
+
+  EXPECT_STATIC_REFERENCE(
+      references, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
+  EXPECT_DYNAMIC_REFERENCE(references, "/$dynamicRef", "#test", std::nullopt,
+                           "test");
+  EXPECT_STATIC_REFERENCE(references, "/$defs/foo/$ref",
+                          "https://sourcemeta.com", "https://sourcemeta.com",
+                          std::nullopt);
+}
+
 TEST(JSONSchema_frame_2020_12, dynamic_anchor_same_on_schema_resource) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
