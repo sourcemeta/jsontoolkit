@@ -41,7 +41,7 @@ TEST(JSONSchema_default_walker_draft6, definitions) {
 TEST(JSONSchema_default_walker_draft6, allOf) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("allOf", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Elements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -49,7 +49,7 @@ TEST(JSONSchema_default_walker_draft6, allOf) {
 TEST(JSONSchema_default_walker_draft6, anyOf) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("anyOf", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Elements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -57,7 +57,7 @@ TEST(JSONSchema_default_walker_draft6, anyOf) {
 TEST(JSONSchema_default_walker_draft6, oneOf) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("oneOf", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Elements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -65,7 +65,7 @@ TEST(JSONSchema_default_walker_draft6, oneOf) {
 TEST(JSONSchema_default_walker_draft6, not) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("not", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -90,7 +90,7 @@ TEST(JSONSchema_default_walker_draft6, additionalItems) {
 TEST(JSONSchema_default_walker_draft6, contains) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("contains", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -133,7 +133,7 @@ TEST(JSONSchema_default_walker_draft6, propertyNames) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("propertyNames", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }

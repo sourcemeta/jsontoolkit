@@ -49,7 +49,7 @@ TEST(JSONSchema_default_walker_draft7, comment) {
 TEST(JSONSchema_default_walker_draft7, allOf) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("allOf", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Elements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -57,7 +57,7 @@ TEST(JSONSchema_default_walker_draft7, allOf) {
 TEST(JSONSchema_default_walker_draft7, anyOf) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("anyOf", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Elements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -65,7 +65,7 @@ TEST(JSONSchema_default_walker_draft7, anyOf) {
 TEST(JSONSchema_default_walker_draft7, oneOf) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("oneOf", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Elements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -73,7 +73,7 @@ TEST(JSONSchema_default_walker_draft7, oneOf) {
 TEST(JSONSchema_default_walker_draft7, not) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("not", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -81,7 +81,7 @@ TEST(JSONSchema_default_walker_draft7, not) {
 TEST(JSONSchema_default_walker_draft7, if) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("if", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -89,7 +89,7 @@ TEST(JSONSchema_default_walker_draft7, if) {
 TEST(JSONSchema_default_walker_draft7, then) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("then", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
   const std::set<std::string> expected{"if"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -97,7 +97,7 @@ TEST(JSONSchema_default_walker_draft7, then) {
 TEST(JSONSchema_default_walker_draft7, else) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("else", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
   const std::set<std::string> expected{"if"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -122,7 +122,7 @@ TEST(JSONSchema_default_walker_draft7, additionalItems) {
 TEST(JSONSchema_default_walker_draft7, contains) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("contains", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -165,7 +165,7 @@ TEST(JSONSchema_default_walker_draft7, propertyNames) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("propertyNames", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
