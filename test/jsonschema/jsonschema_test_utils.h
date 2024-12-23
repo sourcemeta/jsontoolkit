@@ -57,6 +57,18 @@
           .type,                                                               \
       sourcemeta::jsontoolkit::FrameLocationType::Pointer);
 
+#define EXPECT_FRAME_STATIC_SUBSCHEMA(                                         \
+    frame, reference, root_id, expected_pointer, expected_dialect,             \
+    expected_base, expected_relative_pointer, expected_destination_of_size)    \
+  EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,             \
+                      expected_dialect, expected_base,                         \
+                      expected_relative_pointer, expected_destination_of_size) \
+  EXPECT_EQ(                                                                   \
+      (frame)                                                                  \
+          .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
+          .type,                                                               \
+      sourcemeta::jsontoolkit::FrameLocationType::Subschema);
+
 #define EXPECT_FRAME_STATIC_ANCHOR(                                            \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
     expected_base, expected_relative_pointer, expected_destination_of_size)    \
@@ -131,6 +143,18 @@
           .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
           .type,                                                               \
       sourcemeta::jsontoolkit::FrameLocationType::Pointer);
+
+#define EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(                               \
+    frame, reference, expected_pointer, expected_dialect,                      \
+    expected_destination_of_size)                                              \
+  __EXPECT_ANONYMOUS_FRAME(                                                    \
+      frame, sourcemeta::jsontoolkit::ReferenceType::Static, reference,        \
+      expected_pointer, expected_dialect, expected_destination_of_size)        \
+  EXPECT_EQ(                                                                   \
+      (frame)                                                                  \
+          .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
+          .type,                                                               \
+      sourcemeta::jsontoolkit::FrameLocationType::Subschema);
 
 #define EXPECT_ANONYMOUS_FRAME_STATIC_ANCHOR(                                  \
     frame, reference, expected_pointer, expected_dialect,                      \
