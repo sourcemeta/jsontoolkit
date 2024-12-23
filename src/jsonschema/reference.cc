@@ -12,6 +12,8 @@
 #include <utility>    // std::pair, std::move
 #include <vector>     // std::vector
 
+#include <iostream>
+
 static auto find_nearest_bases(const std::map<sourcemeta::jsontoolkit::Pointer,
                                               std::vector<std::string>> &bases,
                                const sourcemeta::jsontoolkit::Pointer &pointer,
@@ -102,12 +104,16 @@ static auto store(sourcemeta::jsontoolkit::ReferenceFrame &frame,
                   const bool ignore_if_present = false) -> void {
   const auto canonical{
       sourcemeta::jsontoolkit::URI{uri}.canonicalize().recompose()};
-  const auto inserted{
-      frame
-          .insert({{type, canonical},
-                   {entry_type, root_id, base_id, pointer_from_root,
-                    pointer_from_base, dialect}})
-          .second};
+  const auto inserted{frame
+                          .insert({{type, canonical},
+                                   {entry_type,
+                                    root_id,
+                                    base_id,
+                                    pointer_from_root,
+                                    pointer_from_base,
+                                    dialect,
+                                    {}}})
+                          .second};
   if (!ignore_if_present && !inserted) {
     std::ostringstream error;
     error << "Schema identifier already exists: " << uri;
@@ -470,6 +476,8 @@ auto sourcemeta::jsontoolkit::frame(
       references.cbegin(), references.cend(), [&frame](const auto &reference) {
         assert(!reference.first.second.empty());
         assert(reference.first.second.back().is_property());
+        // TODO: This check might need to be more elaborate given
+        // https://github.com/sourcemeta/jsontoolkit/issues/1390
         return reference.first.second.back().to_property() == "$schema" ||
                frame.contains(
                    {ReferenceType::Static, reference.second.destination}) ||
@@ -532,6 +540,28 @@ auto sourcemeta::jsontoolkit::frame(
 
     for (auto &&entry : to_insert) {
       references.emplace(std::move(entry));
+    }
+  }
+
+  for (const auto &reference : references) {
+    auto match{
+        frame.find({reference.first.first, reference.second.destination})};
+    if (match == frame.cend()) {
+      continue;
+    }
+
+    for (auto &entry : frame) {
+      if (entry.second.pointer != match->second.pointer ||
+          // Don't count the same origin twice
+          std::any_of(entry.second.destination_of.cbegin(),
+                      entry.second.destination_of.cend(),
+                      [&reference](const auto &destination) {
+                        return destination.get() == reference.first;
+                      })) {
+        continue;
+      }
+
+      entry.second.destination_of.emplace_back(reference.first);
     }
   }
 }
