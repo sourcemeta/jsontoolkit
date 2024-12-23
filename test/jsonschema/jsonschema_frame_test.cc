@@ -27,8 +27,8 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
-  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver);
@@ -168,8 +168,8 @@ TEST(JSONSchema_frame, no_id) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
-  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver);
@@ -243,8 +243,8 @@ TEST(JSONSchema_frame, no_id_with_default) {
     "items": { "type": "string" }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
-  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver,
@@ -293,8 +293,8 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
-  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver);
@@ -374,8 +374,8 @@ TEST(JSONSchema_frame, uri_iterators) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
-  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver);
@@ -412,10 +412,10 @@ TEST(JSONSchema_frame, uri_iterators) {
 }
 
 TEST(JSONSchema_frame, reference_frame_static) {
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::FrameLocations frame;
   frame.insert(
       {{sourcemeta::jsontoolkit::ReferenceType::Static, "https://example.com"},
-       {sourcemeta::jsontoolkit::ReferenceEntryType::Resource,
+       {sourcemeta::jsontoolkit::FrameLocationType::Resource,
         "https://example.com",
         "https://example.com",
         sourcemeta::jsontoolkit::empty_pointer,
@@ -430,10 +430,10 @@ TEST(JSONSchema_frame, reference_frame_static) {
 }
 
 TEST(JSONSchema_frame, reference_frame_dynamic) {
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::FrameLocations frame;
   frame.insert(
       {{sourcemeta::jsontoolkit::ReferenceType::Dynamic, "https://example.com"},
-       {sourcemeta::jsontoolkit::ReferenceEntryType::Resource,
+       {sourcemeta::jsontoolkit::FrameLocationType::Resource,
         "https://example.com",
         "https://example.com",
         sourcemeta::jsontoolkit::empty_pointer,
@@ -448,10 +448,10 @@ TEST(JSONSchema_frame, reference_frame_dynamic) {
 }
 
 TEST(JSONSchema_frame, reference_frame_both) {
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
+  sourcemeta::jsontoolkit::FrameLocations frame;
   frame.insert(
       {{sourcemeta::jsontoolkit::ReferenceType::Static, "https://example.com"},
-       {sourcemeta::jsontoolkit::ReferenceEntryType::Resource,
+       {sourcemeta::jsontoolkit::FrameLocationType::Resource,
         "https://example.com",
         "https://example.com",
         sourcemeta::jsontoolkit::empty_pointer,
@@ -460,7 +460,7 @@ TEST(JSONSchema_frame, reference_frame_both) {
         {}}});
   frame.insert(
       {{sourcemeta::jsontoolkit::ReferenceType::Dynamic, "https://example.com"},
-       {sourcemeta::jsontoolkit::ReferenceEntryType::Resource,
+       {sourcemeta::jsontoolkit::FrameLocationType::Resource,
         "https://example.com",
         "https://example.com",
         sourcemeta::jsontoolkit::empty_pointer,
@@ -486,8 +486,8 @@ TEST(JSONSchema_frame, no_refs) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
-  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver);
@@ -521,8 +521,8 @@ TEST(JSONSchema_frame, refs_with_id) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
-  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver);
@@ -588,8 +588,8 @@ TEST(JSONSchema_frame, refs_with_no_id) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
-  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver);
@@ -632,8 +632,8 @@ TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
-  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver);
@@ -656,8 +656,8 @@ TEST(JSONSchema_frame, remote_refs) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
-  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   sourcemeta::jsontoolkit::frame(document, frame, references,
                                  sourcemeta::jsontoolkit::default_schema_walker,
                                  sourcemeta::jsontoolkit::official_resolver);
@@ -683,8 +683,8 @@ TEST(JSONSchema_frame, no_dialect) {
     "type": "string"
   })JSON");
 
-  sourcemeta::jsontoolkit::ReferenceFrame frame;
-  sourcemeta::jsontoolkit::ReferenceMap references;
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   EXPECT_THROW(sourcemeta::jsontoolkit::frame(
                    document, frame, references,
                    sourcemeta::jsontoolkit::default_schema_walker,

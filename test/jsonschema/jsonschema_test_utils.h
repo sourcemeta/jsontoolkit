@@ -43,7 +43,7 @@
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
           .type,                                                               \
-      sourcemeta::jsontoolkit::ReferenceEntryType::Resource);
+      sourcemeta::jsontoolkit::FrameLocationType::Resource);
 
 #define EXPECT_FRAME_STATIC_POINTER(                                           \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
@@ -55,7 +55,7 @@
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
           .type,                                                               \
-      sourcemeta::jsontoolkit::ReferenceEntryType::Pointer);
+      sourcemeta::jsontoolkit::FrameLocationType::Pointer);
 
 #define EXPECT_FRAME_STATIC_ANCHOR(                                            \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
@@ -67,7 +67,7 @@
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
           .type,                                                               \
-      sourcemeta::jsontoolkit::ReferenceEntryType::Anchor);
+      sourcemeta::jsontoolkit::FrameLocationType::Anchor);
 
 #define EXPECT_FRAME_DYNAMIC_ANCHOR(                                           \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
@@ -79,7 +79,7 @@
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Dynamic, (reference)})  \
           .type,                                                               \
-      sourcemeta::jsontoolkit::ReferenceEntryType::Anchor);
+      sourcemeta::jsontoolkit::FrameLocationType::Anchor);
 
 #define EXPECT_FRAME_DYNAMIC(                                                  \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
@@ -118,7 +118,7 @@
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
           .type,                                                               \
-      sourcemeta::jsontoolkit::ReferenceEntryType::Resource);
+      sourcemeta::jsontoolkit::FrameLocationType::Resource);
 
 #define EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(                                 \
     frame, reference, expected_pointer, expected_dialect,                      \
@@ -130,7 +130,7 @@
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
           .type,                                                               \
-      sourcemeta::jsontoolkit::ReferenceEntryType::Pointer);
+      sourcemeta::jsontoolkit::FrameLocationType::Pointer);
 
 #define EXPECT_ANONYMOUS_FRAME_STATIC_ANCHOR(                                  \
     frame, reference, expected_pointer, expected_dialect,                      \
@@ -142,7 +142,7 @@
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
           .type,                                                               \
-      sourcemeta::jsontoolkit::ReferenceEntryType::Anchor);
+      sourcemeta::jsontoolkit::FrameLocationType::Anchor);
 
 #define EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(                                 \
     frame, reference, expected_pointer, expected_dialect,                      \
@@ -154,7 +154,7 @@
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Dynamic, (reference)})  \
           .type,                                                               \
-      sourcemeta::jsontoolkit::ReferenceEntryType::Anchor);
+      sourcemeta::jsontoolkit::FrameLocationType::Anchor);
 
 #define EXPECT_REFERENCE(references, expected_type, expected_pointer,          \
                          expected_uri, expected_base, expected_fragment)       \
