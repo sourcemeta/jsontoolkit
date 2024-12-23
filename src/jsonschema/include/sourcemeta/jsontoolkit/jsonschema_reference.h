@@ -9,12 +9,14 @@
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
-#include <cstdint>  // std::uint8_t
-#include <map>      // std::map
-#include <optional> // std::optional
-#include <string>   // std::string
-#include <tuple>    // std::tuple
-#include <utility>  // std::pair
+#include <cstdint>    // std::uint8_t
+#include <functional> // std::reference_wrapper
+#include <map>        // std::map
+#include <optional>   // std::optional
+#include <string>     // std::string
+#include <tuple>      // std::tuple
+#include <utility>    // std::pair
+#include <vector>     // std::vector
 
 namespace sourcemeta::jsontoolkit {
 
@@ -36,29 +38,11 @@ enum class ReferenceEntryType : std::uint8_t { Resource, Anchor, Pointer };
 #endif
 
 /// @ingroup jsonschema
-/// A single frame in a JSON Schema reference frame
-struct ReferenceFrameEntry {
-  const ReferenceEntryType type;
-  const std::optional<std::string> root;
-  const std::string base;
-  const Pointer pointer;
-  const Pointer relative_pointer;
-  const std::string dialect;
-};
-
-/// @ingroup jsonschema
-/// A JSON Schema reference frame is a mapping of URIs to schema identifiers,
-/// JSON Pointers within the schema, and subschemas dialects. We call it
-/// reference frame as this mapping is essential for resolving references.
-using ReferenceFrame =
-    std::map<std::pair<ReferenceType, std::string>, ReferenceFrameEntry>;
-
-/// @ingroup jsonschema
 /// A single entry in a JSON Schema reference map
 struct ReferenceMapEntry {
-  const std::string destination;
-  const std::optional<std::string> base;
-  const std::optional<std::string> fragment;
+  std::string destination;
+  std::optional<std::string> base;
+  std::optional<std::string> fragment;
 };
 
 /// @ingroup jsonschema
@@ -71,6 +55,26 @@ struct ReferenceMapEntry {
 /// on the same schema object.
 using ReferenceMap =
     std::map<std::pair<ReferenceType, Pointer>, ReferenceMapEntry>;
+
+/// @ingroup jsonschema
+/// A single frame in a JSON Schema reference frame
+struct ReferenceFrameEntry {
+  ReferenceEntryType type;
+  std::optional<std::string> root;
+  std::string base;
+  Pointer pointer;
+  Pointer relative_pointer;
+  std::string dialect;
+  std::vector<std::reference_wrapper<const ReferenceMap::key_type>>
+      destination_of;
+};
+
+/// @ingroup jsonschema
+/// A JSON Schema reference frame is a mapping of URIs to schema identifiers,
+/// JSON Pointers within the schema, and subschemas dialects. We call it
+/// reference frame as this mapping is essential for resolving references.
+using ReferenceFrame =
+    std::map<std::pair<ReferenceType, std::string>, ReferenceFrameEntry>;
 
 /// @ingroup jsonschema
 ///
