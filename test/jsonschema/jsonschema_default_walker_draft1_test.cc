@@ -133,7 +133,7 @@ TEST(JSONSchema_default_walker_draft1, minItems) {
 TEST(JSONSchema_default_walker_draft1, requires) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("requires", VOCABULARIES_DRAFT1)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -175,7 +175,7 @@ TEST(JSONSchema_default_walker_draft1, disallow) {
 TEST(JSONSchema_default_walker_draft1, extends) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("extends", VOCABULARIES_DRAFT1)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElementsInPlace);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -430,7 +430,7 @@ TEST(JSONSchema_default_walker_draft1, hyperschema_requires) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("requires", VOCABULARIES_DRAFT1_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -478,7 +478,7 @@ TEST(JSONSchema_default_walker_draft1, hyperschema_extends) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("extends", VOCABULARIES_DRAFT1_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElementsInPlace);
   EXPECT_TRUE(result.dependencies.empty());
 }
 

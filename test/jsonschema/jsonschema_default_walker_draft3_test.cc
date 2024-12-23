@@ -230,7 +230,7 @@ TEST(JSONSchema_default_walker_draft3, divisibleBy) {
 TEST(JSONSchema_default_walker_draft3, disallow) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("disallow", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Elements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -238,7 +238,7 @@ TEST(JSONSchema_default_walker_draft3, disallow) {
 TEST(JSONSchema_default_walker_draft3, extends) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("extends", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
