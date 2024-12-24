@@ -30,6 +30,14 @@
                              expected_base, expected_relative_pointer,         \
                              expected_destination_of_size);
 
+#define EXPECT_FRAME_STATIC_DRAFT4_SUBSCHEMA(                                  \
+    frame, reference, root_id, expected_pointer, expected_base,                \
+    expected_relative_pointer, expected_destination_of_size)                   \
+  EXPECT_FRAME_STATIC_SUBSCHEMA(frame, reference, root_id, expected_pointer,   \
+                                "http://json-schema.org/draft-04/schema#",     \
+                                expected_base, expected_relative_pointer,      \
+                                expected_destination_of_size);
+
 TEST(JSONSchema_frame_draft4, anonymous_with_nested_schema_resource) {
   const sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
@@ -54,12 +62,12 @@ TEST(JSONSchema_frame_draft4, anonymous_with_nested_schema_resource) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "https://example.com#/id", "/additionalProperties/id",
       "http://json-schema.org/draft-04/schema#", 0);
-  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+  EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "", "", "http://json-schema.org/draft-04/schema#", 0);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema", "http://json-schema.org/draft-04/schema#",
       0);
-  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+  EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/additionalProperties", "/additionalProperties",
       "http://json-schema.org/draft-04/schema#", 0);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
@@ -147,7 +155,7 @@ TEST(JSONSchema_frame_draft4, one_level_applicators_without_identifiers) {
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
       "https://www.sourcemeta.com/schema", "/$schema", 0);
-  EXPECT_FRAME_STATIC_DRAFT4_POINTER(
+  EXPECT_FRAME_STATIC_DRAFT4_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/items",
       "https://www.sourcemeta.com/schema", "/items",
       "https://www.sourcemeta.com/schema", "/items", 0);
@@ -159,7 +167,7 @@ TEST(JSONSchema_frame_draft4, one_level_applicators_without_identifiers) {
       frame, "https://www.sourcemeta.com/schema#/properties",
       "https://www.sourcemeta.com/schema", "/properties",
       "https://www.sourcemeta.com/schema", "/properties", 0);
-  EXPECT_FRAME_STATIC_DRAFT4_POINTER(
+  EXPECT_FRAME_STATIC_DRAFT4_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/properties/foo",
       "https://www.sourcemeta.com/schema", "/properties/foo",
       "https://www.sourcemeta.com/schema", "/properties/foo", 0);
@@ -211,7 +219,7 @@ TEST(JSONSchema_frame_draft4, one_level_applicators_with_identifiers) {
       frame, "https://www.sourcemeta.com/test/qux#/$schema",
       "https://www.sourcemeta.com/test/qux", "/$schema",
       "https://www.sourcemeta.com/test/qux", "/$schema", 0);
-  EXPECT_FRAME_STATIC_DRAFT4_POINTER(
+  EXPECT_FRAME_STATIC_DRAFT4_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/test/qux#/items",
       "https://www.sourcemeta.com/test/qux", "/items",
       "https://www.sourcemeta.com/foo", "", 0);
@@ -278,7 +286,7 @@ TEST(JSONSchema_frame_draft4, subschema_absolute_identifier) {
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
       "https://www.sourcemeta.com/schema", "/$schema", 0);
-  EXPECT_FRAME_STATIC_DRAFT4_POINTER(
+  EXPECT_FRAME_STATIC_DRAFT4_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/items",
       "https://www.sourcemeta.com/schema", "/items",
       "https://www.sourcemeta.com/foo", "", 0);
@@ -424,7 +432,7 @@ TEST(JSONSchema_frame_draft4, explicit_argument_id_different) {
       frame, "https://www.sourcemeta.com/schema#/properties",
       "https://www.sourcemeta.com/schema", "/properties",
       "https://www.example.com", "/properties", 0);
-  EXPECT_FRAME_STATIC_DRAFT4_POINTER(
+  EXPECT_FRAME_STATIC_DRAFT4_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/properties/one",
       "https://www.sourcemeta.com/schema", "/properties/one",
       "https://www.example.com/test", "", 0);
@@ -432,7 +440,7 @@ TEST(JSONSchema_frame_draft4, explicit_argument_id_different) {
       frame, "https://www.sourcemeta.com/schema#/properties/one/id",
       "https://www.sourcemeta.com/schema", "/properties/one/id",
       "https://www.example.com/test", "/id", 0);
-  EXPECT_FRAME_STATIC_DRAFT4_POINTER(
+  EXPECT_FRAME_STATIC_DRAFT4_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/properties/two",
       "https://www.sourcemeta.com/schema", "/properties/two",
       "https://www.test.com", "", 0);
@@ -472,7 +480,7 @@ TEST(JSONSchema_frame_draft4, ref_metaschema) {
 
   EXPECT_EQ(frame.size(), 3);
 
-  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+  EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "", "", "http://json-schema.org/draft-04/schema#", 0);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema", "http://json-schema.org/draft-04/schema#",
@@ -515,7 +523,7 @@ TEST(JSONSchema_frame_draft4, location_independent_identifier_anonymous) {
   EXPECT_EQ(frame.size(), 8);
 
   // Pointers
-  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+  EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "", "", "http://json-schema.org/draft-04/schema#", 0);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema", "http://json-schema.org/draft-04/schema#",
@@ -525,7 +533,7 @@ TEST(JSONSchema_frame_draft4, location_independent_identifier_anonymous) {
       "http://json-schema.org/draft-04/schema#", 0);
 
   // Foo
-  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+  EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/definitions/foo", "/definitions/foo",
       "http://json-schema.org/draft-04/schema#", 1);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
@@ -533,7 +541,7 @@ TEST(JSONSchema_frame_draft4, location_independent_identifier_anonymous) {
       "http://json-schema.org/draft-04/schema#", 0);
 
   // Bar
-  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+  EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/definitions/bar", "/definitions/bar",
       "http://json-schema.org/draft-04/schema#", 0);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
@@ -577,7 +585,7 @@ TEST(JSONSchema_frame_draft4, ref_with_id) {
 
   // JSON Pointers
 
-  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+  EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "", "", "http://json-schema.org/draft-04/schema#", 0);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/id", "/id", "http://json-schema.org/draft-04/schema#", 0);
@@ -589,7 +597,7 @@ TEST(JSONSchema_frame_draft4, ref_with_id) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/definitions", "/definitions",
       "http://json-schema.org/draft-04/schema#", 0);
-  EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
+  EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/definitions/string", "/definitions/string",
       "http://json-schema.org/draft-04/schema#", 1);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
@@ -678,17 +686,17 @@ TEST(JSONSchema_frame_draft4, relative_base_uri_with_ref) {
                                      "common", "/id", 0);
   EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/allOf", "common", "/allOf",
                                      "common", "/allOf", 0);
-  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/allOf/0", "common",
-                                     "/allOf/0", "common", "/allOf/0", 0);
+  EXPECT_FRAME_STATIC_DRAFT4_SUBSCHEMA(frame, "common#/allOf/0", "common",
+                                       "/allOf/0", "common", "/allOf/0", 0);
   EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/allOf/0/$ref", "common",
                                      "/allOf/0/$ref", "common", "/allOf/0/$ref",
                                      0);
   EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/definitions", "common",
                                      "/definitions", "common", "/definitions",
                                      0);
-  EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/definitions/foo", "common",
-                                     "/definitions/foo", "common",
-                                     "/definitions/foo", 1);
+  EXPECT_FRAME_STATIC_DRAFT4_SUBSCHEMA(frame, "common#/definitions/foo",
+                                       "common", "/definitions/foo", "common",
+                                       "/definitions/foo", 1);
   EXPECT_FRAME_STATIC_DRAFT4_POINTER(frame, "common#/definitions/foo/id",
                                      "common", "/definitions/foo/id", "common",
                                      "/definitions/foo/id", 0);
