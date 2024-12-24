@@ -76,6 +76,9 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorElements:
         [[fallthrough]];
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::
+          ApplicatorElementsInline:
+        [[fallthrough]];
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::
           ApplicatorElementsInPlace:
         if (pair.second.is_array()) {
           for (std::size_t index = 0; index < pair.second.size(); index++) {

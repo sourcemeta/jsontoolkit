@@ -35,8 +35,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
        ApplicatorElementsInPlace)
   WALK(HTTPS_BASE "2020-12/vocab/applicator", "anyOf",
        ApplicatorElementsInPlace)
-  WALK(HTTPS_BASE "2020-12/vocab/applicator", "allOf",
-       ApplicatorElementsInPlace)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "allOf", ApplicatorElementsInline)
   WALK(HTTPS_BASE "2020-12/vocab/applicator", "if", ApplicatorValueOther)
   WALK(HTTPS_BASE "2020-12/vocab/applicator", "then", ApplicatorValueInPlace,
        "if")
@@ -118,8 +117,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTPS_BASE "2019-09/vocab/core", "$vocabulary", Other)
   WALK(HTTPS_BASE "2019-09/vocab/core", "$recursiveRef", Reference)
   WALK(HTTPS_BASE "2019-09/vocab/core", "$recursiveAnchor", Other)
-  WALK(HTTPS_BASE "2019-09/vocab/applicator", "allOf",
-       ApplicatorElementsInPlace)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "allOf", ApplicatorElementsInline)
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "anyOf",
        ApplicatorElementsInPlace)
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "oneOf",
@@ -237,7 +235,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-07/schema#", "if", ApplicatorValueOther, "$ref")
   WALK(HTTP_BASE "draft-07/schema#", "then", ApplicatorValueInPlace, "if")
   WALK(HTTP_BASE "draft-07/schema#", "else", ApplicatorValueInPlace, "if")
-  WALK(HTTP_BASE "draft-07/schema#", "allOf", ApplicatorElementsInPlace, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "allOf", ApplicatorElementsInline, "$ref")
   WALK(HTTP_BASE "draft-07/schema#", "anyOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-07/schema#", "oneOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-07/schema#", "not", ApplicatorValueOther, "$ref")
@@ -305,7 +303,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-06/schema#", "dependencies", ApplicatorMembers, "$ref")
   WALK(HTTP_BASE "draft-06/schema#", "propertyNames", ApplicatorValueInPlace,
        "$ref")
-  WALK(HTTP_BASE "draft-06/schema#", "allOf", ApplicatorElementsInPlace, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "allOf", ApplicatorElementsInline, "$ref")
   WALK(HTTP_BASE "draft-06/schema#", "anyOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-06/schema#", "oneOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-06/schema#", "not", ApplicatorValueOther, "$ref")
@@ -366,7 +364,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-04/schema#", "additionalProperties", ApplicatorValue,
        "properties", "patternProperties")
   WALK(HTTP_BASE "draft-04/schema#", "dependencies", ApplicatorMembers, "$ref")
-  WALK(HTTP_BASE "draft-04/schema#", "allOf", ApplicatorElementsInPlace, "$ref")
+  WALK(HTTP_BASE "draft-04/schema#", "allOf", ApplicatorElementsInline, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "anyOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "oneOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "not", ApplicatorValueOther, "$ref")
