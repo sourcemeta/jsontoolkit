@@ -31,14 +31,14 @@ TEST(JSONSchema_default_walker_draft0, ref) {
 TEST(JSONSchema_default_walker_draft0, items) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("items", VOCABULARIES_DRAFT0)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueOrElements);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
 TEST(JSONSchema_default_walker_draft0, properties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("properties", VOCABULARIES_DRAFT0)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorMembers);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -46,7 +46,7 @@ TEST(JSONSchema_default_walker_draft0, additionalProperties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("additionalProperties", VOCABULARIES_DRAFT0)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValue);
   const std::set<std::string> expected{"properties"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -54,7 +54,7 @@ TEST(JSONSchema_default_walker_draft0, additionalProperties) {
 TEST(JSONSchema_default_walker_draft0, type) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("type", VOCABULARIES_DRAFT0)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Elements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorElements);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -133,7 +133,7 @@ TEST(JSONSchema_default_walker_draft0, minItems) {
 TEST(JSONSchema_default_walker_draft0, requires) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("requires", VOCABULARIES_DRAFT0)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueInPlace);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -175,7 +175,8 @@ TEST(JSONSchema_default_walker_draft0, disallow) {
 TEST(JSONSchema_default_walker_draft0, extends) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("extends", VOCABULARIES_DRAFT0)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElementsInPlace);
+  EXPECT_EQ(result.strategy,
+            SchemaWalkerStrategy::ApplicatorValueOrElementsInPlace);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -317,7 +318,7 @@ TEST(JSONSchema_default_walker_draft0, hyperschema_items) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("items", VOCABULARIES_DRAFT0_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueOrElements);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -325,7 +326,7 @@ TEST(JSONSchema_default_walker_draft0, hyperschema_properties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("properties", VOCABULARIES_DRAFT0_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorMembers);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -333,7 +334,7 @@ TEST(JSONSchema_default_walker_draft0, hyperschema_additionalProperties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("additionalProperties",
                                           VOCABULARIES_DRAFT0_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValue);
   const std::set<std::string> expected{"properties"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -342,7 +343,7 @@ TEST(JSONSchema_default_walker_draft0, hyperschema_type) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("type", VOCABULARIES_DRAFT0_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Elements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorElements);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -430,7 +431,7 @@ TEST(JSONSchema_default_walker_draft0, hyperschema_requires) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("requires", VOCABULARIES_DRAFT0_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueInPlace);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -478,7 +479,8 @@ TEST(JSONSchema_default_walker_draft0, hyperschema_extends) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("extends", VOCABULARIES_DRAFT0_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElementsInPlace);
+  EXPECT_EQ(result.strategy,
+            SchemaWalkerStrategy::ApplicatorValueOrElementsInPlace);
   EXPECT_TRUE(result.dependencies.empty());
 }
 

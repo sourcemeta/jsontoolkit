@@ -62,17 +62,19 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
 
   for (auto &pair : subschema.as_object()) {
     switch (walker(pair.first, vocabularies).strategy) {
-      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value:
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorValue:
         [[fallthrough]];
-      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ValueInPlace: {
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::
+          ApplicatorValueInPlace: {
         sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
         new_pointer.emplace_back(pair.first);
         walk(new_pointer, subschemas, pair.second, walker, resolver,
              new_dialect, type, level + 1);
       } break;
-      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Elements:
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorElements:
         [[fallthrough]];
-      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ElementsInPlace:
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::
+          ApplicatorElementsInPlace:
         if (pair.second.is_array()) {
           for (std::size_t index = 0; index < pair.second.size(); index++) {
             sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
@@ -84,7 +86,9 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
         }
 
         break;
-      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Members:
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorMembers:
+        [[fallthrough]];
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::LocationMembers:
         if (pair.second.is_object()) {
           for (auto &subpair : pair.second.as_object()) {
             sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
@@ -96,10 +100,11 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
         }
 
         break;
-      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ValueOrElements:
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::
+          ApplicatorValueOrElements:
         [[fallthrough]];
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::
-          ValueOrElementsInPlace:
+          ApplicatorValueOrElementsInPlace:
         if (pair.second.is_array()) {
           for (std::size_t index = 0; index < pair.second.size(); index++) {
             sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
@@ -116,7 +121,8 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
         }
 
         break;
-      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ElementsOrMembers:
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::
+          ApplicatorElementsOrMembers:
         if (pair.second.is_array()) {
           for (std::size_t index = 0; index < pair.second.size(); index++) {
             sourcemeta::jsontoolkit::Pointer new_pointer{pointer};

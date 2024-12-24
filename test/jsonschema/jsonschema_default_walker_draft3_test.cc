@@ -33,7 +33,7 @@ TEST(JSONSchema_default_walker_draft3, ref) {
 TEST(JSONSchema_default_walker_draft3, items) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("items", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueOrElements);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -42,7 +42,7 @@ TEST(JSONSchema_default_walker_draft3, additionalItems) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("additionalItems", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValue);
   const std::set<std::string> expected{"items"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -50,7 +50,7 @@ TEST(JSONSchema_default_walker_draft3, additionalItems) {
 TEST(JSONSchema_default_walker_draft3, properties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("properties", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorMembers);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -59,7 +59,7 @@ TEST(JSONSchema_default_walker_draft3, patternProperties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("patternProperties", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorMembers);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -67,7 +67,7 @@ TEST(JSONSchema_default_walker_draft3, patternProperties) {
 TEST(JSONSchema_default_walker_draft3, dependencies) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("dependencies", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorMembers);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -76,7 +76,7 @@ TEST(JSONSchema_default_walker_draft3, additionalProperties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("additionalProperties", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValue);
   const std::set<std::string> expected{"properties", "patternProperties"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -84,7 +84,7 @@ TEST(JSONSchema_default_walker_draft3, additionalProperties) {
 TEST(JSONSchema_default_walker_draft3, type) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("type", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Elements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorElements);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -230,7 +230,7 @@ TEST(JSONSchema_default_walker_draft3, divisibleBy) {
 TEST(JSONSchema_default_walker_draft3, disallow) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("disallow", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ElementsInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -238,7 +238,8 @@ TEST(JSONSchema_default_walker_draft3, disallow) {
 TEST(JSONSchema_default_walker_draft3, extends) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("extends", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElementsInPlace);
+  EXPECT_EQ(result.strategy,
+            SchemaWalkerStrategy::ApplicatorValueOrElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -343,7 +344,7 @@ TEST(JSONSchema_default_walker_draft3, hyperschema_targetSchema) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("targetSchema", VOCABULARIES_DRAFT3_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValue);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
