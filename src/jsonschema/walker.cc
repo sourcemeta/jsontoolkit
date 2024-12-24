@@ -88,6 +88,9 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
         break;
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorMembers:
         [[fallthrough]];
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::
+          ApplicatorMembersInPlace:
+        [[fallthrough]];
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::LocationMembers:
         if (pair.second.is_object()) {
           for (auto &subpair : pair.second.as_object()) {
