@@ -224,4 +224,35 @@
                 .second,                                                       \
             TO_POINTER(expected_origin));
 
+#define EXPECT_KEYWORD_UNKNOWN(keywords, expected_pointer,                     \
+                               expected_dependencies_size)                     \
+  EXPECT_FALSE(keywords.at(expected_pointer).dynamic);                         \
+  EXPECT_FALSE(keywords.at(expected_pointer).vocabulary.has_value());          \
+  EXPECT_EQ(keywords.at(expected_pointer).dependencies.size(),                 \
+            expected_dependencies_size);
+
+#define EXPECT_KEYWORD_STATIC(keywords, expected_pointer, expected_vocabulary, \
+                              expected_dependencies_size)                      \
+  EXPECT_FALSE(keywords.at(expected_pointer).dynamic);                         \
+  EXPECT_TRUE(keywords.at(expected_pointer).vocabulary.has_value());           \
+  EXPECT_EQ(keywords.at(expected_pointer).vocabulary.value(),                  \
+            expected_vocabulary);                                              \
+  EXPECT_EQ(keywords.at(expected_pointer).dependencies.size(),                 \
+            expected_dependencies_size);
+
+#define EXPECT_KEYWORD_DYNAMIC(keywords, expected_pointer,                     \
+                               expected_vocabulary,                            \
+                               expected_dependencies_size)                     \
+  EXPECT_TRUE(keywords.at(expected_pointer).dynamic);                          \
+  EXPECT_TRUE(keywords.at(expected_pointer).vocabulary.has_value());           \
+  EXPECT_EQ(keywords.at(expected_pointer).vocabulary.value(),                  \
+            expected_vocabulary);                                              \
+  EXPECT_EQ(keywords.at(expected_pointer).dependencies.size(),                 \
+            expected_dependencies_size);
+
+#define EXPECT_KEYWORD_DEPENDENCY(keywords, expected_pointer,                  \
+                                  expected_destination)                        \
+  EXPECT_TRUE(keywords.at(expected_pointer)                                    \
+                  .dependencies.contains(TO_POINTER(expected_destination)));
+
 #endif
