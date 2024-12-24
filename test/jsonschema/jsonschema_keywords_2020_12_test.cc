@@ -26,6 +26,13 @@
       "https://json-schema.org/draft/2020-12/vocab/validation",                \
       expected_dependencies_size)
 
+#define EXPECT_KEYWORD_STATIC_2020_12_UNEVALUATED(keywords, expected_pointer,  \
+                                                  expected_dependencies_size)  \
+  EXPECT_KEYWORD_STATIC(                                                       \
+      keywords, expected_pointer,                                              \
+      "https://json-schema.org/draft/2020-12/vocab/unevaluated",               \
+      expected_dependencies_size)
+
 #define EXPECT_KEYWORD_DYNAMIC_2020_12_UNEVALUATED(keywords, expected_pointer, \
                                                    expected_dependencies_size) \
   EXPECT_KEYWORD_DYNAMIC(                                                      \
@@ -266,6 +273,37 @@ TEST(JSONSchema_keywords_2020_12, unevaluatedProperties_1) {
                             "/patternProperties");
   EXPECT_KEYWORD_DEPENDENCY(result, "#/unevaluatedProperties",
                             "/additionalProperties");
+}
+
+TEST(JSONSchema_keywords_2020_12, unevaluatedProperties_2) {
+  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": { "foo": true },
+    "allOf": [ { "patternProperties": { "^@": true } } ],
+    "unevaluatedProperties": false
+  })JSON");
+
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
+  sourcemeta::jsontoolkit::frame(schema, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver);
+  const auto result{sourcemeta::jsontoolkit::keywords(
+      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver)};
+
+  EXPECT_EQ(result.size(), 5);
+
+  EXPECT_KEYWORD_STATIC_2020_12_CORE(result, "#/$schema", 0);
+  EXPECT_KEYWORD_STATIC_2020_12_APPLICATOR(result, "#/properties", 0);
+  EXPECT_KEYWORD_STATIC_2020_12_APPLICATOR(result, "#/allOf", 0);
+  EXPECT_KEYWORD_STATIC_2020_12_APPLICATOR(result,
+                                           "#/allOf/0/patternProperties", 0);
+  EXPECT_KEYWORD_STATIC_2020_12_UNEVALUATED(result, "#/unevaluatedProperties",
+                                            2);
+  EXPECT_KEYWORD_DEPENDENCY(result, "#/unevaluatedProperties", "/properties");
+  EXPECT_KEYWORD_DEPENDENCY(result, "#/unevaluatedProperties",
+                            "/allOf/0/patternProperties");
 }
 
 TEST(JSONSchema_keywords_2020_12, unevaluatedItems_1) {

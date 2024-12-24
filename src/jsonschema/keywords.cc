@@ -4,33 +4,114 @@
 #include <cassert> // assert
 #include <utility> // std::move
 
-// #include <iostream>
+#include <iostream>
 
 namespace {
+using namespace sourcemeta::jsontoolkit;
 
-auto find_sibling_dependency(
-    const sourcemeta::jsontoolkit::JSON &subschema,
-    const sourcemeta::jsontoolkit::FrameLocationsEntry &entry,
-    const sourcemeta::jsontoolkit::JSON::String &keyword,
-    std::set<sourcemeta::jsontoolkit::Pointer> &dependencies) -> void {
+auto find_sibling_dependency(const JSON &subschema,
+                             const FrameLocationsEntry &entry,
+                             const JSON::String &keyword,
+                             std::set<Pointer> &dependencies) -> void {
   if (subschema.defines(keyword)) {
     dependencies.emplace(entry.relative_pointer.concat({keyword}));
   }
 }
 
-auto find_adjacent_dependencies(
-    const sourcemeta::jsontoolkit::JSON &subschema,
-    const sourcemeta::jsontoolkit::FrameLocationsEntry &entry,
-    const std::set<sourcemeta::jsontoolkit::JSON::String> &keywords,
-    std::set<sourcemeta::jsontoolkit::Pointer> &dependencies) -> bool {
-  for (const auto &keyword : keywords) {
-    // TODO: Consider adjacent cases too
-    if (subschema.defines(keyword)) {
-      dependencies.emplace(entry.relative_pointer.concat({keyword}));
+auto navigate_frame(const FrameLocations &frame,
+                    const FrameLocationsEntry &entry,
+                    const Pointer &relative_pointer)
+    -> const FrameLocationsEntry & {
+  const auto new_uri{
+      to_uri(entry.relative_pointer.concat(relative_pointer), entry.base)
+          .recompose()};
+  assert(frame.contains({ReferenceType::Static, new_uri}));
+  return frame.at({ReferenceType::Static, new_uri});
+}
+
+// TODO: Extract all of this into a public utility to traverse
+// adjacent subschemas
+auto find_adjacent_dependencies(const JSON &schema, const FrameLocations &frame,
+                                const FrameLocationsEntry &entry,
+                                const SchemaWalker &walker,
+                                const SchemaResolver &resolver,
+                                const std::set<JSON::String> &keywords,
+                                std::set<Pointer> &dependencies) -> bool {
+  const auto &subschema{get(schema, entry.relative_pointer)};
+  if (!subschema.is_object()) {
+    return true;
+  }
+
+  const auto subschema_vocabularies{
+      vocabularies(subschema, resolver, entry.dialect)};
+
+  std::cerr << "TRAVERSING: ";
+  stringify(subschema, std::cerr);
+  std::cerr << "\n";
+
+  bool result{true};
+  for (const auto &property : subschema.as_object()) {
+    if (keywords.contains(property.first)) {
+      dependencies.emplace(entry.relative_pointer.concat({property.first}));
+    }
+
+    const auto walker_result{walker(property.first, subschema_vocabularies)};
+
+    // TODO: Treat anyOf, then, else, etc differently by giving it
+    // a different walker strategy altogether
+
+    switch (walker_result.strategy) {
+      case SchemaWalkerStrategy::Reference:
+        // TODO: Implement support for static references
+        result = false;
+        break;
+      case SchemaWalkerStrategy::ApplicatorValueInPlace:
+        if (property.second.is_object() &&
+            !find_adjacent_dependencies(
+                schema, frame, navigate_frame(frame, entry, {property.first}),
+                walker, resolver, keywords, dependencies)) {
+          result = false;
+        }
+
+        break;
+      case SchemaWalkerStrategy::ApplicatorElementsInPlace:
+        if (property.second.is_array()) {
+          for (std::size_t index = 0; index < property.second.size(); index++) {
+            if (!find_adjacent_dependencies(
+                    schema, frame,
+                    navigate_frame(frame, entry, {property.first, index}),
+                    walker, resolver, keywords, dependencies)) {
+              result = false;
+            }
+          }
+        }
+
+        break;
+      case SchemaWalkerStrategy::ApplicatorValueOrElementsInPlace:
+        if (property.second.is_array()) {
+          for (std::size_t index = 0; index < property.second.size(); index++) {
+            if (!find_adjacent_dependencies(
+                    schema, frame,
+                    navigate_frame(frame, entry, {property.first, index}),
+                    walker, resolver, keywords, dependencies)) {
+              result = false;
+            }
+          }
+        } else if (property.second.is_object() &&
+                   !find_adjacent_dependencies(
+                       schema, frame,
+                       navigate_frame(frame, entry, {property.first}), walker,
+                       resolver, keywords, dependencies)) {
+          result = false;
+        }
+
+        break;
+      default:
+        break;
     }
   }
 
-  return false;
+  return result;
 }
 
 } // namespace
@@ -169,7 +250,7 @@ auto keywords(const JSON &schema, const FrameLocations &frame,
                "https://json-schema.org/draft/2020-12/vocab/applicator"))) {
         if (pair.first == "unevaluatedProperties") {
           if (!find_adjacent_dependencies(
-                  subschema, entry.second,
+                  schema, frame, entry.second, walker, resolver,
                   {"properties", "patternProperties", "additionalProperties"},
                   dependencies)) {
             dynamic = true;
@@ -180,9 +261,9 @@ auto keywords(const JSON &schema, const FrameLocations &frame,
       if (subschema_vocabularies.contains(
               "https://json-schema.org/draft/2019-09/vocab/applicator")) {
         if (pair.first == "unevaluatedItems") {
-          if (!find_adjacent_dependencies(subschema, entry.second,
-                                          {"items", "additionalItems"},
-                                          dependencies)) {
+          if (!find_adjacent_dependencies(
+                  schema, frame, entry.second, walker, resolver,
+                  {"items", "additionalItems"}, dependencies)) {
             dynamic = true;
           }
         }
@@ -193,9 +274,9 @@ auto keywords(const JSON &schema, const FrameLocations &frame,
           subschema_vocabularies.contains(
               "https://json-schema.org/draft/2020-12/vocab/applicator")) {
         if (pair.first == "unevaluatedItems") {
-          if (!find_adjacent_dependencies(subschema, entry.second,
-                                          {"prefixItems", "items", "contains"},
-                                          dependencies)) {
+          if (!find_adjacent_dependencies(
+                  schema, frame, entry.second, walker, resolver,
+                  {"prefixItems", "items", "contains"}, dependencies)) {
             dynamic = true;
           }
         }
