@@ -27,6 +27,7 @@ namespace sourcemeta::jsontoolkit {
 // alias defined even on a different namespace.
 #pragma GCC diagnostic ignored "-Wshadow"
 #endif
+// TODO: Extract this into a more generic keyword identification enumeration
 /// @ingroup jsonschema
 /// Determines the possible states of a schema walk strategy
 enum class SchemaWalkerStrategy : std::uint8_t {

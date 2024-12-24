@@ -20,15 +20,21 @@ namespace sourcemeta::jsontoolkit {
 
 /// @ingroup jsonschema
 struct UnevaluatedEntry {
-  /// The absolute pointers of the keyword dependencies
-  const std::set<Pointer> dependencies;
-  /// Whether it requires runtime evaluation for full resolution
-  const bool dynamic;
+  /// The absolute pointers of the static keyword dependencies
+  std::set<Pointer> static_dependencies;
+  /// The absolute pointers of the static keyword dependencies
+  std::set<Pointer> dynamic_dependencies;
+  /// Whether the entry cannot be fully resolved, which means
+  /// there might be unknown dynamic dependencies
+  bool unresolved{false};
 };
 
 /// @ingroup jsonschema
 /// The flattened set of unevaluated cases in the schema by absolute URI
 using UnevaluatedEntries = std::map<std::string, UnevaluatedEntry>;
+
+// TODO: Eventually generalize this to list every cross-dependency between
+// keywords, supporting extensibility of custom vocabularies too
 
 /// @ingroup jsonschema
 ///
