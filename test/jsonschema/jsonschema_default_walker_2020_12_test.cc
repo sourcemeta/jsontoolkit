@@ -138,7 +138,7 @@ TEST(JSONSchema_default_walker_2020_12, applicator_allOf) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("allOf", VOCABULARIES_2020_12_APPLICATOR)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorElementsInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorElementsInline);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2020-12/vocab/applicator");

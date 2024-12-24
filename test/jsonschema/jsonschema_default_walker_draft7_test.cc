@@ -64,7 +64,7 @@ TEST(JSONSchema_default_walker_draft7, comment) {
 TEST(JSONSchema_default_walker_draft7, allOf) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("allOf", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorElementsInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorElementsInline);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");
