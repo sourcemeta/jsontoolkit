@@ -86,7 +86,7 @@ TEST(JSONSchema_default_walker_draft4, oneOf) {
 TEST(JSONSchema_default_walker_draft4, not) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("not", VOCABULARIES_DRAFT4)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueOther);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-04/schema#");

@@ -97,7 +97,7 @@ TEST(JSONSchema_default_walker_draft7, oneOf) {
 TEST(JSONSchema_default_walker_draft7, not) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("not", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueOther);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");
@@ -108,7 +108,7 @@ TEST(JSONSchema_default_walker_draft7, not) {
 TEST(JSONSchema_default_walker_draft7, if) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("if", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueOther);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");

@@ -44,6 +44,10 @@ enum class SchemaWalkerStrategy : std::uint8_t {
   /// takes a JSON Schema definition as an argument
   ApplicatorValue,
   /// The JSON Schema keyword is an applicator that potentially
+  /// takes a JSON Schema definition as an argument but its evaluation follows
+  /// special rules
+  ApplicatorValueOther,
+  /// The JSON Schema keyword is an applicator that potentially
   /// takes a JSON Schema definition as an argument without affecting the
   /// instance location
   ApplicatorValueInPlace,
