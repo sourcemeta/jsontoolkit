@@ -72,7 +72,7 @@ static auto test_walker(std::string_view keyword,
     }
   }
 
-  return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::None, {}};
+  return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::Unknown, {}};
 }
 
 TEST(JSONSchema_walker, true) {

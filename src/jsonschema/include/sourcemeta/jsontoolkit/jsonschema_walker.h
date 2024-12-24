@@ -30,8 +30,16 @@ namespace sourcemeta::jsontoolkit {
 /// @ingroup jsonschema
 /// Determines the possible states of a schema walk strategy
 enum class SchemaWalkerStrategy : std::uint8_t {
-  /// The JSON Schema keyword is not an applicator
-  None,
+  /// The JSON Schema keyword is unknown
+  Unknown,
+  /// The JSON Schema keyword is a non-applicator assertion
+  Assertion,
+  /// The JSON Schema keyword is a non-applicator annotation
+  Annotation,
+  /// The JSON Schema keyword is a reference
+  Reference,
+  /// The JSON Schema keyword is known but doesn't match any other type
+  Other,
   /// The JSON Schema keyword is an applicator that potentially
   /// takes a JSON Schema definition as an argument
   ApplicatorValue,
@@ -103,7 +111,7 @@ SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 inline auto schema_walker_none(std::string_view,
                                const std::map<std::string, bool> &)
     -> sourcemeta::jsontoolkit::SchemaWalkerResult {
-  return {SchemaWalkerStrategy::None, {}};
+  return {SchemaWalkerStrategy::Unknown, {}};
 }
 
 /// @ingroup jsonschema
