@@ -85,6 +85,8 @@ enum class SchemaWalkerStrategy : std::uint8_t {
 struct SchemaWalkerResult {
   /// The walker strategy to continue traversing across the schema
   const SchemaWalkerStrategy strategy;
+  /// The vocabulary associated with the keyword, if any
+  const std::optional<std::string> vocabulary;
   /// The keywords a given keyword depends on (if any) during the evaluation
   /// process
   const std::set<std::string> dependencies;
@@ -111,7 +113,7 @@ SOURCEMETA_JSONTOOLKIT_JSONSCHEMA_EXPORT
 inline auto schema_walker_none(std::string_view,
                                const std::map<std::string, bool> &)
     -> sourcemeta::jsontoolkit::SchemaWalkerResult {
-  return {SchemaWalkerStrategy::Unknown, {}};
+  return {SchemaWalkerStrategy::Unknown, std::nullopt, {}};
 }
 
 /// @ingroup jsonschema
