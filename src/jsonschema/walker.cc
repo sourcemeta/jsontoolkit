@@ -142,7 +142,15 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
         }
 
         break;
-      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::None:
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Assertion:
+        break;
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Annotation:
+        break;
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Reference:
+        break;
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Other:
+        break;
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::Unknown:
         break;
     }
   }
