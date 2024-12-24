@@ -33,7 +33,7 @@ TEST(JSONSchema_default_walker_draft6, ref) {
 TEST(JSONSchema_default_walker_draft6, definitions) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("definitions", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::LocationMembers);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -41,7 +41,7 @@ TEST(JSONSchema_default_walker_draft6, definitions) {
 TEST(JSONSchema_default_walker_draft6, allOf) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("allOf", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ElementsInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -49,7 +49,7 @@ TEST(JSONSchema_default_walker_draft6, allOf) {
 TEST(JSONSchema_default_walker_draft6, anyOf) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("anyOf", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ElementsInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -57,7 +57,7 @@ TEST(JSONSchema_default_walker_draft6, anyOf) {
 TEST(JSONSchema_default_walker_draft6, oneOf) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("oneOf", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ElementsInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorElementsInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -65,7 +65,7 @@ TEST(JSONSchema_default_walker_draft6, oneOf) {
 TEST(JSONSchema_default_walker_draft6, not) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("not", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -73,7 +73,7 @@ TEST(JSONSchema_default_walker_draft6, not) {
 TEST(JSONSchema_default_walker_draft6, items) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("items", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueOrElements);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueOrElements);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -82,7 +82,7 @@ TEST(JSONSchema_default_walker_draft6, additionalItems) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("additionalItems", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValue);
   const std::set<std::string> expected{"items"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -90,7 +90,7 @@ TEST(JSONSchema_default_walker_draft6, additionalItems) {
 TEST(JSONSchema_default_walker_draft6, contains) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("contains", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -98,7 +98,7 @@ TEST(JSONSchema_default_walker_draft6, contains) {
 TEST(JSONSchema_default_walker_draft6, properties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("properties", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorMembers);
   const std::set<std::string> expected{"$ref", "required"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -107,7 +107,7 @@ TEST(JSONSchema_default_walker_draft6, patternProperties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("patternProperties", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorMembers);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -115,7 +115,7 @@ TEST(JSONSchema_default_walker_draft6, patternProperties) {
 TEST(JSONSchema_default_walker_draft6, dependencies) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("dependencies", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Members);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorMembers);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -124,7 +124,7 @@ TEST(JSONSchema_default_walker_draft6, additionalProperties) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("additionalProperties", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValue);
   const std::set<std::string> expected{"properties", "patternProperties"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -133,7 +133,7 @@ TEST(JSONSchema_default_walker_draft6, propertyNames) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("propertyNames", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ValueInPlace);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValueInPlace);
   const std::set<std::string> expected{"$ref"};
   EXPECT_EQ(result.dependencies, expected);
 }
@@ -386,7 +386,7 @@ TEST(JSONSchema_default_walker_draft6, hyperschema_hrefSchema) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("hrefSchema", VOCABULARIES_DRAFT6_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValue);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -394,7 +394,7 @@ TEST(JSONSchema_default_walker_draft6, hyperschema_targetSchema) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("targetSchema", VOCABULARIES_DRAFT6_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValue);
   EXPECT_TRUE(result.dependencies.empty());
 }
 
@@ -402,7 +402,7 @@ TEST(JSONSchema_default_walker_draft6, hyperschema_submissionSchema) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("submissionSchema",
                                           VOCABULARIES_DRAFT6_HYPERSCHEMA)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::Value);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorValue);
   EXPECT_TRUE(result.dependencies.empty());
 }
 

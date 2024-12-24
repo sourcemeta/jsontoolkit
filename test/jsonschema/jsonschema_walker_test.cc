@@ -37,24 +37,29 @@ static auto test_walker(std::string_view keyword,
   if (vocabularies.find("https://sourcemeta.com/vocab/test-1") !=
       vocabularies.end()) {
     if (keyword == "schema") {
-      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value, {}};
+      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorValue,
+              {}};
     }
 
     if (keyword == "schemas") {
-      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::Elements, {}};
+      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorElements,
+              {}};
     }
 
     if (keyword == "schemaMap") {
-      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::Members, {}};
+      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorMembers,
+              {}};
     }
 
     if (keyword == "schemaOrSchemas") {
-      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::ValueOrElements,
+      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::
+                  ApplicatorValueOrElements,
               {}};
     }
 
     if (keyword == "schemasOrMap") {
-      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::ElementsOrMembers,
+      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::
+                  ApplicatorElementsOrMembers,
               {}};
     }
   }
@@ -62,7 +67,8 @@ static auto test_walker(std::string_view keyword,
   if (vocabularies.find("https://sourcemeta.com/vocab/test-2") !=
       vocabularies.end()) {
     if (keyword == "custom") {
-      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::Value, {}};
+      return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorValue,
+              {}};
     }
   }
 
