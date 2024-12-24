@@ -37,12 +37,12 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
        ApplicatorElementsInPlace)
   WALK(HTTPS_BASE "2020-12/vocab/applicator", "allOf",
        ApplicatorElementsInPlace)
-  WALK(HTTPS_BASE "2020-12/vocab/applicator", "if", ApplicatorValueInPlace)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "if", ApplicatorValueOther)
   WALK(HTTPS_BASE "2020-12/vocab/applicator", "then", ApplicatorValueInPlace,
        "if")
   WALK(HTTPS_BASE "2020-12/vocab/applicator", "else", ApplicatorValueInPlace,
        "if")
-  WALK(HTTPS_BASE "2020-12/vocab/applicator", "not", ApplicatorValueInPlace)
+  WALK(HTTPS_BASE "2020-12/vocab/applicator", "not", ApplicatorValueOther)
   // For the purpose of compiler optimizations
   WALK_MAYBE_DEPENDENT(HTTPS_BASE "2020-12/vocab/applicator", "properties",
                        ApplicatorMembers, HTTPS_BASE "2020-12/vocab/validation",
@@ -100,7 +100,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
                        HTTPS_BASE "2020-12/vocab/applicator", "prefixItems",
                        "items", "contains")
   WALK(HTTPS_BASE "2020-12/vocab/content", "contentSchema",
-       ApplicatorValueInPlace)
+       ApplicatorValueOther)
   WALK(HTTPS_BASE "2020-12/vocab/content", "contentMediaType", Annotation)
   WALK(HTTPS_BASE "2020-12/vocab/content", "contentEncoding", Annotation)
   WALK(HTTPS_BASE "2020-12/vocab/format-assertion", "format", Assertion)
@@ -124,12 +124,12 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
        ApplicatorElementsInPlace)
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "oneOf",
        ApplicatorElementsInPlace)
-  WALK(HTTPS_BASE "2019-09/vocab/applicator", "if", ApplicatorValueInPlace)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "if", ApplicatorValueOther)
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "then", ApplicatorValueInPlace,
        "if")
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "else", ApplicatorValueInPlace,
        "if")
-  WALK(HTTPS_BASE "2019-09/vocab/applicator", "not", ApplicatorValueInPlace)
+  WALK(HTTPS_BASE "2019-09/vocab/applicator", "not", ApplicatorValueOther)
   // For the purpose of compiler optimizations
   WALK_MAYBE_DEPENDENT(HTTPS_BASE "2019-09/vocab/applicator", "properties",
                        ApplicatorMembers, HTTPS_BASE "2019-09/vocab/validation",
@@ -185,7 +185,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTPS_BASE "2019-09/vocab/meta-data", "default", Annotation)
   WALK(HTTPS_BASE "2019-09/vocab/format", "format", Annotation)
   WALK(HTTPS_BASE "2019-09/vocab/content", "contentSchema",
-       ApplicatorValueInPlace)
+       ApplicatorValueOther)
   WALK(HTTPS_BASE "2019-09/vocab/content", "contentMediaType", Annotation)
   WALK(HTTPS_BASE "2019-09/vocab/content", "contentEncoding", Annotation)
   WALK(HTTPS_BASE "2019-09/vocab/hyper-schema", "hrefSchema", ApplicatorValue)
@@ -234,13 +234,13 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-07/schema#", "dependencies", ApplicatorMembers, "$ref")
   WALK(HTTP_BASE "draft-07/schema#", "propertyNames", ApplicatorValueInPlace,
        "$ref")
-  WALK(HTTP_BASE "draft-07/schema#", "if", ApplicatorValueInPlace, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "if", ApplicatorValueOther, "$ref")
   WALK(HTTP_BASE "draft-07/schema#", "then", ApplicatorValueInPlace, "if")
   WALK(HTTP_BASE "draft-07/schema#", "else", ApplicatorValueInPlace, "if")
   WALK(HTTP_BASE "draft-07/schema#", "allOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-07/schema#", "anyOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-07/schema#", "oneOf", ApplicatorElementsInPlace, "$ref")
-  WALK(HTTP_BASE "draft-07/schema#", "not", ApplicatorValueInPlace, "$ref")
+  WALK(HTTP_BASE "draft-07/schema#", "not", ApplicatorValueOther, "$ref")
   WALK(HTTP_BASE "draft-07/schema#", "format", Other, "$ref")
   WALK(HTTP_BASE "draft-07/schema#", "contentEncoding", Other, "$ref")
   WALK(HTTP_BASE "draft-07/schema#", "contentMediaType", Other, "$ref")
@@ -308,7 +308,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-06/schema#", "allOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-06/schema#", "anyOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-06/schema#", "oneOf", ApplicatorElementsInPlace, "$ref")
-  WALK(HTTP_BASE "draft-06/schema#", "not", ApplicatorValueInPlace, "$ref")
+  WALK(HTTP_BASE "draft-06/schema#", "not", ApplicatorValueOther, "$ref")
   WALK(HTTP_BASE "draft-06/schema#", "format", Other, "$ref")
   WALK(HTTP_BASE "draft-06/schema#", "contentEncoding", Other, "$ref")
   WALK(HTTP_BASE "draft-06/schema#", "contentMediaType", Other, "$ref")
@@ -369,7 +369,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTP_BASE "draft-04/schema#", "allOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "anyOf", ApplicatorElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "oneOf", ApplicatorElementsInPlace, "$ref")
-  WALK(HTTP_BASE "draft-04/schema#", "not", ApplicatorValueInPlace, "$ref")
+  WALK(HTTP_BASE "draft-04/schema#", "not", ApplicatorValueOther, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "format", Other, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "definitions", LocationMembers, "$ref")
   WALK(HTTP_BASE "draft-04/schema#", "title", Other, "$ref")

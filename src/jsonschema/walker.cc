@@ -64,6 +64,8 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
     switch (walker(pair.first, vocabularies).strategy) {
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorValue:
         [[fallthrough]];
+      case sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorValueOther:
+        [[fallthrough]];
       case sourcemeta::jsontoolkit::SchemaWalkerStrategy::
           ApplicatorValueInPlace: {
         sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
