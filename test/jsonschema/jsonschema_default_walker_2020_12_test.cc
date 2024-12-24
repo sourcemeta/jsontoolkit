@@ -217,7 +217,7 @@ TEST(JSONSchema_default_walker_2020_12, applicator_dependentSchemas) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("dependentSchemas",
                                           VOCABULARIES_2020_12_APPLICATOR)};
-  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorMembers);
+  EXPECT_EQ(result.strategy, SchemaWalkerStrategy::ApplicatorMembersInPlace);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2020-12/vocab/applicator");

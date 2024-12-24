@@ -54,7 +54,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTPS_BASE "2020-12/vocab/applicator", "propertyNames",
        ApplicatorValueInPlace)
   WALK(HTTPS_BASE "2020-12/vocab/applicator", "dependentSchemas",
-       ApplicatorMembers)
+       ApplicatorMembersInPlace)
   WALK_MAYBE_DEPENDENT(
       HTTPS_BASE "2020-12/vocab/applicator", "contains", ApplicatorValueInPlace,
       HTTPS_BASE "2020-12/vocab/validation", "minContains", "maxContains")
@@ -141,7 +141,7 @@ auto sourcemeta::jsontoolkit::default_schema_walker(
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "propertyNames",
        ApplicatorValueInPlace)
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "dependentSchemas",
-       ApplicatorMembers)
+       ApplicatorMembersInPlace)
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "unevaluatedProperties",
        ApplicatorValue, "properties", "patternProperties",
        "additionalProperties")
