@@ -38,28 +38,33 @@ static auto test_walker(std::string_view keyword,
       vocabularies.end()) {
     if (keyword == "schema") {
       return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorValue,
+              "https://sourcemeta.com/vocab/test-1",
               {}};
     }
 
     if (keyword == "schemas") {
       return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorElements,
+              "https://sourcemeta.com/vocab/test-1",
               {}};
     }
 
     if (keyword == "schemaMap") {
       return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorMembers,
+              "https://sourcemeta.com/vocab/test-1",
               {}};
     }
 
     if (keyword == "schemaOrSchemas") {
       return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::
                   ApplicatorValueOrElements,
+              "https://sourcemeta.com/vocab/test-1",
               {}};
     }
 
     if (keyword == "schemasOrMap") {
       return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::
                   ApplicatorElementsOrMembers,
+              "https://sourcemeta.com/vocab/test-1",
               {}};
     }
   }
@@ -68,11 +73,13 @@ static auto test_walker(std::string_view keyword,
       vocabularies.end()) {
     if (keyword == "custom") {
       return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::ApplicatorValue,
+              "https://sourcemeta.com/vocab/test-2",
               {}};
     }
   }
 
-  return {sourcemeta::jsontoolkit::SchemaWalkerStrategy::Unknown, {}};
+  return {
+      sourcemeta::jsontoolkit::SchemaWalkerStrategy::Unknown, std::nullopt, {}};
 }
 
 TEST(JSONSchema_walker, true) {
