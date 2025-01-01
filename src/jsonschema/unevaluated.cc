@@ -29,7 +29,7 @@ auto find_adjacent_dependencies(
     const std::set<JSON::String> &keywords, const FrameLocationsEntry &root,
     const FrameLocationsEntry &entry, const bool is_static,
     UnevaluatedEntry &result) -> void {
-  const auto &subschema{get(schema, entry.relative_pointer)};
+  const auto &subschema{get(schema, entry.pointer)};
   if (!subschema.is_object()) {
     return;
   }

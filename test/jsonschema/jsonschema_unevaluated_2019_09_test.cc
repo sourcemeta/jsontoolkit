@@ -78,6 +78,49 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_2) {
                               "https://example.com#/unevaluatedProperties");
 }
 
+TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_3) {
+  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "https://example.com",
+    "$recursiveAnchor": true,
+    "$ref": "tree",
+    "properties": { "name": true },
+    "$defs": {
+      "tree": {
+        "$id": "tree",
+        "$recursiveAnchor": true,
+        "properties": {
+          "branches": {
+            "unevaluatedProperties": false,
+            "$recursiveRef": "#"
+          }
+        }
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
+  sourcemeta::jsontoolkit::frame(schema, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver);
+  const auto result{sourcemeta::jsontoolkit::unevaluated(
+      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver)};
+
+  EXPECT_EQ(result.size(), 1);
+
+  EXPECT_UNEVALUATED_STATIC(
+      result,
+      "https://example.com/tree#/properties/branches/unevaluatedProperties", 0);
+  EXPECT_UNEVALUATED_DYNAMIC(
+      result,
+      "https://example.com/tree#/properties/branches/unevaluatedProperties", 0);
+  EXPECT_UNEVALUATED_UNRESOLVED(
+      result,
+      "https://example.com/tree#/properties/branches/unevaluatedProperties");
+}
+
 TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_1) {
   const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
