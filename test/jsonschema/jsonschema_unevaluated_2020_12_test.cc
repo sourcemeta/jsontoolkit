@@ -139,7 +139,9 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_4) {
 
   EXPECT_UNEVALUATED_STATIC(result, "#/unevaluatedProperties", 0);
 
-  EXPECT_UNEVALUATED_DYNAMIC(result, "#/unevaluatedProperties", 3);
+  EXPECT_UNEVALUATED_DYNAMIC(result, "#/unevaluatedProperties", 4);
+  EXPECT_UNEVALUATED_DYNAMIC_DEPENDENCY(result, "#/unevaluatedProperties",
+                                        "/if/properties");
   EXPECT_UNEVALUATED_DYNAMIC_DEPENDENCY(result, "#/unevaluatedProperties",
                                         "/then/properties");
   EXPECT_UNEVALUATED_DYNAMIC_DEPENDENCY(result, "#/unevaluatedProperties",
