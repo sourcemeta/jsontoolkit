@@ -186,3 +186,26 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_2) {
                              0);
   EXPECT_UNEVALUATED_RESOLVED(result, "https://example.com#/unevaluatedItems");
 }
+
+TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_3) {
+  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalItems": {"type": "number"},
+    "unevaluatedItems": {"type": "string"}
+  })JSON");
+
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
+  sourcemeta::jsontoolkit::frame(schema, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver);
+  const auto result{sourcemeta::jsontoolkit::unevaluated(
+      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver)};
+
+  EXPECT_EQ(result.size(), 1);
+
+  EXPECT_UNEVALUATED_STATIC(result, "#/unevaluatedItems", 0);
+  EXPECT_UNEVALUATED_DYNAMIC(result, "#/unevaluatedItems", 0);
+  EXPECT_UNEVALUATED_RESOLVED(result, "#/unevaluatedItems");
+}

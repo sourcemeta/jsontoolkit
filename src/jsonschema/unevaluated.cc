@@ -41,6 +41,13 @@ auto find_adjacent_dependencies(
     if (property.first == current && entry.pointer == root.pointer) {
       continue;
     } else if (keywords.contains(property.first)) {
+      // In 2019-09, `additionalItems` takes no effect without `items`
+      if (subschema_vocabularies.contains(
+              "https://json-schema.org/draft/2019-09/vocab/applicator") &&
+          property.first == "additionalItems" && !subschema.defines("items")) {
+        continue;
+      }
+
       auto pointer{entry.pointer.concat({property.first})};
       if (is_static) {
         result.static_dependencies.emplace(std::move(pointer));
