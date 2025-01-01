@@ -41,7 +41,7 @@ auto find_adjacent_dependencies(
     if (property.first == current && entry.pointer == root.pointer) {
       continue;
     } else if (keywords.contains(property.first)) {
-      auto pointer{entry.relative_pointer.concat({property.first})};
+      auto pointer{entry.pointer.concat({property.first})};
       if (is_static) {
         result.static_dependencies.emplace(std::move(pointer));
       } else {
