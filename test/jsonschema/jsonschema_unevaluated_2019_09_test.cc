@@ -150,3 +150,39 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_1) {
 
   EXPECT_UNEVALUATED_RESOLVED(result, "#/unevaluatedItems");
 }
+
+TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_2) {
+  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "https://example.com",
+    "$ref": "test",
+    "$recursiveAnchor": true,
+    "unevaluatedItems": false,
+    "$defs": {
+      "test": {
+        "$id": "test",
+        "$recursiveAnchor": true,
+        "items": [ { "$ref": "#" } ]
+      }
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
+  sourcemeta::jsontoolkit::frame(schema, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver);
+  const auto result{sourcemeta::jsontoolkit::unevaluated(
+      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver)};
+
+  EXPECT_EQ(result.size(), 1);
+
+  EXPECT_UNEVALUATED_STATIC(result, "https://example.com#/unevaluatedItems", 1);
+  EXPECT_UNEVALUATED_STATIC_DEPENDENCY(
+      result, "https://example.com#/unevaluatedItems", "/$defs/test/items");
+
+  EXPECT_UNEVALUATED_DYNAMIC(result, "https://example.com#/unevaluatedItems",
+                             0);
+  EXPECT_UNEVALUATED_RESOLVED(result, "https://example.com#/unevaluatedItems");
+}
