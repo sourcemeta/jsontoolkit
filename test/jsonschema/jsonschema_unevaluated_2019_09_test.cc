@@ -121,6 +121,49 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_3) {
       "https://example.com/tree#/properties/branches/unevaluatedProperties");
 }
 
+TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_4) {
+  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "properties": { "foo": true },
+    "unevaluatedProperties": false,
+    "anyOf": [
+      {
+        "properties": {
+          "bar": { "const": "bar" }
+        }
+      },
+      {
+        "properties": {
+          "baz": { "const": "baz" }
+        }
+      }
+    ]
+  })JSON");
+
+  sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
+  sourcemeta::jsontoolkit::frame(schema, frame, references,
+                                 sourcemeta::jsontoolkit::default_schema_walker,
+                                 sourcemeta::jsontoolkit::official_resolver);
+  const auto result{sourcemeta::jsontoolkit::unevaluated(
+      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver)};
+
+  EXPECT_EQ(result.size(), 1);
+
+  EXPECT_UNEVALUATED_STATIC(result, "#/unevaluatedProperties", 1);
+  EXPECT_UNEVALUATED_STATIC_DEPENDENCY(result, "#/unevaluatedProperties",
+                                       "/properties");
+
+  EXPECT_UNEVALUATED_DYNAMIC(result, "#/unevaluatedProperties", 2);
+  EXPECT_UNEVALUATED_DYNAMIC_DEPENDENCY(result, "#/unevaluatedProperties",
+                                        "/anyOf/0/properties");
+  EXPECT_UNEVALUATED_DYNAMIC_DEPENDENCY(result, "#/unevaluatedProperties",
+                                        "/anyOf/1/properties");
+
+  EXPECT_UNEVALUATED_RESOLVED(result, "#/unevaluatedProperties");
+}
+
 TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_1) {
   const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
