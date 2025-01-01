@@ -26,13 +26,17 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_1) {
 
   EXPECT_EQ(result.size(), 1);
 
-  EXPECT_UNEVALUATED_DYNAMIC(result, "#/unevaluatedProperties", 3);
-  EXPECT_UNEVALUATED_DEPENDENCY(result, "#/unevaluatedProperties",
-                                "/properties");
-  EXPECT_UNEVALUATED_DEPENDENCY(result, "#/unevaluatedProperties",
-                                "/patternProperties");
-  EXPECT_UNEVALUATED_DEPENDENCY(result, "#/unevaluatedProperties",
-                                "/additionalProperties");
+  EXPECT_UNEVALUATED_STATIC(result, "#/unevaluatedProperties", 3);
+  EXPECT_UNEVALUATED_STATIC_DEPENDENCY(result, "#/unevaluatedProperties",
+                                       "/properties");
+  EXPECT_UNEVALUATED_STATIC_DEPENDENCY(result, "#/unevaluatedProperties",
+                                       "/patternProperties");
+  EXPECT_UNEVALUATED_STATIC_DEPENDENCY(result, "#/unevaluatedProperties",
+                                       "/additionalProperties");
+
+  EXPECT_UNEVALUATED_DYNAMIC(result, "#/unevaluatedProperties", 0);
+
+  EXPECT_UNEVALUATED_RESOLVED(result, "#/unevaluatedProperties");
 }
 
 TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_2) {
@@ -56,16 +60,22 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_2) {
 
   EXPECT_EQ(result.size(), 1);
 
-  EXPECT_UNEVALUATED_DYNAMIC(result,
-                             "https://example.com#/unevaluatedProperties", 3);
-  EXPECT_UNEVALUATED_DEPENDENCY(
+  EXPECT_UNEVALUATED_STATIC(result,
+                            "https://example.com#/unevaluatedProperties", 3);
+  EXPECT_UNEVALUATED_STATIC_DEPENDENCY(
       result, "https://example.com#/unevaluatedProperties", "/properties");
-  EXPECT_UNEVALUATED_DEPENDENCY(result,
-                                "https://example.com#/unevaluatedProperties",
-                                "/patternProperties");
-  EXPECT_UNEVALUATED_DEPENDENCY(result,
-                                "https://example.com#/unevaluatedProperties",
-                                "/additionalProperties");
+  EXPECT_UNEVALUATED_STATIC_DEPENDENCY(
+      result, "https://example.com#/unevaluatedProperties",
+      "/patternProperties");
+  EXPECT_UNEVALUATED_STATIC_DEPENDENCY(
+      result, "https://example.com#/unevaluatedProperties",
+      "/additionalProperties");
+
+  EXPECT_UNEVALUATED_DYNAMIC(result,
+                             "https://example.com#/unevaluatedProperties", 0);
+
+  EXPECT_UNEVALUATED_RESOLVED(result,
+                              "https://example.com#/unevaluatedProperties");
 }
 
 TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_1) {
@@ -88,8 +98,12 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_1) {
 
   EXPECT_EQ(result.size(), 1);
 
-  EXPECT_UNEVALUATED_DYNAMIC(result, "#/unevaluatedItems", 2);
-  EXPECT_UNEVALUATED_DEPENDENCY(result, "#/unevaluatedItems", "/items");
-  EXPECT_UNEVALUATED_DEPENDENCY(result, "#/unevaluatedItems",
-                                "/additionalItems");
+  EXPECT_UNEVALUATED_STATIC(result, "#/unevaluatedItems", 2);
+  EXPECT_UNEVALUATED_STATIC_DEPENDENCY(result, "#/unevaluatedItems", "/items");
+  EXPECT_UNEVALUATED_STATIC_DEPENDENCY(result, "#/unevaluatedItems",
+                                       "/additionalItems");
+
+  EXPECT_UNEVALUATED_DYNAMIC(result, "#/unevaluatedItems", 0);
+
+  EXPECT_UNEVALUATED_RESOLVED(result, "#/unevaluatedItems");
 }
