@@ -21,8 +21,6 @@ TEST(JSON_null, literal_equality) {
 
 TEST(JSON_null, estimated_byte_size) {
   const sourcemeta::jsontoolkit::JSON document{nullptr};
-  // TODO: Use a different internal type for representing nulls,
-  // as this is otherwise 64 bytes?
   EXPECT_EQ(document.estimated_byte_size(), 8);
 }
 
