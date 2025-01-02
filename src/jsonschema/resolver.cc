@@ -95,8 +95,8 @@ auto FlatFileSchemaResolver::add(
     throw SchemaError(error.str());
   }
 
-  const auto result{this->schemas.emplace(
-      identifier.value(), Entry{canonical, default_dialect, default_id})};
+  const auto result{this->schemas.emplace(identifier.value(),
+                                          Entry{canonical, default_dialect})};
   if (!result.second && result.first->second.path != canonical) {
     std::ostringstream error;
     error << "Cannot register the same identifier twice: "
@@ -119,15 +119,8 @@ auto FlatFileSchemaResolver::operator()(std::string_view identifier) const
       schema.assign("$schema", JSON{result->second.default_dialect.value()});
     }
 
-    const auto schema_identifier{sourcemeta::jsontoolkit::identify(
-        schema, *this, IdentificationStrategy::Strict,
-        result->second.default_dialect)};
-    if (!schema_identifier.has_value() &&
-        result->second.default_id.has_value()) {
-      sourcemeta::jsontoolkit::reidentify(
-          schema, result->second.default_id.value(), *this,
-          result->second.default_dialect);
-    }
+    sourcemeta::jsontoolkit::reidentify(schema, result->first, *this,
+                                        result->second.default_dialect);
 
     return schema;
   }

@@ -141,7 +141,6 @@ public:
   struct Entry {
     const std::filesystem::path path;
     const std::optional<std::string> default_dialect;
-    const std::optional<std::string> default_id;
   };
 
 private:
