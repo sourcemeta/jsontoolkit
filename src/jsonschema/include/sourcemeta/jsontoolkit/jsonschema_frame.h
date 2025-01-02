@@ -67,6 +67,7 @@ struct FrameLocationsEntry {
   Pointer pointer;
   Pointer relative_pointer;
   std::string dialect;
+  std::string base_dialect;
   std::vector<std::reference_wrapper<const FrameReferences::key_type>>
       destination_of;
 };
