@@ -58,11 +58,9 @@ auto find_adjacent_dependencies(
       continue;
     }
 
-    const auto strategy{
-        walker(property.first, subschema_vocabularies).strategy};
-    switch (strategy) {
+    switch (walker(property.first, subschema_vocabularies).type) {
       // References
-      case SchemaWalkerStrategy::Reference:
+      case KeywordType::Reference:
         if (references.contains({ReferenceType::Static,
                                  entry.pointer.concat({property.first})})) {
           const auto &reference{references.at(
@@ -82,7 +80,7 @@ auto find_adjacent_dependencies(
         break;
 
       // Static
-      case SchemaWalkerStrategy::ApplicatorElementsInline:
+      case KeywordType::ApplicatorElementsInline:
         for (std::size_t index = 0; index < property.second.size(); index++) {
           find_adjacent_dependencies(
               current, schema, frame, references, walker, resolver, keywords,
@@ -93,7 +91,7 @@ auto find_adjacent_dependencies(
         break;
 
       // Dynamic
-      case SchemaWalkerStrategy::ApplicatorElementsInPlace:
+      case KeywordType::ApplicatorElementsInPlace:
         if (property.second.is_array()) {
           for (std::size_t index = 0; index < property.second.size(); index++) {
             find_adjacent_dependencies(
@@ -104,7 +102,7 @@ auto find_adjacent_dependencies(
         }
 
         break;
-      case SchemaWalkerStrategy::ApplicatorValueInPlace:
+      case KeywordType::ApplicatorValueInPlace:
         if (is_schema(property.second)) {
           find_adjacent_dependencies(
               current, schema, frame, references, walker, resolver, keywords,
@@ -113,7 +111,7 @@ auto find_adjacent_dependencies(
         }
 
         break;
-      case SchemaWalkerStrategy::ApplicatorValueOrElementsInPlace:
+      case KeywordType::ApplicatorValueOrElementsInPlace:
         if (property.second.is_array()) {
           for (std::size_t index = 0; index < property.second.size(); index++) {
             find_adjacent_dependencies(
@@ -129,7 +127,7 @@ auto find_adjacent_dependencies(
         }
 
         break;
-      case SchemaWalkerStrategy::ApplicatorMembersInPlace:
+      case KeywordType::ApplicatorMembersInPlace:
         if (property.second.is_object()) {
           for (const auto &pair : property.second.as_object()) {
             find_adjacent_dependencies(
