@@ -82,7 +82,7 @@ FlatFileSchemaResolver::FlatFileSchemaResolver(const SchemaResolver &resolver)
 auto FlatFileSchemaResolver::add(
     const std::filesystem::path &path,
     const std::optional<std::string> &default_dialect,
-    const std::optional<std::string> &default_id) -> void {
+    const std::optional<std::string> &default_id) -> const std::string & {
   const auto canonical{std::filesystem::canonical(path)};
   const auto schema{sourcemeta::jsontoolkit::from_file(canonical)};
   assert(sourcemeta::jsontoolkit::is_schema(schema));
@@ -103,6 +103,8 @@ auto FlatFileSchemaResolver::add(
           << identifier.value();
     throw SchemaError(error.str());
   }
+
+  return result.first->first;
 }
 
 auto FlatFileSchemaResolver::operator()(std::string_view identifier) const

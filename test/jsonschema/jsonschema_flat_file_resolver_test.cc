@@ -22,7 +22,8 @@ TEST(JSONSchema_FlatFileSchemaResolver, single_schema) {
   sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id.json"};
-  resolver.add(schema_path);
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
@@ -39,8 +40,9 @@ TEST(JSONSchema_FlatFileSchemaResolver, single_schema_with_default_dialect) {
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
 
-  resolver.add(schema_path, "https://json-schema.org/draft/2020-12/schema");
-
+  const auto &identifier{resolver.add(
+      schema_path, "https://json-schema.org/draft/2020-12/schema")};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/only-id.json");
   EXPECT_TRUE(resolver("https://www.sourcemeta.com/only-id.json").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/only-id.json").value(),
             expected);
@@ -57,8 +59,9 @@ TEST(JSONSchema_FlatFileSchemaResolver, single_schema_anonymous_with_default) {
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
 
-  resolver.add(schema_path, std::nullopt, "https://www.sourcemeta.com/test");
-
+  const auto &identifier{resolver.add(schema_path, std::nullopt,
+                                      "https://www.sourcemeta.com/test")};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/test");
   EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/test").value(), expected);
 }
@@ -68,9 +71,13 @@ TEST(JSONSchema_FlatFileSchemaResolver, single_schema_idempotent) {
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id.json"};
 
-  resolver.add(schema_path);
-  resolver.add(schema_path);
-  resolver.add(schema_path);
+  const auto &identifier_1{resolver.add(schema_path)};
+  const auto &identifier_2{resolver.add(schema_path)};
+  const auto &identifier_3{resolver.add(schema_path)};
+
+  EXPECT_EQ(identifier_1, "https://www.sourcemeta.com/2020-12-id.json");
+  EXPECT_EQ(identifier_2, "https://www.sourcemeta.com/2020-12-id.json");
+  EXPECT_EQ(identifier_3, "https://www.sourcemeta.com/2020-12-id.json");
 
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
@@ -86,7 +93,8 @@ TEST(JSONSchema_FlatFileSchemaResolver, duplicate_ids) {
   const auto schema_path_2{std::filesystem::path{SCHEMAS_PATH} /
                            "2020-12-id-duplicate.json"};
 
-  resolver.add(schema_path_1);
+  const auto &identifier{resolver.add(schema_path_1)};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
   EXPECT_THROW(resolver.add(schema_path_2),
                sourcemeta::jsontoolkit::SchemaError);
 }
@@ -96,7 +104,8 @@ TEST(JSONSchema_FlatFileSchemaResolver, no_embedded_resource) {
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-embedded.json"};
 
-  resolver.add(schema_path);
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-embedded.json");
 
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-embedded.json").has_value());
@@ -113,7 +122,9 @@ TEST(JSONSchema_FlatFileSchemaResolver, metaschema_out_of_order) {
   const auto metaschema_path{std::filesystem::path{SCHEMAS_PATH} /
                              "2020-12-meta-1.json"};
 
-  resolver.add(schema_path);
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier,
+            "https://www.sourcemeta.com/2020-12-meta-1-schema.json");
 
   // We can't resolve it yet until eventually satisfying the metaschema
   EXPECT_THROW(
@@ -121,7 +132,9 @@ TEST(JSONSchema_FlatFileSchemaResolver, metaschema_out_of_order) {
       sourcemeta::jsontoolkit::SchemaResolutionError);
 
   // Note we add the metaschema AFTER the schema
-  resolver.add(metaschema_path);
+  const auto &metaschema_identifier{resolver.add(metaschema_path)};
+  EXPECT_EQ(metaschema_identifier,
+            "https://www.sourcemeta.com/2020-12-meta-1.json");
 
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-meta-1.json").has_value());
@@ -139,7 +152,8 @@ TEST(JSONSchema_FlatFileSchemaResolver, iterators) {
   sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id.json"};
-  resolver.add(schema_path);
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
 
   std::vector<std::string> identifiers;
   std::vector<sourcemeta::jsontoolkit::FlatFileSchemaResolver::Entry> entries;
