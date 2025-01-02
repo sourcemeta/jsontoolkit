@@ -53,10 +53,10 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
                    const std::string &container,
                    const sourcemeta::jsontoolkit::JSON &subschema,
                    sourcemeta::jsontoolkit::FrameLocations &frame,
+                   sourcemeta::jsontoolkit::FrameReferences &references,
                    const sourcemeta::jsontoolkit::SchemaWalker &walker,
                    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
                    const std::optional<std::string> &default_dialect) -> void {
-  sourcemeta::jsontoolkit::FrameReferences references;
   sourcemeta::jsontoolkit::frame(subschema, frame, references, walker, resolver,
                                  default_dialect);
 
@@ -70,6 +70,19 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
         // virtually all implementations to understand them out of the box
         is_official_metaschema_reference(key.second, reference.destination)) {
       continue;
+    }
+
+    // If we can't find the destination but there is a base and we can
+    // find base, then we are facing an unresolved fragment
+    if (reference.base.has_value()) {
+      if (frame.contains({sourcemeta::jsontoolkit::ReferenceType::Static,
+                          reference.base.value()}) ||
+          frame.contains({sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+                          reference.base.value()})) {
+        throw sourcemeta::jsontoolkit::SchemaReferenceError(
+            reference.destination, key.second,
+            "Could not resolve schema reference");
+      }
     }
 
     root.assign_if_missing(container,
@@ -121,7 +134,7 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
     }
 
     embed_schema(root.at(container), identifier, copy);
-    bundle_schema(root, container, copy, frame, walker, resolver,
+    bundle_schema(root, container, copy, frame, references, walker, resolver,
                   default_dialect);
   }
 }
@@ -197,8 +210,9 @@ auto bundle(sourcemeta::jsontoolkit::JSON &schema, const SchemaWalker &walker,
   const auto vocabularies{
       sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)};
   sourcemeta::jsontoolkit::FrameLocations frame;
+  sourcemeta::jsontoolkit::FrameReferences references;
   bundle_schema(schema, definitions_keyword(vocabularies), schema, frame,
-                walker, resolver, default_dialect);
+                references, walker, resolver, default_dialect);
 
   if (options == BundleOptions::WithoutIdentifiers) {
     remove_identifiers(schema, walker, resolver, default_dialect);

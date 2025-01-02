@@ -265,6 +265,22 @@ TEST(JSONSchema_bundle_2020_12, schema_not_found) {
                sourcemeta::jsontoolkit::SchemaResolutionError);
 }
 
+TEST(JSONSchema_bundle_2020_12, anchor_not_found) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": { "$ref": "https://example.com/foo/bar#xxxxxxxx" }
+    }
+  })JSON");
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::bundle(
+                   document, sourcemeta::jsontoolkit::default_schema_walker,
+                   test_resolver),
+               sourcemeta::jsontoolkit::SchemaReferenceError);
+}
+
 TEST(JSONSchema_bundle_2020_12, idempotency) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
