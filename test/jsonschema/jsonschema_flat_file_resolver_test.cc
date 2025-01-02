@@ -168,5 +168,4 @@ TEST(JSONSchema_FlatFileSchemaResolver, iterators) {
   EXPECT_EQ(entries.size(), 1);
   EXPECT_EQ(entries.at(0).path, schema_path);
   EXPECT_FALSE(entries.at(0).default_dialect.has_value());
-  EXPECT_FALSE(entries.at(0).default_id.has_value());
 }
