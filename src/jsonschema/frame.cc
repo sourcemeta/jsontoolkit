@@ -99,7 +99,7 @@ static auto store(sourcemeta::jsontoolkit::FrameLocations &frame,
                   const std::string &base_id,
                   const sourcemeta::jsontoolkit::Pointer &pointer_from_root,
                   const sourcemeta::jsontoolkit::Pointer &pointer_from_base,
-                  const std::string &dialect,
+                  const std::string &dialect, const std::string &base_dialect,
                   const bool ignore_if_present = false) -> void {
   const auto canonical{
       sourcemeta::jsontoolkit::URI{uri}.canonicalize().recompose()};
@@ -111,6 +111,7 @@ static auto store(sourcemeta::jsontoolkit::FrameLocations &frame,
                                     pointer_from_root,
                                     pointer_from_base,
                                     dialect,
+                                    base_dialect,
                                     {}}})
                           .second};
   if (!ignore_if_present && !inserted) {
@@ -165,7 +166,8 @@ auto sourcemeta::jsontoolkit::frame(
     store(frame, ReferenceType::Static, FrameLocationType::Resource,
           default_id.value(), root_id.value(), root_id.value(),
           sourcemeta::jsontoolkit::empty_pointer,
-          sourcemeta::jsontoolkit::empty_pointer, root_dialect.value());
+          sourcemeta::jsontoolkit::empty_pointer, root_dialect.value(),
+          root_base_dialect.value());
     base_uris.insert(
         {sourcemeta::jsontoolkit::empty_pointer, {default_id.value()}});
   }
@@ -224,10 +226,12 @@ auto sourcemeta::jsontoolkit::frame(
 
           if (!maybe_relative_is_absolute ||
               !frame.contains({ReferenceType::Static, new_id})) {
+            assert(entry.common.base_dialect.has_value());
             store(frame, ReferenceType::Static, FrameLocationType::Resource,
                   new_id, root_id, new_id, entry.common.pointer,
                   sourcemeta::jsontoolkit::empty_pointer,
-                  entry.common.dialect.value());
+                  entry.common.dialect.value(),
+                  entry.common.base_dialect.value());
           }
 
           if (base_uris.contains(entry.common.pointer)) {
@@ -275,7 +279,8 @@ auto sourcemeta::jsontoolkit::frame(
           store(frame, ReferenceType::Static, FrameLocationType::Anchor,
                 relative_anchor_uri, root_id, "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
-                entry.common.dialect.value());
+                entry.common.dialect.value(),
+                entry.common.base_dialect.value());
         }
 
         if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
@@ -283,7 +288,8 @@ auto sourcemeta::jsontoolkit::frame(
           store(frame, ReferenceType::Dynamic, FrameLocationType::Anchor,
                 relative_anchor_uri, root_id, "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
-                entry.common.dialect.value());
+                entry.common.dialect.value(),
+                entry.common.base_dialect.value());
 
           // Register a dynamic anchor as a static anchor if possible too
           if (entry.common.vocabularies.contains(
@@ -291,7 +297,8 @@ auto sourcemeta::jsontoolkit::frame(
             store(frame, ReferenceType::Static, FrameLocationType::Anchor,
                   relative_anchor_uri, root_id, "", entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
-                  entry.common.dialect.value(), true);
+                  entry.common.dialect.value(),
+                  entry.common.base_dialect.value(), true);
           }
         }
       } else {
@@ -321,7 +328,8 @@ auto sourcemeta::jsontoolkit::frame(
                   FrameLocationType::Anchor, anchor_uri, root_id, base_string,
                   entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
-                  entry.common.dialect.value());
+                  entry.common.dialect.value(),
+                  entry.common.base_dialect.value());
           }
 
           if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
@@ -330,7 +338,8 @@ auto sourcemeta::jsontoolkit::frame(
                   FrameLocationType::Anchor, anchor_uri, root_id, base_string,
                   entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
-                  entry.common.dialect.value());
+                  entry.common.dialect.value(),
+                  entry.common.base_dialect.value());
 
             // Register a dynamic anchor as a static anchor if possible too
             if (entry.common.vocabularies.contains(
@@ -339,7 +348,8 @@ auto sourcemeta::jsontoolkit::frame(
                     FrameLocationType::Anchor, anchor_uri, root_id, base_string,
                     entry.common.pointer,
                     entry.common.pointer.resolve_from(bases.second),
-                    entry.common.dialect.value(), true);
+                    entry.common.dialect.value(),
+                    entry.common.base_dialect.value(), true);
             }
           }
 
@@ -377,16 +387,23 @@ auto sourcemeta::jsontoolkit::frame(
         const auto nearest_bases{
             find_nearest_bases(base_uris, pointer, base.first)};
         assert(!nearest_bases.first.empty());
+        const auto &current_base{nearest_bases.first.front()};
+        const auto maybe_base_entry{
+            frame.find({ReferenceType::Static, current_base})};
+        const auto current_base_dialect{
+            maybe_base_entry == frame.cend()
+                ? root_base_dialect.value()
+                : maybe_base_entry->second.base_dialect};
         if (subschemas.contains(pointer)) {
           store(frame, ReferenceType::Static, FrameLocationType::Subschema,
-                result, root_id, nearest_bases.first.front(), pointer,
+                result, root_id, current_base, pointer,
                 pointer.resolve_from(nearest_bases.second),
-                dialects.first.front());
+                dialects.first.front(), current_base_dialect);
         } else {
           store(frame, ReferenceType::Static, FrameLocationType::Pointer,
-                result, root_id, nearest_bases.first.front(), pointer,
+                result, root_id, current_base, pointer,
                 pointer.resolve_from(nearest_bases.second),
-                dialects.first.front());
+                dialects.first.front(), current_base_dialect);
         }
       }
     }

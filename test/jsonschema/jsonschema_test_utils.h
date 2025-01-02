@@ -9,7 +9,8 @@
   sourcemeta::jsontoolkit::to_pointer((pointer_string))
 
 #define EXPECT_FRAME(frame, expected_type, reference, root_id,                 \
-                     expected_pointer, expected_dialect, expected_base,        \
+                     expected_pointer, expected_dialect,                       \
+                     expected_base_dialect, expected_base,                     \
                      expected_relative_pointer, expected_destination_of_size)  \
   EXPECT_TRUE((frame).contains({(expected_type), (reference)}));               \
   EXPECT_TRUE((frame).at({(expected_type), (reference)}).root.has_value());    \
@@ -20,24 +21,28 @@
   EXPECT_EQ((frame).at({(expected_type), (reference)}).dialect,                \
             (expected_dialect));                                               \
   EXPECT_EQ((frame).at({(expected_type), (reference)}).base, (expected_base)); \
+  EXPECT_EQ((frame).at({(expected_type), (reference)}).base_dialect,           \
+            (expected_base_dialect));                                          \
   EXPECT_EQ((frame).at({(expected_type), (reference)}).relative_pointer,       \
             TO_POINTER(expected_relative_pointer));                            \
   EXPECT_EQ((frame).at({(expected_type), (reference)}).destination_of.size(),  \
             expected_destination_of_size);
 
-#define EXPECT_FRAME_STATIC(                                                   \
-    frame, reference, root_id, expected_pointer, expected_dialect,             \
-    expected_base, expected_relative_pointer, expected_destination_of_size)    \
+#define EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,       \
+                            expected_dialect, expected_base_dialect,           \
+                            expected_base, expected_relative_pointer,          \
+                            expected_destination_of_size)                      \
   EXPECT_FRAME(frame, sourcemeta::jsontoolkit::ReferenceType::Static,          \
                reference, root_id, expected_pointer, expected_dialect,         \
-               expected_base, expected_relative_pointer,                       \
-               expected_destination_of_size)
+               expected_base_dialect, expected_base,                           \
+               expected_relative_pointer, expected_destination_of_size)
 
 #define EXPECT_FRAME_STATIC_RESOURCE(                                          \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
-    expected_base, expected_relative_pointer, expected_destination_of_size)    \
+    expected_base_dialect, expected_base, expected_relative_pointer,           \
+    expected_destination_of_size)                                              \
   EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,             \
-                      expected_dialect, expected_base,                         \
+                      expected_dialect, expected_base_dialect, expected_base,  \
                       expected_relative_pointer, expected_destination_of_size) \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
@@ -47,9 +52,10 @@
 
 #define EXPECT_FRAME_STATIC_POINTER(                                           \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
-    expected_base, expected_relative_pointer, expected_destination_of_size)    \
+    expected_base_dialect, expected_base, expected_relative_pointer,           \
+    expected_destination_of_size)                                              \
   EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,             \
-                      expected_dialect, expected_base,                         \
+                      expected_dialect, expected_base_dialect, expected_base,  \
                       expected_relative_pointer, expected_destination_of_size) \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
@@ -59,9 +65,10 @@
 
 #define EXPECT_FRAME_STATIC_SUBSCHEMA(                                         \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
-    expected_base, expected_relative_pointer, expected_destination_of_size)    \
+    expected_base_dialect, expected_base, expected_relative_pointer,           \
+    expected_destination_of_size)                                              \
   EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,             \
-                      expected_dialect, expected_base,                         \
+                      expected_dialect, expected_base_dialect, expected_base,  \
                       expected_relative_pointer, expected_destination_of_size) \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
@@ -71,9 +78,10 @@
 
 #define EXPECT_FRAME_STATIC_ANCHOR(                                            \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
-    expected_base, expected_relative_pointer, expected_destination_of_size)    \
+    expected_base_dialect, expected_base, expected_relative_pointer,           \
+    expected_destination_of_size)                                              \
   EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,             \
-                      expected_dialect, expected_base,                         \
+                      expected_dialect, expected_base_dialect, expected_base,  \
                       expected_relative_pointer, expected_destination_of_size) \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
@@ -83,49 +91,56 @@
 
 #define EXPECT_FRAME_DYNAMIC_ANCHOR(                                           \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
-    expected_base, expected_relative_pointer, expected_destination_of_size)    \
-  EXPECT_FRAME_DYNAMIC(                                                        \
-      frame, reference, root_id, expected_pointer, expected_dialect,           \
-      expected_base, expected_relative_pointer, expected_destination_of_size)  \
+    expected_base_dialect, expected_base, expected_relative_pointer,           \
+    expected_destination_of_size)                                              \
+  EXPECT_FRAME_DYNAMIC(frame, reference, root_id, expected_pointer,            \
+                       expected_dialect, expected_base_dialect, expected_base, \
+                       expected_relative_pointer,                              \
+                       expected_destination_of_size)                           \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Dynamic, (reference)})  \
           .type,                                                               \
       sourcemeta::jsontoolkit::FrameLocationType::Anchor);
 
-#define EXPECT_FRAME_DYNAMIC(                                                  \
-    frame, reference, root_id, expected_pointer, expected_dialect,             \
-    expected_base, expected_relative_pointer, expected_destination_of_size)    \
+#define EXPECT_FRAME_DYNAMIC(frame, reference, root_id, expected_pointer,      \
+                             expected_dialect, expected_base_dialect,          \
+                             expected_base, expected_relative_pointer,         \
+                             expected_destination_of_size)                     \
   EXPECT_FRAME(frame, sourcemeta::jsontoolkit::ReferenceType::Dynamic,         \
                reference, root_id, expected_pointer, expected_dialect,         \
-               expected_base, expected_relative_pointer,                       \
-               expected_destination_of_size)
+               expected_base_dialect, expected_base,                           \
+               expected_relative_pointer, expected_destination_of_size)
 
-#define __EXPECT_ANONYMOUS_FRAME(frame, expected_type, reference,              \
-                                 expected_pointer, expected_dialect,           \
-                                 expected_destination_of_size)                 \
+#define __EXPECT_ANONYMOUS_FRAME(                                              \
+    frame, expected_type, reference, expected_pointer, expected_dialect,       \
+    expected_base_dialect, expected_destination_of_size)                       \
   EXPECT_TRUE((frame).contains({(expected_type), (reference)}));               \
   EXPECT_FALSE((frame).at({(expected_type), (reference)}).root.has_value());   \
   EXPECT_EQ((frame).at({(expected_type), (reference)}).pointer,                \
             TO_POINTER(expected_pointer));                                     \
   EXPECT_EQ((frame).at({(expected_type), (reference)}).dialect,                \
             (expected_dialect));                                               \
+  EXPECT_EQ((frame).at({(expected_type), (reference)}).base_dialect,           \
+            (expected_base_dialect));                                          \
   EXPECT_EQ((frame).at({(expected_type), (reference)}).destination_of.size(),  \
             (expected_destination_of_size));
 
 #define EXPECT_ANONYMOUS_FRAME_STATIC(frame, reference, expected_pointer,      \
-                                      expected_dialect,                        \
+                                      expected_dialect, expected_base_dialect, \
                                       expected_destination_of_size)            \
   __EXPECT_ANONYMOUS_FRAME(                                                    \
       frame, sourcemeta::jsontoolkit::ReferenceType::Static, reference,        \
-      expected_pointer, expected_dialect, expected_destination_of_size)
+      expected_pointer, expected_dialect, expected_base_dialect,               \
+      expected_destination_of_size)
 
 #define EXPECT_ANONYMOUS_FRAME_STATIC_RESOURCE(                                \
     frame, reference, expected_pointer, expected_dialect,                      \
-    expected_destination_of_size)                                              \
+    expected_base_dialect, expected_destination_of_size)                       \
   __EXPECT_ANONYMOUS_FRAME(                                                    \
       frame, sourcemeta::jsontoolkit::ReferenceType::Static, reference,        \
-      expected_pointer, expected_dialect, expected_destination_of_size)        \
+      expected_pointer, expected_dialect, expected_base_dialect,               \
+      expected_destination_of_size)                                            \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
@@ -134,10 +149,11 @@
 
 #define EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(                                 \
     frame, reference, expected_pointer, expected_dialect,                      \
-    expected_destination_of_size)                                              \
+    expected_base_dialect, expected_destination_of_size)                       \
   __EXPECT_ANONYMOUS_FRAME(                                                    \
       frame, sourcemeta::jsontoolkit::ReferenceType::Static, reference,        \
-      expected_pointer, expected_dialect, expected_destination_of_size)        \
+      expected_pointer, expected_dialect, expected_base_dialect,               \
+      expected_destination_of_size)                                            \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
@@ -146,10 +162,11 @@
 
 #define EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(                               \
     frame, reference, expected_pointer, expected_dialect,                      \
-    expected_destination_of_size)                                              \
+    expected_base_dialect, expected_destination_of_size)                       \
   __EXPECT_ANONYMOUS_FRAME(                                                    \
       frame, sourcemeta::jsontoolkit::ReferenceType::Static, reference,        \
-      expected_pointer, expected_dialect, expected_destination_of_size)        \
+      expected_pointer, expected_dialect, expected_base_dialect,               \
+      expected_destination_of_size)                                            \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
@@ -158,10 +175,11 @@
 
 #define EXPECT_ANONYMOUS_FRAME_STATIC_ANCHOR(                                  \
     frame, reference, expected_pointer, expected_dialect,                      \
-    expected_destination_of_size)                                              \
+    expected_base_dialect, expected_destination_of_size)                       \
   __EXPECT_ANONYMOUS_FRAME(                                                    \
       frame, sourcemeta::jsontoolkit::ReferenceType::Static, reference,        \
-      expected_pointer, expected_dialect, expected_destination_of_size)        \
+      expected_pointer, expected_dialect, expected_base_dialect,               \
+      expected_destination_of_size)                                            \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Static, (reference)})   \
@@ -170,10 +188,11 @@
 
 #define EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(                                 \
     frame, reference, expected_pointer, expected_dialect,                      \
-    expected_destination_of_size)                                              \
+    expected_base_dialect, expected_destination_of_size)                       \
   __EXPECT_ANONYMOUS_FRAME(                                                    \
       frame, sourcemeta::jsontoolkit::ReferenceType::Dynamic, reference,       \
-      expected_pointer, expected_dialect, expected_destination_of_size)        \
+      expected_pointer, expected_dialect, expected_base_dialect,               \
+      expected_destination_of_size)                                            \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .at({sourcemeta::jsontoolkit::ReferenceType::Dynamic, (reference)})  \
