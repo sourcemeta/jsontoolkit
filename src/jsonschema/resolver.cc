@@ -107,6 +107,15 @@ auto FlatFileSchemaResolver::add(
   return result.first->first;
 }
 
+auto FlatFileSchemaResolver::reidentify(const std::string &schema,
+                                        const std::string &new_identifier)
+    -> void {
+  const auto result{this->schemas.find(schema)};
+  assert(result != this->schemas.cend());
+  this->schemas.insert_or_assign(new_identifier, std::move(result->second));
+  this->schemas.erase(result);
+}
+
 auto FlatFileSchemaResolver::operator()(std::string_view identifier) const
     -> std::optional<JSON> {
   const std::string string_identifier{identifier};
