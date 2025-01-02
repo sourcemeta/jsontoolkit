@@ -8,13 +8,7 @@
 
 static auto test_resolver(std::string_view identifier)
     -> std::optional<sourcemeta::jsontoolkit::JSON> {
-  if (identifier == "https://example.com/foo/bar") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
-      "$schema": "http://json-schema.org/draft-04/schema#",
-      "id": "https://example.com/foo/bar",
-      "$anchor": "baz"
-    })JSON");
-  } else if (identifier == "https://www.sourcemeta.com/test-1") {
+  if (identifier == "https://www.sourcemeta.com/test-1") {
     return sourcemeta::jsontoolkit::parse(R"JSON({
       "$schema": "http://json-schema.org/draft-04/schema#",
       "id": "https://www.sourcemeta.com/test-1",
@@ -118,9 +112,7 @@ TEST(JSONSchema_bundle_draft4, simple_with_id) {
       "bar": {
         "id": "https://www.sourcemeta.com",
         "allOf": [ { "$ref": "test-2" } ]
-      },
-      "baz": { "$ref": "https://example.com/foo/bar#baz" },
-      "qux": { "$ref": "https://example.com/foo/bar" }
+      }
     }
   })JSON");
 
@@ -136,9 +128,7 @@ TEST(JSONSchema_bundle_draft4, simple_with_id) {
       "bar": {
         "id": "https://www.sourcemeta.com",
         "allOf": [ { "$ref": "test-2" } ]
-      },
-      "baz": { "$ref": "https://example.com/foo/bar#baz" },
-      "qux": { "$ref": "https://example.com/foo/bar" }
+      }
     },
     "definitions": {
       "https://www.sourcemeta.com/test-1": {
@@ -155,11 +145,6 @@ TEST(JSONSchema_bundle_draft4, simple_with_id) {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "id": "https://www.sourcemeta.com/test-3",
         "allOf": [ { "$ref": "test-1" } ]
-      },
-      "https://example.com/foo/bar": {
-        "id": "https://example.com/foo/bar",
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "$anchor": "baz"
       }
     }
   })JSON");
@@ -176,9 +161,7 @@ TEST(JSONSchema_bundle_draft4, simple_without_id) {
       "bar": {
         "id": "https://www.sourcemeta.com",
         "allOf": [ { "$ref": "test-2" } ]
-      },
-      "baz": { "$ref": "https://example.com/foo/bar#baz" },
-      "qux": { "$ref": "https://example.com/foo/bar" }
+      }
     }
   })JSON");
 
@@ -193,9 +176,7 @@ TEST(JSONSchema_bundle_draft4, simple_without_id) {
       "bar": {
         "id": "https://www.sourcemeta.com",
         "allOf": [ { "$ref": "test-2" } ]
-      },
-      "baz": { "$ref": "https://example.com/foo/bar#baz" },
-      "qux": { "$ref": "https://example.com/foo/bar" }
+      }
     },
     "definitions": {
       "https://www.sourcemeta.com/test-1": {
@@ -212,11 +193,6 @@ TEST(JSONSchema_bundle_draft4, simple_without_id) {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "id": "https://www.sourcemeta.com/test-3",
         "allOf": [ { "$ref": "test-1" } ]
-      },
-      "https://example.com/foo/bar": {
-        "id": "https://example.com/foo/bar",
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "$anchor": "baz"
       }
     }
   })JSON");

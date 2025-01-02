@@ -257,10 +257,11 @@ auto sourcemeta::jsontoolkit::frame(
       metaschema.canonicalize();
       const std::string destination{metaschema.recompose()};
       assert(entry.common.value.defines("$schema"));
-      references.insert(
-          {{ReferenceType::Static, entry.common.pointer.concat({"$schema"})},
-           {destination, metaschema.recompose_without_fragment(),
-            fragment_string(metaschema)}});
+      references.insert_or_assign(
+          {ReferenceType::Static, entry.common.pointer.concat({"$schema"})},
+          FrameReferencesEntry{destination,
+                               metaschema.recompose_without_fragment(),
+                               fragment_string(metaschema)});
     }
 
     // Handle schema anchors
@@ -423,10 +424,11 @@ auto sourcemeta::jsontoolkit::frame(
         }
 
         ref.canonicalize();
-        references.insert(
-            {{ReferenceType::Static, entry.common.pointer.concat({"$ref"})},
-             {ref.recompose(), ref.recompose_without_fragment(),
-              fragment_string(ref)}});
+        references.insert_or_assign(
+            {ReferenceType::Static, entry.common.pointer.concat({"$ref"})},
+            FrameReferencesEntry{ref.recompose(),
+                                 ref.recompose_without_fragment(),
+                                 fragment_string(ref)});
       }
 
       if (entry.common.vocabularies.contains(
@@ -454,10 +456,11 @@ auto sourcemeta::jsontoolkit::frame(
                                       : ReferenceType::Dynamic};
         const sourcemeta::jsontoolkit::URI anchor_uri{
             std::move(anchor_uri_string)};
-        references.insert(
-            {{reference_type, entry.common.pointer.concat({"$recursiveRef"})},
-             {anchor_uri.recompose(), anchor_uri.recompose_without_fragment(),
-              fragment_string(anchor_uri)}});
+        references.insert_or_assign(
+            {reference_type, entry.common.pointer.concat({"$recursiveRef"})},
+            FrameReferencesEntry{anchor_uri.recompose(),
+                                 anchor_uri.recompose_without_fragment(),
+                                 fragment_string(anchor_uri)});
       }
 
       if (entry.common.vocabularies.contains(
@@ -486,12 +489,12 @@ auto sourcemeta::jsontoolkit::frame(
                                      (has_fragment &&
                                       maybe_static_frame != frame.end() &&
                                       maybe_dynamic_frame == frame.end())};
-        references.insert(
-            {{behaves_as_static ? ReferenceType::Static
-                                : ReferenceType::Dynamic,
-              entry.common.pointer.concat({"$dynamicRef"})},
-             {std::move(ref_string), ref.recompose_without_fragment(),
-              fragment_string(ref)}});
+        references.insert_or_assign(
+            {behaves_as_static ? ReferenceType::Static : ReferenceType::Dynamic,
+             entry.common.pointer.concat({"$dynamicRef"})},
+            FrameReferencesEntry{std::move(ref_string),
+                                 ref.recompose_without_fragment(),
+                                 fragment_string(ref)});
       }
     }
   }
