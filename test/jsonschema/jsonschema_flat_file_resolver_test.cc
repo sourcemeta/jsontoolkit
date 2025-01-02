@@ -169,3 +169,30 @@ TEST(JSONSchema_FlatFileSchemaResolver, iterators) {
   EXPECT_EQ(entries.at(0).path, schema_path);
   EXPECT_FALSE(entries.at(0).default_dialect.has_value());
 }
+
+TEST(JSONSchema_FlatFileSchemaResolver, reidentify) {
+  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
+                         "2020-12-id.json"};
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
+  EXPECT_TRUE(
+      resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
+  EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
+            sourcemeta::jsontoolkit::from_file(schema_path));
+
+  resolver.reidentify("https://www.sourcemeta.com/2020-12-id.json",
+                      "https://example.com");
+
+  EXPECT_FALSE(
+      resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
+  EXPECT_TRUE(resolver("https://example.com").has_value());
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com",
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  })JSON");
+
+  EXPECT_EQ(resolver("https://example.com").value(), expected);
+}
