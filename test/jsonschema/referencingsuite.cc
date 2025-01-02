@@ -49,13 +49,11 @@ public:
     std::map<std::string, std::pair<sourcemeta::jsontoolkit::JSON, std::string>>
         new_entries;
     for (const auto &[uri, schema] : this->registry) {
-      sourcemeta::jsontoolkit::FrameLocations frame;
-      sourcemeta::jsontoolkit::FrameReferences references;
-      sourcemeta::jsontoolkit::frame(
-          schema.first, frame, references,
-          sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::Frame frame;
+      frame.analyse(
+          schema.first, sourcemeta::jsontoolkit::default_schema_walker,
           sourcemeta::jsontoolkit::official_resolver, this->dialect, uri);
-      for (const auto &[key, entry] : frame) {
+      for (const auto &[key, entry] : frame.locations()) {
         new_entries.insert(
             {key.second,
              {sourcemeta::jsontoolkit::get(schema.first, entry.pointer),

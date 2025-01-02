@@ -15,13 +15,11 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_1) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::jsontoolkit::FrameLocations frame;
-  sourcemeta::jsontoolkit::FrameReferences references;
-  sourcemeta::jsontoolkit::frame(schema, frame, references,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
   const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
@@ -49,13 +47,11 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_2) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::jsontoolkit::FrameLocations frame;
-  sourcemeta::jsontoolkit::FrameReferences references;
-  sourcemeta::jsontoolkit::frame(schema, frame, references,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
   const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
@@ -86,13 +82,11 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_3) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::jsontoolkit::FrameLocations frame;
-  sourcemeta::jsontoolkit::FrameReferences references;
-  sourcemeta::jsontoolkit::frame(schema, frame, references,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
   const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
@@ -126,13 +120,11 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_4) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::jsontoolkit::FrameLocations frame;
-  sourcemeta::jsontoolkit::FrameReferences references;
-  sourcemeta::jsontoolkit::frame(schema, frame, references,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
   const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
@@ -160,13 +152,11 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_5) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::jsontoolkit::FrameLocations frame;
-  sourcemeta::jsontoolkit::FrameReferences references;
-  sourcemeta::jsontoolkit::frame(schema, frame, references,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
   const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver)};
 
   EXPECT_EQ(result.size(), 2);
@@ -190,13 +180,11 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_6) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::jsontoolkit::FrameLocations frame;
-  sourcemeta::jsontoolkit::FrameReferences references;
-  sourcemeta::jsontoolkit::frame(schema, frame, references,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
   const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver)};
 
   EXPECT_EQ(result.size(), 2);
@@ -231,13 +219,11 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_7) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::FrameLocations frame;
-  sourcemeta::jsontoolkit::FrameReferences references;
-  sourcemeta::jsontoolkit::frame(schema, frame, references,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
   const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
@@ -274,13 +260,11 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_8) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::FrameLocations frame;
-  sourcemeta::jsontoolkit::FrameReferences references;
-  sourcemeta::jsontoolkit::frame(schema, frame, references,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
   const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
@@ -302,13 +286,11 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedItems_1) {
     "unevaluatedItems": false
   })JSON");
 
-  sourcemeta::jsontoolkit::FrameLocations frame;
-  sourcemeta::jsontoolkit::FrameReferences references;
-  sourcemeta::jsontoolkit::frame(schema, frame, references,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
   const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
@@ -332,13 +314,11 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedItems_2) {
     "unevaluatedItems": false
   })JSON");
 
-  sourcemeta::jsontoolkit::FrameLocations frame;
-  sourcemeta::jsontoolkit::FrameReferences references;
-  sourcemeta::jsontoolkit::frame(schema, frame, references,
-                                 sourcemeta::jsontoolkit::default_schema_walker,
-                                 sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
   const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, references, sourcemeta::jsontoolkit::default_schema_walker,
+      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
       sourcemeta::jsontoolkit::official_resolver)};
 
   EXPECT_EQ(result.size(), 2);
