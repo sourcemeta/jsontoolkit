@@ -236,3 +236,16 @@ TEST(JSONSchema_identify_draft6, reidentify_replace_base_dialect_shortcut) {
 
   EXPECT_EQ(document, expected);
 }
+
+TEST(JSONSchema_identify_draft6, reidentify_set_with_top_level_ref) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "https://example.com/schema"
+  })JSON");
+
+  EXPECT_THROW(sourcemeta::jsontoolkit::reidentify(
+                   document, "https://example.com/my-new-id",
+                   sourcemeta::jsontoolkit::official_resolver),
+               sourcemeta::jsontoolkit::SchemaError);
+}
