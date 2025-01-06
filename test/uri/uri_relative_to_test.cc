@@ -77,3 +77,10 @@ TEST(URI_relative_to, relative_relative_1) {
   uri.relative_to(base);
   EXPECT_EQ(uri.recompose(), "foo/bar/baz");
 }
+
+TEST(URI_relative_to, urn_1) {
+  const sourcemeta::jsontoolkit::URI base{"schema:"};
+  sourcemeta::jsontoolkit::URI uri{"schema:myschema"};
+  uri.relative_to(base);
+  EXPECT_EQ(uri.recompose(), "myschema");
+}
