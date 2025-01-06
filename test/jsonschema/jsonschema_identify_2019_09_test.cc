@@ -237,3 +237,24 @@ TEST(JSONSchema_identify_2019_09, reidentify_replace_base_dialect_shortcut) {
 
   EXPECT_EQ(document, expected);
 }
+
+TEST(JSONSchema_identify_2019_09, reidentify_set_with_top_level_ref) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$ref": "https://example.com/schema"
+  })JSON");
+
+  sourcemeta::jsontoolkit::reidentify(
+      document, "https://example.com/my-new-id",
+      sourcemeta::jsontoolkit::official_resolver);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/my-new-id",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$ref": "https://example.com/schema"
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
