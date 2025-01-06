@@ -100,17 +100,6 @@ auto sourcemeta::jsontoolkit::identify(
   return identify(schema, maybe_base_dialect.value(), default_id);
 }
 
-static auto ref_overrides_sibling(const std::string &base_dialect) -> bool {
-  return (base_dialect == "http://json-schema.org/draft-07/schema#" ||
-          base_dialect == "http://json-schema.org/draft-07/hyper-schema#" ||
-          base_dialect == "http://json-schema.org/draft-06/schema#" ||
-          base_dialect == "http://json-schema.org/draft-06/hyper-schema#" ||
-          base_dialect == "http://json-schema.org/draft-04/schema#" ||
-          base_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
-          base_dialect == "http://json-schema.org/draft-03/schema#" ||
-          base_dialect == "http://json-schema.org/draft-03/hyper-schema#");
-}
-
 auto sourcemeta::jsontoolkit::identify(
     const JSON &schema, const std::string &base_dialect,
     const std::optional<std::string> &default_id)
@@ -136,7 +125,15 @@ auto sourcemeta::jsontoolkit::identify(
   // don't check for base dialects lower than that.
   // See
   // https://json-schema.org/draft-07/draft-handrews-json-schema-01#rfc.section.8.3
-  if (schema.defines("$ref") && ref_overrides_sibling(base_dialect)) {
+  if (schema.defines("$ref") &&
+      (base_dialect == "http://json-schema.org/draft-07/schema#" ||
+       base_dialect == "http://json-schema.org/draft-07/hyper-schema#" ||
+       base_dialect == "http://json-schema.org/draft-06/schema#" ||
+       base_dialect == "http://json-schema.org/draft-06/hyper-schema#" ||
+       base_dialect == "http://json-schema.org/draft-04/schema#" ||
+       base_dialect == "http://json-schema.org/draft-04/hyper-schema#" ||
+       base_dialect == "http://json-schema.org/draft-03/schema#" ||
+       base_dialect == "http://json-schema.org/draft-03/hyper-schema#")) {
     return std::nullopt;
   }
 
@@ -170,14 +167,44 @@ auto sourcemeta::jsontoolkit::reidentify(JSON &schema,
     -> void {
   assert(is_schema(schema));
   assert(schema.is_object());
+  schema.assign(id_keyword(base_dialect), JSON{new_identifier});
 
-  if (ref_overrides_sibling(base_dialect) && schema.defines("$ref")) {
-    throw SchemaError(
-        "Cannot set an identifier on a schema that declares a "
-        "top-level static reference in this dialect of JSON Schema");
+  if (schema.defines("$ref")) {
+    // Workaround top-level `$ref` with `allOf`
+    if (base_dialect == "http://json-schema.org/draft-07/schema#" ||
+        base_dialect == "http://json-schema.org/draft-07/hyper-schema#" ||
+        base_dialect == "http://json-schema.org/draft-06/schema#" ||
+        base_dialect == "http://json-schema.org/draft-06/hyper-schema#" ||
+        base_dialect == "http://json-schema.org/draft-04/schema#" ||
+        base_dialect == "http://json-schema.org/draft-04/hyper-schema#") {
+      // Note that if the schema already has an `allOf`, we can safely
+      // remove it, as it was by definition ignored by `$ref` already
+      if (schema.defines("allOf")) {
+        schema.erase("allOf");
+      }
+
+      schema.assign("allOf", JSON::make_array());
+      auto conjunction{JSON::make_object()};
+      conjunction.assign("$ref", schema.at("$ref"));
+      schema.at("allOf").push_back(std::move(conjunction));
+      schema.erase("$ref");
+    }
+
+    // Workaround top-level `$ref` with `extends`
+    if (base_dialect == "http://json-schema.org/draft-03/schema#" ||
+        base_dialect == "http://json-schema.org/draft-03/hyper-schema#") {
+      // Note that if the schema already has an `extends`, we can safely
+      // remove it, as it was by definition ignored by `$ref` already
+      if (schema.defines("extends")) {
+        schema.erase("extends");
+      }
+
+      schema.assign("extends", JSON::make_object());
+      schema.at("extends").assign("$ref", schema.at("$ref"));
+      schema.erase("$ref");
+    }
   }
 
-  schema.assign(id_keyword(base_dialect), JSON{new_identifier});
   assert(identify(schema, base_dialect).has_value());
 }
 

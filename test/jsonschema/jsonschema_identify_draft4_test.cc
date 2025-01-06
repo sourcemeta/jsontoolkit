@@ -244,8 +244,38 @@ TEST(JSONSchema_identify_draft4, reidentify_set_with_top_level_ref) {
     "$ref": "https://example.com/schema"
   })JSON");
 
-  EXPECT_THROW(sourcemeta::jsontoolkit::reidentify(
-                   document, "https://example.com/my-new-id",
-                   sourcemeta::jsontoolkit::official_resolver),
-               sourcemeta::jsontoolkit::SchemaError);
+  sourcemeta::jsontoolkit::reidentify(
+      document, "https://example.com/my-new-id",
+      sourcemeta::jsontoolkit::official_resolver);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "id": "https://example.com/my-new-id",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "allOf": [ { "$ref": "https://example.com/schema" } ]
+  })JSON");
+
+  EXPECT_EQ(document, expected);
+}
+
+TEST(JSONSchema_identify_draft4, reidentify_set_with_top_level_ref_and_allof) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "https://example.com/schema",
+    "allOf": [ { "type": "string" } ]
+  })JSON");
+
+  sourcemeta::jsontoolkit::reidentify(
+      document, "https://example.com/my-new-id",
+      sourcemeta::jsontoolkit::official_resolver);
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "id": "https://example.com/my-new-id",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "allOf": [ { "$ref": "https://example.com/schema" } ]
+  })JSON");
+
+  EXPECT_EQ(document, expected);
 }
