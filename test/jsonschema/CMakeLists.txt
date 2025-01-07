@@ -83,6 +83,7 @@ add_executable(sourcemeta_jsontoolkit_jsonschema_unit
   jsonschema_error_test.cc
   jsonschema_keyword_iterator_test.cc
   jsonschema_official_resolver_test.cc
+  jsonschema_relativize_test.cc
   jsonschema_map_resolver_test.cc
   jsonschema_flat_file_resolver_test.cc
   jsonschema_format_test.cc)
