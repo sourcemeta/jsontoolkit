@@ -196,3 +196,24 @@ TEST(JSONSchema_FlatFileSchemaResolver, reidentify) {
 
   EXPECT_EQ(resolver("https://example.com").value(), expected);
 }
+
+TEST(JSONSchema_FlatFileSchemaResolver, with_absolute_references) {
+  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
+                         "2020-12-absolute-ref.json"};
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://www.sourcemeta.com/2020-12-absolute-ref.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "2020-12-id.json"
+  })JSON");
+
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-absolute-ref.json");
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/2020-12-absolute-ref.json")
+                  .has_value());
+  EXPECT_EQ(
+      resolver("https://www.sourcemeta.com/2020-12-absolute-ref.json").value(),
+      expected);
+}
