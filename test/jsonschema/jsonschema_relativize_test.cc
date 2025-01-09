@@ -296,3 +296,23 @@ TEST(JSONSchema_relativize, 2020_12_1) {
 
   EXPECT_EQ(schema, expected);
 }
+
+TEST(JSONSchema_relativize, 2020_12_2) {
+  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/foo/bar/baz/qux",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "../../schema.json"
+  })JSON");
+
+  sourcemeta::jsontoolkit::relativize(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver);
+
+  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "https://example.com/foo/bar/baz/qux",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "../../schema.json"
+  })JSON");
+
+  EXPECT_EQ(schema, expected);
+}
