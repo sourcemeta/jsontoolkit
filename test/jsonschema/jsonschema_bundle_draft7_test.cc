@@ -424,7 +424,6 @@ TEST(JSONSchema_bundle_draft7, anonymous_no_dialect) {
 
   sourcemeta::jsontoolkit::bundle(
       document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::Default,
       "http://json-schema.org/draft-07/schema#");
 
   const sourcemeta::jsontoolkit::JSON expected =
@@ -434,45 +433,6 @@ TEST(JSONSchema_bundle_draft7, anonymous_no_dialect) {
       "https://www.sourcemeta.com/anonymous": {
         "$id": "https://www.sourcemeta.com/anonymous",
         "type": "integer"
-      }
-    }
-  })JSON");
-
-  EXPECT_EQ(document, expected);
-}
-
-TEST(JSONSchema_bundle_draft7, without_id) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$id": "https://www.sourcemeta.com/top-level",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "properties": {
-      "foo": {
-        "$ref": "recursive#/properties/foo"
-      }
-    }
-  })JSON");
-
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers);
-
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "properties": {
-      "foo": {
-        "$ref": "#/definitions/https%3A~1~1www.sourcemeta.com~1recursive/properties/foo"
-      }
-    },
-    "definitions": {
-      "https://www.sourcemeta.com/recursive": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "properties": {
-          "foo": {
-            "$ref": "#/definitions/https%3A~1~1www.sourcemeta.com~1recursive"
-          }
-        }
       }
     }
   })JSON");
@@ -502,34 +462,6 @@ TEST(JSONSchema_bundle_draft7, metaschema) {
       "https://example.com/meta/2.json": {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "$id": "https://example.com/meta/2.json"
-      }
-    }
-  })JSON");
-
-  EXPECT_EQ(document, expected);
-}
-
-TEST(JSONSchema_bundle_draft7, metaschema_without_id) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "https://example.com/meta/1.json",
-    "type": "string"
-  })JSON");
-
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers);
-
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "#/definitions/https%3A~1~1example.com~1meta~11.json",
-    "type": "string",
-    "definitions": {
-      "https://example.com/meta/1.json": {
-        "$schema": "#/definitions/https%3A~1~1example.com~1meta~12.json"
-      },
-      "https://example.com/meta/2.json": {
-        "$schema": "http://json-schema.org/draft-07/schema#"
       }
     }
   })JSON");

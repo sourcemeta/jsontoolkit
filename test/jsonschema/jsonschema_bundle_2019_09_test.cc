@@ -449,7 +449,6 @@ TEST(JSONSchema_bundle_2019_09, anonymous_no_dialect) {
 
   sourcemeta::jsontoolkit::bundle(
       document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::Default,
       "https://json-schema.org/draft/2019-09/schema");
 
   const sourcemeta::jsontoolkit::JSON expected =
@@ -459,59 +458,6 @@ TEST(JSONSchema_bundle_2019_09, anonymous_no_dialect) {
       "https://www.sourcemeta.com/anonymous": {
         "$id": "https://www.sourcemeta.com/anonymous",
         "type": "integer"
-      }
-    }
-  })JSON");
-
-  EXPECT_EQ(document, expected);
-}
-
-TEST(JSONSchema_bundle_2019_09, without_id) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$id": "https://www.sourcemeta.com/top-level",
-    "$schema": "https://json-schema.org/draft/2019-09/schema",
-    "properties": {
-      "foo": {
-        "$ref": "recursive#/properties/foo"
-      },
-      "baz": {
-        "$ref": "https://example.com/baz-anchor#baz"
-      }
-    }
-  })JSON");
-
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers);
-
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "https://json-schema.org/draft/2019-09/schema",
-    "properties": {
-      "foo": {
-        "$ref": "#/$defs/https%3A~1~1www.sourcemeta.com~1recursive/properties/foo"
-      },
-      "baz": {
-        "$ref": "#/$defs/https%3A~1~1example.com~1baz-anchor/$defs/baz"
-      }
-    },
-    "$defs": {
-      "https://www.sourcemeta.com/recursive": {
-        "$schema": "https://json-schema.org/draft/2019-09/schema",
-        "properties": {
-          "foo": {
-            "$ref": "#/$defs/https%3A~1~1www.sourcemeta.com~1recursive"
-          }
-        }
-      },
-      "https://example.com/baz-anchor": {
-        "$schema": "https://json-schema.org/draft/2019-09/schema",
-        "$defs": {
-          "baz": {
-            "type": "string"
-          }
-        }
       }
     }
   })JSON");
@@ -542,36 +488,6 @@ TEST(JSONSchema_bundle_2019_09, metaschema) {
       "https://example.com/meta/2.json": {
         "$schema": "https://json-schema.org/draft/2019-09/schema",
         "$id": "https://example.com/meta/2.json",
-        "$vocabulary": { "https://json-schema.org/draft/2019-09/vocab/core": true }
-      }
-    }
-  })JSON");
-
-  EXPECT_EQ(document, expected);
-}
-
-TEST(JSONSchema_bundle_2019_09, metaschema_without_id) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "https://example.com/meta/1.json",
-    "type": "string"
-  })JSON");
-
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers);
-
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "#/$defs/https%3A~1~1example.com~1meta~11.json",
-    "type": "string",
-    "$defs": {
-      "https://example.com/meta/1.json": {
-        "$schema": "#/$defs/https%3A~1~1example.com~1meta~12.json",
-        "$vocabulary": { "https://json-schema.org/draft/2019-09/vocab/core": true }
-      },
-      "https://example.com/meta/2.json": {
-        "$schema": "https://json-schema.org/draft/2019-09/schema",
         "$vocabulary": { "https://json-schema.org/draft/2019-09/vocab/core": true }
       }
     }
