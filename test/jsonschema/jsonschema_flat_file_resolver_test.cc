@@ -217,3 +217,45 @@ TEST(JSONSchema_FlatFileSchemaResolver, with_absolute_references) {
       resolver("https://www.sourcemeta.com/2020-12-absolute-ref.json").value(),
       expected);
 }
+
+TEST(JSONSchema_FlatFileSchemaResolver, case_insensitive_lookup) {
+  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
+                         "2020-12-id.json"};
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
+  EXPECT_TRUE(
+      resolver("https://www.sourcemeta.com/2020-12-Id.json").has_value());
+  EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-Id.json").value(),
+            sourcemeta::jsontoolkit::from_file(schema_path));
+  EXPECT_TRUE(
+      resolver("https://WwW.SOURCEmeta.com/2020-12-Id.json").has_value());
+  EXPECT_EQ(resolver("https://WwW.SOURCEmeta.com/2020-12-Id.json").value(),
+            sourcemeta::jsontoolkit::from_file(schema_path));
+}
+
+TEST(JSONSchema_FlatFileSchemaResolver, case_insensitive_insert) {
+  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
+                         "2020-12-id-casing.json"};
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
+  EXPECT_TRUE(
+      resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
+  EXPECT_TRUE(
+      resolver("https://www.sourcemeta.com/2020-12-ID.json").has_value());
+  EXPECT_TRUE(
+      resolver("https://www.sourcemeta.com/2020-12-iD.json").has_value());
+  EXPECT_TRUE(
+      resolver("https://www.SOURCEMETA.com/2020-12-id.json").has_value());
+}
+
+TEST(JSONSchema_FlatFileSchemaResolver, case_insensitive_reidentify) {
+  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
+                         "2020-12-id-casing.json"};
+  const auto &identifier{resolver.add(schema_path)};
+  resolver.reidentify(identifier, "https://EXAMPLE.com");
+  EXPECT_TRUE(resolver("https://EXAMPLE.com").has_value());
+  EXPECT_TRUE(resolver("https://example.com").has_value());
+}
