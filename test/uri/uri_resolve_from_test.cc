@@ -7,6 +7,13 @@ TEST(URI_resolve_from, relative_base) {
   EXPECT_THROW(relative.resolve_from(base), sourcemeta::jsontoolkit::URIError);
 }
 
+TEST(URI_resolve_from, absolute_relative_with_slash) {
+  const sourcemeta::jsontoolkit::URI base{"https://foobar.com/foo/bar"};
+  sourcemeta::jsontoolkit::URI relative{"/baz"};
+  relative.resolve_from(base);
+  EXPECT_EQ(relative.recompose(), "https://foobar.com/baz");
+}
+
 TEST(URI_resolve_from, example_1) {
   const sourcemeta::jsontoolkit::URI base{"https://foobar.com/foo/bar"};
   sourcemeta::jsontoolkit::URI relative{"../baz"};

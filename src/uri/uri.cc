@@ -278,7 +278,12 @@ auto URI::path() const -> std::optional<std::string> {
     return "/" + this->path_.value();
   }
 
-  return path_;
+  if (this->data.starts_with('/') && this->data.size() > 1 &&
+      this->path_.has_value()) {
+    return "/" + this->path_.value();
+  }
+
+  return this->path_;
 }
 
 auto URI::path(const std::string &path) -> URI & {
