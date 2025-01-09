@@ -85,7 +85,7 @@ TEST(URI_parse, relative_1) {
 
 TEST(URI_parse, relative_2) {
   sourcemeta::jsontoolkit::URI uri{"/one/two/three"};
-  EXPECT_EQ(uri.recompose(), "one/two/three");
+  EXPECT_EQ(uri.recompose(), "/one/two/three");
 }
 
 TEST(URI_parse, relative_3) {
