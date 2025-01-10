@@ -87,3 +87,23 @@ TEST(JSON_string, unicode_length_1) {
   // https://unicodeplus.com/U+7EAF (UTF-8: 0xE7 0xBA 0xAF)
   EXPECT_EQ(document.at("name").byte_size(), 9);
 }
+
+TEST(JSON_string, contains_true) {
+  const sourcemeta::jsontoolkit::JSON document{"foo bar baz"};
+  EXPECT_TRUE(document.contains("foo"));
+}
+
+TEST(JSON_string, contains_false) {
+  const sourcemeta::jsontoolkit::JSON document{"foo bar baz"};
+  EXPECT_FALSE(document.contains("fooo"));
+}
+
+TEST(JSON_string, contains_character_true) {
+  const sourcemeta::jsontoolkit::JSON document{"foo"};
+  EXPECT_TRUE(document.contains('f'));
+}
+
+TEST(JSON_string, contains_character_false) {
+  const sourcemeta::jsontoolkit::JSON document{"foo"};
+  EXPECT_FALSE(document.contains('b'));
+}
