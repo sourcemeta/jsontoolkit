@@ -489,7 +489,6 @@ TEST(JSONSchema_bundle_2020_12, anonymous_no_dialect) {
 
   sourcemeta::jsontoolkit::bundle(
       document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::Default,
       "https://json-schema.org/draft/2020-12/schema");
 
   const sourcemeta::jsontoolkit::JSON expected =
@@ -539,78 +538,31 @@ TEST(JSONSchema_bundle_2020_12, relative_in_target_without_id) {
   EXPECT_EQ(document, expected);
 }
 
-TEST(JSONSchema_bundle_2020_12, without_id) {
+TEST(JSONSchema_bundle_2020_12, relative_base_uri_with_ref) {
   sourcemeta::jsontoolkit::JSON document =
       sourcemeta::jsontoolkit::parse(R"JSON({
-    "$id": "https://www.sourcemeta.com/top-level",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "properties": {
-      "foo": {
-        "$ref": "recursive#/properties/foo"
-      },
-      "baz": {
-        "$ref": "https://example.com/baz-anchor#baz"
+    "$id": "common",
+    "allOf": [ { "$ref": "#reference" } ],
+    "definitions": {
+      "reference": {
+        "$anchor": "reference"
       }
     }
   })JSON");
 
   sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers);
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
 
   const sourcemeta::jsontoolkit::JSON expected =
       sourcemeta::jsontoolkit::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "properties": {
-      "foo": {
-        "$ref": "#/$defs/https%3A~1~1www.sourcemeta.com~1recursive/properties/foo"
-      },
-      "baz": {
-        "$ref": "#/$defs/https%3A~1~1example.com~1baz-anchor/$defs/baz"
+    "$id": "common",
+    "allOf": [ { "$ref": "#reference" } ],
+    "definitions": {
+      "reference": {
+        "$anchor": "reference"
       }
-    },
-    "$defs": {
-      "https://www.sourcemeta.com/recursive": {
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "properties": {
-          "foo": {
-            "$ref": "#/$defs/https%3A~1~1www.sourcemeta.com~1recursive"
-          }
-        }
-      },
-      "https://example.com/baz-anchor": {
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$defs": {
-          "baz": {
-            "type": "string"
-          }
-        }
-      }
-    }
-  })JSON");
-
-  EXPECT_EQ(document, expected);
-}
-
-TEST(JSONSchema_bundle_2020_12, without_id_boolean_subschema) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$id": "https://www.sourcemeta.com/top-level",
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "properties": {
-      "foo": true
-    }
-  })JSON");
-
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers);
-
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "properties": {
-      "foo": true
     }
   })JSON");
 
@@ -641,67 +593,6 @@ TEST(JSONSchema_bundle_2020_12, metaschema) {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://example.com/meta/2.json",
         "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
-      }
-    }
-  })JSON");
-
-  EXPECT_EQ(document, expected);
-}
-
-TEST(JSONSchema_bundle_2020_12, metaschema_without_id) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "https://example.com/meta/1.json",
-    "type": "string"
-  })JSON");
-
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      sourcemeta::jsontoolkit::BundleOptions::WithoutIdentifiers);
-
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "#/$defs/https%3A~1~1example.com~1meta~11.json",
-    "type": "string",
-    "$defs": {
-      "https://example.com/meta/1.json": {
-        "$schema": "#/$defs/https%3A~1~1example.com~1meta~12.json",
-        "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
-      },
-      "https://example.com/meta/2.json": {
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
-      }
-    }
-  })JSON");
-
-  EXPECT_EQ(document, expected);
-}
-
-TEST(JSONSchema_bundle_2020_12, relative_base_uri_with_ref) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "common",
-    "allOf": [ { "$ref": "#reference" } ],
-    "definitions": {
-      "reference": {
-        "$anchor": "reference"
-      }
-    }
-  })JSON");
-
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
-
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "common",
-    "allOf": [ { "$ref": "#reference" } ],
-    "definitions": {
-      "reference": {
-        "$anchor": "reference"
       }
     }
   })JSON");
