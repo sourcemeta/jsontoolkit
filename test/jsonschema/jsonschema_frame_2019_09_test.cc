@@ -2004,3 +2004,34 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_with_ref) {
   EXPECT_STATIC_REFERENCE(frame, "/allOf/0/$ref", "common#foo", "common",
                           "foo");
 }
+
+TEST(JSONSchema_frame_2019_09, relative_id_leading_slash) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$id": "/base",
+    "$schema": "https://json-schema.org/draft/2019-09/schema"
+  })JSON");
+
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
+
+  EXPECT_EQ(frame.locations().size(), 3);
+  EXPECT_FRAME_STATIC_2019_09_RESOURCE(frame, "/base", "/base", "", "/base", "",
+                                       0);
+
+  // JSON Pointers
+
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "/base#/$id", "/base", "/$id",
+                                      "/base", "/$id", 0);
+  EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "/base#/$schema", "/base",
+                                      "/$schema", "/base", "/$schema", 0);
+
+  // References
+
+  EXPECT_EQ(frame.references().size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      frame, "/$schema", "https://json-schema.org/draft/2019-09/schema",
+      "https://json-schema.org/draft/2019-09/schema", std::nullopt);
+}
