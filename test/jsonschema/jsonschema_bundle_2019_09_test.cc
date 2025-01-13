@@ -526,3 +526,55 @@ TEST(JSONSchema_bundle_2019_09, relative_base_uri_with_ref) {
 
   EXPECT_EQ(document, expected);
 }
+
+TEST(JSONSchema_bundle_2019_09, hyperschema_smoke) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$ref": "https://json-schema.org/draft/2019-09/hyper-schema"
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
+
+  EXPECT_TRUE(document.is_object());
+}
+
+TEST(JSONSchema_bundle_2019_09, hyperschema_1) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "allOf": [
+      { "$ref": "https://json-schema.org/draft/2019-09/schema" },
+      { "$ref": "https://json-schema.org/draft/2019-09/meta/hyper-schema" }
+    ]
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
+
+  EXPECT_TRUE(document.defines("$defs"));
+  EXPECT_TRUE(document.at("$defs").is_object());
+  EXPECT_EQ(document.at("$defs").size(), 10);
+
+  EXPECT_TRUE(document.at("$defs").defines(
+      "https://json-schema.org/draft/2019-09/schema"));
+  EXPECT_TRUE(document.at("$defs").defines(
+      "https://json-schema.org/draft/2019-09/meta/core"));
+  EXPECT_TRUE(document.at("$defs").defines(
+      "https://json-schema.org/draft/2019-09/meta/applicator"));
+  EXPECT_TRUE(document.at("$defs").defines(
+      "https://json-schema.org/draft/2019-09/meta/validation"));
+  EXPECT_TRUE(document.at("$defs").defines(
+      "https://json-schema.org/draft/2019-09/meta/meta-data"));
+  EXPECT_TRUE(document.at("$defs").defines(
+      "https://json-schema.org/draft/2019-09/meta/format"));
+  EXPECT_TRUE(document.at("$defs").defines(
+      "https://json-schema.org/draft/2019-09/meta/content"));
+  EXPECT_TRUE(document.at("$defs").defines(
+      "https://json-schema.org/draft/2019-09/meta/hyper-schema"));
+  EXPECT_TRUE(document.at("$defs").defines(
+      "https://json-schema.org/draft/2019-09/links"));
+  EXPECT_TRUE(document.at("$defs").defines(
+      "https://json-schema.org/draft/2019-09/hyper-schema"));
+}

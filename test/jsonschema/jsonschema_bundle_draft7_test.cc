@@ -499,3 +499,41 @@ TEST(JSONSchema_bundle_draft7, relative_base_uri_with_ref) {
 
   EXPECT_EQ(document, expected);
 }
+
+TEST(JSONSchema_bundle_draft7, hyperschema_smoke) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/hyper-schema#",
+    "allOf": [
+      { "$ref": "http://json-schema.org/draft-07/hyper-schema#" }
+    ]
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
+
+  EXPECT_TRUE(document.is_object());
+}
+
+TEST(JSONSchema_bundle_draft7, hyperschema_1) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "allOf": [
+      { "$ref": "http://json-schema.org/draft-07/schema#" },
+      { "$ref": "http://json-schema.org/draft-07/hyper-schema#" }
+    ]
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
+
+  EXPECT_TRUE(document.defines("definitions"));
+  EXPECT_TRUE(document.at("definitions").is_object());
+  EXPECT_EQ(document.at("definitions").size(), 2);
+
+  EXPECT_TRUE(document.at("definitions")
+                  .defines("http://json-schema.org/draft-07/schema"));
+  EXPECT_TRUE(document.at("definitions")
+                  .defines("http://json-schema.org/draft-07/hyper-schema"));
+}
