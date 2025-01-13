@@ -1732,3 +1732,31 @@ TEST(JSONSchema_frame_2020_12, idempotent_with_refs) {
                           "https://www.sourcemeta.com/schema#/$defs/string",
                           "https://www.sourcemeta.com/schema", "/$defs/string");
 }
+
+TEST(JSONSchema_frame_2020_12, allof_refs) {
+  const sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "allOf": [
+      { "$ref": "https://json-schema.org/draft/2020-12/schema" },
+      { "$ref": "https://json-schema.org/draft/2020-12/meta/hyper-schema" }
+    ]
+  })JSON");
+
+  sourcemeta::jsontoolkit::Frame frame;
+  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
+                sourcemeta::jsontoolkit::official_resolver);
+
+  EXPECT_EQ(frame.references().size(), 3);
+
+  EXPECT_STATIC_REFERENCE(
+      frame, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
+  EXPECT_STATIC_REFERENCE(
+      frame, "/allOf/0/$ref", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
+  EXPECT_STATIC_REFERENCE(
+      frame, "/allOf/1/$ref",
+      "https://json-schema.org/draft/2020-12/meta/hyper-schema",
+      "https://json-schema.org/draft/2020-12/meta/hyper-schema", std::nullopt);
+}
