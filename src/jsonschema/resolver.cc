@@ -136,7 +136,14 @@ auto FlatFileSchemaResolver::reidentify(const std::string &schema,
 auto FlatFileSchemaResolver::operator()(std::string_view identifier) const
     -> std::optional<JSON> {
   const std::string string_identifier{to_lowercase(identifier)};
-  const auto result{this->schemas.find(string_identifier)};
+  auto result{this->schemas.find(string_identifier)};
+
+  // Try with a `.json` extension (if not already) as a fallback, given
+  // how common that case is when using a file-based resolver
+  if (result == this->schemas.cend() && !string_identifier.ends_with(".json")) {
+    result = this->schemas.find(string_identifier + ".json");
+  }
+
   if (result != this->schemas.cend()) {
     auto schema{sourcemeta::jsontoolkit::from_file(result->second.path)};
     assert(sourcemeta::jsontoolkit::is_schema(schema));

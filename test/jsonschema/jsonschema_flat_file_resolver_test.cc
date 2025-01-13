@@ -48,6 +48,30 @@ TEST(JSONSchema_FlatFileSchemaResolver, single_schema_with_default_dialect) {
             expected);
 }
 
+TEST(JSONSchema_FlatFileSchemaResolver, no_json_extension_on_insert) {
+  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
+                         "2020-12-without-extension.json"};
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-without-extension");
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/2020-12-without-extension")
+                  .has_value());
+  EXPECT_EQ(
+      resolver("https://www.sourcemeta.com/2020-12-without-extension").value(),
+      sourcemeta::jsontoolkit::from_file(schema_path));
+}
+
+TEST(JSONSchema_FlatFileSchemaResolver, no_json_extension_on_lookup) {
+  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
+                         "2020-12-id.json"};
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/2020-12-id").has_value());
+  EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id").value(),
+            sourcemeta::jsontoolkit::from_file(schema_path));
+}
+
 TEST(JSONSchema_FlatFileSchemaResolver, single_schema_anonymous_with_default) {
   sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
