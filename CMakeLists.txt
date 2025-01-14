@@ -120,6 +120,10 @@ if(JSONTOOLKIT_TESTS)
     add_subdirectory(test/jsonl)
   endif()
 
+  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_YAML)
+    add_subdirectory(test/yaml)
+  endif()
+
   if(PROJECT_IS_TOP_LEVEL)
     # Otherwise we need the child project to link
     # against the sanitizers too.
