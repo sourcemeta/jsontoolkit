@@ -1,3 +1,4 @@
+#include <stdio.h>
 
 /*
  * The parser implements the following grammar:
@@ -1347,6 +1348,17 @@ yaml_parser_append_tag_directive(yaml_parser_t *parser,
 
     for (tag_directive = parser->tag_directives.start;
             tag_directive != parser->tag_directives.top; tag_directive ++) {
+      if (!value.handle) {
+        printf("NULL value.handle\n");
+      }
+
+      if (!tag_directive->handle) {
+        printf("NULL tag_directive->handle\n");
+      }
+
+      printf("=> value.handle: %s\n", value.handle);
+      /* printf("=> tag_directive->handle: %s\n", tag_directive->handle); */
+
         if (strcmp((char *)value.handle, (char *)tag_directive->handle) == 0) {
             if (allow_duplicates)
                 return 1;

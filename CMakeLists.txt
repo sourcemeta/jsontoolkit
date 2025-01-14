@@ -6,12 +6,12 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 include(vendor/noa/cmake/noa.cmake)
 
 # Options
-option(JSONTOOLKIT_URI "Build the JSON Toolkit URI library" ON)
+option(JSONTOOLKIT_URI "Build the JSON Toolkit URI library" OFF)
 option(JSONTOOLKIT_JSON "Build the JSON Toolkit JSON library" ON)
-option(JSONTOOLKIT_REGEX "Build the JSON Toolkit Regex library" ON)
-option(JSONTOOLKIT_JSONSCHEMA "Build the JSON Toolkit JSON Schema library" ON)
-option(JSONTOOLKIT_JSONPOINTER "Build the JSON Toolkit JSON Pointer library" ON)
-option(JSONTOOLKIT_JSONL "Build the JSON Toolkit JSONL library" ON)
+option(JSONTOOLKIT_REGEX "Build the JSON Toolkit Regex library" OFF)
+option(JSONTOOLKIT_JSONSCHEMA "Build the JSON Toolkit JSON Schema library" OFF)
+option(JSONTOOLKIT_JSONPOINTER "Build the JSON Toolkit JSON Pointer library" OFF)
+option(JSONTOOLKIT_JSONL "Build the JSON Toolkit JSONL library" OFF)
 option(JSONTOOLKIT_YAML "Build the JSON Toolkit YAML library" ON)
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" OFF)
 option(JSONTOOLKIT_BENCHMARK "Build the JSON Toolkit benchmarks" OFF)
@@ -94,46 +94,7 @@ endif()
 if(JSONTOOLKIT_TESTS)
   find_package(GoogleTest REQUIRED)
   enable_testing()
-
-  if(JSONTOOLKIT_URI)
-    add_subdirectory(test/uri)
-  endif()
-
-  if(JSONTOOLKIT_JSON)
-    add_subdirectory(test/json)
-  endif()
-
-  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_REGEX)
-    add_subdirectory(test/regex)
-  endif()
-
-  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
-    add_subdirectory(test/jsonpointer)
-  endif()
-
-  if(JSONTOOLKIT_URI AND JSONTOOLKIT_JSON AND
-     JSONTOOLKIT_JSONPOINTER AND JSONTOOLKIT_JSONSCHEMA)
-    add_subdirectory(test/jsonschema)
-  endif()
-
-  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
-    add_subdirectory(test/jsonl)
-  endif()
-
   if(JSONTOOLKIT_JSON AND JSONTOOLKIT_YAML)
     add_subdirectory(test/yaml)
-  endif()
-
-  if(PROJECT_IS_TOP_LEVEL)
-    # Otherwise we need the child project to link
-    # against the sanitizers too.
-    if(NOT JSONTOOLKIT_ADDRESS_SANITIZER AND NOT JSONTOOLKIT_UNDEFINED_SANITIZER)
-      add_subdirectory(test/packaging)
-    endif()
-  endif()
-
-  if(JSONTOOLKIT_BENCHMARK)
-    find_package(GoogleBenchmark REQUIRED)
-    add_subdirectory(benchmark)
   endif()
 endif()

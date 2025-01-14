@@ -9,4 +9,4 @@ target_link_libraries(sourcemeta_jsontoolkit_yaml_unit
   PRIVATE sourcemeta::jsontoolkit::yaml)
 set_target_properties(sourcemeta_jsontoolkit_yaml_unit
   PROPERTIES FOLDER "JSON Toolkit/YAML")
-add_test(NAME YAML COMMAND sourcemeta_jsontoolkit_yaml_unit --gtest_brief=1)
+add_test(NAME YAML COMMAND sourcemeta_jsontoolkit_yaml_unit)
