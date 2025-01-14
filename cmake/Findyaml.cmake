@@ -21,6 +21,11 @@ if(NOT Yaml_FOUND)
     target_compile_options(yaml PRIVATE -Wno-int-to-pointer-cast)
   endif()
 
+  if(LINUX)
+    # See https://github.com/3DSGuy/Project_CTR/issues/122
+    target_compile_definitions(yaml PRIVATE _GNU_SOURCE)
+  endif()
+
   if(BUILD_SHARED_LIBS)
     target_compile_definitions(yaml PUBLIC YAML_DECLARE_EXPORT)
   else()
