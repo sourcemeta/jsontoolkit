@@ -90,6 +90,7 @@ CMake
 | `JSONTOOLKIT_JSONSCHEMA`          | Boolean | `ON`    | Build the JSON Toolkit JSON Schema library            |
 | `JSONTOOLKIT_JSONPOINTER`         | Boolean | `ON`    | Build the JSON Toolkit JSON Pointer library           |
 | `JSONTOOLKIT_JSONL`               | Boolean | `ON`    | Build the JSON Toolkit JSONL library                  |
+| `JSONTOOLKIT_YAML`                | Boolean | `ON`    | Build the JSON Toolkit YAML library                   |
 | `JSONTOOLKIT_TESTS`               | Boolean | `OFF`   | Build the JSON Toolkit tests                          |
 | `JSONTOOLKIT_DOCS`                | Boolean | `OFF`   | Build the JSON Toolkit docs                           |
 | `JSONTOOLKIT_INSTALL`             | Boolean | `ON`    | Install the JSON Toolkit library                      |
