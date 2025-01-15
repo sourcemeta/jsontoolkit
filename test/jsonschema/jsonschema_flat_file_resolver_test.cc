@@ -30,17 +30,18 @@ TEST(JSONSchema_FlatFileSchemaResolver, single_schema) {
             sourcemeta::jsontoolkit::from_file(schema_path));
 }
 
-TEST(JSONSchema_FlatFileSchemaResolver, single_schema_manual_read) {
+TEST(JSONSchema_FlatFileSchemaResolver, single_schema_custom_reader) {
   sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
-  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
-                         "2020-12-id.json"};
+  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} / "2020-12-id"};
   const auto &identifier{resolver.add(
-      schema_path, sourcemeta::jsontoolkit::from_file(schema_path))};
+      schema_path, std::nullopt, std::nullopt, [](const auto &path) {
+        return sourcemeta::jsontoolkit::from_file(path.string() + ".json");
+      })};
   EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
-            sourcemeta::jsontoolkit::from_file(schema_path));
+            sourcemeta::jsontoolkit::from_file(schema_path.string() + ".json"));
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, single_schema_with_default_dialect) {
