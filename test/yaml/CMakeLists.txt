@@ -9,4 +9,6 @@ target_link_libraries(sourcemeta_jsontoolkit_yaml_unit
   PRIVATE sourcemeta::jsontoolkit::yaml)
 set_target_properties(sourcemeta_jsontoolkit_yaml_unit
   PROPERTIES FOLDER "JSON Toolkit/YAML")
+target_compile_definitions(sourcemeta_jsontoolkit_yaml_unit
+  PRIVATE STUBS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/stubs")
 add_test(NAME YAML COMMAND sourcemeta_jsontoolkit_yaml_unit --gtest_brief=1)

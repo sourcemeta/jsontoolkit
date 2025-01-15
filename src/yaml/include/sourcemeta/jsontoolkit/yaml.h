@@ -9,6 +9,8 @@
 
 #include <sourcemeta/jsontoolkit/json.h>
 
+#include <filesystem> // std::filesystem
+
 /// @defgroup yaml YAML
 /// @brief A YAML compatibility library based on `libyaml`.
 ///
@@ -29,7 +31,9 @@ namespace sourcemeta::jsontoolkit {
 /// #include <sourcemeta/jsontoolkit/json.h>
 /// #include <sourcemeta/jsontoolkit/yaml.h>
 ///
-/// std::string input{"hello: world"};
+/// #include <iostream>
+///
+/// const std::string input{"hello: world"};
 /// const sourcemeta::jsontoolkit::JSON document =
 ///   sourcemeta::jsontoolkit::from_yaml(input);
 /// sourcemeta::jsontoolkit::prettify(document, std::cerr);
@@ -37,6 +41,27 @@ namespace sourcemeta::jsontoolkit {
 /// ```
 SOURCEMETA_JSONTOOLKIT_YAML_EXPORT
 auto from_yaml(const JSON::String &input) -> JSON;
+
+/// @ingroup yaml
+///
+/// Read a JSON document from a file location that represents a YAML file. For
+/// example:
+///
+/// ```cpp
+/// #include <sourcemeta/jsontoolkit/json.h>
+/// #include <sourcemeta/jsontoolkit/yaml.h>
+///
+/// #include <iostream>
+/// #include <filesystem>
+///
+/// const std::filesystem::path path{"test.yaml"};
+/// const sourcemeta::jsontoolkit::JSON document =
+///   sourcemeta::jsontoolkit::from_yaml(path);
+/// sourcemeta::jsontoolkit::prettify(document, std::cerr);
+/// std::cerr << "\n";
+/// ```
+SOURCEMETA_JSONTOOLKIT_YAML_EXPORT
+auto from_yaml(const std::filesystem::path &path) -> JSON;
 
 } // namespace sourcemeta::jsontoolkit
 
