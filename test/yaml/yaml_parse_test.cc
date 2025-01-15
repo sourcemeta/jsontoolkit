@@ -66,3 +66,21 @@ TEST(YAML_parse, invalid_1) {
   EXPECT_THROW(sourcemeta::jsontoolkit::from_yaml(input),
                sourcemeta::jsontoolkit::YAMLParseError);
 }
+
+TEST(YAML_parse, stub_test_1) {
+  const auto result{sourcemeta::jsontoolkit::from_yaml(
+      std::filesystem::path{STUBS_PATH} / "test_1.yaml")};
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": "bar",
+    "baz": 2
+  })JSON");
+
+  EXPECT_EQ(result, expected);
+}
+
+TEST(YAML_parse, file_not_exists) {
+  EXPECT_THROW(sourcemeta::jsontoolkit::from_yaml(
+                   std::filesystem::path{STUBS_PATH} / "not_exists.yaml"),
+               std::filesystem::filesystem_error);
+}
