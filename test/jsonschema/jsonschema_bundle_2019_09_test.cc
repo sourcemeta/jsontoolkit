@@ -578,3 +578,17 @@ TEST(JSONSchema_bundle_2019_09, hyperschema_1) {
   EXPECT_TRUE(document.at("$defs").defines(
       "https://json-schema.org/draft/2019-09/hyper-schema"));
 }
+
+TEST(JSONSchema_bundle_2019_09, hyperschema_2) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::official_resolver(
+          "https://json-schema.org/draft/2019-09/hyper-schema")
+          .value();
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
+
+  EXPECT_TRUE(document.defines("$defs"));
+  EXPECT_TRUE(document.at("$defs").is_object());
+  EXPECT_EQ(document.at("$defs").size(), 9);
+}
