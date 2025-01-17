@@ -316,3 +316,29 @@ TEST(JSONSchema_relativize, 2020_12_2) {
 
   EXPECT_EQ(schema, expected);
 }
+
+TEST(JSONSchema_relativize, recursive_ref) {
+  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "https://www.sourcemeta.com",
+    "$recursiveAnchor": true,
+    "additionalProperties": {
+      "$recursiveRef": "#"
+    }
+  })JSON");
+
+  sourcemeta::jsontoolkit::relativize(
+      schema, sourcemeta::jsontoolkit::default_schema_walker,
+      sourcemeta::jsontoolkit::official_resolver);
+
+  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "https://www.sourcemeta.com",
+    "$recursiveAnchor": true,
+    "additionalProperties": {
+      "$recursiveRef": "#"
+    }
+  })JSON");
+
+  EXPECT_EQ(schema, expected);
+}

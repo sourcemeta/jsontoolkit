@@ -273,3 +273,28 @@ TEST(JSONSchema_FlatFileSchemaResolver, case_insensitive_reidentify) {
   EXPECT_TRUE(resolver("https://EXAMPLE.com").has_value());
   EXPECT_TRUE(resolver("https://example.com").has_value());
 }
+
+TEST(JSONSchema_FlatFileSchemaResolver, with_recursive_ref) {
+  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
+                         "2019-09-recursive-ref.json"};
+
+  const sourcemeta::jsontoolkit::JSON expected =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "https://www.sourcemeta.com/2019-09-recursive-ref.json",
+    "$recursiveAnchor": true,
+    "additionalProperties": {
+      "$recursiveRef": "#"
+    }
+  })JSON");
+
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier,
+            "https://www.sourcemeta.com/2019-09-recursive-ref.json");
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/2019-09-recursive-ref.json")
+                  .has_value());
+  EXPECT_EQ(
+      resolver("https://www.sourcemeta.com/2019-09-recursive-ref.json").value(),
+      expected);
+}
