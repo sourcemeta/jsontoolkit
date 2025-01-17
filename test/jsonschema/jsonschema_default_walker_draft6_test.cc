@@ -438,7 +438,8 @@ TEST(JSONSchema_default_walker_draft6, hyperschema_links) {
       default_schema_walker("links", VOCABULARIES_DRAFT6_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft6, hyperschema_href) {
@@ -447,7 +448,8 @@ TEST(JSONSchema_default_walker_draft6, hyperschema_href) {
       default_schema_walker("href", VOCABULARIES_DRAFT6_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft6, hyperschema_rel) {
@@ -456,7 +458,8 @@ TEST(JSONSchema_default_walker_draft6, hyperschema_rel) {
       default_schema_walker("rel", VOCABULARIES_DRAFT6_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft6, hyperschema_mediaType) {
@@ -465,7 +468,8 @@ TEST(JSONSchema_default_walker_draft6, hyperschema_mediaType) {
       default_schema_walker("mediaType", VOCABULARIES_DRAFT6_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft6, hyperschema_submissionEncType) {
@@ -474,7 +478,8 @@ TEST(JSONSchema_default_walker_draft6, hyperschema_submissionEncType) {
                                           VOCABULARIES_DRAFT6_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft6, hyperschema_base) {
@@ -483,7 +488,8 @@ TEST(JSONSchema_default_walker_draft6, hyperschema_base) {
       default_schema_walker("base", VOCABULARIES_DRAFT6_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft6, hyperschema_media) {
@@ -492,16 +498,20 @@ TEST(JSONSchema_default_walker_draft6, hyperschema_media) {
       default_schema_walker("media", VOCABULARIES_DRAFT6_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft6, hyperschema_readOnly) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("readOnly", VOCABULARIES_DRAFT6_HYPERSCHEMA)};
-  EXPECT_EQ(result.type, KeywordType::Unknown);
-  EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_TRUE(result.vocabulary.has_value());
+  EXPECT_EQ(result.vocabulary.value(),
+            "http://json-schema.org/draft-06/hyper-schema#");
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft6, hyperschema_hrefSchema) {
