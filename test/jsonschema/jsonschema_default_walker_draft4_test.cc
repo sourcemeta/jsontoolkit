@@ -393,7 +393,8 @@ TEST(JSONSchema_default_walker_draft4, hyperschema_links) {
       default_schema_walker("links", VOCABULARIES_DRAFT4_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft4, hyperschema_media) {
@@ -402,7 +403,8 @@ TEST(JSONSchema_default_walker_draft4, hyperschema_media) {
       default_schema_walker("media", VOCABULARIES_DRAFT4_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft4, hyperschema_pathStart) {
@@ -411,7 +413,8 @@ TEST(JSONSchema_default_walker_draft4, hyperschema_pathStart) {
       default_schema_walker("pathStart", VOCABULARIES_DRAFT4_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft4, hyperschema_href) {
@@ -420,7 +423,8 @@ TEST(JSONSchema_default_walker_draft4, hyperschema_href) {
       default_schema_walker("href", VOCABULARIES_DRAFT4_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft4, hyperschema_rel) {
@@ -429,7 +433,8 @@ TEST(JSONSchema_default_walker_draft4, hyperschema_rel) {
       default_schema_walker("rel", VOCABULARIES_DRAFT4_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft4, hyperschema_mediaType) {
@@ -438,7 +443,8 @@ TEST(JSONSchema_default_walker_draft4, hyperschema_mediaType) {
       default_schema_walker("mediaType", VOCABULARIES_DRAFT4_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft4, hyperschema_method) {
@@ -447,7 +453,8 @@ TEST(JSONSchema_default_walker_draft4, hyperschema_method) {
       default_schema_walker("method", VOCABULARIES_DRAFT4_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft4, hyperschema_encType) {
@@ -456,7 +463,8 @@ TEST(JSONSchema_default_walker_draft4, hyperschema_encType) {
       default_schema_walker("encType", VOCABULARIES_DRAFT4_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft4, hyperschema_readOnly) {
@@ -465,7 +473,8 @@ TEST(JSONSchema_default_walker_draft4, hyperschema_readOnly) {
       default_schema_walker("readOnly", VOCABULARIES_DRAFT4_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
-  EXPECT_TRUE(result.dependencies.empty());
+  const std::set<std::string> expected{"$ref"};
+  EXPECT_EQ(result.dependencies, expected);
 }
 
 TEST(JSONSchema_default_walker_draft4, hyperschema_targetSchema) {

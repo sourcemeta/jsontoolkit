@@ -537,3 +537,23 @@ TEST(JSONSchema_bundle_draft6, hyperschema_1) {
   EXPECT_TRUE(document.at("definitions")
                   .defines("http://json-schema.org/draft-06/hyper-schema"));
 }
+
+TEST(JSONSchema_bundle_draft6, hyperschema_ref_metaschema) {
+  sourcemeta::jsontoolkit::JSON document =
+      sourcemeta::jsontoolkit::parse(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/hyper-schema#",
+    "allOf": [
+      { "$ref": "http://json-schema.org/draft-06/schema#" }
+    ]
+  })JSON");
+
+  sourcemeta::jsontoolkit::bundle(
+      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
+
+  EXPECT_TRUE(document.defines("definitions"));
+  EXPECT_TRUE(document.at("definitions").is_object());
+  EXPECT_EQ(document.at("definitions").size(), 1);
+
+  EXPECT_TRUE(document.at("definitions")
+                  .defines("http://json-schema.org/draft-06/schema"));
+}
