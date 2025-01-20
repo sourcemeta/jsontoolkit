@@ -1,5 +1,5 @@
-#ifndef SOURCEMETA_JSONTOOLKIT_JSON_FLAT_MAP_H_
-#define SOURCEMETA_JSONTOOLKIT_JSON_FLAT_MAP_H_
+#ifndef SOURCEMETA_NOA_FLAT_MAP_H_
+#define SOURCEMETA_NOA_FLAT_MAP_H_
 
 #include <algorithm>        // std::swap
 #include <cassert>          // assert
@@ -8,16 +8,19 @@
 #include <utility>          // std::pair, std::move
 #include <vector>           // std::vector
 
-namespace sourcemeta::jsontoolkit {
+/// @defgroup flat_map Flat Map
 
-/// @ingroup json
+namespace sourcemeta::noa {
+
+// TODO: Allow passing custom allocators
+/// @ingroup flat_map
 template <typename Key, typename Value, typename Hash> class FlatMap {
 public:
   FlatMap() = default;
 
   using key_type = Key;
   using mapped_type = Value;
-  using hash_type = typename Hash::property_hash_type;
+  using hash_type = typename Hash::hash_type;
   using value_type = std::pair<key_type, mapped_type>;
 
   struct Entry {
@@ -55,7 +58,7 @@ public:
   auto assign(key_type &&key, mapped_type &&value) -> hash_type {
     const auto key_hash{this->hash(key)};
 
-    if (key_hash.is_perfect()) {
+    if (this->hasher.is_perfect(key_hash)) {
       for (auto &entry : this->data) {
         if (entry.hash == key_hash) {
           entry.second = std::move(value);
@@ -78,7 +81,7 @@ public:
   auto assign(const key_type &key, const mapped_type &value) -> hash_type {
     const auto key_hash{this->hash(key)};
 
-    if (key_hash.is_perfect()) {
+    if (this->hasher.is_perfect(key_hash)) {
       for (auto &entry : this->data) {
         if (entry.hash == key_hash) {
           entry.second = value;
@@ -104,7 +107,7 @@ public:
     assert(this->hash(key) == key_hash);
 
     // Move the perfect hash condition out of the loop for extra performance
-    if (key_hash.is_perfect()) {
+    if (this->hasher.is_perfect(key_hash)) {
       for (size_type index = 0; index < this->data.size(); index++) {
         if (this->data[index].hash == key_hash) {
           auto iterator{this->cbegin()};
@@ -131,7 +134,7 @@ public:
     assert(this->hash(key) == key_hash);
 
     // Move the perfect hash condition out of the loop for extra performance
-    if (key_hash.is_perfect()) {
+    if (this->hasher.is_perfect(key_hash)) {
       for (const auto &entry : this->data) {
         if (entry.hash == key_hash) {
           return true;
@@ -155,7 +158,7 @@ public:
     assert(this->hash(key) == key_hash);
 
     // Move the perfect hash condition out of the loop for extra performance
-    if (key_hash.is_perfect()) {
+    if (this->hasher.is_perfect(key_hash)) {
       for (const auto &entry : this->data) {
         if (entry.hash == key_hash) {
           return entry.second;
@@ -182,7 +185,7 @@ public:
     assert(this->hash(key) == key_hash);
 
     // Move the perfect hash condition out of the loop for extra performance
-    if (key_hash.is_perfect()) {
+    if (this->hasher.is_perfect(key_hash)) {
       for (auto &entry : this->data) {
         if (entry.hash == key_hash) {
           return entry.second;
@@ -207,7 +210,7 @@ public:
   auto erase(const key_type &key, const hash_type key_hash) -> size_type {
     const auto current_size{this->size()};
 
-    if (key_hash.is_perfect()) {
+    if (this->hasher.is_perfect(key_hash)) {
       for (auto &entry : this->data) {
         if (entry.hash == key_hash) {
           std::swap(entry, this->data.back());
@@ -262,6 +265,6 @@ private:
   Hash hasher;
 };
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::noa
 
 #endif

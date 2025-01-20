@@ -671,7 +671,8 @@ TEST(JSON_object, at_hash_const) {
   EXPECT_EQ(document.size(), 2);
   EXPECT_EQ(document.object_size(), 2);
 
-  const sourcemeta::jsontoolkit::Hash hasher;
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
   const auto hash_foo{hasher("foo")};
   const auto hash_bar{hasher("bar")};
 
@@ -689,7 +690,8 @@ TEST(JSON_object, at_hash_non_const) {
   EXPECT_EQ(document.size(), 2);
   EXPECT_EQ(document.object_size(), 2);
 
-  const sourcemeta::jsontoolkit::Hash hasher;
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
   const auto hash_foo{hasher("foo")};
   const auto hash_bar{hasher("bar")};
 
@@ -707,7 +709,8 @@ TEST(JSON_object, defines_hash_const) {
   EXPECT_EQ(document.size(), 2);
   EXPECT_EQ(document.object_size(), 2);
 
-  const sourcemeta::jsontoolkit::Hash hasher;
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
   EXPECT_TRUE(document.defines("foo", hasher("foo")));
   EXPECT_TRUE(document.defines("bar", hasher("bar")));
   EXPECT_FALSE(document.defines("baz", hasher("baz")));
