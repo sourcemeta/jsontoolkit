@@ -1,15 +1,17 @@
 #include <benchmark/benchmark.h>
 
 #include <cassert> // assert
+#include <string>  // std::string
 
-#include <sourcemeta/jsontoolkit/regex.h>
+#include <sourcemeta/noa/regex.h>
 
-#define BENCHMARK_REGEX(name, pattern, string)                                 \
+#define BENCHMARK_REGEX(name, pattern, input)                                  \
   static void name(benchmark::State &state) {                                  \
-    const auto regex{sourcemeta::jsontoolkit::to_regex(pattern)};              \
+    const auto regex{sourcemeta::noa::to_regex<std::string>(pattern)};         \
     assert(regex.has_value());                                                 \
     for (auto _ : state) {                                                     \
-      auto result{sourcemeta::jsontoolkit::matches(regex.value(), string)};    \
+      auto result{                                                             \
+          sourcemeta::noa::matches<std::string>(regex.value(), input)};        \
       assert(result);                                                          \
       benchmark::DoNotOptimize(result);                                        \
     }                                                                          \
