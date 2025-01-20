@@ -79,13 +79,13 @@ function(noa_library)
       "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
   endif()
 
-  if(NOA_LIBRARY_SOURCES)
-    if(NOA_LIBRARY_VARIANT)
-      set(export_name "${NOA_LIBRARY_PROJECT}::${NOA_LIBRARY_NAME}::${NOA_LIBRARY_VARIANT}")
-    else()
-      set(export_name "${NOA_LIBRARY_PROJECT}::${NOA_LIBRARY_NAME}")
-    endif()
+  if(NOA_LIBRARY_VARIANT)
+    set(export_name "${NOA_LIBRARY_PROJECT}::${NOA_LIBRARY_NAME}::${NOA_LIBRARY_VARIANT}")
+  else()
+    set(export_name "${NOA_LIBRARY_PROJECT}::${NOA_LIBRARY_NAME}")
+  endif()
 
+  if(NOA_LIBRARY_SOURCES)
     set_target_properties(${TARGET_NAME}
       PROPERTIES
         OUTPUT_NAME ${TARGET_NAME}
@@ -99,6 +99,7 @@ function(noa_library)
         OUTPUT_NAME ${TARGET_NAME}
         PUBLIC_HEADER "${PUBLIC_HEADER}"
         PRIVATE_HEADER "${ABSOLUTE_PRIVATE_HEADERS}"
+        EXPORT_NAME "${export_name}"
         FOLDER "${NOA_LIBRARY_FOLDER}")
   endif()
 

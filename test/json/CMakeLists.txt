@@ -1,10 +1,9 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME json 
-  FOLDER "JSON Toolkit/JSON" 
+noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME json
+  FOLDER "JSON Toolkit/JSON"
   SOURCES
     json_array_test.cc
     json_boolean_test.cc
     json_error_test.cc
-    json_flat_map_test.cc
     json_hash_test.cc
     json_integer_test.cc
     json_null_test.cc
@@ -28,7 +27,7 @@ target_compile_definitions(sourcemeta_jsontoolkit_json_unit
 # JSON Test Suite
 # See https://github.com/nst/JSONTestSuite
 noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsontestsuite
-  FOLDER "JSON Toolkit/JSON" 
+  FOLDER "JSON Toolkit/JSON"
   SOURCES jsontestsuite.cc)
 target_compile_definitions(sourcemeta_jsontoolkit_jsontestsuite_unit
   PRIVATE JSONTESTSUITE_PATH="${PROJECT_SOURCE_DIR}/vendor/jsontestsuite")
