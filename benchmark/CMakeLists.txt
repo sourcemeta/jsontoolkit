@@ -13,12 +13,9 @@ if(JSONTOOLKIT_JSONPOINTER)
 endif()
 
 if(BENCHMARK_SOURCES)
-  add_executable(sourcemeta_jsontoolkit_benchmark ${BENCHMARK_SOURCES})
-  noa_add_default_options(PRIVATE sourcemeta_jsontoolkit_benchmark)
-  target_link_libraries(sourcemeta_jsontoolkit_benchmark
-    PRIVATE benchmark::benchmark)
-  target_link_libraries(sourcemeta_jsontoolkit_benchmark
-    PRIVATE benchmark::benchmark_main)
+  noa_googlebenchmark(NAMESPACE sourcemeta PROJECT jsontoolkit
+    FOLDER "JSON Toolkit" SOURCES ${BENCHMARK_SOURCES})
+
   target_compile_definitions(sourcemeta_jsontoolkit_benchmark
     PRIVATE CURRENT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}")
 
