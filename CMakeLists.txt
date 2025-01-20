@@ -20,6 +20,7 @@ option(JSONTOOLKIT_ADDRESS_SANITIZER "Build JSON Toolkit with an address sanitiz
 option(JSONTOOLKIT_UNDEFINED_SANITIZER "Build JSON Toolkit with an undefined behavior sanitizer" OFF)
 
 set(NOA_GOOGLETEST ${JSONTOOLKIT_TESTS} CACHE BOOL "GoogleTest")
+set(NOA_GOOGLEBENCHMARK ${JSONTOOLKIT_BENCHMARK} CACHE BOOL "GoogleBenchmark")
 add_subdirectory(vendor/noa)
 
 if(JSONTOOLKIT_INSTALL)
@@ -134,7 +135,6 @@ if(JSONTOOLKIT_TESTS)
   endif()
 
   if(JSONTOOLKIT_BENCHMARK)
-    find_package(GoogleBenchmark REQUIRED)
     add_subdirectory(benchmark)
   endif()
 endif()

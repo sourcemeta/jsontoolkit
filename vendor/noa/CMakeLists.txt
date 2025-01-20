@@ -6,8 +6,13 @@ include(noa)
 
 # Options
 option(NOA_GOOGLETEST "Build the Google Test library" ON)
+option(NOA_GOOGLEBENCHMARK "Build the Google Benchmark library" ON)
 
 if(NOA_GOOGLETEST)
   find_package(GoogleTest REQUIRED)
   enable_testing()
+endif()
+
+if(NOA_GOOGLEBENCHMARK)
+  find_package(GoogleBenchmark REQUIRED)
 endif()
