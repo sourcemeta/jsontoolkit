@@ -3,7 +3,6 @@ project(jsontoolkit VERSION 2.0.0 LANGUAGES C CXX
   DESCRIPTION "The swiss-army knife for JSON programming in C++"
   HOMEPAGE_URL "https://jsontoolkit.sourcemeta.com")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
-include(vendor/noa/cmake/noa.cmake)
 
 # Options
 option(JSONTOOLKIT_URI "Build the JSON Toolkit URI library" ON)
@@ -19,6 +18,9 @@ option(JSONTOOLKIT_DOCS "Build the JSON Toolkit docs" OFF)
 option(JSONTOOLKIT_INSTALL "Install the JSON Toolkit library" ON)
 option(JSONTOOLKIT_ADDRESS_SANITIZER "Build JSON Toolkit with an address sanitizer" OFF)
 option(JSONTOOLKIT_UNDEFINED_SANITIZER "Build JSON Toolkit with an undefined behavior sanitizer" OFF)
+
+set(NOA_GOOGLETEST ${JSONTOOLKIT_TESTS} CACHE BOOL "GoogleTest")
+add_subdirectory(vendor/noa)
 
 if(JSONTOOLKIT_INSTALL)
   include(GNUInstallDirs)
@@ -92,7 +94,6 @@ endif()
 
 # Testing
 if(JSONTOOLKIT_TESTS)
-  find_package(GoogleTest REQUIRED)
   enable_testing()
 
   if(JSONTOOLKIT_URI)
