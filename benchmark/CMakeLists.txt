@@ -4,10 +4,6 @@ if(JSONTOOLKIT_JSON)
   list(APPEND BENCHMARK_SOURCES json.cc)
 endif()
 
-if(JSONTOOLKIT_REGEX)
-  list(APPEND BENCHMARK_SOURCES regex.cc)
-endif()
-
 if(JSONTOOLKIT_JSONPOINTER)
   list(APPEND BENCHMARK_SOURCES jsonpointer.cc)
 endif()
@@ -22,11 +18,6 @@ if(BENCHMARK_SOURCES)
   if(JSONTOOLKIT_JSON)
     target_link_libraries(sourcemeta_jsontoolkit_benchmark
       PRIVATE sourcemeta::jsontoolkit::json)
-  endif()
-
-  if(JSONTOOLKIT_REGEX)
-    target_link_libraries(sourcemeta_jsontoolkit_benchmark
-      PRIVATE sourcemeta::jsontoolkit::regex)
   endif()
 
   if(JSONTOOLKIT_JSONPOINTER)
