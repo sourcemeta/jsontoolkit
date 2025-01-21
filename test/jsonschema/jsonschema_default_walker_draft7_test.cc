@@ -53,7 +53,7 @@ TEST(JSONSchema_default_walker_draft7, definitions) {
 TEST(JSONSchema_default_walker_draft7, comment) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("$comment", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");
@@ -436,7 +436,7 @@ TEST(JSONSchema_default_walker_draft7, contentEncoding) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("contentEncoding", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");
@@ -448,7 +448,7 @@ TEST(JSONSchema_default_walker_draft7, contentMediaType) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("contentMediaType", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");
@@ -459,7 +459,7 @@ TEST(JSONSchema_default_walker_draft7, contentMediaType) {
 TEST(JSONSchema_default_walker_draft7, title) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("title", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");
@@ -470,7 +470,7 @@ TEST(JSONSchema_default_walker_draft7, title) {
 TEST(JSONSchema_default_walker_draft7, description) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("description", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");
@@ -481,7 +481,7 @@ TEST(JSONSchema_default_walker_draft7, description) {
 TEST(JSONSchema_default_walker_draft7, default) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("default", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");
@@ -492,7 +492,7 @@ TEST(JSONSchema_default_walker_draft7, default) {
 TEST(JSONSchema_default_walker_draft7, readOnly) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("readOnly", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");
@@ -503,7 +503,7 @@ TEST(JSONSchema_default_walker_draft7, readOnly) {
 TEST(JSONSchema_default_walker_draft7, writeOnly) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("writeOnly", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");
@@ -514,7 +514,7 @@ TEST(JSONSchema_default_walker_draft7, writeOnly) {
 TEST(JSONSchema_default_walker_draft7, examples) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("examples", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");

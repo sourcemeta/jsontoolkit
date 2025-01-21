@@ -119,7 +119,7 @@ TEST(JSONSchema_default_walker_2019_09, core_comment) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("$comment", VOCABULARIES_2019_09_CORE)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/core");
