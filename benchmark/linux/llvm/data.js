@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737409310885,
+  "lastUpdate": 1737461720162,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -45540,6 +45540,72 @@ window.BENCHMARK_DATA = {
             "value": 354.79489382626633,
             "unit": "ns/iter",
             "extra": "iterations: 1915681\ncpu: 354.76406823474355 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4ad4547ee188b65de4b9c940cf76113e66e4ab46",
+          "message": "Move regex module to Noa (#1456)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2025-01-21T08:10:51-04:00",
+          "tree_id": "be59519589755227b3633e9680efbbe7549153cc",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/4ad4547ee188b65de4b9c940cf76113e66e4ab46"
+        },
+        "date": 1737461716928,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 449.2769641544686,
+            "unit": "ns/iter",
+            "extra": "iterations: 1562148\ncpu: 449.2393512010385 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Parse_1",
+            "value": 30099.82374593366,
+            "unit": "ns/iter",
+            "extra": "iterations: 23364\ncpu: 30099.115776408154 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Fast_Hash_Helm_Chart_Lock",
+            "value": 55.44617410924271,
+            "unit": "ns/iter",
+            "extra": "iterations: 12639122\ncpu: 55.44491381600716 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Equality_Helm_Chart_Lock",
+            "value": 140.54427288235675,
+            "unit": "ns/iter",
+            "extra": "iterations: 5109132\ncpu: 140.53957756425163 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Object_Traverse",
+            "value": 44.910295181602834,
+            "unit": "ns/iter",
+            "extra": "iterations: 15598025\ncpu: 44.90955784466306 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Object_Try_Traverse",
+            "value": 50.191290974064096,
+            "unit": "ns/iter",
+            "extra": "iterations: 11824583\ncpu: 50.19026861243226 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Push_Back_Pointer_To_Weak_Pointer",
+            "value": 352.40322224152357,
+            "unit": "ns/iter",
+            "extra": "iterations: 1986195\ncpu: 352.39194540314503 ns\nthreads: 1"
           }
         ]
       }
