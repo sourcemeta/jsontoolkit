@@ -34,3 +34,5 @@ cmake/FindGoogleTest.cmake
 Brewfile
 Brewfile.lock.json
 CHANGELOG.markdown
+vendor/noa/vendor/googletest
+vendor/noa/vendor/googlebenchmark
