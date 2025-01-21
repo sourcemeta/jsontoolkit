@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737485567692,
+  "lastUpdate": 1737486886620,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -46002,6 +46002,70 @@ window.BENCHMARK_DATA = {
             "value": 352.3646054116624,
             "unit": "ns/iter",
             "extra": "iterations: 1986298\ncpu: 352.3524043220102 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti",
+            "email": "jv@jviotti.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "d3436cfa5546f5f5c01ffa2f2314aabd966a84ed",
+          "message": "Don't ship Noa when vendoring (#1462)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2025-01-21T18:45:46Z",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/d3436cfa5546f5f5c01ffa2f2314aabd966a84ed"
+        },
+        "date": 1737486883508,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 439.5780634214989,
+            "unit": "ns/iter",
+            "extra": "iterations: 1566598\ncpu: 439.5204066390995 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Parse_1",
+            "value": 30262.67378665774,
+            "unit": "ns/iter",
+            "extra": "iterations: 23221\ncpu: 30261.025321906895 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Fast_Hash_Helm_Chart_Lock",
+            "value": 55.35855034205425,
+            "unit": "ns/iter",
+            "extra": "iterations: 12659207\ncpu: 55.35734995090926 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Equality_Helm_Chart_Lock",
+            "value": 143.133154724085,
+            "unit": "ns/iter",
+            "extra": "iterations: 4961296\ncpu: 143.13234384725283 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Object_Traverse",
+            "value": 44.932415088588094,
+            "unit": "ns/iter",
+            "extra": "iterations: 15594753\ncpu: 44.93141096880471 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Object_Try_Traverse",
+            "value": 49.20853205839887,
+            "unit": "ns/iter",
+            "extra": "iterations: 14221281\ncpu: 49.20515500678172 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Push_Back_Pointer_To_Weak_Pointer",
+            "value": 354.222797792722,
+            "unit": "ns/iter",
+            "extra": "iterations: 1961146\ncpu: 354.2016790182883 ns\nthreads: 1"
           }
         ]
       }
