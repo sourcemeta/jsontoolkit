@@ -17,7 +17,8 @@ function(noa_googletest)
     SOURCES "${NOA_GOOGLETEST_SOURCES}"
     OUTPUT TARGET_NAME)
 
-  target_link_libraries("${TARGET_NAME}" PRIVATE GTest::gtest GTest::gtest_main)
+  target_link_libraries("${TARGET_NAME}"
+    PRIVATE GTest::gtest GTest::gmock GTest::gtest_main)
   add_test(NAME "${NOA_GOOGLETEST_PROJECT}.${NOA_GOOGLETEST_NAME}"
     COMMAND "${TARGET_NAME}" --gtest_brief=1)
 endfunction()
