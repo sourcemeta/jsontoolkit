@@ -26,6 +26,7 @@ vendor/googlebenchmark.mask
 vendor/referencing-suite
 vendor/referencing-suite.mask
 vendor/jsonschema-test-suite
+vendor/noa
 cmake/FindGoogleTest.cmake
 .editorconfig
 .ackrc
@@ -34,5 +35,3 @@ cmake/FindGoogleTest.cmake
 Brewfile
 Brewfile.lock.json
 CHANGELOG.markdown
-vendor/noa/vendor/googletest
-vendor/noa/vendor/googlebenchmark
