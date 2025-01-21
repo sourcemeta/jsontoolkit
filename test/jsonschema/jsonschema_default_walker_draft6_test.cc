@@ -391,7 +391,7 @@ TEST(JSONSchema_default_walker_draft6, format) {
 TEST(JSONSchema_default_walker_draft6, title) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("title", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-06/schema#");
@@ -402,7 +402,7 @@ TEST(JSONSchema_default_walker_draft6, title) {
 TEST(JSONSchema_default_walker_draft6, description) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("description", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-06/schema#");
@@ -413,7 +413,7 @@ TEST(JSONSchema_default_walker_draft6, description) {
 TEST(JSONSchema_default_walker_draft6, default) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("default", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-06/schema#");
@@ -424,7 +424,7 @@ TEST(JSONSchema_default_walker_draft6, default) {
 TEST(JSONSchema_default_walker_draft6, examples) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("examples", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-06/schema#");
@@ -506,7 +506,7 @@ TEST(JSONSchema_default_walker_draft6, hyperschema_readOnly) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("readOnly", VOCABULARIES_DRAFT6_HYPERSCHEMA)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-06/hyper-schema#");
@@ -617,7 +617,7 @@ TEST(JSONSchema_default_walker_draft6,
      hyperschema_readOnly_without_hyperschema) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("readOnly", VOCABULARIES_DRAFT6)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-06/schema#");

@@ -127,7 +127,7 @@ TEST(JSONSchema_default_walker_2020_12, core_comment) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("$comment", VOCABULARIES_2020_12_CORE)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2020-12/vocab/core");

@@ -214,7 +214,7 @@ TEST(JSONSchema_default_walker_draft2, format) {
 TEST(JSONSchema_default_walker_draft2, title) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("title", VOCABULARIES_DRAFT2)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-02/schema#");
@@ -224,7 +224,7 @@ TEST(JSONSchema_default_walker_draft2, title) {
 TEST(JSONSchema_default_walker_draft2, description) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("description", VOCABULARIES_DRAFT2)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-02/schema#");
@@ -234,7 +234,7 @@ TEST(JSONSchema_default_walker_draft2, description) {
 TEST(JSONSchema_default_walker_draft2, default) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{default_schema_walker("default", VOCABULARIES_DRAFT2)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-02/schema#");
@@ -275,7 +275,7 @@ TEST(JSONSchema_default_walker_draft2, contentEncoding) {
   using namespace sourcemeta::jsontoolkit;
   const auto result{
       default_schema_walker("contentEncoding", VOCABULARIES_DRAFT2)};
-  EXPECT_EQ(result.type, KeywordType::Other);
+  EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-02/schema#");
