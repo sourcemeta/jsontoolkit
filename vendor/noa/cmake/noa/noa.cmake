@@ -1,4 +1,4 @@
-set(NOA_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/noa")
+set(NOA_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}")
 include("${NOA_DIRECTORY}/shim.cmake")
 include("${NOA_DIRECTORY}/variables.cmake")
 include("${NOA_DIRECTORY}/defaults.cmake")

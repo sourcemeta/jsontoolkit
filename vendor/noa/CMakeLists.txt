@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(noa VERSION 0.0.0 LANGUAGES CXX
-  DESCRIPTION "The swiss-army knife for JSON programming in C++")
+  DESCRIPTION "A set of re-usable and opinionated utilities for Sourcemeta projects")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/noa")
 include(noa)
 
 # Options
@@ -12,6 +13,7 @@ option(NOA_GOOGLETEST "Build the Google Test library" ON)
 option(NOA_GOOGLEBENCHMARK "Build the Google Benchmark library" ON)
 option(NOA_TESTS "Build the Noa tests" OFF)
 option(NOA_BENCHMARK "Build the Noa benchmarks" OFF)
+option(NOA_DOCS "Build the Noa docs" OFF)
 option(NOA_INSTALL "Install the Noa library" ON)
 option(NOA_ADDRESS_SANITIZER "Build Noa with an address sanitizer" OFF)
 option(NOA_UNDEFINED_SANITIZER "Build Noa with an undefined behavior sanitizer" OFF)
@@ -54,6 +56,11 @@ if(NOA_ADDRESS_SANITIZER)
   noa_sanitizer(TYPE address)
 elseif(NOA_UNDEFINED_SANITIZER)
   noa_sanitizer(TYPE undefined)
+endif()
+
+if(NOA_DOCS)
+  noa_target_doxygen(CONFIG "${PROJECT_SOURCE_DIR}/doxygen/Doxyfile.in"
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/website")
 endif()
 
 if(PROJECT_IS_TOP_LEVEL)
