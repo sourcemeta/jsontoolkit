@@ -18,9 +18,7 @@ option(JSONTOOLKIT_INSTALL "Install the JSON Toolkit library" ON)
 option(JSONTOOLKIT_ADDRESS_SANITIZER "Build JSON Toolkit with an address sanitizer" OFF)
 option(JSONTOOLKIT_UNDEFINED_SANITIZER "Build JSON Toolkit with an undefined behavior sanitizer" OFF)
 
-set(NOA_GOOGLETEST ${JSONTOOLKIT_TESTS} CACHE BOOL "GoogleTest")
-set(NOA_GOOGLEBENCHMARK ${JSONTOOLKIT_BENCHMARK} CACHE BOOL "GoogleBenchmark")
-add_subdirectory(vendor/noa)
+find_package(Noa REQUIRED)
 
 if(JSONTOOLKIT_INSTALL)
   include(GNUInstallDirs)
