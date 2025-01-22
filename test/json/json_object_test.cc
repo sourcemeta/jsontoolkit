@@ -742,3 +742,23 @@ TEST(JSON_object, as_object_size) {
       {"foo", sourcemeta::jsontoolkit::JSON{"bar"}}};
   EXPECT_EQ(document.as_object().size(), 1);
 }
+
+TEST(JSON_object, at_index) {
+  const sourcemeta::jsontoolkit::JSON document{
+      {"foo", sourcemeta::jsontoolkit::JSON{false}},
+      {"bar", sourcemeta::jsontoolkit::JSON{true}}};
+
+  const auto &entry_1{document.as_object().at(0)};
+  const auto &entry_2{document.as_object().at(1)};
+
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
+
+  EXPECT_EQ(entry_1.first, "foo");
+  EXPECT_FALSE(entry_1.second.to_boolean());
+  EXPECT_EQ(entry_1.hash, hasher("foo"));
+
+  EXPECT_EQ(entry_2.first, "bar");
+  EXPECT_TRUE(entry_2.second.to_boolean());
+  EXPECT_EQ(entry_2.hash, hasher("bar"));
+}
