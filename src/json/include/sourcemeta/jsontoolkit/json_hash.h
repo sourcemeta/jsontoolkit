@@ -5,6 +5,10 @@
 #include <cstdint> // std::uint64_t
 #include <cstring> // std::memcpy
 
+#if defined(__AVX2__)
+#include <immintrin.h>
+#endif
+
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup json
@@ -23,7 +27,10 @@ template <typename T> struct FastHash {
 template <typename T> struct KeyHash {
   struct hash_type {
     // For performance when the platform allows it
-#if defined(__SIZEOF_INT128__)
+#if defined(__AVX2__)
+    using type = __m256i; // Use AVX2 256-bit integer vector type
+    type a{0};
+#elif defined(__SIZEOF_INT128__)
     using type = __uint128_t;
     type a{0};
     type b{0};
@@ -36,7 +43,9 @@ template <typename T> struct KeyHash {
 #endif
 
     inline auto operator==(const hash_type &other) const noexcept -> bool {
-#if defined(__SIZEOF_INT128__)
+#if defined(__AVX2__)
+      return _mm256_testc_si256(this->a, other.a);
+#elif defined(__SIZEOF_INT128__)
       return this->a == other.a && this->b == other.b;
 #else
       return this->a == other.a && this->b == other.b && this->c == other.c &&

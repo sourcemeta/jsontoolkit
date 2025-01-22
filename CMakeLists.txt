@@ -20,6 +20,15 @@ option(JSONTOOLKIT_UNDEFINED_SANITIZER "Build JSON Toolkit with an undefined beh
 
 find_package(Noa REQUIRED)
 
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+  include(CheckCXXCompilerFlag)
+  check_cxx_compiler_flag("-mavx2" COMPILER_SUPPORTS_AVX2)
+  if(COMPILER_SUPPORTS_AVX2)
+    message(STATUS "AVX2 supported, enabling -mavx2")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2")
+  endif()
+endif()
+
 if(JSONTOOLKIT_INSTALL)
   include(GNUInstallDirs)
   include(CMakePackageConfigHelpers)
