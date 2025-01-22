@@ -107,3 +107,12 @@ TEST(JSON_string, contains_character_false) {
   const sourcemeta::jsontoolkit::JSON document{"foo"};
   EXPECT_FALSE(document.contains('b'));
 }
+
+TEST(JSON_string, string_hash) {
+  const auto document = sourcemeta::jsontoolkit::parse(R"JSON({
+    "foo": true
+  })JSON");
+
+  const auto key = sourcemeta::jsontoolkit::JSON{"foo"};
+  EXPECT_TRUE(document.defines(key.to_string(), key.string_hash()));
+}

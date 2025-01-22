@@ -844,6 +844,22 @@ public:
   /// ```
   [[nodiscard]] auto string_size() const -> std::size_t;
 
+  /// If the input JSON instance is a string, return its hash.
+  ///
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/jsontoolkit/json.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::jsontoolkit::JSON my_string{"foo"};
+  /// const sourcemeta::jsontoolkit::JSON my_object =
+  ///   sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
+  /// assert(my_object.defines("foo", my_string.string_hash()));
+  /// ```
+  [[nodiscard]] auto string_hash() const
+      -> const Object::Container::hash_type &;
+
   /// If the input JSON instance is an array, return its number of elements.
   ///
   /// For example:
@@ -1522,7 +1538,7 @@ private:
     bool data_boolean;
     Integer data_integer;
     Real data_real;
-    String data_string;
+    std::pair<String, typename Object::Container::hash_type> data_string;
     Array data_array;
     Object data_object;
   };
