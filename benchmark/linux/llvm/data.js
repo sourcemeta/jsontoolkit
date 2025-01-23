@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737636469140,
+  "lastUpdate": 1737638593492,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -46526,6 +46526,120 @@ window.BENCHMARK_DATA = {
             "value": 349.7551354877506,
             "unit": "ns/iter",
             "extra": "iterations: 2001952\ncpu: 349.7394048408754 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ae3c076561031601b41fc374fff454b03f247893",
+          "message": "Benchmark JSON string equality (#1471)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2025-01-23T09:17:57-04:00",
+          "tree_id": "e37bff234ff7193f3f8ec87b0d12b9d246cdc393",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/ae3c076561031601b41fc374fff454b03f247893"
+        },
+        "date": 1737638590190,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 386.2590280374966,
+            "unit": "ns/iter",
+            "extra": "iterations: 1769986\ncpu: 386.25603309856683 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Parse_1",
+            "value": 30344.29593643512,
+            "unit": "ns/iter",
+            "extra": "iterations: 23157\ncpu: 30344.091678542132 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Fast_Hash_Helm_Chart_Lock",
+            "value": 58.44219279496071,
+            "unit": "ns/iter",
+            "extra": "iterations: 11945613\ncpu: 58.44039121307544 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Equality_Helm_Chart_Lock",
+            "value": 146.9878929870455,
+            "unit": "ns/iter",
+            "extra": "iterations: 4873952\ncpu: 146.98119513692376 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Equal/10",
+            "value": 6.538812176397777,
+            "unit": "ns/iter",
+            "extra": "iterations: 107078896\ncpu: 6.538502946462952 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Equal/100",
+            "value": 7.15719781124909,
+            "unit": "ns/iter",
+            "extra": "iterations: 97774313\ncpu: 7.156768506264013 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Equal_Small_By_Perfect_Hash/10",
+            "value": 0.31091466182617306,
+            "unit": "ns/iter",
+            "extra": "iterations: 2238531380\ncpu: 0.3109000169566529 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Equal_Small_By_Runtime_Perfect_Hash/10",
+            "value": 14.609815465217313,
+            "unit": "ns/iter",
+            "extra": "iterations: 47894602\ncpu: 14.609877330226077 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Fast_Hash/10",
+            "value": 2.17623155407128,
+            "unit": "ns/iter",
+            "extra": "iterations: 321773103\ncpu: 2.1762144550658697 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Fast_Hash/100",
+            "value": 2.1752030060057246,
+            "unit": "ns/iter",
+            "extra": "iterations: 321595658\ncpu: 2.1751858602518865 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Key_Hash/10",
+            "value": 3.4218148570493314,
+            "unit": "ns/iter",
+            "extra": "iterations: 204472997\ncpu: 3.4217957836261403 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Key_Hash/100",
+            "value": 1.2444069813174337,
+            "unit": "ns/iter",
+            "extra": "iterations: 562235204\ncpu: 1.2444125003599005 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Object_Traverse",
+            "value": 44.5159451759355,
+            "unit": "ns/iter",
+            "extra": "iterations: 15671950\ncpu: 44.51474526143848 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Object_Try_Traverse",
+            "value": 52.71724197339941,
+            "unit": "ns/iter",
+            "extra": "iterations: 13233810\ncpu: 52.71641228036365 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Push_Back_Pointer_To_Weak_Pointer",
+            "value": 371.384346567401,
+            "unit": "ns/iter",
+            "extra": "iterations: 1886040\ncpu: 371.3806902292635 ns\nthreads: 1"
           }
         ]
       }
