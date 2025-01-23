@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 
-#include <cassert> // assert
+#include <cassert>       // assert
+#include <unordered_set> // unordered_set
 
 #include <sourcemeta/jsontoolkit/json.h>
 
@@ -309,6 +310,35 @@ static void JSON_Object_Defines_Miss_Too_Large(benchmark::State &state) {
   }
 }
 
+static void JSON_String_Set_Unordered(benchmark::State &state) {
+  std::unordered_set<sourcemeta::jsontoolkit::JSON,
+                     sourcemeta::jsontoolkit::Hash>
+      set;
+  set.emplace("javascript");
+  set.emplace("ruby:bundler");
+  set.emplace("php:composer");
+  set.emplace("python");
+  set.emplace("go:modules");
+  set.emplace("go:dep");
+  set.emplace("java:maven");
+  set.emplace("java:gradle");
+  set.emplace("dotnet:nuget");
+  set.emplace("rust:cargo");
+  set.emplace("elixir:hex");
+  set.emplace("docker");
+  set.emplace("terraform");
+  set.emplace("submodules");
+  set.emplace("elm");
+  set.emplace("github_actions");
+
+  const sourcemeta::jsontoolkit::JSON value{"github_actions"};
+  for (auto _ : state) {
+    auto result = set.contains(value);
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
 BENCHMARK(JSON_Array_Of_Objects_Unique);
 BENCHMARK(JSON_Parse_1);
 BENCHMARK(JSON_Fast_Hash_Helm_Chart_Lock);
@@ -321,3 +351,4 @@ BENCHMARK(JSON_String_Key_Hash)->Args({10})->Args({100});
 BENCHMARK(JSON_Object_Defines_Miss_Same_Length);
 BENCHMARK(JSON_Object_Defines_Miss_Too_Small);
 BENCHMARK(JSON_Object_Defines_Miss_Too_Large);
+BENCHMARK(JSON_String_Set_Unordered);
