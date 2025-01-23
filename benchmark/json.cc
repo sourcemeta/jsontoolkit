@@ -191,7 +191,79 @@ static void JSON_Equality_Helm_Chart_Lock(benchmark::State &state) {
   }
 }
 
+static void JSON_String_Equal(benchmark::State &state) {
+  const auto length{static_cast<std::size_t>(state.range(0))};
+  sourcemeta::jsontoolkit::JSON::String string_left(length, 'x');
+  sourcemeta::jsontoolkit::JSON::String string_right(length, 'x');
+  const sourcemeta::jsontoolkit::JSON left{std::move(string_left)};
+  const sourcemeta::jsontoolkit::JSON right{std::move(string_right)};
+  for (auto _ : state) {
+    bool result = left == right;
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
+static void JSON_String_Equal_Small_By_Perfect_Hash(benchmark::State &state) {
+  const auto length{static_cast<std::size_t>(state.range(0))};
+  sourcemeta::jsontoolkit::JSON::String left(length, 'x');
+  sourcemeta::jsontoolkit::JSON::String right(length, 'x');
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
+  const auto hash_left{hasher(left)};
+  const auto hash_right{hasher(right)};
+  assert(hasher.is_perfect(hash_left));
+  assert(hasher.is_perfect(hash_right));
+  for (auto _ : state) {
+    bool result = hash_left == hash_right;
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
+static void
+JSON_String_Equal_Small_By_Runtime_Perfect_Hash(benchmark::State &state) {
+  const auto length{static_cast<std::size_t>(state.range(0))};
+  sourcemeta::jsontoolkit::JSON::String left(length, 'x');
+  sourcemeta::jsontoolkit::JSON::String right(length, 'x');
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
+  for (auto _ : state) {
+    const auto hash_left{hasher(left)};
+    const auto hash_right{hasher(right)};
+    assert(hasher.is_perfect(hash_left));
+    assert(hasher.is_perfect(hash_right));
+    bool result = hash_left == hash_right;
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
+static void JSON_String_Fast_Hash(benchmark::State &state) {
+  const auto length{static_cast<std::size_t>(state.range(0))};
+  sourcemeta::jsontoolkit::JSON::String value(length, 'x');
+  const sourcemeta::jsontoolkit::JSON document{std::move(value)};
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(document.fast_hash());
+  }
+}
+
+static void JSON_String_Key_Hash(benchmark::State &state) {
+  const auto length{static_cast<std::size_t>(state.range(0))};
+  sourcemeta::jsontoolkit::JSON::String value(length, 'x');
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(hasher(value));
+  }
+}
+
 BENCHMARK(JSON_Array_Of_Objects_Unique);
 BENCHMARK(JSON_Parse_1);
 BENCHMARK(JSON_Fast_Hash_Helm_Chart_Lock);
 BENCHMARK(JSON_Equality_Helm_Chart_Lock);
+BENCHMARK(JSON_String_Equal)->Args({10})->Args({100});
+BENCHMARK(JSON_String_Equal_Small_By_Perfect_Hash)->Args({10});
+BENCHMARK(JSON_String_Equal_Small_By_Runtime_Perfect_Hash)->Args({10});
+BENCHMARK(JSON_String_Fast_Hash)->Args({10})->Args({100});
+BENCHMARK(JSON_String_Key_Hash)->Args({10})->Args({100});
