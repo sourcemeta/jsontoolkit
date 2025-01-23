@@ -345,36 +345,308 @@ static void JSON_String_Set_Flat_Perfect(benchmark::State &state) {
   const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
       hasher;
   std::vector<
-      std::pair<sourcemeta::jsontoolkit::JSON,
+      std::pair<sourcemeta::jsontoolkit::JSON::String,
                 sourcemeta::jsontoolkit::JSON::Object::Container::hash_type>>
       set;
 
-  set.emplace_back("javascript", hasher("javascript"));
-  set.emplace_back("ruby:bundler", hasher("ruby:bundler"));
-  set.emplace_back("php:composer", hasher("php:composer"));
-  set.emplace_back("python", hasher("python"));
-  set.emplace_back("go:modules", hasher("go:modules"));
-  set.emplace_back("go:dep", hasher("go:dep"));
-  set.emplace_back("java:maven", hasher("java:maven"));
-  set.emplace_back("java:gradle", hasher("java:gradle"));
-  set.emplace_back("dotnet:nuget", hasher("dotnet:nuget"));
-  set.emplace_back("rust:cargo", hasher("rust:cargo"));
-  set.emplace_back("elixir:hex", hasher("elixir:hex"));
-  set.emplace_back("docker", hasher("docker"));
-  set.emplace_back("terraform", hasher("terraform"));
-  set.emplace_back("submodules", hasher("submodules"));
   set.emplace_back("elm", hasher("elm"));
+  set.emplace_back("docker", hasher("docker"));
+  set.emplace_back("python", hasher("python"));
+  set.emplace_back("go:dep", hasher("go:dep"));
+  set.emplace_back("terraform", hasher("terraform"));
+  set.emplace_back("elixir:hex", hasher("elixir:hex"));
+  set.emplace_back("go:modules", hasher("go:modules"));
+  set.emplace_back("javascript", hasher("javascript"));
+  set.emplace_back("java:maven", hasher("java:maven"));
+  set.emplace_back("rust:cargo", hasher("rust:cargo"));
+  set.emplace_back("submodules", hasher("submodules"));
+  set.emplace_back("java:gradle", hasher("java:gradle"));
+  set.emplace_back("php:composer", hasher("php:composer"));
+  set.emplace_back("ruby:bundler", hasher("ruby:bundler"));
+  set.emplace_back("dotnet:nuget", hasher("dotnet:nuget"));
   set.emplace_back("github_actions", hasher("github_actions"));
+
+  std::vector<std::pair<std::size_t, std::size_t>> toc;
+  // 0 = none
+  toc.emplace_back(0, 0);
+  // 1 = none
+  toc.emplace_back(0, 0);
+  // 2 = none
+  toc.emplace_back(0, 0);
+  // 3 = "elm"
+  toc.emplace_back(1, 1);
+  // 4 = none
+  toc.emplace_back(0, 0);
+  // 5 = none
+  toc.emplace_back(0, 0);
+  // 6 = "docker", "python", "go:dep"
+  toc.emplace_back(2, 4);
+  // 7 = none
+  toc.emplace_back(0, 0);
+  // 8 = none
+  toc.emplace_back(0, 0);
+  // 9 = "terraform"
+  toc.emplace_back(5, 5);
+  // 10 = "elixir:hex", "go:modules", "javascript", "java:maven", "rust:cargo",
+  // "submodules"
+  toc.emplace_back(6, 11);
+  // 11 = "java:grammar"
+  toc.emplace_back(12, 12);
+  // 12 = "php:composer", "ruby:bundler", "dotnet:nuget"
+  toc.emplace_back(13, 15);
+  // 13 = none
+  toc.emplace_back(0, 0);
+  // 14 = "github_actions"
+  toc.emplace_back(16, 16);
 
   const sourcemeta::jsontoolkit::JSON value{"github_actions"};
   for (auto _ : state) {
     const auto value_hash{hasher(value.to_string())};
     auto result = false;
-    for (const auto &entry : set) {
-      assert(hasher.is_perfect(entry.second));
-      if (entry.second == value_hash) {
-        result = true;
-        break;
+
+    const auto &hint{toc[value.byte_size()]};
+    assert(hint.first <= hint.second);
+    if (hint.second != 0) {
+      for (std::size_t index = hint.first - 1; index < hint.second; index++) {
+        assert(hasher.is_perfect(set[index].second));
+        if (set[index].second == value_hash) {
+          result = true;
+          break;
+        }
+      }
+    }
+
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
+static void JSON_String_Set_Flat_Perfect_Pre_Hashed(benchmark::State &state) {
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
+  std::vector<
+      std::pair<sourcemeta::jsontoolkit::JSON::String,
+                sourcemeta::jsontoolkit::JSON::Object::Container::hash_type>>
+      set;
+
+  set.emplace_back("elm", hasher("elm"));
+  set.emplace_back("docker", hasher("docker"));
+  set.emplace_back("python", hasher("python"));
+  set.emplace_back("go:dep", hasher("go:dep"));
+  set.emplace_back("terraform", hasher("terraform"));
+  set.emplace_back("elixir:hex", hasher("elixir:hex"));
+  set.emplace_back("go:modules", hasher("go:modules"));
+  set.emplace_back("javascript", hasher("javascript"));
+  set.emplace_back("java:maven", hasher("java:maven"));
+  set.emplace_back("rust:cargo", hasher("rust:cargo"));
+  set.emplace_back("submodules", hasher("submodules"));
+  set.emplace_back("java:gradle", hasher("java:gradle"));
+  set.emplace_back("php:composer", hasher("php:composer"));
+  set.emplace_back("ruby:bundler", hasher("ruby:bundler"));
+  set.emplace_back("dotnet:nuget", hasher("dotnet:nuget"));
+  set.emplace_back("github_actions", hasher("github_actions"));
+
+  std::vector<std::pair<std::size_t, std::size_t>> toc;
+  // 0 = none
+  toc.emplace_back(0, 0);
+  // 1 = none
+  toc.emplace_back(0, 0);
+  // 2 = none
+  toc.emplace_back(0, 0);
+  // 3 = "elm"
+  toc.emplace_back(1, 1);
+  // 4 = none
+  toc.emplace_back(0, 0);
+  // 5 = none
+  toc.emplace_back(0, 0);
+  // 6 = "docker", "python", "go:dep"
+  toc.emplace_back(2, 4);
+  // 7 = none
+  toc.emplace_back(0, 0);
+  // 8 = none
+  toc.emplace_back(0, 0);
+  // 9 = "terraform"
+  toc.emplace_back(5, 5);
+  // 10 = "elixir:hex", "go:modules", "javascript", "java:maven", "rust:cargo",
+  // "submodules"
+  toc.emplace_back(6, 11);
+  // 11 = "java:grammar"
+  toc.emplace_back(12, 12);
+  // 12 = "php:composer", "ruby:bundler", "dotnet:nuget"
+  toc.emplace_back(13, 15);
+  // 13 = none
+  toc.emplace_back(0, 0);
+  // 14 = "github_actions"
+  toc.emplace_back(16, 16);
+
+  const sourcemeta::jsontoolkit::JSON value{"github_actions"};
+  const auto value_hash{hasher(value.to_string())};
+  for (auto _ : state) {
+    auto result = false;
+    const auto &hint{toc[value.byte_size()]};
+    assert(hint.first <= hint.second);
+    if (hint.second != 0) {
+      for (std::size_t index = hint.first - 1; index < hint.second; index++) {
+        assert(hasher.is_perfect(set[index].second));
+        if (set[index].second == value_hash) {
+          result = true;
+          break;
+        }
+      }
+    }
+
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
+static void JSON_String_Set_Flat_Toc(benchmark::State &state) {
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
+  std::vector<
+      std::pair<sourcemeta::jsontoolkit::JSON::String,
+                sourcemeta::jsontoolkit::JSON::Object::Container::hash_type>>
+      set;
+
+  set.emplace_back("elm", hasher("elm"));
+  set.emplace_back("docker", hasher("docker"));
+  set.emplace_back("python", hasher("python"));
+  set.emplace_back("go:dep", hasher("go:dep"));
+  set.emplace_back("terraform", hasher("terraform"));
+  set.emplace_back("elixir:hex", hasher("elixir:hex"));
+  set.emplace_back("go:modules", hasher("go:modules"));
+  set.emplace_back("javascript", hasher("javascript"));
+  set.emplace_back("java:maven", hasher("java:maven"));
+  set.emplace_back("rust:cargo", hasher("rust:cargo"));
+  set.emplace_back("submodules", hasher("submodules"));
+  set.emplace_back("java:gradle", hasher("java:gradle"));
+  set.emplace_back("php:composer", hasher("php:composer"));
+  set.emplace_back("ruby:bundler", hasher("ruby:bundler"));
+  set.emplace_back("dotnet:nuget", hasher("dotnet:nuget"));
+  set.emplace_back("github_actions", hasher("github_actions"));
+
+  std::vector<std::pair<std::size_t, std::size_t>> toc;
+  // 0 = none
+  toc.emplace_back(0, 0);
+  // 1 = none
+  toc.emplace_back(0, 0);
+  // 2 = none
+  toc.emplace_back(0, 0);
+  // 3 = "elm"
+  toc.emplace_back(1, 1);
+  // 4 = none
+  toc.emplace_back(0, 0);
+  // 5 = none
+  toc.emplace_back(0, 0);
+  // 6 = "docker", "python", "go:dep"
+  toc.emplace_back(2, 4);
+  // 7 = none
+  toc.emplace_back(0, 0);
+  // 8 = none
+  toc.emplace_back(0, 0);
+  // 9 = "terraform"
+  toc.emplace_back(5, 5);
+  // 10 = "elixir:hex", "go:modules", "javascript", "java:maven", "rust:cargo",
+  // "submodules"
+  toc.emplace_back(6, 11);
+  // 11 = "java:grammar"
+  toc.emplace_back(12, 12);
+  // 12 = "php:composer", "ruby:bundler", "dotnet:nuget"
+  toc.emplace_back(13, 15);
+  // 13 = none
+  toc.emplace_back(0, 0);
+  // 14 = "github_actions"
+  toc.emplace_back(16, 16);
+
+  const sourcemeta::jsontoolkit::JSON value{"github_actions"};
+  for (auto _ : state) {
+    auto result = false;
+
+    const auto &hint{toc[value.byte_size()]};
+    assert(hint.first <= hint.second);
+    if (hint.second != 0) {
+      for (std::size_t index = hint.first - 1; index < hint.second; index++) {
+        assert(hasher.is_perfect(set[index].second));
+        if (set[index].first == value.to_string()) {
+          result = true;
+          break;
+        }
+      }
+    }
+
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
+static void JSON_String_Set_Unordered_Small(benchmark::State &state) {
+  std::unordered_set<sourcemeta::jsontoolkit::JSON,
+                     sourcemeta::jsontoolkit::Hash>
+      set;
+  set.emplace("development");
+  set.emplace("production");
+  set.emplace("all");
+
+  const sourcemeta::jsontoolkit::JSON value{"all"};
+  for (auto _ : state) {
+    auto result = set.contains(value);
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
+static void JSON_String_Set_Flat_Perfect_Small(benchmark::State &state) {
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
+  std::vector<
+      std::pair<sourcemeta::jsontoolkit::JSON::String,
+                sourcemeta::jsontoolkit::JSON::Object::Container::hash_type>>
+      set;
+
+  set.emplace_back("all", hasher("all"));
+  set.emplace_back("production", hasher("production"));
+  set.emplace_back("development", hasher("development"));
+
+  std::vector<std::pair<std::size_t, std::size_t>> toc;
+  // 0 = none
+  toc.emplace_back(0, 0);
+  // 1 = none
+  toc.emplace_back(0, 0);
+  // 2 = none
+  toc.emplace_back(0, 0);
+  // 3 = "elm"
+  toc.emplace_back(1, 1);
+  // 4 = none
+  toc.emplace_back(0, 0);
+  // 5 = none
+  toc.emplace_back(0, 0);
+  // 6 = none
+  toc.emplace_back(0, 0);
+  // 7 = none
+  toc.emplace_back(0, 0);
+  // 8 = none
+  toc.emplace_back(0, 0);
+  // 9 = none
+  toc.emplace_back(0, 0);
+  // 10 = "production"
+  toc.emplace_back(2, 2);
+  // 11 = "java:grammar"
+  toc.emplace_back(3, 3);
+
+  const sourcemeta::jsontoolkit::JSON value{"all"};
+  for (auto _ : state) {
+    const auto value_hash{hasher(value.to_string())};
+    auto result = false;
+
+    const auto &hint{toc[value.byte_size()]};
+    assert(hint.first <= hint.second);
+    if (hint.second != 0) {
+      for (std::size_t index = hint.first - 1; index < hint.second; index++) {
+        assert(hasher.is_perfect(set[index].second));
+        if (set[index].second == value_hash) {
+          result = true;
+          break;
+        }
       }
     }
 
@@ -397,3 +669,7 @@ BENCHMARK(JSON_Object_Defines_Miss_Too_Small);
 BENCHMARK(JSON_Object_Defines_Miss_Too_Large);
 BENCHMARK(JSON_String_Set_Unordered);
 BENCHMARK(JSON_String_Set_Flat_Perfect);
+BENCHMARK(JSON_String_Set_Flat_Perfect_Pre_Hashed);
+BENCHMARK(JSON_String_Set_Flat_Toc);
+BENCHMARK(JSON_String_Set_Unordered_Small);
+BENCHMARK(JSON_String_Set_Flat_Perfect_Small);
