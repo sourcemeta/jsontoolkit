@@ -5,6 +5,31 @@
 #include <cstdint> // std::uint64_t
 #include <cstring> // std::memcpy
 
+// TODO: Try SSE2?
+inline void *fastMemcpy(void *destination, const void *source,
+                        size_t numBytes) {
+  char *dst = static_cast<char *>(destination);
+  const char *src = static_cast<const char *>(source);
+
+  // Aligned word-size copy for performance
+  size_t wordCopySize = numBytes / sizeof(size_t);
+  size_t *wordDst = reinterpret_cast<size_t *>(dst);
+  const size_t *wordSrc = reinterpret_cast<const size_t *>(src);
+
+  // Copy words if possible
+  for (size_t i = 0; i < wordCopySize; ++i) {
+    wordDst[i] = wordSrc[i];
+  }
+
+  // Copy remaining bytes
+  size_t byteOffset = wordCopySize * sizeof(size_t);
+  for (size_t i = byteOffset; i < numBytes; ++i) {
+    dst[i] = src[i];
+  }
+
+  return destination;
+}
+
 namespace sourcemeta::jsontoolkit {
 
 /// @ingroup json
@@ -51,7 +76,7 @@ template <typename T> struct KeyHash {
     assert(!value.empty());
     assert(value.size() <= 31);
     // Copy starting a byte 2
-    std::memcpy(reinterpret_cast<char *>(&result) + 1, value.data(), size);
+    fastMemcpy(reinterpret_cast<char *>(&result) + 1, value.data(), size);
     return result;
   }
 
