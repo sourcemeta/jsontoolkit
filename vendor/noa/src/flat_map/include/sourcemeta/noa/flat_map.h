@@ -129,7 +129,7 @@ public:
     return this->cend();
   }
 
-  inline auto try_at(const key_type &key, const hash_type key_hash) const noexcept
+  inline auto try_at(const key_type &key, const hash_type key_hash) const
       -> const mapped_type * {
     assert(this->hash(key) == key_hash);
 
@@ -176,7 +176,7 @@ public:
 
   // As a performance optimisation if the hash is known
 
-  inline auto at(const key_type &key, const hash_type key_hash) const noexcept
+  inline auto at(const key_type &key, const hash_type key_hash) const
       -> const mapped_type & {
     assert(this->hash(key) == key_hash);
 
@@ -203,7 +203,7 @@ public:
 #endif
   }
 
-  inline auto at(const key_type &key, const hash_type key_hash) noexcept
+  inline auto at(const key_type &key, const hash_type key_hash)
       -> mapped_type & {
     assert(this->hash(key) == key_hash);
 
