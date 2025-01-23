@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737588018834,
+  "lastUpdate": 1737636469140,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (linux/llvm)": [
@@ -46460,6 +46460,72 @@ window.BENCHMARK_DATA = {
             "value": 350.2940220071703,
             "unit": "ns/iter",
             "extra": "iterations: 1997075\ncpu: 350.2756125834032 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a16bff210c0a8c24c2c48f48b28bb4fd2f282219",
+          "message": "Make `FlatMap` accesors `noexcept` (#1470)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2025-01-23T08:42:40-04:00",
+          "tree_id": "9063b3792bc7af68aca796db611ecb8b6c8ce80f",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/a16bff210c0a8c24c2c48f48b28bb4fd2f282219"
+        },
+        "date": 1737636465592,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 487.8381471863712,
+            "unit": "ns/iter",
+            "extra": "iterations: 1391678\ncpu: 487.8312749069828 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Parse_1",
+            "value": 30257.33173554511,
+            "unit": "ns/iter",
+            "extra": "iterations: 23157\ncpu: 30255.899382476146 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Fast_Hash_Helm_Chart_Lock",
+            "value": 70.23662525790566,
+            "unit": "ns/iter",
+            "extra": "iterations: 8126381\ncpu: 70.23303805223998 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Equality_Helm_Chart_Lock",
+            "value": 150.69137884123595,
+            "unit": "ns/iter",
+            "extra": "iterations: 4884529\ncpu: 150.68755411217742 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Object_Traverse",
+            "value": 44.89067033130846,
+            "unit": "ns/iter",
+            "extra": "iterations: 15590425\ncpu: 44.8875269917273 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Object_Try_Traverse",
+            "value": 52.298924926481924,
+            "unit": "ns/iter",
+            "extra": "iterations: 13390061\ncpu: 52.297446292440384 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Push_Back_Pointer_To_Weak_Pointer",
+            "value": 349.7551354877506,
+            "unit": "ns/iter",
+            "extra": "iterations: 2001952\ncpu: 349.7394048408754 ns\nthreads: 1"
           }
         ]
       }
