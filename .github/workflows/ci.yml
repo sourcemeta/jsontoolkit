@@ -31,6 +31,7 @@ jobs:
             cxx: g++-13
             type: static
             shell: sh
+            benchmark: macos/gcc
           - os: ubuntu-latest
             cc: clang
             cxx: clang++
