@@ -1,7 +1,9 @@
 #include <benchmark/benchmark.h>
 
 #include <cassert>       // assert
-#include <unordered_set> // unordered_set
+#include <unordered_set> // std::unordered_set
+#include <utility>       // std::utility
+#include <vector>        // std::vector
 
 #include <sourcemeta/jsontoolkit/json.h>
 
@@ -339,6 +341,48 @@ static void JSON_String_Set_Unordered(benchmark::State &state) {
   }
 }
 
+static void JSON_String_Set_Flat_Perfect(benchmark::State &state) {
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
+  std::vector<
+      std::pair<sourcemeta::jsontoolkit::JSON,
+                sourcemeta::jsontoolkit::JSON::Object::Container::hash_type>>
+      set;
+
+  set.emplace_back("javascript", hasher("javascript"));
+  set.emplace_back("ruby:bundler", hasher("ruby:bundler"));
+  set.emplace_back("php:composer", hasher("php:composer"));
+  set.emplace_back("python", hasher("python"));
+  set.emplace_back("go:modules", hasher("go:modules"));
+  set.emplace_back("go:dep", hasher("go:dep"));
+  set.emplace_back("java:maven", hasher("java:maven"));
+  set.emplace_back("java:gradle", hasher("java:gradle"));
+  set.emplace_back("dotnet:nuget", hasher("dotnet:nuget"));
+  set.emplace_back("rust:cargo", hasher("rust:cargo"));
+  set.emplace_back("elixir:hex", hasher("elixir:hex"));
+  set.emplace_back("docker", hasher("docker"));
+  set.emplace_back("terraform", hasher("terraform"));
+  set.emplace_back("submodules", hasher("submodules"));
+  set.emplace_back("elm", hasher("elm"));
+  set.emplace_back("github_actions", hasher("github_actions"));
+
+  const sourcemeta::jsontoolkit::JSON value{"github_actions"};
+  for (auto _ : state) {
+    const auto value_hash{hasher(value.to_string())};
+    auto result = false;
+    for (const auto &entry : set) {
+      assert(hasher.is_perfect(entry.second));
+      if (entry.second == value_hash) {
+        result = true;
+        break;
+      }
+    }
+
+    assert(result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
 BENCHMARK(JSON_Array_Of_Objects_Unique);
 BENCHMARK(JSON_Parse_1);
 BENCHMARK(JSON_Fast_Hash_Helm_Chart_Lock);
@@ -352,3 +396,4 @@ BENCHMARK(JSON_Object_Defines_Miss_Same_Length);
 BENCHMARK(JSON_Object_Defines_Miss_Too_Small);
 BENCHMARK(JSON_Object_Defines_Miss_Too_Large);
 BENCHMARK(JSON_String_Set_Unordered);
+BENCHMARK(JSON_String_Set_Flat_Perfect);
