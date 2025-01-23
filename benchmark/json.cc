@@ -258,6 +258,57 @@ static void JSON_String_Key_Hash(benchmark::State &state) {
   }
 }
 
+static void JSON_Object_Defines_Miss_Same_Length(benchmark::State &state) {
+  auto document{sourcemeta::jsontoolkit::JSON::make_object()};
+  document.assign("abcdefg", sourcemeta::jsontoolkit::JSON{1});
+  document.assign("abcdefgh", sourcemeta::jsontoolkit::JSON{2});
+  document.assign("abcdefghi", sourcemeta::jsontoolkit::JSON{3});
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
+  const auto &object{document.as_object()};
+  const sourcemeta::jsontoolkit::JSON::String key{"foobarbaz"};
+  const auto key_hash{hasher(key)};
+  for (auto _ : state) {
+    auto result = object.defines(key, key_hash);
+    assert(!result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
+static void JSON_Object_Defines_Miss_Too_Small(benchmark::State &state) {
+  auto document{sourcemeta::jsontoolkit::JSON::make_object()};
+  document.assign("abcdefg", sourcemeta::jsontoolkit::JSON{1});
+  document.assign("abcdefgh", sourcemeta::jsontoolkit::JSON{2});
+  document.assign("abcdefghi", sourcemeta::jsontoolkit::JSON{3});
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
+  const auto &object{document.as_object()};
+  const sourcemeta::jsontoolkit::JSON::String key{"foo"};
+  const auto key_hash{hasher(key)};
+  for (auto _ : state) {
+    auto result = object.defines(key, key_hash);
+    assert(!result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
+static void JSON_Object_Defines_Miss_Too_Large(benchmark::State &state) {
+  auto document{sourcemeta::jsontoolkit::JSON::make_object()};
+  document.assign("abcdefg", sourcemeta::jsontoolkit::JSON{1});
+  document.assign("abcdefgh", sourcemeta::jsontoolkit::JSON{2});
+  document.assign("abcdefghi", sourcemeta::jsontoolkit::JSON{3});
+  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
+      hasher;
+  const auto &object{document.as_object()};
+  const sourcemeta::jsontoolkit::JSON::String key{"toolargestring"};
+  const auto key_hash{hasher(key)};
+  for (auto _ : state) {
+    auto result = object.defines(key, key_hash);
+    assert(!result);
+    benchmark::DoNotOptimize(result);
+  }
+}
+
 BENCHMARK(JSON_Array_Of_Objects_Unique);
 BENCHMARK(JSON_Parse_1);
 BENCHMARK(JSON_Fast_Hash_Helm_Chart_Lock);
@@ -267,3 +318,6 @@ BENCHMARK(JSON_String_Equal_Small_By_Perfect_Hash)->Args({10});
 BENCHMARK(JSON_String_Equal_Small_By_Runtime_Perfect_Hash)->Args({10});
 BENCHMARK(JSON_String_Fast_Hash)->Args({10})->Args({100});
 BENCHMARK(JSON_String_Key_Hash)->Args({10})->Args({100});
+BENCHMARK(JSON_Object_Defines_Miss_Same_Length);
+BENCHMARK(JSON_Object_Defines_Miss_Too_Small);
+BENCHMARK(JSON_Object_Defines_Miss_Too_Large);
