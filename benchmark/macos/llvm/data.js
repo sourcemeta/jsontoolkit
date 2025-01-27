@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738006644126,
+  "lastUpdate": 1738008601480,
   "repoUrl": "https://github.com/sourcemeta/jsontoolkit",
   "entries": {
     "Benchmark (macos/llvm)": [
@@ -42884,6 +42884,138 @@ window.BENCHMARK_DATA = {
             "value": 185.2665464625366,
             "unit": "ns/iter",
             "extra": "iterations: 3782455\ncpu: 182.329730294213 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jv@jviotti.com",
+            "name": "Juan Cruz Viotti",
+            "username": "jviotti"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "98caa5c18e4de32220849ea7992f46b16e8ed614",
+          "message": "Bring AlterSchema as an extension module of this project (#1484)\n\nSigned-off-by: Juan Cruz Viotti <jv@jviotti.com>",
+          "timestamp": "2025-01-27T16:05:03-04:00",
+          "tree_id": "9d259a23f81e57cdf1b872b6c09543c4c6d0fa6d",
+          "url": "https://github.com/sourcemeta/jsontoolkit/commit/98caa5c18e4de32220849ea7992f46b16e8ed614"
+        },
+        "date": 1738008597172,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "JSON_Array_Of_Objects_Unique",
+            "value": 329.5167962114728,
+            "unit": "ns/iter",
+            "extra": "iterations: 2106993\ncpu: 329.43915807978493 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Parse_1",
+            "value": 21301.482027483504,
+            "unit": "ns/iter",
+            "extra": "iterations: 32967\ncpu: 21273.00027300027 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Fast_Hash_Helm_Chart_Lock",
+            "value": 47.9031591993764,
+            "unit": "ns/iter",
+            "extra": "iterations: 14676345\ncpu: 47.902526139852924 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Equality_Helm_Chart_Lock",
+            "value": 117.28876171134107,
+            "unit": "ns/iter",
+            "extra": "iterations: 5991099\ncpu: 117.27330828617583 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Equal/10",
+            "value": 7.520664669167802,
+            "unit": "ns/iter",
+            "extra": "iterations: 93093772\ncpu: 7.519751160152796 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Equal/100",
+            "value": 5.983701308445415,
+            "unit": "ns/iter",
+            "extra": "iterations: 117589746\ncpu: 5.9836509894323555 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Equal_Small_By_Perfect_Hash/10",
+            "value": 0.3163923801775792,
+            "unit": "ns/iter",
+            "extra": "iterations: 2233481807\ncpu: 0.31622330559686584 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Equal_Small_By_Runtime_Perfect_Hash/10",
+            "value": 3.0338434090415394,
+            "unit": "ns/iter",
+            "extra": "iterations: 241013634\ncpu: 2.96155029968139 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Fast_Hash/10",
+            "value": 1.6361988114905344,
+            "unit": "ns/iter",
+            "extra": "iterations: 442743746\ncpu: 1.5982450489543454 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Fast_Hash/100",
+            "value": 1.8991567945157424,
+            "unit": "ns/iter",
+            "extra": "iterations: 370965092\ncpu: 1.8922400385856248 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Key_Hash/10",
+            "value": 1.2659027119858688,
+            "unit": "ns/iter",
+            "extra": "iterations: 558793007\ncpu: 1.265457854951288 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_String_Key_Hash/100",
+            "value": 1.2593082540062879,
+            "unit": "ns/iter",
+            "extra": "iterations: 555352808\ncpu: 1.2580993378177026 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Object_Defines_Miss_Same_Length",
+            "value": 2.1949734966262735,
+            "unit": "ns/iter",
+            "extra": "iterations: 318659808\ncpu: 2.1943620828391355 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Object_Defines_Miss_Too_Small",
+            "value": 2.1966639190156854,
+            "unit": "ns/iter",
+            "extra": "iterations: 319102865\ncpu: 2.196457872604811 ns\nthreads: 1"
+          },
+          {
+            "name": "JSON_Object_Defines_Miss_Too_Large",
+            "value": 2.197834393626092,
+            "unit": "ns/iter",
+            "extra": "iterations: 319108684\ncpu: 2.197774724300513 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Object_Traverse",
+            "value": 15.38971857001625,
+            "unit": "ns/iter",
+            "extra": "iterations: 45693994\ncpu: 15.384297551227384 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Object_Try_Traverse",
+            "value": 21.909966659637615,
+            "unit": "ns/iter",
+            "extra": "iterations: 31530253\ncpu: 21.909053504898846 ns\nthreads: 1"
+          },
+          {
+            "name": "Pointer_Push_Back_Pointer_To_Weak_Pointer",
+            "value": 172.79173548833265,
+            "unit": "ns/iter",
+            "extra": "iterations: 4095124\ncpu: 172.60918106509155 ns\nthreads: 1"
           }
         ]
       }
