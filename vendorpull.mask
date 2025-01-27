@@ -34,4 +34,3 @@ cmake/FindGoogleTest.cmake
 .cirrus.yml
 Brewfile
 Brewfile.lock.json
-CHANGELOG.markdown
