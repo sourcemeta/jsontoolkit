@@ -11,6 +11,14 @@ Pointer](https://www.rfc-editor.org/rfc/rfc6901),
 Clang, GCC, and MSVC compilers on macOS, GNU/Linux, FreeBSD, Windows, and
 Unikraft (through the ELF loader).
 
+Live at head
+------------
+
+Like projects such as [`GoogleTest`](https://github.com/google/googletest), Noa
+follows the [Abseil Live at
+Head](https://abseil.io/about/philosophy#upgrade-support) philosophy. We
+recommend always following the latest commit in the `main` branch.
+
 Installation
 ------------
 
