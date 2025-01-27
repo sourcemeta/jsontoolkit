@@ -13,6 +13,7 @@
 #include <sourcemeta/jsontoolkit/jsonschema_keywords.h>
 #include <sourcemeta/jsontoolkit/jsonschema_reference.h>
 #include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
+#include <sourcemeta/jsontoolkit/jsonschema_transform.h>
 #include <sourcemeta/jsontoolkit/jsonschema_unevaluated.h>
 #include <sourcemeta/jsontoolkit/jsonschema_walker.h>
 
