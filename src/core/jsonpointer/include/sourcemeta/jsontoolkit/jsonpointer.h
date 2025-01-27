@@ -6,13 +6,15 @@
 #endif
 
 #include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/jsontoolkit/uri.h>
+
 #include <sourcemeta/jsontoolkit/jsonpointer.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_error.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_pointer.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_position.h>
+#include <sourcemeta/jsontoolkit/jsonpointer_proxy.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_subpointer_walker.h>
 #include <sourcemeta/jsontoolkit/jsonpointer_walker.h>
-#include <sourcemeta/jsontoolkit/uri.h>
 
 #include <functional> // std::reference_wrapper
 #include <memory>     // std::allocator
@@ -44,6 +46,9 @@ const Pointer empty_pointer;
 /// @ingroup jsonpointer
 /// A global constant instance of the empty JSON WeakPointer.
 const WeakPointer empty_weak_pointer;
+
+/// @ingroup jsonpointer
+using PointerProxy = GenericPointerProxy<Pointer>;
 
 /// @ingroup jsonpointer
 /// Get a value from a JSON document using a JSON Pointer (`const` overload).

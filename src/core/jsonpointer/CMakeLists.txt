@@ -1,6 +1,7 @@
 noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonpointer
   FOLDER "JSON Toolkit/JSON Pointer"
-  PRIVATE_HEADERS pointer.h position.h error.h token.h walker.h subpointer_walker.h
+  PRIVATE_HEADERS pointer.h position.h error.h token.h
+    walker.h subpointer_walker.h proxy.h
   SOURCES jsonpointer.cc stringify.h parser.h grammar.h position.cc)
 
 if(JSONTOOLKIT_INSTALL)
