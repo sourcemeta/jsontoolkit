@@ -1,5 +1,9 @@
 set(BENCHMARK_SOURCES)
 
+if(JSONTOOLKIT_CORE_REGEX)
+  list(APPEND BENCHMARK_SOURCES regex.cc)
+endif()
+
 if(JSONTOOLKIT_CORE_JSON)
   list(APPEND BENCHMARK_SOURCES json.cc)
 endif()
@@ -14,6 +18,11 @@ if(BENCHMARK_SOURCES)
 
   target_compile_definitions(sourcemeta_jsontoolkit_benchmark
     PRIVATE CURRENT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}")
+
+  if(JSONTOOLKIT_CORE_REGEX)
+    target_link_libraries(sourcemeta_jsontoolkit_benchmark
+      PRIVATE sourcemeta::jsontoolkit::regex)
+  endif()
 
   if(JSONTOOLKIT_CORE_JSON)
     target_link_libraries(sourcemeta_jsontoolkit_benchmark

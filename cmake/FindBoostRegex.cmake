@@ -124,6 +124,15 @@ if(NOT BoostRegex_FOUND)
 
   target_compile_definitions(boost_regex INTERFACE BOOST_REGEX_STANDALONE)
 
+  if(JSONTOOLKIT_UNDEFINED_SANITIZER AND NOA_COMPILER_LLVM)
+    # Boost Regex doesn't pass the LLVM Undefined Behavior sanitizer otherwise
+    # vendor/boost-regex/include/boost/regex/v5/cpp_regex_traits.hpp:1022:60:
+    # runtime error: implicit conversion from type 'unsigned char' of value 128
+    # (8-bit, unsigned) to type 'char' changed the value to -128 (8-bit, signed)
+    target_compile_options(boost_regex INTERFACE -fno-sanitize=integer)
+    target_compile_options(boost_regex INTERFACE -fno-sanitize=implicit-conversion)
+  endif()
+
   add_library(Boost::regex ALIAS boost_regex)
 
   target_include_directories(boost_regex INTERFACE
@@ -137,39 +146,39 @@ if(NOT BoostRegex_FOUND)
       PRIVATE_HEADER "${BOOST_REGEX_PRIVATE_HEADERS}"
       EXPORT_NAME boost_regex)
 
-  if(NOA_INSTALL)
+  if(JSONTOOLKIT_INSTALL)
     include(GNUInstallDirs)
     install(TARGETS boost_regex
       EXPORT boost_regex
       PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/boost"
-        COMPONENT sourcemeta_noa
+        COMPONENT sourcemeta_jsontoolkit
       PRIVATE_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/boost"
-        COMPONENT sourcemeta_noa
+        COMPONENT sourcemeta_jsontoolkit
       RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-        COMPONENT sourcemeta_noa
+        COMPONENT sourcemeta_jsontoolkit
       LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        COMPONENT sourcemeta_noa
-        NAMELINK_COMPONENT sourcemeta_noa_dev
+        COMPONENT sourcemeta_jsontoolkit
+        NAMELINK_COMPONENT sourcemeta_jsontoolkit_dev
       ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        COMPONENT sourcemeta_noa_dev)
+        COMPONENT sourcemeta_jsontoolkit_dev)
     install(FILES ${BOOST_REGEX_PRIVATE_HEADERS_REGEX}
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/boost/regex"
-        COMPONENT sourcemeta_noa)
+        COMPONENT sourcemeta_jsontoolkit)
     install(FILES ${BOOST_REGEX_PRIVATE_HEADERS_REGEX_CONFIG}
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/boost/regex/config"
-        COMPONENT sourcemeta_noa)
+        COMPONENT sourcemeta_jsontoolkit)
     install(FILES ${BOOST_REGEX_PRIVATE_HEADERS_REGEX_PENDING}
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/boost/regex/pending"
-        COMPONENT sourcemeta_noa)
+        COMPONENT sourcemeta_jsontoolkit)
     install(FILES ${BOOST_REGEX_PRIVATE_HEADERS_REGEX_V4}
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/boost/regex/v4"
-        COMPONENT sourcemeta_noa)
+        COMPONENT sourcemeta_jsontoolkit)
     install(FILES ${BOOST_REGEX_PRIVATE_HEADERS_REGEX_V5}
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/boost/regex/v5"
-        COMPONENT sourcemeta_noa)
+        COMPONENT sourcemeta_jsontoolkit)
     install(EXPORT boost_regex
       DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/boostregex"
-      COMPONENT sourcemeta_noa_dev)
+      COMPONENT sourcemeta_jsontoolkit_dev)
 
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/boostregex-config.cmake
       "include(\"\${CMAKE_CURRENT_LIST_DIR}/boost_regex.cmake\")\n"
@@ -177,7 +186,7 @@ if(NOT BoostRegex_FOUND)
     install(FILES
       "${CMAKE_CURRENT_BINARY_DIR}/boostregex-config.cmake"
       DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/boostregex"
-      COMPONENT sourcemeta_noa_dev)
+      COMPONENT sourcemeta_jsontoolkit_dev)
   endif()
 
   set(BoostRegex_FOUND ON)

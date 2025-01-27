@@ -5,6 +5,7 @@ project(jsontoolkit VERSION 0.0.0 LANGUAGES C CXX
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # Options
+option(JSONTOOLKIT_CORE_REGEX "Build the JSON Toolkit Regex library" ON)
 option(JSONTOOLKIT_CORE_URI "Build the JSON Toolkit URI library" ON)
 option(JSONTOOLKIT_CORE_JSON "Build the JSON Toolkit JSON library" ON)
 option(JSONTOOLKIT_CORE_JSONSCHEMA "Build the JSON Toolkit JSON Schema library" ON)
@@ -36,6 +37,11 @@ if(JSONTOOLKIT_INSTALL)
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
     COMPONENT sourcemeta_jsontoolkit_dev)
+endif()
+
+if(JSONTOOLKIT_CORE_REGEX)
+  find_package(BoostRegex REQUIRED)
+  add_subdirectory(src/core/regex)
 endif()
 
 if(JSONTOOLKIT_CORE_URI)
@@ -91,6 +97,10 @@ endif()
 # Testing
 if(JSONTOOLKIT_TESTS)
   enable_testing()
+
+  if(JSONTOOLKIT_CORE_REGEX)
+    add_subdirectory(test/regex)
+  endif()
 
   if(JSONTOOLKIT_CORE_URI)
     add_subdirectory(test/uri)
