@@ -124,6 +124,15 @@ if(NOT BoostRegex_FOUND)
 
   target_compile_definitions(boost_regex INTERFACE BOOST_REGEX_STANDALONE)
 
+  if(JSONTOOLKIT_UNDEFINED_SANITIZER AND NOA_COMPILER_LLVM)
+    # Boost Regex doesn't pass the LLVM Undefined Behavior sanitizer otherwise
+    # vendor/boost-regex/include/boost/regex/v5/cpp_regex_traits.hpp:1022:60:
+    # runtime error: implicit conversion from type 'unsigned char' of value 128
+    # (8-bit, unsigned) to type 'char' changed the value to -128 (8-bit, signed)
+    target_compile_options(boost_regex INTERFACE -fno-sanitize=integer)
+    target_compile_options(boost_regex INTERFACE -fno-sanitize=implicit-conversion)
+  endif()
+
   add_library(Boost::regex ALIAS boost_regex)
 
   target_include_directories(boost_regex INTERFACE
