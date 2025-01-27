@@ -11,3 +11,4 @@ target_link_libraries(jsontoolkit_hello PRIVATE sourcemeta::jsontoolkit::jsonsch
 target_link_libraries(jsontoolkit_hello PRIVATE sourcemeta::jsontoolkit::jsonpointer)
 target_link_libraries(jsontoolkit_hello PRIVATE sourcemeta::jsontoolkit::jsonl)
 target_link_libraries(jsontoolkit_hello PRIVATE sourcemeta::jsontoolkit::yaml)
+target_link_libraries(jsontoolkit_hello PRIVATE sourcemeta::jsontoolkit::alterschema)
