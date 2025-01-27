@@ -1,3 +1,4 @@
+#include <sourcemeta/jsontoolkit/alterschema.h>
 #include <sourcemeta/jsontoolkit/json.h>
 #include <sourcemeta/jsontoolkit/jsonl.h>
 #include <sourcemeta/jsontoolkit/jsonpointer.h>

@@ -11,6 +11,7 @@ option(JSONTOOLKIT_CORE_JSONSCHEMA "Build the JSON Toolkit JSON Schema library" 
 option(JSONTOOLKIT_CORE_JSONPOINTER "Build the JSON Toolkit JSON Pointer library" ON)
 option(JSONTOOLKIT_CORE_JSONL "Build the JSON Toolkit JSONL library" ON)
 option(JSONTOOLKIT_CORE_YAML "Build the JSON Toolkit YAML library" ON)
+option(JSONTOOLKIT_EXTENSION_ALTERSCHEMA "Build the JSON Toolkit AlterSchema library" ON)
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" OFF)
 option(JSONTOOLKIT_BENCHMARK "Build the JSON Toolkit benchmarks" OFF)
 option(JSONTOOLKIT_DOCS "Build the JSON Toolkit docs" OFF)
@@ -46,22 +47,25 @@ if(JSONTOOLKIT_CORE_JSON)
   add_subdirectory(src/core/json)
 endif()
 
-if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_JSONPOINTER)
+if(JSONTOOLKIT_CORE_JSONPOINTER)
   add_subdirectory(src/core/jsonpointer)
 endif()
 
-if(JSONTOOLKIT_CORE_URI AND JSONTOOLKIT_CORE_JSON AND
-   JSONTOOLKIT_CORE_JSONPOINTER AND JSONTOOLKIT_CORE_JSONSCHEMA)
+if(JSONTOOLKIT_CORE_JSONSCHEMA)
   add_subdirectory(src/core/jsonschema)
 endif()
 
-if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_JSONL)
+if(JSONTOOLKIT_CORE_JSONL)
   add_subdirectory(src/core/jsonl)
 endif()
 
-if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_YAML)
+if(JSONTOOLKIT_CORE_YAML)
   find_package(yaml REQUIRED)
   add_subdirectory(src/core/yaml)
+endif()
+
+if(JSONTOOLKIT_EXTENSION_ALTERSCHEMA)
+  add_subdirectory(src/extension/alterschema)
 endif()
 
 if(JSONTOOLKIT_ADDRESS_SANITIZER)
@@ -96,21 +100,24 @@ if(JSONTOOLKIT_TESTS)
     add_subdirectory(test/json)
   endif()
 
-  if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_JSONPOINTER)
+  if(JSONTOOLKIT_CORE_JSONPOINTER)
     add_subdirectory(test/jsonpointer)
   endif()
 
-  if(JSONTOOLKIT_CORE_URI AND JSONTOOLKIT_CORE_JSON AND
-     JSONTOOLKIT_CORE_JSONPOINTER AND JSONTOOLKIT_CORE_JSONSCHEMA)
+  if(JSONTOOLKIT_CORE_JSONSCHEMA)
     add_subdirectory(test/jsonschema)
   endif()
 
-  if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_JSONL)
+  if(JSONTOOLKIT_CORE_JSONL)
     add_subdirectory(test/jsonl)
   endif()
 
-  if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_YAML)
+  if(JSONTOOLKIT_CORE_YAML)
     add_subdirectory(test/yaml)
+  endif()
+
+  if(JSONTOOLKIT_EXTENSION_ALTERSCHEMA)
+    add_subdirectory(test/alterschema)
   endif()
 
   if(PROJECT_IS_TOP_LEVEL)
