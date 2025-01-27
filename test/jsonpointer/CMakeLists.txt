@@ -8,6 +8,7 @@ noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonpointer
     jsonpointer_parse_error_test.cc
     jsonpointer_parse_test.cc
     jsonpointer_pointer_test.cc
+    jsonpointer_proxy_test.cc
     jsonpointer_position_test.cc
     jsonpointer_weakpointer_test.cc
     jsonpointer_resolve_from_test.cc
