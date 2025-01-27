@@ -69,32 +69,14 @@ target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::j
 target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonl)
 ```
 
-At the moment of this writing, JSON Toolkit is available with `find_package`
-integration on the following package managers:
-
-```sh
-# Homebrew
-$ brew install jsontoolkit
-```
-
 CMake
 -----
 
 ### Options
 
-| Option                            | Type    | Default | Description                                           |
-|-----------------------------------|---------|---------|-------------------------------------------------------|
-| `JSONTOOLKIT_URI`                 | Boolean | `ON`    | Build the JSON Toolkit URI library                    |
-| `JSONTOOLKIT_JSON`                | Boolean | `ON`    | Build the JSON Toolkit JSON library                   |
-| `JSONTOOLKIT_JSONSCHEMA`          | Boolean | `ON`    | Build the JSON Toolkit JSON Schema library            |
-| `JSONTOOLKIT_JSONPOINTER`         | Boolean | `ON`    | Build the JSON Toolkit JSON Pointer library           |
-| `JSONTOOLKIT_JSONL`               | Boolean | `ON`    | Build the JSON Toolkit JSONL library                  |
-| `JSONTOOLKIT_YAML`                | Boolean | `ON`    | Build the JSON Toolkit YAML library                   |
-| `JSONTOOLKIT_TESTS`               | Boolean | `OFF`   | Build the JSON Toolkit tests                          |
-| `JSONTOOLKIT_DOCS`                | Boolean | `OFF`   | Build the JSON Toolkit docs                           |
-| `JSONTOOLKIT_INSTALL`             | Boolean | `ON`    | Install the JSON Toolkit library                      |
-| `JSONTOOLKIT_ADDRESS_SANITIZER`   | Boolean | `OFF`   | Enable the address sanitizer                          |
-| `JSONTOOLKIT_UNDEFINED_SANITIZER` | Boolean | `OFF`   | Enable the undefined behavior sanitizer               |
+Check the top-level
+[`CMakeLists.txt`](https://github.com/sourcemeta/jsontoolkit/blob/main/CMakeLists.txt)
+for the available CMake options.
 
 ### Components
 
@@ -109,24 +91,7 @@ into a set of CMake components:
 Contributing
 ------------
 
-JSON Toolkit makes use of the [CMake](https://cmake.org) build system. You can
-configure, build and test the project as follows:
-
-```sh
-cmake -S . -B ./build \
-  -DCMAKE_BUILD_TYPE:STRING=<Debug|Release> \
-  -DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON \
-  -DJSONTOOLKIT_DOCS:BOOL=ON \
-  -DJSONTOOLKIT_TESTS:BOOL=ON
-# Format the code
-cmake --build ./build --config <Debug|Release> --target clang_format
-# Build the project
-cmake --build ./build --config <Debug|Release>
-# Run the test suite
-ctest --test-dir ./build --build-config <Debug|Release> --output-on-failure --progress
-```
-
-Or simply run:
+You can configure, build and test the project by simply runnning:
 
 ```sh
 # On UNIX-based systems

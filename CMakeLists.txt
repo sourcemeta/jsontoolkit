@@ -5,12 +5,12 @@ project(jsontoolkit VERSION 2.0.0 LANGUAGES C CXX
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # Options
-option(JSONTOOLKIT_URI "Build the JSON Toolkit URI library" ON)
-option(JSONTOOLKIT_JSON "Build the JSON Toolkit JSON library" ON)
-option(JSONTOOLKIT_JSONSCHEMA "Build the JSON Toolkit JSON Schema library" ON)
-option(JSONTOOLKIT_JSONPOINTER "Build the JSON Toolkit JSON Pointer library" ON)
-option(JSONTOOLKIT_JSONL "Build the JSON Toolkit JSONL library" ON)
-option(JSONTOOLKIT_YAML "Build the JSON Toolkit YAML library" ON)
+option(JSONTOOLKIT_CORE_URI "Build the JSON Toolkit URI library" ON)
+option(JSONTOOLKIT_CORE_JSON "Build the JSON Toolkit JSON library" ON)
+option(JSONTOOLKIT_CORE_JSONSCHEMA "Build the JSON Toolkit JSON Schema library" ON)
+option(JSONTOOLKIT_CORE_JSONPOINTER "Build the JSON Toolkit JSON Pointer library" ON)
+option(JSONTOOLKIT_CORE_JSONL "Build the JSON Toolkit JSONL library" ON)
+option(JSONTOOLKIT_CORE_YAML "Build the JSON Toolkit YAML library" ON)
 option(JSONTOOLKIT_TESTS "Build the JSON Toolkit tests" OFF)
 option(JSONTOOLKIT_BENCHMARK "Build the JSON Toolkit benchmarks" OFF)
 option(JSONTOOLKIT_DOCS "Build the JSON Toolkit docs" OFF)
@@ -37,31 +37,31 @@ if(JSONTOOLKIT_INSTALL)
     COMPONENT sourcemeta_jsontoolkit_dev)
 endif()
 
-if(JSONTOOLKIT_URI)
+if(JSONTOOLKIT_CORE_URI)
   find_package(UriParser REQUIRED)
-  add_subdirectory(src/uri)
+  add_subdirectory(src/core/uri)
 endif()
 
-if(JSONTOOLKIT_JSON)
-  add_subdirectory(src/json)
+if(JSONTOOLKIT_CORE_JSON)
+  add_subdirectory(src/core/json)
 endif()
 
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
-  add_subdirectory(src/jsonpointer)
+if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_JSONPOINTER)
+  add_subdirectory(src/core/jsonpointer)
 endif()
 
-if(JSONTOOLKIT_URI AND JSONTOOLKIT_JSON AND
-   JSONTOOLKIT_JSONPOINTER AND JSONTOOLKIT_JSONSCHEMA)
-  add_subdirectory(src/jsonschema)
+if(JSONTOOLKIT_CORE_URI AND JSONTOOLKIT_CORE_JSON AND
+   JSONTOOLKIT_CORE_JSONPOINTER AND JSONTOOLKIT_CORE_JSONSCHEMA)
+  add_subdirectory(src/core/jsonschema)
 endif()
 
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
-  add_subdirectory(src/jsonl)
+if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_JSONL)
+  add_subdirectory(src/core/jsonl)
 endif()
 
-if(JSONTOOLKIT_JSON AND JSONTOOLKIT_YAML)
+if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_YAML)
   find_package(yaml REQUIRED)
-  add_subdirectory(src/yaml)
+  add_subdirectory(src/core/yaml)
 endif()
 
 if(JSONTOOLKIT_ADDRESS_SANITIZER)
@@ -88,28 +88,28 @@ endif()
 if(JSONTOOLKIT_TESTS)
   enable_testing()
 
-  if(JSONTOOLKIT_URI)
+  if(JSONTOOLKIT_CORE_URI)
     add_subdirectory(test/uri)
   endif()
 
-  if(JSONTOOLKIT_JSON)
+  if(JSONTOOLKIT_CORE_JSON)
     add_subdirectory(test/json)
   endif()
 
-  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONPOINTER)
+  if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_JSONPOINTER)
     add_subdirectory(test/jsonpointer)
   endif()
 
-  if(JSONTOOLKIT_URI AND JSONTOOLKIT_JSON AND
-     JSONTOOLKIT_JSONPOINTER AND JSONTOOLKIT_JSONSCHEMA)
+  if(JSONTOOLKIT_CORE_URI AND JSONTOOLKIT_CORE_JSON AND
+     JSONTOOLKIT_CORE_JSONPOINTER AND JSONTOOLKIT_CORE_JSONSCHEMA)
     add_subdirectory(test/jsonschema)
   endif()
 
-  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_JSONL)
+  if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_JSONL)
     add_subdirectory(test/jsonl)
   endif()
 
-  if(JSONTOOLKIT_JSON AND JSONTOOLKIT_YAML)
+  if(JSONTOOLKIT_CORE_JSON AND JSONTOOLKIT_CORE_YAML)
     add_subdirectory(test/yaml)
   endif()
 
