@@ -21,20 +21,24 @@ auto vocabularies_to_set(const std::map<std::string, bool> &vocabularies)
 
 namespace sourcemeta::jsontoolkit {
 
-TransformRule::TransformRule(std::string &&name, std::string &&message)
+SchemaTransformRule::SchemaTransformRule(std::string &&name,
+                                         std::string &&message)
     : name_{std::move(name)}, message_{std::move(message)} {}
 
-auto TransformRule::operator==(const TransformRule &other) const -> bool {
+auto SchemaTransformRule::operator==(const SchemaTransformRule &other) const
+    -> bool {
   return this->name() == other.name();
 }
 
-auto TransformRule::name() const -> const std::string & { return this->name_; }
+auto SchemaTransformRule::name() const -> const std::string & {
+  return this->name_;
+}
 
-auto TransformRule::message() const -> const std::string & {
+auto SchemaTransformRule::message() const -> const std::string & {
   return this->message_;
 }
 
-auto TransformRule::apply(
+auto SchemaTransformRule::apply(
     JSON &schema, const Pointer &pointer, const SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect) const
     -> std::vector<PointerProxy::Operation> {
@@ -68,7 +72,7 @@ auto TransformRule::apply(
   return transformer.traces();
 }
 
-auto TransformRule::check(
+auto SchemaTransformRule::check(
     const JSON &schema, const Pointer &pointer, const SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect) const -> bool {
   const std::optional<std::string> effective_dialect{

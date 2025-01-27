@@ -10,7 +10,7 @@ noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
   SOURCES jsonschema.cc default_walker.cc frame.cc
     anchor.cc resolver.cc walker.cc bundle.cc
     unevaluated.cc relativize.cc unidentify.cc
-    transform_rule.cc
+    transform_rule.cc transformer.cc
     "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 
 if(JSONTOOLKIT_INSTALL)
