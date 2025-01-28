@@ -6,7 +6,7 @@
 
 static void JSON_Array_Of_Objects_Unique(benchmark::State &state) {
   // From Unreal Engine `uproject` files
-  const auto document{sourcemeta::core::parse(R"JSON([
+  const auto document{sourcemeta::core::parse_json(R"JSON([
     { "Enabled": true, "Name": "DDTools" },
     { "Enabled": true, "Name": "VideoCore" },
     { "Enabled": true, "Name": "EditorScriptingUtilities" },
@@ -86,7 +86,7 @@ static void JSON_Parse_1(benchmark::State &state) {
   })JSON"};
 
   for (auto _ : state) {
-    auto result{sourcemeta::core::parse(document)};
+    auto result{sourcemeta::core::parse_json(document)};
     assert(result.is_object());
     benchmark::DoNotOptimize(result);
   }
@@ -94,7 +94,7 @@ static void JSON_Parse_1(benchmark::State &state) {
 
 static void JSON_Fast_Hash_Helm_Chart_Lock(benchmark::State &state) {
   // From `helm-chart-lock`
-  const auto document{sourcemeta::core::parse(R"JSON({
+  const auto document{sourcemeta::core::parse_json(R"JSON({
     "digest": "sha256:157d6244f0fac36b70be1aecfed8811037504d4e3a1060f50688e93531174040",
     "generated": "2021-12-23T14:00:42.29198548Z",
     "dependencies": [
@@ -130,7 +130,7 @@ static void JSON_Fast_Hash_Helm_Chart_Lock(benchmark::State &state) {
 static void JSON_Equality_Helm_Chart_Lock(benchmark::State &state) {
   // From `helm-chart-lock`
 
-  const auto document_1{sourcemeta::core::parse(R"JSON({
+  const auto document_1{sourcemeta::core::parse_json(R"JSON({
     "digest": "sha256:157d6244f0fac36b70be1aecfed8811037504d4e3a1060f50688e93531174040",
     "generated": "2021-12-23T14:00:42.29198548Z",
     "dependencies": [
@@ -157,7 +157,7 @@ static void JSON_Equality_Helm_Chart_Lock(benchmark::State &state) {
     ]
   })JSON")};
 
-  const auto document_2{sourcemeta::core::parse(R"JSON({
+  const auto document_2{sourcemeta::core::parse_json(R"JSON({
     "digest": "sha256:157d6244f0fac36b70be1aecfed8811037504d4e3a1060f50688e93531174040",
     "generated": "2021-12-23T14:00:42.29198548Z",
     "dependencies": [
@@ -208,7 +208,8 @@ static void JSON_String_Equal_Small_By_Perfect_Hash(benchmark::State &state) {
   const auto length{static_cast<std::size_t>(state.range(0))};
   sourcemeta::core::JSON::String left(length, 'x');
   sourcemeta::core::JSON::String right(length, 'x');
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const auto hash_left{hasher(left)};
   const auto hash_right{hasher(right)};
   assert(hasher.is_perfect(hash_left));
@@ -225,7 +226,8 @@ JSON_String_Equal_Small_By_Runtime_Perfect_Hash(benchmark::State &state) {
   const auto length{static_cast<std::size_t>(state.range(0))};
   sourcemeta::core::JSON::String left(length, 'x');
   sourcemeta::core::JSON::String right(length, 'x');
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   for (auto _ : state) {
     const auto hash_left{hasher(left)};
     const auto hash_right{hasher(right)};
@@ -249,7 +251,8 @@ static void JSON_String_Fast_Hash(benchmark::State &state) {
 static void JSON_String_Key_Hash(benchmark::State &state) {
   const auto length{static_cast<std::size_t>(state.range(0))};
   sourcemeta::core::JSON::String value(length, 'x');
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   for (auto _ : state) {
     benchmark::DoNotOptimize(hasher(value));
   }
@@ -260,7 +263,8 @@ static void JSON_Object_Defines_Miss_Same_Length(benchmark::State &state) {
   document.assign("abcdefg", sourcemeta::core::JSON{1});
   document.assign("abcdefgh", sourcemeta::core::JSON{2});
   document.assign("abcdefghi", sourcemeta::core::JSON{3});
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const auto &object{document.as_object()};
   const sourcemeta::core::JSON::String key{"foobarbaz"};
   const auto key_hash{hasher(key)};
@@ -276,7 +280,8 @@ static void JSON_Object_Defines_Miss_Too_Small(benchmark::State &state) {
   document.assign("abcdefg", sourcemeta::core::JSON{1});
   document.assign("abcdefgh", sourcemeta::core::JSON{2});
   document.assign("abcdefghi", sourcemeta::core::JSON{3});
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const auto &object{document.as_object()};
   const sourcemeta::core::JSON::String key{"foo"};
   const auto key_hash{hasher(key)};
@@ -292,7 +297,8 @@ static void JSON_Object_Defines_Miss_Too_Large(benchmark::State &state) {
   document.assign("abcdefg", sourcemeta::core::JSON{1});
   document.assign("abcdefgh", sourcemeta::core::JSON{2});
   document.assign("abcdefghi", sourcemeta::core::JSON{3});
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const auto &object{document.as_object()};
   const sourcemeta::core::JSON::String key{"toolargestring"};
   const auto key_hash{hasher(key)};

@@ -32,7 +32,7 @@ namespace sourcemeta::core {
 /// static auto test_resolver(std::string_view identifier)
 ///     -> std::optional<sourcemeta::core::JSON> {
 ///   if (identifier == "https://www.example.com/test") {
-///     return sourcemeta::core::parse(R"JSON({
+///     return sourcemeta::core::parse_json(R"JSON({
 ///       "$id": "https://www.example.com/test",
 ///       "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///       "type": "string"
@@ -43,7 +43,7 @@ namespace sourcemeta::core {
 /// }
 ///
 /// sourcemeta::core::JSON document =
-///     sourcemeta::core::parse(R"JSON({
+///     sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "items": { "$ref": "https://www.example.com/test" }
 /// })JSON");
@@ -52,7 +52,7 @@ namespace sourcemeta::core {
 ///   sourcemeta::core::default_schema_walker, test_resolver);
 ///
 /// const sourcemeta::core::JSON expected =
-///     sourcemeta::core::parse(R"JSON({
+///     sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "items": { "$ref": "https://www.example.com/test" },
 ///   "$defs": {
@@ -88,7 +88,7 @@ auto bundle(sourcemeta::core::JSON &schema, const SchemaWalker &walker,
 /// static auto test_resolver(std::string_view identifier)
 ///     -> std::optional<sourcemeta::core::JSON> {
 ///   if (identifier == "https://www.example.com/test") {
-///     return sourcemeta::core::parse(R"JSON({
+///     return sourcemeta::core::parse_json(R"JSON({
 ///       "$id": "https://www.example.com/test",
 ///       "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///       "type": "string"
@@ -99,7 +99,7 @@ auto bundle(sourcemeta::core::JSON &schema, const SchemaWalker &walker,
 /// }
 ///
 /// const sourcemeta::core::JSON document =
-///     sourcemeta::core::parse(R"JSON({
+///     sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "items": { "$ref": "https://www.example.com/test" }
 /// })JSON");
@@ -109,7 +109,7 @@ auto bundle(sourcemeta::core::JSON &schema, const SchemaWalker &walker,
 ///     sourcemeta::core::default_schema_walker, test_resolver);
 ///
 /// const sourcemeta::core::JSON expected =
-///     sourcemeta::core::parse(R"JSON({
+///     sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "items": { "$ref": "https://www.example.com/test" },
 ///   "$defs": {

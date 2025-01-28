@@ -123,7 +123,7 @@ static auto register_tests(const std::filesystem::path &subdirectory,
            std::filesystem::path{REFERENCING_SUITE_PATH} / subdirectory)) {
     const std::string name{entry.path().stem().string()};
     const sourcemeta::core::JSON test =
-        sourcemeta::core::from_file(entry.path());
+        sourcemeta::core::read_json(entry.path());
     assert(test.is_object());
     assert(test.defines("tests"));
     assert(test.at("tests").is_array());

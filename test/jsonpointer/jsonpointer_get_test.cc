@@ -3,7 +3,7 @@
 #include <sourcemeta/core/jsonpointer.h>
 
 TEST(JSONPointer_get, integer_property) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "0": 1
   })JSON");
 
@@ -15,7 +15,7 @@ TEST(JSONPointer_get, integer_property) {
 }
 
 TEST(JSONPointer_get, integer_property_as_character) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "0": 1
   })JSON");
 
@@ -27,7 +27,7 @@ TEST(JSONPointer_get, integer_property_as_character) {
 }
 
 TEST(JSONPointer_get, character_after_property) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": { "x": 1 }
   })JSON");
 
@@ -39,7 +39,7 @@ TEST(JSONPointer_get, character_after_property) {
 }
 
 TEST(JSONPointer_get, const_empty) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": 1
   })JSON");
 
@@ -51,7 +51,7 @@ TEST(JSONPointer_get, const_empty) {
 }
 
 TEST(JSONPointer_get, empty) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": 1
   })JSON");
 
@@ -62,7 +62,7 @@ TEST(JSONPointer_get, empty) {
 }
 
 TEST(JSONPointer_get, const_foo) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": 1,
     "bar": 2,
     "baz": 3
@@ -76,7 +76,7 @@ TEST(JSONPointer_get, const_foo) {
 }
 
 TEST(JSONPointer_get, foo) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": 1,
     "bar": 2,
     "baz": 3
@@ -89,7 +89,7 @@ TEST(JSONPointer_get, foo) {
 }
 
 TEST(JSONPointer_get, const_foo_0_bar_1) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": [
       { "bar": [ 1, 2, 3 ] },
       { "baz": [ 4, 5, 6 ] }
@@ -104,7 +104,7 @@ TEST(JSONPointer_get, const_foo_0_bar_1) {
 }
 
 TEST(JSONPointer_get, foo_0_bar_1) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": [
       { "bar": [ 1, 2, 3 ] },
       { "baz": [ 4, 5, 6 ] }
@@ -118,7 +118,7 @@ TEST(JSONPointer_get, foo_0_bar_1) {
 }
 
 TEST(JSONPointer_get, slash) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "/": 1
   })JSON");
 
@@ -130,7 +130,7 @@ TEST(JSONPointer_get, slash) {
 }
 
 TEST(JSONPointer_get, tilde) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "~": 1
   })JSON");
 
@@ -142,7 +142,7 @@ TEST(JSONPointer_get, tilde) {
 }
 
 TEST(JSONPointer_get, hyphen) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "-": 1
   })JSON");
 
@@ -155,7 +155,7 @@ TEST(JSONPointer_get, hyphen) {
 
 // Escaping should only happen while parsing
 TEST(JSONPointer_get, no_tilde_0_escape) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "~0": 1
   })JSON");
 
@@ -168,7 +168,7 @@ TEST(JSONPointer_get, no_tilde_0_escape) {
 
 // Escaping should only happen while parsing
 TEST(JSONPointer_get, no_tilde_1_escape) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "~1": 1
   })JSON");
 
@@ -181,7 +181,7 @@ TEST(JSONPointer_get, no_tilde_1_escape) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_1) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -204,7 +204,7 @@ TEST(JSONPointer_get, rfc6901_1) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_2) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -231,7 +231,7 @@ TEST(JSONPointer_get, rfc6901_2) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_3) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -254,7 +254,7 @@ TEST(JSONPointer_get, rfc6901_3) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_4) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -277,7 +277,7 @@ TEST(JSONPointer_get, rfc6901_4) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_5) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -300,7 +300,7 @@ TEST(JSONPointer_get, rfc6901_5) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_6) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -323,7 +323,7 @@ TEST(JSONPointer_get, rfc6901_6) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_7) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -346,7 +346,7 @@ TEST(JSONPointer_get, rfc6901_7) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_8) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -369,7 +369,7 @@ TEST(JSONPointer_get, rfc6901_8) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_9) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -392,7 +392,7 @@ TEST(JSONPointer_get, rfc6901_9) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_10) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -415,7 +415,7 @@ TEST(JSONPointer_get, rfc6901_10) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_11) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -438,7 +438,7 @@ TEST(JSONPointer_get, rfc6901_11) {
 
 // See https://www.rfc-editor.org/rfc/rfc6901#section-5
 TEST(JSONPointer_get, rfc6901_12) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": ["bar", "baz"],
     "": 0,
     "a/b": 1,
@@ -464,7 +464,7 @@ TEST(JSONPointer_get, rfc6901_12) {
 // programming languages that use NUL to mark the end of a string.
 // See https://www.rfc-editor.org/rfc/rfc6901#section-8
 TEST(JSONPointer_get, null) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo\u0000bar": 1
   })JSON");
 
@@ -478,7 +478,7 @@ TEST(JSONPointer_get, null) {
 }
 
 TEST(JSONPointer_get, positive_integer_property) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "0": 1
   })JSON");
 
@@ -490,7 +490,7 @@ TEST(JSONPointer_get, positive_integer_property) {
 }
 
 TEST(JSONPointer_get, token_property) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": 2
   })JSON");
 
@@ -502,7 +502,7 @@ TEST(JSONPointer_get, token_property) {
 
 TEST(JSONPointer_get, token_index) {
   const sourcemeta::core::JSON document =
-      sourcemeta::core::parse(R"JSON([ 1, 2, 3 ])JSON");
+      sourcemeta::core::parse_json(R"JSON([ 1, 2, 3 ])JSON");
 
   const sourcemeta::core::JSON &result{
       sourcemeta::core::get(document, sourcemeta::core::Pointer{1})};
@@ -511,7 +511,7 @@ TEST(JSONPointer_get, token_index) {
 }
 
 TEST(JSONPointer_get, token_hyphen) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "-": 2
   })JSON");
 
@@ -522,7 +522,7 @@ TEST(JSONPointer_get, token_hyphen) {
 }
 
 TEST(JSONWeakPointer_get, token_property) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": 2
   })JSON");
 
@@ -535,7 +535,7 @@ TEST(JSONWeakPointer_get, token_property) {
 
 TEST(JSONWeakPointer_get, token_index) {
   const sourcemeta::core::JSON document =
-      sourcemeta::core::parse(R"JSON([ 1, 2, 3 ])JSON");
+      sourcemeta::core::parse_json(R"JSON([ 1, 2, 3 ])JSON");
 
   const sourcemeta::core::JSON &result{
       sourcemeta::core::get(document, sourcemeta::core::WeakPointer{1})};
@@ -544,7 +544,7 @@ TEST(JSONWeakPointer_get, token_index) {
 }
 
 TEST(JSONWeakPointer_get, token_hyphen) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "-": 2
   })JSON");
 

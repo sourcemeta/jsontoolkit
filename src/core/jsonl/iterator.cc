@@ -35,7 +35,7 @@ auto ConstJSONLIterator::parse_next() -> JSON {
 parse_start:
   if (this->data) {
     assert(!this->data->eof());
-    return parse(*this->data, this->line, this->column);
+    return parse_json(*this->data, this->line, this->column);
   } else {
     // Just as a cheap placeholder
     return JSON{nullptr};

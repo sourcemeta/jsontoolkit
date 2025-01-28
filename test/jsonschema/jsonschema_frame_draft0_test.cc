@@ -34,7 +34,7 @@
       expected_relative_pointer, expected_destination_of_size);
 
 TEST(JSONSchema_frame_draft0, anonymous_with_nested_schema_resource) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-00/schema#",
     "additionalProperties": { "id": "https://example.com" }
   })JSON");
@@ -81,7 +81,7 @@ TEST(JSONSchema_frame_draft0, anonymous_with_nested_schema_resource) {
 }
 
 TEST(JSONSchema_frame_draft0, empty_schema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://www.sourcemeta.com/schema",
     "$schema": "http://json-schema.org/draft-00/schema#"
   })JSON");
@@ -117,7 +117,7 @@ TEST(JSONSchema_frame_draft0, empty_schema) {
 }
 
 TEST(JSONSchema_frame_draft0, one_level_applicators_without_identifiers) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://www.sourcemeta.com/schema",
     "$schema": "http://json-schema.org/draft-00/schema#",
     "items": { "type": "string" },
@@ -177,7 +177,7 @@ TEST(JSONSchema_frame_draft0, one_level_applicators_without_identifiers) {
 }
 
 TEST(JSONSchema_frame_draft0, one_level_applicators_with_identifiers) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://www.sourcemeta.com/test/qux",
     "$schema": "http://json-schema.org/draft-00/schema#",
     "items": { "id": "../foo", "type": "string" }
@@ -238,7 +238,7 @@ TEST(JSONSchema_frame_draft0, one_level_applicators_with_identifiers) {
 }
 
 TEST(JSONSchema_frame_draft0, subschema_absolute_identifier) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://www.sourcemeta.com/schema",
     "$schema": "http://json-schema.org/draft-00/schema#",
     "items": {
@@ -302,7 +302,7 @@ TEST(JSONSchema_frame_draft0, subschema_absolute_identifier) {
 }
 
 TEST(JSONSchema_frame_draft0, id_override) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://www.sourcemeta.com/schema",
     "$schema": "http://json-schema.org/draft-00/schema#",
     "items": { "id": "schema" }
@@ -315,7 +315,7 @@ TEST(JSONSchema_frame_draft0, id_override) {
 }
 
 TEST(JSONSchema_frame_draft0, explicit_argument_id_same) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://www.sourcemeta.com/schema",
     "$schema": "http://json-schema.org/draft-00/schema#"
   })JSON");
@@ -353,7 +353,7 @@ TEST(JSONSchema_frame_draft0, explicit_argument_id_same) {
 }
 
 TEST(JSONSchema_frame_draft0, explicit_argument_id_different) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://www.sourcemeta.com/schema",
     "$schema": "http://json-schema.org/draft-00/schema#",
     "properties": {
@@ -441,7 +441,7 @@ TEST(JSONSchema_frame_draft0, explicit_argument_id_different) {
 }
 
 TEST(JSONSchema_frame_draft0, ref_metaschema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-00/schema#",
     "$ref": "http://json-schema.org/draft-00/schema#"
   })JSON");

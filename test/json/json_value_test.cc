@@ -162,50 +162,55 @@ TEST(JSON_value, compare_bool_real) {
 
 TEST(JSON_value, compare_int_array) {
   const sourcemeta::core::JSON left{4};
-  const sourcemeta::core::JSON right = sourcemeta::core::parse("[1,2,3]");
+  const sourcemeta::core::JSON right = sourcemeta::core::parse_json("[1,2,3]");
   EXPECT_TRUE(left < right);
   EXPECT_FALSE(right < left);
 }
 
 TEST(JSON_value, compare_array_array_same) {
-  const sourcemeta::core::JSON left = sourcemeta::core::parse("[1,2,3]");
-  const sourcemeta::core::JSON right = sourcemeta::core::parse("[1,2,3]");
+  const sourcemeta::core::JSON left = sourcemeta::core::parse_json("[1,2,3]");
+  const sourcemeta::core::JSON right = sourcemeta::core::parse_json("[1,2,3]");
   EXPECT_FALSE(left < right);
   EXPECT_FALSE(right < left);
 }
 
 TEST(JSON_value, compare_array_array_different) {
-  const sourcemeta::core::JSON left = sourcemeta::core::parse("[1,2]");
-  const sourcemeta::core::JSON right = sourcemeta::core::parse("[1,2,3]");
+  const sourcemeta::core::JSON left = sourcemeta::core::parse_json("[1,2]");
+  const sourcemeta::core::JSON right = sourcemeta::core::parse_json("[1,2,3]");
   EXPECT_TRUE(left < right);
   EXPECT_FALSE(right < left);
 }
 
 TEST(JSON_value, compare_array_array_different_same_size) {
-  const sourcemeta::core::JSON left = sourcemeta::core::parse("[1,3,4]");
-  const sourcemeta::core::JSON right = sourcemeta::core::parse("[1,2,3]");
+  const sourcemeta::core::JSON left = sourcemeta::core::parse_json("[1,3,4]");
+  const sourcemeta::core::JSON right = sourcemeta::core::parse_json("[1,2,3]");
   EXPECT_FALSE(left < right);
   EXPECT_TRUE(right < left);
 }
 
 TEST(JSON_value, compare_object_object_same) {
-  const sourcemeta::core::JSON left = sourcemeta::core::parse("{\"foo\":1}");
-  const sourcemeta::core::JSON right = sourcemeta::core::parse("{\"foo\":1}");
+  const sourcemeta::core::JSON left =
+      sourcemeta::core::parse_json("{\"foo\":1}");
+  const sourcemeta::core::JSON right =
+      sourcemeta::core::parse_json("{\"foo\":1}");
   EXPECT_FALSE(left < right);
   EXPECT_FALSE(right < left);
 }
 
 TEST(JSON_value, compare_object_object_different_same_size) {
-  const sourcemeta::core::JSON left = sourcemeta::core::parse("{\"foo\":1}");
-  const sourcemeta::core::JSON right = sourcemeta::core::parse("{\"foo\":2}");
+  const sourcemeta::core::JSON left =
+      sourcemeta::core::parse_json("{\"foo\":1}");
+  const sourcemeta::core::JSON right =
+      sourcemeta::core::parse_json("{\"foo\":2}");
   EXPECT_TRUE(left < right);
   EXPECT_FALSE(right < left);
 }
 
 TEST(JSON_value, compare_object_object_different) {
-  const sourcemeta::core::JSON left = sourcemeta::core::parse("{\"foo\":1}");
+  const sourcemeta::core::JSON left =
+      sourcemeta::core::parse_json("{\"foo\":1}");
   const sourcemeta::core::JSON right =
-      sourcemeta::core::parse("{\"foo\":1, \"bar\":2}");
+      sourcemeta::core::parse_json("{\"foo\":1, \"bar\":2}");
   EXPECT_TRUE(left < right);
   EXPECT_FALSE(right < left);
 }
@@ -363,7 +368,7 @@ TEST(JSON_value, class_member_initializer_list) {
 
 TEST(JSON_value, try_at) {
   const sourcemeta::core::JSON document =
-      sourcemeta::core::parse("{\"foo\":5}");
+      sourcemeta::core::parse_json("{\"foo\":5}");
   EXPECT_TRUE(document.is_object());
   const auto result = document.try_at("foo");
   EXPECT_TRUE(result);
@@ -372,14 +377,16 @@ TEST(JSON_value, try_at) {
 
 TEST(JSON_value, try_at_fail) {
   const sourcemeta::core::JSON document =
-      sourcemeta::core::parse("{\"foo\":5}");
+      sourcemeta::core::parse_json("{\"foo\":5}");
   EXPECT_TRUE(document.is_object());
   const auto result = document.try_at("boo");
   EXPECT_FALSE(result);
 }
 
 TEST(JSON_value, unordered_set_with_custom_hash) {
-  std::unordered_set<sourcemeta::core::JSON, sourcemeta::core::Hash> value;
+  std::unordered_set<sourcemeta::core::JSON,
+                     sourcemeta::core::HashJSON<sourcemeta::core::JSON>>
+      value;
   value.insert(sourcemeta::core::JSON{"foo"});
   value.insert(sourcemeta::core::JSON{"bar"});
   value.insert(sourcemeta::core::JSON{"baz"});

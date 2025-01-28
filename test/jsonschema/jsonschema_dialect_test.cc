@@ -15,13 +15,13 @@ TEST(JSONSchema_dialect, dialect_false) {
 }
 
 TEST(JSONSchema_dialect, dialect_empty_object) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse("{}");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};
   EXPECT_FALSE(dialect.has_value());
 }
 
 TEST(JSONSchema_dialect, dialect_empty_object_with_default) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse("{}");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(
       document, "https://json-schema.org/draft/2020-12/schema")};
   EXPECT_TRUE(dialect.has_value());

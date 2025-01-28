@@ -13,7 +13,7 @@ TEST(JSONPointer_position, track_1) {
 ])JSON"};
 
   sourcemeta::core::PositionTracker tracker;
-  sourcemeta::core::parse(input, std::ref(tracker));
+  sourcemeta::core::parse_json(input, std::ref(tracker));
 
   EXPECT_EQ(tracker.size(), 4);
 

@@ -51,7 +51,7 @@ auto official_resolver(std::string_view identifier)
 ///   resolver{sourcemeta::core::official_resolver};
 ///
 /// const sourcemeta::core::JSON schema =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$id": "https://www.example.com"
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "string"
@@ -130,7 +130,7 @@ public:
   auto add(const std::filesystem::path &path,
            const std::optional<std::string> &default_dialect = std::nullopt,
            const std::optional<std::string> &default_id = std::nullopt,
-           const Reader &reader = sourcemeta::core::from_file)
+           const Reader &reader = sourcemeta::core::read_json)
       -> const std::string &;
 
   // Change the identifier of a registered schema

@@ -74,7 +74,7 @@ TEST(JSONPointer_walker, string) {
 }
 
 TEST(JSONPointer_walker, array_empty) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse("[]");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json("[]");
   std::vector<sourcemeta::core::Pointer> subpointers;
   for (const auto &subpointer : sourcemeta::core::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -86,7 +86,7 @@ TEST(JSONPointer_walker, array_empty) {
 
 TEST(JSONPointer_walker, array_scalars) {
   const sourcemeta::core::JSON document =
-      sourcemeta::core::parse("[ 1, 2, 3, 4 ]");
+      sourcemeta::core::parse_json("[ 1, 2, 3, 4 ]");
   std::vector<sourcemeta::core::Pointer> subpointers;
   for (const auto &subpointer : sourcemeta::core::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -101,7 +101,7 @@ TEST(JSONPointer_walker, array_scalars) {
 }
 
 TEST(JSONPointer_walker, array_deep) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"EOF([
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"EOF([
     [],
     [ 1, 2 ],
     [ "foo" ]
@@ -122,7 +122,7 @@ TEST(JSONPointer_walker, array_deep) {
 }
 
 TEST(JSONPointer_walker, object_empty) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse("{}");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   std::vector<sourcemeta::core::Pointer> subpointers;
   for (const auto &subpointer : sourcemeta::core::PointerWalker{document}) {
     subpointers.push_back(subpointer);
@@ -134,7 +134,7 @@ TEST(JSONPointer_walker, object_empty) {
 
 TEST(JSONPointer_walker, object_scalars) {
   const sourcemeta::core::JSON document =
-      sourcemeta::core::parse("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }");
+      sourcemeta::core::parse_json("{ \"foo\": 1, \"bar\": 2, \"baz\": 3 }");
   // Do a set to not dependent on object property ordering
   std::set<sourcemeta::core::Pointer> subpointers;
   for (const auto &subpointer : sourcemeta::core::PointerWalker{document}) {
@@ -150,7 +150,7 @@ TEST(JSONPointer_walker, object_scalars) {
 
 TEST(JSONPointer_walker, object_nested) {
   const sourcemeta::core::JSON document =
-      sourcemeta::core::parse("{ \"foo\": { \"bar\": 1 } }");
+      sourcemeta::core::parse_json("{ \"foo\": { \"bar\": 1 } }");
   std::vector<sourcemeta::core::Pointer> subpointers;
   for (const auto &subpointer : sourcemeta::core::PointerWalker{document}) {
     subpointers.push_back(subpointer);

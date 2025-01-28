@@ -649,27 +649,29 @@ auto parse_number(
 #define CALLBACK_PRE(value_type, value)                                        \
   if (callback) {                                                              \
     assert(value.is_null() || value.is_string() || value.is_integer());        \
-    callback(CallbackPhase::Pre, JSON::Type::value_type, line, column, value); \
+    callback(JSON::ParsePhase::Pre, JSON::Type::value_type, line, column,      \
+             value);                                                           \
   }
 
 #define CALLBACK_PRE_WITH_POSITION(value_type, line, column, value)            \
   if (callback) {                                                              \
     assert(value.is_null() || value.is_string() || value.is_integer());        \
-    callback(CallbackPhase::Pre, JSON::Type::value_type, line, column, value); \
+    callback(JSON::ParsePhase::Pre, JSON::Type::value_type, line, column,      \
+             value);                                                           \
   }
 
 #define CALLBACK_POST(value_type, value)                                       \
   if (callback) {                                                              \
     assert(value.type() == JSON::Type::value_type);                            \
-    callback(CallbackPhase::Post, JSON::Type::value_type, line, column,        \
+    callback(JSON::ParsePhase::Post, JSON::Type::value_type, line, column,     \
              value);                                                           \
   }
 
 namespace sourcemeta::core {
-auto internal_parse(
+auto internal_parse_json(
     std::basic_istream<typename JSON::Char, typename JSON::CharTraits> &stream,
-    std::uint64_t &line, std::uint64_t &column, const Callback &callback)
-    -> JSON {
+    std::uint64_t &line, std::uint64_t &column,
+    const JSON::ParseCallback &callback) -> JSON {
   // Globals
   using Result = JSON;
   enum class Container : std::uint8_t { Array, Object };
@@ -1189,14 +1191,15 @@ do_parse_container_end:
 
 // NOLINTEND(cppcoreguidelines-avoid-goto)
 
-auto internal_parse(const std::basic_string<typename JSON::Char,
-                                            typename JSON::CharTraits> &input,
-                    std::uint64_t &line, std::uint64_t &column,
-                    const Callback &callback) -> JSON {
+auto internal_parse_json(
+    const std::basic_string<typename JSON::Char, typename JSON::CharTraits>
+        &input,
+    std::uint64_t &line, std::uint64_t &column,
+    const JSON::ParseCallback &callback) -> JSON {
   std::basic_istringstream<typename JSON::Char, typename JSON::CharTraits,
                            typename JSON::Allocator<typename JSON::Char>>
       stream{input};
-  return internal_parse(stream, line, column, callback);
+  return internal_parse_json(stream, line, column, callback);
 }
 
 } // namespace sourcemeta::core

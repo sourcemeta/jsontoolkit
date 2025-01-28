@@ -9,7 +9,7 @@
 #include "jsonschema_test_utils.h"
 
 TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/test",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$defs": {
@@ -170,7 +170,7 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
 }
 
 TEST(JSONSchema_frame, no_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": {
@@ -265,7 +265,7 @@ TEST(JSONSchema_frame, no_id) {
 }
 
 TEST(JSONSchema_frame, no_id_with_default) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": { "type": "string" }
   })JSON");
@@ -311,7 +311,7 @@ TEST(JSONSchema_frame, no_id_with_default) {
 }
 
 TEST(JSONSchema_frame, anchor_on_absolute_subid) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": {
@@ -402,7 +402,7 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
 }
 
 TEST(JSONSchema_frame, uri_iterators) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": {
@@ -448,7 +448,7 @@ TEST(JSONSchema_frame, uri_iterators) {
 }
 
 TEST(JSONSchema_frame, no_refs) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -470,7 +470,7 @@ TEST(JSONSchema_frame, no_refs) {
 }
 
 TEST(JSONSchema_frame, refs_with_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -535,7 +535,7 @@ TEST(JSONSchema_frame, refs_with_id) {
 }
 
 TEST(JSONSchema_frame, refs_with_no_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "$ref": "#" },
@@ -587,7 +587,7 @@ TEST(JSONSchema_frame, refs_with_no_id) {
 }
 
 TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": {
@@ -607,7 +607,7 @@ TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
 }
 
 TEST(JSONSchema_frame, remote_refs) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "$ref": "https://www.example.com" },
@@ -636,7 +636,7 @@ TEST(JSONSchema_frame, remote_refs) {
 }
 
 TEST(JSONSchema_frame, no_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "type": "string"
   })JSON");
 

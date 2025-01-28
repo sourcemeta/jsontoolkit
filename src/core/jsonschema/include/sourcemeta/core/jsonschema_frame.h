@@ -34,7 +34,7 @@ namespace sourcemeta::core {
 /// #include <cassert>
 ///
 /// const sourcemeta::core::JSON document =
-///     sourcemeta::core::parse(R"JSON({
+///     sourcemeta::core::parse_json(R"JSON({
 ///   "$id": "https://www.example.com/schema",
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "items": { "$id": "foo", "type": "string" },

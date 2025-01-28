@@ -7,7 +7,7 @@
 #include "jsonschema_test_utils.h"
 
 TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_1) {
-  const auto schema = sourcemeta::core::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": { "foo": true },
     "patternProperties": { "^@": true },
@@ -38,7 +38,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_1) {
 }
 
 TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_2) {
-  const auto schema = sourcemeta::core::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": { "foo": true },
@@ -75,7 +75,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_2) {
 }
 
 TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_3) {
-  const auto schema = sourcemeta::core::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": { "foo": true },
     "allOf": [ { "patternProperties": { "^@": true } } ],
@@ -103,7 +103,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_3) {
 }
 
 TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_4) {
-  const auto schema = sourcemeta::core::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "if": {
       "properties": { "foo": true }
@@ -146,7 +146,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_4) {
 }
 
 TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_5) {
-  const auto schema = sourcemeta::core::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "allOf": [ { "unevaluatedProperties": false } ],
     "unevaluatedProperties": false
@@ -174,7 +174,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_5) {
 }
 
 TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_6) {
-  const auto schema = sourcemeta::core::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "anyOf": [ { "unevaluatedProperties": false } ],
     "unevaluatedProperties": false
@@ -202,7 +202,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_6) {
 }
 
 TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_7) {
-  const auto schema = sourcemeta::core::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$ref": "#/$defs/foo",
     "unevaluatedProperties": false,
@@ -240,7 +240,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_7) {
 }
 
 TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_8) {
-  const auto schema = sourcemeta::core::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$dynamicRef": "#test",
@@ -278,7 +278,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_8) {
 }
 
 TEST(JSONSchema_unevaluated_2020_12, unevaluatedItems_1) {
-  const auto schema = sourcemeta::core::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "prefixItems": true,
     "items": true,
@@ -308,7 +308,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedItems_1) {
 }
 
 TEST(JSONSchema_unevaluated_2020_12, unevaluatedItems_2) {
-  const auto schema = sourcemeta::core::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "allOf": [ { "unevaluatedItems": false } ],
     "unevaluatedItems": false

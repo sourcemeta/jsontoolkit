@@ -10,7 +10,7 @@ TEST(JSONSchema_vocabulary, core_vocabularies_boolean_without_default) {
 }
 
 TEST(JSONSchema_vocabulary, unresolvable_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://non-existent.com/dialect"
   })JSON");
   EXPECT_THROW(sourcemeta::core::vocabularies(

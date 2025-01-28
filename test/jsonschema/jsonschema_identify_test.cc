@@ -20,7 +20,7 @@ TEST(JSONSchema_identify, boolean_no_dialect_with_default_id) {
 }
 
 TEST(JSONSchema_identify, empty_old_no_dollar_sign_id_with_default) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse("{}");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
       sourcemeta::core::IdentificationStrategy::Strict,
@@ -31,7 +31,7 @@ TEST(JSONSchema_identify, empty_old_no_dollar_sign_id_with_default) {
 }
 
 TEST(JSONSchema_identify, empty_dollar_sign_id_with_default) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse("{}");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
       sourcemeta::core::IdentificationStrategy::Strict,
@@ -51,14 +51,14 @@ TEST(JSONSchema_identify, boolean_unknown_dialect) {
 }
 
 TEST(JSONSchema_identify, empty_object_no_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse("{}");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver)};
   EXPECT_FALSE(id.has_value());
 }
 
 TEST(JSONSchema_identify, empty_object_unknown_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse("{}");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   EXPECT_THROW(sourcemeta::core::identify(
                    document, sourcemeta::core::official_resolver,
                    sourcemeta::core::IdentificationStrategy::Strict,
@@ -67,7 +67,7 @@ TEST(JSONSchema_identify, empty_object_unknown_dialect) {
 }
 
 TEST(JSONSchema_identify, object_with_dollar_id_with_no_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema"
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
@@ -76,7 +76,7 @@ TEST(JSONSchema_identify, object_with_dollar_id_with_no_dialect) {
 }
 
 TEST(JSONSchema_identify, object_with_id_with_no_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://example.com/my-schema"
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
@@ -93,7 +93,7 @@ TEST(JSONSchema_identify, loose_boolean) {
 }
 
 TEST(JSONSchema_identify, loose_with_valid_dollar_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema"
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
@@ -104,7 +104,7 @@ TEST(JSONSchema_identify, loose_with_valid_dollar_id) {
 }
 
 TEST(JSONSchema_identify, loose_with_invalid_dollar_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": false
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
@@ -114,7 +114,7 @@ TEST(JSONSchema_identify, loose_with_invalid_dollar_id) {
 }
 
 TEST(JSONSchema_identify, loose_with_valid_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://example.com/my-schema"
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
@@ -125,7 +125,7 @@ TEST(JSONSchema_identify, loose_with_valid_id) {
 }
 
 TEST(JSONSchema_identify, loose_with_invalid_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": false
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
@@ -135,7 +135,7 @@ TEST(JSONSchema_identify, loose_with_invalid_id) {
 }
 
 TEST(JSONSchema_identify, loose_with_valid_dollar_id_and_invalid_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "id": false
   })JSON");
@@ -147,7 +147,7 @@ TEST(JSONSchema_identify, loose_with_valid_dollar_id_and_invalid_id) {
 }
 
 TEST(JSONSchema_identify, loose_with_valid_id_and_invalid_dollar_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://example.com/my-schema",
     "$id": false
   })JSON");
@@ -159,7 +159,7 @@ TEST(JSONSchema_identify, loose_with_valid_id_and_invalid_dollar_id) {
 }
 
 TEST(JSONSchema_identify, loose_with_invalid_id_and_invalid_dollar_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": 1,
     "id": false
   })JSON");
@@ -170,7 +170,7 @@ TEST(JSONSchema_identify, loose_with_invalid_id_and_invalid_dollar_id) {
 }
 
 TEST(JSONSchema_identify, loose_with_matching_id_and_dollar_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "id": "https://example.com/my-schema"
   })JSON");
@@ -182,7 +182,7 @@ TEST(JSONSchema_identify, loose_with_matching_id_and_dollar_id) {
 }
 
 TEST(JSONSchema_identify, loose_with_non_matching_id_and_dollar_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "http://example.com/my-schema",
     "id": "https://example.com/my-schema"
   })JSON");
@@ -193,7 +193,7 @@ TEST(JSONSchema_identify, loose_with_non_matching_id_and_dollar_id) {
 }
 
 TEST(JSONSchema_identify, loose_with_resolvable_default_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "http://example.com/my-schema",
     "id": "https://example.com/my-schema"
   })JSON");
@@ -206,7 +206,7 @@ TEST(JSONSchema_identify, loose_with_resolvable_default_dialect) {
 }
 
 TEST(JSONSchema_identify, loose_with_unresolvable_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://www.sourcemeta.com/invalid-dialect"
   })JSON");
@@ -218,7 +218,7 @@ TEST(JSONSchema_identify, loose_with_unresolvable_dialect) {
 }
 
 TEST(JSONSchema_identify, anonymize_with_unknown_base_dialect) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema"
   })JSON");

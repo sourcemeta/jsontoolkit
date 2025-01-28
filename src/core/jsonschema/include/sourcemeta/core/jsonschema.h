@@ -69,7 +69,7 @@ enum class IdentificationStrategy : std::uint8_t {
 /// #include <cassert>
 ///
 /// const sourcemeta::core::JSON document =
-///     sourcemeta::core::parse(R"JSON({
+///     sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "$id": "https://sourcemeta.com/example-schema"
 /// })JSON");
@@ -113,7 +113,7 @@ auto identify(const JSON &schema, const std::string &base_dialect,
 /// #include <cassert>
 ///
 /// sourcemeta::core::JSON document =
-///     sourcemeta::core::parse(R"JSON({
+///     sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "$id": "https://sourcemeta.com/example-schema"
 /// })JSON");
@@ -139,7 +139,7 @@ auto anonymize(JSON &schema, const std::string &base_dialect) -> void;
 /// #include <cassert>
 ///
 /// sourcemeta::core::JSON document =
-///     sourcemeta::core::parse(R"JSON({
+///     sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "$id": "https://sourcemeta.com/example-schema"
 /// })JSON");
@@ -178,7 +178,7 @@ auto reidentify(JSON &schema, const std::string &new_identifier,
 /// #include <cassert>
 ///
 /// const sourcemeta::core::JSON document =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object"
 /// })JSON");
@@ -204,7 +204,7 @@ auto dialect(const JSON &schema,
 /// #include <iostream>
 ///
 /// const sourcemeta::core::JSON document =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object"
 /// })JSON");
@@ -236,7 +236,7 @@ auto metaschema(
 /// #include <cassert>
 ///
 /// const sourcemeta::core::JSON document =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object"
 /// })JSON");
@@ -269,7 +269,7 @@ auto base_dialect(const JSON &schema, const SchemaResolver &resolver,
 /// #include <cassert>
 ///
 /// const sourcemeta::core::JSON document =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object"
 /// })JSON");
@@ -312,7 +312,7 @@ auto vocabularies(const SchemaResolver &resolver,
 /// #include <sstream>
 ///
 /// const sourcemeta::core::JSON document =
-///   sourcemeta::core::parse(
+///   sourcemeta::core::parse_json(
 ///     "{ \"type\": \"string\", \"minLength\": 3 }");
 /// std::ostringstream stream;
 /// sourcemeta::core::prettify(document, stream,
@@ -334,7 +334,7 @@ auto schema_format_compare(const JSON::String &left, const JSON::String &right)
 /// #include <cassert>
 ///
 /// sourcemeta::core::JSON schema =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$id": "https://www.example.com/schema",
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "$ref": "https://www.example.com/another",
@@ -345,7 +345,7 @@ auto schema_format_compare(const JSON::String &left, const JSON::String &right)
 ///   sourcemeta::core::official_resolver);
 ///
 /// const sourcemeta::core::JSON expected =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$id": "https://www.example.com/schema",
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "$ref": "another",
@@ -370,7 +370,7 @@ auto relativize(
 /// #include <cassert>
 ///
 /// sourcemeta::core::JSON schema =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$id": "https://www.example.com/schema",
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "$ref": "another",
@@ -381,7 +381,7 @@ auto relativize(
 ///   sourcemeta::core::official_resolver);
 ///
 /// const sourcemeta::core::JSON expected =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "$ref": "https://www.example.com/another",
 /// })JSON");

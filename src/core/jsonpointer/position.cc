@@ -4,11 +4,11 @@
 
 namespace sourcemeta::core {
 
-auto PositionTracker::operator()(const CallbackPhase phase, const JSON::Type,
+auto PositionTracker::operator()(const JSON::ParsePhase phase, const JSON::Type,
                                  const std::uint64_t line,
                                  const std::uint64_t column, const JSON &value)
     -> void {
-  if (phase == CallbackPhase::Pre) {
+  if (phase == JSON::ParsePhase::Pre) {
     this->stack.push({line, column});
     if (value.is_string()) {
       this->current.push_back(value.to_string());
@@ -16,7 +16,7 @@ auto PositionTracker::operator()(const CallbackPhase phase, const JSON::Type,
       this->current.push_back(
           static_cast<Pointer::Token::Index>(value.to_integer()));
     }
-  } else if (phase == CallbackPhase::Post) {
+  } else if (phase == JSON::ParsePhase::Post) {
     assert(!this->stack.empty());
     this->data.emplace(this->current,
                        Position{this->stack.top().first,

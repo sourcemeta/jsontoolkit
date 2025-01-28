@@ -9,7 +9,7 @@
 static auto test_resolver(std::string_view identifier)
     -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://sourcemeta.com/test-metaschema") {
-    return sourcemeta::core::parse(R"JSON({
+    return sourcemeta::core::parse_json(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://sourcemeta.com/test-metaschema",
       "$vocabulary": {
@@ -18,7 +18,7 @@ static auto test_resolver(std::string_view identifier)
       }
     })JSON");
   } else if (identifier == "https://sourcemeta.com/custom-vocab") {
-    return sourcemeta::core::parse(R"JSON({
+    return sourcemeta::core::parse_json(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://sourcemeta.com/custom-vocab",
       "$vocabulary": {
@@ -121,7 +121,7 @@ TEST(JSONSchema_walker, false) {
 }
 
 TEST(JSONSchema_walker, value) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
       "schema": {
@@ -139,7 +139,7 @@ TEST(JSONSchema_walker, value) {
   }
 
   EXPECT_EQ(subschemas.size(), 3);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
       "schema": {
@@ -147,12 +147,12 @@ TEST(JSONSchema_walker, value) {
       }
     }
   })JSON"));
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "schema": {
       "foo": 1
     }
   })JSON"));
-  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse_json(R"JSON({
     "foo": 1
   })JSON"));
 
@@ -176,7 +176,7 @@ TEST(JSONSchema_walker, value) {
 }
 
 TEST(JSONSchema_walker, value_invalid) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": [ { "foo": 1 } ]
   })JSON");
@@ -190,7 +190,7 @@ TEST(JSONSchema_walker, value_invalid) {
   }
 
   EXPECT_EQ(subschemas.size(), 1);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": [ { "foo": 1 } ]
   })JSON"));
@@ -203,7 +203,7 @@ TEST(JSONSchema_walker, value_invalid) {
 }
 
 TEST(JSONSchema_walker, elements) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemas": [ { "foo": 1 }, { "schema": { "bar": 2 } } ]
   })JSON");
@@ -217,17 +217,17 @@ TEST(JSONSchema_walker, elements) {
   }
 
   EXPECT_EQ(subschemas.size(), 4);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemas": [ { "foo": 1 }, { "schema": { "bar": 2 } } ]
   })JSON"));
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "foo": 1
   })JSON"));
-  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse_json(R"JSON({
     "schema": { "bar": 2 }
   })JSON"));
-  EXPECT_EQ(subschemas.at(3), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(3), sourcemeta::core::parse_json(R"JSON({
     "bar": 2
   })JSON"));
 
@@ -256,7 +256,7 @@ TEST(JSONSchema_walker, elements) {
 }
 
 TEST(JSONSchema_walker, elements_invalid) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemas": { "foo": 1 }
   })JSON");
@@ -270,7 +270,7 @@ TEST(JSONSchema_walker, elements_invalid) {
   }
 
   EXPECT_EQ(subschemas.size(), 1);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemas": { "foo": 1 }
   })JSON"));
@@ -283,7 +283,7 @@ TEST(JSONSchema_walker, elements_invalid) {
 }
 
 TEST(JSONSchema_walker, members) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemaMap": {
       "foo": {
@@ -303,7 +303,7 @@ TEST(JSONSchema_walker, members) {
   }
 
   EXPECT_EQ(subschemas.size(), 3);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemaMap": {
       "foo": {
@@ -313,10 +313,10 @@ TEST(JSONSchema_walker, members) {
       }
     }
   })JSON"));
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "schema": { "bar": 1 }
   })JSON"));
-  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse_json(R"JSON({
     "bar": 1
   })JSON"));
 
@@ -341,7 +341,7 @@ TEST(JSONSchema_walker, members) {
 }
 
 TEST(JSONSchema_walker, members_invalid) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemaMap": [ { "foo": 1 } ]
   })JSON");
@@ -355,7 +355,7 @@ TEST(JSONSchema_walker, members_invalid) {
   }
 
   EXPECT_EQ(subschemas.size(), 1);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemaMap": [ { "foo": 1 } ]
   })JSON"));
@@ -368,7 +368,7 @@ TEST(JSONSchema_walker, members_invalid) {
 }
 
 TEST(JSONSchema_walker, value_or_elements) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemaOrSchemas": {
       "schemaOrSchemas": [
@@ -386,7 +386,7 @@ TEST(JSONSchema_walker, value_or_elements) {
   }
 
   EXPECT_EQ(subschemas.size(), 3);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemaOrSchemas": {
       "schemaOrSchemas": [
@@ -394,11 +394,11 @@ TEST(JSONSchema_walker, value_or_elements) {
       ]
     }
   })JSON"));
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "schemaOrSchemas": [ { "foo": 1 } ]
   })JSON"));
 
-  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse_json(R"JSON({
     "foo": 1
   })JSON"));
 
@@ -424,7 +424,7 @@ TEST(JSONSchema_walker, value_or_elements) {
 }
 
 TEST(JSONSchema_walker, elements_or_members) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemasOrMap": [
       {
@@ -444,7 +444,7 @@ TEST(JSONSchema_walker, elements_or_members) {
   }
 
   EXPECT_EQ(subschemas.size(), 3);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemasOrMap": [
       {
@@ -454,12 +454,12 @@ TEST(JSONSchema_walker, elements_or_members) {
       }
     ]
   })JSON"));
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "schemasOrMap": {
       "foo": { "bar": 1 }
     }
   })JSON"));
-  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse_json(R"JSON({
     "bar": 1
   })JSON"));
 
@@ -485,7 +485,7 @@ TEST(JSONSchema_walker, elements_or_members) {
 }
 
 TEST(JSONSchema_walker, no_metaschema_and_no_default) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "schema": { "foo": 1 }
   })JSON");
 
@@ -498,7 +498,7 @@ TEST(JSONSchema_walker, no_metaschema_and_no_default) {
   }
 
   EXPECT_EQ(subschemas.size(), 1);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "schema": { "foo": 1 }
   })JSON"));
 
@@ -509,7 +509,7 @@ TEST(JSONSchema_walker, no_metaschema_and_no_default) {
 }
 
 TEST(JSONSchema_walker, no_metaschema_with_default) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "schema": {
       "schema": {
         "foo": 1
@@ -527,19 +527,19 @@ TEST(JSONSchema_walker, no_metaschema_with_default) {
   }
 
   EXPECT_EQ(subschemas.size(), 3);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "schema": {
       "schema": {
         "foo": 1
       }
     }
   })JSON"));
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "schema": {
       "foo": 1
     }
   })JSON"));
-  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse_json(R"JSON({
     "foo": 1
   })JSON"));
 
@@ -563,7 +563,7 @@ TEST(JSONSchema_walker, no_metaschema_with_default) {
 }
 
 TEST(JSONSchema_walker, unknown_keyword_from_other_vocab) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
       "custom": { "foo": 1 }
@@ -579,13 +579,13 @@ TEST(JSONSchema_walker, unknown_keyword_from_other_vocab) {
   }
 
   EXPECT_EQ(subschemas.size(), 2);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
       "custom": { "foo": 1 }
     }
   })JSON"));
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "custom": { "foo": 1 }
   })JSON"));
 
@@ -603,7 +603,7 @@ TEST(JSONSchema_walker, unknown_keyword_from_other_vocab) {
 }
 
 TEST(JSONSchema_walker, multi_metaschemas) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
       "$schema": "https://sourcemeta.com/custom-vocab",
@@ -620,18 +620,18 @@ TEST(JSONSchema_walker, multi_metaschemas) {
   }
 
   EXPECT_EQ(subschemas.size(), 3);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
       "$schema": "https://sourcemeta.com/custom-vocab",
       "custom": { "foo": 1 }
     }
   })JSON"));
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/custom-vocab",
     "custom": { "foo": 1 }
   })JSON"));
-  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse_json(R"JSON({
     "foo": 1
   })JSON"));
 
@@ -655,7 +655,7 @@ TEST(JSONSchema_walker, multi_metaschemas) {
 }
 
 TEST(JSONSchema_walker, flat) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": {
       "schema": { "foo": 1 }
@@ -680,10 +680,10 @@ TEST(JSONSchema_walker, flat) {
 
   // We don't guarantee any specific ordering
   if (subschemas.at(0).at("schema").at("foo").to_integer() == 1) {
-    EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+    EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
       "schema": { "foo": 1 }
     })JSON"));
-    EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+    EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
       "schema": { "foo": 2 }
     })JSON"));
 
@@ -698,10 +698,10 @@ TEST(JSONSchema_walker, flat) {
     EXPECT_EQ(entries.at(1).base_dialect,
               "https://json-schema.org/draft/2020-12/schema");
   } else {
-    EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+    EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
       "schema": { "foo": 1 }
     })JSON"));
-    EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse(R"JSON({
+    EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
       "schema": { "foo": 2 }
     })JSON"));
 
@@ -731,14 +731,14 @@ TEST(JSONSchema_walker, flat_non_modify) {
     }
   })JSON"};
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(json);
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(json);
   for (const auto &entry : sourcemeta::core::SchemaIteratorFlat(
            document, test_walker, test_resolver)) {
     sourcemeta::core::set(document, entry.pointer,
                           sourcemeta::core::JSON{true});
   }
 
-  EXPECT_EQ(document, sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(document, sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schema": true,
     "schemaMap": {
@@ -749,7 +749,7 @@ TEST(JSONSchema_walker, flat_non_modify) {
 
 TEST(JSONSchema_walker, flat_no_metaschema) {
   const sourcemeta::core::JSON document =
-      sourcemeta::core::parse(R"JSON({ "foo": 1 })JSON");
+      sourcemeta::core::parse_json(R"JSON({ "foo": 1 })JSON");
 
   std::vector<sourcemeta::core::JSON> subschemas;
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
@@ -772,7 +772,7 @@ TEST(JSONSchema_walker, members_with_array) {
     }
   })JSON"};
 
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(json);
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(json);
   std::vector<sourcemeta::core::JSON> subschemas;
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry :
@@ -783,7 +783,7 @@ TEST(JSONSchema_walker, members_with_array) {
 
   EXPECT_EQ(subschemas.size(), 2);
   EXPECT_EQ(subschemas.at(0), document);
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "test": 1
   })JSON"));
 
@@ -810,7 +810,7 @@ TEST(JSONSchema_walker, elements_or_members_with_array_property) {
     }
   })JSON"};
 
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(json);
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(json);
   std::vector<sourcemeta::core::JSON> subschemas;
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry :
@@ -821,7 +821,7 @@ TEST(JSONSchema_walker, elements_or_members_with_array_property) {
 
   EXPECT_EQ(subschemas.size(), 2);
   EXPECT_EQ(subschemas.at(0), document);
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "test": 1
   })JSON"));
 
@@ -840,7 +840,7 @@ TEST(JSONSchema_walker, elements_or_members_with_array_property) {
 }
 
 TEST(JSONSchema_walker, elements_with_string_items) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemas": [ { "foo": 1 }, "foo" ]
   })JSON");
@@ -855,7 +855,7 @@ TEST(JSONSchema_walker, elements_with_string_items) {
 
   EXPECT_EQ(subschemas.size(), 2);
   EXPECT_EQ(subschemas.at(0), document);
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "foo": 1
   })JSON"));
 
@@ -873,7 +873,7 @@ TEST(JSONSchema_walker, elements_with_string_items) {
 }
 
 TEST(JSONSchema_walker, value_or_elements_with_string_items) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/test-metaschema",
     "schemaOrSchemas": [ { "foo": 1 }, "foo" ]
   })JSON");
@@ -888,7 +888,7 @@ TEST(JSONSchema_walker, value_or_elements_with_string_items) {
 
   EXPECT_EQ(subschemas.size(), 2);
   EXPECT_EQ(subschemas.at(0), document);
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse(R"JSON({
+  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
     "foo": 1
   })JSON"));
 

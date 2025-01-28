@@ -28,7 +28,7 @@ namespace sourcemeta::core {
 ///
 /// const auto input{"{\n  \"foo\": \"bar\"\n}"};;
 /// sourcemeta::core::PositionTracker tracker;
-/// sourcemeta::core::parse(stream, std::ref(tracker));
+/// sourcemeta::core::parse_json(stream, std::ref(tracker));
 /// assert(tracker.size() == 2);
 /// const auto foo{tracker.get(sourcemeta::core::Pointer{"foo"})};
 /// assert(foo.has_value());
@@ -43,10 +43,10 @@ namespace sourcemeta::core {
 /// ```
 class SOURCEMETA_CORE_JSONPOINTER_EXPORT PositionTracker {
 public:
-  using Pointer = GenericPointer<JSON::String, KeyHash<JSON::String>>;
+  using Pointer = GenericPointer<JSON::String, PropertyHashJSON<JSON::String>>;
   using Position =
       std::tuple<std::uint64_t, std::uint64_t, std::uint64_t, std::uint64_t>;
-  auto operator()(const CallbackPhase phase, const JSON::Type,
+  auto operator()(const JSON::ParsePhase phase, const JSON::Type,
                   const std::uint64_t line, const std::uint64_t column,
                   const JSON &value) -> void;
   auto get(const Pointer &pointer) const -> std::optional<Position>;

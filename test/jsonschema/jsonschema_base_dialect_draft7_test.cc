@@ -3,7 +3,7 @@
 #include <sourcemeta/core/jsonschema.h>
 
 TEST(JSONSchema_base_dialect_draft7, jsonschema_draft_hyperschema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-07/hyper-schema#",
     "type": "object"
   })JSON");
@@ -15,7 +15,7 @@ TEST(JSONSchema_base_dialect_draft7, jsonschema_draft_hyperschema) {
 }
 
 TEST(JSONSchema_base_dialect_draft7, jsonschema_draft_schema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object"
   })JSON");
@@ -26,7 +26,7 @@ TEST(JSONSchema_base_dialect_draft7, jsonschema_draft_schema) {
 }
 
 TEST(JSONSchema_base_dialect_draft7, jsonschema_draft_links) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-07/links#"
   })JSON");
   const std::optional<std::string> base_dialect{sourcemeta::core::base_dialect(
@@ -37,7 +37,7 @@ TEST(JSONSchema_base_dialect_draft7, jsonschema_draft_links) {
 }
 
 TEST(JSONSchema_base_dialect_draft7, jsonschema_draft_hyperschema_output) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-07/hyper-schema-output"
   })JSON");
   const std::optional<std::string> base_dialect{sourcemeta::core::base_dialect(

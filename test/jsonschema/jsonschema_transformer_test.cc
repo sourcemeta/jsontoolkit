@@ -14,7 +14,7 @@ TEST(JSONSchema_transformer, flat_document_no_applicators) {
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar",
     "bar": "baz",
@@ -24,7 +24,7 @@ TEST(JSONSchema_transformer, flat_document_no_applicators) {
   bundle.apply(document, sourcemeta::core::default_schema_walker,
                sourcemeta::core::official_resolver);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "qux": "xxx"
   })JSON");
@@ -37,7 +37,7 @@ TEST(JSONSchema_transformer, flat_document_no_applicators_no_walker) {
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar",
     "bar": "baz",
@@ -47,7 +47,7 @@ TEST(JSONSchema_transformer, flat_document_no_applicators_no_walker) {
   bundle.apply(document, sourcemeta::core::schema_walker_none,
                sourcemeta::core::official_resolver);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "qux": "xxx"
   })JSON");
@@ -60,7 +60,7 @@ TEST(JSONSchema_transformer, throw_if_no_dialect_invalid_default) {
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": "bar",
     "bar": "baz",
     "qux": "xxx"
@@ -72,7 +72,7 @@ TEST(JSONSchema_transformer, throw_if_no_dialect_invalid_default) {
                             "https://example.com/invalid"),
                sourcemeta::core::SchemaResolutionError);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "foo": "bar",
     "bar": "baz",
     "qux": "xxx"
@@ -87,7 +87,7 @@ TEST(JSONSchema_transformer, with_default_dialect) {
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": "bar",
     "bar": "baz",
     "qux": "xxx"
@@ -98,7 +98,7 @@ TEST(JSONSchema_transformer, with_default_dialect) {
                sourcemeta::core::empty_pointer,
                "https://json-schema.org/draft/2020-12/schema");
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "qux": "xxx"
   })JSON");
 
@@ -110,7 +110,7 @@ TEST(JSONSchema_transformer, with_explicit_default_dialect_same) {
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar",
     "bar": "baz",
@@ -122,7 +122,7 @@ TEST(JSONSchema_transformer, with_explicit_default_dialect_same) {
                sourcemeta::core::empty_pointer,
                "https://json-schema.org/draft/2020-12/schema");
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "qux": "xxx"
   })JSON");
@@ -135,7 +135,7 @@ TEST(JSONSchema_transformer, throw_on_rules_called_twice) {
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRuleConflictsWith1>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar"
   })JSON");
@@ -149,7 +149,7 @@ TEST(JSONSchema_transformer, top_level_rule) {
   sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule3>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" }
@@ -159,7 +159,7 @@ TEST(JSONSchema_transformer, top_level_rule) {
   bundle.apply(document, sourcemeta::core::default_schema_walker,
                sourcemeta::core::official_resolver);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "top": true,
     "properties": {
@@ -174,7 +174,7 @@ TEST(JSONSchema_transformer, walker_2020_12) {
   sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule4>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -189,7 +189,7 @@ TEST(JSONSchema_transformer, walker_2020_12) {
   bundle.apply(document, sourcemeta::core::default_schema_walker,
                sourcemeta::core::official_resolver);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "here": true,
     "properties": {
@@ -214,7 +214,7 @@ TEST(JSONSchema_transformer, none_walker) {
   sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule4>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -229,7 +229,7 @@ TEST(JSONSchema_transformer, none_walker) {
   bundle.apply(document, sourcemeta::core::schema_walker_none,
                sourcemeta::core::official_resolver);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "here": true,
     "properties": {
@@ -247,7 +247,7 @@ TEST(JSONSchema_transformer, mismatch_default_dialect) {
   sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule4>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -264,7 +264,7 @@ TEST(JSONSchema_transformer, mismatch_default_dialect) {
                sourcemeta::core::empty_pointer,
                "http://json-schema.org/draft-04/schema#");
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "here": true,
     "properties": {
@@ -289,7 +289,7 @@ TEST(JSONSchema_transformer, specific_subschema) {
   sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule4>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -304,7 +304,7 @@ TEST(JSONSchema_transformer, specific_subschema) {
   bundle.apply(document, sourcemeta::core::default_schema_walker,
                sourcemeta::core::official_resolver, {"properties", "bar"});
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": {
@@ -327,7 +327,7 @@ TEST(JSONSchema_transformer, rule_pointers) {
   sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule5>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -339,7 +339,7 @@ TEST(JSONSchema_transformer, rule_pointers) {
   bundle.apply(document, sourcemeta::core::default_schema_walker,
                sourcemeta::core::official_resolver);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -355,7 +355,7 @@ TEST(JSONSchema_transformer, multi_dialect_rules) {
   sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule4>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "unevaluatedItems": { "type": "string" },
     "$defs": {
@@ -371,7 +371,7 @@ TEST(JSONSchema_transformer, multi_dialect_rules) {
   bundle.apply(document, sourcemeta::core::default_schema_walker,
                sourcemeta::core::official_resolver);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "here": true,
     "unevaluatedItems": {
@@ -397,7 +397,7 @@ TEST(JSONSchema_transformer, dialect_specific_rules) {
   sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule6>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$defs": {
       "foo": { "$schema": "http://json-schema.org/draft-03/schema#" },
@@ -409,7 +409,7 @@ TEST(JSONSchema_transformer, dialect_specific_rules) {
   bundle.apply(document, sourcemeta::core::default_schema_walker,
                sourcemeta::core::official_resolver);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$defs": {
       "foo": { "$schema": "http://json-schema.org/draft-03/schema#", "draft": 3 },
@@ -426,7 +426,7 @@ TEST(JSONSchema_transformer, check_top_level) {
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar",
     "properties": {
@@ -463,7 +463,7 @@ TEST(JSONSchema_transformer, check_subschema) {
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar",
     "properties": {
@@ -497,7 +497,7 @@ TEST(JSONSchema_transformer, check_no_match) {
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "xxx": {
@@ -521,7 +521,7 @@ TEST(JSONSchema_transformer, check_no_match) {
 
 TEST(JSONSchema_transformer, check_empty) {
   sourcemeta::core::SchemaTransformer bundle;
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar"
   })JSON");
@@ -544,7 +544,7 @@ TEST(JSONSchema_transformer, check_throw_if_no_dialect_invalid_default) {
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": "bar",
     "bar": "baz",
     "qux": "xxx"
@@ -562,7 +562,7 @@ TEST(JSONSchema_transformer, check_with_default_dialect) {
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "foo": "bar",
     "properties": {
       "xxx": {

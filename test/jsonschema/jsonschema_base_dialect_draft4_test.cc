@@ -5,12 +5,12 @@
 static auto test_resolver(std::string_view identifier)
     -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://sourcemeta.com/metaschema_1") {
-    return sourcemeta::core::parse(R"JSON({
+    return sourcemeta::core::parse_json(R"JSON({
       "id": "https://sourcemeta.com/metaschema_1",
       "$schema": "http://json-schema.org/draft-04/schema#"
     })JSON");
   } else if (identifier == "https://sourcemeta.com/metaschema_2") {
-    return sourcemeta::core::parse(R"JSON({
+    return sourcemeta::core::parse_json(R"JSON({
       "id": "https://sourcemeta.com/metaschema_2",
       "$schema": "https://sourcemeta.com/metaschema_1"
     })JSON");
@@ -20,7 +20,7 @@ static auto test_resolver(std::string_view identifier)
 }
 
 TEST(JSONSchema_base_dialect_draft4, jsonschema_draft_hyperschema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/hyper-schema#",
     "type": "object"
   })JSON");
@@ -32,7 +32,7 @@ TEST(JSONSchema_base_dialect_draft4, jsonschema_draft_hyperschema) {
 }
 
 TEST(JSONSchema_base_dialect_draft4, jsonschema_draft_schema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object"
   })JSON");
@@ -43,7 +43,7 @@ TEST(JSONSchema_base_dialect_draft4, jsonschema_draft_schema) {
 }
 
 TEST(JSONSchema_base_dialect_draft4, jsonschema_draft_links) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/links#"
   })JSON");
   const std::optional<std::string> base_dialect{sourcemeta::core::base_dialect(
@@ -54,7 +54,7 @@ TEST(JSONSchema_base_dialect_draft4, jsonschema_draft_links) {
 }
 
 TEST(JSONSchema_base_dialect_draft4, jsonschema_base_one_hop) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_1"
   })JSON");
   const std::optional<std::string> base_dialect{
@@ -64,7 +64,7 @@ TEST(JSONSchema_base_dialect_draft4, jsonschema_base_one_hop) {
 }
 
 TEST(JSONSchema_base_dialect_draft4, jsonschema_base_two_hops) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/metaschema_2"
   })JSON");
   const std::optional<std::string> base_dialect{
