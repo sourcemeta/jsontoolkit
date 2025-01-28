@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(core VERSION 0.0.0 LANGUAGES C CXX)
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 # Options
 option(SOURCEMETA_CORE_REGEX "Build the Sourcemeta Core Regex library" ON)
