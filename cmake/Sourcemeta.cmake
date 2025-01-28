@@ -14,3 +14,8 @@ include("${SOURCEMETA_UTILITIES_DIRECTORY}/targets/shellcheck.cmake")
 include("${SOURCEMETA_UTILITIES_DIRECTORY}/targets/doxygen.cmake")
 include("${SOURCEMETA_UTILITIES_DIRECTORY}/targets/googletest.cmake")
 include("${SOURCEMETA_UTILITIES_DIRECTORY}/targets/googlebenchmark.cmake")
+
+# To let downstream projects directly include this file
+if(NOT PROJECT_IS_TOP_LEVEL)
+  set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" PARENT_SCOPE)
+endif()
