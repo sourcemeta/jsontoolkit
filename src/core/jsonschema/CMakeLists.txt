@@ -3,7 +3,6 @@ set(OFFICIAL_RESOLVER_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 include(./official_resolver.cmake)
 
 sourcemeta_library(NAMESPACE sourcemeta PROJECT core NAME jsonschema
-  FOLDER "Core/JSON Schema"
   PRIVATE_HEADERS bundle.h resolver.h
     walker.h frame.h error.h unevaluated.h
     keywords.h transform.h

@@ -1,5 +1,4 @@
 sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME json
-  FOLDER "Core/JSON"
   SOURCES
     json_array_test.cc
     json_boolean_test.cc
@@ -27,7 +26,6 @@ target_compile_definitions(sourcemeta_core_json_unit
 # JSON Test Suite
 # See https://github.com/nst/JSONTestSuite
 sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME jsontestsuite
-  FOLDER "Core/JSON"
   SOURCES jsontestsuite.cc)
 target_compile_definitions(sourcemeta_core_jsontestsuite_unit
   PRIVATE JSONTESTSUITE_PATH="${PROJECT_SOURCE_DIR}/vendor/jsontestsuite")

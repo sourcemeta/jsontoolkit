@@ -1,5 +1,4 @@
 sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonpointer
-  FOLDER "Core/JSON Pointer"
   SOURCES
     jsonpointer_empty_pointer_test.cc
     jsonpointer_get_test.cc
