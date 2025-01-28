@@ -54,9 +54,9 @@ auto read_json(const std::filesystem::path &path) -> JSON {
   auto stream{read_file(path)};
   try {
     return parse_json(stream);
-  } catch (const ParseError &error) {
+  } catch (const JSONParseError &error) {
     // For producing better error messages
-    throw FileParseError(path, error);
+    throw JSONFileParseError(path, error);
   }
 }
 

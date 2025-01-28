@@ -64,7 +64,7 @@ start:
       goto end;
     default:
       this->column += 1;
-      throw ParseError(this->line, this->column);
+      throw JSONParseError(this->line, this->column);
   }
 
 element:

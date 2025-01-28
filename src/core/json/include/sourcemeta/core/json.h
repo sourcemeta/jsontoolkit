@@ -44,7 +44,7 @@ namespace sourcemeta::core {
 /// assert(document.is_array());
 /// ```
 ///
-/// If parsing fails, sourcemeta::core::ParseError will be thrown.
+/// If parsing fails, sourcemeta::core::JSONParseError will be thrown.
 SOURCEMETA_CORE_JSON_EXPORT
 auto parse_json(std::basic_istream<JSON::Char, JSON::CharTraits> &stream,
                 const JSON::ParseCallback &callback = nullptr) -> JSON;
@@ -63,7 +63,7 @@ auto parse_json(std::basic_istream<JSON::Char, JSON::CharTraits> &stream,
 /// assert(document.is_array());
 /// ```
 ///
-/// If parsing fails, sourcemeta::core::ParseError will be thrown.
+/// If parsing fails, sourcemeta::core::JSONParseError will be thrown.
 SOURCEMETA_CORE_JSON_EXPORT
 auto parse_json(const std::basic_string<JSON::Char, JSON::CharTraits> &input,
                 const JSON::ParseCallback &callback = nullptr) -> JSON;
@@ -125,7 +125,7 @@ auto parse_json(const std::basic_string<JSON::Char, JSON::CharTraits> &input,
 /// std::cout << std::endl;
 /// ```
 ///
-/// If parsing fails, sourcemeta::core::ParseError will be thrown.
+/// If parsing fails, sourcemeta::core::JSONParseError will be thrown.
 SOURCEMETA_CORE_JSON_EXPORT
 auto read_json(const std::filesystem::path &path) -> JSON;
 
@@ -147,7 +147,7 @@ auto read_json(const std::filesystem::path &path) -> JSON;
 /// std::cout << std::endl;
 /// ```
 ///
-/// If parsing fails, sourcemeta::core::ParseError will be thrown.
+/// If parsing fails, sourcemeta::core::JSONParseError will be thrown.
 SOURCEMETA_CORE_JSON_EXPORT
 auto read_file(const std::filesystem::path &path)
     -> std::basic_ifstream<JSON::Char, JSON::CharTraits>;

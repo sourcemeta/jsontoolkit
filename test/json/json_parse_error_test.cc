@@ -8,7 +8,7 @@
   try {                                                                        \
     sourcemeta::core::parse_json((input));                                     \
     FAIL() << "The parse function was expected to throw";                      \
-  } catch (const sourcemeta::core::ParseError &error) {                        \
+  } catch (const sourcemeta::core::JSONParseError &error) {                    \
     EXPECT_EQ(error.line(), expected_line);                                    \
     EXPECT_EQ(error.column(), expected_column);                                \
     SUCCEED();                                                                 \
@@ -633,7 +633,7 @@ TEST(JSON_parse_error, read_json_invalid) {
   try {
     sourcemeta::core::read_json(std::filesystem::path{TEST_DIRECTORY} /
                                 "stub_invalid.json");
-  } catch (const sourcemeta::core::FileParseError &error) {
+  } catch (const sourcemeta::core::JSONFileParseError &error) {
     EXPECT_EQ(error.path(),
               std::filesystem::path{TEST_DIRECTORY} / "stub_invalid.json");
     EXPECT_EQ(error.line(), 3);
