@@ -23,7 +23,7 @@ static auto yaml_node_to_json(yaml_node_t *const node,
 
       try {
         // TODO: Avoid this std::string transformation
-        return sourcemeta::core::parse(std::string{input});
+        return sourcemeta::core::parse_json(std::string{input});
         // Looks like it is very hard in YAML, given a scalar value, to
         // determine whether it is a string or something else without attempting
         // to parsing it and potentially failing to do so
@@ -65,7 +65,8 @@ static auto yaml_node_to_json(yaml_node_t *const node,
   }
 }
 
-static auto internal_parse(yaml_parser_t *parser) -> sourcemeta::core::JSON {
+static auto internal_parse_json(yaml_parser_t *parser)
+    -> sourcemeta::core::JSON {
   yaml_document_t document;
   if (!yaml_parser_load(parser, &document)) {
     // TODO: Ideally we would get line/column information like for `ParseError`
@@ -102,7 +103,7 @@ auto from_yaml(const JSON::String &input) -> JSON {
       input.size());
 
   try {
-    const auto result{internal_parse(&parser)};
+    const auto result{internal_parse_json(&parser)};
     yaml_parser_delete(&parser);
     return result;
   } catch (...) {

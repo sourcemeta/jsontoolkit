@@ -49,7 +49,7 @@ using UnevaluatedEntries = std::map<std::string, UnevaluatedEntry>;
 /// #include <cassert>
 ///
 /// const sourcemeta::core::JSON document =
-///     sourcemeta::core::parse(R"JSON({
+///     sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "unevaluatedProperties": false
 /// })JSON");

@@ -153,7 +153,7 @@ private:
 ///
 /// // The input schema to transform
 /// sourcemeta::core::JSON schema =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "foo": 1,
 ///   "items": {

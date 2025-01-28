@@ -52,7 +52,7 @@
                               expected_destination_of_size);
 
 TEST(JSONSchema_frame_2019_09, anonymous_with_nested_schema_resource) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "additionalProperties": { "$id": "https://example.com" }
   })JSON");
@@ -100,7 +100,7 @@ TEST(JSONSchema_frame_2019_09, anonymous_with_nested_schema_resource) {
 }
 
 TEST(JSONSchema_frame_2019_09, empty_schema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema"
   })JSON");
@@ -136,7 +136,7 @@ TEST(JSONSchema_frame_2019_09, empty_schema) {
 }
 
 TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "items": { "type": "string" },
@@ -196,7 +196,7 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
 }
 
 TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/test/qux",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "items": { "$id": "../foo", "type": "string" },
@@ -285,7 +285,7 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
 }
 
 TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "items": {
@@ -349,7 +349,7 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
 }
 
 TEST(JSONSchema_frame_2019_09, nested_schemas) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": {
@@ -520,7 +520,7 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
 }
 
 TEST(JSONSchema_frame_2019_09, id_override) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "items": { "$id": "schema" }
@@ -533,7 +533,7 @@ TEST(JSONSchema_frame_2019_09, id_override) {
 }
 
 TEST(JSONSchema_frame_2019_09, static_anchor_override) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$anchor": "foo",
@@ -547,7 +547,7 @@ TEST(JSONSchema_frame_2019_09, static_anchor_override) {
 }
 
 TEST(JSONSchema_frame_2019_09, explicit_argument_id_same) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema"
   })JSON");
@@ -585,7 +585,7 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_same) {
 }
 
 TEST(JSONSchema_frame_2019_09, anchor_top_level) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$anchor": "foo"
@@ -631,7 +631,7 @@ TEST(JSONSchema_frame_2019_09, anchor_top_level) {
 }
 
 TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "items": {
@@ -769,7 +769,7 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
 }
 
 TEST(JSONSchema_frame_2019_09, ref_metaschema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$ref": "https://json-schema.org/draft/2019-09/schema"
   })JSON");
@@ -804,7 +804,7 @@ TEST(JSONSchema_frame_2019_09, ref_metaschema) {
 }
 
 TEST(JSONSchema_frame_2019_09, location_independent_identifier_anonymous) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$defs": {
       "foo": {
@@ -824,7 +824,7 @@ TEST(JSONSchema_frame_2019_09, location_independent_identifier_anonymous) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_anchor_true_with_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$recursiveAnchor": true
@@ -875,7 +875,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_true_with_id) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_anchor_false_with_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$recursiveAnchor": false
@@ -919,7 +919,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_false_with_id) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_anchor_true_without_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": {
       "foo": {
@@ -974,7 +974,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_true_without_id) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_anchor_false_without_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": {
       "foo": {
@@ -1022,7 +1022,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_false_without_id) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor_anonymous) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "additionalItems": {
       "$recursiveRef": "#"
@@ -1064,7 +1064,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor_anonymous) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "additionalItems": {
@@ -1113,7 +1113,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false_anonymous) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$recursiveAnchor": false,
     "additionalItems": {
@@ -1160,7 +1160,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false_anonymous) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$recursiveAnchor": false,
@@ -1214,7 +1214,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true_anonymous) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$recursiveAnchor": true,
     "additionalItems": {
@@ -1267,7 +1267,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true_anonymous) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$recursiveAnchor": true,
@@ -1329,7 +1329,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true) {
 
 TEST(JSONSchema_frame_2019_09,
      recursive_ref_recursive_anchor_false_anonymous_nested) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "additionalItems": {
       "$id": "https://example.com",
@@ -1404,7 +1404,7 @@ TEST(JSONSchema_frame_2019_09,
 
 TEST(JSONSchema_frame_2019_09,
      recursive_ref_recursive_anchor_true_anonymous_nested) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "additionalItems": {
       "$id": "https://example.com",
@@ -1485,7 +1485,7 @@ TEST(JSONSchema_frame_2019_09,
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_ref_nested_recursive_anchor_true) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "additionalItems": {
@@ -1548,7 +1548,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_nested_recursive_anchor_true) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_ref_multiple_recursive_anchor_true) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$recursiveAnchor": true,
@@ -1641,7 +1641,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_multiple_recursive_anchor_true) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_anchor_conflict) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$recursiveAnchor": true,
@@ -1657,7 +1657,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_conflict) {
 }
 
 TEST(JSONSchema_frame_2019_09, invalid_recursive_ref) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$recursiveRef": "nested#"
@@ -1670,7 +1670,7 @@ TEST(JSONSchema_frame_2019_09, invalid_recursive_ref) {
 }
 
 TEST(JSONSchema_frame_2019_09, recursive_anchor_on_relative_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$recursiveAnchor": true,
     "additionalItems": {
@@ -1745,7 +1745,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_on_relative_id) {
 }
 
 TEST(JSONSchema_frame_2019_09, ref_with_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$ref": "#/$defs/string",
@@ -1805,7 +1805,7 @@ TEST(JSONSchema_frame_2019_09, ref_with_id) {
 }
 
 TEST(JSONSchema_frame_2019_09, ref_from_definitions) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$ref": "#/definitions/middle",
@@ -1878,7 +1878,7 @@ TEST(JSONSchema_frame_2019_09, ref_from_definitions) {
 }
 
 TEST(JSONSchema_frame_2019_09, relative_base_uri_without_ref) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$id": "common"
   })JSON");
@@ -1909,7 +1909,7 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_without_ref) {
 }
 
 TEST(JSONSchema_frame_2019_09, relative_base_uri_with_ref) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$id": "common",
     "allOf": [ { "$ref": "#foo" } ],
@@ -1967,7 +1967,7 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_with_ref) {
 }
 
 TEST(JSONSchema_frame_2019_09, relative_id_leading_slash) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "/base",
     "$schema": "https://json-schema.org/draft/2019-09/schema"
   })JSON");

@@ -6,7 +6,7 @@
 #include <sourcemeta/core/jsonschema.h>
 
 TEST(JSONSchema_walker_none, flat_2020_12) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "contentSchema": { "type": "array" },
     "unevaluatedItems": { "type": "integer" },
@@ -29,7 +29,7 @@ TEST(JSONSchema_walker_none, flat_2020_12) {
 }
 
 TEST(JSONSchema_walker_none, deep_2020_12) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "contentSchema": { "type": "array" },
     "unevaluatedItems": { "type": "integer" },
@@ -59,7 +59,7 @@ TEST(JSONSchema_walker_none, deep_2020_12) {
 }
 
 TEST(JSONSchema_walker_none, flat_2019_09) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "contentSchema": { "type": "array" },
     "properties": {
@@ -81,7 +81,7 @@ TEST(JSONSchema_walker_none, flat_2019_09) {
 }
 
 TEST(JSONSchema_walker_none, deep_2019_09) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "contentSchema": { "type": "array" },
     "properties": {
@@ -110,7 +110,7 @@ TEST(JSONSchema_walker_none, deep_2019_09) {
 }
 
 TEST(JSONSchema_walker_none, flat_draft7) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
     "anyOf": [ { "type": "array" } ],
     "properties": {
@@ -132,7 +132,7 @@ TEST(JSONSchema_walker_none, flat_draft7) {
 }
 
 TEST(JSONSchema_walker_none, deep_draft7) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
     "anyOf": [ { "type": "array" } ],
     "properties": {
@@ -160,7 +160,7 @@ TEST(JSONSchema_walker_none, deep_draft7) {
 }
 
 TEST(JSONSchema_walker_none, flat_draft6) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-06/schema#",
     "anyOf": [ { "type": "array" } ],
     "properties": {
@@ -182,7 +182,7 @@ TEST(JSONSchema_walker_none, flat_draft6) {
 }
 
 TEST(JSONSchema_walker_none, deep_draft6) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-06/schema#",
     "anyOf": [ { "type": "array" } ],
     "properties": {
@@ -210,7 +210,7 @@ TEST(JSONSchema_walker_none, deep_draft6) {
 }
 
 TEST(JSONSchema_walker_none, flat_draft4) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "anyOf": [ { "type": "array" } ],
     "properties": {
@@ -232,7 +232,7 @@ TEST(JSONSchema_walker_none, flat_draft4) {
 }
 
 TEST(JSONSchema_walker_none, deep_draft4) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "anyOf": [ { "type": "array" } ],
     "properties": {
@@ -260,7 +260,7 @@ TEST(JSONSchema_walker_none, deep_draft4) {
 }
 
 TEST(JSONSchema_walker_none, flat_draft3) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-03/schema#",
     "additionalProperties": { "type": "array" },
     "properties": {
@@ -282,7 +282,7 @@ TEST(JSONSchema_walker_none, flat_draft3) {
 }
 
 TEST(JSONSchema_walker_none, deep_draft3) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-03/schema#",
     "additionalProperties": { "type": "array" },
     "properties": {
@@ -310,7 +310,7 @@ TEST(JSONSchema_walker_none, deep_draft3) {
 }
 
 TEST(JSONSchema_walker_none, flat_draft2) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-02/schema#",
     "additionalProperties": { "type": "array" },
     "properties": {
@@ -332,7 +332,7 @@ TEST(JSONSchema_walker_none, flat_draft2) {
 }
 
 TEST(JSONSchema_walker_none, deep_draft2) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-02/schema#",
     "additionalProperties": { "type": "array" },
     "properties": {
@@ -360,7 +360,7 @@ TEST(JSONSchema_walker_none, deep_draft2) {
 }
 
 TEST(JSONSchema_walker_none, flat_draft1) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-01/schema#",
     "additionalProperties": { "type": "array" },
     "properties": {
@@ -382,7 +382,7 @@ TEST(JSONSchema_walker_none, flat_draft1) {
 }
 
 TEST(JSONSchema_walker_none, deep_draft1) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-01/schema#",
     "additionalProperties": { "type": "array" },
     "properties": {
@@ -410,7 +410,7 @@ TEST(JSONSchema_walker_none, deep_draft1) {
 }
 
 TEST(JSONSchema_walker_none, flat_draft0) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-00/schema#",
     "additionalProperties": { "type": "array" },
     "properties": {
@@ -432,7 +432,7 @@ TEST(JSONSchema_walker_none, flat_draft0) {
 }
 
 TEST(JSONSchema_walker_none, deep_draft0) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-00/schema#",
     "additionalProperties": { "type": "array" },
     "properties": {

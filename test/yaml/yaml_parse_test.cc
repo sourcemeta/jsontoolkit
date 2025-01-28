@@ -15,7 +15,7 @@ TEST(YAML_parse, object_1) {
 
   const auto result{sourcemeta::core::from_yaml(input)};
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "hello": "world",
     "foo": 1,
     "bar": true
@@ -29,7 +29,7 @@ TEST(YAML_parse, object_2) {
 
   const auto result{sourcemeta::core::from_yaml(input)};
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "foo": "bar baz"
   })JSON");
 
@@ -42,7 +42,7 @@ TEST(YAML_parse, array_1) {
   const auto result{sourcemeta::core::from_yaml(input)};
 
   const sourcemeta::core::JSON expected =
-      sourcemeta::core::parse(R"JSON([ "foo", true ])JSON");
+      sourcemeta::core::parse_json(R"JSON([ "foo", true ])JSON");
 
   EXPECT_EQ(result, expected);
 }
@@ -68,7 +68,7 @@ TEST(YAML_parse, invalid_1) {
 TEST(YAML_parse, stub_test_1) {
   const auto result{sourcemeta::core::from_yaml(
       std::filesystem::path{STUBS_PATH} / "test_1.yaml")};
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "foo": "bar",
     "baz": 2
   })JSON");

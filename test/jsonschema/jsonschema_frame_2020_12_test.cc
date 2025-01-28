@@ -52,7 +52,7 @@
                               expected_destination_of_size);
 
 TEST(JSONSchema_frame_2020_12, anonymous_with_nested_schema_resource) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "additionalProperties": { "$id": "https://example.com" }
   })JSON");
@@ -100,7 +100,7 @@ TEST(JSONSchema_frame_2020_12, anonymous_with_nested_schema_resource) {
 }
 
 TEST(JSONSchema_frame_2020_12, empty_schema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -136,7 +136,7 @@ TEST(JSONSchema_frame_2020_12, empty_schema) {
 }
 
 TEST(JSONSchema_frame_2020_12, one_level_applicators_without_identifiers) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": { "type": "string" },
@@ -196,7 +196,7 @@ TEST(JSONSchema_frame_2020_12, one_level_applicators_without_identifiers) {
 }
 
 TEST(JSONSchema_frame_2020_12, one_level_applicators_with_identifiers) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/test/qux",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": { "$id": "../foo", "type": "string" },
@@ -284,7 +284,7 @@ TEST(JSONSchema_frame_2020_12, one_level_applicators_with_identifiers) {
 }
 
 TEST(JSONSchema_frame_2020_12, subschema_absolute_identifier) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": {
@@ -340,7 +340,7 @@ TEST(JSONSchema_frame_2020_12, subschema_absolute_identifier) {
 }
 
 TEST(JSONSchema_frame_2020_12, nested_schemas) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -511,7 +511,7 @@ TEST(JSONSchema_frame_2020_12, nested_schemas) {
 }
 
 TEST(JSONSchema_frame_2020_12, id_override) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": { "$id": "schema" }
@@ -524,7 +524,7 @@ TEST(JSONSchema_frame_2020_12, id_override) {
 }
 
 TEST(JSONSchema_frame_2020_12, static_anchor_override) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$anchor": "foo",
@@ -538,7 +538,7 @@ TEST(JSONSchema_frame_2020_12, static_anchor_override) {
 }
 
 TEST(JSONSchema_frame_2020_12, explicit_argument_id_same) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -576,7 +576,7 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_same) {
 }
 
 TEST(JSONSchema_frame_2020_12, anchor_top_level) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$anchor": "foo"
@@ -622,7 +622,7 @@ TEST(JSONSchema_frame_2020_12, anchor_top_level) {
 }
 
 TEST(JSONSchema_frame_2020_12, explicit_argument_id_different) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": {
@@ -760,7 +760,7 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_different) {
 }
 
 TEST(JSONSchema_frame_2020_12, dynamic_refs_with_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -821,7 +821,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_id) {
 }
 
 TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "$dynamicRef": "#" },
@@ -876,7 +876,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
 }
 
 TEST(JSONSchema_frame_2020_12, ref_to_dynamic_anchor) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -901,7 +901,7 @@ TEST(JSONSchema_frame_2020_12, ref_to_dynamic_anchor) {
 }
 
 TEST(JSONSchema_frame_2020_12, different_dynamic_and_refs_in_same_object) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -935,7 +935,7 @@ TEST(JSONSchema_frame_2020_12, different_dynamic_and_refs_in_same_object) {
 }
 
 TEST(JSONSchema_frame_2020_12, same_dynamic_and_refs_in_same_object) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -970,7 +970,7 @@ TEST(JSONSchema_frame_2020_12, same_dynamic_and_refs_in_same_object) {
 }
 
 TEST(JSONSchema_frame_2020_12, dynamic_anchor_with_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$dynamicAnchor": "foo",
@@ -1098,7 +1098,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_anchor_with_id) {
 }
 
 TEST(JSONSchema_frame_2020_12, dynamic_anchor_without_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": {
@@ -1158,7 +1158,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_anchor_without_id) {
 
 TEST(JSONSchema_frame_2020_12,
      dynamic_ref_to_single_dynamic_anchor_standalone) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$dynamicRef": "#test",
     "$defs": {
@@ -1222,7 +1222,7 @@ TEST(JSONSchema_frame_2020_12,
 }
 
 TEST(JSONSchema_frame_2020_12, dynamic_ref_to_single_dynamic_anchor_external) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$dynamicRef": "#test",
     "$defs": {
@@ -1300,7 +1300,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_ref_to_single_dynamic_anchor_external) {
 }
 
 TEST(JSONSchema_frame_2020_12, dynamic_anchor_same_on_schema_resource) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$dynamicAnchor": "foo",
@@ -1316,7 +1316,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_anchor_same_on_schema_resource) {
 }
 
 TEST(JSONSchema_frame_2020_12, no_id_recursive_empty_pointer) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": {
@@ -1363,7 +1363,7 @@ TEST(JSONSchema_frame_2020_12, no_id_recursive_empty_pointer) {
 }
 
 TEST(JSONSchema_frame_2020_12, ref_metaschema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$ref": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -1398,7 +1398,7 @@ TEST(JSONSchema_frame_2020_12, ref_metaschema) {
 }
 
 TEST(JSONSchema_frame_2020_12, location_independent_identifier_anonymous) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$defs": {
       "foo": {
@@ -1418,7 +1418,7 @@ TEST(JSONSchema_frame_2020_12, location_independent_identifier_anonymous) {
 }
 
 TEST(JSONSchema_frame_2020_12, ref_with_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$ref": "#/$defs/string",
@@ -1478,7 +1478,7 @@ TEST(JSONSchema_frame_2020_12, ref_with_id) {
 }
 
 TEST(JSONSchema_frame_2020_12, ref_from_definitions) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$ref": "#/definitions/middle",
@@ -1551,7 +1551,7 @@ TEST(JSONSchema_frame_2020_12, ref_from_definitions) {
 }
 
 TEST(JSONSchema_frame_2020_12, relative_base_uri_without_ref) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "common"
   })JSON");
@@ -1582,7 +1582,7 @@ TEST(JSONSchema_frame_2020_12, relative_base_uri_without_ref) {
 }
 
 TEST(JSONSchema_frame_2020_12, relative_base_uri_with_ref) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "common",
     "allOf": [ { "$ref": "#foo" } ],
@@ -1640,7 +1640,7 @@ TEST(JSONSchema_frame_2020_12, relative_base_uri_with_ref) {
 }
 
 TEST(JSONSchema_frame_2020_12, idempotent_with_refs) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$ref": "#/$defs/string",
@@ -1701,7 +1701,7 @@ TEST(JSONSchema_frame_2020_12, idempotent_with_refs) {
 }
 
 TEST(JSONSchema_frame_2020_12, allof_refs) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "allOf": [
       { "$ref": "https://json-schema.org/draft/2020-12/schema" },

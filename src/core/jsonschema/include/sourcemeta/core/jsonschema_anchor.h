@@ -32,7 +32,7 @@ enum class AnchorType : std::uint8_t { Static, Dynamic, All };
 /// #include <cassert>
 ///
 /// const sourcemeta::core::JSON document =
-///     sourcemeta::core::parse(R"JSON({
+///     sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "$id": "https://sourcemeta.com/example-schema",
 ///   "$anchor": "foo"

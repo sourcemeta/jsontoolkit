@@ -9,7 +9,7 @@
 static auto test_resolver(std::string_view identifier)
     -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://www.sourcemeta.com/test-1") {
-    return sourcemeta::core::parse(R"JSON({
+    return sourcemeta::core::parse_json(R"JSON({
       "$schema": "http://json-schema.org/draft-00/schema#",
       "id": "https://www.sourcemeta.com/test-1",
       "type": "string"
@@ -20,7 +20,7 @@ static auto test_resolver(std::string_view identifier)
 }
 
 TEST(JSONSchema_bundle_draft0, no_references_no_id) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-00/schema#"
   })JSON");
 
@@ -31,7 +31,7 @@ TEST(JSONSchema_bundle_draft0, no_references_no_id) {
 }
 
 TEST(JSONSchema_bundle_draft0, const_no_references_no_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-00/schema#"
   })JSON");
 
@@ -42,7 +42,7 @@ TEST(JSONSchema_bundle_draft0, const_no_references_no_id) {
 }
 
 TEST(JSONSchema_bundle_draft0, simple_bundling) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://example.com",
     "$schema": "http://json-schema.org/draft-00/schema#",
     "properties": {

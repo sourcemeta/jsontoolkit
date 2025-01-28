@@ -7,12 +7,12 @@
 static auto test_resolver(std::string_view identifier)
     -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://sourcemeta.com/one-hop") {
-    return sourcemeta::core::parse(R"JSON({
+    return sourcemeta::core::parse_json(R"JSON({
       "$id": "https://sourcemeta.com/one-hop",
       "$schema": "http://json-schema.org/draft-00/schema#"
     })JSON");
   } else if (identifier == "https://sourcemeta.com/with-vocabulary") {
-    return sourcemeta::core::parse(R"JSON({
+    return sourcemeta::core::parse_json(R"JSON({
       "$id": "https://sourcemeta.com/with-vocabulary",
       "$schema": "http://json-schema.org/draft-00/schema#",
       "$vocabulary": {
@@ -35,7 +35,7 @@ static auto test_resolver(std::string_view identifier)
   EXPECT_FALSE((vocabularies).at(vocabulary));
 
 TEST(JSONSchema_vocabulary_draft0, schema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-00/schema#",
     "type": "object"
   })JSON");
@@ -47,7 +47,7 @@ TEST(JSONSchema_vocabulary_draft0, schema) {
 }
 
 TEST(JSONSchema_vocabulary_draft0, hyperschema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-00/hyper-schema#",
     "type": "object"
   })JSON");
@@ -59,7 +59,7 @@ TEST(JSONSchema_vocabulary_draft0, hyperschema) {
 }
 
 TEST(JSONSchema_vocabulary_draft0, one_hop) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/one-hop",
     "type": "object"
   })JSON");
@@ -71,7 +71,7 @@ TEST(JSONSchema_vocabulary_draft0, one_hop) {
 }
 
 TEST(JSONSchema_vocabulary_draft0, ignore_vocabulary) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://sourcemeta.com/with-vocabulary",
     "type": "object"
   })JSON");

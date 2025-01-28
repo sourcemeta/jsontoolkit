@@ -278,7 +278,7 @@ TEST(JSONWeakPointer_pointer, push_back_pointer) {
 }
 
 TEST(JSONWeakPointer_try_get, complex_true) {
-  const auto document{sourcemeta::core::parse(R"JSON({
+  const auto document{sourcemeta::core::parse_json(R"JSON({
     "foo": {
       "bar": [ 1, 2, { "baz": "qux" } ]
     }
@@ -293,7 +293,7 @@ TEST(JSONWeakPointer_try_get, complex_true) {
 }
 
 TEST(JSONWeakPointer_try_get, complex_false) {
-  const auto document{sourcemeta::core::parse(R"JSON({
+  const auto document{sourcemeta::core::parse_json(R"JSON({
     "foo": {
       "bar": [ 1, 2, { "baz": "qux" } ]
     }

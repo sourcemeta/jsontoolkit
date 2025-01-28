@@ -6,7 +6,7 @@
 #include <sourcemeta/core/jsonpointer.h>
 
 static void Pointer_Object_Traverse(benchmark::State &state) {
-  const auto document{sourcemeta::core::parse(R"JSON({
+  const auto document{sourcemeta::core::parse_json(R"JSON({
     "one": {
       "two": {
         "three": {
@@ -41,7 +41,7 @@ static void Pointer_Object_Traverse(benchmark::State &state) {
 }
 
 static void Pointer_Object_Try_Traverse(benchmark::State &state) {
-  const auto document{sourcemeta::core::parse(R"JSON({
+  const auto document{sourcemeta::core::parse_json(R"JSON({
     "one": {
       "two": {
         "three": {

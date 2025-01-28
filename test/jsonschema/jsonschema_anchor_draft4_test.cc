@@ -4,7 +4,7 @@
 #include <sourcemeta/core/jsonschema.h>
 
 TEST(JSONSchema_anchor_draft4, boolean_schema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse("true");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json("true");
   const auto anchors{
       sourcemeta::core::anchors(document, sourcemeta::core::official_resolver,
                                 "http://json-schema.org/draft-04/schema#")};
@@ -12,7 +12,7 @@ TEST(JSONSchema_anchor_draft4, boolean_schema) {
 }
 
 TEST(JSONSchema_anchor_draft4, top_level_no_anchor) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
@@ -22,7 +22,7 @@ TEST(JSONSchema_anchor_draft4, top_level_no_anchor) {
 }
 
 TEST(JSONSchema_anchor_draft4, top_level_static_anchor) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "#foo"
   })JSON");
@@ -35,7 +35,7 @@ TEST(JSONSchema_anchor_draft4, top_level_static_anchor) {
 }
 
 TEST(JSONSchema_anchor_draft4, nested_static_with_default_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "#foo"
   })JSON");
 
@@ -48,7 +48,7 @@ TEST(JSONSchema_anchor_draft4, nested_static_with_default_dialect) {
 }
 
 TEST(JSONSchema_anchor_draft4, vocabularies_shortcut) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "#foo"
   })JSON");
@@ -63,7 +63,7 @@ TEST(JSONSchema_anchor_draft4, vocabularies_shortcut) {
 }
 
 TEST(JSONSchema_anchor_draft4, non_fragment_relative_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "foo"
   })JSON");
@@ -74,7 +74,7 @@ TEST(JSONSchema_anchor_draft4, non_fragment_relative_id) {
 }
 
 TEST(JSONSchema_anchor_draft4, not_only_fragment) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "foo#bar"
   })JSON");

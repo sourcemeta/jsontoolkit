@@ -5,7 +5,7 @@
 static auto test_resolver(std::string_view identifier)
     -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://sourcemeta.com/metaschema") {
-    return sourcemeta::core::parse(R"JSON({
+    return sourcemeta::core::parse_json(R"JSON({
       "$id": "https://sourcemeta.com/metaschema",
       "$schema": "https://json-schema.org/draft/2020-12/schema"
     })JSON");
@@ -15,7 +15,7 @@ static auto test_resolver(std::string_view identifier)
 }
 
 TEST(JSONSchema_identify_2020_12, valid_one_hop) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://sourcemeta.com/metaschema"
   })JSON");
@@ -26,7 +26,7 @@ TEST(JSONSchema_identify_2020_12, valid_one_hop) {
 }
 
 TEST(JSONSchema_identify_2020_12, old_one_hop) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://example.com/my-schema",
     "$schema": "https://sourcemeta.com/metaschema"
   })JSON");
@@ -45,7 +45,7 @@ TEST(JSONSchema_identify_2020_12, id_boolean_default_dialect) {
 }
 
 TEST(JSONSchema_identify_2020_12, empty_object_default_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse("{}");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
       sourcemeta::core::IdentificationStrategy::Strict,
@@ -54,7 +54,7 @@ TEST(JSONSchema_identify_2020_12, empty_object_default_dialect) {
 }
 
 TEST(JSONSchema_identify_2020_12, valid_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -65,7 +65,7 @@ TEST(JSONSchema_identify_2020_12, valid_id) {
 }
 
 TEST(JSONSchema_identify_2020_12, old_id) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "id": "https://example.com/my-schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -75,7 +75,7 @@ TEST(JSONSchema_identify_2020_12, old_id) {
 }
 
 TEST(JSONSchema_identify_2020_12, default_dialect_precedence) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -88,7 +88,7 @@ TEST(JSONSchema_identify_2020_12, default_dialect_precedence) {
 }
 
 TEST(JSONSchema_identify_2020_12, base_dialect_shortcut) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -99,7 +99,7 @@ TEST(JSONSchema_identify_2020_12, base_dialect_shortcut) {
 }
 
 TEST(JSONSchema_identify_2020_12, anonymize_with_base_dialect) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -109,7 +109,7 @@ TEST(JSONSchema_identify_2020_12, anonymize_with_base_dialect) {
   EXPECT_TRUE(base_dialect.has_value());
   sourcemeta::core::anonymize(document, base_dialect.value());
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
 
@@ -117,7 +117,7 @@ TEST(JSONSchema_identify_2020_12, anonymize_with_base_dialect) {
 }
 
 TEST(JSONSchema_identify_2020_12, anonymize_with_base_dialect_no_id) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
 
@@ -126,7 +126,7 @@ TEST(JSONSchema_identify_2020_12, anonymize_with_base_dialect_no_id) {
   EXPECT_TRUE(base_dialect.has_value());
   sourcemeta::core::anonymize(document, base_dialect.value());
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
 
@@ -134,7 +134,7 @@ TEST(JSONSchema_identify_2020_12, anonymize_with_base_dialect_no_id) {
 }
 
 TEST(JSONSchema_identify_2020_12, sibling_ref) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$ref": "#"
@@ -146,7 +146,7 @@ TEST(JSONSchema_identify_2020_12, sibling_ref) {
 }
 
 TEST(JSONSchema_identify_2020_12, reidentify_replace) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -154,7 +154,7 @@ TEST(JSONSchema_identify_2020_12, reidentify_replace) {
   sourcemeta::core::reidentify(document, "https://example.com/my-new-id",
                                sourcemeta::core::official_resolver);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-new-id",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -163,14 +163,14 @@ TEST(JSONSchema_identify_2020_12, reidentify_replace) {
 }
 
 TEST(JSONSchema_identify_2020_12, reidentify_set) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
 
   sourcemeta::core::reidentify(document, "https://example.com/my-new-id",
                                sourcemeta::core::official_resolver);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-new-id",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -179,7 +179,7 @@ TEST(JSONSchema_identify_2020_12, reidentify_set) {
 }
 
 TEST(JSONSchema_identify_2020_12, reidentify_replace_default_dialect) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema"
   })JSON");
 
@@ -187,7 +187,7 @@ TEST(JSONSchema_identify_2020_12, reidentify_replace_default_dialect) {
                                sourcemeta::core::official_resolver,
                                "https://json-schema.org/draft/2020-12/schema");
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-new-id"
   })JSON");
 
@@ -195,7 +195,7 @@ TEST(JSONSchema_identify_2020_12, reidentify_replace_default_dialect) {
 }
 
 TEST(JSONSchema_identify_2020_12, reidentify_replace_base_dialect_shortcut) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -207,7 +207,7 @@ TEST(JSONSchema_identify_2020_12, reidentify_replace_base_dialect_shortcut) {
   sourcemeta::core::reidentify(document, "https://example.com/my-new-id",
                                base_dialect.value());
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-new-id",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -216,7 +216,7 @@ TEST(JSONSchema_identify_2020_12, reidentify_replace_base_dialect_shortcut) {
 }
 
 TEST(JSONSchema_identify_2020_12, reidentify_set_with_top_level_ref) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$ref": "https://example.com/schema"
   })JSON");
@@ -224,7 +224,7 @@ TEST(JSONSchema_identify_2020_12, reidentify_set_with_top_level_ref) {
   sourcemeta::core::reidentify(document, "https://example.com/my-new-id",
                                sourcemeta::core::official_resolver);
 
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-new-id",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$ref": "https://example.com/schema"

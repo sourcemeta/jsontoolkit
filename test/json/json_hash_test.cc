@@ -3,7 +3,8 @@
 #include <sourcemeta/core/json.h>
 
 TEST(JSON_key_hash, hash_empty) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{""};
   const auto hash{hasher(value)};
   EXPECT_FALSE(hasher.is_perfect(hash));
@@ -21,7 +22,8 @@ TEST(JSON_key_hash, hash_empty) {
 }
 
 TEST(JSON_key_hash, hash_f) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"f"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -39,7 +41,8 @@ TEST(JSON_key_hash, hash_f) {
 }
 
 TEST(JSON_key_hash, hash_fo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -57,7 +60,8 @@ TEST(JSON_key_hash, hash_fo) {
 }
 
 TEST(JSON_key_hash, hash_foo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -75,7 +79,8 @@ TEST(JSON_key_hash, hash_foo) {
 }
 
 TEST(JSON_key_hash, hash_fooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -93,7 +98,8 @@ TEST(JSON_key_hash, hash_fooo) {
 }
 
 TEST(JSON_key_hash, hash_foooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -111,7 +117,8 @@ TEST(JSON_key_hash, hash_foooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -129,7 +136,8 @@ TEST(JSON_key_hash, hash_fooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -147,7 +155,8 @@ TEST(JSON_key_hash, hash_foooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -165,7 +174,8 @@ TEST(JSON_key_hash, hash_fooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -183,7 +193,8 @@ TEST(JSON_key_hash, hash_foooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -201,7 +212,8 @@ TEST(JSON_key_hash, hash_fooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -219,7 +231,8 @@ TEST(JSON_key_hash, hash_foooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -237,7 +250,8 @@ TEST(JSON_key_hash, hash_fooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -255,7 +269,8 @@ TEST(JSON_key_hash, hash_foooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -273,7 +288,8 @@ TEST(JSON_key_hash, hash_fooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -291,7 +307,8 @@ TEST(JSON_key_hash, hash_foooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -309,7 +326,8 @@ TEST(JSON_key_hash, hash_fooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -327,7 +345,8 @@ TEST(JSON_key_hash, hash_foooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -345,7 +364,8 @@ TEST(JSON_key_hash, hash_fooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -363,7 +383,8 @@ TEST(JSON_key_hash, hash_foooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -381,7 +402,8 @@ TEST(JSON_key_hash, hash_fooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -399,7 +421,8 @@ TEST(JSON_key_hash, hash_foooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -417,7 +440,8 @@ TEST(JSON_key_hash, hash_fooooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -435,7 +459,8 @@ TEST(JSON_key_hash, hash_foooooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -453,7 +478,8 @@ TEST(JSON_key_hash, hash_fooooooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -471,7 +497,8 @@ TEST(JSON_key_hash, hash_foooooooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -489,7 +516,8 @@ TEST(JSON_key_hash, hash_fooooooooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -507,7 +535,8 @@ TEST(JSON_key_hash, hash_foooooooooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooooooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -525,7 +554,8 @@ TEST(JSON_key_hash, hash_fooooooooooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooooooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooooooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -543,7 +573,8 @@ TEST(JSON_key_hash, hash_foooooooooooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooooooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"fooooooooooooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -561,7 +592,8 @@ TEST(JSON_key_hash, hash_fooooooooooooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_foooooooooooooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{"foooooooooooooooooooooooooooooo"};
   const auto hash{hasher(value)};
   EXPECT_TRUE(hasher.is_perfect(hash));
@@ -579,7 +611,8 @@ TEST(JSON_key_hash, hash_foooooooooooooooooooooooooooooo) {
 }
 
 TEST(JSON_key_hash, hash_fooooooooooooooooooooooooooooooo) {
-  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
+  const sourcemeta::core::PropertyHashJSON<sourcemeta::core::JSON::String>
+      hasher;
   const sourcemeta::core::JSON::String value{
       "fooooooooooooooooooooooooooooooo"};
   const auto hash{hasher(value)};

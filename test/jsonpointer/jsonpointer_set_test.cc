@@ -3,7 +3,8 @@
 #include <sourcemeta/core/jsonpointer.h>
 
 TEST(JSONPointer_set, property_to_integer) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse("{ \"foo\": 1 }");
+  sourcemeta::core::JSON document =
+      sourcemeta::core::parse_json("{ \"foo\": 1 }");
   const sourcemeta::core::Pointer pointer{"foo"};
   sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{2});
   EXPECT_TRUE(document.is_object());
@@ -14,7 +15,8 @@ TEST(JSONPointer_set, property_to_integer) {
 }
 
 TEST(JSONPointer_set, property_to_integer_copy) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse("{ \"foo\": 1 }");
+  sourcemeta::core::JSON document =
+      sourcemeta::core::parse_json("{ \"foo\": 1 }");
   const sourcemeta::core::Pointer pointer{"foo"};
   const sourcemeta::core::JSON value{2};
   sourcemeta::core::set(document, pointer, value);
@@ -26,7 +28,8 @@ TEST(JSONPointer_set, property_to_integer_copy) {
 }
 
 TEST(JSONPointer_set, top_level_to_integer) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse("{ \"foo\": 1 }");
+  sourcemeta::core::JSON document =
+      sourcemeta::core::parse_json("{ \"foo\": 1 }");
   const sourcemeta::core::Pointer pointer;
   sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{2});
   EXPECT_TRUE(document.is_integer());
@@ -34,7 +37,8 @@ TEST(JSONPointer_set, top_level_to_integer) {
 }
 
 TEST(JSONPointer_set, top_level_to_integer_copy) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse("{ \"foo\": 1 }");
+  sourcemeta::core::JSON document =
+      sourcemeta::core::parse_json("{ \"foo\": 1 }");
   const sourcemeta::core::Pointer pointer;
   const sourcemeta::core::JSON value{2};
   sourcemeta::core::set(document, pointer, value);
@@ -44,7 +48,7 @@ TEST(JSONPointer_set, top_level_to_integer_copy) {
 
 TEST(JSONPointer_set, array_element_to_integer) {
   sourcemeta::core::JSON document =
-      sourcemeta::core::parse("{ \"foo\": [ 1, 2, 3 ] }");
+      sourcemeta::core::parse_json("{ \"foo\": [ 1, 2, 3 ] }");
   const sourcemeta::core::Pointer pointer{"foo", 1};
   sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{9});
   EXPECT_TRUE(document.is_object());
@@ -62,7 +66,7 @@ TEST(JSONPointer_set, array_element_to_integer) {
 
 TEST(JSONPointer_set, array_element_to_integer_copy) {
   sourcemeta::core::JSON document =
-      sourcemeta::core::parse("{ \"foo\": [ 1, 2, 3 ] }");
+      sourcemeta::core::parse_json("{ \"foo\": [ 1, 2, 3 ] }");
   const sourcemeta::core::Pointer pointer{"foo", 1};
   const sourcemeta::core::JSON value{9};
   sourcemeta::core::set(document, pointer, value);
@@ -81,7 +85,7 @@ TEST(JSONPointer_set, array_element_to_integer_copy) {
 
 TEST(JSONPointer_set, hyphen_property_in_object) {
   sourcemeta::core::JSON document =
-      sourcemeta::core::parse("{ \"foo\": { \"-\": 1 } }");
+      sourcemeta::core::parse_json("{ \"foo\": { \"-\": 1 } }");
   const sourcemeta::core::Pointer pointer{"foo", "-"};
   sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{2});
   EXPECT_TRUE(document.is_object());
@@ -94,7 +98,7 @@ TEST(JSONPointer_set, hyphen_property_in_object) {
 }
 
 TEST(JSONPointer_set, hyphen_in_array_single_token) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse("[ 1, 2, 3 ]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json("[ 1, 2, 3 ]");
   const sourcemeta::core::Pointer pointer{"-"};
   sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{4});
   EXPECT_TRUE(document.is_array());
@@ -110,7 +114,7 @@ TEST(JSONPointer_set, hyphen_in_array_single_token) {
 }
 
 TEST(JSONPointer_set, hyphen_in_array_single_token_copy) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse("[ 1, 2, 3 ]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json("[ 1, 2, 3 ]");
   const sourcemeta::core::Pointer pointer{"-"};
   const sourcemeta::core::JSON value{4};
   sourcemeta::core::set(document, pointer, value);
@@ -128,7 +132,7 @@ TEST(JSONPointer_set, hyphen_in_array_single_token_copy) {
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens) {
   sourcemeta::core::JSON document =
-      sourcemeta::core::parse("{ \"foo\": [ 1, 2, 3 ] }");
+      sourcemeta::core::parse_json("{ \"foo\": [ 1, 2, 3 ] }");
   const sourcemeta::core::Pointer pointer{"foo", "-"};
   sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{4});
   EXPECT_TRUE(document.is_object());
@@ -147,7 +151,7 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens) {
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_copy) {
   sourcemeta::core::JSON document =
-      sourcemeta::core::parse("{ \"foo\": [ 1, 2, 3 ] }");
+      sourcemeta::core::parse_json("{ \"foo\": [ 1, 2, 3 ] }");
   const sourcemeta::core::Pointer pointer{"foo", "-"};
   const sourcemeta::core::JSON value{4};
   sourcemeta::core::set(document, pointer, value);
@@ -167,7 +171,7 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_copy) {
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen) {
   sourcemeta::core::JSON document =
-      sourcemeta::core::parse("{ \"-\": [ 1, 2, 3 ] }");
+      sourcemeta::core::parse_json("{ \"-\": [ 1, 2, 3 ] }");
   const sourcemeta::core::Pointer pointer{"-", "-"};
   sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{4});
   EXPECT_TRUE(document.is_object());
@@ -186,7 +190,7 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen) {
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen_copy) {
   sourcemeta::core::JSON document =
-      sourcemeta::core::parse("{ \"-\": [ 1, 2, 3 ] }");
+      sourcemeta::core::parse_json("{ \"-\": [ 1, 2, 3 ] }");
   const sourcemeta::core::Pointer pointer{"-", "-"};
   const sourcemeta::core::JSON value{4};
   sourcemeta::core::set(document, pointer, value);
@@ -205,7 +209,7 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen_copy) {
 }
 
 TEST(JSONPointer_set, positive_integer_property) {
-  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "0": 1
   })JSON");
 

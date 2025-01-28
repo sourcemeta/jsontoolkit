@@ -90,7 +90,7 @@ struct SchemaIteratorEntry {
 /// #include <iostream>
 ///
 /// const sourcemeta::core::JSON document =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object",
 ///   "properties": {
@@ -157,7 +157,7 @@ private:
 /// #include <iostream>
 ///
 /// const sourcemeta::core::JSON document =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object",
 ///   "properties": {
@@ -223,7 +223,7 @@ private:
 /// #include <cassert>
 ///
 /// const sourcemeta::core::JSON document =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "prefixItems": [ true, true ],
 ///   "items": false
@@ -259,7 +259,7 @@ auto SOURCEMETA_CORE_JSONSCHEMA_EXPORT keyword_priority(
 /// #include <iostream>
 ///
 /// const sourcemeta::core::JSON document =
-///   sourcemeta::core::parse(R"JSON({
+///   sourcemeta::core::parse_json(R"JSON({
 ///   "$schema": "https://json-schema.org/draft/2020-12/schema",
 ///   "type": "object",
 ///   "properties": {},

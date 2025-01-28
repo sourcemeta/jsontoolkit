@@ -6,7 +6,7 @@
 
 #define EXPECT_PARSE_ERROR(input, expected_line, expected_column)              \
   try {                                                                        \
-    sourcemeta::core::parse((input));                                          \
+    sourcemeta::core::parse_json((input));                                     \
     FAIL() << "The parse function was expected to throw";                      \
   } catch (const sourcemeta::core::ParseError &error) {                        \
     EXPECT_EQ(error.line(), expected_line);                                    \
@@ -629,9 +629,9 @@ TEST(JSON_parse_error, backspace_is_not_whitespace) {
   EXPECT_PARSE_ERROR(input, 1, 1);
 }
 
-TEST(JSON_parse_error, from_file_invalid) {
+TEST(JSON_parse_error, read_json_invalid) {
   try {
-    sourcemeta::core::from_file(std::filesystem::path{TEST_DIRECTORY} /
+    sourcemeta::core::read_json(std::filesystem::path{TEST_DIRECTORY} /
                                 "stub_invalid.json");
   } catch (const sourcemeta::core::FileParseError &error) {
     EXPECT_EQ(error.path(),
@@ -643,9 +643,9 @@ TEST(JSON_parse_error, from_file_invalid) {
   }
 }
 
-TEST(JSON_parse_error, from_file_directory) {
+TEST(JSON_parse_error, read_json_directory) {
   try {
-    sourcemeta::core::from_file(std::filesystem::path{TEST_DIRECTORY});
+    sourcemeta::core::read_json(std::filesystem::path{TEST_DIRECTORY});
   } catch (const std::filesystem::filesystem_error &error) {
     EXPECT_EQ(error.code(), std::errc::is_a_directory);
     EXPECT_EQ(error.path1(), std::filesystem::path{TEST_DIRECTORY});
@@ -654,9 +654,9 @@ TEST(JSON_parse_error, from_file_directory) {
   }
 }
 
-TEST(JSON_parse_error, from_file_non_existent) {
+TEST(JSON_parse_error, read_json_non_existent) {
   try {
-    sourcemeta::core::from_file(std::filesystem::path{TEST_DIRECTORY} /
+    sourcemeta::core::read_json(std::filesystem::path{TEST_DIRECTORY} /
                                 "i-dont-exist");
   } catch (const std::filesystem::filesystem_error &error) {
     EXPECT_EQ(error.code(), std::errc::no_such_file_or_directory);

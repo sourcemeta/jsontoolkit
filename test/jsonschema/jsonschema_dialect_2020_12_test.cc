@@ -3,7 +3,7 @@
 #include <sourcemeta/core/jsonschema.h>
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_schema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object"
   })JSON");
@@ -13,7 +13,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_schema) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_hyperschema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/hyper-schema",
     "type": "object"
   })JSON");
@@ -24,7 +24,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_hyperschema) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_links) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/links"
   })JSON");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};
@@ -33,7 +33,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_links) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_output) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/output/schema"
   })JSON");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};
@@ -43,7 +43,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_output) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_meta_applicator) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/meta/applicator"
   })JSON");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};
@@ -53,7 +53,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_meta_applicator) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_meta_content) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/meta/content"
   })JSON");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};
@@ -63,7 +63,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_meta_content) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_meta_core) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/meta/core"
   })JSON");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};
@@ -72,7 +72,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_meta_core) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_meta_format_annotation) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/meta/format-annotation"
   })JSON");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};
@@ -82,7 +82,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_meta_format_annotation) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_meta_format_assertion) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/meta/format-assertion"
   })JSON");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};
@@ -92,7 +92,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_meta_format_assertion) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_meta_hyperschema) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/meta/hyper-schema"
   })JSON");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};
@@ -102,7 +102,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_meta_hyperschema) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_meta_meta_data) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/meta/meta-data"
   })JSON");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};
@@ -112,7 +112,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_meta_meta_data) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_meta_unevaluated) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/meta/unevaluated"
   })JSON");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};
@@ -122,7 +122,7 @@ TEST(JSONSchema_dialect_2020_12, jsonschema_meta_unevaluated) {
 }
 
 TEST(JSONSchema_dialect_2020_12, jsonschema_meta_validation) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/meta/validation"
   })JSON");
   const std::optional<std::string> dialect{sourcemeta::core::dialect(document)};

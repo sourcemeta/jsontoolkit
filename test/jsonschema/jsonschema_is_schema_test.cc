@@ -34,11 +34,11 @@ TEST(JSONSchema, is_schema_string) {
 
 TEST(JSONSchema, is_schema_array) {
   const sourcemeta::core::JSON document =
-      sourcemeta::core::parse("[ 1, 2, 3 ]");
+      sourcemeta::core::parse_json("[ 1, 2, 3 ]");
   EXPECT_FALSE(sourcemeta::core::is_schema(document));
 }
 
 TEST(JSONSchema, is_schema_empty_object) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse("{}");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   EXPECT_TRUE(sourcemeta::core::is_schema(document));
 }

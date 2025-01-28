@@ -10,7 +10,7 @@
   try {                                                                        \
     std::ostringstream stream;                                                 \
     stream << "\"" << (input) << "\"";                                         \
-    sourcemeta::core::parse(stream.str());                                     \
+    sourcemeta::core::parse_json(stream.str());                                \
     FAIL() << "The parse function was expected to throw";                      \
   } catch (const sourcemeta::core::ParseError &) {                             \
     SUCCEED();                                                                 \

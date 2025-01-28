@@ -72,7 +72,7 @@ TEST(JSON_string, fast_hash_empty) {
 
 TEST(JSON_string, unicode_length_1) {
   // This unicode string corresponds to 简律纯
-  const auto document = sourcemeta::core::parse(R"JSON({
+  const auto document = sourcemeta::core::parse_json(R"JSON({
     "name": "\u7b80\u5f8b\u7eaf"
   })JSON");
 

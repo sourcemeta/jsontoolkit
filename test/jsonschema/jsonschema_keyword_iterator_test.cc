@@ -7,7 +7,7 @@
 #include <vector>
 
 TEST(JSONSchema_keyword_iterator, draft_2020_12) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "string",
     "properties": {},
@@ -57,13 +57,13 @@ TEST(JSONSchema_keyword_iterator, draft_2020_12) {
 
   EXPECT_EQ(entries.at(4).pointer,
             sourcemeta::core::Pointer({"patternProperties"}));
-  EXPECT_EQ(entries.at(4).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(4).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(5).pointer, sourcemeta::core::Pointer({"prefixItems"}));
-  EXPECT_EQ(entries.at(5).value, sourcemeta::core::parse("[]"));
+  EXPECT_EQ(entries.at(5).value, sourcemeta::core::parse_json("[]"));
 
   EXPECT_EQ(entries.at(6).pointer, sourcemeta::core::Pointer({"required"}));
-  EXPECT_EQ(entries.at(6).value, sourcemeta::core::parse("[ \"foo\" ]"));
+  EXPECT_EQ(entries.at(6).value, sourcemeta::core::parse_json("[ \"foo\" ]"));
 
   EXPECT_EQ(entries.at(7).pointer, sourcemeta::core::Pointer({"contains"}));
   EXPECT_EQ(entries.at(7).value, sourcemeta::core::JSON{true});
@@ -75,7 +75,7 @@ TEST(JSONSchema_keyword_iterator, draft_2020_12) {
   EXPECT_EQ(entries.at(9).value, sourcemeta::core::JSON{true});
 
   EXPECT_EQ(entries.at(10).pointer, sourcemeta::core::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(10).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(10).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(11).pointer, sourcemeta::core::Pointer({"then"}));
   EXPECT_EQ(entries.at(11).value, sourcemeta::core::JSON{true});
@@ -97,7 +97,7 @@ TEST(JSONSchema_keyword_iterator, draft_2020_12) {
 }
 
 TEST(JSONSchema_keyword_iterator, draft_2019_09) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "type": "string",
     "properties": {},
@@ -140,7 +140,7 @@ TEST(JSONSchema_keyword_iterator, draft_2019_09) {
   EXPECT_EQ(entries.at(1).value, sourcemeta::core::JSON{true});
 
   EXPECT_EQ(entries.at(2).pointer, sourcemeta::core::Pointer({"items"}));
-  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse("[]"));
+  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse_json("[]"));
 
   EXPECT_EQ(entries.at(3).pointer, sourcemeta::core::Pointer({"maxContains"}));
   EXPECT_EQ(entries.at(3).value, sourcemeta::core::JSON{1});
@@ -150,10 +150,10 @@ TEST(JSONSchema_keyword_iterator, draft_2019_09) {
 
   EXPECT_EQ(entries.at(5).pointer,
             sourcemeta::core::Pointer({"patternProperties"}));
-  EXPECT_EQ(entries.at(5).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(5).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(6).pointer, sourcemeta::core::Pointer({"required"}));
-  EXPECT_EQ(entries.at(6).value, sourcemeta::core::parse("[ \"foo\" ]"));
+  EXPECT_EQ(entries.at(6).value, sourcemeta::core::parse_json("[ \"foo\" ]"));
 
   EXPECT_EQ(entries.at(7).pointer,
             sourcemeta::core::Pointer({"additionalItems"}));
@@ -166,7 +166,7 @@ TEST(JSONSchema_keyword_iterator, draft_2019_09) {
   EXPECT_EQ(entries.at(9).value, sourcemeta::core::JSON{true});
 
   EXPECT_EQ(entries.at(10).pointer, sourcemeta::core::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(10).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(10).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(11).pointer, sourcemeta::core::Pointer({"then"}));
   EXPECT_EQ(entries.at(11).value, sourcemeta::core::JSON{true});
@@ -188,7 +188,7 @@ TEST(JSONSchema_keyword_iterator, draft_2019_09) {
 }
 
 TEST(JSONSchema_keyword_iterator, draft7) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "string",
     "properties": {},
@@ -224,14 +224,14 @@ TEST(JSONSchema_keyword_iterator, draft7) {
   EXPECT_EQ(entries.at(1).value, sourcemeta::core::JSON{true});
 
   EXPECT_EQ(entries.at(2).pointer, sourcemeta::core::Pointer({"items"}));
-  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse("[]"));
+  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse_json("[]"));
 
   EXPECT_EQ(entries.at(3).pointer,
             sourcemeta::core::Pointer({"patternProperties"}));
-  EXPECT_EQ(entries.at(3).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(3).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(4).pointer, sourcemeta::core::Pointer({"required"}));
-  EXPECT_EQ(entries.at(4).value, sourcemeta::core::parse("[ \"foo\" ]"));
+  EXPECT_EQ(entries.at(4).value, sourcemeta::core::parse_json("[ \"foo\" ]"));
 
   EXPECT_EQ(entries.at(5).pointer,
             sourcemeta::core::Pointer({"additionalItems"}));
@@ -241,7 +241,7 @@ TEST(JSONSchema_keyword_iterator, draft7) {
   EXPECT_EQ(entries.at(6).value, sourcemeta::core::JSON{true});
 
   EXPECT_EQ(entries.at(7).pointer, sourcemeta::core::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(7).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(7).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(8).pointer, sourcemeta::core::Pointer({"then"}));
   EXPECT_EQ(entries.at(8).value, sourcemeta::core::JSON{true});
@@ -255,7 +255,7 @@ TEST(JSONSchema_keyword_iterator, draft7) {
 }
 
 TEST(JSONSchema_keyword_iterator, draft6) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-06/schema#",
     "type": "string",
     "properties": {},
@@ -285,21 +285,21 @@ TEST(JSONSchema_keyword_iterator, draft6) {
             sourcemeta::core::JSON{"http://json-schema.org/draft-06/schema#"});
 
   EXPECT_EQ(entries.at(1).pointer, sourcemeta::core::Pointer({"items"}));
-  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse("[]"));
+  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse_json("[]"));
 
   EXPECT_EQ(entries.at(2).pointer,
             sourcemeta::core::Pointer({"patternProperties"}));
-  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(3).pointer, sourcemeta::core::Pointer({"required"}));
-  EXPECT_EQ(entries.at(3).value, sourcemeta::core::parse("[ \"foo\" ]"));
+  EXPECT_EQ(entries.at(3).value, sourcemeta::core::parse_json("[ \"foo\" ]"));
 
   EXPECT_EQ(entries.at(4).pointer,
             sourcemeta::core::Pointer({"additionalItems"}));
   EXPECT_EQ(entries.at(4).value, sourcemeta::core::JSON{true});
 
   EXPECT_EQ(entries.at(5).pointer, sourcemeta::core::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(5).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(5).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(6).pointer,
             sourcemeta::core::Pointer({"additionalProperties"}));
@@ -310,7 +310,7 @@ TEST(JSONSchema_keyword_iterator, draft6) {
 }
 
 TEST(JSONSchema_keyword_iterator, draft4) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "string",
     "properties": {},
@@ -340,21 +340,21 @@ TEST(JSONSchema_keyword_iterator, draft4) {
             sourcemeta::core::JSON{"http://json-schema.org/draft-04/schema#"});
 
   EXPECT_EQ(entries.at(1).pointer, sourcemeta::core::Pointer({"items"}));
-  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse("[]"));
+  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse_json("[]"));
 
   EXPECT_EQ(entries.at(2).pointer,
             sourcemeta::core::Pointer({"patternProperties"}));
-  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(3).pointer, sourcemeta::core::Pointer({"required"}));
-  EXPECT_EQ(entries.at(3).value, sourcemeta::core::parse("[ \"foo\" ]"));
+  EXPECT_EQ(entries.at(3).value, sourcemeta::core::parse_json("[ \"foo\" ]"));
 
   EXPECT_EQ(entries.at(4).pointer,
             sourcemeta::core::Pointer({"additionalItems"}));
   EXPECT_EQ(entries.at(4).value, sourcemeta::core::JSON{true});
 
   EXPECT_EQ(entries.at(5).pointer, sourcemeta::core::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(5).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(5).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(6).pointer,
             sourcemeta::core::Pointer({"additionalProperties"}));
@@ -365,7 +365,7 @@ TEST(JSONSchema_keyword_iterator, draft4) {
 }
 
 TEST(JSONSchema_keyword_iterator, draft3) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-03/schema#",
     "type": "string",
     "properties": {},
@@ -394,14 +394,14 @@ TEST(JSONSchema_keyword_iterator, draft3) {
             sourcemeta::core::JSON{"http://json-schema.org/draft-03/schema#"});
 
   EXPECT_EQ(entries.at(1).pointer, sourcemeta::core::Pointer({"items"}));
-  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse("[]"));
+  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse_json("[]"));
 
   EXPECT_EQ(entries.at(2).pointer,
             sourcemeta::core::Pointer({"patternProperties"}));
-  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(3).pointer, sourcemeta::core::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(3).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(3).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(4).pointer, sourcemeta::core::Pointer({"type"}));
   EXPECT_EQ(entries.at(4).value, sourcemeta::core::JSON{"string"});
@@ -416,7 +416,7 @@ TEST(JSONSchema_keyword_iterator, draft3) {
 }
 
 TEST(JSONSchema_keyword_iterator, draft2) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-02/schema#",
     "type": "string",
     "properties": {},
@@ -443,7 +443,7 @@ TEST(JSONSchema_keyword_iterator, draft2) {
             sourcemeta::core::JSON{"http://json-schema.org/draft-02/schema#"});
 
   EXPECT_EQ(entries.at(1).pointer, sourcemeta::core::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(2).pointer, sourcemeta::core::Pointer({"type"}));
   EXPECT_EQ(entries.at(2).value, sourcemeta::core::JSON{"string"});
@@ -454,7 +454,7 @@ TEST(JSONSchema_keyword_iterator, draft2) {
 }
 
 TEST(JSONSchema_keyword_iterator, draft1) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-01/schema#",
     "type": "string",
     "properties": {},
@@ -481,7 +481,7 @@ TEST(JSONSchema_keyword_iterator, draft1) {
             sourcemeta::core::JSON{"http://json-schema.org/draft-01/schema#"});
 
   EXPECT_EQ(entries.at(1).pointer, sourcemeta::core::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(2).pointer, sourcemeta::core::Pointer({"type"}));
   EXPECT_EQ(entries.at(2).value, sourcemeta::core::JSON{"string"});
@@ -492,7 +492,7 @@ TEST(JSONSchema_keyword_iterator, draft1) {
 }
 
 TEST(JSONSchema_keyword_iterator, draft0) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-00/schema#",
     "type": "string",
     "properties": {},
@@ -519,7 +519,7 @@ TEST(JSONSchema_keyword_iterator, draft0) {
             sourcemeta::core::JSON{"http://json-schema.org/draft-00/schema#"});
 
   EXPECT_EQ(entries.at(1).pointer, sourcemeta::core::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(2).pointer, sourcemeta::core::Pointer({"type"}));
   EXPECT_EQ(entries.at(2).value, sourcemeta::core::JSON{"string"});
@@ -530,7 +530,7 @@ TEST(JSONSchema_keyword_iterator, draft0) {
 }
 
 TEST(JSONSchema_keyword_iterator, unknown_keyword) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foobar": 0
   })JSON");
@@ -564,7 +564,7 @@ TEST(JSONSchema_keyword_iterator, unknown_keyword) {
 }
 
 TEST(JSONSchema_keyword_iterator, with_default_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "properties": {},
     "patternProperties": {},
     "additionalProperties": true
@@ -588,10 +588,10 @@ TEST(JSONSchema_keyword_iterator, with_default_dialect) {
 
   EXPECT_EQ(entries.at(0).pointer,
             sourcemeta::core::Pointer({"patternProperties"}));
-  EXPECT_EQ(entries.at(0).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(0).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(1).pointer, sourcemeta::core::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(2).pointer,
             sourcemeta::core::Pointer({"additionalProperties"}));
@@ -599,7 +599,7 @@ TEST(JSONSchema_keyword_iterator, with_default_dialect) {
 }
 
 TEST(JSONSchema_keyword_iterator, no_default_dialect) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "properties": {},
     "patternProperties": {},
     "additionalProperties": true
@@ -625,10 +625,10 @@ TEST(JSONSchema_keyword_iterator, no_default_dialect) {
 
   EXPECT_EQ(entries.at(1).pointer,
             sourcemeta::core::Pointer({"patternProperties"}));
-  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(1).value, sourcemeta::core::parse_json("{}"));
 
   EXPECT_EQ(entries.at(2).pointer, sourcemeta::core::Pointer({"properties"}));
-  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse("{}"));
+  EXPECT_EQ(entries.at(2).value, sourcemeta::core::parse_json("{}"));
 }
 
 TEST(JSONSchema_keyword_iterator, boolean_true) {

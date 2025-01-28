@@ -101,7 +101,7 @@ TEST(JSONPointer_token, property_hash) {
 }
 
 TEST(JSONPointer_get, at_property_with_hash) {
-  const auto document = sourcemeta::core::parse(R"JSON({
+  const auto document = sourcemeta::core::parse_json(R"JSON({
     "foo": 1,
     "bar": 2,
     "baz": 3
