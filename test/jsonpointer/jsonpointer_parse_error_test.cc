@@ -12,7 +12,7 @@
     stream << "\"" << (input) << "\"";                                         \
     sourcemeta::core::parse_json(stream.str());                                \
     FAIL() << "The parse function was expected to throw";                      \
-  } catch (const sourcemeta::core::ParseError &) {                             \
+  } catch (const sourcemeta::core::JSONParseError &) {                         \
     SUCCEED();                                                                 \
   } catch (const std::exception &) {                                           \
     FAIL() << "The parse operation threw an unexpected error";                 \

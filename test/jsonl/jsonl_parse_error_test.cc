@@ -12,7 +12,7 @@
     while (iterator != parser.cend())                                          \
       ++iterator;                                                              \
     FAIL() << "The JSONL parser was expected to throw";                        \
-  } catch (const sourcemeta::core::ParseError &error) {                        \
+  } catch (const sourcemeta::core::JSONParseError &error) {                    \
     EXPECT_EQ(error.line(), expected_line);                                    \
     EXPECT_EQ(error.column(), expected_column);                                \
     SUCCEED();                                                                 \

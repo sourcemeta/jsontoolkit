@@ -27,7 +27,7 @@ static auto yaml_node_to_json(yaml_node_t *const node,
         // Looks like it is very hard in YAML, given a scalar value, to
         // determine whether it is a string or something else without attempting
         // to parsing it and potentially failing to do so
-      } catch (const sourcemeta::core::ParseError &) {
+      } catch (const sourcemeta::core::JSONParseError &) {
         return sourcemeta::core::JSON{input};
       }
     }
