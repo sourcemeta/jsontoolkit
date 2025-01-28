@@ -18,8 +18,9 @@ option(SOURCEMETA_CORE_INSTALL "Install the Sourcemeta Core library" ON)
 option(SOURCEMETA_CORE_ADDRESS_SANITIZER "Build Sourcemeta Core with an address sanitizer" OFF)
 option(SOURCEMETA_CORE_UNDEFINED_SANITIZER "Build Sourcemeta Core with an undefined behavior sanitizer" OFF)
 
-find_package(Noa REQUIRED)
+include(./vendor/noa/cmake/noa.cmake)
 
+# TODO: Turn this into a re-usable utility CMake function
 if(SOURCEMETA_CORE_INSTALL)
   include(GNUInstallDirs)
   include(CMakePackageConfigHelpers)
@@ -34,7 +35,7 @@ if(SOURCEMETA_CORE_INSTALL)
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-    COMPONENT sourcemeta_core_dev)
+    COMPONENT sourcemeta_${PROJECT_NAME}_dev)
 endif()
 
 if(SOURCEMETA_CORE_REGEX)
@@ -95,6 +96,7 @@ endif()
 # Testing
 if(SOURCEMETA_CORE_TESTS)
   enable_testing()
+  find_package(GoogleTest REQUIRED)
 
   if(SOURCEMETA_CORE_REGEX)
     add_subdirectory(test/regex)
@@ -137,6 +139,7 @@ if(SOURCEMETA_CORE_TESTS)
   endif()
 
   if(SOURCEMETA_CORE_BENCHMARK)
+    find_package(GoogleBenchmark REQUIRED)
     add_subdirectory(benchmark)
   endif()
 endif()
