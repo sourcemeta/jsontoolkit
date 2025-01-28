@@ -22,7 +22,7 @@ auto SchemaMapResolver::add(const JSON &schema,
   // Registering the top-level schema is not enough. We need to check
   // and register every embedded schema resource too
   SchemaFrame frame;
-  frame.analyse(schema, default_schema_walker, *this, default_dialect,
+  frame.analyse(schema, schema_official_walker, *this, default_dialect,
                 default_id);
 
   for (const auto &[key, entry] : frame.locations()) {
@@ -150,7 +150,7 @@ auto SchemaFlatFileResolver::operator()(std::string_view identifier) const
                                  *this, result->second.default_dialect);
     // Because we allow re-identification, we can get into issues unless we
     // always try to relativize references
-    sourcemeta::core::relativize(schema, default_schema_walker, *this,
+    sourcemeta::core::relativize(schema, schema_official_walker, *this,
                                  result->second.default_dialect,
                                  result->second.original_identifier);
     sourcemeta::core::reidentify(schema, result->first, *this,

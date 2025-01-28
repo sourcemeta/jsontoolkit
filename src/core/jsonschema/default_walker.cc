@@ -1,6 +1,6 @@
 #include <sourcemeta/core/jsonschema_walker.h>
 
-auto sourcemeta::core::default_schema_walker(
+auto sourcemeta::core::schema_official_walker(
     std::string_view keyword, const std::map<std::string, bool> &vocabularies)
     -> sourcemeta::core::SchemaWalkerResult {
 #define WALK(vocabulary, _keyword, strategy, ...)                              \

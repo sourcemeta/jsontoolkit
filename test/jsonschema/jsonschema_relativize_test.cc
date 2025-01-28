@@ -22,7 +22,7 @@ TEST(JSONSchema_relativize, draft4_1) {
     }
   })JSON");
 
-  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::relativize(schema, sourcemeta::core::schema_official_walker,
                                sourcemeta::core::official_resolver);
 
   const auto expected = sourcemeta::core::parse_json(R"JSON({
@@ -57,7 +57,7 @@ TEST(JSONSchema_relativize, draft4_2) {
     }
   })JSON");
 
-  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::relativize(schema, sourcemeta::core::schema_official_walker,
                                sourcemeta::core::official_resolver);
 
   const auto expected = sourcemeta::core::parse_json(R"JSON({
@@ -95,7 +95,7 @@ TEST(JSONSchema_relativize, draft4_3) {
     }
   })JSON");
 
-  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::relativize(schema, sourcemeta::core::schema_official_walker,
                                sourcemeta::core::official_resolver);
 
   const auto expected = sourcemeta::core::parse_json(R"JSON({
@@ -132,7 +132,7 @@ TEST(JSONSchema_relativize, draft4_4) {
     }
   })JSON");
 
-  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::relativize(schema, sourcemeta::core::schema_official_walker,
                                sourcemeta::core::official_resolver);
 
   const auto expected = sourcemeta::core::parse_json(R"JSON({
@@ -168,7 +168,7 @@ TEST(JSONSchema_relativize, draft4_5) {
     }
   })JSON");
 
-  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::relativize(schema, sourcemeta::core::schema_official_walker,
                                sourcemeta::core::official_resolver);
 
   const auto expected = sourcemeta::core::parse_json(R"JSON({
@@ -204,7 +204,7 @@ TEST(JSONSchema_relativize, draft4_6) {
     }
   })JSON");
 
-  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::relativize(schema, sourcemeta::core::schema_official_walker,
                                sourcemeta::core::official_resolver,
                                std::nullopt, "http://asyncapi.com/definitions");
 
@@ -230,7 +230,7 @@ TEST(JSONSchema_relativize, draft4_7) {
     }
   })JSON");
 
-  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::relativize(schema, sourcemeta::core::schema_official_walker,
                                sourcemeta::core::official_resolver,
                                "http://json-schema.org/draft-04/schema");
 
@@ -257,7 +257,7 @@ TEST(JSONSchema_relativize, draft4_8) {
   })JSON");
 
   EXPECT_THROW(sourcemeta::core::relativize(
-                   schema, sourcemeta::core::default_schema_walker,
+                   schema, sourcemeta::core::schema_official_walker,
                    sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
 }
@@ -273,7 +273,7 @@ TEST(JSONSchema_relativize, 2020_12_1) {
     }
   })JSON");
 
-  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::relativize(schema, sourcemeta::core::schema_official_walker,
                                sourcemeta::core::official_resolver);
 
   const auto expected = sourcemeta::core::parse_json(R"JSON({
@@ -296,7 +296,7 @@ TEST(JSONSchema_relativize, 2020_12_2) {
     "$ref": "../../schema.json"
   })JSON");
 
-  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::relativize(schema, sourcemeta::core::schema_official_walker,
                                sourcemeta::core::official_resolver);
 
   const auto expected = sourcemeta::core::parse_json(R"JSON({
@@ -318,7 +318,7 @@ TEST(JSONSchema_relativize, recursive_ref) {
     }
   })JSON");
 
-  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::relativize(schema, sourcemeta::core::schema_official_walker,
                                sourcemeta::core::official_resolver);
 
   const auto expected = sourcemeta::core::parse_json(R"JSON({

@@ -28,7 +28,7 @@ TEST(JSONSchema_keyword_iterator, draft_2020_12) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
 
@@ -118,7 +118,7 @@ TEST(JSONSchema_keyword_iterator, draft_2019_09) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
 
@@ -204,7 +204,7 @@ TEST(JSONSchema_keyword_iterator, draft7) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
 
@@ -268,7 +268,7 @@ TEST(JSONSchema_keyword_iterator, draft6) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
 
@@ -323,7 +323,7 @@ TEST(JSONSchema_keyword_iterator, draft4) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
 
@@ -377,7 +377,7 @@ TEST(JSONSchema_keyword_iterator, draft3) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
 
@@ -425,7 +425,7 @@ TEST(JSONSchema_keyword_iterator, draft2) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
 
@@ -463,7 +463,7 @@ TEST(JSONSchema_keyword_iterator, draft1) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
 
@@ -501,7 +501,7 @@ TEST(JSONSchema_keyword_iterator, draft0) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
 
@@ -537,7 +537,7 @@ TEST(JSONSchema_keyword_iterator, unknown_keyword) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
   }
@@ -572,7 +572,7 @@ TEST(JSONSchema_keyword_iterator, with_default_dialect) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver,
            "https://json-schema.org/draft/2020-12/schema")) {
     entries.push_back(entry);
@@ -607,7 +607,7 @@ TEST(JSONSchema_keyword_iterator, no_default_dialect) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
 
@@ -636,7 +636,7 @@ TEST(JSONSchema_keyword_iterator, boolean_true) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
   }
@@ -649,7 +649,7 @@ TEST(JSONSchema_keyword_iterator, boolean_false) {
 
   std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
   for (const auto &entry : sourcemeta::core::SchemaKeywordIterator(
-           document, sourcemeta::core::default_schema_walker,
+           document, sourcemeta::core::schema_official_walker,
            sourcemeta::core::official_resolver)) {
     entries.push_back(entry);
   }

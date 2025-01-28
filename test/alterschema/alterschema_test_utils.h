@@ -16,7 +16,7 @@
                         sourcemeta::core::AlterSchemaCategory::Redundant);     \
   sourcemeta::core::add(bundle,                                                \
                         sourcemeta::core::AlterSchemaCategory::SyntaxSugar);   \
-  bundle.apply(document, sourcemeta::core::default_schema_walker,              \
+  bundle.apply(document, sourcemeta::core::schema_official_walker,             \
                sourcemeta::core::official_resolver);
 
 #define LINT_AND_FIX_FOR_ANALYSIS(document)                                    \
@@ -31,7 +31,7 @@
                         sourcemeta::core::AlterSchemaCategory::Implicit);      \
   sourcemeta::core::add(bundle,                                                \
                         sourcemeta::core::AlterSchemaCategory::Desugar);       \
-  bundle.apply(document, sourcemeta::core::default_schema_walker,              \
+  bundle.apply(document, sourcemeta::core::schema_official_walker,             \
                sourcemeta::core::official_resolver);
 
 #endif
