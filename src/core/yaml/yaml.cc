@@ -91,7 +91,7 @@ static auto internal_parse_json(yaml_parser_t *parser)
 
 namespace sourcemeta::core {
 
-auto from_yaml(const JSON::String &input) -> JSON {
+auto parse_yaml(const JSON::String &input) -> JSON {
   yaml_parser_t parser;
   if (!yaml_parser_initialize(&parser)) {
     throw YAMLError("Could not initialize the YAML parser");
@@ -112,11 +112,11 @@ auto from_yaml(const JSON::String &input) -> JSON {
   }
 }
 
-auto from_yaml(const std::filesystem::path &path) -> JSON {
+auto read_yaml(const std::filesystem::path &path) -> JSON {
   auto stream = read_file(path);
   std::ostringstream buffer;
   buffer << stream.rdbuf();
-  return from_yaml(buffer.str());
+  return parse_yaml(buffer.str());
 }
 
 } // namespace sourcemeta::core

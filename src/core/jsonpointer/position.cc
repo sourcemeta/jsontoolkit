@@ -4,10 +4,11 @@
 
 namespace sourcemeta::core {
 
-auto PositionTracker::operator()(const JSON::ParsePhase phase, const JSON::Type,
-                                 const std::uint64_t line,
-                                 const std::uint64_t column, const JSON &value)
-    -> void {
+auto PointerPositionTracker::operator()(const JSON::ParsePhase phase,
+                                        const JSON::Type,
+                                        const std::uint64_t line,
+                                        const std::uint64_t column,
+                                        const JSON &value) -> void {
   if (phase == JSON::ParsePhase::Pre) {
     this->stack.push({line, column});
     if (value.is_string()) {
@@ -28,13 +29,15 @@ auto PositionTracker::operator()(const JSON::ParsePhase phase, const JSON::Type,
   }
 }
 
-auto PositionTracker::get(const Pointer &pointer) const
+auto PointerPositionTracker::get(const Pointer &pointer) const
     -> std::optional<Position> {
   const auto result{this->data.find(pointer)};
   return result == this->data.cend() ? std::nullopt
                                      : std::optional<Position>{result->second};
 }
 
-auto PositionTracker::size() const -> std::size_t { return this->data.size(); }
+auto PointerPositionTracker::size() const -> std::size_t {
+  return this->data.size();
+}
 
 } // namespace sourcemeta::core

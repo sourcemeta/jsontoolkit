@@ -27,7 +27,7 @@ namespace sourcemeta::core {
 /// #include <cassert>
 ///
 /// const auto input{"{\n  \"foo\": \"bar\"\n}"};;
-/// sourcemeta::core::PositionTracker tracker;
+/// sourcemeta::core::PointerPositionTracker tracker;
 /// sourcemeta::core::parse_json(stream, std::ref(tracker));
 /// assert(tracker.size() == 2);
 /// const auto foo{tracker.get(sourcemeta::core::Pointer{"foo"})};
@@ -41,7 +41,7 @@ namespace sourcemeta::core {
 /// assert(std::get<3>(foo.value()) == 2);
 /// assert(std::get<4>(foo.value()) == 14);
 /// ```
-class SOURCEMETA_CORE_JSONPOINTER_EXPORT PositionTracker {
+class SOURCEMETA_CORE_JSONPOINTER_EXPORT PointerPositionTracker {
 public:
   using Pointer = GenericPointer<JSON::String, PropertyHashJSON<JSON::String>>;
   using Position =
