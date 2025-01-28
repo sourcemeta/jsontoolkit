@@ -13,7 +13,7 @@ TEST(JSONSchema_identify, boolean_no_dialect_with_default_id) {
   const sourcemeta::core::JSON document{true};
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Strict, std::nullopt,
+      sourcemeta::core::SchemaIdentificationStrategy::Strict, std::nullopt,
       "https://www.sourcemeta.com/foo")};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://www.sourcemeta.com/foo");
@@ -23,7 +23,7 @@ TEST(JSONSchema_identify, empty_old_no_dollar_sign_id_with_default) {
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Strict,
+      sourcemeta::core::SchemaIdentificationStrategy::Strict,
       "http://json-schema.org/draft-00/schema#",
       "https://example.com/my-schema")};
   EXPECT_TRUE(id.has_value());
@@ -34,7 +34,7 @@ TEST(JSONSchema_identify, empty_dollar_sign_id_with_default) {
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Strict,
+      sourcemeta::core::SchemaIdentificationStrategy::Strict,
       "https://json-schema.org/draft/2020-12/schema",
       "https://example.com/my-schema")};
   EXPECT_TRUE(id.has_value());
@@ -45,7 +45,7 @@ TEST(JSONSchema_identify, boolean_unknown_dialect) {
   const sourcemeta::core::JSON document{true};
   EXPECT_THROW(sourcemeta::core::identify(
                    document, sourcemeta::core::official_resolver,
-                   sourcemeta::core::IdentificationStrategy::Strict,
+                   sourcemeta::core::SchemaIdentificationStrategy::Strict,
                    "https://www.sourcemeta.com/invalid-dialect"),
                sourcemeta::core::SchemaResolutionError);
 }
@@ -61,7 +61,7 @@ TEST(JSONSchema_identify, empty_object_unknown_dialect) {
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json("{}");
   EXPECT_THROW(sourcemeta::core::identify(
                    document, sourcemeta::core::official_resolver,
-                   sourcemeta::core::IdentificationStrategy::Strict,
+                   sourcemeta::core::SchemaIdentificationStrategy::Strict,
                    "https://www.sourcemeta.com/invalid-dialect"),
                sourcemeta::core::SchemaResolutionError);
 }
@@ -88,7 +88,7 @@ TEST(JSONSchema_identify, loose_boolean) {
   const sourcemeta::core::JSON document{true};
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose)};
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
   EXPECT_FALSE(id.has_value());
 }
 
@@ -98,7 +98,7 @@ TEST(JSONSchema_identify, loose_with_valid_dollar_id) {
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose)};
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
@@ -109,7 +109,7 @@ TEST(JSONSchema_identify, loose_with_invalid_dollar_id) {
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose)};
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
   EXPECT_FALSE(id.has_value());
 }
 
@@ -119,7 +119,7 @@ TEST(JSONSchema_identify, loose_with_valid_id) {
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose)};
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
@@ -130,7 +130,7 @@ TEST(JSONSchema_identify, loose_with_invalid_id) {
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose)};
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
   EXPECT_FALSE(id.has_value());
 }
 
@@ -141,7 +141,7 @@ TEST(JSONSchema_identify, loose_with_valid_dollar_id_and_invalid_id) {
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose)};
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
@@ -153,7 +153,7 @@ TEST(JSONSchema_identify, loose_with_valid_id_and_invalid_dollar_id) {
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose)};
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
@@ -165,7 +165,7 @@ TEST(JSONSchema_identify, loose_with_invalid_id_and_invalid_dollar_id) {
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose)};
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
   EXPECT_FALSE(id.has_value());
 }
 
@@ -176,7 +176,7 @@ TEST(JSONSchema_identify, loose_with_matching_id_and_dollar_id) {
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose)};
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
@@ -188,7 +188,7 @@ TEST(JSONSchema_identify, loose_with_non_matching_id_and_dollar_id) {
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose)};
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
   EXPECT_FALSE(id.has_value());
 }
 
@@ -199,7 +199,7 @@ TEST(JSONSchema_identify, loose_with_resolvable_default_dialect) {
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose,
+      sourcemeta::core::SchemaIdentificationStrategy::Loose,
       "https://json-schema.org/draft/2020-12/schema")};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "http://example.com/my-schema");
@@ -212,7 +212,7 @@ TEST(JSONSchema_identify, loose_with_unresolvable_dialect) {
   })JSON");
   std::optional<std::string> id{sourcemeta::core::identify(
       document, sourcemeta::core::official_resolver,
-      sourcemeta::core::IdentificationStrategy::Loose)};
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
   EXPECT_TRUE(id.has_value());
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }

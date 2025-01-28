@@ -2,14 +2,14 @@
 
 #include <sourcemeta/core/jsonschema.h>
 
-TEST(JSONSchema_MapSchemaResolver, empty_no_fallback) {
-  sourcemeta::core::MapSchemaResolver resolver;
+TEST(JSONSchema_SchemaMapResolver, empty_no_fallback) {
+  sourcemeta::core::SchemaMapResolver resolver;
   EXPECT_FALSE(
       resolver("https://json-schema.org/draft/2020-12/schema").has_value());
 }
 
-TEST(JSONSchema_MapSchemaResolver, empty_with_fallback) {
-  sourcemeta::core::MapSchemaResolver resolver{
+TEST(JSONSchema_SchemaMapResolver, empty_with_fallback) {
+  sourcemeta::core::SchemaMapResolver resolver{
       sourcemeta::core::official_resolver};
   EXPECT_TRUE(
       resolver("https://json-schema.org/draft/2020-12/schema").has_value());
@@ -18,8 +18,8 @@ TEST(JSONSchema_MapSchemaResolver, empty_with_fallback) {
                 "https://json-schema.org/draft/2020-12/schema"));
 }
 
-TEST(JSONSchema_MapSchemaResolver, single_schema) {
-  sourcemeta::core::MapSchemaResolver resolver;
+TEST(JSONSchema_SchemaMapResolver, single_schema) {
+  sourcemeta::core::SchemaMapResolver resolver;
 
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/test",
@@ -32,8 +32,8 @@ TEST(JSONSchema_MapSchemaResolver, single_schema) {
   EXPECT_EQ(resolver("https://www.sourcemeta.com/test").value(), document);
 }
 
-TEST(JSONSchema_MapSchemaResolver, single_schema_with_default_dialect) {
-  sourcemeta::core::MapSchemaResolver resolver;
+TEST(JSONSchema_SchemaMapResolver, single_schema_with_default_dialect) {
+  sourcemeta::core::SchemaMapResolver resolver;
 
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/test"
@@ -50,8 +50,8 @@ TEST(JSONSchema_MapSchemaResolver, single_schema_with_default_dialect) {
   EXPECT_EQ(resolver("https://www.sourcemeta.com/test").value(), expected);
 }
 
-TEST(JSONSchema_MapSchemaResolver, single_schema_anonymous_with_default) {
-  sourcemeta::core::MapSchemaResolver resolver;
+TEST(JSONSchema_SchemaMapResolver, single_schema_anonymous_with_default) {
+  sourcemeta::core::SchemaMapResolver resolver;
 
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema"
@@ -68,8 +68,8 @@ TEST(JSONSchema_MapSchemaResolver, single_schema_anonymous_with_default) {
   EXPECT_EQ(resolver("https://www.sourcemeta.com/test").value(), expected);
 }
 
-TEST(JSONSchema_MapSchemaResolver, single_schema_idempotent) {
-  sourcemeta::core::MapSchemaResolver resolver;
+TEST(JSONSchema_SchemaMapResolver, single_schema_idempotent) {
+  sourcemeta::core::SchemaMapResolver resolver;
 
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/test",
@@ -84,8 +84,8 @@ TEST(JSONSchema_MapSchemaResolver, single_schema_idempotent) {
   EXPECT_EQ(resolver("https://www.sourcemeta.com/test").value(), document);
 }
 
-TEST(JSONSchema_MapSchemaResolver, duplicate_ids) {
-  sourcemeta::core::MapSchemaResolver resolver;
+TEST(JSONSchema_SchemaMapResolver, duplicate_ids) {
+  sourcemeta::core::SchemaMapResolver resolver;
 
   const sourcemeta::core::JSON document_1 =
       sourcemeta::core::parse_json(R"JSON({
@@ -104,8 +104,8 @@ TEST(JSONSchema_MapSchemaResolver, duplicate_ids) {
   EXPECT_THROW(resolver.add(document_2), sourcemeta::core::SchemaError);
 }
 
-TEST(JSONSchema_MapSchemaResolver, embedded_resource) {
-  sourcemeta::core::MapSchemaResolver resolver;
+TEST(JSONSchema_SchemaMapResolver, embedded_resource) {
+  sourcemeta::core::SchemaMapResolver resolver;
 
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/test",
