@@ -1,5 +1,4 @@
 sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonschema
-  FOLDER "Core/JSON Schema"
   SOURCES
     jsonschema_test_utils.h
     jsonschema_identify_2020_12_test.cc
@@ -103,7 +102,6 @@ target_compile_definitions(sourcemeta_core_jsonschema_unit
 # JSON Schema Referencing Suite
 # See https://github.com/python-jsonschema/referencing-suite
 sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonschema_referencing_suite
-  FOLDER "Core/JSON Schema"
   SOURCES referencingsuite.cc)
 target_compile_definitions(sourcemeta_core_jsonschema_referencing_suite_unit
   PRIVATE REFERENCING_SUITE_PATH="${PROJECT_SOURCE_DIR}/vendor/referencing-suite/tests")

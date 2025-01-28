@@ -1,5 +1,4 @@
 sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME uri
-  FOLDER "Core/URI"
   SOURCES
     uri_test.cc
     uri_fragment_test.cc

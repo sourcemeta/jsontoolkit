@@ -14,7 +14,7 @@ endif()
 
 if(BENCHMARK_SOURCES)
   sourcemeta_googlebenchmark(NAMESPACE sourcemeta PROJECT core
-    FOLDER "Core" SOURCES ${BENCHMARK_SOURCES})
+    SOURCES ${BENCHMARK_SOURCES})
 
   target_compile_definitions(sourcemeta_core_benchmark
     PRIVATE CURRENT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}")

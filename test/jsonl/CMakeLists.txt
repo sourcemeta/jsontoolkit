@@ -1,5 +1,4 @@
 sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonl
-  FOLDER "Core/JSONL"
   SOURCES
     jsonl_parse_test.cc
     jsonl_parse_error_test.cc)
