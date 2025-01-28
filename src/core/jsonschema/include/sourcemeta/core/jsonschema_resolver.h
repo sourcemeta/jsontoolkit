@@ -47,7 +47,7 @@ auto official_resolver(std::string_view identifier)
 /// #include <cassert>
 ///
 /// // (1) Create a map resolver that falls back to the official resolver
-/// sourcemeta::core::MapSchemaResolver
+/// sourcemeta::core::SchemaMapResolver
 ///   resolver{sourcemeta::core::official_resolver};
 ///
 /// const sourcemeta::core::JSON schema =
@@ -62,14 +62,14 @@ auto official_resolver(std::string_view identifier)
 ///
 /// assert(resolver("https://www.example.com").has_value());
 /// ```
-class SOURCEMETA_CORE_JSONSCHEMA_EXPORT MapSchemaResolver {
+class SOURCEMETA_CORE_JSONSCHEMA_EXPORT SchemaMapResolver {
 public:
   /// Construct an empty resolver. If you don't add schemas to it, it will
   /// always resolve to nothing
-  MapSchemaResolver();
+  SchemaMapResolver();
 
   /// Construct an empty resolver that has another schema resolver as a fallback
-  MapSchemaResolver(const SchemaResolver &resolver);
+  SchemaMapResolver(const SchemaResolver &resolver);
 
   /// Register a schema to the map resolver
   auto add(const JSON &schema,
@@ -104,7 +104,7 @@ private:
 /// #include <cassert>
 ///
 /// // (1) Create a flat file resolver that falls back to the official resolver
-/// sourcemeta::core::FlatFileSchemaResolver
+/// sourcemeta::core::SchemaFlatFileResolver
 ///   resolver{sourcemeta::core::official_resolver};
 ///
 /// // (2) Register a schema by path
@@ -112,14 +112,14 @@ private:
 ///
 /// assert(resolver("https://www.example.com").has_value());
 /// ```
-class SOURCEMETA_CORE_JSONSCHEMA_EXPORT FlatFileSchemaResolver {
+class SOURCEMETA_CORE_JSONSCHEMA_EXPORT SchemaFlatFileResolver {
 public:
   /// Construct an empty resolver. If you don't add schemas to it, it will
   /// always resolve to nothing
-  FlatFileSchemaResolver();
+  SchemaFlatFileResolver();
 
   /// Construct an empty resolver that has another schema resolver as a fallback
-  FlatFileSchemaResolver(const SchemaResolver &resolver);
+  SchemaFlatFileResolver(const SchemaResolver &resolver);
 
   /// Determines how to access the registered file entry, letting you hook
   /// into how schemas are read to support other file formats, like YAML

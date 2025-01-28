@@ -25,7 +25,7 @@ namespace sourcemeta::core {
 /// A structure that encapsulates the result of walker over a specific keyword
 struct SchemaWalkerResult {
   /// The walker strategy to continue traversing across the schema
-  const KeywordType type;
+  const SchemaKeywordType type;
   /// The vocabulary associated with the keyword, if any
   const std::optional<std::string> vocabulary;
   /// The keywords a given keyword depends on (if any) during the evaluation
@@ -54,7 +54,7 @@ SOURCEMETA_CORE_JSONSCHEMA_EXPORT
 inline auto schema_walker_none(std::string_view,
                                const std::map<std::string, bool> &)
     -> sourcemeta::core::SchemaWalkerResult {
-  return {KeywordType::Unknown, std::nullopt, {}};
+  return {SchemaKeywordType::Unknown, std::nullopt, {}};
 }
 
 /// @ingroup jsonschema
@@ -233,16 +233,16 @@ private:
 ///   sourcemeta::core::vocabularies(
 ///     document, sourcemeta::core::official_resolver)};
 ///
-/// assert(sourcemeta::core::keyword_priority(
+/// assert(sourcemeta::core::schema_keyword_priority(
 ///   "prefixItems", vocabularies,
 ///   sourcemeta::core::default_schema_walker) == 0);
 ///
 /// // The "items" keyword must be evaluated after the "prefixItems" keyword
-/// assert(sourcemeta::core::keyword_priority(
+/// assert(sourcemeta::core::schema_keyword_priority(
 ///   "items", vocabularies,
 ///   sourcemeta::core::default_schema_walker) == 1);
 /// ```
-auto SOURCEMETA_CORE_JSONSCHEMA_EXPORT keyword_priority(
+auto SOURCEMETA_CORE_JSONSCHEMA_EXPORT schema_keyword_priority(
     std::string_view keyword, const std::map<std::string, bool> &vocabularies,
     const SchemaWalker &walker) -> std::uint64_t;
 

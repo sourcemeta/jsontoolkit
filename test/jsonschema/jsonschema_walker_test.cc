@@ -37,31 +37,31 @@ static auto test_walker(std::string_view keyword,
   if (vocabularies.find("https://sourcemeta.com/vocab/test-1") !=
       vocabularies.end()) {
     if (keyword == "schema") {
-      return {sourcemeta::core::KeywordType::ApplicatorValue,
+      return {sourcemeta::core::SchemaKeywordType::ApplicatorValue,
               "https://sourcemeta.com/vocab/test-1",
               {}};
     }
 
     if (keyword == "schemas") {
-      return {sourcemeta::core::KeywordType::ApplicatorElements,
+      return {sourcemeta::core::SchemaKeywordType::ApplicatorElements,
               "https://sourcemeta.com/vocab/test-1",
               {}};
     }
 
     if (keyword == "schemaMap") {
-      return {sourcemeta::core::KeywordType::ApplicatorMembers,
+      return {sourcemeta::core::SchemaKeywordType::ApplicatorMembers,
               "https://sourcemeta.com/vocab/test-1",
               {}};
     }
 
     if (keyword == "schemaOrSchemas") {
-      return {sourcemeta::core::KeywordType::ApplicatorValueOrElements,
+      return {sourcemeta::core::SchemaKeywordType::ApplicatorValueOrElements,
               "https://sourcemeta.com/vocab/test-1",
               {}};
     }
 
     if (keyword == "schemasOrMap") {
-      return {sourcemeta::core::KeywordType::ApplicatorElementsOrMembers,
+      return {sourcemeta::core::SchemaKeywordType::ApplicatorElementsOrMembers,
               "https://sourcemeta.com/vocab/test-1",
               {}};
     }
@@ -70,13 +70,13 @@ static auto test_walker(std::string_view keyword,
   if (vocabularies.find("https://sourcemeta.com/vocab/test-2") !=
       vocabularies.end()) {
     if (keyword == "custom") {
-      return {sourcemeta::core::KeywordType::ApplicatorValue,
+      return {sourcemeta::core::SchemaKeywordType::ApplicatorValue,
               "https://sourcemeta.com/vocab/test-2",
               {}};
     }
   }
 
-  return {sourcemeta::core::KeywordType::Unknown, std::nullopt, {}};
+  return {sourcemeta::core::SchemaKeywordType::Unknown, std::nullopt, {}};
 }
 
 TEST(JSONSchema_walker, true) {

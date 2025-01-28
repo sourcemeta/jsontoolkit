@@ -39,7 +39,7 @@ TEST(JSONSchema_frame_draft1, anonymous_with_nested_schema_resource) {
     "additionalProperties": { "id": "https://example.com" }
   })JSON");
 
-  sourcemeta::core::Frame frame;
+  sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::default_schema_walker,
                 sourcemeta::core::official_resolver);
 
@@ -86,7 +86,7 @@ TEST(JSONSchema_frame_draft1, empty_schema) {
     "$schema": "http://json-schema.org/draft-01/schema#"
   })JSON");
 
-  sourcemeta::core::Frame frame;
+  sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::default_schema_walker,
                 sourcemeta::core::official_resolver);
 
@@ -126,7 +126,7 @@ TEST(JSONSchema_frame_draft1, one_level_applicators_without_identifiers) {
     }
   })JSON");
 
-  sourcemeta::core::Frame frame;
+  sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::default_schema_walker,
                 sourcemeta::core::official_resolver);
 
@@ -183,7 +183,7 @@ TEST(JSONSchema_frame_draft1, one_level_applicators_with_identifiers) {
     "items": { "id": "../foo", "type": "string" }
   })JSON");
 
-  sourcemeta::core::Frame frame;
+  sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::default_schema_walker,
                 sourcemeta::core::official_resolver);
 
@@ -247,7 +247,7 @@ TEST(JSONSchema_frame_draft1, subschema_absolute_identifier) {
      }
   })JSON");
 
-  sourcemeta::core::Frame frame;
+  sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::default_schema_walker,
                 sourcemeta::core::official_resolver);
 
@@ -308,7 +308,7 @@ TEST(JSONSchema_frame_draft1, id_override) {
     "items": { "id": "schema" }
   })JSON");
 
-  sourcemeta::core::Frame frame;
+  sourcemeta::core::SchemaFrame frame;
   EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
                              sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
@@ -320,7 +320,7 @@ TEST(JSONSchema_frame_draft1, explicit_argument_id_same) {
     "$schema": "http://json-schema.org/draft-01/schema#"
   })JSON");
 
-  sourcemeta::core::Frame frame;
+  sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::default_schema_walker,
                 sourcemeta::core::official_resolver,
                 "http://json-schema.org/draft-01/schema#",
@@ -366,7 +366,7 @@ TEST(JSONSchema_frame_draft1, explicit_argument_id_different) {
     }
   })JSON");
 
-  sourcemeta::core::Frame frame;
+  sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::default_schema_walker,
                 sourcemeta::core::official_resolver,
                 "http://json-schema.org/draft-01/schema#",
@@ -446,7 +446,7 @@ TEST(JSONSchema_frame_draft1, ref_metaschema) {
     "$ref": "http://json-schema.org/draft-01/schema#"
   })JSON");
 
-  sourcemeta::core::Frame frame;
+  sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::default_schema_walker,
                 sourcemeta::core::official_resolver);
 

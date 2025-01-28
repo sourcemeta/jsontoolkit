@@ -5,7 +5,7 @@ include(./official_resolver.cmake)
 sourcemeta_library(NAMESPACE sourcemeta PROJECT core NAME jsonschema
   FOLDER "Core/JSON Schema"
   PRIVATE_HEADERS bundle.h resolver.h
-    walker.h reference.h frame.h error.h unevaluated.h
+    walker.h frame.h error.h unevaluated.h
     keywords.h transform.h
   SOURCES jsonschema.cc default_walker.cc frame.cc
     resolver.cc walker.cc bundle.cc
