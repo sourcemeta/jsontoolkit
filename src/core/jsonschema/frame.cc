@@ -13,6 +13,92 @@
 #include <utility>    // std::pair, std::move
 #include <vector>     // std::vector
 
+enum class AnchorType : std::uint8_t { Static, Dynamic, All };
+
+static auto find_anchors(const sourcemeta::core::JSON &schema,
+                         const std::map<std::string, bool> &vocabularies)
+    -> std::map<std::string, AnchorType> {
+  std::map<std::string, AnchorType> result;
+
+  // 2020-12
+  if (schema.is_object() &&
+      vocabularies.contains(
+          "https://json-schema.org/draft/2020-12/vocab/core")) {
+    if (schema.defines("$dynamicAnchor")) {
+      const auto &anchor{schema.at("$dynamicAnchor")};
+      assert(anchor.is_string());
+      result.insert({anchor.to_string(), AnchorType::Dynamic});
+    }
+
+    if (schema.defines("$anchor")) {
+      const auto &anchor{schema.at("$anchor")};
+      assert(anchor.is_string());
+      const auto anchor_string{anchor.to_string()};
+      const auto success = result.insert({anchor_string, AnchorType::Static});
+      assert(success.second || result.contains(anchor_string));
+      if (!success.second) {
+        result[anchor_string] = AnchorType::All;
+      }
+    }
+  }
+
+  // 2019-09
+  if (schema.is_object() &&
+      vocabularies.contains(
+          "https://json-schema.org/draft/2019-09/vocab/core")) {
+    if (schema.defines("$recursiveAnchor")) {
+      const auto &anchor{schema.at("$recursiveAnchor")};
+      assert(anchor.is_boolean());
+      if (anchor.to_boolean()) {
+        // We store a 2019-09 recursive anchor as an empty anchor
+        result.insert({"", AnchorType::Dynamic});
+      }
+    }
+
+    if (schema.defines("$anchor")) {
+      const auto &anchor{schema.at("$anchor")};
+      assert(anchor.is_string());
+      const auto anchor_string{anchor.to_string()};
+      const auto success = result.insert({anchor_string, AnchorType::Static});
+      assert(success.second || result.contains(anchor_string));
+      if (!success.second) {
+        result[anchor_string] = AnchorType::All;
+      }
+    }
+  }
+
+  // Draft 7 and 6
+  // Old `$id` anchor form
+  if (schema.is_object() &&
+      (vocabularies.contains("http://json-schema.org/draft-07/schema#") ||
+       vocabularies.contains("http://json-schema.org/draft-06/schema#"))) {
+    if (schema.defines("$id")) {
+      assert(schema.at("$id").is_string());
+      const sourcemeta::core::URI identifier(schema.at("$id").to_string());
+      if (identifier.is_fragment_only()) {
+        result.insert(
+            {std::string{identifier.fragment().value()}, AnchorType::Static});
+      }
+    }
+  }
+
+  // Draft 4
+  // Old `id` anchor form
+  if (schema.is_object() &&
+      vocabularies.contains("http://json-schema.org/draft-04/schema#")) {
+    if (schema.defines("id")) {
+      assert(schema.at("id").is_string());
+      const sourcemeta::core::URI identifier(schema.at("id").to_string());
+      if (identifier.is_fragment_only()) {
+        result.insert(
+            {std::string{identifier.fragment().value()}, AnchorType::Static});
+      }
+    }
+  }
+
+  return result;
+}
+
 static auto find_nearest_bases(
     const std::map<sourcemeta::core::Pointer, std::vector<std::string>> &bases,
     const sourcemeta::core::Pointer &pointer,
@@ -254,8 +340,8 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
     }
 
     // Handle schema anchors
-    for (const auto &[name, type] : sourcemeta::core::anchors(
-             entry.common.value, entry.common.vocabularies)) {
+    for (const auto &[name, type] :
+         find_anchors(entry.common.value, entry.common.vocabularies)) {
       const auto bases{
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
 
@@ -263,8 +349,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
         const auto anchor_uri{sourcemeta::core::URI::from_fragment(name)};
         const auto relative_anchor_uri{anchor_uri.recompose()};
 
-        if (type == sourcemeta::core::AnchorType::Static ||
-            type == sourcemeta::core::AnchorType::All) {
+        if (type == AnchorType::Static || type == AnchorType::All) {
           store(frame, ReferenceType::Static, Frame::LocationType::Anchor,
                 relative_anchor_uri, root_id, "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
@@ -272,8 +357,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                 entry.common.base_dialect.value());
         }
 
-        if (type == sourcemeta::core::AnchorType::Dynamic ||
-            type == sourcemeta::core::AnchorType::All) {
+        if (type == AnchorType::Dynamic || type == AnchorType::All) {
           store(frame, ReferenceType::Dynamic, Frame::LocationType::Anchor,
                 relative_anchor_uri, root_id, "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
@@ -310,8 +394,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
             continue;
           }
 
-          if (type == sourcemeta::core::AnchorType::Static ||
-              type == sourcemeta::core::AnchorType::All) {
+          if (type == AnchorType::Static || type == AnchorType::All) {
             store(frame, sourcemeta::core::ReferenceType::Static,
                   Frame::LocationType::Anchor, anchor_uri, root_id, base_string,
                   entry.common.pointer,
@@ -320,8 +403,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                   entry.common.base_dialect.value());
           }
 
-          if (type == sourcemeta::core::AnchorType::Dynamic ||
-              type == sourcemeta::core::AnchorType::All) {
+          if (type == AnchorType::Dynamic || type == AnchorType::All) {
             store(frame, sourcemeta::core::ReferenceType::Dynamic,
                   Frame::LocationType::Anchor, anchor_uri, root_id, base_string,
                   entry.common.pointer,

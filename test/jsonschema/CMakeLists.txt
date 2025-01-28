@@ -2,11 +2,6 @@ sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonschema
   FOLDER "Core/JSON Schema"
   SOURCES
     jsonschema_test_utils.h
-    jsonschema_anchor_2020_12_test.cc
-    jsonschema_anchor_2019_09_test.cc
-    jsonschema_anchor_draft7_test.cc
-    jsonschema_anchor_draft6_test.cc
-    jsonschema_anchor_draft4_test.cc
     jsonschema_identify_2020_12_test.cc
     jsonschema_identify_2019_09_test.cc
     jsonschema_identify_draft7_test.cc

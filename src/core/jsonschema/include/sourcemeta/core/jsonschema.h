@@ -6,7 +6,6 @@
 #endif
 
 #include <sourcemeta/core/json.h>
-#include <sourcemeta/core/jsonschema_anchor.h>
 #include <sourcemeta/core/jsonschema_bundle.h>
 #include <sourcemeta/core/jsonschema_error.h>
 #include <sourcemeta/core/jsonschema_frame.h>
