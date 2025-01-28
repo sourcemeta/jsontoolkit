@@ -1,9 +1,9 @@
-#ifndef SOURCEMETA_JSONTOOLKIT_JSON_PARSER_H_
-#define SOURCEMETA_JSONTOOLKIT_JSON_PARSER_H_
+#ifndef SOURCEMETA_CORE_JSON_PARSER_H_
+#define SOURCEMETA_CORE_JSON_PARSER_H_
 
 #include "grammar.h"
 
-#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/core/json.h>
 
 #include <cassert>    // assert
 #include <cctype>     // std::isxdigit
@@ -16,7 +16,7 @@
 #include <stdexcept>  // std::out_of_range
 #include <string>     // std::basic_string, std::stol, std::stod, std::stoul
 
-namespace sourcemeta::jsontoolkit::internal {
+namespace sourcemeta::core::internal {
 
 inline auto parse_null(
     const std::uint64_t line, std::uint64_t &column,
@@ -641,7 +641,7 @@ auto parse_number(
   }
 }
 
-} // namespace sourcemeta::jsontoolkit::internal
+} // namespace sourcemeta::core::internal
 
 // We use "goto" to avoid recursion
 // NOLINTBEGIN(cppcoreguidelines-avoid-goto)
@@ -665,7 +665,7 @@ auto parse_number(
              value);                                                           \
   }
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 auto internal_parse(
     std::basic_istream<typename JSON::Char, typename JSON::CharTraits> &stream,
     std::uint64_t &line, std::uint64_t &column, const Callback &callback)
@@ -1199,7 +1199,7 @@ auto internal_parse(const std::basic_string<typename JSON::Char,
   return internal_parse(stream, line, column, callback);
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core
 
 #undef CALLBACK_PRE
 #undef CALLBACK_PRE_WITH_POSITION

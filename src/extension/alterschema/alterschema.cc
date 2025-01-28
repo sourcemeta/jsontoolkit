@@ -1,4 +1,4 @@
-#include <sourcemeta/jsontoolkit/alterschema.h>
+#include <sourcemeta/core/alterschema.h>
 
 #include <cassert> // assert
 
@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iterator>
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 template <typename T>
 auto contains_any(const T &container, const T &values) -> bool {
   return std::any_of(
@@ -174,9 +174,9 @@ template <typename T> auto every_item_is_boolean(const T &container) -> bool {
 #include "superfluous/max_contains_without_contains.h"
 #include "superfluous/min_contains_without_contains.h"
 #include "superfluous/then_without_if.h"
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 auto add(SchemaTransformer &bundle, const AlterSchemaCategory category)
     -> void {
@@ -344,4 +344,4 @@ auto add(SchemaTransformer &bundle, const AlterSchemaCategory category)
   }
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

@@ -1,5 +1,5 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME alterschema
-  FOLDER "JSON Toolkit/AlterSchema"
+noa_googletest(NAMESPACE sourcemeta PROJECT core NAME alterschema
+  FOLDER "Core/AlterSchema"
   SOURCES
     alterschema_lint_2020_12_test.cc
     alterschema_lint_2019_09_test.cc
@@ -12,9 +12,9 @@ noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME alterschema
     alterschema_lint_draft0_test.cc
     alterschema_test_utils.h)
 
-target_link_libraries(sourcemeta_jsontoolkit_alterschema_unit
-  PRIVATE sourcemeta::jsontoolkit::json)
-target_link_libraries(sourcemeta_jsontoolkit_alterschema_unit
-  PRIVATE sourcemeta::jsontoolkit::jsonschema)
-target_link_libraries(sourcemeta_jsontoolkit_alterschema_unit
-  PRIVATE sourcemeta::jsontoolkit::alterschema)
+target_link_libraries(sourcemeta_core_alterschema_unit
+  PRIVATE sourcemeta::core::json)
+target_link_libraries(sourcemeta_core_alterschema_unit
+  PRIVATE sourcemeta::core::jsonschema)
+target_link_libraries(sourcemeta_core_alterschema_unit
+  PRIVATE sourcemeta::core::alterschema)

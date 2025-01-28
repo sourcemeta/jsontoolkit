@@ -1,12 +1,12 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME yaml
-  FOLDER "JSON Toolkit/YAML"
+noa_googletest(NAMESPACE sourcemeta PROJECT core NAME yaml
+  FOLDER "Core/YAML"
   SOURCES
     yaml_parse_test.cc)
 
-target_link_libraries(sourcemeta_jsontoolkit_yaml_unit
-  PRIVATE sourcemeta::jsontoolkit::json)
-target_link_libraries(sourcemeta_jsontoolkit_yaml_unit
-  PRIVATE sourcemeta::jsontoolkit::yaml)
+target_link_libraries(sourcemeta_core_yaml_unit
+  PRIVATE sourcemeta::core::json)
+target_link_libraries(sourcemeta_core_yaml_unit
+  PRIVATE sourcemeta::core::yaml)
 
-target_compile_definitions(sourcemeta_jsontoolkit_yaml_unit
+target_compile_definitions(sourcemeta_core_yaml_unit
   PRIVATE STUBS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/stubs")

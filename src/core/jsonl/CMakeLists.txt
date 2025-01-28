@@ -1,11 +1,11 @@
-noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonl
-  FOLDER "JSON Toolkit/JSONL"
+noa_library(NAMESPACE sourcemeta PROJECT core NAME jsonl
+  FOLDER "Core/JSONL"
   PRIVATE_HEADERS iterator.h
   SOURCES jsonl.cc iterator.cc grammar.h)
 
-if(JSONTOOLKIT_INSTALL)
-  noa_library_install(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonl)
+if(SOURCEMETA_CORE_INSTALL)
+  noa_library_install(NAMESPACE sourcemeta PROJECT core NAME jsonl)
 endif()
 
-target_link_libraries(sourcemeta_jsontoolkit_jsonl PUBLIC
-  sourcemeta::jsontoolkit::json)
+target_link_libraries(sourcemeta_core_jsonl PUBLIC
+  sourcemeta::core::json)

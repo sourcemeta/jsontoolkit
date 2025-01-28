@@ -1,13 +1,13 @@
-#include <sourcemeta/jsontoolkit/jsonl_iterator.h>
+#include <sourcemeta/core/jsonl_iterator.h>
 
 #include "grammar.h"
 
 #include <cassert> // assert
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 struct ConstJSONLIterator::Internal {
-  sourcemeta::jsontoolkit::JSON current;
+  sourcemeta::core::JSON current;
 };
 
 /*
@@ -119,4 +119,4 @@ auto ConstJSONLIterator::operator->() const -> ConstJSONLIterator::pointer {
   return &(this->internal->current);
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

@@ -2,15 +2,14 @@
 
 #include <set>
 
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonpointer.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonpointer.h>
+#include <sourcemeta/core/jsonschema.h>
 
 #include "jsonschema_test_utils.h"
 
 TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/test",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$defs": {
@@ -27,9 +26,9 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::Frame frame;
+  frame.analyse(document, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 21);
 
@@ -171,8 +170,7 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
 }
 
 TEST(JSONSchema_frame, no_id) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": {
@@ -186,9 +184,9 @@ TEST(JSONSchema_frame, no_id) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::Frame frame;
+  frame.analyse(document, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 14);
 
@@ -267,15 +265,14 @@ TEST(JSONSchema_frame, no_id) {
 }
 
 TEST(JSONSchema_frame, no_id_with_default) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": { "type": "string" }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver,
+  sourcemeta::core::Frame frame;
+  frame.analyse(document, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver,
                 "https://json-schema.org/draft/2020-12/schema",
                 "https://www.sourcemeta.com/schema");
 
@@ -314,8 +311,7 @@ TEST(JSONSchema_frame, no_id_with_default) {
 }
 
 TEST(JSONSchema_frame, anchor_on_absolute_subid) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": {
@@ -326,9 +322,9 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::Frame frame;
+  frame.analyse(document, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 12);
   EXPECT_FRAME_STATIC_RESOURCE(frame, "https://www.example.com",
@@ -406,8 +402,7 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
 }
 
 TEST(JSONSchema_frame, uri_iterators) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": {
@@ -417,9 +412,9 @@ TEST(JSONSchema_frame, uri_iterators) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::Frame frame;
+  frame.analyse(document, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
 
   std::set<std::string> uris;
   for (const auto &entry : frame.locations()) {
@@ -453,8 +448,7 @@ TEST(JSONSchema_frame, uri_iterators) {
 }
 
 TEST(JSONSchema_frame, no_refs) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -464,9 +458,9 @@ TEST(JSONSchema_frame, no_refs) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::Frame frame;
+  frame.analyse(document, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.references().size(), 1);
 
@@ -476,8 +470,7 @@ TEST(JSONSchema_frame, no_refs) {
 }
 
 TEST(JSONSchema_frame, refs_with_id) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -497,9 +490,9 @@ TEST(JSONSchema_frame, refs_with_id) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::Frame frame;
+  frame.analyse(document, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
 
   EXPECT_FRAME_DESTINATION_OF(frame, Static,
                               "https://www.sourcemeta.com/schema", 0,
@@ -542,8 +535,7 @@ TEST(JSONSchema_frame, refs_with_id) {
 }
 
 TEST(JSONSchema_frame, refs_with_no_id) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "$ref": "#" },
@@ -562,9 +554,9 @@ TEST(JSONSchema_frame, refs_with_no_id) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::Frame frame;
+  frame.analyse(document, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
 
   EXPECT_FRAME_DESTINATION_OF(frame, Static, "", 0, "/properties/foo/$ref")
   EXPECT_FRAME_DESTINATION_OF(frame, Static, "#baz", 0,
@@ -595,8 +587,7 @@ TEST(JSONSchema_frame, refs_with_no_id) {
 }
 
 TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": {
@@ -604,9 +595,9 @@ TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::Frame frame;
+  frame.analyse(document, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.references().size(), 1);
 
@@ -616,8 +607,7 @@ TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
 }
 
 TEST(JSONSchema_frame, remote_refs) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "$ref": "https://www.example.com" },
@@ -626,9 +616,9 @@ TEST(JSONSchema_frame, remote_refs) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(document, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::Frame frame;
+  frame.analyse(document, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.references().size(), 4);
   EXPECT_STATIC_REFERENCE(
@@ -646,14 +636,12 @@ TEST(JSONSchema_frame, remote_refs) {
 }
 
 TEST(JSONSchema_frame, no_dialect) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "type": "string"
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  EXPECT_THROW(frame.analyse(document,
-                             sourcemeta::jsontoolkit::default_schema_walker,
-                             sourcemeta::jsontoolkit::official_resolver),
-               sourcemeta::jsontoolkit::SchemaError);
+  sourcemeta::core::Frame frame;
+  EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
+                             sourcemeta::core::official_resolver),
+               sourcemeta::core::SchemaError);
 }

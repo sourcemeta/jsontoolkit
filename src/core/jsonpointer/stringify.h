@@ -1,17 +1,17 @@
-#ifndef SOURCEMETA_JSONTOOLKIT_JSONPOINTER_STRINGIFY_H_
-#define SOURCEMETA_JSONTOOLKIT_JSONPOINTER_STRINGIFY_H_
+#ifndef SOURCEMETA_CORE_JSONPOINTER_STRINGIFY_H_
+#define SOURCEMETA_CORE_JSONPOINTER_STRINGIFY_H_
 
 #include "grammar.h"
 
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonpointer_pointer.h>
-#include <sourcemeta/jsontoolkit/uri.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonpointer_pointer.h>
+#include <sourcemeta/core/uri.h>
 
 #include <ostream> // std::basic_ostream
 #include <sstream> // std::basic_istringstream
 #include <string>  // std::to_string, std::basic_string
 
-namespace sourcemeta::jsontoolkit::internal {
+namespace sourcemeta::core::internal {
 inline auto
 write_character(std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
                 const JSON::Char character, const bool perform_uri_escaping)
@@ -23,14 +23,14 @@ write_character(std::basic_ostream<JSON::Char, JSON::CharTraits> &stream,
     // character to avoid this expensive ugliness
     std::basic_istringstream<JSON::Char> input{
         std::basic_string<JSON::Char>{character}};
-    sourcemeta::jsontoolkit::URI::escape(input, stream);
+    sourcemeta::core::URI::escape(input, stream);
   } else {
     stream.put(character);
   }
 }
-} // namespace sourcemeta::jsontoolkit::internal
+} // namespace sourcemeta::core::internal
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator, typename PointerT>
@@ -435,6 +435,6 @@ auto stringify(const PointerT &pointer,
   }
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core
 
 #endif

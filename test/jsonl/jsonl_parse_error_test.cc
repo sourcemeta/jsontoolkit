@@ -3,16 +3,16 @@
 #include <exception>
 #include <sstream>
 
-#include <sourcemeta/jsontoolkit/jsonl.h>
+#include <sourcemeta/core/jsonl.h>
 
 #define EXPECT_PARSE_ERROR(stream, expected_line, expected_column)             \
   try {                                                                        \
-    sourcemeta::jsontoolkit::JSONL parser{stream};                             \
-    sourcemeta::jsontoolkit::ConstJSONLIterator iterator{parser.cbegin()};     \
+    sourcemeta::core::JSONL parser{stream};                                    \
+    sourcemeta::core::ConstJSONLIterator iterator{parser.cbegin()};            \
     while (iterator != parser.cend())                                          \
       ++iterator;                                                              \
     FAIL() << "The JSONL parser was expected to throw";                        \
-  } catch (const sourcemeta::jsontoolkit::ParseError &error) {                 \
+  } catch (const sourcemeta::core::ParseError &error) {                        \
     EXPECT_EQ(error.line(), expected_line);                                    \
     EXPECT_EQ(error.column(), expected_column);                                \
     SUCCEED();                                                                 \

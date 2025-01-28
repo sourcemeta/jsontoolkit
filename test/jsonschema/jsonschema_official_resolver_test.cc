@@ -1,21 +1,20 @@
 #include <gtest/gtest.h>
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
-#include <sourcemeta/jsontoolkit/uri.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonschema.h>
+#include <sourcemeta/core/uri.h>
 
 #define EXPECT_SCHEMA(identifier)                                              \
   {                                                                            \
-    const std::optional<sourcemeta::jsontoolkit::JSON> result{                 \
-        sourcemeta::jsontoolkit::official_resolver(identifier)};               \
+    const std::optional<sourcemeta::core::JSON> result{                        \
+        sourcemeta::core::official_resolver(identifier)};                      \
     EXPECT_TRUE(result.has_value());                                           \
-    const sourcemeta::jsontoolkit::JSON &document{result.value()};             \
-    EXPECT_TRUE(sourcemeta::jsontoolkit::is_schema(document));                 \
-    std::optional<std::string> id{sourcemeta::jsontoolkit::identify(           \
-        document, sourcemeta::jsontoolkit::official_resolver)};                \
+    const sourcemeta::core::JSON &document{result.value()};                    \
+    EXPECT_TRUE(sourcemeta::core::is_schema(document));                        \
+    std::optional<std::string> id{sourcemeta::core::identify(                  \
+        document, sourcemeta::core::official_resolver)};                       \
     EXPECT_TRUE(id.has_value());                                               \
-    EXPECT_EQ(                                                                 \
-        sourcemeta::jsontoolkit::URI{id.value()}.canonicalize().recompose(),   \
-        sourcemeta::jsontoolkit::URI{identifier}.canonicalize().recompose());  \
+    EXPECT_EQ(sourcemeta::core::URI{id.value()}.canonicalize().recompose(),    \
+              sourcemeta::core::URI{identifier}.canonicalize().recompose());   \
   }
 
 TEST(JSONSchema_official_resolver, jsonschema_2020_12) {
@@ -140,7 +139,7 @@ TEST(JSONSchema_official_resolver, idempotency) {
 }
 
 TEST(JSONSchema_official_resolver, invalid) {
-  const std::optional<sourcemeta::jsontoolkit::JSON> result{
-      sourcemeta::jsontoolkit::official_resolver("https://example.com/foobar")};
+  const std::optional<sourcemeta::core::JSON> result{
+      sourcemeta::core::official_resolver("https://example.com/foobar")};
   EXPECT_FALSE(result.has_value());
 }

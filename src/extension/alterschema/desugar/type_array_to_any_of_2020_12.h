@@ -6,10 +6,10 @@ public:
             "Setting `type` to more than one choice is syntax sugar to "
             "`anyOf` over the corresponding types"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,
@@ -27,7 +27,7 @@ public:
   auto transform(PointerProxy &transformer) const -> void override {
     const std::set<std::string> keep{"$schema", "$id", "$anchor",
                                      "$dynamicAnchor", "$vocabulary"};
-    auto disjunctors{sourcemeta::jsontoolkit::JSON::make_array()};
+    auto disjunctors{sourcemeta::core::JSON::make_array()};
     for (const auto &type : transformer.value().at("type").as_array()) {
       auto copy = transformer.value();
       copy.erase_keys(keep.cbegin(), keep.cend());
@@ -35,7 +35,7 @@ public:
       disjunctors.push_back(std::move(copy));
     }
 
-    auto result{sourcemeta::jsontoolkit::JSON::make_object()};
+    auto result{sourcemeta::core::JSON::make_object()};
     for (const auto &keyword : keep) {
       if (transformer.value().defines(keyword)) {
         result.assign(keyword, transformer.value().at(keyword));

@@ -1,13 +1,11 @@
 #include <gtest/gtest.h>
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonpointer.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonpointer.h>
 
 TEST(JSONPointer_set, property_to_integer) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
-  sourcemeta::jsontoolkit::set(document, pointer,
-                               sourcemeta::jsontoolkit::JSON{2});
+  sourcemeta::core::JSON document = sourcemeta::core::parse("{ \"foo\": 1 }");
+  const sourcemeta::core::Pointer pointer{"foo"};
+  sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{2});
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -16,11 +14,10 @@ TEST(JSONPointer_set, property_to_integer) {
 }
 
 TEST(JSONPointer_set, property_to_integer_copy) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo"};
-  const sourcemeta::jsontoolkit::JSON value{2};
-  sourcemeta::jsontoolkit::set(document, pointer, value);
+  sourcemeta::core::JSON document = sourcemeta::core::parse("{ \"foo\": 1 }");
+  const sourcemeta::core::Pointer pointer{"foo"};
+  const sourcemeta::core::JSON value{2};
+  sourcemeta::core::set(document, pointer, value);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -29,31 +26,27 @@ TEST(JSONPointer_set, property_to_integer_copy) {
 }
 
 TEST(JSONPointer_set, top_level_to_integer) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
-  const sourcemeta::jsontoolkit::Pointer pointer;
-  sourcemeta::jsontoolkit::set(document, pointer,
-                               sourcemeta::jsontoolkit::JSON{2});
+  sourcemeta::core::JSON document = sourcemeta::core::parse("{ \"foo\": 1 }");
+  const sourcemeta::core::Pointer pointer;
+  sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{2});
   EXPECT_TRUE(document.is_integer());
   EXPECT_EQ(document.to_integer(), 2);
 }
 
 TEST(JSONPointer_set, top_level_to_integer_copy) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": 1 }");
-  const sourcemeta::jsontoolkit::Pointer pointer;
-  const sourcemeta::jsontoolkit::JSON value{2};
-  sourcemeta::jsontoolkit::set(document, pointer, value);
+  sourcemeta::core::JSON document = sourcemeta::core::parse("{ \"foo\": 1 }");
+  const sourcemeta::core::Pointer pointer;
+  const sourcemeta::core::JSON value{2};
+  sourcemeta::core::set(document, pointer, value);
   EXPECT_TRUE(document.is_integer());
   EXPECT_EQ(document.to_integer(), 2);
 }
 
 TEST(JSONPointer_set, array_element_to_integer) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": [ 1, 2, 3 ] }");
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo", 1};
-  sourcemeta::jsontoolkit::set(document, pointer,
-                               sourcemeta::jsontoolkit::JSON{9});
+  sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{ \"foo\": [ 1, 2, 3 ] }");
+  const sourcemeta::core::Pointer pointer{"foo", 1};
+  sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{9});
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -68,11 +61,11 @@ TEST(JSONPointer_set, array_element_to_integer) {
 }
 
 TEST(JSONPointer_set, array_element_to_integer_copy) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": [ 1, 2, 3 ] }");
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo", 1};
-  const sourcemeta::jsontoolkit::JSON value{9};
-  sourcemeta::jsontoolkit::set(document, pointer, value);
+  sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{ \"foo\": [ 1, 2, 3 ] }");
+  const sourcemeta::core::Pointer pointer{"foo", 1};
+  const sourcemeta::core::JSON value{9};
+  sourcemeta::core::set(document, pointer, value);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -87,11 +80,10 @@ TEST(JSONPointer_set, array_element_to_integer_copy) {
 }
 
 TEST(JSONPointer_set, hyphen_property_in_object) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": { \"-\": 1 } }");
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "-"};
-  sourcemeta::jsontoolkit::set(document, pointer,
-                               sourcemeta::jsontoolkit::JSON{2});
+  sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{ \"foo\": { \"-\": 1 } }");
+  const sourcemeta::core::Pointer pointer{"foo", "-"};
+  sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{2});
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -102,11 +94,9 @@ TEST(JSONPointer_set, hyphen_property_in_object) {
 }
 
 TEST(JSONPointer_set, hyphen_in_array_single_token) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
-  const sourcemeta::jsontoolkit::Pointer pointer{"-"};
-  sourcemeta::jsontoolkit::set(document, pointer,
-                               sourcemeta::jsontoolkit::JSON{4});
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[ 1, 2, 3 ]");
+  const sourcemeta::core::Pointer pointer{"-"};
+  sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{4});
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 4);
   EXPECT_TRUE(document.at(0).is_integer());
@@ -120,11 +110,10 @@ TEST(JSONPointer_set, hyphen_in_array_single_token) {
 }
 
 TEST(JSONPointer_set, hyphen_in_array_single_token_copy) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
-  const sourcemeta::jsontoolkit::Pointer pointer{"-"};
-  const sourcemeta::jsontoolkit::JSON value{4};
-  sourcemeta::jsontoolkit::set(document, pointer, value);
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[ 1, 2, 3 ]");
+  const sourcemeta::core::Pointer pointer{"-"};
+  const sourcemeta::core::JSON value{4};
+  sourcemeta::core::set(document, pointer, value);
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 4);
   EXPECT_TRUE(document.at(0).is_integer());
@@ -138,11 +127,10 @@ TEST(JSONPointer_set, hyphen_in_array_single_token_copy) {
 }
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": [ 1, 2, 3 ] }");
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "-"};
-  sourcemeta::jsontoolkit::set(document, pointer,
-                               sourcemeta::jsontoolkit::JSON{4});
+  sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{ \"foo\": [ 1, 2, 3 ] }");
+  const sourcemeta::core::Pointer pointer{"foo", "-"};
+  sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{4});
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -158,11 +146,11 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens) {
 }
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_copy) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"foo\": [ 1, 2, 3 ] }");
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "-"};
-  const sourcemeta::jsontoolkit::JSON value{4};
-  sourcemeta::jsontoolkit::set(document, pointer, value);
+  sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{ \"foo\": [ 1, 2, 3 ] }");
+  const sourcemeta::core::Pointer pointer{"foo", "-"};
+  const sourcemeta::core::JSON value{4};
+  sourcemeta::core::set(document, pointer, value);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("foo"));
@@ -178,11 +166,10 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_copy) {
 }
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"-\": [ 1, 2, 3 ] }");
-  const sourcemeta::jsontoolkit::Pointer pointer{"-", "-"};
-  sourcemeta::jsontoolkit::set(document, pointer,
-                               sourcemeta::jsontoolkit::JSON{4});
+  sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{ \"-\": [ 1, 2, 3 ] }");
+  const sourcemeta::core::Pointer pointer{"-", "-"};
+  sourcemeta::core::set(document, pointer, sourcemeta::core::JSON{4});
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("-"));
@@ -198,11 +185,11 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen) {
 }
 
 TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen_copy) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("{ \"-\": [ 1, 2, 3 ] }");
-  const sourcemeta::jsontoolkit::Pointer pointer{"-", "-"};
-  const sourcemeta::jsontoolkit::JSON value{4};
-  sourcemeta::jsontoolkit::set(document, pointer, value);
+  sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{ \"-\": [ 1, 2, 3 ] }");
+  const sourcemeta::core::Pointer pointer{"-", "-"};
+  const sourcemeta::core::JSON value{4};
+  sourcemeta::core::set(document, pointer, value);
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 1);
   EXPECT_TRUE(document.defines("-"));
@@ -218,14 +205,13 @@ TEST(JSONPointer_set, hyphen_in_array_multiple_tokens_with_inner_hyphen_copy) {
 }
 
 TEST(JSONPointer_set, positive_integer_property) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "0": 1
   })JSON");
 
-  const sourcemeta::jsontoolkit::Pointer pointer{0};
-  const sourcemeta::jsontoolkit::JSON value{4};
-  sourcemeta::jsontoolkit::set(document, pointer, value);
+  const sourcemeta::core::Pointer pointer{0};
+  const sourcemeta::core::JSON value{4};
+  sourcemeta::core::set(document, pointer, value);
   EXPECT_TRUE(document.at("0").is_integer());
   EXPECT_EQ(document.at("0").to_integer(), 4);
 }

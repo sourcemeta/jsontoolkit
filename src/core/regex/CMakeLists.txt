@@ -1,8 +1,8 @@
-noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME regex
-  FOLDER "JSON Toolkit/Regex")
+noa_library(NAMESPACE sourcemeta PROJECT core NAME regex
+  FOLDER "Core/Regex")
 
-if(JSONTOOLKIT_INSTALL)
-  noa_library_install(NAMESPACE sourcemeta PROJECT jsontoolkit NAME regex)
+if(SOURCEMETA_CORE_INSTALL)
+  noa_library_install(NAMESPACE sourcemeta PROJECT core NAME regex)
 endif()
 
-target_link_libraries(sourcemeta_jsontoolkit_regex INTERFACE Boost::regex)
+target_link_libraries(sourcemeta_core_regex INTERFACE Boost::regex)

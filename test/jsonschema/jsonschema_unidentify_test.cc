@@ -1,18 +1,18 @@
 #include <gtest/gtest.h>
 
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonschema.h>
 
 static auto test_resolver_2020_12(std::string_view identifier)
-    -> std::optional<sourcemeta::jsontoolkit::JSON> {
+    -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://example.com/foo/bar") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://example.com/foo/bar",
       "$anchor": "baz"
     })JSON");
   } else if (identifier == "https://example.com/baz-anchor") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://example.com/baz-anchor",
       "$defs": {
@@ -23,7 +23,7 @@ static auto test_resolver_2020_12(std::string_view identifier)
       }
     })JSON");
   } else if (identifier == "https://www.sourcemeta.com/recursive") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://www.sourcemeta.com/recursive",
       "properties": {
@@ -31,32 +31,32 @@ static auto test_resolver_2020_12(std::string_view identifier)
       }
     })JSON");
   } else if (identifier == "https://example.com/meta/1.json") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://example.com/meta/2.json",
       "$id": "https://example.com/meta/1.json",
       "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
     })JSON");
   } else if (identifier == "https://example.com/meta/2.json") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://example.com/meta/2.json",
       "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
     })JSON");
   } else {
-    return sourcemeta::jsontoolkit::official_resolver(identifier);
+    return sourcemeta::core::official_resolver(identifier);
   }
 }
 
 static auto test_resolver_2019_09(std::string_view identifier)
-    -> std::optional<sourcemeta::jsontoolkit::JSON> {
+    -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://example.com/foo/bar") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2019-09/schema",
       "$id": "https://example.com/foo/bar",
       "$anchor": "baz"
     })JSON");
   } else if (identifier == "https://example.com/baz-anchor") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2019-09/schema",
       "$id": "https://example.com/baz-anchor",
       "$defs": {
@@ -67,7 +67,7 @@ static auto test_resolver_2019_09(std::string_view identifier)
       }
     })JSON");
   } else if (identifier == "https://www.sourcemeta.com/recursive") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2019-09/schema",
       "$id": "https://www.sourcemeta.com/recursive",
       "properties": {
@@ -75,26 +75,26 @@ static auto test_resolver_2019_09(std::string_view identifier)
       }
     })JSON");
   } else if (identifier == "https://example.com/meta/1.json") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://example.com/meta/2.json",
       "$id": "https://example.com/meta/1.json",
       "$vocabulary": { "https://json-schema.org/draft/2019-09/vocab/core": true }
     })JSON");
   } else if (identifier == "https://example.com/meta/2.json") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2019-09/schema",
       "$id": "https://example.com/meta/2.json",
       "$vocabulary": { "https://json-schema.org/draft/2019-09/vocab/core": true }
     })JSON");
   } else {
-    return sourcemeta::jsontoolkit::official_resolver(identifier);
+    return sourcemeta::core::official_resolver(identifier);
   }
 }
 
 static auto test_resolver_draft7(std::string_view identifier)
-    -> std::optional<sourcemeta::jsontoolkit::JSON> {
+    -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://www.sourcemeta.com/recursive") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "http://json-schema.org/draft-07/schema#",
       "$id": "https://www.sourcemeta.com/recursive",
       "properties": {
@@ -102,24 +102,24 @@ static auto test_resolver_draft7(std::string_view identifier)
       }
     })JSON");
   } else if (identifier == "https://example.com/meta/1.json") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://example.com/meta/2.json",
       "$id": "https://example.com/meta/1.json"
     })JSON");
   } else if (identifier == "https://example.com/meta/2.json") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "http://json-schema.org/draft-07/schema#",
       "$id": "https://example.com/meta/2.json"
     })JSON");
   } else {
-    return sourcemeta::jsontoolkit::official_resolver(identifier);
+    return sourcemeta::core::official_resolver(identifier);
   }
 }
 
 static auto test_resolver_draft6(std::string_view identifier)
-    -> std::optional<sourcemeta::jsontoolkit::JSON> {
+    -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://www.sourcemeta.com/recursive") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "http://json-schema.org/draft-06/schema#",
       "$id": "https://www.sourcemeta.com/recursive",
       "properties": {
@@ -127,24 +127,24 @@ static auto test_resolver_draft6(std::string_view identifier)
       }
     })JSON");
   } else if (identifier == "https://example.com/meta/1.json") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://example.com/meta/2.json",
       "$id": "https://example.com/meta/1.json"
     })JSON");
   } else if (identifier == "https://example.com/meta/2.json") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "http://json-schema.org/draft-06/schema#",
       "$id": "https://example.com/meta/2.json"
     })JSON");
   } else {
-    return sourcemeta::jsontoolkit::official_resolver(identifier);
+    return sourcemeta::core::official_resolver(identifier);
   }
 }
 
 static auto test_resolver_draft4(std::string_view identifier)
-    -> std::optional<sourcemeta::jsontoolkit::JSON> {
+    -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://www.sourcemeta.com/recursive") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "http://json-schema.org/draft-04/schema#",
       "id": "https://www.sourcemeta.com/recursive",
       "properties": {
@@ -152,23 +152,22 @@ static auto test_resolver_draft4(std::string_view identifier)
       }
     })JSON");
   } else if (identifier == "https://example.com/meta/1.json") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://example.com/meta/2.json",
       "id": "https://example.com/meta/1.json"
     })JSON");
   } else if (identifier == "https://example.com/meta/2.json") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "http://json-schema.org/draft-04/schema#",
       "id": "https://example.com/meta/2.json"
     })JSON");
   } else {
-    return sourcemeta::jsontoolkit::official_resolver(identifier);
+    return sourcemeta::core::official_resolver(identifier);
   }
 }
 
 TEST(JSONSchema_unidentify, 2020_12) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/top-level",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -181,12 +180,10 @@ TEST(JSONSchema_unidentify, 2020_12) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2020_12);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_2020_12);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": {
@@ -202,8 +199,7 @@ TEST(JSONSchema_unidentify, 2020_12) {
 }
 
 TEST(JSONSchema_unidentify, 2020_12_bundle) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/top-level",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -216,15 +212,12 @@ TEST(JSONSchema_unidentify, 2020_12_bundle) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2020_12);
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2020_12);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver_2020_12);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_2020_12);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": {
@@ -258,8 +251,7 @@ TEST(JSONSchema_unidentify, 2020_12_bundle) {
 }
 
 TEST(JSONSchema_unidentify, 2020_12_bundle_boolean_subschema) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/top-level",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -267,15 +259,12 @@ TEST(JSONSchema_unidentify, 2020_12_bundle_boolean_subschema) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2020_12);
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2020_12);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver_2020_12);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_2020_12);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": true
@@ -286,21 +275,17 @@ TEST(JSONSchema_unidentify, 2020_12_bundle_boolean_subschema) {
 }
 
 TEST(JSONSchema_unidentify, 2020_12_bundle_metaschema) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://example.com/meta/1.json",
     "type": "string"
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2020_12);
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2020_12);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver_2020_12);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_2020_12);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "#/$defs/https%3A~1~1example.com~1meta~11.json",
     "type": "string",
     "$defs": {
@@ -319,8 +304,7 @@ TEST(JSONSchema_unidentify, 2020_12_bundle_metaschema) {
 }
 
 TEST(JSONSchema_unidentify, 2019_09) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/top-level",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": {
@@ -333,12 +317,10 @@ TEST(JSONSchema_unidentify, 2019_09) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2019_09);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_2019_09);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": {
       "foo": {
@@ -354,8 +336,7 @@ TEST(JSONSchema_unidentify, 2019_09) {
 }
 
 TEST(JSONSchema_unidentify, 2019_09_bundle) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/top-level",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": {
@@ -368,15 +349,12 @@ TEST(JSONSchema_unidentify, 2019_09_bundle) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2019_09);
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2019_09);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver_2019_09);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_2019_09);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": {
       "foo": {
@@ -410,21 +388,17 @@ TEST(JSONSchema_unidentify, 2019_09_bundle) {
 }
 
 TEST(JSONSchema_unidentify, 2019_09_bundle_metaschema) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://example.com/meta/1.json",
     "type": "string"
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2019_09);
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_2019_09);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver_2019_09);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_2019_09);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "#/$defs/https%3A~1~1example.com~1meta~11.json",
     "type": "string",
     "$defs": {
@@ -443,8 +417,7 @@ TEST(JSONSchema_unidentify, 2019_09_bundle_metaschema) {
 }
 
 TEST(JSONSchema_unidentify, draft7) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/top-level",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "properties": {
@@ -454,12 +427,10 @@ TEST(JSONSchema_unidentify, draft7) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft7);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_draft7);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
     "properties": {
       "foo": {
@@ -472,8 +443,7 @@ TEST(JSONSchema_unidentify, draft7) {
 }
 
 TEST(JSONSchema_unidentify, draft7_bundle) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/top-level",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "properties": {
@@ -483,15 +453,12 @@ TEST(JSONSchema_unidentify, draft7_bundle) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft7);
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft7);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver_draft7);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_draft7);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
     "properties": {
       "foo": {
@@ -514,21 +481,17 @@ TEST(JSONSchema_unidentify, draft7_bundle) {
 }
 
 TEST(JSONSchema_unidentify, draft7_bundle_metaschema) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://example.com/meta/1.json",
     "type": "string"
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft7);
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft7);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver_draft7);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_draft7);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "#/definitions/https%3A~1~1example.com~1meta~11.json",
     "type": "string",
     "definitions": {
@@ -545,8 +508,7 @@ TEST(JSONSchema_unidentify, draft7_bundle_metaschema) {
 }
 
 TEST(JSONSchema_unidentify, draft6) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/top-level",
     "$schema": "http://json-schema.org/draft-06/schema#",
     "properties": {
@@ -556,12 +518,10 @@ TEST(JSONSchema_unidentify, draft6) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft6);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_draft6);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-06/schema#",
     "properties": {
       "foo": {
@@ -574,8 +534,7 @@ TEST(JSONSchema_unidentify, draft6) {
 }
 
 TEST(JSONSchema_unidentify, draft6_bundle) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/top-level",
     "$schema": "http://json-schema.org/draft-06/schema#",
     "properties": {
@@ -585,15 +544,12 @@ TEST(JSONSchema_unidentify, draft6_bundle) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft6);
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft6);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver_draft6);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_draft6);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-06/schema#",
     "properties": {
       "foo": {
@@ -616,21 +572,17 @@ TEST(JSONSchema_unidentify, draft6_bundle) {
 }
 
 TEST(JSONSchema_unidentify, draft6_bundle_metaschema) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://example.com/meta/1.json",
     "type": "string"
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft6);
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft6);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver_draft6);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_draft6);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "#/definitions/https%3A~1~1example.com~1meta~11.json",
     "type": "string",
     "definitions": {
@@ -647,8 +599,7 @@ TEST(JSONSchema_unidentify, draft6_bundle_metaschema) {
 }
 
 TEST(JSONSchema_unidentify, draft4) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "id": "https://www.sourcemeta.com/top-level",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "properties": {
@@ -658,12 +609,10 @@ TEST(JSONSchema_unidentify, draft4) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft4);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_draft4);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "properties": {
       "foo": {
@@ -676,8 +625,7 @@ TEST(JSONSchema_unidentify, draft4) {
 }
 
 TEST(JSONSchema_unidentify, draft4_bundle) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "id": "https://www.sourcemeta.com/top-level",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "properties": {
@@ -687,15 +635,12 @@ TEST(JSONSchema_unidentify, draft4_bundle) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft4);
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft4);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver_draft4);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_draft4);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "properties": {
       "foo": {
@@ -718,21 +663,17 @@ TEST(JSONSchema_unidentify, draft4_bundle) {
 }
 
 TEST(JSONSchema_unidentify, draft4_bundle_metaschema) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://example.com/meta/1.json",
     "type": "string"
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft4);
-  sourcemeta::jsontoolkit::unidentify(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      test_resolver_draft4);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver_draft4);
+  sourcemeta::core::unidentify(
+      document, sourcemeta::core::default_schema_walker, test_resolver_draft4);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "#/definitions/https%3A~1~1example.com~1meta~11.json",
     "type": "string",
     "definitions": {

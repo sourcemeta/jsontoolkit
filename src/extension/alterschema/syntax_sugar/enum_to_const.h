@@ -5,10 +5,10 @@ public:
             "enum_to_const",
             "An `enum` of a single value can be expressed as `const`"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,

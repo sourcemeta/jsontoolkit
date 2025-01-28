@@ -1,52 +1,52 @@
 #include <gtest/gtest.h>
-#include <sourcemeta/jsontoolkit/uri.h>
+#include <sourcemeta/core/uri.h>
 #include <string_view>
 
 // Getter
 
 TEST(URI_path_getter, https_example_url_no_path) {
-  const sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+  const sourcemeta::core::URI uri{"https://example.com"};
   EXPECT_FALSE(uri.path().has_value());
 }
 
 TEST(URI_path_getter, https_example_url_slash) {
-  const sourcemeta::jsontoolkit::URI uri{"https://example.com/"};
+  const sourcemeta::core::URI uri{"https://example.com/"};
   EXPECT_TRUE(uri.path().has_value());
   EXPECT_EQ(uri.path().value(), "/");
 }
 
 TEST(URI_path_getter, https_example_url_single) {
-  const sourcemeta::jsontoolkit::URI uri{"https://example.com/foo"};
+  const sourcemeta::core::URI uri{"https://example.com/foo"};
   EXPECT_TRUE(uri.path().has_value());
   EXPECT_EQ(uri.path().value(), "/foo");
 }
 
 TEST(URI_path_getter, https_example_url_multi) {
-  const sourcemeta::jsontoolkit::URI uri{"https://example.com/foo/bar/baz"};
+  const sourcemeta::core::URI uri{"https://example.com/foo/bar/baz"};
   EXPECT_TRUE(uri.path().has_value());
   EXPECT_EQ(uri.path().value(), "/foo/bar/baz");
 }
 
 TEST(URI_path_getter, relative_multi) {
-  const sourcemeta::jsontoolkit::URI uri{"../foo/bar"};
+  const sourcemeta::core::URI uri{"../foo/bar"};
   EXPECT_TRUE(uri.path().has_value());
   EXPECT_EQ(uri.path().value(), "../foo/bar");
 }
 
 TEST(URI_path_getter, urn) {
-  const sourcemeta::jsontoolkit::URI uri{"urn:example:schema"};
+  const sourcemeta::core::URI uri{"urn:example:schema"};
   EXPECT_TRUE(uri.path().has_value());
   EXPECT_EQ(uri.path().value(), "example:schema");
 }
 
 TEST(URI_path_getter, urn_with_fragment) {
-  const sourcemeta::jsontoolkit::URI uri{"urn:example:schema#foo"};
+  const sourcemeta::core::URI uri{"urn:example:schema#foo"};
   EXPECT_TRUE(uri.path().has_value());
   EXPECT_EQ(uri.path().value(), "example:schema");
 }
 
 TEST(URI_path_getter, tag) {
-  const sourcemeta::jsontoolkit::URI uri{
+  const sourcemeta::core::URI uri{
       "tag:bowtie.report,2023-11:referencing-suite-tag-uris-id"};
   EXPECT_TRUE(uri.path().has_value());
   EXPECT_EQ(uri.path().value(),
@@ -54,7 +54,7 @@ TEST(URI_path_getter, tag) {
 }
 
 TEST(URI_path_getter, tag_with_fragment) {
-  const sourcemeta::jsontoolkit::URI uri{
+  const sourcemeta::core::URI uri{
       "tag:bowtie.report,2023-11:referencing-suite-tag-uris-id#foo"};
   EXPECT_TRUE(uri.path().has_value());
   EXPECT_EQ(uri.path().value(),
@@ -62,19 +62,19 @@ TEST(URI_path_getter, tag_with_fragment) {
 }
 
 TEST(URI_path_getter, without_scheme) {
-  const sourcemeta::jsontoolkit::URI uri{"example.com/foo"};
+  const sourcemeta::core::URI uri{"example.com/foo"};
   EXPECT_EQ(uri.path().value(), "example.com/foo");
 }
 
 TEST(URI_path_getter, mailto) {
-  const sourcemeta::jsontoolkit::URI uri{"mailto:jdoe@woo.com"};
+  const sourcemeta::core::URI uri{"mailto:jdoe@woo.com"};
   EXPECT_EQ(uri.path().value(), "jdoe@woo.com");
 }
 
 // Setter
 
 TEST(URI_path_setter, no_path) {
-  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+  sourcemeta::core::URI uri{"https://example.com"};
 
   uri.path(std::string{"/foo"});
   EXPECT_EQ(uri.path().value(), "/foo");
@@ -88,7 +88,7 @@ TEST(URI_path_setter, no_path) {
 }
 
 TEST(URI_path_setter, url_slash) {
-  sourcemeta::jsontoolkit::URI uri{"https://example.com/"};
+  sourcemeta::core::URI uri{"https://example.com/"};
 
   uri.path(std::string{"/foo"});
   EXPECT_EQ(uri.path().value(), "/foo");
@@ -102,7 +102,7 @@ TEST(URI_path_setter, url_slash) {
 }
 
 TEST(URI_path_setter, url_path) {
-  sourcemeta::jsontoolkit::URI uri{"https://example.com/foo"};
+  sourcemeta::core::URI uri{"https://example.com/foo"};
 
   uri.path(std::string{"/bar"});
   EXPECT_EQ(uri.path().value(), "/bar");
@@ -116,7 +116,7 @@ TEST(URI_path_setter, url_path) {
 }
 
 TEST(URI_path_setter, set_empty) {
-  sourcemeta::jsontoolkit::URI uri{"https://example.com/foo/bar/baz"};
+  sourcemeta::core::URI uri{"https://example.com/foo/bar/baz"};
 
   uri.path(std::string{""});
   EXPECT_EQ(uri.path().has_value(), false);
@@ -129,7 +129,7 @@ TEST(URI_path_setter, set_empty) {
 }
 
 TEST(URI_path_setter, set_path_without_leading_slash) {
-  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+  sourcemeta::core::URI uri{"https://example.com"};
 
   uri.path(std::string{"foo"});
   EXPECT_EQ(uri.path().value(), "/foo");
@@ -143,7 +143,7 @@ TEST(URI_path_setter, set_path_without_leading_slash) {
 }
 
 TEST(URI_path_setter, set_path_with_trailing_slash) {
-  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+  sourcemeta::core::URI uri{"https://example.com"};
 
   uri.path(std::string{"/foo/"});
   EXPECT_EQ(uri.path().value(), "/foo/");
@@ -157,22 +157,22 @@ TEST(URI_path_setter, set_path_with_trailing_slash) {
 }
 
 TEST(URI_path_setter, set_relative_path) {
-  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+  sourcemeta::core::URI uri{"https://example.com"};
 
-  EXPECT_THROW(uri.path("../foo"), sourcemeta::jsontoolkit::URIError);
-  EXPECT_THROW(uri.path("./foo"), sourcemeta::jsontoolkit::URIError);
+  EXPECT_THROW(uri.path("../foo"), sourcemeta::core::URIError);
+  EXPECT_THROW(uri.path("./foo"), sourcemeta::core::URIError);
 
   auto path{"../foo"};
-  EXPECT_THROW(uri.path(std::move(path)), sourcemeta::jsontoolkit::URIError);
+  EXPECT_THROW(uri.path(std::move(path)), sourcemeta::core::URIError);
   EXPECT_EQ(path, "../foo");
 
   path = "./foo";
-  EXPECT_THROW(uri.path(std::move(path)), sourcemeta::jsontoolkit::URIError);
+  EXPECT_THROW(uri.path(std::move(path)), sourcemeta::core::URIError);
   EXPECT_EQ(path, "./foo");
 }
 
 TEST(URI_path_setter, set_path_with_query) {
-  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+  sourcemeta::core::URI uri{"https://example.com"};
 
   uri.path("/foo%20bar?query=value#fragment");
   EXPECT_EQ(uri.path().value(), "/foo%20bar");
@@ -186,7 +186,7 @@ TEST(URI_path_setter, set_path_with_query) {
 }
 
 TEST(URI_path_setter, set_path_with_fragment) {
-  sourcemeta::jsontoolkit::URI uri{"https://example.com"};
+  sourcemeta::core::URI uri{"https://example.com"};
 
   uri.path("/foo%20bar#fragment");
   EXPECT_EQ(uri.path().value(), "/foo%20bar");
@@ -200,8 +200,7 @@ TEST(URI_path_setter, set_path_with_fragment) {
 }
 
 TEST(URI_path_setter, set_path_with_query_and_fragment) {
-  sourcemeta::jsontoolkit::URI uri{
-      "https://example.com/old?query=value#fragment"};
+  sourcemeta::core::URI uri{"https://example.com/old?query=value#fragment"};
 
   uri.path("/new?query=value#fragment");
   EXPECT_EQ(uri.path().value(), "/new");
@@ -215,7 +214,7 @@ TEST(URI_path_setter, set_path_with_query_and_fragment) {
 }
 
 TEST(URI_path_setter_no_scheme, set_path_on_host_only) {
-  sourcemeta::jsontoolkit::URI uri{"example.com"};
+  sourcemeta::core::URI uri{"example.com"};
 
   uri.path("/foo");
   EXPECT_EQ(uri.path().value(), "foo");
@@ -229,7 +228,7 @@ TEST(URI_path_setter_no_scheme, set_path_on_host_only) {
 }
 
 TEST(URI_path_setter_no_scheme, replace_existing_path) {
-  sourcemeta::jsontoolkit::URI uri{"example.com/old"};
+  sourcemeta::core::URI uri{"example.com/old"};
 
   uri.path("/new");
   EXPECT_EQ(uri.path().value(), "new");
@@ -243,7 +242,7 @@ TEST(URI_path_setter_no_scheme, replace_existing_path) {
 }
 
 TEST(URI_path_setter_no_scheme, set_empty_path) {
-  sourcemeta::jsontoolkit::URI uri{"example.com/foo"};
+  sourcemeta::core::URI uri{"example.com/foo"};
 
   uri.path("");
   EXPECT_EQ(uri.path().has_value(), false);
@@ -256,7 +255,7 @@ TEST(URI_path_setter_no_scheme, set_empty_path) {
 }
 
 TEST(URI_path_setter_no_scheme, set_path_on_ip_address) {
-  sourcemeta::jsontoolkit::URI uri{"192.168.0.1"};
+  sourcemeta::core::URI uri{"192.168.0.1"};
 
   uri.path("/admin");
   EXPECT_EQ(uri.path().value(), "admin");
@@ -271,7 +270,7 @@ TEST(URI_path_setter_no_scheme, set_path_on_ip_address) {
 
 // TODO: dig why scheme return example.com
 TEST(URI_path_setter_no_scheme, set_path_with_port) {
-  sourcemeta::jsontoolkit::URI uri{"http://example.com:8080"};
+  sourcemeta::core::URI uri{"http://example.com:8080"};
 
   uri.path("/test");
   EXPECT_EQ(uri.path().value(), "/test");

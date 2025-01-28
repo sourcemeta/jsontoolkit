@@ -1,20 +1,19 @@
 #include <gtest/gtest.h>
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonschema.h>
 
 TEST(JSONSchema_vocabulary, core_vocabularies_boolean_without_default) {
-  const sourcemeta::jsontoolkit::JSON document{true};
-  EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(
-                   document, sourcemeta::jsontoolkit::official_resolver),
-               sourcemeta::jsontoolkit::SchemaError);
+  const sourcemeta::core::JSON document{true};
+  EXPECT_THROW(sourcemeta::core::vocabularies(
+                   document, sourcemeta::core::official_resolver),
+               sourcemeta::core::SchemaError);
 }
 
 TEST(JSONSchema_vocabulary, unresolvable_dialect) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://non-existent.com/dialect"
   })JSON");
-  EXPECT_THROW(sourcemeta::jsontoolkit::vocabularies(
-                   document, sourcemeta::jsontoolkit::official_resolver),
-               sourcemeta::jsontoolkit::SchemaResolutionError);
+  EXPECT_THROW(sourcemeta::core::vocabularies(
+                   document, sourcemeta::core::official_resolver),
+               sourcemeta::core::SchemaResolutionError);
 }

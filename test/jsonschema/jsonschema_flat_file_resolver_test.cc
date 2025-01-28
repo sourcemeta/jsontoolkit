@@ -1,25 +1,25 @@
 #include <gtest/gtest.h>
 
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/jsonschema.h>
 
 TEST(JSONSchema_FlatFileSchemaResolver, empty_no_fallback) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   EXPECT_FALSE(
       resolver("https://json-schema.org/draft/2020-12/schema").has_value());
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, empty_with_fallback) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver{
-      sourcemeta::jsontoolkit::official_resolver};
+  sourcemeta::core::FlatFileSchemaResolver resolver{
+      sourcemeta::core::official_resolver};
   EXPECT_TRUE(
       resolver("https://json-schema.org/draft/2020-12/schema").has_value());
   EXPECT_EQ(resolver("https://json-schema.org/draft/2020-12/schema"),
-            sourcemeta::jsontoolkit::official_resolver(
+            sourcemeta::core::official_resolver(
                 "https://json-schema.org/draft/2020-12/schema"));
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, single_schema) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id.json"};
   const auto &identifier{resolver.add(schema_path)};
@@ -27,29 +27,28 @@ TEST(JSONSchema_FlatFileSchemaResolver, single_schema) {
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
-            sourcemeta::jsontoolkit::from_file(schema_path));
+            sourcemeta::core::from_file(schema_path));
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, single_schema_custom_reader) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} / "2020-12-id"};
   const auto &identifier{resolver.add(
       schema_path, std::nullopt, std::nullopt, [](const auto &path) {
-        return sourcemeta::jsontoolkit::from_file(path.string() + ".json");
+        return sourcemeta::core::from_file(path.string() + ".json");
       })};
   EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
-            sourcemeta::jsontoolkit::from_file(schema_path.string() + ".json"));
+            sourcemeta::core::from_file(schema_path.string() + ".json"));
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, single_schema_with_default_dialect) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} / "only-id.json"};
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/only-id.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -63,12 +62,11 @@ TEST(JSONSchema_FlatFileSchemaResolver, single_schema_with_default_dialect) {
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, single_schema_anonymous_with_default) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-anonymous.json"};
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/test",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -81,7 +79,7 @@ TEST(JSONSchema_FlatFileSchemaResolver, single_schema_anonymous_with_default) {
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, single_schema_idempotent) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id.json"};
 
@@ -96,11 +94,11 @@ TEST(JSONSchema_FlatFileSchemaResolver, single_schema_idempotent) {
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
-            sourcemeta::jsontoolkit::from_file(schema_path));
+            sourcemeta::core::from_file(schema_path));
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, duplicate_ids) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
 
   const auto schema_path_1{std::filesystem::path{SCHEMAS_PATH} /
                            "2020-12-id.json"};
@@ -109,12 +107,11 @@ TEST(JSONSchema_FlatFileSchemaResolver, duplicate_ids) {
 
   const auto &identifier{resolver.add(schema_path_1)};
   EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
-  EXPECT_THROW(resolver.add(schema_path_2),
-               sourcemeta::jsontoolkit::SchemaError);
+  EXPECT_THROW(resolver.add(schema_path_2), sourcemeta::core::SchemaError);
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, no_embedded_resource) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-embedded.json"};
 
@@ -125,12 +122,12 @@ TEST(JSONSchema_FlatFileSchemaResolver, no_embedded_resource) {
       resolver("https://www.sourcemeta.com/2020-12-embedded.json").has_value());
   EXPECT_EQ(
       resolver("https://www.sourcemeta.com/2020-12-embedded.json").value(),
-      sourcemeta::jsontoolkit::from_file(schema_path));
+      sourcemeta::core::from_file(schema_path));
   EXPECT_FALSE(resolver("https://www.sourcemeta.com/string").has_value());
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, metaschema_out_of_order) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-meta-1-schema.json"};
   const auto metaschema_path{std::filesystem::path{SCHEMAS_PATH} /
@@ -143,7 +140,7 @@ TEST(JSONSchema_FlatFileSchemaResolver, metaschema_out_of_order) {
   // We can't resolve it yet until eventually satisfying the metaschema
   EXPECT_THROW(
       resolver("https://www.sourcemeta.com/2020-12-meta-1-schema.json"),
-      sourcemeta::jsontoolkit::SchemaResolutionError);
+      sourcemeta::core::SchemaResolutionError);
 
   // Note we add the metaschema AFTER the schema
   const auto &metaschema_identifier{resolver.add(metaschema_path)};
@@ -153,24 +150,24 @@ TEST(JSONSchema_FlatFileSchemaResolver, metaschema_out_of_order) {
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-meta-1.json").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-meta-1.json").value(),
-            sourcemeta::jsontoolkit::from_file(metaschema_path));
+            sourcemeta::core::from_file(metaschema_path));
 
   EXPECT_TRUE(resolver("https://www.sourcemeta.com/2020-12-meta-1-schema.json")
                   .has_value());
   EXPECT_EQ(
       resolver("https://www.sourcemeta.com/2020-12-meta-1-schema.json").value(),
-      sourcemeta::jsontoolkit::from_file(schema_path));
+      sourcemeta::core::from_file(schema_path));
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, iterators) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id.json"};
   const auto &identifier{resolver.add(schema_path)};
   EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
 
   std::vector<std::string> identifiers;
-  std::vector<sourcemeta::jsontoolkit::FlatFileSchemaResolver::Entry> entries;
+  std::vector<sourcemeta::core::FlatFileSchemaResolver::Entry> entries;
   for (const auto &entry : resolver) {
     identifiers.push_back(entry.first);
     entries.push_back(entry.second);
@@ -185,7 +182,7 @@ TEST(JSONSchema_FlatFileSchemaResolver, iterators) {
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, reidentify) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id.json"};
   const auto &identifier{resolver.add(schema_path)};
@@ -193,7 +190,7 @@ TEST(JSONSchema_FlatFileSchemaResolver, reidentify) {
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
-            sourcemeta::jsontoolkit::from_file(schema_path));
+            sourcemeta::core::from_file(schema_path));
 
   resolver.reidentify("https://www.sourcemeta.com/2020-12-id.json",
                       "https://example.com");
@@ -202,8 +199,7 @@ TEST(JSONSchema_FlatFileSchemaResolver, reidentify) {
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
   EXPECT_TRUE(resolver("https://example.com").has_value());
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$id": "https://example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   })JSON");
@@ -212,12 +208,11 @@ TEST(JSONSchema_FlatFileSchemaResolver, reidentify) {
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, with_absolute_references) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-absolute-ref.json"};
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.sourcemeta.com/2020-12-absolute-ref.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$ref": "2020-12-id.json"
@@ -233,7 +228,7 @@ TEST(JSONSchema_FlatFileSchemaResolver, with_absolute_references) {
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, case_insensitive_lookup) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id.json"};
   const auto &identifier{resolver.add(schema_path)};
@@ -241,15 +236,15 @@ TEST(JSONSchema_FlatFileSchemaResolver, case_insensitive_lookup) {
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-Id.json").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-Id.json").value(),
-            sourcemeta::jsontoolkit::from_file(schema_path));
+            sourcemeta::core::from_file(schema_path));
   EXPECT_TRUE(
       resolver("https://WwW.SOURCEmeta.com/2020-12-Id.json").has_value());
   EXPECT_EQ(resolver("https://WwW.SOURCEmeta.com/2020-12-Id.json").value(),
-            sourcemeta::jsontoolkit::from_file(schema_path));
+            sourcemeta::core::from_file(schema_path));
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, case_insensitive_insert) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id-casing.json"};
   const auto &identifier{resolver.add(schema_path)};
@@ -265,7 +260,7 @@ TEST(JSONSchema_FlatFileSchemaResolver, case_insensitive_insert) {
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, case_insensitive_reidentify) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id-casing.json"};
   const auto &identifier{resolver.add(schema_path)};
@@ -275,12 +270,11 @@ TEST(JSONSchema_FlatFileSchemaResolver, case_insensitive_reidentify) {
 }
 
 TEST(JSONSchema_FlatFileSchemaResolver, with_recursive_ref) {
-  sourcemeta::jsontoolkit::FlatFileSchemaResolver resolver;
+  sourcemeta::core::FlatFileSchemaResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2019-09-recursive-ref.json"};
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$id": "https://www.sourcemeta.com/2019-09-recursive-ref.json",
     "$recursiveAnchor": true,

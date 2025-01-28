@@ -1,9 +1,9 @@
-#ifndef SOURCEMETA_JSONTOOLKIT_JSON_GRAMMAR_H_
-#define SOURCEMETA_JSONTOOLKIT_JSON_GRAMMAR_H_
+#ifndef SOURCEMETA_CORE_JSON_GRAMMAR_H_
+#define SOURCEMETA_CORE_JSON_GRAMMAR_H_
 
 #include <string_view> // std::basic_string_view
 
-namespace sourcemeta::jsontoolkit::internal {
+namespace sourcemeta::core::internal {
 
 // The six structural tokens:
 // [ U+005B  left square bracket
@@ -124,6 +124,6 @@ static constexpr CharT token_whitespace_carriage_return{'\u000D'};
 template <typename CharT>
 static constexpr CharT token_whitespace_space{'\u0020'};
 
-} // namespace sourcemeta::jsontoolkit::internal
+} // namespace sourcemeta::core::internal
 
 #endif

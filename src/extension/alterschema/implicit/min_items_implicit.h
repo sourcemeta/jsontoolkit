@@ -4,10 +4,10 @@ public:
       : SchemaTransformRule{"min_items_implicit",
                             "Every array has a minimum size of zero items"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(vocabularies,
                         {"http://json-schema.org/draft-07/schema#",
@@ -23,6 +23,6 @@ public:
   }
 
   auto transform(PointerProxy &transformer) const -> void override {
-    transformer.assign("minItems", sourcemeta::jsontoolkit::JSON{0});
+    transformer.assign("minItems", sourcemeta::core::JSON{0});
   }
 };

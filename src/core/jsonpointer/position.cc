@@ -1,8 +1,8 @@
-#include <sourcemeta/jsontoolkit/jsonpointer_position.h>
+#include <sourcemeta/core/jsonpointer_position.h>
 
 #include <cassert> // assert
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 auto PositionTracker::operator()(const CallbackPhase phase, const JSON::Type,
                                  const std::uint64_t line,
@@ -37,4 +37,4 @@ auto PositionTracker::get(const Pointer &pointer) const
 
 auto PositionTracker::size() const -> std::size_t { return this->data.size(); }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

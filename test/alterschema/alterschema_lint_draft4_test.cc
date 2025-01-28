@@ -1,12 +1,11 @@
 #include <gtest/gtest.h>
 
-#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/core/json.h>
 
 #include "alterschema_test_utils.h"
 
 TEST(AlterSchema_lint_draft4, enum_with_type_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "string",
     "enum": [ "foo", "bar" ]
@@ -14,8 +13,7 @@ TEST(AlterSchema_lint_draft4, enum_with_type_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "enum": [ "foo", "bar" ]
   })JSON");
@@ -24,16 +22,14 @@ TEST(AlterSchema_lint_draft4, enum_with_type_1) {
 }
 
 TEST(AlterSchema_lint_draft4, single_type_array_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": [ "string" ]
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "string"
   })JSON");
@@ -42,16 +38,14 @@ TEST(AlterSchema_lint_draft4, single_type_array_1) {
 }
 
 TEST(AlterSchema_lint_draft4, additional_properties_default_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "additionalProperties": true
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
@@ -59,16 +53,14 @@ TEST(AlterSchema_lint_draft4, additional_properties_default_1) {
 }
 
 TEST(AlterSchema_lint_draft4, additional_properties_default_2) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "additionalProperties": {}
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
@@ -76,16 +68,14 @@ TEST(AlterSchema_lint_draft4, additional_properties_default_2) {
 }
 
 TEST(AlterSchema_lint_draft4, additional_properties_default_3) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "additionalProperties": false
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "additionalProperties": false
   })JSON");
@@ -94,16 +84,14 @@ TEST(AlterSchema_lint_draft4, additional_properties_default_3) {
 }
 
 TEST(AlterSchema_lint_draft4, items_schema_default_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "items": {}
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
@@ -111,16 +99,14 @@ TEST(AlterSchema_lint_draft4, items_schema_default_1) {
 }
 
 TEST(AlterSchema_lint_draft4, items_schema_default_2) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "items": {}
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
@@ -128,16 +114,14 @@ TEST(AlterSchema_lint_draft4, items_schema_default_2) {
 }
 
 TEST(AlterSchema_lint_draft4, items_schema_default_3) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "items": { "type": "string" }
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "items": { "type": "string" }
   })JSON");
@@ -146,16 +130,14 @@ TEST(AlterSchema_lint_draft4, items_schema_default_3) {
 }
 
 TEST(AlterSchema_lint_draft4, items_array_default_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "items": []
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
@@ -163,16 +145,14 @@ TEST(AlterSchema_lint_draft4, items_array_default_1) {
 }
 
 TEST(AlterSchema_lint_draft4, duplicate_enum_values_4) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "enum": [ 1, {}, 2, 1, 1, 3, {} ]
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "enum": [ 1, 2, 3, {} ]
   })JSON");
@@ -181,16 +161,14 @@ TEST(AlterSchema_lint_draft4, duplicate_enum_values_4) {
 }
 
 TEST(AlterSchema_lint_draft4, duplicate_required_values_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "foo", "bar", "baz", "foo" ]
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "bar", "baz", "foo" ]
   })JSON");
@@ -199,16 +177,14 @@ TEST(AlterSchema_lint_draft4, duplicate_required_values_1) {
 }
 
 TEST(AlterSchema_lint_draft4, duplicate_allof_branches_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "allOf": [ { "type": "string" }, { "type": "integer" }, { "type": "string" } ]
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "allOf": [ { "type": "integer" }, { "type": "string" } ]
   })JSON");
@@ -217,16 +193,14 @@ TEST(AlterSchema_lint_draft4, duplicate_allof_branches_1) {
 }
 
 TEST(AlterSchema_lint_draft4, duplicate_anyof_branches_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "anyOf": [ { "type": "string" }, { "type": "integer" }, { "type": "string" } ]
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "anyOf": [ { "type": "integer" }, { "type": "string" } ]
   })JSON");
@@ -235,8 +209,7 @@ TEST(AlterSchema_lint_draft4, duplicate_anyof_branches_1) {
 }
 
 TEST(AlterSchema_lint_draft4, maximum_real_for_integer_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "integer",
     "maximum": 3.2
@@ -244,8 +217,7 @@ TEST(AlterSchema_lint_draft4, maximum_real_for_integer_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "integer",
     "maximum": 3
@@ -255,8 +227,7 @@ TEST(AlterSchema_lint_draft4, maximum_real_for_integer_1) {
 }
 
 TEST(AlterSchema_lint_draft4, minimum_real_for_integer_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "integer",
     "minimum": 3.2
@@ -264,8 +235,7 @@ TEST(AlterSchema_lint_draft4, minimum_real_for_integer_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "integer",
     "minimum": 4
@@ -275,8 +245,7 @@ TEST(AlterSchema_lint_draft4, minimum_real_for_integer_1) {
 }
 
 TEST(AlterSchema_lint_draft4, dependent_required_tautology_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "foo" ],
     "dependencies": {
@@ -288,8 +257,7 @@ TEST(AlterSchema_lint_draft4, dependent_required_tautology_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "foo", "bar" ],
     "dependencies": {
@@ -302,8 +270,7 @@ TEST(AlterSchema_lint_draft4, dependent_required_tautology_1) {
 }
 
 TEST(AlterSchema_lint_draft4, dependent_required_tautology_2) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "foo" ],
     "dependencies": {
@@ -314,8 +281,7 @@ TEST(AlterSchema_lint_draft4, dependent_required_tautology_2) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "foo", "bar", "baz" ]
   })JSON");
@@ -324,16 +290,14 @@ TEST(AlterSchema_lint_draft4, dependent_required_tautology_2) {
 }
 
 TEST(AlterSchema_lint_draft4, properties_default_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "properties": {}
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
@@ -341,16 +305,14 @@ TEST(AlterSchema_lint_draft4, properties_default_1) {
 }
 
 TEST(AlterSchema_lint_draft4, pattern_properties_default_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "patternProperties": {}
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
@@ -358,8 +320,7 @@ TEST(AlterSchema_lint_draft4, pattern_properties_default_1) {
 }
 
 TEST(AlterSchema_lint_draft4, unsatisfiable_min_properties_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "foo", "bar", "bar", "baz" ],
     "minProperties": 3
@@ -367,8 +328,7 @@ TEST(AlterSchema_lint_draft4, unsatisfiable_min_properties_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "bar", "baz", "foo" ]
   })JSON");
@@ -377,8 +337,7 @@ TEST(AlterSchema_lint_draft4, unsatisfiable_min_properties_1) {
 }
 
 TEST(AlterSchema_lint_draft4, unsatisfiable_min_properties_2) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "foo", "bar", "bar", "baz" ],
     "minProperties": 4
@@ -386,8 +345,7 @@ TEST(AlterSchema_lint_draft4, unsatisfiable_min_properties_2) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "bar", "baz", "foo" ],
     "minProperties": 4
@@ -397,8 +355,7 @@ TEST(AlterSchema_lint_draft4, unsatisfiable_min_properties_2) {
 }
 
 TEST(AlterSchema_lint_draft4, unsatisfiable_min_properties_3) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "foo", "bar", "bar", "baz" ],
     "minProperties": 2
@@ -406,8 +363,7 @@ TEST(AlterSchema_lint_draft4, unsatisfiable_min_properties_3) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "required": [ "bar", "baz", "foo" ]
   })JSON");
@@ -416,8 +372,7 @@ TEST(AlterSchema_lint_draft4, unsatisfiable_min_properties_3) {
 }
 
 TEST(AlterSchema_lint_draft4, drop_non_array_keywords_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "array",
@@ -428,8 +383,7 @@ TEST(AlterSchema_lint_draft4, drop_non_array_keywords_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "array",
@@ -440,8 +394,7 @@ TEST(AlterSchema_lint_draft4, drop_non_array_keywords_1) {
 }
 
 TEST(AlterSchema_lint_draft4, drop_non_boolean_keywords_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "boolean",
@@ -452,8 +405,7 @@ TEST(AlterSchema_lint_draft4, drop_non_boolean_keywords_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "boolean"
@@ -463,8 +415,7 @@ TEST(AlterSchema_lint_draft4, drop_non_boolean_keywords_1) {
 }
 
 TEST(AlterSchema_lint_draft4, drop_non_null_keywords_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "null",
@@ -475,8 +426,7 @@ TEST(AlterSchema_lint_draft4, drop_non_null_keywords_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "null"
@@ -486,8 +436,7 @@ TEST(AlterSchema_lint_draft4, drop_non_null_keywords_1) {
 }
 
 TEST(AlterSchema_lint_draft4, drop_non_numeric_keywords_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "number",
@@ -498,8 +447,7 @@ TEST(AlterSchema_lint_draft4, drop_non_numeric_keywords_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "number"
@@ -509,8 +457,7 @@ TEST(AlterSchema_lint_draft4, drop_non_numeric_keywords_1) {
 }
 
 TEST(AlterSchema_lint_draft4, drop_non_numeric_keywords_2) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "integer",
@@ -521,8 +468,7 @@ TEST(AlterSchema_lint_draft4, drop_non_numeric_keywords_2) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "integer"
@@ -532,8 +478,7 @@ TEST(AlterSchema_lint_draft4, drop_non_numeric_keywords_2) {
 }
 
 TEST(AlterSchema_lint_draft4, drop_non_object_keywords_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "object",
@@ -544,8 +489,7 @@ TEST(AlterSchema_lint_draft4, drop_non_object_keywords_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "object",
@@ -556,8 +500,7 @@ TEST(AlterSchema_lint_draft4, drop_non_object_keywords_1) {
 }
 
 TEST(AlterSchema_lint_draft4, drop_non_string_keywords_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "string",
@@ -568,8 +511,7 @@ TEST(AlterSchema_lint_draft4, drop_non_string_keywords_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Test",
     "type": "string",
@@ -580,16 +522,14 @@ TEST(AlterSchema_lint_draft4, drop_non_string_keywords_1) {
 }
 
 TEST(AlterSchema_lint_draft4, type_boolean_as_enum_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "boolean"
   })JSON");
 
   LINT_AND_FIX_FOR_ANALYSIS(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "enum": [ false, true ]
   })JSON");
@@ -598,8 +538,7 @@ TEST(AlterSchema_lint_draft4, type_boolean_as_enum_1) {
 }
 
 TEST(AlterSchema_lint_draft4, type_boolean_as_enum_2) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "boolean",
     "enum": [ 1, 2, 3 ]
@@ -607,8 +546,7 @@ TEST(AlterSchema_lint_draft4, type_boolean_as_enum_2) {
 
   LINT_AND_FIX_FOR_ANALYSIS(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "boolean",
     "enum": [ 1, 2, 3 ]
@@ -618,16 +556,14 @@ TEST(AlterSchema_lint_draft4, type_boolean_as_enum_2) {
 }
 
 TEST(AlterSchema_lint_draft4, type_boolean_as_enum_3) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "boolean"
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "boolean"
   })JSON");
@@ -636,16 +572,14 @@ TEST(AlterSchema_lint_draft4, type_boolean_as_enum_3) {
 }
 
 TEST(AlterSchema_lint_draft4, type_null_as_enum_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "null"
   })JSON");
 
   LINT_AND_FIX_FOR_ANALYSIS(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "enum": [ null ]
   })JSON");
@@ -654,8 +588,7 @@ TEST(AlterSchema_lint_draft4, type_null_as_enum_1) {
 }
 
 TEST(AlterSchema_lint_draft4, type_null_as_enum_2) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "null",
     "enum": [ 1, 2, 3 ]
@@ -663,8 +596,7 @@ TEST(AlterSchema_lint_draft4, type_null_as_enum_2) {
 
   LINT_AND_FIX_FOR_ANALYSIS(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "null",
     "enum": [ 1, 2, 3 ]
@@ -674,16 +606,14 @@ TEST(AlterSchema_lint_draft4, type_null_as_enum_2) {
 }
 
 TEST(AlterSchema_lint_draft4, type_null_as_enum_3) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "null"
   })JSON");
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "null"
   })JSON");
@@ -692,8 +622,7 @@ TEST(AlterSchema_lint_draft4, type_null_as_enum_3) {
 }
 
 TEST(AlterSchema_lint_draft4, boolean_true_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "properties": {
       "foo": true
@@ -702,8 +631,7 @@ TEST(AlterSchema_lint_draft4, boolean_true_1) {
 
   LINT_AND_FIX_FOR_ANALYSIS(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": [ "null", "boolean", "object", "array", "string", "number", "integer" ],
     "properties": {
@@ -717,8 +645,7 @@ TEST(AlterSchema_lint_draft4, boolean_true_1) {
 }
 
 TEST(AlterSchema_lint_draft4, min_properties_covered_by_required_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "minProperties": 1,
@@ -727,8 +654,7 @@ TEST(AlterSchema_lint_draft4, min_properties_covered_by_required_1) {
 
   LINT_AND_FIX_FOR_ANALYSIS(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "minProperties": 2,
@@ -740,8 +666,7 @@ TEST(AlterSchema_lint_draft4, min_properties_covered_by_required_1) {
 }
 
 TEST(AlterSchema_lint_draft4, min_properties_implicit_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "required": [ "foo", "bar" ]
@@ -749,8 +674,7 @@ TEST(AlterSchema_lint_draft4, min_properties_implicit_1) {
 
   LINT_AND_FIX_FOR_ANALYSIS(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "required": [ "foo", "bar" ],
@@ -762,8 +686,7 @@ TEST(AlterSchema_lint_draft4, min_properties_implicit_1) {
 }
 
 TEST(AlterSchema_lint_draft4, min_properties_implicit_2) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "minProperties": 2,
@@ -772,8 +695,7 @@ TEST(AlterSchema_lint_draft4, min_properties_implicit_2) {
 
   LINT_AND_FIX_FOR_ANALYSIS(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "properties": {},
@@ -785,8 +707,7 @@ TEST(AlterSchema_lint_draft4, min_properties_implicit_2) {
 }
 
 TEST(AlterSchema_lint_draft4, equal_numeric_bounds_to_enum_1) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "integer",
     "minimum": 3,
@@ -795,8 +716,7 @@ TEST(AlterSchema_lint_draft4, equal_numeric_bounds_to_enum_1) {
 
   LINT_AND_FIX_FOR_READABILITY(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "enum": [ 3 ]
   })JSON");
@@ -805,8 +725,7 @@ TEST(AlterSchema_lint_draft4, equal_numeric_bounds_to_enum_1) {
 }
 
 TEST(AlterSchema_lint_draft4, equal_numeric_bounds_to_enum_2) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "integer",
     "minimum": 3,
@@ -815,8 +734,7 @@ TEST(AlterSchema_lint_draft4, equal_numeric_bounds_to_enum_2) {
 
   LINT_AND_FIX_FOR_ANALYSIS(document);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
     "enum": [ 3 ]
   })JSON");

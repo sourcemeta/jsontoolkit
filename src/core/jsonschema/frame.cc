@@ -1,7 +1,7 @@
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonpointer.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
-#include <sourcemeta/jsontoolkit/uri.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonpointer.h>
+#include <sourcemeta/core/jsonschema.h>
+#include <sourcemeta/core/uri.h>
 
 #include <algorithm>  // std::sort, std::all_of
 #include <cassert>    // assert
@@ -13,33 +13,31 @@
 #include <utility>    // std::pair, std::move
 #include <vector>     // std::vector
 
-static auto find_nearest_bases(const std::map<sourcemeta::jsontoolkit::Pointer,
-                                              std::vector<std::string>> &bases,
-                               const sourcemeta::jsontoolkit::Pointer &pointer,
-                               const std::optional<std::string> &default_base)
-    -> std::pair<std::vector<std::string>, sourcemeta::jsontoolkit::Pointer> {
-  for (const auto &subpointer :
-       sourcemeta::jsontoolkit::SubPointerWalker{pointer}) {
+static auto find_nearest_bases(
+    const std::map<sourcemeta::core::Pointer, std::vector<std::string>> &bases,
+    const sourcemeta::core::Pointer &pointer,
+    const std::optional<std::string> &default_base)
+    -> std::pair<std::vector<std::string>, sourcemeta::core::Pointer> {
+  for (const auto &subpointer : sourcemeta::core::SubPointerWalker{pointer}) {
     if (bases.contains(subpointer)) {
       return {bases.at(subpointer), subpointer};
     }
   }
 
   if (default_base.has_value()) {
-    return {{default_base.value()}, sourcemeta::jsontoolkit::empty_pointer};
+    return {{default_base.value()}, sourcemeta::core::empty_pointer};
   }
 
-  return {{}, sourcemeta::jsontoolkit::empty_pointer};
+  return {{}, sourcemeta::core::empty_pointer};
 }
 
-static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
-                                           std::vector<std::string>> &bases,
-                            const sourcemeta::jsontoolkit::Pointer &pointer)
-    -> std::vector<std::pair<std::string, sourcemeta::jsontoolkit::Pointer>> {
-  std::vector<std::pair<std::string, sourcemeta::jsontoolkit::Pointer>> result;
+static auto find_every_base(
+    const std::map<sourcemeta::core::Pointer, std::vector<std::string>> &bases,
+    const sourcemeta::core::Pointer &pointer)
+    -> std::vector<std::pair<std::string, sourcemeta::core::Pointer>> {
+  std::vector<std::pair<std::string, sourcemeta::core::Pointer>> result;
 
-  for (const auto &subpointer :
-       sourcemeta::jsontoolkit::SubPointerWalker{pointer}) {
+  for (const auto &subpointer : sourcemeta::core::SubPointerWalker{pointer}) {
     if (bases.contains(subpointer)) {
       for (const auto &base : bases.at(subpointer)) {
         result.push_back({base, subpointer});
@@ -49,8 +47,8 @@ static auto find_every_base(const std::map<sourcemeta::jsontoolkit::Pointer,
 
   if (result.empty() ||
       // This means the top-level schema is anonymous
-      result.back().second != sourcemeta::jsontoolkit::empty_pointer) {
-    result.push_back({"", sourcemeta::jsontoolkit::empty_pointer});
+      result.back().second != sourcemeta::core::empty_pointer) {
+    result.push_back({"", sourcemeta::core::empty_pointer});
   }
 
   return result;
@@ -81,7 +79,7 @@ static auto supports_id_anchors(const std::string &base_dialect) -> bool {
          base_dialect == "http://json-schema.org/draft-04/hyper-schema#";
 }
 
-static auto fragment_string(const sourcemeta::jsontoolkit::URI &uri)
+static auto fragment_string(const sourcemeta::core::URI &uri)
     -> std::optional<std::string> {
   const auto fragment{uri.fragment()};
   if (fragment.has_value()) {
@@ -91,18 +89,17 @@ static auto fragment_string(const sourcemeta::jsontoolkit::URI &uri)
   return std::nullopt;
 }
 
-static auto store(sourcemeta::jsontoolkit::Frame::Locations &frame,
-                  const sourcemeta::jsontoolkit::ReferenceType type,
-                  const sourcemeta::jsontoolkit::Frame::LocationType entry_type,
+static auto store(sourcemeta::core::Frame::Locations &frame,
+                  const sourcemeta::core::ReferenceType type,
+                  const sourcemeta::core::Frame::LocationType entry_type,
                   const std::string &uri,
                   const std::optional<std::string> &root_id,
                   const std::string &base_id,
-                  const sourcemeta::jsontoolkit::Pointer &pointer_from_root,
-                  const sourcemeta::jsontoolkit::Pointer &pointer_from_base,
+                  const sourcemeta::core::Pointer &pointer_from_root,
+                  const sourcemeta::core::Pointer &pointer_from_base,
                   const std::string &dialect, const std::string &base_dialect,
                   const bool ignore_if_present = false) -> void {
-  const auto canonical{
-      sourcemeta::jsontoolkit::URI{uri}.canonicalize().recompose()};
+  const auto canonical{sourcemeta::core::URI{uri}.canonicalize().recompose()};
   const auto inserted{frame
                           .insert({{type, canonical},
                                    {entry_type,
@@ -117,41 +114,39 @@ static auto store(sourcemeta::jsontoolkit::Frame::Locations &frame,
   if (!ignore_if_present && !inserted) {
     std::ostringstream error;
     error << "Schema identifier already exists: " << uri;
-    throw sourcemeta::jsontoolkit::SchemaError(error.str());
+    throw sourcemeta::core::SchemaError(error.str());
   }
 }
 
 struct InternalEntry {
-  const sourcemeta::jsontoolkit::SchemaIteratorEntry common;
+  const sourcemeta::core::SchemaIteratorEntry common;
   const std::optional<std::string> id;
 };
 
-auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
-                      sourcemeta::jsontoolkit::Frame::Locations &frame,
-                      sourcemeta::jsontoolkit::Frame::References &references,
-                      const sourcemeta::jsontoolkit::SchemaWalker &walker,
-                      const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+auto internal_analyse(const sourcemeta::core::JSON &schema,
+                      sourcemeta::core::Frame::Locations &frame,
+                      sourcemeta::core::Frame::References &references,
+                      const sourcemeta::core::SchemaWalker &walker,
+                      const sourcemeta::core::SchemaResolver &resolver,
                       const std::optional<std::string> &default_dialect,
                       const std::optional<std::string> &default_id) -> void {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
 
   std::vector<InternalEntry> subschema_entries;
   std::set<Pointer> subschemas;
-  std::map<sourcemeta::jsontoolkit::Pointer, std::vector<std::string>>
-      base_uris;
-  std::map<sourcemeta::jsontoolkit::Pointer, std::vector<std::string>>
-      base_dialects;
+  std::map<sourcemeta::core::Pointer, std::vector<std::string>> base_uris;
+  std::map<sourcemeta::core::Pointer, std::vector<std::string>> base_dialects;
 
   const std::optional<std::string> root_base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(schema, resolver, default_dialect)};
+      sourcemeta::core::base_dialect(schema, resolver, default_dialect)};
   if (!root_base_dialect.has_value()) {
     throw SchemaError("Cannot determine the base dialect of the schema");
   }
 
-  const std::optional<std::string> root_id{sourcemeta::jsontoolkit::identify(
+  const std::optional<std::string> root_id{sourcemeta::core::identify(
       schema, root_base_dialect.value(), default_id)};
   const std::optional<std::string> root_dialect{
-      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+      sourcemeta::core::dialect(schema, default_dialect)};
   assert(root_dialect.has_value());
 
   // If the top-level schema has a specific identifier but the user
@@ -163,15 +158,13 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
   if (has_explicit_different_id) {
     store(frame, ReferenceType::Static, Frame::LocationType::Resource,
           default_id.value(), root_id.value(), root_id.value(),
-          sourcemeta::jsontoolkit::empty_pointer,
-          sourcemeta::jsontoolkit::empty_pointer, root_dialect.value(),
-          root_base_dialect.value());
-    base_uris.insert(
-        {sourcemeta::jsontoolkit::empty_pointer, {default_id.value()}});
+          sourcemeta::core::empty_pointer, sourcemeta::core::empty_pointer,
+          root_dialect.value(), root_base_dialect.value());
+    base_uris.insert({sourcemeta::core::empty_pointer, {default_id.value()}});
   }
 
-  for (auto &entry : sourcemeta::jsontoolkit::SchemaIterator{
-           schema, walker, resolver, default_dialect}) {
+  for (auto &entry : sourcemeta::core::SchemaIterator{schema, walker, resolver,
+                                                      default_dialect}) {
     // Dialect
     assert(entry.dialect.has_value());
     base_dialects.insert({entry.pointer, {entry.dialect.value()}});
@@ -180,7 +173,7 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
     assert(entry.base_dialect.has_value());
 
     // Schema identifier
-    std::optional<std::string> id{sourcemeta::jsontoolkit::identify(
+    std::optional<std::string> id{sourcemeta::core::identify(
         entry.value, entry.base_dialect.value(),
         entry.pointer.empty() ? default_id : std::nullopt)};
 
@@ -195,7 +188,7 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
           ref_overrides_adjacent_keywords(entry.common.base_dialect.value());
       const bool is_pre_2019_09_location_independent_identifier =
           supports_id_anchors(entry.common.base_dialect.value()) &&
-          sourcemeta::jsontoolkit::URI{entry.id.value()}.is_fragment_only();
+          sourcemeta::core::URI{entry.id.value()}.is_fragment_only();
 
       if ((!entry.common.value.defines("$ref") || !ref_overrides) &&
           // If we are dealing with a pre-2019-09 location independent
@@ -205,8 +198,8 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
         const auto bases{
             find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
         for (const auto &base_string : bases.first) {
-          const sourcemeta::jsontoolkit::URI base{base_string};
-          sourcemeta::jsontoolkit::URI maybe_relative{entry.id.value()};
+          const sourcemeta::core::URI base{base_string};
+          sourcemeta::core::URI maybe_relative{entry.id.value()};
           const auto maybe_fragment{maybe_relative.fragment()};
 
           // See
@@ -227,8 +220,7 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
             assert(entry.common.base_dialect.has_value());
             store(frame, ReferenceType::Static, Frame::LocationType::Resource,
                   new_id, root_id, new_id, entry.common.pointer,
-                  sourcemeta::jsontoolkit::empty_pointer,
-                  entry.common.dialect.value(),
+                  sourcemeta::core::empty_pointer, entry.common.dialect.value(),
                   entry.common.base_dialect.value());
           }
 
@@ -242,10 +234,9 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
     }
 
     // Handle metaschema references
-    const auto maybe_metaschema{
-        sourcemeta::jsontoolkit::dialect(entry.common.value)};
+    const auto maybe_metaschema{sourcemeta::core::dialect(entry.common.value)};
     if (maybe_metaschema.has_value()) {
-      sourcemeta::jsontoolkit::URI metaschema{maybe_metaschema.value()};
+      sourcemeta::core::URI metaschema{maybe_metaschema.value()};
       const auto nearest_bases{
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
       if (!nearest_bases.first.empty()) {
@@ -263,18 +254,17 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
     }
 
     // Handle schema anchors
-    for (const auto &[name, type] : sourcemeta::jsontoolkit::anchors(
+    for (const auto &[name, type] : sourcemeta::core::anchors(
              entry.common.value, entry.common.vocabularies)) {
       const auto bases{
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
 
       if (bases.first.empty()) {
-        const auto anchor_uri{
-            sourcemeta::jsontoolkit::URI::from_fragment(name)};
+        const auto anchor_uri{sourcemeta::core::URI::from_fragment(name)};
         const auto relative_anchor_uri{anchor_uri.recompose()};
 
-        if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
-            type == sourcemeta::jsontoolkit::AnchorType::All) {
+        if (type == sourcemeta::core::AnchorType::Static ||
+            type == sourcemeta::core::AnchorType::All) {
           store(frame, ReferenceType::Static, Frame::LocationType::Anchor,
                 relative_anchor_uri, root_id, "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
@@ -282,8 +272,8 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
                 entry.common.base_dialect.value());
         }
 
-        if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
-            type == sourcemeta::jsontoolkit::AnchorType::All) {
+        if (type == sourcemeta::core::AnchorType::Dynamic ||
+            type == sourcemeta::core::AnchorType::All) {
           store(frame, ReferenceType::Dynamic, Frame::LocationType::Anchor,
                 relative_anchor_uri, root_id, "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
@@ -306,24 +296,23 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
           // TODO: All this dance is necessary because we don't have a
           // URI::fragment setter
           std::ostringstream anchor_uri_string;
-          anchor_uri_string << sourcemeta::jsontoolkit::URI{base_string}
+          anchor_uri_string << sourcemeta::core::URI{base_string}
                                    .recompose_without_fragment()
                                    .value_or("");
           anchor_uri_string << '#';
           anchor_uri_string << name;
-          const auto anchor_uri{
-              sourcemeta::jsontoolkit::URI{anchor_uri_string.str()}
-                  .canonicalize()
-                  .recompose()};
+          const auto anchor_uri{sourcemeta::core::URI{anchor_uri_string.str()}
+                                    .canonicalize()
+                                    .recompose()};
 
           if (!is_first &&
               frame.contains({ReferenceType::Static, anchor_uri})) {
             continue;
           }
 
-          if (type == sourcemeta::jsontoolkit::AnchorType::Static ||
-              type == sourcemeta::jsontoolkit::AnchorType::All) {
-            store(frame, sourcemeta::jsontoolkit::ReferenceType::Static,
+          if (type == sourcemeta::core::AnchorType::Static ||
+              type == sourcemeta::core::AnchorType::All) {
+            store(frame, sourcemeta::core::ReferenceType::Static,
                   Frame::LocationType::Anchor, anchor_uri, root_id, base_string,
                   entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
@@ -331,9 +320,9 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
                   entry.common.base_dialect.value());
           }
 
-          if (type == sourcemeta::jsontoolkit::AnchorType::Dynamic ||
-              type == sourcemeta::jsontoolkit::AnchorType::All) {
-            store(frame, sourcemeta::jsontoolkit::ReferenceType::Dynamic,
+          if (type == sourcemeta::core::AnchorType::Dynamic ||
+              type == sourcemeta::core::AnchorType::All) {
+            store(frame, sourcemeta::core::ReferenceType::Dynamic,
                   Frame::LocationType::Anchor, anchor_uri, root_id, base_string,
                   entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
@@ -343,7 +332,7 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
             // Register a dynamic anchor as a static anchor if possible too
             if (entry.common.vocabularies.contains(
                     "https://json-schema.org/draft/2020-12/vocab/core")) {
-              store(frame, sourcemeta::jsontoolkit::ReferenceType::Static,
+              store(frame, sourcemeta::core::ReferenceType::Static,
                     Frame::LocationType::Anchor, anchor_uri, root_id,
                     base_string, entry.common.pointer,
                     entry.common.pointer.resolve_from(bases.second),
@@ -360,11 +349,11 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
 
   // It is important for the loop that follows to assume a specific ordering
   // where smaller pointers (by number of tokens) are scanned first.
-  const auto pointer_walker{sourcemeta::jsontoolkit::PointerWalker{schema}};
-  std::vector<sourcemeta::jsontoolkit::Pointer> pointers{
-      pointer_walker.cbegin(), pointer_walker.cend()};
+  const auto pointer_walker{sourcemeta::core::PointerWalker{schema}};
+  std::vector<sourcemeta::core::Pointer> pointers{pointer_walker.cbegin(),
+                                                  pointer_walker.cend()};
   std::sort(pointers.begin(), pointers.end(),
-            std::less<sourcemeta::jsontoolkit::Pointer>());
+            std::less<sourcemeta::core::Pointer>());
 
   // Pre-compute every possible pointer to the schema
   for (const auto &pointer : pointers) {
@@ -374,7 +363,7 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
 
     for (const auto &base : find_every_base(base_uris, pointer)) {
       auto relative_pointer_uri{
-          sourcemeta::jsontoolkit::to_uri(pointer.resolve_from(base.second))};
+          sourcemeta::core::to_uri(pointer.resolve_from(base.second))};
       if (!base.first.empty()) {
         relative_pointer_uri.try_resolve_from({base.first});
       }
@@ -415,8 +404,7 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
       if (entry.common.value.defines("$ref")) {
         assert(entry.common.value.at("$ref").is_string());
-        sourcemeta::jsontoolkit::URI ref{
-            entry.common.value.at("$ref").to_string()};
+        sourcemeta::core::URI ref{entry.common.value.at("$ref").to_string()};
         if (!nearest_bases.first.empty()) {
           ref.try_resolve_from(nearest_bases.first.front());
         }
@@ -442,7 +430,7 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
         if (ref != "#") {
           std::ostringstream error;
           error << "Invalid recursive reference: " << ref;
-          throw sourcemeta::jsontoolkit::SchemaError(error.str());
+          throw sourcemeta::core::SchemaError(error.str());
         }
 
         auto anchor_uri_string{
@@ -452,8 +440,7 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
         const auto reference_type{recursive_anchor == frame.end()
                                       ? ReferenceType::Static
                                       : ReferenceType::Dynamic};
-        const sourcemeta::jsontoolkit::URI anchor_uri{
-            std::move(anchor_uri_string)};
+        const sourcemeta::core::URI anchor_uri{std::move(anchor_uri_string)};
         references.insert_or_assign(
             {reference_type, entry.common.pointer.concat({"$recursiveRef"})},
             Frame::ReferencesEntry{anchor_uri.recompose(),
@@ -465,7 +452,7 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
               "https://json-schema.org/draft/2020-12/vocab/core") &&
           entry.common.value.defines("$dynamicRef")) {
         assert(entry.common.value.at("$dynamicRef").is_string());
-        sourcemeta::jsontoolkit::URI ref{
+        sourcemeta::core::URI ref{
             entry.common.value.at("$dynamicRef").to_string()};
         if (!nearest_bases.first.empty()) {
           ref.resolve_from(nearest_bases.first.front());
@@ -503,7 +490,7 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
         assert(!reference.first.second.empty());
         assert(reference.first.second.back().is_property());
         // TODO: This check might need to be more elaborate given
-        // https://github.com/sourcemeta/jsontoolkit/issues/1390
+        // https://github.com/sourcemeta/core/issues/1390
         return reference.first.second.back().to_property() == "$schema" ||
                frame.contains(
                    {ReferenceType::Static, reference.second.destination}) ||
@@ -593,7 +580,7 @@ auto internal_analyse(const sourcemeta::jsontoolkit::JSON &schema,
   }
 }
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 auto Frame::analyse(const JSON &schema, const SchemaWalker &walker,
                     const SchemaResolver &resolver,
@@ -614,8 +601,8 @@ auto Frame::references() const noexcept -> const References & {
 auto Frame::vocabularies(const LocationsEntry &location,
                          const SchemaResolver &resolver) const
     -> std::map<std::string, bool> {
-  return sourcemeta::jsontoolkit::vocabularies(resolver, location.base_dialect,
-                                               location.dialect);
+  return sourcemeta::core::vocabularies(resolver, location.base_dialect,
+                                        location.dialect);
 }
 
 auto Frame::uri(const LocationsEntry &location,
@@ -683,4 +670,4 @@ auto Frame::dereference(const LocationsEntry &location,
   return {ReferenceType::Static, destination->second};
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

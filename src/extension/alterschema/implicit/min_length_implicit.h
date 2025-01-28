@@ -5,10 +5,10 @@ public:
             "min_length_implicit",
             "Every string has a minimum length of zero characters"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,
@@ -27,6 +27,6 @@ public:
   }
 
   auto transform(PointerProxy &transformer) const -> void override {
-    transformer.assign("minLength", sourcemeta::jsontoolkit::JSON{0});
+    transformer.assign("minLength", sourcemeta::core::JSON{0});
   }
 };

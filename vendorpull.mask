@@ -1,6 +1,5 @@
 DEPENDENCIES
 doxygen
-assets
 Makefile
 README.markdown
 test
@@ -27,10 +26,8 @@ vendor/referencing-suite
 vendor/referencing-suite.mask
 vendor/jsonschema-test-suite
 vendor/noa
-cmake/FindGoogleTest.cmake
 .editorconfig
 .ackrc
 .gitattributes
-.cirrus.yml
 Brewfile
 Brewfile.lock.json

@@ -1,4 +1,4 @@
-#include <sourcemeta/jsontoolkit/yaml.h>
+#include <sourcemeta/core/yaml.h>
 
 #include <sstream>     // std::ostringstream
 #include <string_view> // std::string_view
@@ -10,9 +10,9 @@
 // as that function also let us get line/column information on `yaml_event_t`
 static auto yaml_node_to_json(yaml_node_t *const node,
                               yaml_document_t *const document)
-    -> sourcemeta::jsontoolkit::JSON {
+    -> sourcemeta::core::JSON {
   if (!node) {
-    return sourcemeta::jsontoolkit::JSON{nullptr};
+    return sourcemeta::core::JSON{nullptr};
   }
 
   switch (node->type) {
@@ -23,17 +23,17 @@ static auto yaml_node_to_json(yaml_node_t *const node,
 
       try {
         // TODO: Avoid this std::string transformation
-        return sourcemeta::jsontoolkit::parse(std::string{input});
+        return sourcemeta::core::parse(std::string{input});
         // Looks like it is very hard in YAML, given a scalar value, to
         // determine whether it is a string or something else without attempting
         // to parsing it and potentially failing to do so
-      } catch (const sourcemeta::jsontoolkit::ParseError &) {
-        return sourcemeta::jsontoolkit::JSON{input};
+      } catch (const sourcemeta::core::ParseError &) {
+        return sourcemeta::core::JSON{input};
       }
     }
 
     case YAML_SEQUENCE_NODE: {
-      auto result{sourcemeta::jsontoolkit::JSON::make_array()};
+      auto result{sourcemeta::core::JSON::make_array()};
       for (yaml_node_item_t *item = node->data.sequence.items.start;
            item < node->data.sequence.items.top; ++item) {
         yaml_node_t *const child = yaml_document_get_node(document, *item);
@@ -44,7 +44,7 @@ static auto yaml_node_to_json(yaml_node_t *const node,
     }
 
     case YAML_MAPPING_NODE: {
-      auto result{sourcemeta::jsontoolkit::JSON::make_object()};
+      auto result{sourcemeta::core::JSON::make_object()};
       for (yaml_node_pair_t *pair = node->data.mapping.pairs.start;
            pair < node->data.mapping.pairs.top; ++pair) {
         yaml_node_t *const key_node =
@@ -61,24 +61,21 @@ static auto yaml_node_to_json(yaml_node_t *const node,
     }
 
     default:
-      return sourcemeta::jsontoolkit::JSON{nullptr};
+      return sourcemeta::core::JSON{nullptr};
   }
 }
 
-static auto internal_parse(yaml_parser_t *parser)
-    -> sourcemeta::jsontoolkit::JSON {
+static auto internal_parse(yaml_parser_t *parser) -> sourcemeta::core::JSON {
   yaml_document_t document;
   if (!yaml_parser_load(parser, &document)) {
     // TODO: Ideally we would get line/column information like for `ParseError`
-    throw sourcemeta::jsontoolkit::YAMLParseError(
-        "Failed to parse the YAML document");
+    throw sourcemeta::core::YAMLParseError("Failed to parse the YAML document");
   }
 
   yaml_node_t *const root = yaml_document_get_root_node(&document);
   if (!root) {
     yaml_document_delete(&document);
-    throw sourcemeta::jsontoolkit::YAMLParseError(
-        "The input YAML document is empty");
+    throw sourcemeta::core::YAMLParseError("The input YAML document is empty");
   }
 
   try {
@@ -91,7 +88,7 @@ static auto internal_parse(yaml_parser_t *parser)
   }
 }
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 auto from_yaml(const JSON::String &input) -> JSON {
   yaml_parser_t parser;
@@ -121,4 +118,4 @@ auto from_yaml(const std::filesystem::path &path) -> JSON {
   return from_yaml(buffer.str());
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

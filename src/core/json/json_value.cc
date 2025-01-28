@@ -1,4 +1,4 @@
-#include <sourcemeta/jsontoolkit/json_value.h>
+#include <sourcemeta/core/json_value.h>
 
 #include <algorithm> // std::find
 #include <cassert>   // assert
@@ -9,7 +9,7 @@
 #include <utility>   // std::move
 #include <vector>    // std::vector
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 JSON::JSON(const std::int64_t value) : current_type{Type::Integer} {
   this->data_integer = value;
@@ -867,4 +867,4 @@ auto JSON::maybe_destruct_union() -> void {
   this->current_type = Type::Null;
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

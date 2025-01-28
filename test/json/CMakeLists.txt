@@ -1,5 +1,5 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME json
-  FOLDER "JSON Toolkit/JSON"
+noa_googletest(NAMESPACE sourcemeta PROJECT core NAME json
+  FOLDER "Core/JSON"
   SOURCES
     json_array_test.cc
     json_boolean_test.cc
@@ -19,16 +19,16 @@ noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME json
     json_value_test.cc
     json_type_test.cc)
 
-target_link_libraries(sourcemeta_jsontoolkit_json_unit
-  PRIVATE sourcemeta::jsontoolkit::json)
-target_compile_definitions(sourcemeta_jsontoolkit_json_unit
+target_link_libraries(sourcemeta_core_json_unit
+  PRIVATE sourcemeta::core::json)
+target_compile_definitions(sourcemeta_core_json_unit
   PRIVATE TEST_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}")
 
 # JSON Test Suite
 # See https://github.com/nst/JSONTestSuite
-noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsontestsuite
-  FOLDER "JSON Toolkit/JSON"
+noa_googletest(NAMESPACE sourcemeta PROJECT core NAME jsontestsuite
+  FOLDER "Core/JSON"
   SOURCES jsontestsuite.cc)
-target_compile_definitions(sourcemeta_jsontoolkit_jsontestsuite_unit
+target_compile_definitions(sourcemeta_core_jsontestsuite_unit
   PRIVATE JSONTESTSUITE_PATH="${PROJECT_SOURCE_DIR}/vendor/jsontestsuite")
-target_link_libraries(sourcemeta_jsontoolkit_jsontestsuite_unit PRIVATE sourcemeta::jsontoolkit::json)
+target_link_libraries(sourcemeta_core_jsontestsuite_unit PRIVATE sourcemeta::core::json)

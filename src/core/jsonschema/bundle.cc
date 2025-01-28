@@ -1,4 +1,4 @@
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/jsonschema.h>
 
 #include <cassert> // assert
 #include <map>     // std::map
@@ -27,13 +27,13 @@ auto definitions_keyword(const std::map<std::string, bool> &vocabularies)
 
   // We don't attempt to bundle on dialects where we
   // don't know where to put the embedded schemas
-  throw sourcemeta::jsontoolkit::SchemaError(
+  throw sourcemeta::core::SchemaError(
       "Cannot determine how to bundle on this dialect");
 }
 
-auto embed_schema(sourcemeta::jsontoolkit::JSON &definitions,
+auto embed_schema(sourcemeta::core::JSON &definitions,
                   const std::string &identifier,
-                  const sourcemeta::jsontoolkit::JSON &target) -> void {
+                  const sourcemeta::core::JSON &target) -> void {
   std::ostringstream key;
   key << identifier;
   // Ensure we get a definitions entry that does not exist
@@ -44,20 +44,18 @@ auto embed_schema(sourcemeta::jsontoolkit::JSON &definitions,
   definitions.assign(key.str(), target);
 }
 
-auto is_official_metaschema_reference(
-    const sourcemeta::jsontoolkit::Pointer &pointer,
-    const std::string &destination) -> bool {
+auto is_official_metaschema_reference(const sourcemeta::core::Pointer &pointer,
+                                      const std::string &destination) -> bool {
   return !pointer.empty() && pointer.back().is_property() &&
          pointer.back().to_property() == "$schema" &&
-         sourcemeta::jsontoolkit::official_resolver(destination).has_value();
+         sourcemeta::core::official_resolver(destination).has_value();
 }
 
-auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
-                   const std::string &container,
-                   const sourcemeta::jsontoolkit::JSON &subschema,
-                   sourcemeta::jsontoolkit::Frame &frame,
-                   const sourcemeta::jsontoolkit::SchemaWalker &walker,
-                   const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+auto bundle_schema(sourcemeta::core::JSON &root, const std::string &container,
+                   const sourcemeta::core::JSON &subschema,
+                   sourcemeta::core::Frame &frame,
+                   const sourcemeta::core::SchemaWalker &walker,
+                   const sourcemeta::core::SchemaResolver &resolver,
                    const std::optional<std::string> &default_dialect) -> void {
   frame.analyse(subschema, walker, resolver, default_dialect);
   // Otherwise, given recursion, we would be modifying the
@@ -76,16 +74,15 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
     // find base, then we are facing an unresolved fragment
     if (reference.base.has_value() &&
         frame.traverse(reference.base.value()).has_value()) {
-      throw sourcemeta::jsontoolkit::SchemaReferenceError(
+      throw sourcemeta::core::SchemaReferenceError(
           reference.destination, key.second,
           "Could not resolve schema reference");
     }
 
-    root.assign_if_missing(container,
-                           sourcemeta::jsontoolkit::JSON::make_object());
+    root.assign_if_missing(container, sourcemeta::core::JSON::make_object());
 
     if (!reference.base.has_value()) {
-      throw sourcemeta::jsontoolkit::SchemaReferenceError(
+      throw sourcemeta::core::SchemaReferenceError(
           reference.destination, key.second,
           "Could not resolve schema reference");
     }
@@ -95,35 +92,34 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
     const auto remote{resolver(identifier)};
     if (!remote.has_value()) {
       if (frame.traverse(identifier).has_value()) {
-        throw sourcemeta::jsontoolkit::SchemaReferenceError(
+        throw sourcemeta::core::SchemaReferenceError(
             reference.destination, key.second,
             "Could not resolve schema reference");
       }
 
-      throw sourcemeta::jsontoolkit::SchemaResolutionError(
+      throw sourcemeta::core::SchemaResolutionError(
           identifier, "Could not resolve the requested schema");
     }
 
     // Otherwise, if the target schema does not declare an inline identifier,
     // references to that identifier from the outer schema won't resolve.
-    sourcemeta::jsontoolkit::JSON copy{remote.value()};
+    sourcemeta::core::JSON copy{remote.value()};
 
-    if (!sourcemeta::jsontoolkit::is_schema(copy)) {
-      throw sourcemeta::jsontoolkit::SchemaResolutionError(
+    if (!sourcemeta::core::is_schema(copy)) {
+      throw sourcemeta::core::SchemaResolutionError(
           identifier, "The JSON document is not a valid JSON Schema");
     }
 
-    const auto dialect{sourcemeta::jsontoolkit::dialect(copy, default_dialect)};
+    const auto dialect{sourcemeta::core::dialect(copy, default_dialect)};
     if (!dialect.has_value()) {
-      throw sourcemeta::jsontoolkit::SchemaResolutionError(
+      throw sourcemeta::core::SchemaResolutionError(
           identifier, "The JSON document is not a valid JSON Schema");
     }
 
     if (copy.is_object()) {
       // Always insert an identifier, as a schema might refer to another schema
       // using another URI (i.e. due to relying on HTTP re-directions, etc)
-      sourcemeta::jsontoolkit::reidentify(copy, identifier, resolver,
-                                          default_dialect);
+      sourcemeta::core::reidentify(copy, identifier, resolver, default_dialect);
     }
 
     embed_schema(root.at(container), identifier, copy);
@@ -134,25 +130,25 @@ auto bundle_schema(sourcemeta::jsontoolkit::JSON &root,
 
 } // namespace
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
-auto bundle(sourcemeta::jsontoolkit::JSON &schema, const SchemaWalker &walker,
+auto bundle(sourcemeta::core::JSON &schema, const SchemaWalker &walker,
             const SchemaResolver &resolver,
             const std::optional<std::string> &default_dialect) -> void {
   const auto vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)};
-  sourcemeta::jsontoolkit::Frame frame;
+      sourcemeta::core::vocabularies(schema, resolver, default_dialect)};
+  sourcemeta::core::Frame frame;
   bundle_schema(schema, definitions_keyword(vocabularies), schema, frame,
                 walker, resolver, default_dialect);
 }
 
-auto bundle(const sourcemeta::jsontoolkit::JSON &schema,
-            const SchemaWalker &walker, const SchemaResolver &resolver,
+auto bundle(const sourcemeta::core::JSON &schema, const SchemaWalker &walker,
+            const SchemaResolver &resolver,
             const std::optional<std::string> &default_dialect)
-    -> sourcemeta::jsontoolkit::JSON {
-  sourcemeta::jsontoolkit::JSON copy = schema;
+    -> sourcemeta::core::JSON {
+  sourcemeta::core::JSON copy = schema;
   bundle(copy, walker, resolver, default_dialect);
   return copy;
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

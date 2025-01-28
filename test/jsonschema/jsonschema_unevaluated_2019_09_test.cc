@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonpointer.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonpointer.h>
+#include <sourcemeta/core/jsonschema.h>
 
 #include "jsonschema_test_utils.h"
 
 TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_1) {
-  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": { "foo": true },
     "patternProperties": { "^@": true },
@@ -15,12 +15,12 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_1) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
-  const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver)};
+  sourcemeta::core::Frame frame;
+  frame.analyse(schema, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
+  const auto result{sourcemeta::core::unevaluated(
+      schema, frame, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -38,7 +38,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_1) {
 }
 
 TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_2) {
-  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse(R"JSON({
     "$id": "https://example.com",
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": { "foo": true },
@@ -47,12 +47,12 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_2) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
-  const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver)};
+  sourcemeta::core::Frame frame;
+  frame.analyse(schema, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
+  const auto result{sourcemeta::core::unevaluated(
+      schema, frame, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -75,7 +75,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_2) {
 }
 
 TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_3) {
-  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$id": "https://example.com",
     "$recursiveAnchor": true,
@@ -95,12 +95,12 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_3) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
-  const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver)};
+  sourcemeta::core::Frame frame;
+  frame.analyse(schema, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
+  const auto result{sourcemeta::core::unevaluated(
+      schema, frame, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -116,7 +116,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_3) {
 }
 
 TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_4) {
-  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "properties": { "foo": true },
     "unevaluatedProperties": false,
@@ -134,12 +134,12 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_4) {
     ]
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
-  const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver)};
+  sourcemeta::core::Frame frame;
+  frame.analyse(schema, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
+  const auto result{sourcemeta::core::unevaluated(
+      schema, frame, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -157,7 +157,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_4) {
 }
 
 TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_1) {
-  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "items": true,
     "additionalItems": true,
@@ -165,12 +165,12 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_1) {
     "unevaluatedItems": false
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
-  const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver)};
+  sourcemeta::core::Frame frame;
+  frame.analyse(schema, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
+  const auto result{sourcemeta::core::unevaluated(
+      schema, frame, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -185,7 +185,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_1) {
 }
 
 TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_2) {
-  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$id": "https://example.com",
     "$ref": "test",
@@ -200,12 +200,12 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_2) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
-  const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver)};
+  sourcemeta::core::Frame frame;
+  frame.analyse(schema, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
+  const auto result{sourcemeta::core::unevaluated(
+      schema, frame, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -219,18 +219,18 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_2) {
 }
 
 TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_3) {
-  const auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto schema = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "additionalItems": {"type": "number"},
     "unevaluatedItems": {"type": "string"}
   })JSON");
 
-  sourcemeta::jsontoolkit::Frame frame;
-  frame.analyse(schema, sourcemeta::jsontoolkit::default_schema_walker,
-                sourcemeta::jsontoolkit::official_resolver);
-  const auto result{sourcemeta::jsontoolkit::unevaluated(
-      schema, frame, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver)};
+  sourcemeta::core::Frame frame;
+  frame.analyse(schema, sourcemeta::core::default_schema_walker,
+                sourcemeta::core::official_resolver);
+  const auto result{sourcemeta::core::unevaluated(
+      schema, frame, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 

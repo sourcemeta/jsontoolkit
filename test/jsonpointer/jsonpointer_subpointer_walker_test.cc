@@ -3,14 +3,12 @@
 #include <string>
 #include <vector>
 
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonpointer.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonpointer.h>
 
 TEST(JSONPointer_subpointer_walker, equality_null_subpointer_iterators) {
-  const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator first{
-      nullptr};
-  const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator second{
-      nullptr};
+  const sourcemeta::core::SubPointerWalker::const_iterator first{nullptr};
+  const sourcemeta::core::SubPointerWalker::const_iterator second{nullptr};
   EXPECT_EQ(first, second);
   EXPECT_EQ(second, first);
   EXPECT_FALSE(first != second);
@@ -19,11 +17,9 @@ TEST(JSONPointer_subpointer_walker, equality_null_subpointer_iterators) {
 
 TEST(JSONPointer_subpointer_walker,
      equality_null_and_not_null_subpointer_iterators) {
-  sourcemeta::jsontoolkit::Pointer pointer;
-  const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator first{
-      &pointer};
-  const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator second{
-      nullptr};
+  sourcemeta::core::Pointer pointer;
+  const sourcemeta::core::SubPointerWalker::const_iterator first{&pointer};
+  const sourcemeta::core::SubPointerWalker::const_iterator second{nullptr};
   EXPECT_FALSE(first == second);
   EXPECT_FALSE(second == first);
   EXPECT_TRUE(first != second);
@@ -31,12 +27,10 @@ TEST(JSONPointer_subpointer_walker,
 }
 
 TEST(JSONPointer_subpointer_walker, equality_same_subpointer_iterators) {
-  sourcemeta::jsontoolkit::Pointer pointer_1;
-  sourcemeta::jsontoolkit::Pointer pointer_2;
-  const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator first{
-      &pointer_1};
-  const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator second{
-      &pointer_2};
+  sourcemeta::core::Pointer pointer_1;
+  sourcemeta::core::Pointer pointer_2;
+  const sourcemeta::core::SubPointerWalker::const_iterator first{&pointer_1};
+  const sourcemeta::core::SubPointerWalker::const_iterator second{&pointer_2};
   EXPECT_EQ(first, second);
   EXPECT_EQ(second, first);
   EXPECT_FALSE(first != second);
@@ -44,12 +38,10 @@ TEST(JSONPointer_subpointer_walker, equality_same_subpointer_iterators) {
 }
 
 TEST(JSONPointer_subpointer_walker, equality_different_subpointer_iterators) {
-  sourcemeta::jsontoolkit::Pointer pointer_1{"foo"};
-  sourcemeta::jsontoolkit::Pointer pointer_2{"bar"};
-  const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator first{
-      &pointer_1};
-  const sourcemeta::jsontoolkit::SubPointerWalker::const_iterator second{
-      &pointer_2};
+  sourcemeta::core::Pointer pointer_1{"foo"};
+  sourcemeta::core::Pointer pointer_2{"bar"};
+  const sourcemeta::core::SubPointerWalker::const_iterator first{&pointer_1};
+  const sourcemeta::core::SubPointerWalker::const_iterator second{&pointer_2};
   EXPECT_FALSE(first == second);
   EXPECT_FALSE(second == first);
   EXPECT_TRUE(first != second);
@@ -57,10 +49,9 @@ TEST(JSONPointer_subpointer_walker, equality_different_subpointer_iterators) {
 }
 
 TEST(JSONPointer_subpointer_walker, subpointer_walker) {
-  const sourcemeta::jsontoolkit::Pointer pointer{"foo", "bar", "baz"};
-  std::vector<sourcemeta::jsontoolkit::Pointer> subpointers;
-  for (const auto &subpointer :
-       sourcemeta::jsontoolkit::SubPointerWalker{pointer}) {
+  const sourcemeta::core::Pointer pointer{"foo", "bar", "baz"};
+  std::vector<sourcemeta::core::Pointer> subpointers;
+  for (const auto &subpointer : sourcemeta::core::SubPointerWalker{pointer}) {
     subpointers.push_back(subpointer);
   }
 

@@ -5,10 +5,10 @@ public:
                             "Setting `type` to an array of a single type is "
                             "the same as directly declaring such type"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,

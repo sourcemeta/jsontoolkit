@@ -2,8 +2,8 @@ set(OFFICIAL_RESOLVER_INPUT "${CMAKE_CURRENT_SOURCE_DIR}/official_resolver.in.cc
 set(OFFICIAL_RESOLVER_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 include(./official_resolver.cmake)
 
-noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
-  FOLDER "JSON Toolkit/JSON Schema"
+noa_library(NAMESPACE sourcemeta PROJECT core NAME jsonschema
+  FOLDER "Core/JSON Schema"
   PRIVATE_HEADERS anchor.h bundle.h resolver.h
     walker.h reference.h frame.h error.h unevaluated.h
     keywords.h transform.h
@@ -13,13 +13,13 @@ noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
     transform_rule.cc transformer.cc
     "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 
-if(JSONTOOLKIT_INSTALL)
-  noa_library_install(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema)
+if(SOURCEMETA_CORE_INSTALL)
+  noa_library_install(NAMESPACE sourcemeta PROJECT core NAME jsonschema)
 endif()
 
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
-  sourcemeta::jsontoolkit::json)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema PUBLIC
-  sourcemeta::jsontoolkit::jsonpointer)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema PRIVATE
-  sourcemeta::jsontoolkit::uri)
+target_link_libraries(sourcemeta_core_jsonschema PUBLIC
+  sourcemeta::core::json)
+target_link_libraries(sourcemeta_core_jsonschema PUBLIC
+  sourcemeta::core::jsonpointer)
+target_link_libraries(sourcemeta_core_jsonschema PRIVATE
+  sourcemeta::core::uri)

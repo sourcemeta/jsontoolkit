@@ -1,63 +1,61 @@
 #include <gtest/gtest.h>
 
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonschema.h>
 
 #include <string>      // std::string
 #include <string_view> // std::string_view
 
 static auto test_resolver(std::string_view identifier)
-    -> std::optional<sourcemeta::jsontoolkit::JSON> {
+    -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://www.sourcemeta.com/test-1") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "https://www.sourcemeta.com/test-1",
       "type": "string"
     })JSON");
   } else if (identifier == "https://www.sourcemeta.com/test-2") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "https://json-schema.org/draft/2019-09/schema",
       "$id": "https://www.sourcemeta.com/test-2",
       "$ref": "test-3"
     })JSON");
   } else if (identifier == "https://www.sourcemeta.com/test-3") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "http://json-schema.org/draft-06/schema#",
       "$id": "https://www.sourcemeta.com/test-3",
       "allOf": [ { "$ref": "test-4" } ]
     })JSON");
   } else if (identifier == "https://www.sourcemeta.com/test-4") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "http://json-schema.org/draft-04/schema#",
       "id": "https://www.sourcemeta.com/test-4",
       "type": "string"
     })JSON");
   } else if (identifier == "https://www.sourcemeta.com/no-dialect") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "foo": 1
     })JSON");
   } else if (identifier == "https://www.sourcemeta.com/array") {
-    return sourcemeta::jsontoolkit::parse(R"JSON([
+    return sourcemeta::core::parse(R"JSON([
       "foo", "bar", "baz"
     ])JSON");
   } else {
-    return sourcemeta::jsontoolkit::official_resolver(identifier);
+    return sourcemeta::core::official_resolver(identifier);
   }
 }
 
 TEST(JSONSchema_bundle, across_dialects) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": { "$ref": "https://www.sourcemeta.com/test-2" }
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": { "$ref": "https://www.sourcemeta.com/test-2" },
@@ -84,18 +82,16 @@ TEST(JSONSchema_bundle, across_dialects) {
 }
 
 TEST(JSONSchema_bundle, across_dialects_const) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": { "$ref": "https://www.sourcemeta.com/test-2" }
   })JSON");
 
-  const auto result = sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver);
+  const auto result = sourcemeta::core::bundle(
+      document, sourcemeta::core::default_schema_walker, test_resolver);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$id": "https://www.example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "items": { "$ref": "https://www.sourcemeta.com/test-2" },
@@ -122,19 +118,17 @@ TEST(JSONSchema_bundle, across_dialects_const) {
 }
 
 TEST(JSONSchema_bundle, with_default_dialect) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "properties": {
       "foo": { "$ref": "https://www.sourcemeta.com/test-1" }
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::bundle(
-      document, sourcemeta::jsontoolkit::default_schema_walker, test_resolver,
-      "https://json-schema.org/draft/2020-12/schema");
+  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+                           test_resolver,
+                           "https://json-schema.org/draft/2020-12/schema");
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "properties": {
       "foo": { "$ref": "https://www.sourcemeta.com/test-1" }
     },
@@ -151,45 +145,42 @@ TEST(JSONSchema_bundle, with_default_dialect) {
 }
 
 TEST(JSONSchema_bundle, without_default_dialect) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "properties": {
       "foo": { "$ref": "https://www.sourcemeta.com/test-1" }
     }
   })JSON");
 
-  EXPECT_THROW(sourcemeta::jsontoolkit::bundle(
-                   document, sourcemeta::jsontoolkit::default_schema_walker,
-                   test_resolver),
-               sourcemeta::jsontoolkit::SchemaError);
+  EXPECT_THROW(sourcemeta::core::bundle(document,
+                                        sourcemeta::core::default_schema_walker,
+                                        test_resolver),
+               sourcemeta::core::SchemaError);
 }
 
 TEST(JSONSchema_bundle, target_no_dialect) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "$ref": "https://www.sourcemeta.com/no-dialect" }
     }
   })JSON");
 
-  EXPECT_THROW(sourcemeta::jsontoolkit::bundle(
-                   document, sourcemeta::jsontoolkit::default_schema_walker,
-                   test_resolver),
-               sourcemeta::jsontoolkit::SchemaResolutionError);
+  EXPECT_THROW(sourcemeta::core::bundle(document,
+                                        sourcemeta::core::default_schema_walker,
+                                        test_resolver),
+               sourcemeta::core::SchemaResolutionError);
 }
 
 TEST(JSONSchema_bundle, target_array) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "$ref": "https://www.sourcemeta.com/array" }
     }
   })JSON");
 
-  EXPECT_THROW(sourcemeta::jsontoolkit::bundle(
-                   document, sourcemeta::jsontoolkit::default_schema_walker,
-                   test_resolver),
-               sourcemeta::jsontoolkit::SchemaResolutionError);
+  EXPECT_THROW(sourcemeta::core::bundle(document,
+                                        sourcemeta::core::default_schema_walker,
+                                        test_resolver),
+               sourcemeta::core::SchemaResolutionError);
 }

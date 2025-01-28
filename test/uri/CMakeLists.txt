@@ -1,5 +1,5 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME uri
-  FOLDER "JSON Toolkit/URI"
+noa_googletest(NAMESPACE sourcemeta PROJECT core NAME uri
+  FOLDER "Core/URI"
   SOURCES
     uri_test.cc
     uri_fragment_test.cc
@@ -25,5 +25,5 @@ noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME uri
     uri_unescape_test.cc
     uri_user_info_test.cc)
 
-target_link_libraries(sourcemeta_jsontoolkit_uri_unit
-  PRIVATE sourcemeta::jsontoolkit::uri)
+target_link_libraries(sourcemeta_core_uri_unit
+  PRIVATE sourcemeta::core::uri)

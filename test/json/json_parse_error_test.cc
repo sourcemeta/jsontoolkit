@@ -2,13 +2,13 @@
 #include <gtest/gtest.h>
 #include <sstream>
 
-#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/core/json.h>
 
 #define EXPECT_PARSE_ERROR(input, expected_line, expected_column)              \
   try {                                                                        \
-    sourcemeta::jsontoolkit::parse((input));                                   \
+    sourcemeta::core::parse((input));                                          \
     FAIL() << "The parse function was expected to throw";                      \
-  } catch (const sourcemeta::jsontoolkit::ParseError &error) {                 \
+  } catch (const sourcemeta::core::ParseError &error) {                        \
     EXPECT_EQ(error.line(), expected_line);                                    \
     EXPECT_EQ(error.column(), expected_column);                                \
     SUCCEED();                                                                 \
@@ -631,9 +631,9 @@ TEST(JSON_parse_error, backspace_is_not_whitespace) {
 
 TEST(JSON_parse_error, from_file_invalid) {
   try {
-    sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY} /
-                                       "stub_invalid.json");
-  } catch (const sourcemeta::jsontoolkit::FileParseError &error) {
+    sourcemeta::core::from_file(std::filesystem::path{TEST_DIRECTORY} /
+                                "stub_invalid.json");
+  } catch (const sourcemeta::core::FileParseError &error) {
     EXPECT_EQ(error.path(),
               std::filesystem::path{TEST_DIRECTORY} / "stub_invalid.json");
     EXPECT_EQ(error.line(), 3);
@@ -645,7 +645,7 @@ TEST(JSON_parse_error, from_file_invalid) {
 
 TEST(JSON_parse_error, from_file_directory) {
   try {
-    sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY});
+    sourcemeta::core::from_file(std::filesystem::path{TEST_DIRECTORY});
   } catch (const std::filesystem::filesystem_error &error) {
     EXPECT_EQ(error.code(), std::errc::is_a_directory);
     EXPECT_EQ(error.path1(), std::filesystem::path{TEST_DIRECTORY});
@@ -656,8 +656,8 @@ TEST(JSON_parse_error, from_file_directory) {
 
 TEST(JSON_parse_error, from_file_non_existent) {
   try {
-    sourcemeta::jsontoolkit::from_file(std::filesystem::path{TEST_DIRECTORY} /
-                                       "i-dont-exist");
+    sourcemeta::core::from_file(std::filesystem::path{TEST_DIRECTORY} /
+                                "i-dont-exist");
   } catch (const std::filesystem::filesystem_error &error) {
     EXPECT_EQ(error.code(), std::errc::no_such_file_or_directory);
     EXPECT_EQ(error.path1(),

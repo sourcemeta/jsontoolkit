@@ -1,4 +1,4 @@
-#include <sourcemeta/jsontoolkit/uri.h>
+#include <sourcemeta/core/uri.h>
 #include <uriparser/Uri.h>
 
 #include <cassert>   // assert
@@ -13,14 +13,14 @@
 
 static auto uri_normalize(UriUriA *uri) -> void {
   if (uriNormalizeSyntaxA(uri) != URI_SUCCESS) {
-    throw sourcemeta::jsontoolkit::URIError{"Could not normalize URI"};
+    throw sourcemeta::core::URIError{"Could not normalize URI"};
   }
 }
 
 static auto uri_to_string(const UriUriA *const uri) -> std::string {
   int size;
   if (uriToStringCharsRequiredA(uri, &size) != URI_SUCCESS) {
-    throw sourcemeta::jsontoolkit::URIError{"Could not determine URI size"};
+    throw sourcemeta::core::URIError{"Could not determine URI size"};
   }
 
   std::string result;
@@ -28,7 +28,7 @@ static auto uri_to_string(const UriUriA *const uri) -> std::string {
   // `URI_ERROR_OUTPUT_TOO_LARGE`.
   result.resize(static_cast<std::string::size_type>(size));
   if (uriToStringA(result.data(), uri, size + 1, nullptr) != URI_SUCCESS) {
-    throw sourcemeta::jsontoolkit::URIError{"Could not stringify URI"};
+    throw sourcemeta::core::URIError{"Could not stringify URI"};
   }
 
   return result;
@@ -50,7 +50,7 @@ static auto uri_parse(const std::string &data, UriUriA *uri) -> void {
   switch (uriParseSingleUriA(uri, data.c_str(), &error_position)) {
     case URI_ERROR_SYNTAX:
       // TODO: Test the positions of this error
-      throw sourcemeta::jsontoolkit::URIParseError{
+      throw sourcemeta::core::URIParseError{
           static_cast<std::uint64_t>(error_position - data.c_str() + 1)};
     case URI_ERROR_MALLOC:
       throw std::runtime_error("URI malloc error");
@@ -59,7 +59,7 @@ static auto uri_parse(const std::string &data, UriUriA *uri) -> void {
     case URI_SUCCESS:
       break;
     default:
-      throw sourcemeta::jsontoolkit::URIError{"Unknown URI error"};
+      throw sourcemeta::core::URIError{"Unknown URI error"};
   }
 
   uri_normalize(uri);
@@ -110,7 +110,7 @@ static auto canonicalize_path(const std::string &path)
   return canonical_path;
 }
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 struct URI::Internal {
   UriUriA uri;
@@ -576,4 +576,4 @@ auto URI::userinfo() const -> std::optional<std::string_view> {
   return this->userinfo_;
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

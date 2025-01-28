@@ -1,17 +1,17 @@
-#ifndef SOURCEMETA_JSONTOOLKIT_JSONPOINTER_PARSER_H_
-#define SOURCEMETA_JSONTOOLKIT_JSONPOINTER_PARSER_H_
+#ifndef SOURCEMETA_CORE_JSONPOINTER_PARSER_H_
+#define SOURCEMETA_CORE_JSONPOINTER_PARSER_H_
 
 #include "grammar.h"
 
-#include <sourcemeta/jsontoolkit/jsonpointer_error.h>
-#include <sourcemeta/jsontoolkit/jsonpointer_pointer.h>
+#include <sourcemeta/core/jsonpointer_error.h>
+#include <sourcemeta/core/jsonpointer_pointer.h>
 
 #include <istream>   // std::basic_istream
 #include <sstream>   // std::basic_stringstream
 #include <stdexcept> // std::out_of_range
 #include <string>    // std::stoi
 
-namespace sourcemeta::jsontoolkit::internal {
+namespace sourcemeta::core::internal {
 template <typename CharT, typename Traits,
           template <typename T> typename Allocator>
 inline auto
@@ -33,12 +33,12 @@ parse_index(std::basic_stringstream<CharT, Traits, Allocator<CharT>> &stream,
   }
 }
 
-} // namespace sourcemeta::jsontoolkit::internal
+} // namespace sourcemeta::core::internal
 
 // We use "goto" for performance reasons
 // NOLINTBEGIN(cppcoreguidelines-avoid-goto)
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 auto parse_pointer(std::basic_istream<JSON::Char, JSON::CharTraits> &stream)
     -> Pointer {
   Pointer result;
@@ -209,6 +209,6 @@ done:
 
 // NOLINTEND(cppcoreguidelines-avoid-goto)
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core
 
 #endif

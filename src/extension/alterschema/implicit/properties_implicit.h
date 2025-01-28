@@ -5,10 +5,10 @@ public:
                             "Every object has an implicit `properties` "
                             "that consists of the empty object"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return ((vocabularies.contains(
                  "https://json-schema.org/draft/2020-12/vocab/validation") &&
@@ -32,7 +32,6 @@ public:
   }
 
   auto transform(PointerProxy &transformer) const -> void override {
-    transformer.assign("properties",
-                       sourcemeta::jsontoolkit::JSON::make_object());
+    transformer.assign("properties", sourcemeta::core::JSON::make_object());
   }
 };

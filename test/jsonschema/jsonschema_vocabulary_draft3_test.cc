@@ -1,18 +1,18 @@
 #include <gtest/gtest.h>
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonschema.h>
 
 #include <string> // std::string
 
 static auto test_resolver(std::string_view identifier)
-    -> std::optional<sourcemeta::jsontoolkit::JSON> {
+    -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://sourcemeta.com/one-hop") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$id": "https://sourcemeta.com/one-hop",
       "$schema": "http://json-schema.org/draft-03/schema#"
     })JSON");
   } else if (identifier == "https://sourcemeta.com/with-vocabulary") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$id": "https://sourcemeta.com/with-vocabulary",
       "$schema": "http://json-schema.org/draft-03/schema#",
       "$vocabulary": {
@@ -22,7 +22,7 @@ static auto test_resolver(std::string_view identifier)
       }
     })JSON");
   } else {
-    return sourcemeta::jsontoolkit::official_resolver(identifier);
+    return sourcemeta::core::official_resolver(identifier);
   }
 }
 
@@ -35,52 +35,48 @@ static auto test_resolver(std::string_view identifier)
   EXPECT_FALSE((vocabularies).at(vocabulary));
 
 TEST(JSONSchema_vocabulary_draft3, schema) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-03/schema#",
     "type": "object"
   })JSON");
   const std::map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, test_resolver)};
+      sourcemeta::core::vocabularies(document, test_resolver)};
   EXPECT_EQ(vocabularies.size(), 1);
   EXPECT_VOCABULARY_REQUIRED(vocabularies,
                              "http://json-schema.org/draft-03/schema#");
 }
 
 TEST(JSONSchema_vocabulary_draft3, hyperschema) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-03/hyper-schema#",
     "type": "object"
   })JSON");
   const std::map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, test_resolver)};
+      sourcemeta::core::vocabularies(document, test_resolver)};
   EXPECT_EQ(vocabularies.size(), 1);
   EXPECT_VOCABULARY_REQUIRED(vocabularies,
                              "http://json-schema.org/draft-03/hyper-schema#");
 }
 
 TEST(JSONSchema_vocabulary_draft3, one_hop) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://sourcemeta.com/one-hop",
     "type": "object"
   })JSON");
   const std::map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, test_resolver)};
+      sourcemeta::core::vocabularies(document, test_resolver)};
   EXPECT_EQ(vocabularies.size(), 1);
   EXPECT_VOCABULARY_REQUIRED(vocabularies,
                              "http://json-schema.org/draft-03/schema#");
 }
 
 TEST(JSONSchema_vocabulary_draft3, ignore_vocabulary) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://sourcemeta.com/with-vocabulary",
     "type": "object"
   })JSON");
   const std::map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, test_resolver)};
+      sourcemeta::core::vocabularies(document, test_resolver)};
   EXPECT_EQ(vocabularies.size(), 1);
   EXPECT_VOCABULARY_REQUIRED(vocabularies,
                              "http://json-schema.org/draft-03/schema#");

@@ -3,15 +3,15 @@
 #include <cassert> // assert
 #include <string>  // std::string
 
-#include <sourcemeta/jsontoolkit/regex.h>
+#include <sourcemeta/core/regex.h>
 
 #define BENCHMARK_REGEX(name, pattern, input)                                  \
   static void name(benchmark::State &state) {                                  \
-    const auto regex{sourcemeta::jsontoolkit::to_regex<std::string>(pattern)}; \
+    const auto regex{sourcemeta::core::to_regex<std::string>(pattern)};        \
     assert(regex.has_value());                                                 \
     for (auto _ : state) {                                                     \
-      auto result{sourcemeta::jsontoolkit::matches<std::string>(regex.value(), \
-                                                                input)};       \
+      auto result{                                                             \
+          sourcemeta::core::matches<std::string>(regex.value(), input)};       \
       assert(result);                                                          \
       benchmark::DoNotOptimize(result);                                        \
     }                                                                          \

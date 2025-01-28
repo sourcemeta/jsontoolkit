@@ -1,6 +1,6 @@
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/jsonschema.h>
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 auto relativize(JSON &schema, const SchemaWalker &walker,
                 const SchemaResolver &resolver,
@@ -46,4 +46,4 @@ auto relativize(JSON &schema, const SchemaWalker &walker,
   }
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

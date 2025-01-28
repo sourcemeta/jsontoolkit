@@ -1,4 +1,4 @@
-#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/core/json.h>
 
 #include <gtest/gtest.h>
 
@@ -19,8 +19,8 @@ public:
     std::ifstream stream{this->test_path};
     stream.exceptions(std::ios_base::badbit);
     if (this->type == JSONTestType::Accept) {
-      sourcemeta::jsontoolkit::parse(stream);
-      // JSON Toolkit consumes up to the end of a valid document
+      sourcemeta::core::parse(stream);
+      // Core consumes up to the end of a valid document
       // in the stream. Force it continue until the end to cover
       // certain test cases.
       while (stream.peek() != std::char_traits<char>::eof()) {
@@ -34,13 +34,13 @@ public:
       }
     } else if (this->type == JSONTestType::Reject) {
       try {
-        // JSON Toolkit consumes up to the end of a valid document
+        // Core consumes up to the end of a valid document
         // in the stream. Force it continue until the end to cover
         // certain test cases.
         while (!stream.eof()) {
-          sourcemeta::jsontoolkit::parse(stream);
+          sourcemeta::core::parse(stream);
         }
-      } catch (const sourcemeta::jsontoolkit::ParseError &) {
+      } catch (const sourcemeta::core::ParseError &) {
         SUCCEED();
       } catch (const std::exception &) {
         FAIL() << "The parse function threw an unexpected error";

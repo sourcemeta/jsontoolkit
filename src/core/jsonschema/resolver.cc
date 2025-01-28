@@ -1,12 +1,12 @@
-#include <sourcemeta/jsontoolkit/jsonschema.h>
-#include <sourcemeta/jsontoolkit/jsonschema_resolver.h>
+#include <sourcemeta/core/jsonschema.h>
+#include <sourcemeta/core/jsonschema_resolver.h>
 
 #include <algorithm> // std::transform
 #include <cassert>   // assert
 #include <cctype>    // std::tolower
 #include <sstream>   // std::ostringstream
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 MapSchemaResolver::MapSchemaResolver() {}
 
@@ -17,7 +17,7 @@ auto MapSchemaResolver::add(const JSON &schema,
                             const std::optional<std::string> &default_dialect,
                             const std::optional<std::string> &default_id)
     -> void {
-  assert(sourcemeta::jsontoolkit::is_schema(schema));
+  assert(sourcemeta::core::is_schema(schema));
 
   // Registering the top-level schema is not enough. We need to check
   // and register every embedded schema resource too
@@ -97,10 +97,10 @@ auto FlatFileSchemaResolver::add(
     -> const std::string & {
   const auto canonical{std::filesystem::weakly_canonical(path)};
   const auto schema{reader(canonical)};
-  assert(sourcemeta::jsontoolkit::is_schema(schema));
-  const auto identifier{sourcemeta::jsontoolkit::identify(
-      schema, *this, IdentificationStrategy::Loose, default_dialect,
-      default_id)};
+  assert(sourcemeta::core::is_schema(schema));
+  const auto identifier{
+      sourcemeta::core::identify(schema, *this, IdentificationStrategy::Loose,
+                                 default_dialect, default_id)};
   if (!identifier.has_value()) {
     std::ostringstream error;
     error << "Cannot identify schema: " << canonical.string();
@@ -140,22 +140,21 @@ auto FlatFileSchemaResolver::operator()(std::string_view identifier) const
   const auto result{this->schemas.find(string_identifier)};
   if (result != this->schemas.cend()) {
     auto schema{result->second.reader(result->second.path)};
-    assert(sourcemeta::jsontoolkit::is_schema(schema));
+    assert(sourcemeta::core::is_schema(schema));
     if (schema.is_object() && !schema.defines("$schema") &&
         result->second.default_dialect.has_value()) {
       schema.assign("$schema", JSON{result->second.default_dialect.value()});
     }
 
-    sourcemeta::jsontoolkit::reidentify(schema,
-                                        result->second.original_identifier,
-                                        *this, result->second.default_dialect);
+    sourcemeta::core::reidentify(schema, result->second.original_identifier,
+                                 *this, result->second.default_dialect);
     // Because we allow re-identification, we can get into issues unless we
     // always try to relativize references
-    sourcemeta::jsontoolkit::relativize(schema, default_schema_walker, *this,
-                                        result->second.default_dialect,
-                                        result->second.original_identifier);
-    sourcemeta::jsontoolkit::reidentify(schema, result->first, *this,
-                                        result->second.default_dialect);
+    sourcemeta::core::relativize(schema, default_schema_walker, *this,
+                                 result->second.default_dialect,
+                                 result->second.original_identifier);
+    sourcemeta::core::reidentify(schema, result->first, *this,
+                                 result->second.default_dialect);
 
     return schema;
   }
@@ -167,4 +166,4 @@ auto FlatFileSchemaResolver::operator()(std::string_view identifier) const
   return std::nullopt;
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

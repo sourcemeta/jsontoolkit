@@ -6,10 +6,10 @@ public:
             "Setting `minProperties` to a number less than `required` does "
             "not add any further constraint"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,
@@ -28,8 +28,8 @@ public:
   }
 
   auto transform(PointerProxy &transformer) const -> void override {
-    transformer.assign("minProperties",
-                       sourcemeta::jsontoolkit::JSON{
-                           transformer.value().at("required").size()});
+    transformer.assign(
+        "minProperties",
+        sourcemeta::core::JSON{transformer.value().at("required").size()});
   }
 };

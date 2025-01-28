@@ -1,51 +1,48 @@
 #include <gtest/gtest.h>
 
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonschema.h>
 
 #include <string>      // std::string
 #include <string_view> // std::string_view
 
 static auto test_resolver(std::string_view identifier)
-    -> std::optional<sourcemeta::jsontoolkit::JSON> {
+    -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://www.sourcemeta.com/test-1") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$schema": "http://json-schema.org/draft-00/schema#",
       "id": "https://www.sourcemeta.com/test-1",
       "type": "string"
     })JSON");
   } else {
-    return sourcemeta::jsontoolkit::official_resolver(identifier);
+    return sourcemeta::core::official_resolver(identifier);
   }
 }
 
 TEST(JSONSchema_bundle_draft0, no_references_no_id) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-00/schema#"
   })JSON");
 
-  EXPECT_THROW(sourcemeta::jsontoolkit::bundle(
-                   document, sourcemeta::jsontoolkit::default_schema_walker,
-                   test_resolver),
-               sourcemeta::jsontoolkit::SchemaError);
+  EXPECT_THROW(sourcemeta::core::bundle(document,
+                                        sourcemeta::core::default_schema_walker,
+                                        test_resolver),
+               sourcemeta::core::SchemaError);
 }
 
 TEST(JSONSchema_bundle_draft0, const_no_references_no_id) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-00/schema#"
   })JSON");
 
-  EXPECT_THROW(sourcemeta::jsontoolkit::bundle(
-                   document, sourcemeta::jsontoolkit::default_schema_walker,
-                   test_resolver),
-               sourcemeta::jsontoolkit::SchemaError);
+  EXPECT_THROW(sourcemeta::core::bundle(document,
+                                        sourcemeta::core::default_schema_walker,
+                                        test_resolver),
+               sourcemeta::core::SchemaError);
 }
 
 TEST(JSONSchema_bundle_draft0, simple_bundling) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "id": "https://example.com",
     "$schema": "http://json-schema.org/draft-00/schema#",
     "properties": {
@@ -53,8 +50,8 @@ TEST(JSONSchema_bundle_draft0, simple_bundling) {
     }
   })JSON");
 
-  EXPECT_THROW(sourcemeta::jsontoolkit::bundle(
-                   document, sourcemeta::jsontoolkit::default_schema_walker,
-                   test_resolver),
-               sourcemeta::jsontoolkit::SchemaError);
+  EXPECT_THROW(sourcemeta::core::bundle(document,
+                                        sourcemeta::core::default_schema_walker,
+                                        test_resolver),
+               sourcemeta::core::SchemaError);
 }

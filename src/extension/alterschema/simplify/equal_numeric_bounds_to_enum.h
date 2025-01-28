@@ -6,10 +6,10 @@ public:
             "Setting `minimum` and `maximum` to the same number only leaves "
             "one possible value"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,
@@ -31,8 +31,7 @@ public:
   }
 
   auto transform(PointerProxy &transformer) const -> void override {
-    sourcemeta::jsontoolkit::JSON values =
-        sourcemeta::jsontoolkit::JSON::make_array();
+    sourcemeta::core::JSON values = sourcemeta::core::JSON::make_array();
     values.push_back(transformer.value().at("minimum"));
     transformer.assign("enum", std::move(values));
     transformer.erase("type");

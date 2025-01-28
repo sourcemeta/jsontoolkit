@@ -6,10 +6,10 @@ public:
             "If an instance is guaranteed to be an integer, setting a real "
             "number upper bound is the same as a floor of that upper bound"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,
@@ -30,6 +30,6 @@ public:
   auto transform(PointerProxy &transformer) const -> void override {
     const auto current{transformer.value().at("maximum").to_real()};
     const auto new_value{static_cast<std::int64_t>(std::floor(current))};
-    transformer.assign("maximum", sourcemeta::jsontoolkit::JSON{new_value});
+    transformer.assign("maximum", sourcemeta::core::JSON{new_value});
   }
 };

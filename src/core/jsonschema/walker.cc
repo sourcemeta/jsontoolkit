@@ -1,14 +1,14 @@
-#include <sourcemeta/jsontoolkit/jsonpointer.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
-#include <sourcemeta/jsontoolkit/jsonschema_walker.h>
+#include <sourcemeta/core/jsonpointer.h>
+#include <sourcemeta/core/jsonschema.h>
+#include <sourcemeta/core/jsonschema_walker.h>
 
 #include <algorithm> // std::max, std::sort
 #include <cassert>   // assert
 #include <numeric>   // std::accumulate
 
-auto sourcemeta::jsontoolkit::keyword_priority(
+auto sourcemeta::core::keyword_priority(
     std::string_view keyword, const std::map<std::string, bool> &vocabularies,
-    const sourcemeta::jsontoolkit::SchemaWalker &walker) -> std::uint64_t {
+    const sourcemeta::core::SchemaWalker &walker) -> std::uint64_t {
   const auto result{walker(keyword, vocabularies)};
   return std::accumulate(
       result.dependencies.cbegin(), result.dependencies.cend(),
@@ -22,11 +22,11 @@ auto sourcemeta::jsontoolkit::keyword_priority(
 namespace {
 enum class SchemaWalkerType_t : std::uint8_t { Deep, Flat };
 
-auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
-          std::vector<sourcemeta::jsontoolkit::SchemaIteratorEntry> &subschemas,
-          const sourcemeta::jsontoolkit::JSON &subschema,
-          const sourcemeta::jsontoolkit::SchemaWalker &walker,
-          const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+auto walk(sourcemeta::core::Pointer &pointer,
+          std::vector<sourcemeta::core::SchemaIteratorEntry> &subschemas,
+          const sourcemeta::core::JSON &subschema,
+          const sourcemeta::core::SchemaWalker &walker,
+          const sourcemeta::core::SchemaResolver &resolver,
           const std::string &dialect, const SchemaWalkerType_t type,
           const std::size_t level) -> void {
   if (!is_schema(subschema)) {
@@ -38,16 +38,15 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
   // contains pointers that use different dialect/vocabularies.
   // This is often the case for bundled schemas.
   const std::optional<std::string> current_dialect{
-      sourcemeta::jsontoolkit::dialect(subschema, dialect)};
+      sourcemeta::core::dialect(subschema, dialect)};
   assert(current_dialect.has_value());
   const std::string &new_dialect{current_dialect.value()};
 
   const std::optional<std::string> base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(subschema, resolver, new_dialect)};
+      sourcemeta::core::base_dialect(subschema, resolver, new_dialect)};
   assert(base_dialect.has_value());
-  const std::map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(resolver, base_dialect.value(),
-                                            new_dialect)};
+  const std::map<std::string, bool> vocabularies{sourcemeta::core::vocabularies(
+      resolver, base_dialect.value(), new_dialect)};
 
   if (type == SchemaWalkerType_t::Deep || level > 0) {
     subschemas.push_back(
@@ -62,24 +61,24 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
 
   for (auto &pair : subschema.as_object()) {
     switch (walker(pair.first, vocabularies).type) {
-      case sourcemeta::jsontoolkit::KeywordType::ApplicatorValue:
+      case sourcemeta::core::KeywordType::ApplicatorValue:
         [[fallthrough]];
-      case sourcemeta::jsontoolkit::KeywordType::ApplicatorValueOther:
+      case sourcemeta::core::KeywordType::ApplicatorValueOther:
         [[fallthrough]];
-      case sourcemeta::jsontoolkit::KeywordType::ApplicatorValueInPlace: {
-        sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+      case sourcemeta::core::KeywordType::ApplicatorValueInPlace: {
+        sourcemeta::core::Pointer new_pointer{pointer};
         new_pointer.emplace_back(pair.first);
         walk(new_pointer, subschemas, pair.second, walker, resolver,
              new_dialect, type, level + 1);
       } break;
-      case sourcemeta::jsontoolkit::KeywordType::ApplicatorElements:
+      case sourcemeta::core::KeywordType::ApplicatorElements:
         [[fallthrough]];
-      case sourcemeta::jsontoolkit::KeywordType::ApplicatorElementsInline:
+      case sourcemeta::core::KeywordType::ApplicatorElementsInline:
         [[fallthrough]];
-      case sourcemeta::jsontoolkit::KeywordType::ApplicatorElementsInPlace:
+      case sourcemeta::core::KeywordType::ApplicatorElementsInPlace:
         if (pair.second.is_array()) {
           for (std::size_t index = 0; index < pair.second.size(); index++) {
-            sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+            sourcemeta::core::Pointer new_pointer{pointer};
             new_pointer.emplace_back(pair.first);
             new_pointer.emplace_back(index);
             walk(new_pointer, subschemas, pair.second.at(index), walker,
@@ -88,14 +87,14 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
         }
 
         break;
-      case sourcemeta::jsontoolkit::KeywordType::ApplicatorMembers:
+      case sourcemeta::core::KeywordType::ApplicatorMembers:
         [[fallthrough]];
-      case sourcemeta::jsontoolkit::KeywordType::ApplicatorMembersInPlace:
+      case sourcemeta::core::KeywordType::ApplicatorMembersInPlace:
         [[fallthrough]];
-      case sourcemeta::jsontoolkit::KeywordType::LocationMembers:
+      case sourcemeta::core::KeywordType::LocationMembers:
         if (pair.second.is_object()) {
           for (auto &subpair : pair.second.as_object()) {
-            sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+            sourcemeta::core::Pointer new_pointer{pointer};
             new_pointer.emplace_back(pair.first);
             new_pointer.emplace_back(subpair.first);
             walk(new_pointer, subschemas, subpair.second, walker, resolver,
@@ -104,30 +103,29 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
         }
 
         break;
-      case sourcemeta::jsontoolkit::KeywordType::ApplicatorValueOrElements:
+      case sourcemeta::core::KeywordType::ApplicatorValueOrElements:
         [[fallthrough]];
-      case sourcemeta::jsontoolkit::KeywordType::
-          ApplicatorValueOrElementsInPlace:
+      case sourcemeta::core::KeywordType::ApplicatorValueOrElementsInPlace:
         if (pair.second.is_array()) {
           for (std::size_t index = 0; index < pair.second.size(); index++) {
-            sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+            sourcemeta::core::Pointer new_pointer{pointer};
             new_pointer.emplace_back(pair.first);
             new_pointer.emplace_back(index);
             walk(new_pointer, subschemas, pair.second.at(index), walker,
                  resolver, new_dialect, type, level + 1);
           }
         } else {
-          sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+          sourcemeta::core::Pointer new_pointer{pointer};
           new_pointer.emplace_back(pair.first);
           walk(new_pointer, subschemas, pair.second, walker, resolver,
                new_dialect, type, level + 1);
         }
 
         break;
-      case sourcemeta::jsontoolkit::KeywordType::ApplicatorElementsOrMembers:
+      case sourcemeta::core::KeywordType::ApplicatorElementsOrMembers:
         if (pair.second.is_array()) {
           for (std::size_t index = 0; index < pair.second.size(); index++) {
-            sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+            sourcemeta::core::Pointer new_pointer{pointer};
             new_pointer.emplace_back(pair.first);
             new_pointer.emplace_back(index);
             walk(new_pointer, subschemas, pair.second.at(index), walker,
@@ -135,7 +133,7 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
           }
         } else if (pair.second.is_object()) {
           for (auto &subpair : pair.second.as_object()) {
-            sourcemeta::jsontoolkit::Pointer new_pointer{pointer};
+            sourcemeta::core::Pointer new_pointer{pointer};
             new_pointer.emplace_back(pair.first);
             new_pointer.emplace_back(subpair.first);
             walk(new_pointer, subschemas, subpair.second, walker, resolver,
@@ -144,17 +142,17 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
         }
 
         break;
-      case sourcemeta::jsontoolkit::KeywordType::Assertion:
+      case sourcemeta::core::KeywordType::Assertion:
         break;
-      case sourcemeta::jsontoolkit::KeywordType::Annotation:
+      case sourcemeta::core::KeywordType::Annotation:
         break;
-      case sourcemeta::jsontoolkit::KeywordType::Reference:
+      case sourcemeta::core::KeywordType::Reference:
         break;
-      case sourcemeta::jsontoolkit::KeywordType::Other:
+      case sourcemeta::core::KeywordType::Other:
         break;
-      case sourcemeta::jsontoolkit::KeywordType::Comment:
+      case sourcemeta::core::KeywordType::Comment:
         break;
-      case sourcemeta::jsontoolkit::KeywordType::Unknown:
+      case sourcemeta::core::KeywordType::Unknown:
         break;
     }
   }
@@ -164,48 +162,45 @@ auto walk(sourcemeta::jsontoolkit::Pointer &pointer,
 // TODO: These iterators are not very efficient. They traverse once on
 // construction and then the client traverses again.
 
-sourcemeta::jsontoolkit::SchemaIterator::SchemaIterator(
-    const sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::SchemaWalker &walker,
-    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+sourcemeta::core::SchemaIterator::SchemaIterator(
+    const sourcemeta::core::JSON &schema,
+    const sourcemeta::core::SchemaWalker &walker,
+    const sourcemeta::core::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect) {
   const std::optional<std::string> dialect{
-      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+      sourcemeta::core::dialect(schema, default_dialect)};
 
   // If the given schema declares no dialect and the user didn't
   // not pass a default, then there is nothing we can do. We know
   // the current schema is a subschema, but cannot walk any further.
   if (!dialect.has_value()) {
-    this->subschemas.push_back({sourcemeta::jsontoolkit::Pointer{},
-                                std::nullopt,
-                                {},
-                                std::nullopt,
-                                schema});
+    this->subschemas.push_back(
+        {sourcemeta::core::Pointer{}, std::nullopt, {}, std::nullopt, schema});
   } else {
-    sourcemeta::jsontoolkit::Pointer pointer;
+    sourcemeta::core::Pointer pointer;
     walk(pointer, this->subschemas, schema, walker, resolver, dialect.value(),
          SchemaWalkerType_t::Deep, 0);
   }
 }
 
-sourcemeta::jsontoolkit::SchemaIteratorFlat::SchemaIteratorFlat(
-    const sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::SchemaWalker &walker,
-    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+sourcemeta::core::SchemaIteratorFlat::SchemaIteratorFlat(
+    const sourcemeta::core::JSON &schema,
+    const sourcemeta::core::SchemaWalker &walker,
+    const sourcemeta::core::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect) {
   const std::optional<std::string> dialect{
-      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+      sourcemeta::core::dialect(schema, default_dialect)};
   if (dialect.has_value()) {
-    sourcemeta::jsontoolkit::Pointer pointer;
+    sourcemeta::core::Pointer pointer;
     walk(pointer, this->subschemas, schema, walker, resolver, dialect.value(),
          SchemaWalkerType_t::Flat, 0);
   }
 }
 
-sourcemeta::jsontoolkit::SchemaKeywordIterator::SchemaKeywordIterator(
-    const sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::SchemaWalker &walker,
-    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+sourcemeta::core::SchemaKeywordIterator::SchemaKeywordIterator(
+    const sourcemeta::core::JSON &schema,
+    const sourcemeta::core::SchemaWalker &walker,
+    const sourcemeta::core::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect) {
   assert(is_schema(schema));
   if (schema.is_boolean()) {
@@ -213,13 +208,13 @@ sourcemeta::jsontoolkit::SchemaKeywordIterator::SchemaKeywordIterator(
   }
 
   const std::optional<std::string> dialect{
-      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+      sourcemeta::core::dialect(schema, default_dialect)};
   const std::optional<std::string> base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(schema, resolver, dialect)};
+      sourcemeta::core::base_dialect(schema, resolver, dialect)};
 
   std::map<std::string, bool> vocabularies;
   if (base_dialect.has_value() && dialect.has_value()) {
-    vocabularies.merge(sourcemeta::jsontoolkit::vocabularies(
+    vocabularies.merge(sourcemeta::core::vocabularies(
         resolver, base_dialect.value(), dialect.value()));
   }
 
@@ -254,49 +249,41 @@ sourcemeta::jsontoolkit::SchemaKeywordIterator::SchemaKeywordIterator(
       });
 }
 
-auto sourcemeta::jsontoolkit::SchemaIterator::begin() const -> const_iterator {
+auto sourcemeta::core::SchemaIterator::begin() const -> const_iterator {
   return this->subschemas.begin();
 }
-auto sourcemeta::jsontoolkit::SchemaIterator::end() const -> const_iterator {
+auto sourcemeta::core::SchemaIterator::end() const -> const_iterator {
   return this->subschemas.end();
 }
-auto sourcemeta::jsontoolkit::SchemaIterator::cbegin() const -> const_iterator {
+auto sourcemeta::core::SchemaIterator::cbegin() const -> const_iterator {
   return this->subschemas.cbegin();
 }
-auto sourcemeta::jsontoolkit::SchemaIterator::cend() const -> const_iterator {
+auto sourcemeta::core::SchemaIterator::cend() const -> const_iterator {
   return this->subschemas.cend();
 }
 
-auto sourcemeta::jsontoolkit::SchemaIteratorFlat::begin() const
-    -> const_iterator {
+auto sourcemeta::core::SchemaIteratorFlat::begin() const -> const_iterator {
   return this->subschemas.begin();
 }
-auto sourcemeta::jsontoolkit::SchemaIteratorFlat::end() const
-    -> const_iterator {
+auto sourcemeta::core::SchemaIteratorFlat::end() const -> const_iterator {
   return this->subschemas.end();
 }
-auto sourcemeta::jsontoolkit::SchemaIteratorFlat::cbegin() const
-    -> const_iterator {
+auto sourcemeta::core::SchemaIteratorFlat::cbegin() const -> const_iterator {
   return this->subschemas.cbegin();
 }
-auto sourcemeta::jsontoolkit::SchemaIteratorFlat::cend() const
-    -> const_iterator {
+auto sourcemeta::core::SchemaIteratorFlat::cend() const -> const_iterator {
   return this->subschemas.cend();
 }
 
-auto sourcemeta::jsontoolkit::SchemaKeywordIterator::begin() const
-    -> const_iterator {
+auto sourcemeta::core::SchemaKeywordIterator::begin() const -> const_iterator {
   return this->entries.begin();
 }
-auto sourcemeta::jsontoolkit::SchemaKeywordIterator::end() const
-    -> const_iterator {
+auto sourcemeta::core::SchemaKeywordIterator::end() const -> const_iterator {
   return this->entries.end();
 }
-auto sourcemeta::jsontoolkit::SchemaKeywordIterator::cbegin() const
-    -> const_iterator {
+auto sourcemeta::core::SchemaKeywordIterator::cbegin() const -> const_iterator {
   return this->entries.cbegin();
 }
-auto sourcemeta::jsontoolkit::SchemaKeywordIterator::cend() const
-    -> const_iterator {
+auto sourcemeta::core::SchemaKeywordIterator::cend() const -> const_iterator {
   return this->entries.cend();
 }

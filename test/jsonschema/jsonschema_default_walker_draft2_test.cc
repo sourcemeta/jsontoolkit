@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/jsonschema.h>
 
 static const std::map<std::string, bool> VOCABULARIES_DRAFT2{
     {"http://json-schema.org/draft-02/schema#", true}};
@@ -8,7 +8,7 @@ static const std::map<std::string, bool> VOCABULARIES_DRAFT2_HYPERSCHEMA{
     {"http://json-schema.org/draft-02/hyper-schema#", true}};
 
 TEST(JSONSchema_default_walker_draft2, schema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("$schema", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Other);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -18,7 +18,7 @@ TEST(JSONSchema_default_walker_draft2, schema) {
 }
 
 TEST(JSONSchema_default_walker_draft2, id) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("id", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Other);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -28,7 +28,7 @@ TEST(JSONSchema_default_walker_draft2, id) {
 }
 
 TEST(JSONSchema_default_walker_draft2, ref) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("$ref", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Reference);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -38,7 +38,7 @@ TEST(JSONSchema_default_walker_draft2, ref) {
 }
 
 TEST(JSONSchema_default_walker_draft2, items) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("items", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorValueOrElements);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -48,7 +48,7 @@ TEST(JSONSchema_default_walker_draft2, items) {
 }
 
 TEST(JSONSchema_default_walker_draft2, properties) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("properties", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorMembers);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -58,7 +58,7 @@ TEST(JSONSchema_default_walker_draft2, properties) {
 }
 
 TEST(JSONSchema_default_walker_draft2, additionalProperties) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("additionalProperties", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorValue);
@@ -70,7 +70,7 @@ TEST(JSONSchema_default_walker_draft2, additionalProperties) {
 }
 
 TEST(JSONSchema_default_walker_draft2, type) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("type", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorElements);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -80,7 +80,7 @@ TEST(JSONSchema_default_walker_draft2, type) {
 }
 
 TEST(JSONSchema_default_walker_draft2, enum) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("enum", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -90,7 +90,7 @@ TEST(JSONSchema_default_walker_draft2, enum) {
 }
 
 TEST(JSONSchema_default_walker_draft2, maximum) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("maximum", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -100,7 +100,7 @@ TEST(JSONSchema_default_walker_draft2, maximum) {
 }
 
 TEST(JSONSchema_default_walker_draft2, minimum) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("minimum", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -110,7 +110,7 @@ TEST(JSONSchema_default_walker_draft2, minimum) {
 }
 
 TEST(JSONSchema_default_walker_draft2, maximumCanEqual) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("maximumCanEqual", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
@@ -121,7 +121,7 @@ TEST(JSONSchema_default_walker_draft2, maximumCanEqual) {
 }
 
 TEST(JSONSchema_default_walker_draft2, minimumCanEqual) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("minimumCanEqual", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
@@ -132,7 +132,7 @@ TEST(JSONSchema_default_walker_draft2, minimumCanEqual) {
 }
 
 TEST(JSONSchema_default_walker_draft2, maxLength) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("maxLength", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -142,7 +142,7 @@ TEST(JSONSchema_default_walker_draft2, maxLength) {
 }
 
 TEST(JSONSchema_default_walker_draft2, minLength) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("minLength", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -152,7 +152,7 @@ TEST(JSONSchema_default_walker_draft2, minLength) {
 }
 
 TEST(JSONSchema_default_walker_draft2, pattern) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("pattern", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -162,7 +162,7 @@ TEST(JSONSchema_default_walker_draft2, pattern) {
 }
 
 TEST(JSONSchema_default_walker_draft2, maxItems) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("maxItems", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -172,7 +172,7 @@ TEST(JSONSchema_default_walker_draft2, maxItems) {
 }
 
 TEST(JSONSchema_default_walker_draft2, minItems) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("minItems", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -182,7 +182,7 @@ TEST(JSONSchema_default_walker_draft2, minItems) {
 }
 
 TEST(JSONSchema_default_walker_draft2, uniqueItems) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("uniqueItems", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -192,7 +192,7 @@ TEST(JSONSchema_default_walker_draft2, uniqueItems) {
 }
 
 TEST(JSONSchema_default_walker_draft2, requires) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("requires", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorValueInPlace);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -202,7 +202,7 @@ TEST(JSONSchema_default_walker_draft2, requires) {
 }
 
 TEST(JSONSchema_default_walker_draft2, format) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("format", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Other);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -212,7 +212,7 @@ TEST(JSONSchema_default_walker_draft2, format) {
 }
 
 TEST(JSONSchema_default_walker_draft2, title) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("title", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -222,7 +222,7 @@ TEST(JSONSchema_default_walker_draft2, title) {
 }
 
 TEST(JSONSchema_default_walker_draft2, description) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("description", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -232,7 +232,7 @@ TEST(JSONSchema_default_walker_draft2, description) {
 }
 
 TEST(JSONSchema_default_walker_draft2, default) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("default", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Comment);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -242,7 +242,7 @@ TEST(JSONSchema_default_walker_draft2, default) {
 }
 
 TEST(JSONSchema_default_walker_draft2, divisibleBy) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("divisibleBy", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -252,7 +252,7 @@ TEST(JSONSchema_default_walker_draft2, divisibleBy) {
 }
 
 TEST(JSONSchema_default_walker_draft2, disallow) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("disallow", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Assertion);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -262,7 +262,7 @@ TEST(JSONSchema_default_walker_draft2, disallow) {
 }
 
 TEST(JSONSchema_default_walker_draft2, extends) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("extends", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorValueOrElementsInPlace);
   EXPECT_TRUE(result.vocabulary.has_value());
@@ -272,7 +272,7 @@ TEST(JSONSchema_default_walker_draft2, extends) {
 }
 
 TEST(JSONSchema_default_walker_draft2, contentEncoding) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("contentEncoding", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Comment);
@@ -283,7 +283,7 @@ TEST(JSONSchema_default_walker_draft2, contentEncoding) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_links) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("links", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -292,7 +292,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_links) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_fragmentResolution) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("fragmentResolution",
                                           VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -301,7 +301,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_fragmentResolution) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_root) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("root", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -310,7 +310,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_root) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_readonly) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("readonly", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -319,7 +319,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_readonly) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_pathStart) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("pathStart", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -328,7 +328,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_pathStart) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_mediaType) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("mediaType", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -337,7 +337,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_mediaType) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_alternate) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("alternate", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -346,7 +346,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_alternate) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_href) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("href", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -355,7 +355,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_href) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_rel) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("rel", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -364,7 +364,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_rel) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_method) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("method", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -373,7 +373,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_method) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_enctype) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("enctype", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -382,7 +382,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_enctype) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_targetSchema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("targetSchema", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorValue);
@@ -393,7 +393,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_targetSchema) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_links_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("links", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
@@ -401,7 +401,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_links_without_hyperschema) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_schema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("$schema", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -410,7 +410,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_schema) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_id) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("id", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -419,7 +419,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_id) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_ref) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("$ref", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -428,7 +428,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_ref) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_items) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("items", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorValueOrElements);
@@ -439,7 +439,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_items) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_properties) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("properties", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorMembers);
@@ -450,7 +450,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_properties) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_additionalProperties) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("additionalProperties",
                                           VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorValue);
@@ -462,7 +462,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_additionalProperties) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_type) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("type", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorElements);
@@ -473,7 +473,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_type) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_enum) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("enum", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -482,7 +482,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_enum) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_maximum) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("maximum", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -491,7 +491,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_maximum) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_minimum) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("minimum", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -500,7 +500,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_minimum) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_maximumCanEqual) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("maximumCanEqual",
                                           VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -509,7 +509,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_maximumCanEqual) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_minimumCanEqual) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("minimumCanEqual",
                                           VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -518,7 +518,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_minimumCanEqual) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_maxLength) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("maxLength", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -527,7 +527,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_maxLength) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_minLength) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("minLength", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -536,7 +536,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_minLength) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_pattern) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("pattern", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -545,7 +545,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_pattern) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_maxItems) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("maxItems", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -554,7 +554,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_maxItems) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_minItems) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("minItems", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -563,7 +563,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_minItems) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_uniqueItems) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("uniqueItems", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -572,7 +572,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_uniqueItems) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_requires) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("requires", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorValueInPlace);
@@ -583,7 +583,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_requires) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_format) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("format", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -592,7 +592,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_format) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_title) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("title", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -601,7 +601,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_title) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_description) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("description", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -610,7 +610,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_description) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_default) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("default", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -619,7 +619,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_default) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_divisibleBy) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("divisibleBy", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -628,7 +628,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_divisibleBy) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_disallow) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("disallow", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -637,7 +637,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_disallow) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_extends) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("extends", VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::ApplicatorValueOrElementsInPlace);
@@ -648,7 +648,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_extends) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_contentEncoding) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("contentEncoding",
                                           VOCABULARIES_DRAFT2_HYPERSCHEMA)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -658,7 +658,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_contentEncoding) {
 
 TEST(JSONSchema_default_walker_draft2,
      hyperschema_fragmentResolution_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{
       default_schema_walker("fragmentResolution", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
@@ -667,7 +667,7 @@ TEST(JSONSchema_default_walker_draft2,
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_root_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("root", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
@@ -676,7 +676,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_root_without_hyperschema) {
 
 TEST(JSONSchema_default_walker_draft2,
      hyperschema_readonly_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("readonly", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
@@ -685,7 +685,7 @@ TEST(JSONSchema_default_walker_draft2,
 
 TEST(JSONSchema_default_walker_draft2,
      hyperschema_pathStart_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("pathStart", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
@@ -694,7 +694,7 @@ TEST(JSONSchema_default_walker_draft2,
 
 TEST(JSONSchema_default_walker_draft2,
      hyperschema_mediaType_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("mediaType", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
@@ -703,7 +703,7 @@ TEST(JSONSchema_default_walker_draft2,
 
 TEST(JSONSchema_default_walker_draft2,
      hyperschema_alternate_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("alternate", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
@@ -711,7 +711,7 @@ TEST(JSONSchema_default_walker_draft2,
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_href_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("href", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
@@ -719,7 +719,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_href_without_hyperschema) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_rel_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("rel", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
@@ -727,7 +727,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_rel_without_hyperschema) {
 }
 
 TEST(JSONSchema_default_walker_draft2, hyperschema_method_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("method", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
@@ -736,7 +736,7 @@ TEST(JSONSchema_default_walker_draft2, hyperschema_method_without_hyperschema) {
 
 TEST(JSONSchema_default_walker_draft2,
      hyperschema_enctype_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("enctype", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
@@ -745,7 +745,7 @@ TEST(JSONSchema_default_walker_draft2,
 
 TEST(JSONSchema_default_walker_draft2,
      hyperschema_targetSchema_without_hyperschema) {
-  using namespace sourcemeta::jsontoolkit;
+  using namespace sourcemeta::core;
   const auto result{default_schema_walker("targetSchema", VOCABULARIES_DRAFT2)};
   EXPECT_EQ(result.type, KeywordType::Unknown);
   EXPECT_FALSE(result.vocabulary.has_value());
@@ -754,15 +754,15 @@ TEST(JSONSchema_default_walker_draft2,
 
 TEST(JSONSchema_default_walker_draft2, keyword_priority_object) {
   const auto &vocabularies = VOCABULARIES_DRAFT2;
-  const auto &walker = sourcemeta::jsontoolkit::default_schema_walker;
-  using namespace sourcemeta::jsontoolkit;
+  const auto &walker = sourcemeta::core::default_schema_walker;
+  using namespace sourcemeta::core;
   EXPECT_EQ(keyword_priority("properties", vocabularies, walker), 0);
   EXPECT_EQ(keyword_priority("additionalProperties", vocabularies, walker), 1);
 }
 
 TEST(JSONSchema_default_walker_draft2, keyword_priority_unknown) {
   const auto &vocabularies = VOCABULARIES_DRAFT2;
-  const auto &walker = sourcemeta::jsontoolkit::default_schema_walker;
-  using namespace sourcemeta::jsontoolkit;
+  const auto &walker = sourcemeta::core::default_schema_walker;
+  using namespace sourcemeta::core;
   EXPECT_EQ(keyword_priority("foobar", vocabularies, walker), 0);
 }
