@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(core VERSION 0.0.0 LANGUAGES C CXX)
+project(core VERSION 0.0.0 LANGUAGES C CXX DESCRIPTION "Sourcemeta Core")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 # Options
