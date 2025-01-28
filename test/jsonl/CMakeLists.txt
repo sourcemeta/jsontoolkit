@@ -1,4 +1,4 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonl
+sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonl
   FOLDER "Core/JSONL"
   SOURCES
     jsonl_parse_test.cc

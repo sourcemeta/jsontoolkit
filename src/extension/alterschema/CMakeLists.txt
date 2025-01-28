@@ -1,4 +1,4 @@
-noa_library(NAMESPACE sourcemeta PROJECT core NAME alterschema
+sourcemeta_library(NAMESPACE sourcemeta PROJECT core NAME alterschema
   FOLDER "Core/AlterSchema"
   SOURCES alterschema.cc
     # Antipattern
@@ -158,7 +158,7 @@ noa_library(NAMESPACE sourcemeta PROJECT core NAME alterschema
     superfluous/then_without_if.h)
 
 if(SOURCEMETA_CORE_INSTALL)
-  noa_library_install(NAMESPACE sourcemeta PROJECT core NAME alterschema)
+  sourcemeta_library_install(NAMESPACE sourcemeta PROJECT core NAME alterschema)
 endif()
 
 target_link_libraries(sourcemeta_core_alterschema PUBLIC

@@ -25,7 +25,6 @@ vendor/googlebenchmark.mask
 vendor/referencing-suite
 vendor/referencing-suite.mask
 vendor/jsonschema-test-suite
-vendor/noa
 .editorconfig
 .ackrc
 .gitattributes

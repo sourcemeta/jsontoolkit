@@ -9,8 +9,8 @@ projects.
 Live at head
 ------------
 
-Like projects such as [`GoogleTest`](https://github.com/google/googletest), Noa
-follows the [Abseil Live at
+Like projects such as [`GoogleTest`](https://github.com/google/googletest),
+this project follows the [Abseil Live at
 Head](https://abseil.io/about/philosophy#upgrade-support) philosophy. We
 recommend always following the latest commit in the `main` branch.
 

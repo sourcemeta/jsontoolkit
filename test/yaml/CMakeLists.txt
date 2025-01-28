@@ -1,4 +1,4 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT core NAME yaml
+sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME yaml
   FOLDER "Core/YAML"
   SOURCES
     yaml_parse_test.cc)

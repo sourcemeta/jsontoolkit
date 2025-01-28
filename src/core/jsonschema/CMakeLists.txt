@@ -2,7 +2,7 @@ set(OFFICIAL_RESOLVER_INPUT "${CMAKE_CURRENT_SOURCE_DIR}/official_resolver.in.cc
 set(OFFICIAL_RESOLVER_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 include(./official_resolver.cmake)
 
-noa_library(NAMESPACE sourcemeta PROJECT core NAME jsonschema
+sourcemeta_library(NAMESPACE sourcemeta PROJECT core NAME jsonschema
   FOLDER "Core/JSON Schema"
   PRIVATE_HEADERS anchor.h bundle.h resolver.h
     walker.h reference.h frame.h error.h unevaluated.h
@@ -14,7 +14,7 @@ noa_library(NAMESPACE sourcemeta PROJECT core NAME jsonschema
     "${CMAKE_CURRENT_BINARY_DIR}/official_resolver.cc")
 
 if(SOURCEMETA_CORE_INSTALL)
-  noa_library_install(NAMESPACE sourcemeta PROJECT core NAME jsonschema)
+  sourcemeta_library_install(NAMESPACE sourcemeta PROJECT core NAME jsonschema)
 endif()
 
 target_link_libraries(sourcemeta_core_jsonschema PUBLIC

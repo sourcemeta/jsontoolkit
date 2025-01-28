@@ -1,4 +1,4 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT core NAME alterschema
+sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME alterschema
   FOLDER "Core/AlterSchema"
   SOURCES
     alterschema_lint_2020_12_test.cc

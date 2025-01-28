@@ -1,4 +1,4 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonpointer
+sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonpointer
   FOLDER "Core/JSON Pointer"
   SOURCES
     jsonpointer_empty_pointer_test.cc
