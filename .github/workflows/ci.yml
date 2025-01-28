@@ -122,12 +122,6 @@ jobs:
       - run: cmake --build ./build --config Release --parallel 4
       - run: >
           cmake --install ./build --prefix ./build/dist --config Release --verbose
-          --component sourcemeta_noa
-      - run: >
-          cmake --install ./build --prefix ./build/dist --config Release --verbose
-          --component sourcemeta_noa_dev
-      - run: >
-          cmake --install ./build --prefix ./build/dist --config Release --verbose
           --component sourcemeta_core
       - run: >
           cmake --install ./build --prefix ./build/dist --config Release --verbose

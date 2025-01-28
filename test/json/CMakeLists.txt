@@ -1,4 +1,4 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT core NAME json
+sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME json
   FOLDER "Core/JSON"
   SOURCES
     json_array_test.cc
@@ -26,7 +26,7 @@ target_compile_definitions(sourcemeta_core_json_unit
 
 # JSON Test Suite
 # See https://github.com/nst/JSONTestSuite
-noa_googletest(NAMESPACE sourcemeta PROJECT core NAME jsontestsuite
+sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME jsontestsuite
   FOLDER "Core/JSON"
   SOURCES jsontestsuite.cc)
 target_compile_definitions(sourcemeta_core_jsontestsuite_unit

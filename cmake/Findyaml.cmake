@@ -16,7 +16,7 @@ if(NOT Yaml_FOUND)
 
   add_library(yaml ${YAML_SOURCES})
 
-  if(NOA_COMPILER_LLVM OR NOA_COMPILER_GCC)
+  if(SOURCEMETA_COMPILER_LLVM OR SOURCEMETA_COMPILER_GCC)
     target_compile_options(yaml PRIVATE -Wno-implicit-function-declaration)
     target_compile_options(yaml PRIVATE -Wno-int-to-pointer-cast)
   endif()

@@ -13,7 +13,7 @@ if(SOURCEMETA_CORE_JSONPOINTER)
 endif()
 
 if(BENCHMARK_SOURCES)
-  noa_googlebenchmark(NAMESPACE sourcemeta PROJECT core
+  sourcemeta_googlebenchmark(NAMESPACE sourcemeta PROJECT core
     FOLDER "Core" SOURCES ${BENCHMARK_SOURCES})
 
   target_compile_definitions(sourcemeta_core_benchmark
