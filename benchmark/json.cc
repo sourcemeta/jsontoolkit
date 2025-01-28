@@ -2,11 +2,11 @@
 
 #include <cassert> // assert
 
-#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/core/json.h>
 
 static void JSON_Array_Of_Objects_Unique(benchmark::State &state) {
   // From Unreal Engine `uproject` files
-  const auto document{sourcemeta::jsontoolkit::parse(R"JSON([
+  const auto document{sourcemeta::core::parse(R"JSON([
     { "Enabled": true, "Name": "DDTools" },
     { "Enabled": true, "Name": "VideoCore" },
     { "Enabled": true, "Name": "EditorScriptingUtilities" },
@@ -86,7 +86,7 @@ static void JSON_Parse_1(benchmark::State &state) {
   })JSON"};
 
   for (auto _ : state) {
-    auto result{sourcemeta::jsontoolkit::parse(document)};
+    auto result{sourcemeta::core::parse(document)};
     assert(result.is_object());
     benchmark::DoNotOptimize(result);
   }
@@ -94,7 +94,7 @@ static void JSON_Parse_1(benchmark::State &state) {
 
 static void JSON_Fast_Hash_Helm_Chart_Lock(benchmark::State &state) {
   // From `helm-chart-lock`
-  const auto document{sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto document{sourcemeta::core::parse(R"JSON({
     "digest": "sha256:157d6244f0fac36b70be1aecfed8811037504d4e3a1060f50688e93531174040",
     "generated": "2021-12-23T14:00:42.29198548Z",
     "dependencies": [
@@ -130,7 +130,7 @@ static void JSON_Fast_Hash_Helm_Chart_Lock(benchmark::State &state) {
 static void JSON_Equality_Helm_Chart_Lock(benchmark::State &state) {
   // From `helm-chart-lock`
 
-  const auto document_1{sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto document_1{sourcemeta::core::parse(R"JSON({
     "digest": "sha256:157d6244f0fac36b70be1aecfed8811037504d4e3a1060f50688e93531174040",
     "generated": "2021-12-23T14:00:42.29198548Z",
     "dependencies": [
@@ -157,7 +157,7 @@ static void JSON_Equality_Helm_Chart_Lock(benchmark::State &state) {
     ]
   })JSON")};
 
-  const auto document_2{sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto document_2{sourcemeta::core::parse(R"JSON({
     "digest": "sha256:157d6244f0fac36b70be1aecfed8811037504d4e3a1060f50688e93531174040",
     "generated": "2021-12-23T14:00:42.29198548Z",
     "dependencies": [
@@ -193,10 +193,10 @@ static void JSON_Equality_Helm_Chart_Lock(benchmark::State &state) {
 
 static void JSON_String_Equal(benchmark::State &state) {
   const auto length{static_cast<std::size_t>(state.range(0))};
-  sourcemeta::jsontoolkit::JSON::String string_left(length, 'x');
-  sourcemeta::jsontoolkit::JSON::String string_right(length, 'x');
-  const sourcemeta::jsontoolkit::JSON left{std::move(string_left)};
-  const sourcemeta::jsontoolkit::JSON right{std::move(string_right)};
+  sourcemeta::core::JSON::String string_left(length, 'x');
+  sourcemeta::core::JSON::String string_right(length, 'x');
+  const sourcemeta::core::JSON left{std::move(string_left)};
+  const sourcemeta::core::JSON right{std::move(string_right)};
   for (auto _ : state) {
     bool result = left == right;
     assert(result);
@@ -206,10 +206,9 @@ static void JSON_String_Equal(benchmark::State &state) {
 
 static void JSON_String_Equal_Small_By_Perfect_Hash(benchmark::State &state) {
   const auto length{static_cast<std::size_t>(state.range(0))};
-  sourcemeta::jsontoolkit::JSON::String left(length, 'x');
-  sourcemeta::jsontoolkit::JSON::String right(length, 'x');
-  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
-      hasher;
+  sourcemeta::core::JSON::String left(length, 'x');
+  sourcemeta::core::JSON::String right(length, 'x');
+  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
   const auto hash_left{hasher(left)};
   const auto hash_right{hasher(right)};
   assert(hasher.is_perfect(hash_left));
@@ -224,10 +223,9 @@ static void JSON_String_Equal_Small_By_Perfect_Hash(benchmark::State &state) {
 static void
 JSON_String_Equal_Small_By_Runtime_Perfect_Hash(benchmark::State &state) {
   const auto length{static_cast<std::size_t>(state.range(0))};
-  sourcemeta::jsontoolkit::JSON::String left(length, 'x');
-  sourcemeta::jsontoolkit::JSON::String right(length, 'x');
-  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
-      hasher;
+  sourcemeta::core::JSON::String left(length, 'x');
+  sourcemeta::core::JSON::String right(length, 'x');
+  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
   for (auto _ : state) {
     const auto hash_left{hasher(left)};
     const auto hash_right{hasher(right)};
@@ -241,8 +239,8 @@ JSON_String_Equal_Small_By_Runtime_Perfect_Hash(benchmark::State &state) {
 
 static void JSON_String_Fast_Hash(benchmark::State &state) {
   const auto length{static_cast<std::size_t>(state.range(0))};
-  sourcemeta::jsontoolkit::JSON::String value(length, 'x');
-  const sourcemeta::jsontoolkit::JSON document{std::move(value)};
+  sourcemeta::core::JSON::String value(length, 'x');
+  const sourcemeta::core::JSON document{std::move(value)};
   for (auto _ : state) {
     benchmark::DoNotOptimize(document.fast_hash());
   }
@@ -250,23 +248,21 @@ static void JSON_String_Fast_Hash(benchmark::State &state) {
 
 static void JSON_String_Key_Hash(benchmark::State &state) {
   const auto length{static_cast<std::size_t>(state.range(0))};
-  sourcemeta::jsontoolkit::JSON::String value(length, 'x');
-  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
-      hasher;
+  sourcemeta::core::JSON::String value(length, 'x');
+  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
   for (auto _ : state) {
     benchmark::DoNotOptimize(hasher(value));
   }
 }
 
 static void JSON_Object_Defines_Miss_Same_Length(benchmark::State &state) {
-  auto document{sourcemeta::jsontoolkit::JSON::make_object()};
-  document.assign("abcdefg", sourcemeta::jsontoolkit::JSON{1});
-  document.assign("abcdefgh", sourcemeta::jsontoolkit::JSON{2});
-  document.assign("abcdefghi", sourcemeta::jsontoolkit::JSON{3});
-  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
-      hasher;
+  auto document{sourcemeta::core::JSON::make_object()};
+  document.assign("abcdefg", sourcemeta::core::JSON{1});
+  document.assign("abcdefgh", sourcemeta::core::JSON{2});
+  document.assign("abcdefghi", sourcemeta::core::JSON{3});
+  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
   const auto &object{document.as_object()};
-  const sourcemeta::jsontoolkit::JSON::String key{"foobarbaz"};
+  const sourcemeta::core::JSON::String key{"foobarbaz"};
   const auto key_hash{hasher(key)};
   for (auto _ : state) {
     auto result = object.defines(key, key_hash);
@@ -276,14 +272,13 @@ static void JSON_Object_Defines_Miss_Same_Length(benchmark::State &state) {
 }
 
 static void JSON_Object_Defines_Miss_Too_Small(benchmark::State &state) {
-  auto document{sourcemeta::jsontoolkit::JSON::make_object()};
-  document.assign("abcdefg", sourcemeta::jsontoolkit::JSON{1});
-  document.assign("abcdefgh", sourcemeta::jsontoolkit::JSON{2});
-  document.assign("abcdefghi", sourcemeta::jsontoolkit::JSON{3});
-  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
-      hasher;
+  auto document{sourcemeta::core::JSON::make_object()};
+  document.assign("abcdefg", sourcemeta::core::JSON{1});
+  document.assign("abcdefgh", sourcemeta::core::JSON{2});
+  document.assign("abcdefghi", sourcemeta::core::JSON{3});
+  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
   const auto &object{document.as_object()};
-  const sourcemeta::jsontoolkit::JSON::String key{"foo"};
+  const sourcemeta::core::JSON::String key{"foo"};
   const auto key_hash{hasher(key)};
   for (auto _ : state) {
     auto result = object.defines(key, key_hash);
@@ -293,14 +288,13 @@ static void JSON_Object_Defines_Miss_Too_Small(benchmark::State &state) {
 }
 
 static void JSON_Object_Defines_Miss_Too_Large(benchmark::State &state) {
-  auto document{sourcemeta::jsontoolkit::JSON::make_object()};
-  document.assign("abcdefg", sourcemeta::jsontoolkit::JSON{1});
-  document.assign("abcdefgh", sourcemeta::jsontoolkit::JSON{2});
-  document.assign("abcdefghi", sourcemeta::jsontoolkit::JSON{3});
-  const sourcemeta::jsontoolkit::KeyHash<sourcemeta::jsontoolkit::JSON::String>
-      hasher;
+  auto document{sourcemeta::core::JSON::make_object()};
+  document.assign("abcdefg", sourcemeta::core::JSON{1});
+  document.assign("abcdefgh", sourcemeta::core::JSON{2});
+  document.assign("abcdefghi", sourcemeta::core::JSON{3});
+  const sourcemeta::core::KeyHash<sourcemeta::core::JSON::String> hasher;
   const auto &object{document.as_object()};
-  const sourcemeta::jsontoolkit::JSON::String key{"toolargestring"};
+  const sourcemeta::core::JSON::String key{"toolargestring"};
   const auto key_hash{hasher(key)};
   for (auto _ : state) {
     auto result = object.defines(key, key_hash);

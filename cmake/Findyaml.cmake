@@ -50,23 +50,23 @@ if(NOT Yaml_FOUND)
       C_VISIBILITY_INLINES_HIDDEN FALSE
       EXPORT_NAME yaml)
 
-  if(JSONTOOLKIT_INSTALL)
+  if(SOURCEMETA_CORE_INSTALL)
     include(GNUInstallDirs)
     install(TARGETS yaml
       EXPORT yaml
       PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-        COMPONENT sourcemeta_jsontoolkit_dev
+        COMPONENT sourcemeta_core_dev
       RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-        COMPONENT sourcemeta_jsontoolkit
+        COMPONENT sourcemeta_core
       LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        COMPONENT sourcemeta_jsontoolkit
-        NAMELINK_COMPONENT sourcemeta_jsontoolkit_dev
+        COMPONENT sourcemeta_core
+        NAMELINK_COMPONENT sourcemeta_core_dev
       ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        COMPONENT sourcemeta_jsontoolkit_dev)
+        COMPONENT sourcemeta_core_dev)
     install(EXPORT yaml
       DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/yaml"
       NAMESPACE yaml::
-      COMPONENT sourcemeta_jsontoolkit_dev)
+      COMPONENT sourcemeta_core_dev)
 
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/yaml-config.cmake
       "include(\"\${CMAKE_CURRENT_LIST_DIR}/yaml.cmake\")\n"
@@ -74,7 +74,7 @@ if(NOT Yaml_FOUND)
     install(FILES
       "${CMAKE_CURRENT_BINARY_DIR}/yaml-config.cmake"
       DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/yaml"
-      COMPONENT sourcemeta_jsontoolkit_dev)
+      COMPONENT sourcemeta_core_dev)
   endif()
 
   set(Yaml_FOUND ON)

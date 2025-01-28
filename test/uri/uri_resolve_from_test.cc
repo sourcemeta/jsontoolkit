@@ -1,64 +1,64 @@
 #include <gtest/gtest.h>
-#include <sourcemeta/jsontoolkit/uri.h>
+#include <sourcemeta/core/uri.h>
 
 TEST(URI_resolve_from, relative_base) {
-  const sourcemeta::jsontoolkit::URI base{"../foo"};
-  sourcemeta::jsontoolkit::URI relative{"../baz"};
-  EXPECT_THROW(relative.resolve_from(base), sourcemeta::jsontoolkit::URIError);
+  const sourcemeta::core::URI base{"../foo"};
+  sourcemeta::core::URI relative{"../baz"};
+  EXPECT_THROW(relative.resolve_from(base), sourcemeta::core::URIError);
 }
 
 TEST(URI_resolve_from, absolute_relative_with_slash) {
-  const sourcemeta::jsontoolkit::URI base{"https://foobar.com/foo/bar"};
-  sourcemeta::jsontoolkit::URI relative{"/baz"};
+  const sourcemeta::core::URI base{"https://foobar.com/foo/bar"};
+  sourcemeta::core::URI relative{"/baz"};
   relative.resolve_from(base);
   EXPECT_EQ(relative.recompose(), "https://foobar.com/baz");
 }
 
 TEST(URI_resolve_from, example_1) {
-  const sourcemeta::jsontoolkit::URI base{"https://foobar.com/foo/bar"};
-  sourcemeta::jsontoolkit::URI relative{"../baz"};
+  const sourcemeta::core::URI base{"https://foobar.com/foo/bar"};
+  sourcemeta::core::URI relative{"../baz"};
   relative.resolve_from(base);
   EXPECT_EQ(relative.recompose(), "https://foobar.com/baz");
 }
 
 TEST(URI_resolve_from, add_fragment) {
-  const sourcemeta::jsontoolkit::URI base{"https://foobar.com/foo/bar"};
-  sourcemeta::jsontoolkit::URI relative{"#baz"};
+  const sourcemeta::core::URI base{"https://foobar.com/foo/bar"};
+  sourcemeta::core::URI relative{"#baz"};
   relative.resolve_from(base);
   EXPECT_EQ(relative.recompose(), "https://foobar.com/foo/bar#baz");
 }
 
 TEST(URI_resolve_from, change_fragment) {
-  const sourcemeta::jsontoolkit::URI base{"https://foobar.com/foo/bar#baz"};
-  sourcemeta::jsontoolkit::URI relative{"#qux"};
+  const sourcemeta::core::URI base{"https://foobar.com/foo/bar#baz"};
+  sourcemeta::core::URI relative{"#qux"};
   relative.resolve_from(base);
   EXPECT_EQ(relative.recompose(), "https://foobar.com/foo/bar#qux");
 }
 
 TEST(URI_try_resolve_from, example_1) {
-  const sourcemeta::jsontoolkit::URI base{"https://foobar.com/foo/bar"};
-  sourcemeta::jsontoolkit::URI relative{"../baz"};
+  const sourcemeta::core::URI base{"https://foobar.com/foo/bar"};
+  sourcemeta::core::URI relative{"../baz"};
   relative.try_resolve_from(base);
   EXPECT_EQ(relative.recompose(), "https://foobar.com/baz");
 }
 
 TEST(URI_try_resolve_from, relative_base) {
-  const sourcemeta::jsontoolkit::URI base{"../foo"};
-  sourcemeta::jsontoolkit::URI relative{"../baz"};
+  const sourcemeta::core::URI base{"../foo"};
+  sourcemeta::core::URI relative{"../baz"};
   relative.try_resolve_from(base);
   EXPECT_EQ(relative.recompose(), "../baz");
 }
 
 TEST(URI_try_resolve_from, pointer_fragment_on_relative_path) {
-  const sourcemeta::jsontoolkit::URI base{"foo"};
-  sourcemeta::jsontoolkit::URI relative{"#/bar"};
+  const sourcemeta::core::URI base{"foo"};
+  sourcemeta::core::URI relative{"#/bar"};
   relative.try_resolve_from(base);
   EXPECT_EQ(relative.recompose(), "foo#/bar");
 }
 
 TEST(URI_try_resolve_from, base_relative_path_leading_slash) {
-  const sourcemeta::jsontoolkit::URI base{"/foo"};
-  sourcemeta::jsontoolkit::URI relative{"#/bar"};
+  const sourcemeta::core::URI base{"/foo"};
+  sourcemeta::core::URI relative{"#/bar"};
   relative.try_resolve_from(base);
   EXPECT_EQ(relative.recompose(), "/foo#/bar");
 }
@@ -67,36 +67,36 @@ TEST(URI_try_resolve_from, base_relative_path_leading_slash) {
 // https://cr.openjdk.org/~dfuchs/writeups/updating-uri/A Section "Resolutuon"
 
 TEST(URI_resolve_from, rfc3986_resolve_with_relative_path) {
-  const sourcemeta::jsontoolkit::URI base{"s://h/a/c"};
-  sourcemeta::jsontoolkit::URI relative_path{"../../b"};
+  const sourcemeta::core::URI base{"s://h/a/c"};
+  sourcemeta::core::URI relative_path{"../../b"};
   relative_path.resolve_from(base);
   EXPECT_EQ(relative_path.recompose(), "s://h/b");
 }
 
 TEST(URI_resolve_from, rfc3986_resolve_with_empty) {
-  const sourcemeta::jsontoolkit::URI base{"s://h/a/c"};
-  sourcemeta::jsontoolkit::URI empty{""};
+  const sourcemeta::core::URI base{"s://h/a/c"};
+  sourcemeta::core::URI empty{""};
   empty.resolve_from(base);
   EXPECT_EQ(empty.recompose(), "s://h/a/c");
 }
 
 TEST(URI_resolve_from, rfc3986_resolve_with_query) {
-  const sourcemeta::jsontoolkit::URI base{"s://h/a/c"};
-  sourcemeta::jsontoolkit::URI query{"?x=y"};
+  const sourcemeta::core::URI base{"s://h/a/c"};
+  sourcemeta::core::URI query{"?x=y"};
   query.resolve_from(base);
   EXPECT_EQ(query.recompose(), "s://h/a/c?x=y");
 }
 
 TEST(URI_resolve_from, rfc3986_resolve_with_fragment) {
-  const sourcemeta::jsontoolkit::URI base{"s://h/a/c"};
-  sourcemeta::jsontoolkit::URI fragment{"#x=y"};
+  const sourcemeta::core::URI base{"s://h/a/c"};
+  sourcemeta::core::URI fragment{"#x=y"};
   fragment.resolve_from(base);
   EXPECT_EQ(fragment.recompose(), "s://h/a/c#x=y");
 }
 
 TEST(URI_resolve_from, rfc3986_resolve_with_absolute_path) {
-  const sourcemeta::jsontoolkit::URI base{"s://h/a/c"};
-  sourcemeta::jsontoolkit::URI absolute_path{"/././x"};
+  const sourcemeta::core::URI base{"s://h/a/c"};
+  sourcemeta::core::URI absolute_path{"/././x"};
   absolute_path.resolve_from(base);
   EXPECT_EQ(absolute_path.recompose(), "s://h/x");
 }

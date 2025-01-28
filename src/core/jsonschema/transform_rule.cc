@@ -1,4 +1,4 @@
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/jsonschema.h>
 
 #include <cassert>   // assert
 #include <sstream>   // std::ostringstream
@@ -19,7 +19,7 @@ auto vocabularies_to_set(const std::map<std::string, bool> &vocabularies)
 
 } // namespace
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 SchemaTransformRule::SchemaTransformRule(std::string &&name,
                                          std::string &&message)
@@ -87,4 +87,4 @@ auto SchemaTransformRule::check(
       pointer);
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

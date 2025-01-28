@@ -6,10 +6,10 @@ public:
             "Keywords that don't apply to arrays will never match if the "
             "instance is guaranteed to be an array"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return vocabularies.contains(
                "http://json-schema.org/draft-01/hyper-schema#") &&

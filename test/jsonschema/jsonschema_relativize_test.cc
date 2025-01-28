@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonschema.h>
 
 TEST(JSONSchema_relativize, draft4_1) {
-  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  auto schema = sourcemeta::core::parse(R"JSON({
     "id": "http://asyncapi.com/definitions/1.0.0/asyncapi.json",
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "AsyncAPI 1.0 schema.",
@@ -22,11 +22,10 @@ TEST(JSONSchema_relativize, draft4_1) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::relativize(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+                               sourcemeta::core::official_resolver);
 
-  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto expected = sourcemeta::core::parse(R"JSON({
     "id": "http://asyncapi.com/definitions/1.0.0/asyncapi.json",
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "AsyncAPI 1.0 schema.",
@@ -48,7 +47,7 @@ TEST(JSONSchema_relativize, draft4_1) {
 }
 
 TEST(JSONSchema_relativize, draft4_2) {
-  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  auto schema = sourcemeta::core::parse(R"JSON({
     "id": "http://example.com",
     "$schema": "http://json-schema.org/draft-04/schema",
     "properties": {
@@ -58,11 +57,10 @@ TEST(JSONSchema_relativize, draft4_2) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::relativize(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+                               sourcemeta::core::official_resolver);
 
-  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto expected = sourcemeta::core::parse(R"JSON({
     "id": "http://example.com",
     "$schema": "http://json-schema.org/draft-04/schema",
     "properties": {
@@ -76,7 +74,7 @@ TEST(JSONSchema_relativize, draft4_2) {
 }
 
 TEST(JSONSchema_relativize, draft4_3) {
-  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  auto schema = sourcemeta::core::parse(R"JSON({
     "id": "http://example.com",
     "$schema": "http://json-schema.org/draft-04/schema",
     "properties": {
@@ -97,11 +95,10 @@ TEST(JSONSchema_relativize, draft4_3) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::relativize(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+                               sourcemeta::core::official_resolver);
 
-  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto expected = sourcemeta::core::parse(R"JSON({
     "id": "http://example.com",
     "$schema": "http://json-schema.org/draft-04/schema",
     "properties": {
@@ -126,7 +123,7 @@ TEST(JSONSchema_relativize, draft4_3) {
 }
 
 TEST(JSONSchema_relativize, draft4_4) {
-  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  auto schema = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema",
     "properties": {
       "foo": {
@@ -135,11 +132,10 @@ TEST(JSONSchema_relativize, draft4_4) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::relativize(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+                               sourcemeta::core::official_resolver);
 
-  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema",
     "properties": {
       "foo": {
@@ -152,7 +148,7 @@ TEST(JSONSchema_relativize, draft4_4) {
 }
 
 TEST(JSONSchema_relativize, draft4_5) {
-  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  auto schema = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema",
     "properties": {
       "foo": {
@@ -172,11 +168,10 @@ TEST(JSONSchema_relativize, draft4_5) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::relativize(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+                               sourcemeta::core::official_resolver);
 
-  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema",
     "properties": {
       "foo": {
@@ -200,7 +195,7 @@ TEST(JSONSchema_relativize, draft4_5) {
 }
 
 TEST(JSONSchema_relativize, draft4_6) {
-  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  auto schema = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema",
     "properties": {
       "foo": {
@@ -209,12 +204,11 @@ TEST(JSONSchema_relativize, draft4_6) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::relativize(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver, std::nullopt,
-      "http://asyncapi.com/definitions");
+  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+                               sourcemeta::core::official_resolver,
+                               std::nullopt, "http://asyncapi.com/definitions");
 
-  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto expected = sourcemeta::core::parse(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema",
     "properties": {
       "foo": {
@@ -227,7 +221,7 @@ TEST(JSONSchema_relativize, draft4_6) {
 }
 
 TEST(JSONSchema_relativize, draft4_7) {
-  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  auto schema = sourcemeta::core::parse(R"JSON({
     "id": "http://asyncapi.com/definitions",
     "properties": {
       "foo": {
@@ -236,12 +230,11 @@ TEST(JSONSchema_relativize, draft4_7) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::relativize(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
-      "http://json-schema.org/draft-04/schema");
+  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+                               sourcemeta::core::official_resolver,
+                               "http://json-schema.org/draft-04/schema");
 
-  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto expected = sourcemeta::core::parse(R"JSON({
     "id": "http://asyncapi.com/definitions",
     "properties": {
       "foo": {
@@ -254,7 +247,7 @@ TEST(JSONSchema_relativize, draft4_7) {
 }
 
 TEST(JSONSchema_relativize, draft4_8) {
-  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  auto schema = sourcemeta::core::parse(R"JSON({
     "id": "http://asyncapi.com/definitions",
     "properties": {
       "foo": {
@@ -263,14 +256,14 @@ TEST(JSONSchema_relativize, draft4_8) {
     }
   })JSON");
 
-  EXPECT_THROW(sourcemeta::jsontoolkit::relativize(
-                   schema, sourcemeta::jsontoolkit::default_schema_walker,
-                   sourcemeta::jsontoolkit::official_resolver),
-               sourcemeta::jsontoolkit::SchemaError);
+  EXPECT_THROW(sourcemeta::core::relativize(
+                   schema, sourcemeta::core::default_schema_walker,
+                   sourcemeta::core::official_resolver),
+               sourcemeta::core::SchemaError);
 }
 
 TEST(JSONSchema_relativize, 2020_12_1) {
-  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  auto schema = sourcemeta::core::parse(R"JSON({
     "$id": "http://example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -280,11 +273,10 @@ TEST(JSONSchema_relativize, 2020_12_1) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::relativize(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+                               sourcemeta::core::official_resolver);
 
-  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto expected = sourcemeta::core::parse(R"JSON({
     "$id": "http://example.com",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -298,17 +290,16 @@ TEST(JSONSchema_relativize, 2020_12_1) {
 }
 
 TEST(JSONSchema_relativize, 2020_12_2) {
-  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  auto schema = sourcemeta::core::parse(R"JSON({
     "$id": "https://example.com/foo/bar/baz/qux",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$ref": "../../schema.json"
   })JSON");
 
-  sourcemeta::jsontoolkit::relativize(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+                               sourcemeta::core::official_resolver);
 
-  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto expected = sourcemeta::core::parse(R"JSON({
     "$id": "https://example.com/foo/bar/baz/qux",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$ref": "../../schema.json"
@@ -318,7 +309,7 @@ TEST(JSONSchema_relativize, 2020_12_2) {
 }
 
 TEST(JSONSchema_relativize, recursive_ref) {
-  auto schema = sourcemeta::jsontoolkit::parse(R"JSON({
+  auto schema = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$id": "https://www.sourcemeta.com",
     "$recursiveAnchor": true,
@@ -327,11 +318,10 @@ TEST(JSONSchema_relativize, recursive_ref) {
     }
   })JSON");
 
-  sourcemeta::jsontoolkit::relativize(
-      schema, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver);
+  sourcemeta::core::relativize(schema, sourcemeta::core::default_schema_walker,
+                               sourcemeta::core::official_resolver);
 
-  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$id": "https://www.sourcemeta.com",
     "$recursiveAnchor": true,

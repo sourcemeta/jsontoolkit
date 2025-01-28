@@ -1,10 +1,10 @@
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/jsonschema.h>
 
 #include <set>       // std::set
 #include <sstream>   // std::ostringstream
 #include <stdexcept> // std::runtime_error
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 auto SchemaTransformer::apply(
     JSON &schema, const SchemaWalker &walker, const SchemaResolver &resolver,
@@ -81,4 +81,4 @@ auto SchemaTransformer::check(
   return result;
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

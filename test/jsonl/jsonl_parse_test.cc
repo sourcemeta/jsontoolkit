@@ -3,12 +3,12 @@
 #include <sstream>
 #include <vector>
 
-#include <sourcemeta/jsontoolkit/jsonl.h>
+#include <sourcemeta/core/jsonl.h>
 
 TEST(JSONL_parse, empty) {
   std::istringstream stream{""};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 
@@ -17,8 +17,8 @@ TEST(JSONL_parse, empty) {
 
 TEST(JSONL_parse, blank) {
   std::istringstream stream{"    "};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 
@@ -28,8 +28,8 @@ TEST(JSONL_parse, blank) {
 TEST(JSONL_parse, integers_n) {
   std::string input{"1\n2\n3\n4"};
   std::istringstream stream{input};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 
@@ -47,8 +47,8 @@ TEST(JSONL_parse, integers_n) {
 TEST(JSONL_parse, whitespace_before_after_within) {
   std::string input{" \t\r   1  \r\r\n2  \t\n3   \n4   \t\r   "};
   std::istringstream stream{input};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 
@@ -66,8 +66,8 @@ TEST(JSONL_parse, whitespace_before_after_within) {
 TEST(JSONL_parse, integers_n_trailing_n) {
   std::string input{"1\n2\n3\n4\n"};
   std::istringstream stream{input};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 
@@ -85,8 +85,8 @@ TEST(JSONL_parse, integers_n_trailing_n) {
 TEST(JSONL_parse, integers_n_trailing_rn) {
   std::string input{"1\n2\n3\n4\r\n"};
   std::istringstream stream{input};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 
@@ -104,8 +104,8 @@ TEST(JSONL_parse, integers_n_trailing_rn) {
 TEST(JSONL_parse, integers_rn) {
   std::string input{"1\r\n2\r\n3\r\n4"};
   std::istringstream stream{input};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 
@@ -123,8 +123,8 @@ TEST(JSONL_parse, integers_rn) {
 TEST(JSONL_parse, integers_rn_trailing_rn) {
   std::string input{"1\r\n2\r\n3\r\n4\r\n"};
   std::istringstream stream{input};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 
@@ -142,8 +142,8 @@ TEST(JSONL_parse, integers_rn_trailing_rn) {
 TEST(JSONL_parse, integers_rn_trailing_n) {
   std::string input{"1\r\n2\r\n3\r\n4\n"};
   std::istringstream stream{input};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 
@@ -161,8 +161,8 @@ TEST(JSONL_parse, integers_rn_trailing_n) {
 TEST(JSONL_parse, integers_mixed) {
   std::string input{"1\r\n2\n3\r\n4\n"};
   std::istringstream stream{input};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 
@@ -187,8 +187,8 @@ TEST(JSONL_parse, example_1) {
   )EOF"};
 
   std::istringstream stream{input};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 
@@ -261,8 +261,8 @@ TEST(JSONL_parse, example_2) {
   )EOF"};
 
   std::istringstream stream{input};
-  std::vector<sourcemeta::jsontoolkit::JSON> result;
-  for (const auto &document : sourcemeta::jsontoolkit::JSONL{stream}) {
+  std::vector<sourcemeta::core::JSON> result;
+  for (const auto &document : sourcemeta::core::JSONL{stream}) {
     result.push_back(document);
   }
 

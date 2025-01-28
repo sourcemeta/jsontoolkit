@@ -1,4 +1,4 @@
-#include <sourcemeta/jsontoolkit/jsonpointer.h>
+#include <sourcemeta/core/jsonpointer.h>
 
 #include "grammar.h"
 #include "parser.h"
@@ -14,10 +14,10 @@
 
 namespace {
 
-template <template <typename T> typename Allocator, typename V,
-          typename PointerT = sourcemeta::jsontoolkit::GenericPointer<
-              typename V::String,
-              sourcemeta::jsontoolkit::KeyHash<typename V::String>>>
+template <
+    template <typename T> typename Allocator, typename V,
+    typename PointerT = sourcemeta::core::GenericPointer<
+        typename V::String, sourcemeta::core::KeyHash<typename V::String>>>
 auto traverse(V &document, typename PointerT::const_iterator begin,
               typename PointerT::const_iterator end) -> V & {
   // Make sure types match
@@ -62,10 +62,10 @@ auto traverse(V &document, typename PointerT::const_iterator begin,
 
 // A variant of the above function that assumes traversing of
 // the entire pointer and does not rely on iterators for performance reasons
-template <template <typename T> typename Allocator, typename V,
-          typename PointerT = sourcemeta::jsontoolkit::GenericPointer<
-              typename V::String,
-              sourcemeta::jsontoolkit::KeyHash<typename V::String>>>
+template <
+    template <typename T> typename Allocator, typename V,
+    typename PointerT = sourcemeta::core::GenericPointer<
+        typename V::String, sourcemeta::core::KeyHash<typename V::String>>>
 auto traverse_all(V &document, const PointerT &pointer) -> V & {
   // Make sure types match
   static_assert(
@@ -88,14 +88,13 @@ auto traverse_all(V &document, const PointerT &pointer) -> V & {
 }
 
 template <typename PointerT>
-auto try_traverse(const sourcemeta::jsontoolkit::JSON &document,
-                  const PointerT &pointer)
-    -> const sourcemeta::jsontoolkit::JSON * {
-  const sourcemeta::jsontoolkit::JSON *current = &document;
+auto try_traverse(const sourcemeta::core::JSON &document,
+                  const PointerT &pointer) -> const sourcemeta::core::JSON * {
+  const sourcemeta::core::JSON *current = &document;
 
   for (const auto &token : pointer) {
     const auto type{current->type()};
-    const auto is_object{type == sourcemeta::jsontoolkit::JSON::Type::Object};
+    const auto is_object{type == sourcemeta::core::JSON::Type::Object};
 
     if (token.is_property()) {
       if (!is_object) {
@@ -109,8 +108,7 @@ auto try_traverse(const sourcemeta::jsontoolkit::JSON &document,
       } else {
         return nullptr;
       }
-    } else if (type != sourcemeta::jsontoolkit::JSON::Type::Array &&
-               !is_object) {
+    } else if (type != sourcemeta::core::JSON::Type::Array && !is_object) {
       return nullptr;
     } else {
       const auto index{token.to_index()};
@@ -131,7 +129,7 @@ auto try_traverse(const sourcemeta::jsontoolkit::JSON &document,
 
 } // namespace
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 auto get(const JSON &document, const Pointer &pointer) -> const JSON & {
   if (pointer.empty()) {
@@ -319,4 +317,4 @@ auto to_uri(const Pointer &pointer, const URI &base) -> URI {
   return to_uri(pointer).try_resolve_from(base).canonicalize();
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

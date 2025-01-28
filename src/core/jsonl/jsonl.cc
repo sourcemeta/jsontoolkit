@@ -1,6 +1,6 @@
-#include <sourcemeta/jsontoolkit/jsonl.h>
+#include <sourcemeta/core/jsonl.h>
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 JSONL::JSONL(std::basic_istream<JSON::Char, JSON::CharTraits> &stream)
     : data{stream} {}
@@ -10,4 +10,4 @@ auto JSONL::end() -> JSONL::const_iterator { return {nullptr}; }
 auto JSONL::cbegin() -> JSONL::const_iterator { return {&this->data}; }
 auto JSONL::cend() -> JSONL::const_iterator { return {nullptr}; }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

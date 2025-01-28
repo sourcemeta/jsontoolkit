@@ -6,10 +6,10 @@ public:
             "If an instance is guaranteed to be an integer, setting a real "
             "number lower bound is the same as a ceil of that lower bound"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,
@@ -30,6 +30,6 @@ public:
   auto transform(PointerProxy &transformer) const -> void override {
     const auto current{transformer.value().at("minimum").to_real()};
     const auto new_value{static_cast<std::int64_t>(std::ceil(current))};
-    transformer.assign("minimum", sourcemeta::jsontoolkit::JSON{new_value});
+    transformer.assign("minimum", sourcemeta::core::JSON{new_value});
   }
 };

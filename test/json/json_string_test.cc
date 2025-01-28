@@ -3,30 +3,30 @@
 #include <string_view>
 #include <unordered_set>
 
-#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/core/json.h>
 
 TEST(JSON_string, foo_value_string) {
   const std::string value{"foo"};
-  const sourcemeta::jsontoolkit::JSON document{value};
+  const sourcemeta::core::JSON document{value};
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.to_string(), "foo");
 }
 
 TEST(JSON_string, foo_value_string_view) {
   const std::string_view value{"foo"};
-  const sourcemeta::jsontoolkit::JSON document{value};
+  const sourcemeta::core::JSON document{value};
   EXPECT_TRUE(document.is_string());
   EXPECT_EQ(document.to_string(), "foo");
 }
 
 TEST(JSON_string, type) {
-  const sourcemeta::jsontoolkit::JSON document{"foo"};
-  EXPECT_EQ(document.type(), sourcemeta::jsontoolkit::JSON::Type::String);
+  const sourcemeta::core::JSON document{"foo"};
+  EXPECT_EQ(document.type(), sourcemeta::core::JSON::Type::String);
 }
 
 TEST(JSON_string, to_stringstream) {
   const std::string value{"foo bar"};
-  const sourcemeta::jsontoolkit::JSON document{value};
+  const sourcemeta::core::JSON document{value};
   EXPECT_TRUE(document.is_string());
   auto stream{document.to_stringstream()};
   EXPECT_EQ(stream.get(), 'f');
@@ -41,38 +41,38 @@ TEST(JSON_string, to_stringstream) {
 }
 
 TEST(JSON_string, estimated_byte_size_foo) {
-  const sourcemeta::jsontoolkit::JSON document{"foo"};
+  const sourcemeta::core::JSON document{"foo"};
   EXPECT_EQ(document.estimated_byte_size(), 3);
 }
 
 TEST(JSON_string, estimated_byte_size_foo_bar_baz) {
-  const sourcemeta::jsontoolkit::JSON document{"foo bar baz"};
+  const sourcemeta::core::JSON document{"foo bar baz"};
   EXPECT_EQ(document.estimated_byte_size(), 11);
 }
 
 TEST(JSON_string, estimated_byte_size_empty) {
-  const sourcemeta::jsontoolkit::JSON document{""};
+  const sourcemeta::core::JSON document{""};
   EXPECT_EQ(document.estimated_byte_size(), 0);
 }
 
 TEST(JSON_string, fast_hash_foo) {
-  const sourcemeta::jsontoolkit::JSON document{"foo"};
+  const sourcemeta::core::JSON document{"foo"};
   EXPECT_EQ(document.fast_hash(), 6);
 }
 
 TEST(JSON_string, fast_hash_foo_bar_baz) {
-  const sourcemeta::jsontoolkit::JSON document{"foo bar baz"};
+  const sourcemeta::core::JSON document{"foo bar baz"};
   EXPECT_EQ(document.fast_hash(), 14);
 }
 
 TEST(JSON_string, fast_hash_empty) {
-  const sourcemeta::jsontoolkit::JSON document{""};
+  const sourcemeta::core::JSON document{""};
   EXPECT_EQ(document.fast_hash(), 3);
 }
 
 TEST(JSON_string, unicode_length_1) {
   // This unicode string corresponds to 简律纯
-  const auto document = sourcemeta::jsontoolkit::parse(R"JSON({
+  const auto document = sourcemeta::core::parse(R"JSON({
     "name": "\u7b80\u5f8b\u7eaf"
   })JSON");
 
@@ -89,21 +89,21 @@ TEST(JSON_string, unicode_length_1) {
 }
 
 TEST(JSON_string, contains_true) {
-  const sourcemeta::jsontoolkit::JSON document{"foo bar baz"};
+  const sourcemeta::core::JSON document{"foo bar baz"};
   EXPECT_TRUE(document.contains("foo"));
 }
 
 TEST(JSON_string, contains_false) {
-  const sourcemeta::jsontoolkit::JSON document{"foo bar baz"};
+  const sourcemeta::core::JSON document{"foo bar baz"};
   EXPECT_FALSE(document.contains("fooo"));
 }
 
 TEST(JSON_string, contains_character_true) {
-  const sourcemeta::jsontoolkit::JSON document{"foo"};
+  const sourcemeta::core::JSON document{"foo"};
   EXPECT_TRUE(document.contains('f'));
 }
 
 TEST(JSON_string, contains_character_false) {
-  const sourcemeta::jsontoolkit::JSON document{"foo"};
+  const sourcemeta::core::JSON document{"foo"};
   EXPECT_FALSE(document.contains('b'));
 }

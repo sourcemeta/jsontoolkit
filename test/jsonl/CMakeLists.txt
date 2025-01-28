@@ -1,8 +1,8 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonl
-  FOLDER "JSON Toolkit/JSONL"
+noa_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonl
+  FOLDER "Core/JSONL"
   SOURCES
     jsonl_parse_test.cc
     jsonl_parse_error_test.cc)
 
-target_link_libraries(sourcemeta_jsontoolkit_jsonl_unit
-  PRIVATE sourcemeta::jsontoolkit::jsonl)
+target_link_libraries(sourcemeta_core_jsonl_unit
+  PRIVATE sourcemeta::core::jsonl)

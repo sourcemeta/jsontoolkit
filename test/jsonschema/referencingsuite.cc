@@ -8,16 +8,16 @@
 #include <string>
 #include <utility>
 
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonpointer.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
-#include <sourcemeta/jsontoolkit/uri.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonpointer.h>
+#include <sourcemeta/core/jsonschema.h>
+#include <sourcemeta/core/uri.h>
 
-static auto
-dereference(const std::string &uri,
-            const std::map<std::string, std::pair<sourcemeta::jsontoolkit::JSON,
-                                                  std::string>> &registry)
-    -> std::optional<std::pair<sourcemeta::jsontoolkit::JSON, std::string>> {
+static auto dereference(
+    const std::string &uri,
+    const std::map<std::string, std::pair<sourcemeta::core::JSON, std::string>>
+        &registry)
+    -> std::optional<std::pair<sourcemeta::core::JSON, std::string>> {
   if (!registry.contains(uri)) {
     return std::nullopt;
   }
@@ -27,8 +27,8 @@ dereference(const std::string &uri,
 
 class ReferencingTest : public testing::Test {
 public:
-  explicit ReferencingTest(sourcemeta::jsontoolkit::JSON test_suite,
-                           sourcemeta::jsontoolkit::JSON test_document,
+  explicit ReferencingTest(sourcemeta::core::JSON test_suite,
+                           sourcemeta::core::JSON test_document,
                            std::string default_dialect)
       // Ubuntu's ClangFormat gets a bit lost on this one
       // clang-format off
@@ -41,23 +41,21 @@ public:
     EXPECT_TRUE(this->suite.defines("registry"));
     EXPECT_TRUE(this->suite.at("registry").is_object());
     for (const auto &entry : this->suite.at("registry").as_object()) {
-      assert(sourcemeta::jsontoolkit::is_schema(entry.second));
+      assert(sourcemeta::core::is_schema(entry.second));
       this->registry.insert({entry.first, {entry.second, entry.first}});
     }
 
     // (2) Frame every schema and re-populate registry
-    std::map<std::string, std::pair<sourcemeta::jsontoolkit::JSON, std::string>>
+    std::map<std::string, std::pair<sourcemeta::core::JSON, std::string>>
         new_entries;
     for (const auto &[uri, schema] : this->registry) {
-      sourcemeta::jsontoolkit::Frame frame;
-      frame.analyse(
-          schema.first, sourcemeta::jsontoolkit::default_schema_walker,
-          sourcemeta::jsontoolkit::official_resolver, this->dialect, uri);
+      sourcemeta::core::Frame frame;
+      frame.analyse(schema.first, sourcemeta::core::default_schema_walker,
+                    sourcemeta::core::official_resolver, this->dialect, uri);
       for (const auto &[key, entry] : frame.locations()) {
         new_entries.insert(
             {key.second,
-             {sourcemeta::jsontoolkit::get(schema.first, entry.pointer),
-              entry.base}});
+             {sourcemeta::core::get(schema.first, entry.pointer), entry.base}});
       }
     }
 
@@ -71,7 +69,7 @@ public:
     this->assert_case(this->test, std::nullopt);
   }
 
-  auto assert_case(const sourcemeta::jsontoolkit::JSON &current,
+  auto assert_case(const sourcemeta::core::JSON &current,
                    const std::optional<std::string> &default_base_uri) -> void {
     const bool is_error{current.defines("error") &&
                         current.at("error").is_boolean() &&
@@ -86,7 +84,7 @@ public:
     const std::string ref_string{current.at("ref").to_string()};
 
     try {
-      sourcemeta::jsontoolkit::URI ref_uri{ref_string};
+      sourcemeta::core::URI ref_uri{ref_string};
       if (base_uri.has_value()) {
         ref_uri.resolve_from(base_uri.value());
       }
@@ -104,16 +102,16 @@ public:
           assert_case(current.at("then"), result.value().second);
         }
       }
-    } catch (const sourcemeta::jsontoolkit::URIParseError &) {
+    } catch (const sourcemeta::core::URIParseError &) {
       EXPECT_TRUE(is_error);
     }
   }
 
 private:
-  const sourcemeta::jsontoolkit::JSON suite;
-  const sourcemeta::jsontoolkit::JSON test;
+  const sourcemeta::core::JSON suite;
+  const sourcemeta::core::JSON test;
   const std::string dialect;
-  std::map<std::string, std::pair<sourcemeta::jsontoolkit::JSON, std::string>>
+  std::map<std::string, std::pair<sourcemeta::core::JSON, std::string>>
       registry;
 };
 
@@ -124,8 +122,8 @@ static auto register_tests(const std::filesystem::path &subdirectory,
        std::filesystem::directory_iterator(
            std::filesystem::path{REFERENCING_SUITE_PATH} / subdirectory)) {
     const std::string name{entry.path().stem().string()};
-    const sourcemeta::jsontoolkit::JSON test =
-        sourcemeta::jsontoolkit::from_file(entry.path());
+    const sourcemeta::core::JSON test =
+        sourcemeta::core::from_file(entry.path());
     assert(test.is_object());
     assert(test.defines("tests"));
     assert(test.at("tests").is_array());

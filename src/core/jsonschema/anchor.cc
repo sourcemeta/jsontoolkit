@@ -1,16 +1,16 @@
-#include <sourcemeta/jsontoolkit/jsonschema.h>
-#include <sourcemeta/jsontoolkit/uri.h>
+#include <sourcemeta/core/jsonschema.h>
+#include <sourcemeta/core/uri.h>
 
 #include <cassert> // assert
 #include <utility> // std::move
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 auto anchors(const JSON &schema, const SchemaResolver &resolver,
              const std::optional<std::string> &default_dialect)
     -> std::map<std::string, AnchorType> {
   const std::map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(schema, resolver, default_dialect)};
+      sourcemeta::core::vocabularies(schema, resolver, default_dialect)};
   return anchors(schema, vocabularies);
 }
 
@@ -98,4 +98,4 @@ auto anchors(const JSON &schema,
   return result;
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

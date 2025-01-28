@@ -1,5 +1,5 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
-  FOLDER "JSON Toolkit/JSON Schema"
+noa_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonschema
+  FOLDER "Core/JSON Schema"
   SOURCES
     jsonschema_test_utils.h
     jsonschema_anchor_2020_12_test.cc
@@ -94,25 +94,25 @@ noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema
     jsonschema_flat_file_resolver_test.cc
     jsonschema_format_test.cc)
 
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
-  PRIVATE sourcemeta::jsontoolkit::json)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
-  PRIVATE sourcemeta::jsontoolkit::jsonpointer)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
-  PRIVATE sourcemeta::jsontoolkit::jsonschema)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_unit
-  PRIVATE sourcemeta::jsontoolkit::uri)
-target_compile_definitions(sourcemeta_jsontoolkit_jsonschema_unit
+target_link_libraries(sourcemeta_core_jsonschema_unit
+  PRIVATE sourcemeta::core::json)
+target_link_libraries(sourcemeta_core_jsonschema_unit
+  PRIVATE sourcemeta::core::jsonpointer)
+target_link_libraries(sourcemeta_core_jsonschema_unit
+  PRIVATE sourcemeta::core::jsonschema)
+target_link_libraries(sourcemeta_core_jsonschema_unit
+  PRIVATE sourcemeta::core::uri)
+target_compile_definitions(sourcemeta_core_jsonschema_unit
   PRIVATE SCHEMAS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/schemas")
 
 # JSON Schema Referencing Suite
 # See https://github.com/python-jsonschema/referencing-suite
-noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonschema_referencing_suite
-  FOLDER "JSON Toolkit/JSON Schema"
+noa_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonschema_referencing_suite
+  FOLDER "Core/JSON Schema"
   SOURCES referencingsuite.cc)
-target_compile_definitions(sourcemeta_jsontoolkit_jsonschema_referencing_suite_unit
+target_compile_definitions(sourcemeta_core_jsonschema_referencing_suite_unit
   PRIVATE REFERENCING_SUITE_PATH="${PROJECT_SOURCE_DIR}/vendor/referencing-suite/tests")
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_referencing_suite_unit PRIVATE sourcemeta::jsontoolkit::uri)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_referencing_suite_unit PRIVATE sourcemeta::jsontoolkit::json)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_referencing_suite_unit PRIVATE sourcemeta::jsontoolkit::jsonschema)
-target_link_libraries(sourcemeta_jsontoolkit_jsonschema_referencing_suite_unit PRIVATE sourcemeta::jsontoolkit::jsonpointer)
+target_link_libraries(sourcemeta_core_jsonschema_referencing_suite_unit PRIVATE sourcemeta::core::uri)
+target_link_libraries(sourcemeta_core_jsonschema_referencing_suite_unit PRIVATE sourcemeta::core::json)
+target_link_libraries(sourcemeta_core_jsonschema_referencing_suite_unit PRIVATE sourcemeta::core::jsonschema)
+target_link_libraries(sourcemeta_core_jsonschema_referencing_suite_unit PRIVATE sourcemeta::core::jsonpointer)

@@ -1,7 +1,7 @@
-#ifndef SOURCEMETA_JSONTOOLKIT_JSONPOINTER_GRAMMAR_H_
-#define SOURCEMETA_JSONTOOLKIT_JSONPOINTER_GRAMMAR_H_
+#ifndef SOURCEMETA_CORE_JSONPOINTER_GRAMMAR_H_
+#define SOURCEMETA_CORE_JSONPOINTER_GRAMMAR_H_
 
-namespace sourcemeta::jsontoolkit::internal {
+namespace sourcemeta::core::internal {
 template <typename CharT> static constexpr CharT token_pointer_slash{'\u002F'};
 template <typename CharT> static constexpr CharT token_pointer_tilde{'\u007E'};
 template <typename CharT> static constexpr CharT token_pointer_zero{'\u0030'};
@@ -42,6 +42,6 @@ template <typename CharT>
 static constexpr CharT token_pointer_number_eight{'\u0038'};
 template <typename CharT>
 static constexpr CharT token_pointer_number_nine{'\u0039'};
-} // namespace sourcemeta::jsontoolkit::internal
+} // namespace sourcemeta::core::internal
 
 #endif

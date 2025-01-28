@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonschema.h>
 
 #include <string> // std::string
 
 static auto test_resolver(std::string_view identifier)
-    -> std::optional<sourcemeta::jsontoolkit::JSON> {
+    -> std::optional<sourcemeta::core::JSON> {
   if (identifier == "https://sourcemeta.com/2019-09-custom-vocabularies") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$id": "https://sourcemeta.com/2019-09-custom-vocabularies",
       "$schema": "https://json-schema.org/draft/2019-09/schema",
       "$vocabulary": {
@@ -17,18 +17,18 @@ static auto test_resolver(std::string_view identifier)
       }
     })JSON");
   } else if (identifier == "https://sourcemeta.com/2019-09-no-vocabularies") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$id": "https://sourcemeta.com/2019-09-no-vocabularies",
       "$schema": "https://json-schema.org/draft/2019-09/schema"
     })JSON");
   } else if (identifier ==
              "https://sourcemeta.com/2019-09-hyper-no-vocabularies") {
-    return sourcemeta::jsontoolkit::parse(R"JSON({
+    return sourcemeta::core::parse(R"JSON({
       "$id": "https://sourcemeta.com/2019-09-hyper-no-vocabularies",
       "$schema": "https://json-schema.org/draft/2019-09/hyper-schema"
     })JSON");
   } else {
-    return sourcemeta::jsontoolkit::official_resolver(identifier);
+    return sourcemeta::core::official_resolver(identifier);
   }
 }
 
@@ -41,36 +41,33 @@ static auto test_resolver(std::string_view identifier)
   EXPECT_FALSE((vocabularies).at(vocabulary));
 
 TEST(JSONSchema_vocabulary_2019_09, no_vocabularies) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2019-09-no-vocabularies"
   })JSON");
   const std::map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, test_resolver)};
+      sourcemeta::core::vocabularies(document, test_resolver)};
   EXPECT_EQ(vocabularies.size(), 1);
   EXPECT_VOCABULARY_REQUIRED(
       vocabularies, "https://json-schema.org/draft/2019-09/vocab/core");
 }
 
 TEST(JSONSchema_vocabulary_2019_09, no_vocabularies_hyper) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2019-09-hyper-no-vocabularies"
   })JSON");
   const std::map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, test_resolver)};
+      sourcemeta::core::vocabularies(document, test_resolver)};
   EXPECT_EQ(vocabularies.size(), 1);
   EXPECT_VOCABULARY_REQUIRED(
       vocabularies, "https://json-schema.org/draft/2019-09/vocab/core");
 }
 
 TEST(JSONSchema_vocabulary_2019_09, hyper) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/hyper-schema"
   })JSON");
   const std::map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, test_resolver)};
+      sourcemeta::core::vocabularies(document, test_resolver)};
   EXPECT_EQ(vocabularies.size(), 7);
   EXPECT_VOCABULARY_REQUIRED(
       vocabularies, "https://json-schema.org/draft/2019-09/vocab/core");
@@ -89,12 +86,11 @@ TEST(JSONSchema_vocabulary_2019_09, hyper) {
 }
 
 TEST(JSONSchema_vocabulary_2019_09, custom_vocabularies) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://sourcemeta.com/2019-09-custom-vocabularies"
   })JSON");
   const std::map<std::string, bool> vocabularies{
-      sourcemeta::jsontoolkit::vocabularies(document, test_resolver)};
+      sourcemeta::core::vocabularies(document, test_resolver)};
   EXPECT_EQ(vocabularies.size(), 3);
   EXPECT_VOCABULARY_REQUIRED(
       vocabularies, "https://json-schema.org/draft/2019-09/vocab/core");

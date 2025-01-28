@@ -6,10 +6,10 @@ public:
             "Setting `exclusiveMaximum` when `type` is `integer` is syntax "
             "sugar for `maximum`"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,
@@ -28,13 +28,13 @@ public:
   auto transform(PointerProxy &transformer) const -> void override {
     if (transformer.value().at("exclusiveMaximum").is_integer()) {
       auto new_maximum = transformer.value().at("exclusiveMaximum");
-      new_maximum += sourcemeta::jsontoolkit::JSON{-1};
+      new_maximum += sourcemeta::core::JSON{-1};
       transformer.assign("maximum", new_maximum);
       transformer.erase("exclusiveMaximum");
     } else {
       const auto current{transformer.value().at("exclusiveMaximum").to_real()};
       const auto new_value{static_cast<std::int64_t>(std::floor(current))};
-      transformer.assign("maximum", sourcemeta::jsontoolkit::JSON{new_value});
+      transformer.assign("maximum", sourcemeta::core::JSON{new_value});
       transformer.erase("exclusiveMaximum");
     }
   }

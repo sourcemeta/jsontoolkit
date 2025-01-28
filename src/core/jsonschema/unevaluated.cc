@@ -1,11 +1,11 @@
-#include <sourcemeta/jsontoolkit/jsonschema.h>
-#include <sourcemeta/jsontoolkit/uri.h>
+#include <sourcemeta/core/jsonschema.h>
+#include <sourcemeta/core/uri.h>
 
 #include <cassert> // assert
 #include <utility> // std::move
 
 namespace {
-using namespace sourcemeta::jsontoolkit;
+using namespace sourcemeta::core;
 
 // TODO: Extract all of this into a public utility to traverse
 // adjacent subschemas
@@ -127,7 +127,7 @@ auto find_adjacent_dependencies(const JSON::String &current, const JSON &schema,
 
 } // namespace
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 auto unevaluated(const JSON &schema, const Frame &frame,
                  const SchemaWalker &walker, const SchemaResolver &resolver)
@@ -199,4 +199,4 @@ auto unevaluated(const JSON &schema, const Frame &frame,
   return result;
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

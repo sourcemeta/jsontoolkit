@@ -6,10 +6,10 @@ public:
             "Every array has a minimum size of zero items but may be affected "
             "by `minContains`"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,
@@ -26,10 +26,10 @@ public:
         transformer.value().defines("minContains") &&
         transformer.value().at("minContains").is_integer()) {
       transformer.assign(
-          "minItems", sourcemeta::jsontoolkit::JSON{
+          "minItems", sourcemeta::core::JSON{
                           transformer.value().at("minContains").to_integer()});
     } else {
-      transformer.assign("minItems", sourcemeta::jsontoolkit::JSON{0});
+      transformer.assign("minItems", sourcemeta::core::JSON{0});
     }
   }
 };

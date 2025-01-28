@@ -1,10 +1,10 @@
-#include <sourcemeta/jsontoolkit/uri.h>
+#include <sourcemeta/core/uri.h>
 #include <uriparser/Uri.h>
 
 #include <algorithm> // std::copy
 #include <sstream>   // std::ostringstream
 
-namespace sourcemeta::jsontoolkit {
+namespace sourcemeta::core {
 
 // TODO: Not very efficient. Can be better if we implement it from scratch
 auto URI::escape(std::istream &input, std::ostream &output) -> void {
@@ -64,4 +64,4 @@ auto URI::unescape(std::istream &input, std::ostream &output) -> void {
   }
 }
 
-} // namespace sourcemeta::jsontoolkit
+} // namespace sourcemeta::core

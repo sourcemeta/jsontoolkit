@@ -7,45 +7,39 @@
 #include <utility>
 #include <vector>
 
-#include <sourcemeta/jsontoolkit/json.h>
+#include <sourcemeta/core/json.h>
 
 TEST(JSON_array, general_traits) {
-  EXPECT_TRUE(std::is_default_constructible<
-              sourcemeta::jsontoolkit::JSON::Array>::value);
-  EXPECT_FALSE(std::is_nothrow_default_constructible<
-               sourcemeta::jsontoolkit::JSON::Array>::value);
   EXPECT_TRUE(
-      std::is_destructible<sourcemeta::jsontoolkit::JSON::Array>::value);
-  EXPECT_TRUE(std::is_nothrow_destructible<
-              sourcemeta::jsontoolkit::JSON::Array>::value);
+      std::is_default_constructible<sourcemeta::core::JSON::Array>::value);
+  EXPECT_FALSE(std::is_nothrow_default_constructible<
+               sourcemeta::core::JSON::Array>::value);
+  EXPECT_TRUE(std::is_destructible<sourcemeta::core::JSON::Array>::value);
+  EXPECT_TRUE(
+      std::is_nothrow_destructible<sourcemeta::core::JSON::Array>::value);
 }
 
 TEST(JSON_array, copy_traits) {
-  EXPECT_TRUE(
-      std::is_copy_assignable<sourcemeta::jsontoolkit::JSON::Array>::value);
-  EXPECT_TRUE(
-      std::is_copy_constructible<sourcemeta::jsontoolkit::JSON::Array>::value);
-  EXPECT_FALSE(std::is_nothrow_copy_assignable<
-               sourcemeta::jsontoolkit::JSON::Array>::value);
-  EXPECT_FALSE(std::is_nothrow_copy_constructible<
-               sourcemeta::jsontoolkit::JSON::Array>::value);
+  EXPECT_TRUE(std::is_copy_assignable<sourcemeta::core::JSON::Array>::value);
+  EXPECT_TRUE(std::is_copy_constructible<sourcemeta::core::JSON::Array>::value);
+  EXPECT_FALSE(
+      std::is_nothrow_copy_assignable<sourcemeta::core::JSON::Array>::value);
+  EXPECT_FALSE(
+      std::is_nothrow_copy_constructible<sourcemeta::core::JSON::Array>::value);
 }
 
 TEST(JSON_array, move_traits) {
+  EXPECT_TRUE(std::is_move_assignable<sourcemeta::core::JSON::Array>::value);
+  EXPECT_TRUE(std::is_move_constructible<sourcemeta::core::JSON::Array>::value);
   EXPECT_TRUE(
-      std::is_move_assignable<sourcemeta::jsontoolkit::JSON::Array>::value);
+      std::is_nothrow_move_assignable<sourcemeta::core::JSON::Array>::value);
   EXPECT_TRUE(
-      std::is_move_constructible<sourcemeta::jsontoolkit::JSON::Array>::value);
-  EXPECT_TRUE(std::is_nothrow_move_assignable<
-              sourcemeta::jsontoolkit::JSON::Array>::value);
-  EXPECT_TRUE(std::is_nothrow_move_constructible<
-              sourcemeta::jsontoolkit::JSON::Array>::value);
+      std::is_nothrow_move_constructible<sourcemeta::core::JSON::Array>::value);
 }
 
 TEST(JSON_array, initializer_list_2_booleans) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{false},
-      sourcemeta::jsontoolkit::JSON{true}};
+  const sourcemeta::core::JSON document{sourcemeta::core::JSON{false},
+                                        sourcemeta::core::JSON{true}};
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 2);
@@ -57,15 +51,13 @@ TEST(JSON_array, initializer_list_2_booleans) {
 }
 
 TEST(JSON_array, type) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{false},
-      sourcemeta::jsontoolkit::JSON{true}};
-  EXPECT_EQ(document.type(), sourcemeta::jsontoolkit::JSON::Type::Array);
+  const sourcemeta::core::JSON document{sourcemeta::core::JSON{false},
+                                        sourcemeta::core::JSON{true}};
+  EXPECT_EQ(document.type(), sourcemeta::core::JSON::Type::Array);
 }
 
 TEST(JSON_array, empty_with_copy_constructor) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON::Array{}};
+  const sourcemeta::core::JSON document{sourcemeta::core::JSON::Array{}};
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
@@ -73,19 +65,17 @@ TEST(JSON_array, empty_with_copy_constructor) {
 }
 
 TEST(JSON_array, empty_with_make_array) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::JSON::make_array();
+  const sourcemeta::core::JSON document = sourcemeta::core::JSON::make_array();
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 0);
   EXPECT_EQ(document.array_size(), 0);
 }
 
 TEST(JSON_array, push_back_booleans) {
-  sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON::Array{}};
+  sourcemeta::core::JSON document{sourcemeta::core::JSON::Array{}};
   EXPECT_TRUE(document.is_array());
-  document.push_back(sourcemeta::jsontoolkit::JSON{false});
-  document.push_back(sourcemeta::jsontoolkit::JSON{true});
+  document.push_back(sourcemeta::core::JSON{false});
+  document.push_back(sourcemeta::core::JSON{true});
   EXPECT_EQ(document.size(), 2);
   EXPECT_EQ(document.array_size(), 2);
   EXPECT_TRUE(document.at(0).is_boolean());
@@ -95,9 +85,9 @@ TEST(JSON_array, push_back_booleans) {
 }
 
 TEST(JSON_array, boolean_iterator) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{true}, sourcemeta::jsontoolkit::JSON{false},
-      sourcemeta::jsontoolkit::JSON{false}};
+  const sourcemeta::core::JSON document{sourcemeta::core::JSON{true},
+                                        sourcemeta::core::JSON{false},
+                                        sourcemeta::core::JSON{false}};
 
   std::vector<bool> result;
   for (const auto &element : document.as_array()) {
@@ -111,9 +101,9 @@ TEST(JSON_array, boolean_iterator) {
 }
 
 TEST(JSON_array, reverse_boolean_iterator) {
-  const sourcemeta::jsontoolkit::JSON document{
-      sourcemeta::jsontoolkit::JSON{true}, sourcemeta::jsontoolkit::JSON{false},
-      sourcemeta::jsontoolkit::JSON{false}};
+  const sourcemeta::core::JSON document{sourcemeta::core::JSON{true},
+                                        sourcemeta::core::JSON{false},
+                                        sourcemeta::core::JSON{false}};
 
   std::vector<bool> result;
   for (auto iterator = document.as_array().crbegin();
@@ -128,8 +118,8 @@ TEST(JSON_array, reverse_boolean_iterator) {
 }
 
 TEST(JSON_array, push_back_json_copy) {
-  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::JSON{1},
-                                         sourcemeta::jsontoolkit::JSON{2}};
+  sourcemeta::core::JSON document{sourcemeta::core::JSON{1},
+                                  sourcemeta::core::JSON{2}};
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 2);
@@ -137,7 +127,7 @@ TEST(JSON_array, push_back_json_copy) {
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
 
-  const sourcemeta::jsontoolkit::JSON element{3};
+  const sourcemeta::core::JSON element{3};
   document.push_back(element);
 
   EXPECT_TRUE(document.is_array());
@@ -149,8 +139,8 @@ TEST(JSON_array, push_back_json_copy) {
 }
 
 TEST(JSON_array, push_back_json_move) {
-  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::JSON{1},
-                                         sourcemeta::jsontoolkit::JSON{2}};
+  sourcemeta::core::JSON document{sourcemeta::core::JSON{1},
+                                  sourcemeta::core::JSON{2}};
 
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 2);
@@ -158,7 +148,7 @@ TEST(JSON_array, push_back_json_move) {
   EXPECT_EQ(document.at(0).to_integer(), 1);
   EXPECT_EQ(document.at(1).to_integer(), 2);
 
-  sourcemeta::jsontoolkit::JSON element{3};
+  sourcemeta::core::JSON element{3};
   document.push_back(std::move(element));
 
   EXPECT_TRUE(document.is_array());
@@ -171,9 +161,9 @@ TEST(JSON_array, push_back_json_move) {
 
 TEST(JSON_array, modify_array_after_copy) {
   // Original document
-  sourcemeta::jsontoolkit::JSON document{sourcemeta::jsontoolkit::JSON{1},
-                                         sourcemeta::jsontoolkit::JSON{2},
-                                         sourcemeta::jsontoolkit::JSON{3}};
+  sourcemeta::core::JSON document{sourcemeta::core::JSON{1},
+                                  sourcemeta::core::JSON{2},
+                                  sourcemeta::core::JSON{3}};
   EXPECT_EQ(document.size(), 3);
   EXPECT_EQ(document.array_size(), 3);
   EXPECT_EQ(document.at(0).to_integer(), 1);
@@ -181,7 +171,7 @@ TEST(JSON_array, modify_array_after_copy) {
   EXPECT_EQ(document.at(2).to_integer(), 3);
 
   // Make copy
-  sourcemeta::jsontoolkit::JSON copy = document;
+  sourcemeta::core::JSON copy = document;
   EXPECT_EQ(copy.size(), 3);
   EXPECT_EQ(copy.array_size(), 3);
   EXPECT_EQ(copy.at(0).to_integer(), 1);
@@ -189,7 +179,7 @@ TEST(JSON_array, modify_array_after_copy) {
   EXPECT_EQ(copy.at(2).to_integer(), 3);
 
   // Modify copy
-  copy.push_back(sourcemeta::jsontoolkit::JSON{5});
+  copy.push_back(sourcemeta::core::JSON{5});
 
   // Original document must remain intact
   EXPECT_EQ(document.size(), 3);
@@ -200,8 +190,8 @@ TEST(JSON_array, modify_array_after_copy) {
 }
 
 TEST(JSON_array, const_iterator_for_each) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("[ 1, 2, 3 ]");
   std::vector<std::int64_t> result;
   std::for_each(document.as_array().cbegin(), document.as_array().cend(),
                 [&result](const auto &element) {
@@ -214,8 +204,7 @@ TEST(JSON_array, const_iterator_for_each) {
 }
 
 TEST(JSON_array, iterator_for_each) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[ 1, 2, 3 ]");
   std::vector<std::int64_t> result;
   std::for_each(
       document.as_array().begin(), document.as_array().end(),
@@ -227,8 +216,8 @@ TEST(JSON_array, iterator_for_each) {
 }
 
 TEST(JSON_array, reverse_const_iterator_for_each) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("[ 1, 2, 3 ]");
   std::vector<std::int64_t> result;
   std::for_each(document.as_array().crbegin(), document.as_array().crend(),
                 [&result](const auto &element) {
@@ -241,8 +230,7 @@ TEST(JSON_array, reverse_const_iterator_for_each) {
 }
 
 TEST(JSON_array, reverse_iterator_for_each) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[ 1, 2, 3 ]");
   std::vector<std::int64_t> result;
   std::for_each(
       document.as_array().rbegin(), document.as_array().rend(),
@@ -255,8 +243,8 @@ TEST(JSON_array, reverse_iterator_for_each) {
 
 TEST(JSON_array, const_iterator) {
   std::vector<std::int64_t> result;
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("[ 1, 2, 3 ]");
   for (const auto &element : document.as_array()) {
     result.push_back(element.to_integer());
   }
@@ -269,8 +257,7 @@ TEST(JSON_array, const_iterator) {
 
 TEST(JSON_array, simple_iterator) {
   std::vector<std::int64_t> result;
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ 1, 2, 3 ]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[ 1, 2, 3 ]");
   for (auto &element : document.as_array()) {
     result.push_back(element.to_integer());
   }
@@ -282,8 +269,7 @@ TEST(JSON_array, simple_iterator) {
 }
 
 TEST(JSON_array, int_standard_sort) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[3,2,1]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[3,2,1]");
   EXPECT_EQ(document.size(), 3);
   EXPECT_EQ(document.array_size(), 3);
   EXPECT_EQ(document.at(0).to_integer(), 3);
@@ -296,8 +282,7 @@ TEST(JSON_array, int_standard_sort) {
 }
 
 TEST(JSON_array, erase_many_full) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[1,2,3]");
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
   EXPECT_EQ(document.array_size(), 3);
@@ -308,8 +293,7 @@ TEST(JSON_array, erase_many_full) {
 }
 
 TEST(JSON_array, erase_many_partial) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[1,2,3]");
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
   EXPECT_EQ(document.array_size(), 3);
@@ -322,8 +306,7 @@ TEST(JSON_array, erase_many_partial) {
 }
 
 TEST(JSON_array, erase_many_full_const) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[1,2,3]");
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
   EXPECT_EQ(document.array_size(), 3);
@@ -334,20 +317,20 @@ TEST(JSON_array, erase_many_full_const) {
 }
 
 TEST(JSON_array, contains_string_key_true) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\" ]");
-  EXPECT_TRUE(document.contains(sourcemeta::jsontoolkit::JSON{"bar"}));
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("[ \"foo\", \"bar\" ]");
+  EXPECT_TRUE(document.contains(sourcemeta::core::JSON{"bar"}));
 }
 
 TEST(JSON_array, contains_string_key_false) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ \"foo\", \"bar\" ]");
-  EXPECT_FALSE(document.contains(sourcemeta::jsontoolkit::JSON{"baz"}));
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("[ \"foo\", \"bar\" ]");
+  EXPECT_FALSE(document.contains(sourcemeta::core::JSON{"baz"}));
 }
 
 TEST(JSON_array, defines_any_with_iterators_has_one) {
-  const sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(
-      "{\"foo\":true,\"bar\":false,\"baz\":true}");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{\"foo\":true,\"bar\":false,\"baz\":true}");
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 3);
   EXPECT_TRUE(document.defines("foo"));
@@ -358,8 +341,8 @@ TEST(JSON_array, defines_any_with_iterators_has_one) {
 }
 
 TEST(JSON_array, defines_any_with_iterators_has_two) {
-  const sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(
-      "{\"foo\":true,\"bar\":false,\"baz\":true}");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{\"foo\":true,\"bar\":false,\"baz\":true}");
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 3);
   const std::vector<std::string> keys{"foo", "baz"};
@@ -367,8 +350,8 @@ TEST(JSON_array, defines_any_with_iterators_has_two) {
 }
 
 TEST(JSON_array, defines_any_with_iterators_has_none) {
-  const sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(
-      "{\"foo\":true,\"bar\":false,\"baz\":true}");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{\"foo\":true,\"bar\":false,\"baz\":true}");
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 3);
   const std::vector<std::string> keys{"qux", "test"};
@@ -376,31 +359,31 @@ TEST(JSON_array, defines_any_with_iterators_has_none) {
 }
 
 TEST(JSON_array, defines_any_with_initializer_list_has_one) {
-  const sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(
-      "{\"foo\":true,\"bar\":false,\"baz\":true}");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{\"foo\":true,\"bar\":false,\"baz\":true}");
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 3);
   EXPECT_TRUE(document.defines_any({"foo", "qux"}));
 }
 
 TEST(JSON_array, defines_any_with_initializer_list_has_two) {
-  const sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(
-      "{\"foo\":true,\"bar\":false,\"baz\":true}");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{\"foo\":true,\"bar\":false,\"baz\":true}");
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 3);
   EXPECT_TRUE(document.defines_any({"foo", "baz"}));
 }
 
 TEST(JSON_array, defines_any_with_initializer_list_has_none) {
-  const sourcemeta::jsontoolkit::JSON document = sourcemeta::jsontoolkit::parse(
-      "{\"foo\":true,\"bar\":false,\"baz\":true}");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("{\"foo\":true,\"bar\":false,\"baz\":true}");
   EXPECT_TRUE(document.is_object());
   EXPECT_EQ(document.size(), 3);
   EXPECT_FALSE(document.defines_any({"qux", "test"}));
 }
 
 TEST(JSON_array, into_array) {
-  sourcemeta::jsontoolkit::JSON document{true};
+  sourcemeta::core::JSON document{true};
   EXPECT_TRUE(document.is_boolean());
   document.into_array();
   EXPECT_TRUE(document.is_array());
@@ -409,8 +392,7 @@ TEST(JSON_array, into_array) {
 }
 
 TEST(JSON_array, clear) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[1,2,3]");
   EXPECT_TRUE(document.is_array());
   EXPECT_EQ(document.size(), 3);
   EXPECT_EQ(document.array_size(), 3);
@@ -421,34 +403,31 @@ TEST(JSON_array, clear) {
 }
 
 TEST(JSON_array, estimated_byte_size_integers) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse("[1,2,3]");
   EXPECT_EQ(document.estimated_byte_size(), 24);
 }
 
 TEST(JSON_array, estimated_byte_size_nested) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,[\"foo\"],[[true]]]");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("[1,[\"foo\"],[[true]]]");
   EXPECT_EQ(document.estimated_byte_size(), 12);
 }
 
 TEST(JSON_array, fast_hash_integers) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse("[1,2,3]");
   EXPECT_EQ(document.fast_hash(), 27);
 }
 
 TEST(JSON_array, fast_hash_nested) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,[\"foo\"],[[true]]]");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("[1,[\"foo\"],[[true]]]");
   EXPECT_EQ(document.fast_hash(), 42);
 }
 
 TEST(JSON_array, push_back_if_unique_copy_exists) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[1,2,3]");
 
-  const sourcemeta::jsontoolkit::JSON element{2};
+  const sourcemeta::core::JSON element{2};
   const auto result{document.push_back_if_unique(element)};
 
   EXPECT_TRUE(result.first.get().is_integer());
@@ -464,10 +443,9 @@ TEST(JSON_array, push_back_if_unique_copy_exists) {
 }
 
 TEST(JSON_array, push_back_if_unique_copy_not_exist) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[1,2,3]");
 
-  const sourcemeta::jsontoolkit::JSON element{4};
+  const sourcemeta::core::JSON element{4};
   const auto result{document.push_back_if_unique(element)};
 
   EXPECT_TRUE(result.first.get().is_integer());
@@ -484,10 +462,9 @@ TEST(JSON_array, push_back_if_unique_copy_not_exist) {
 }
 
 TEST(JSON_array, push_back_if_unique_move_exists) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[1,2,3]");
 
-  sourcemeta::jsontoolkit::JSON element{2};
+  sourcemeta::core::JSON element{2};
   const auto result{document.push_back_if_unique(std::move(element))};
 
   EXPECT_TRUE(result.first.get().is_integer());
@@ -503,10 +480,9 @@ TEST(JSON_array, push_back_if_unique_move_exists) {
 }
 
 TEST(JSON_array, push_back_if_unique_move_not_exist) {
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[1,2,3]");
+  sourcemeta::core::JSON document = sourcemeta::core::parse("[1,2,3]");
 
-  sourcemeta::jsontoolkit::JSON element{4};
+  sourcemeta::core::JSON element{4};
   const auto result{document.push_back_if_unique(std::move(element))};
 
   EXPECT_TRUE(result.first.get().is_integer());
@@ -523,25 +499,24 @@ TEST(JSON_array, push_back_if_unique_move_not_exist) {
 }
 
 TEST(JSON_array, unique_empty) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[]");
+  const sourcemeta::core::JSON document = sourcemeta::core::parse("[]");
   EXPECT_TRUE(document.unique());
 }
 
 TEST(JSON_array, unique_true) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ 1, 2, {} ]");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("[ 1, 2, {} ]");
   EXPECT_TRUE(document.unique());
 }
 
 TEST(JSON_array, unique_false) {
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse("[ [2], 1, [2] ]");
+  const sourcemeta::core::JSON document =
+      sourcemeta::core::parse("[ [2], 1, [2] ]");
   EXPECT_FALSE(document.unique());
 }
 
 TEST(JSON_array, sort_object_items) {
-  auto document = sourcemeta::jsontoolkit::parse(R"JSON([
+  auto document = sourcemeta::core::parse(R"JSON([
     { "type": "string" },
     { "type": "integer" },
     { "type": "string" }
@@ -549,7 +524,7 @@ TEST(JSON_array, sort_object_items) {
 
   std::sort(document.as_array().begin(), document.as_array().end());
 
-  const auto expected = sourcemeta::jsontoolkit::parse(R"JSON([
+  const auto expected = sourcemeta::core::parse(R"JSON([
     { "type": "integer" },
     { "type": "string" },
     { "type": "string" }

@@ -6,10 +6,10 @@ public:
             "Setting `exclusiveMinimum` when `type` is `integer` is syntax "
             "sugar for `minimum`"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,
@@ -28,13 +28,13 @@ public:
   auto transform(PointerProxy &transformer) const -> void override {
     if (transformer.value().at("exclusiveMinimum").is_integer()) {
       auto new_minimum = transformer.value().at("exclusiveMinimum");
-      new_minimum += sourcemeta::jsontoolkit::JSON{1};
+      new_minimum += sourcemeta::core::JSON{1};
       transformer.assign("minimum", new_minimum);
       transformer.erase("exclusiveMinimum");
     } else {
       const auto current{transformer.value().at("exclusiveMinimum").to_real()};
       const auto new_value{static_cast<std::int64_t>(std::ceil(current))};
-      transformer.assign("minimum", sourcemeta::jsontoolkit::JSON{new_value});
+      transformer.assign("minimum", sourcemeta::core::JSON{new_value});
       transformer.erase("exclusiveMinimum");
     }
   }

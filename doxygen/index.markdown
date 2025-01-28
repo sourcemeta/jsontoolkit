@@ -3,13 +3,8 @@ Getting Started
 
 @tableofcontents
 
-JSON Toolkit is a swiss-army knife for [JSON](https://www.json.org) programming
-in modern C++. It comes with a built-in parser and growing support for
-standards such as [JSON Schema](http://json-schema.org), [JSON
-Pointer](https://www.rfc-editor.org/rfc/rfc6901),
-[JSONL](https://jsonlines.org), and more. It targets C++20 and supports the
-Clang, GCC, and MSVC compilers on macOS, GNU/Linux, FreeBSD, Windows, and
-Unikraft (through the ELF loader).
+This project implements a set of foundational C++ libraries to power Sourcemeta
+projects.
 
 Live at head
 ------------
@@ -25,17 +20,17 @@ Installation
 ### As a git submodule
 
 ```sh
-# Add the project as a submodule, in this case to deps/jsontoolkit
-$ git submodule add https://github.com/sourcemeta/jsontoolkit.git deps/jsontoolkit
+# Add the project as a submodule, in this case to deps/core
+$ git submodule add https://github.com/sourcemeta/core.git deps/core
 
 # Add the project as a CMake subdirectory
-add_subdirectory("${PROJECT_SOURCE_DIR}/deps/jsontoolkit")
+add_subdirectory("${PROJECT_SOURCE_DIR}/deps/core")
 
 # Link your targets accordingly
-target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::json)
-target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonschema)
-target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonpointer)
-target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonl)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::core::json)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::core::jsonschema)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::core::jsonpointer)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::core::jsonl)
 ```
 
 ### Using FetchContent
@@ -47,34 +42,34 @@ set(CMAKE_CXX_STANDARD 20)
 
 include(FetchContent)
 FetchContent_Declare(
-  jsontoolkit
-  URL https://github.com/sourcemeta/jsontoolkit/archive/<commit-sha>.zip
+  core
+  URL https://github.com/sourcemeta/core/archive/<commit-sha>.zip
   DOWNLOAD_EXTRACT_TIMESTAMP NO)
-FetchContent_MakeAvailable(jsontoolkit)
+FetchContent_MakeAvailable(core)
 
 add_executable(my_example ...)
-target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::json)
-target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::jsonschema)
-target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::jsonpointer)
-target_link_libraries(my_example PUBLIC sourcemeta::jsontoolkit::jsonl)
+target_link_libraries(my_example PUBLIC sourcemeta::core::json)
+target_link_libraries(my_example PUBLIC sourcemeta::core::jsonschema)
+target_link_libraries(my_example PUBLIC sourcemeta::core::jsonpointer)
+target_link_libraries(my_example PUBLIC sourcemeta::core::jsonl)
 ```
 
 ### Using find_package
 
-Assuming you have installed JSON Toolkit in a place where CMake can find the
+Assuming you have installed Sourcemeta Core in a place where CMake can find the
 package config file:
 
 ```sh
-find_package(JSONToolkit REQUIRED)
+find_package(Core REQUIRED)
 
 # This package also supports component-based inclusion
-find_package(JSONToolkit REQUIRED COMPONENTS json jsonschema jsonpointer jsonl)
+find_package(Core REQUIRED COMPONENTS json jsonschema jsonpointer jsonl)
 
 # Link your targets accordingly
-target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::json)
-target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonschema)
-target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonpointer)
-target_link_libraries(my_executable_or_library PUBLIC sourcemeta::jsontoolkit::jsonl)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::core::json)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::core::jsonschema)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::core::jsonpointer)
+target_link_libraries(my_executable_or_library PUBLIC sourcemeta::core::jsonl)
 ```
 
 CMake
@@ -83,18 +78,18 @@ CMake
 ### Options
 
 Check the top-level
-[`CMakeLists.txt`](https://github.com/sourcemeta/jsontoolkit/blob/main/CMakeLists.txt)
+[`CMakeLists.txt`](https://github.com/sourcemeta/core/blob/main/CMakeLists.txt)
 for the available CMake options.
 
 ### Components
 
-If you install JSON Toolkit from source, keep in mind that the project is split
+If you install Sourcemeta Core from source, keep in mind that the project is split
 into a set of CMake components:
 
-| Component                        | Description                                    |
-|----------------------------------|------------------------------------------------|
-| `sourcemeta_jsontoolkit`         | The core JSON Toolkit libraries                |
-| `sourcemeta_jsontoolkit_dev`     | The JSON Toolkit headers and development files |
+| Component             | Description                                       |
+|-----------------------|---------------------------------------------------|
+| `sourcemeta_core`     | The Sourcemeta Core libraries                     |
+| `sourcemeta_core_dev` | The Sourcemeta Core headers and development files |
 
 Contributing
 ------------

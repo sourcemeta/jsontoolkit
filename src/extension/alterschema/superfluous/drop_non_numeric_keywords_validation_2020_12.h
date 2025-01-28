@@ -7,10 +7,10 @@ public:
             "Keywords that don't apply to numbers will never match if the "
             "instance is guaranteed to be a number"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return vocabularies.contains(
                "https://json-schema.org/draft/2020-12/vocab/validation") &&

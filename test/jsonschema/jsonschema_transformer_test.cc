@@ -4,29 +4,27 @@
 #include <tuple>
 #include <vector>
 
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonschema.h>
 
 #include "jsonschema_transform_rules.h"
 
 TEST(JSONSchema_transformer, flat_document_no_applicators) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar",
     "bar": "baz",
     "qux": "xxx"
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,
-               sourcemeta::jsontoolkit::official_resolver);
+  bundle.apply(document, sourcemeta::core::default_schema_walker,
+               sourcemeta::core::official_resolver);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "qux": "xxx"
   })JSON");
@@ -35,23 +33,21 @@ TEST(JSONSchema_transformer, flat_document_no_applicators) {
 }
 
 TEST(JSONSchema_transformer, flat_document_no_applicators_no_walker) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar",
     "bar": "baz",
     "qux": "xxx"
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::schema_walker_none,
-               sourcemeta::jsontoolkit::official_resolver);
+  bundle.apply(document, sourcemeta::core::schema_walker_none,
+               sourcemeta::core::official_resolver);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "qux": "xxx"
   })JSON");
@@ -60,26 +56,23 @@ TEST(JSONSchema_transformer, flat_document_no_applicators_no_walker) {
 }
 
 TEST(JSONSchema_transformer, throw_if_no_dialect_invalid_default) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "foo": "bar",
     "bar": "baz",
     "qux": "xxx"
   })JSON");
 
-  EXPECT_THROW(bundle.apply(document,
-                            sourcemeta::jsontoolkit::default_schema_walker,
-                            sourcemeta::jsontoolkit::official_resolver,
-                            sourcemeta::jsontoolkit::empty_pointer,
+  EXPECT_THROW(bundle.apply(document, sourcemeta::core::default_schema_walker,
+                            sourcemeta::core::official_resolver,
+                            sourcemeta::core::empty_pointer,
                             "https://example.com/invalid"),
-               sourcemeta::jsontoolkit::SchemaResolutionError);
+               sourcemeta::core::SchemaResolutionError);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "foo": "bar",
     "bar": "baz",
     "qux": "xxx"
@@ -90,24 +83,22 @@ TEST(JSONSchema_transformer, throw_if_no_dialect_invalid_default) {
 }
 
 TEST(JSONSchema_transformer, with_default_dialect) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "foo": "bar",
     "bar": "baz",
     "qux": "xxx"
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,
-               sourcemeta::jsontoolkit::official_resolver,
-               sourcemeta::jsontoolkit::empty_pointer,
+  bundle.apply(document, sourcemeta::core::default_schema_walker,
+               sourcemeta::core::official_resolver,
+               sourcemeta::core::empty_pointer,
                "https://json-schema.org/draft/2020-12/schema");
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "qux": "xxx"
   })JSON");
 
@@ -115,25 +106,23 @@ TEST(JSONSchema_transformer, with_default_dialect) {
 }
 
 TEST(JSONSchema_transformer, with_explicit_default_dialect_same) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar",
     "bar": "baz",
     "qux": "xxx"
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,
-               sourcemeta::jsontoolkit::official_resolver,
-               sourcemeta::jsontoolkit::empty_pointer,
+  bundle.apply(document, sourcemeta::core::default_schema_walker,
+               sourcemeta::core::official_resolver,
+               sourcemeta::core::empty_pointer,
                "https://json-schema.org/draft/2020-12/schema");
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "qux": "xxx"
   })JSON");
@@ -142,39 +131,35 @@ TEST(JSONSchema_transformer, with_explicit_default_dialect_same) {
 }
 
 TEST(JSONSchema_transformer, throw_on_rules_called_twice) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRuleConflictsWith1>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar"
   })JSON");
 
-  EXPECT_THROW(bundle.apply(document,
-                            sourcemeta::jsontoolkit::default_schema_walker,
-                            sourcemeta::jsontoolkit::official_resolver),
+  EXPECT_THROW(bundle.apply(document, sourcemeta::core::default_schema_walker,
+                            sourcemeta::core::official_resolver),
                std::runtime_error);
 }
 
 TEST(JSONSchema_transformer, top_level_rule) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule3>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" }
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,
-               sourcemeta::jsontoolkit::official_resolver);
+  bundle.apply(document, sourcemeta::core::default_schema_walker,
+               sourcemeta::core::official_resolver);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "top": true,
     "properties": {
@@ -186,11 +171,10 @@ TEST(JSONSchema_transformer, top_level_rule) {
 }
 
 TEST(JSONSchema_transformer, walker_2020_12) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule4>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -202,11 +186,10 @@ TEST(JSONSchema_transformer, walker_2020_12) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,
-               sourcemeta::jsontoolkit::official_resolver);
+  bundle.apply(document, sourcemeta::core::default_schema_walker,
+               sourcemeta::core::official_resolver);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "here": true,
     "properties": {
@@ -228,11 +211,10 @@ TEST(JSONSchema_transformer, walker_2020_12) {
 }
 
 TEST(JSONSchema_transformer, none_walker) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule4>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -244,11 +226,10 @@ TEST(JSONSchema_transformer, none_walker) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::schema_walker_none,
-               sourcemeta::jsontoolkit::official_resolver);
+  bundle.apply(document, sourcemeta::core::schema_walker_none,
+               sourcemeta::core::official_resolver);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "here": true,
     "properties": {
@@ -263,11 +244,10 @@ TEST(JSONSchema_transformer, none_walker) {
 }
 
 TEST(JSONSchema_transformer, mismatch_default_dialect) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule4>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -279,13 +259,12 @@ TEST(JSONSchema_transformer, mismatch_default_dialect) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,
-               sourcemeta::jsontoolkit::official_resolver,
-               sourcemeta::jsontoolkit::empty_pointer,
+  bundle.apply(document, sourcemeta::core::default_schema_walker,
+               sourcemeta::core::official_resolver,
+               sourcemeta::core::empty_pointer,
                "http://json-schema.org/draft-04/schema#");
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "here": true,
     "properties": {
@@ -307,11 +286,10 @@ TEST(JSONSchema_transformer, mismatch_default_dialect) {
 }
 
 TEST(JSONSchema_transformer, specific_subschema) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule4>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -323,12 +301,10 @@ TEST(JSONSchema_transformer, specific_subschema) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,
-               sourcemeta::jsontoolkit::official_resolver,
-               {"properties", "bar"});
+  bundle.apply(document, sourcemeta::core::default_schema_walker,
+               sourcemeta::core::official_resolver, {"properties", "bar"});
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": {
@@ -348,11 +324,10 @@ TEST(JSONSchema_transformer, specific_subschema) {
 }
 
 TEST(JSONSchema_transformer, rule_pointers) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule5>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -361,11 +336,10 @@ TEST(JSONSchema_transformer, rule_pointers) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,
-               sourcemeta::jsontoolkit::official_resolver);
+  bundle.apply(document, sourcemeta::core::default_schema_walker,
+               sourcemeta::core::official_resolver);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "foo": { "type": "string" },
@@ -378,11 +352,10 @@ TEST(JSONSchema_transformer, rule_pointers) {
 }
 
 TEST(JSONSchema_transformer, multi_dialect_rules) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule4>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "unevaluatedItems": { "type": "string" },
     "$defs": {
@@ -395,11 +368,10 @@ TEST(JSONSchema_transformer, multi_dialect_rules) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,
-               sourcemeta::jsontoolkit::official_resolver);
+  bundle.apply(document, sourcemeta::core::default_schema_walker,
+               sourcemeta::core::official_resolver);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "here": true,
     "unevaluatedItems": {
@@ -422,11 +394,10 @@ TEST(JSONSchema_transformer, multi_dialect_rules) {
 }
 
 TEST(JSONSchema_transformer, dialect_specific_rules) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule6>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$defs": {
       "foo": { "$schema": "http://json-schema.org/draft-03/schema#" },
@@ -435,11 +406,10 @@ TEST(JSONSchema_transformer, dialect_specific_rules) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::jsontoolkit::default_schema_walker,
-               sourcemeta::jsontoolkit::official_resolver);
+  bundle.apply(document, sourcemeta::core::default_schema_walker,
+               sourcemeta::core::official_resolver);
 
-  const sourcemeta::jsontoolkit::JSON expected =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$defs": {
       "foo": { "$schema": "http://json-schema.org/draft-03/schema#", "draft": 3 },
@@ -452,12 +422,11 @@ TEST(JSONSchema_transformer, dialect_specific_rules) {
 }
 
 TEST(JSONSchema_transformer, check_top_level) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar",
     "properties": {
@@ -467,12 +436,11 @@ TEST(JSONSchema_transformer, check_top_level) {
     }
   })JSON");
 
-  std::vector<
-      std::tuple<sourcemeta::jsontoolkit::Pointer, std::string, std::string>>
+  std::vector<std::tuple<sourcemeta::core::Pointer, std::string, std::string>>
       entries;
   const bool result = bundle.check(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
+      document, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
       });
@@ -480,23 +448,22 @@ TEST(JSONSchema_transformer, check_top_level) {
   EXPECT_FALSE(result);
   EXPECT_EQ(entries.size(), 2);
 
-  EXPECT_EQ(std::get<0>(entries.at(0)), sourcemeta::jsontoolkit::Pointer{});
+  EXPECT_EQ(std::get<0>(entries.at(0)), sourcemeta::core::Pointer{});
   EXPECT_EQ(std::get<1>(entries.at(0)), "example_rule_1");
   EXPECT_EQ(std::get<2>(entries.at(0)), "Keyword foo is not permitted");
 
   EXPECT_EQ(std::get<0>(entries.at(1)),
-            sourcemeta::jsontoolkit::Pointer({"properties", "xxx"}));
+            sourcemeta::core::Pointer({"properties", "xxx"}));
   EXPECT_EQ(std::get<1>(entries.at(1)), "example_rule_2");
   EXPECT_EQ(std::get<2>(entries.at(1)), "Keyword bar is not permitted");
 }
 
 TEST(JSONSchema_transformer, check_subschema) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar",
     "properties": {
@@ -506,12 +473,11 @@ TEST(JSONSchema_transformer, check_subschema) {
     }
   })JSON");
 
-  std::vector<
-      std::tuple<sourcemeta::jsontoolkit::Pointer, std::string, std::string>>
+  std::vector<std::tuple<sourcemeta::core::Pointer, std::string, std::string>>
       entries;
   const bool result = bundle.check(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
+      document, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
       },
@@ -521,18 +487,17 @@ TEST(JSONSchema_transformer, check_subschema) {
   EXPECT_EQ(entries.size(), 1);
 
   EXPECT_EQ(std::get<0>(entries.at(0)),
-            sourcemeta::jsontoolkit::Pointer({"properties", "xxx"}));
+            sourcemeta::core::Pointer({"properties", "xxx"}));
   EXPECT_EQ(std::get<1>(entries.at(0)), "example_rule_2");
   EXPECT_EQ(std::get<2>(entries.at(0)), "Keyword bar is not permitted");
 }
 
 TEST(JSONSchema_transformer, check_no_match) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "xxx": {
@@ -541,12 +506,11 @@ TEST(JSONSchema_transformer, check_no_match) {
     }
   })JSON");
 
-  std::vector<
-      std::tuple<sourcemeta::jsontoolkit::Pointer, std::string, std::string>>
+  std::vector<std::tuple<sourcemeta::core::Pointer, std::string, std::string>>
       entries;
   const bool result = bundle.check(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
+      document, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
       });
@@ -556,19 +520,17 @@ TEST(JSONSchema_transformer, check_no_match) {
 }
 
 TEST(JSONSchema_transformer, check_empty) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::SchemaTransformer bundle;
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "foo": "bar"
   })JSON");
 
-  std::vector<
-      std::tuple<sourcemeta::jsontoolkit::Pointer, std::string, std::string>>
+  std::vector<std::tuple<sourcemeta::core::Pointer, std::string, std::string>>
       entries;
   const bool result = bundle.check(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
+      document, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
       });
@@ -578,32 +540,29 @@ TEST(JSONSchema_transformer, check_empty) {
 }
 
 TEST(JSONSchema_transformer, check_throw_if_no_dialect_invalid_default) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  const sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  const sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "foo": "bar",
     "bar": "baz",
     "qux": "xxx"
   })JSON");
 
-  EXPECT_THROW(bundle.check(document,
-                            sourcemeta::jsontoolkit::default_schema_walker,
-                            sourcemeta::jsontoolkit::official_resolver, nullptr,
-                            sourcemeta::jsontoolkit::empty_pointer,
+  EXPECT_THROW(bundle.check(document, sourcemeta::core::default_schema_walker,
+                            sourcemeta::core::official_resolver, nullptr,
+                            sourcemeta::core::empty_pointer,
                             "https://example.com/invalid"),
-               sourcemeta::jsontoolkit::SchemaResolutionError);
+               sourcemeta::core::SchemaResolutionError);
 }
 
 TEST(JSONSchema_transformer, check_with_default_dialect) {
-  sourcemeta::jsontoolkit::SchemaTransformer bundle;
+  sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule1>();
   bundle.add<ExampleRule2>();
 
-  sourcemeta::jsontoolkit::JSON document =
-      sourcemeta::jsontoolkit::parse(R"JSON({
+  sourcemeta::core::JSON document = sourcemeta::core::parse(R"JSON({
     "foo": "bar",
     "properties": {
       "xxx": {
@@ -612,27 +571,26 @@ TEST(JSONSchema_transformer, check_with_default_dialect) {
     }
   })JSON");
 
-  std::vector<
-      std::tuple<sourcemeta::jsontoolkit::Pointer, std::string, std::string>>
+  std::vector<std::tuple<sourcemeta::core::Pointer, std::string, std::string>>
       entries;
   const bool result = bundle.check(
-      document, sourcemeta::jsontoolkit::default_schema_walker,
-      sourcemeta::jsontoolkit::official_resolver,
+      document, sourcemeta::core::default_schema_walker,
+      sourcemeta::core::official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
       },
-      sourcemeta::jsontoolkit::empty_pointer,
+      sourcemeta::core::empty_pointer,
       "https://json-schema.org/draft/2020-12/schema");
 
   EXPECT_FALSE(result);
   EXPECT_EQ(entries.size(), 2);
 
-  EXPECT_EQ(std::get<0>(entries.at(0)), sourcemeta::jsontoolkit::Pointer{});
+  EXPECT_EQ(std::get<0>(entries.at(0)), sourcemeta::core::Pointer{});
   EXPECT_EQ(std::get<1>(entries.at(0)), "example_rule_1");
   EXPECT_EQ(std::get<2>(entries.at(0)), "Keyword foo is not permitted");
 
   EXPECT_EQ(std::get<0>(entries.at(1)),
-            sourcemeta::jsontoolkit::Pointer({"properties", "xxx"}));
+            sourcemeta::core::Pointer({"properties", "xxx"}));
   EXPECT_EQ(std::get<1>(entries.at(1)), "example_rule_2");
   EXPECT_EQ(std::get<2>(entries.at(1)), "Keyword bar is not permitted");
 }

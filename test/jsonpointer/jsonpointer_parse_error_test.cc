@@ -3,16 +3,16 @@
 #include <sstream>
 #include <string>
 
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonpointer.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonpointer.h>
 
 #define EXPECT_JSON_PARSE_ERROR(input)                                         \
   try {                                                                        \
     std::ostringstream stream;                                                 \
     stream << "\"" << (input) << "\"";                                         \
-    sourcemeta::jsontoolkit::parse(stream.str());                              \
+    sourcemeta::core::parse(stream.str());                                     \
     FAIL() << "The parse function was expected to throw";                      \
-  } catch (const sourcemeta::jsontoolkit::ParseError &) {                      \
+  } catch (const sourcemeta::core::ParseError &) {                             \
     SUCCEED();                                                                 \
   } catch (const std::exception &) {                                           \
     FAIL() << "The parse operation threw an unexpected error";                 \
@@ -20,9 +20,9 @@
 
 #define EXPECT_POINTER_PARSE_ERROR(input, expected_column)                     \
   try {                                                                        \
-    sourcemeta::jsontoolkit::to_pointer(input);                                \
+    sourcemeta::core::to_pointer(input);                                       \
     FAIL() << "The to_pointer function was expected to throw";                 \
-  } catch (const sourcemeta::jsontoolkit::PointerParseError &error) {          \
+  } catch (const sourcemeta::core::PointerParseError &error) {                 \
     EXPECT_EQ(error.column(), expected_column);                                \
     SUCCEED();                                                                 \
   } catch (const std::exception &) {                                           \

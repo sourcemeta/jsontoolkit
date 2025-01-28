@@ -6,10 +6,10 @@ public:
             "Setting `type` to `null` is syntax sugar for an enumeration "
             "of a single value: `null`"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     return contains_any(
                vocabularies,
@@ -28,8 +28,8 @@ public:
   }
 
   auto transform(PointerProxy &transformer) const -> void override {
-    auto choices = sourcemeta::jsontoolkit::JSON::make_array();
-    choices.push_back(sourcemeta::jsontoolkit::JSON{nullptr});
+    auto choices = sourcemeta::core::JSON::make_array();
+    choices.push_back(sourcemeta::core::JSON{nullptr});
     transformer.assign("enum", choices);
     transformer.erase("type");
   }

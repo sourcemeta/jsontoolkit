@@ -12,9 +12,9 @@ configure: .always
 	$(CMAKE) -S . -B ./build \
 		-DCMAKE_BUILD_TYPE:STRING=$(PRESET) \
 		-DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON \
-		-DJSONTOOLKIT_TESTS:BOOL=ON \
-		-DJSONTOOLKIT_BENCHMARK:BOOL=ON \
-		-DJSONTOOLKIT_DOCS:BOOL=ON \
+		-DSOURCEMETA_CORE_TESTS:BOOL=ON \
+		-DSOURCEMETA_CORE_BENCHMARK:BOOL=ON \
+		-DSOURCEMETA_CORE_DOCS:BOOL=ON \
 		-DBUILD_SHARED_LIBS:BOOL=$(SHARED)
 
 compile: .always
@@ -25,9 +25,9 @@ compile: .always
 	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
 		--component sourcemeta_noa_dev
 	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
-		--component sourcemeta_jsontoolkit
+		--component sourcemeta_core
 	$(CMAKE) --install ./build --prefix ./build/dist --config $(PRESET) --verbose \
-		--component sourcemeta_jsontoolkit_dev
+		--component sourcemeta_core_dev
 
 lint: .always
 	$(CMAKE) --build ./build --config $(PRESET) --target clang_tidy

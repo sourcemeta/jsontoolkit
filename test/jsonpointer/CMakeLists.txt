@@ -1,5 +1,5 @@
-noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonpointer
-  FOLDER "JSON Toolkit/JSON Pointer"
+noa_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonpointer
+  FOLDER "Core/JSON Pointer"
   SOURCES
     jsonpointer_empty_pointer_test.cc
     jsonpointer_get_test.cc
@@ -24,9 +24,9 @@ noa_googletest(NAMESPACE sourcemeta PROJECT jsontoolkit NAME jsonpointer
     jsonpointer_starts_with_initial_test.cc
     jsonpointer_rebase_test.cc)
 
-target_link_libraries(sourcemeta_jsontoolkit_jsonpointer_unit
-  PRIVATE sourcemeta::jsontoolkit::jsonpointer)
-target_link_libraries(sourcemeta_jsontoolkit_jsonpointer_unit
-  PRIVATE sourcemeta::jsontoolkit::json)
-target_link_libraries(sourcemeta_jsontoolkit_jsonpointer_unit
-  PRIVATE sourcemeta::jsontoolkit::uri)
+target_link_libraries(sourcemeta_core_jsonpointer_unit
+  PRIVATE sourcemeta::core::jsonpointer)
+target_link_libraries(sourcemeta_core_jsonpointer_unit
+  PRIVATE sourcemeta::core::json)
+target_link_libraries(sourcemeta_core_jsonpointer_unit
+  PRIVATE sourcemeta::core::uri)

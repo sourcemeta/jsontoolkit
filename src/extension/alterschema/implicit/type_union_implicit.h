@@ -5,10 +5,10 @@ public:
             "type_union_implicit",
             "Not setting `type` is equivalent to accepting any type"} {};
 
-  [[nodiscard]] auto condition(const sourcemeta::jsontoolkit::JSON &schema,
+  [[nodiscard]] auto condition(const sourcemeta::core::JSON &schema,
                                const std::string &,
                                const std::set<std::string> &vocabularies,
-                               const sourcemeta::jsontoolkit::Pointer &) const
+                               const sourcemeta::core::Pointer &) const
       -> bool override {
     if (!schema.is_object()) {
       return false;
@@ -116,18 +116,18 @@ public:
   }
 
   auto transform(PointerProxy &transformer) const -> void override {
-    auto types{sourcemeta::jsontoolkit::JSON::make_array()};
+    auto types{sourcemeta::core::JSON::make_array()};
 
     // All possible JSON Schema types
     // See
     // https://json-schema.org/draft/2020-12/json-schema-validation.html#rfc.section.6.1.1
-    types.push_back(sourcemeta::jsontoolkit::JSON{"null"});
-    types.push_back(sourcemeta::jsontoolkit::JSON{"boolean"});
-    types.push_back(sourcemeta::jsontoolkit::JSON{"object"});
-    types.push_back(sourcemeta::jsontoolkit::JSON{"array"});
-    types.push_back(sourcemeta::jsontoolkit::JSON{"string"});
-    types.push_back(sourcemeta::jsontoolkit::JSON{"number"});
-    types.push_back(sourcemeta::jsontoolkit::JSON{"integer"});
+    types.push_back(sourcemeta::core::JSON{"null"});
+    types.push_back(sourcemeta::core::JSON{"boolean"});
+    types.push_back(sourcemeta::core::JSON{"object"});
+    types.push_back(sourcemeta::core::JSON{"array"});
+    types.push_back(sourcemeta::core::JSON{"string"});
+    types.push_back(sourcemeta::core::JSON{"number"});
+    types.push_back(sourcemeta::core::JSON{"integer"});
 
     transformer.assign("type", std::move(types));
   }

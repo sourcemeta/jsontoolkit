@@ -1,5 +1,5 @@
-noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME alterschema
-  FOLDER "JSON Toolkit/AlterSchema"
+noa_library(NAMESPACE sourcemeta PROJECT core NAME alterschema
+  FOLDER "Core/AlterSchema"
   SOURCES alterschema.cc
     # Antipattern
     antipattern/const_with_type.h
@@ -157,9 +157,9 @@ noa_library(NAMESPACE sourcemeta PROJECT jsontoolkit NAME alterschema
     superfluous/min_contains_without_contains.h
     superfluous/then_without_if.h)
 
-if(JSONTOOLKIT_INSTALL)
-  noa_library_install(NAMESPACE sourcemeta PROJECT jsontoolkit NAME alterschema)
+if(SOURCEMETA_CORE_INSTALL)
+  noa_library_install(NAMESPACE sourcemeta PROJECT core NAME alterschema)
 endif()
 
-target_link_libraries(sourcemeta_jsontoolkit_alterschema PUBLIC
-  sourcemeta::jsontoolkit::jsonschema)
+target_link_libraries(sourcemeta_core_alterschema PUBLIC
+  sourcemeta::core::jsonschema)

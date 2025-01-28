@@ -1,5 +1,5 @@
-#include <sourcemeta/jsontoolkit/json.h>
-#include <sourcemeta/jsontoolkit/jsonschema.h>
+#include <sourcemeta/core/json.h>
+#include <sourcemeta/core/jsonschema.h>
 
 #include <cassert>     // assert
 #include <cstdint>     // std::uint64_t
@@ -9,12 +9,11 @@
 #include <type_traits> // std::remove_reference_t
 #include <utility>     // std::move
 
-auto sourcemeta::jsontoolkit::is_schema(
-    const sourcemeta::jsontoolkit::JSON &schema) -> bool {
+auto sourcemeta::core::is_schema(const sourcemeta::core::JSON &schema) -> bool {
   return schema.is_object() || schema.is_boolean();
 }
 
-static auto id_keyword_guess(const sourcemeta::jsontoolkit::JSON &schema)
+static auto id_keyword_guess(const sourcemeta::core::JSON &schema)
     -> std::optional<std::string> {
   if (schema.defines("$id") && schema.at("$id").is_string()) {
     if (!schema.defines("id") ||
@@ -53,11 +52,11 @@ static auto id_keyword(const std::string &base_dialect) -> std::string {
 
   std::ostringstream error;
   error << "Unrecognized base dialect: " << base_dialect;
-  throw sourcemeta::jsontoolkit::SchemaError(error.str());
+  throw sourcemeta::core::SchemaError(error.str());
 }
 
-auto sourcemeta::jsontoolkit::identify(
-    const sourcemeta::jsontoolkit::JSON &schema, const SchemaResolver &resolver,
+auto sourcemeta::core::identify(
+    const sourcemeta::core::JSON &schema, const SchemaResolver &resolver,
     const IdentificationStrategy strategy,
     const std::optional<std::string> &default_dialect,
     const std::optional<std::string> &default_id)
@@ -67,8 +66,8 @@ auto sourcemeta::jsontoolkit::identify(
   // TODO: Can we avoid a C++ exception as the potential normal way of
   // operation?
   try {
-    maybe_base_dialect = sourcemeta::jsontoolkit::base_dialect(schema, resolver,
-                                                               default_dialect);
+    maybe_base_dialect =
+        sourcemeta::core::base_dialect(schema, resolver, default_dialect);
   } catch (const SchemaResolutionError &) {
     // Attempt to play a heuristic guessing game before giving up
     if (strategy == IdentificationStrategy::Loose && schema.is_object()) {
@@ -100,9 +99,9 @@ auto sourcemeta::jsontoolkit::identify(
   return identify(schema, maybe_base_dialect.value(), default_id);
 }
 
-auto sourcemeta::jsontoolkit::identify(
-    const JSON &schema, const std::string &base_dialect,
-    const std::optional<std::string> &default_id)
+auto sourcemeta::core::identify(const JSON &schema,
+                                const std::string &base_dialect,
+                                const std::optional<std::string> &default_id)
     -> std::optional<std::string> {
   if (!schema.is_object()) {
     return default_id;
@@ -117,7 +116,7 @@ auto sourcemeta::jsontoolkit::identify(
   if (!identifier.is_string() || identifier.empty()) {
     std::ostringstream error;
     error << "The value of the " << keyword << " property is not valid";
-    throw sourcemeta::jsontoolkit::SchemaError(error.str());
+    throw sourcemeta::core::SchemaError(error.str());
   }
 
   // In older drafts, the presence of `$ref` would override any sibling
@@ -140,31 +139,29 @@ auto sourcemeta::jsontoolkit::identify(
   return identifier.to_string();
 }
 
-auto sourcemeta::jsontoolkit::anonymize(JSON &schema,
-                                        const std::string &base_dialect)
+auto sourcemeta::core::anonymize(JSON &schema, const std::string &base_dialect)
     -> void {
   if (schema.is_object()) {
     schema.erase(id_keyword(base_dialect));
   }
 }
 
-auto sourcemeta::jsontoolkit::reidentify(
+auto sourcemeta::core::reidentify(
     JSON &schema, const std::string &new_identifier,
     const SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect) -> void {
   const auto base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(schema, resolver, default_dialect)};
+      sourcemeta::core::base_dialect(schema, resolver, default_dialect)};
   if (!base_dialect.has_value()) {
-    throw sourcemeta::jsontoolkit::SchemaError("Cannot determine base dialect");
+    throw sourcemeta::core::SchemaError("Cannot determine base dialect");
   }
 
   reidentify(schema, new_identifier, base_dialect.value());
 }
 
-auto sourcemeta::jsontoolkit::reidentify(JSON &schema,
-                                         const std::string &new_identifier,
-                                         const std::string &base_dialect)
-    -> void {
+auto sourcemeta::core::reidentify(JSON &schema,
+                                  const std::string &new_identifier,
+                                  const std::string &base_dialect) -> void {
   assert(is_schema(schema));
   assert(schema.is_object());
   schema.assign(id_keyword(base_dialect), JSON{new_identifier});
@@ -208,34 +205,33 @@ auto sourcemeta::jsontoolkit::reidentify(JSON &schema,
   assert(identify(schema, base_dialect).has_value());
 }
 
-auto sourcemeta::jsontoolkit::dialect(
-    const sourcemeta::jsontoolkit::JSON &schema,
+auto sourcemeta::core::dialect(
+    const sourcemeta::core::JSON &schema,
     const std::optional<std::string> &default_dialect)
     -> std::optional<std::string> {
-  assert(sourcemeta::jsontoolkit::is_schema(schema));
+  assert(sourcemeta::core::is_schema(schema));
   if (schema.is_boolean() || !schema.defines("$schema")) {
     return default_dialect;
   }
 
-  const sourcemeta::jsontoolkit::JSON &dialect{schema.at("$schema")};
+  const sourcemeta::core::JSON &dialect{schema.at("$schema")};
   assert(dialect.is_string() && !dialect.empty());
   return dialect.to_string();
 }
 
-auto sourcemeta::jsontoolkit::metaschema(
-    const sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+auto sourcemeta::core::metaschema(
+    const sourcemeta::core::JSON &schema,
+    const sourcemeta::core::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect) -> JSON {
-  const auto maybe_dialect{
-      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+  const auto maybe_dialect{sourcemeta::core::dialect(schema, default_dialect)};
   if (!maybe_dialect.has_value()) {
-    throw sourcemeta::jsontoolkit::SchemaError(
+    throw sourcemeta::core::SchemaError(
         "Could not determine dialect of the schema");
   }
 
   const auto maybe_metaschema{resolver(maybe_dialect.value())};
   if (!maybe_metaschema.has_value()) {
-    throw sourcemeta::jsontoolkit::SchemaResolutionError(
+    throw sourcemeta::core::SchemaResolutionError(
         maybe_dialect.value(),
         "Could not resolve the metaschema of the schema");
   }
@@ -243,14 +239,14 @@ auto sourcemeta::jsontoolkit::metaschema(
   return maybe_metaschema.value();
 }
 
-auto sourcemeta::jsontoolkit::base_dialect(
-    const sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+auto sourcemeta::core::base_dialect(
+    const sourcemeta::core::JSON &schema,
+    const sourcemeta::core::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect)
     -> std::optional<std::string> {
-  assert(sourcemeta::jsontoolkit::is_schema(schema));
+  assert(sourcemeta::core::is_schema(schema));
   const std::optional<std::string> dialect{
-      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+      sourcemeta::core::dialect(schema, default_dialect)};
 
   // There is no metaschema information whatsoever
   // Nothing we can do at this point
@@ -296,10 +292,10 @@ auto sourcemeta::jsontoolkit::base_dialect(
   }
 
   // Otherwise, traverse the metaschema hierarchy up
-  const std::optional<sourcemeta::jsontoolkit::JSON> metaschema{
+  const std::optional<sourcemeta::core::JSON> metaschema{
       resolver(effective_dialect)};
   if (!metaschema.has_value()) {
-    throw sourcemeta::jsontoolkit::SchemaResolutionError(
+    throw sourcemeta::core::SchemaResolutionError(
         effective_dialect, "Could not resolve the requested schema");
   }
 
@@ -318,30 +314,30 @@ auto core_vocabulary(std::string_view base_dialect) -> std::string {
   } else {
     std::ostringstream error;
     error << "Unrecognized base dialect: " << base_dialect;
-    throw sourcemeta::jsontoolkit::SchemaError(error.str());
+    throw sourcemeta::core::SchemaError(error.str());
   }
 }
 } // namespace
 
-auto sourcemeta::jsontoolkit::vocabularies(
-    const sourcemeta::jsontoolkit::JSON &schema,
-    const sourcemeta::jsontoolkit::SchemaResolver &resolver,
+auto sourcemeta::core::vocabularies(
+    const sourcemeta::core::JSON &schema,
+    const sourcemeta::core::SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect)
     -> std::map<std::string, bool> {
   const std::optional<std::string> maybe_base_dialect{
-      sourcemeta::jsontoolkit::base_dialect(schema, resolver, default_dialect)};
+      sourcemeta::core::base_dialect(schema, resolver, default_dialect)};
   if (!maybe_base_dialect.has_value()) {
-    throw sourcemeta::jsontoolkit::SchemaError(
+    throw sourcemeta::core::SchemaError(
         "Could not determine base dialect for schema");
   }
 
   const std::optional<std::string> maybe_dialect{
-      sourcemeta::jsontoolkit::dialect(schema, default_dialect)};
+      sourcemeta::core::dialect(schema, default_dialect)};
   if (!maybe_dialect.has_value()) {
     // If the schema has no declared metaschema and the user didn't
     // provide a explicit default, then we cannot do anything.
     // Better to abort instead of trying to guess.
-    throw sourcemeta::jsontoolkit::SchemaError(
+    throw sourcemeta::core::SchemaError(
         "Cannot determine the dialect of the schema");
   }
 
@@ -349,9 +345,9 @@ auto sourcemeta::jsontoolkit::vocabularies(
                       maybe_dialect.value());
 }
 
-auto sourcemeta::jsontoolkit::vocabularies(const SchemaResolver &resolver,
-                                           const std::string &base_dialect,
-                                           const std::string &dialect)
+auto sourcemeta::core::vocabularies(const SchemaResolver &resolver,
+                                    const std::string &base_dialect,
+                                    const std::string &dialect)
     -> std::map<std::string, bool> {
   // As a performance optimization shortcut
   if (base_dialect == dialect) {
@@ -398,14 +394,13 @@ auto sourcemeta::jsontoolkit::vocabularies(const SchemaResolver &resolver,
    * (2) If the dialect is vocabulary aware, then fetch such dialect
    */
 
-  const std::optional<sourcemeta::jsontoolkit::JSON> maybe_schema_dialect{
+  const std::optional<sourcemeta::core::JSON> maybe_schema_dialect{
       resolver(dialect)};
   if (!maybe_schema_dialect.has_value()) {
-    throw sourcemeta::jsontoolkit::SchemaResolutionError(
+    throw sourcemeta::core::SchemaResolutionError(
         dialect, "Could not resolve the requested schema");
   }
-  const sourcemeta::jsontoolkit::JSON &schema_dialect{
-      maybe_schema_dialect.value()};
+  const sourcemeta::core::JSON &schema_dialect{maybe_schema_dialect.value()};
   // At this point we are sure that the dialect is vocabulary aware and the
   // identifier keyword is indeed `$id`, so we can avoid the added
   // complexity of the generic `id` function.
@@ -421,7 +416,7 @@ auto sourcemeta::jsontoolkit::vocabularies(const SchemaResolver &resolver,
   std::map<std::string, bool> result;
   const std::string core{core_vocabulary(base_dialect)};
   if (schema_dialect.defines("$vocabulary")) {
-    const sourcemeta::jsontoolkit::JSON &vocabularies{
+    const sourcemeta::core::JSON &vocabularies{
         schema_dialect.at("$vocabulary")};
     assert(vocabularies.is_object());
     for (const auto &entry : vocabularies.as_object()) {
@@ -433,19 +428,19 @@ auto sourcemeta::jsontoolkit::vocabularies(const SchemaResolver &resolver,
 
   // The specification recommends these checks
   if (!result.contains(core)) {
-    throw sourcemeta::jsontoolkit::SchemaError(
+    throw sourcemeta::core::SchemaError(
         "The core vocabulary must always be present");
   } else if (!result.at(core)) {
-    throw sourcemeta::jsontoolkit::SchemaError(
+    throw sourcemeta::core::SchemaError(
         "The core vocabulary must always be required");
   }
 
   return result;
 }
 
-auto sourcemeta::jsontoolkit::schema_format_compare(
-    const sourcemeta::jsontoolkit::JSON::String &left,
-    const sourcemeta::jsontoolkit::JSON::String &right) -> bool {
+auto sourcemeta::core::schema_format_compare(
+    const sourcemeta::core::JSON::String &left,
+    const sourcemeta::core::JSON::String &right) -> bool {
   using Rank =
       std::map<JSON::String, std::uint64_t, std::less<JSON::String>,
                JSON::Allocator<std::pair<const JSON::String, std::uint64_t>>>;
