@@ -46,7 +46,7 @@ namespace sourcemeta::core {
 ///
 /// sourcemeta::core::SchemaSchemaFrame frame;
 /// frame.analyse(document,
-///   sourcemeta::core::default_schema_walker,
+///   sourcemeta::core::schema_official_walker,
 ///   sourcemeta::core::official_resolver);
 ///
 /// // IDs

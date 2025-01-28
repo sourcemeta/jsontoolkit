@@ -163,7 +163,7 @@ private:
 /// })JSON");
 ///
 /// // Apply the transformation bundle to the schema
-/// bundle.apply(schema, sourcemeta::core::default_schema_walker,
+/// bundle.apply(schema, sourcemeta::core::schema_official_walker,
 ///              sourcemeta::core::official_resolver);
 ///
 /// // `foo` keywords are gone

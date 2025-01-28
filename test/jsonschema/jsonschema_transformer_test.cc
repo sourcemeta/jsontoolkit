@@ -21,30 +21,7 @@ TEST(JSONSchema_transformer, flat_document_no_applicators) {
     "qux": "xxx"
   })JSON");
 
-  bundle.apply(document, sourcemeta::core::default_schema_walker,
-               sourcemeta::core::official_resolver);
-
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "qux": "xxx"
-  })JSON");
-
-  EXPECT_EQ(document, expected);
-}
-
-TEST(JSONSchema_transformer, flat_document_no_applicators_no_walker) {
-  sourcemeta::core::SchemaTransformer bundle;
-  bundle.add<ExampleRule1>();
-  bundle.add<ExampleRule2>();
-
-  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "foo": "bar",
-    "bar": "baz",
-    "qux": "xxx"
-  })JSON");
-
-  bundle.apply(document, sourcemeta::core::schema_walker_none,
+  bundle.apply(document, sourcemeta::core::schema_official_walker,
                sourcemeta::core::official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -66,7 +43,7 @@ TEST(JSONSchema_transformer, throw_if_no_dialect_invalid_default) {
     "qux": "xxx"
   })JSON");
 
-  EXPECT_THROW(bundle.apply(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(bundle.apply(document, sourcemeta::core::schema_official_walker,
                             sourcemeta::core::official_resolver,
                             sourcemeta::core::empty_pointer,
                             "https://example.com/invalid"),
@@ -93,7 +70,7 @@ TEST(JSONSchema_transformer, with_default_dialect) {
     "qux": "xxx"
   })JSON");
 
-  bundle.apply(document, sourcemeta::core::default_schema_walker,
+  bundle.apply(document, sourcemeta::core::schema_official_walker,
                sourcemeta::core::official_resolver,
                sourcemeta::core::empty_pointer,
                "https://json-schema.org/draft/2020-12/schema");
@@ -117,7 +94,7 @@ TEST(JSONSchema_transformer, with_explicit_default_dialect_same) {
     "qux": "xxx"
   })JSON");
 
-  bundle.apply(document, sourcemeta::core::default_schema_walker,
+  bundle.apply(document, sourcemeta::core::schema_official_walker,
                sourcemeta::core::official_resolver,
                sourcemeta::core::empty_pointer,
                "https://json-schema.org/draft/2020-12/schema");
@@ -140,7 +117,7 @@ TEST(JSONSchema_transformer, throw_on_rules_called_twice) {
     "foo": "bar"
   })JSON");
 
-  EXPECT_THROW(bundle.apply(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(bundle.apply(document, sourcemeta::core::schema_official_walker,
                             sourcemeta::core::official_resolver),
                std::runtime_error);
 }
@@ -156,7 +133,7 @@ TEST(JSONSchema_transformer, top_level_rule) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::core::default_schema_walker,
+  bundle.apply(document, sourcemeta::core::schema_official_walker,
                sourcemeta::core::official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -186,7 +163,7 @@ TEST(JSONSchema_transformer, walker_2020_12) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::core::default_schema_walker,
+  bundle.apply(document, sourcemeta::core::schema_official_walker,
                sourcemeta::core::official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -210,39 +187,6 @@ TEST(JSONSchema_transformer, walker_2020_12) {
   EXPECT_EQ(document, expected);
 }
 
-TEST(JSONSchema_transformer, none_walker) {
-  sourcemeta::core::SchemaTransformer bundle;
-  bundle.add<ExampleRule4>();
-
-  sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "properties": {
-      "foo": { "type": "string" },
-      "bar": {
-        "items": {
-          "type": "number"
-        }
-      }
-    }
-  })JSON");
-
-  bundle.apply(document, sourcemeta::core::schema_walker_none,
-               sourcemeta::core::official_resolver);
-
-  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "here": true,
-    "properties": {
-      "foo": { "type": "string" },
-      "bar": {
-        "items": { "type": "number" }
-      }
-    }
-  })JSON");
-
-  EXPECT_EQ(document, expected);
-}
-
 TEST(JSONSchema_transformer, mismatch_default_dialect) {
   sourcemeta::core::SchemaTransformer bundle;
   bundle.add<ExampleRule4>();
@@ -259,7 +203,7 @@ TEST(JSONSchema_transformer, mismatch_default_dialect) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::core::default_schema_walker,
+  bundle.apply(document, sourcemeta::core::schema_official_walker,
                sourcemeta::core::official_resolver,
                sourcemeta::core::empty_pointer,
                "http://json-schema.org/draft-04/schema#");
@@ -301,7 +245,7 @@ TEST(JSONSchema_transformer, specific_subschema) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::core::default_schema_walker,
+  bundle.apply(document, sourcemeta::core::schema_official_walker,
                sourcemeta::core::official_resolver, {"properties", "bar"});
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -336,7 +280,7 @@ TEST(JSONSchema_transformer, rule_pointers) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::core::default_schema_walker,
+  bundle.apply(document, sourcemeta::core::schema_official_walker,
                sourcemeta::core::official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -368,7 +312,7 @@ TEST(JSONSchema_transformer, multi_dialect_rules) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::core::default_schema_walker,
+  bundle.apply(document, sourcemeta::core::schema_official_walker,
                sourcemeta::core::official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -406,7 +350,7 @@ TEST(JSONSchema_transformer, dialect_specific_rules) {
     }
   })JSON");
 
-  bundle.apply(document, sourcemeta::core::default_schema_walker,
+  bundle.apply(document, sourcemeta::core::schema_official_walker,
                sourcemeta::core::official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -439,7 +383,7 @@ TEST(JSONSchema_transformer, check_top_level) {
   std::vector<std::tuple<sourcemeta::core::Pointer, std::string, std::string>>
       entries;
   const bool result = bundle.check(
-      document, sourcemeta::core::default_schema_walker,
+      document, sourcemeta::core::schema_official_walker,
       sourcemeta::core::official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
@@ -476,7 +420,7 @@ TEST(JSONSchema_transformer, check_subschema) {
   std::vector<std::tuple<sourcemeta::core::Pointer, std::string, std::string>>
       entries;
   const bool result = bundle.check(
-      document, sourcemeta::core::default_schema_walker,
+      document, sourcemeta::core::schema_official_walker,
       sourcemeta::core::official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
@@ -509,7 +453,7 @@ TEST(JSONSchema_transformer, check_no_match) {
   std::vector<std::tuple<sourcemeta::core::Pointer, std::string, std::string>>
       entries;
   const bool result = bundle.check(
-      document, sourcemeta::core::default_schema_walker,
+      document, sourcemeta::core::schema_official_walker,
       sourcemeta::core::official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
@@ -529,7 +473,7 @@ TEST(JSONSchema_transformer, check_empty) {
   std::vector<std::tuple<sourcemeta::core::Pointer, std::string, std::string>>
       entries;
   const bool result = bundle.check(
-      document, sourcemeta::core::default_schema_walker,
+      document, sourcemeta::core::schema_official_walker,
       sourcemeta::core::official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
@@ -550,7 +494,7 @@ TEST(JSONSchema_transformer, check_throw_if_no_dialect_invalid_default) {
     "qux": "xxx"
   })JSON");
 
-  EXPECT_THROW(bundle.check(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(bundle.check(document, sourcemeta::core::schema_official_walker,
                             sourcemeta::core::official_resolver, nullptr,
                             sourcemeta::core::empty_pointer,
                             "https://example.com/invalid"),
@@ -574,7 +518,7 @@ TEST(JSONSchema_transformer, check_with_default_dialect) {
   std::vector<std::tuple<sourcemeta::core::Pointer, std::string, std::string>>
       entries;
   const bool result = bundle.check(
-      document, sourcemeta::core::default_schema_walker,
+      document, sourcemeta::core::schema_official_walker,
       sourcemeta::core::official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);

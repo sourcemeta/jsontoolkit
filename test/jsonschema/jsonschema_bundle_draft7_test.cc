@@ -73,7 +73,7 @@ TEST(JSONSchema_bundle_draft7, no_references_no_id) {
     "$schema": "http://json-schema.org/draft-07/schema#"
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -89,7 +89,7 @@ TEST(JSONSchema_bundle_draft7, const_no_references_no_id) {
   })JSON");
 
   const auto result = sourcemeta::core::bundle(
-      document, sourcemeta::core::default_schema_walker, test_resolver);
+      document, sourcemeta::core::schema_official_walker, test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#"
@@ -111,7 +111,7 @@ TEST(JSONSchema_bundle_draft7, simple_with_id) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -158,7 +158,7 @@ TEST(JSONSchema_bundle_draft7, simple_without_id) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -201,10 +201,10 @@ TEST(JSONSchema_bundle_draft7, schema_not_found) {
     }
   })JSON");
 
-  EXPECT_THROW(sourcemeta::core::bundle(document,
-                                        sourcemeta::core::default_schema_walker,
-                                        test_resolver),
-               sourcemeta::core::SchemaResolutionError);
+  EXPECT_THROW(
+      sourcemeta::core::bundle(
+          document, sourcemeta::core::schema_official_walker, test_resolver),
+      sourcemeta::core::SchemaResolutionError);
 }
 
 TEST(JSONSchema_bundle_draft7, idempotency) {
@@ -216,11 +216,11 @@ TEST(JSONSchema_bundle_draft7, idempotency) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -267,7 +267,7 @@ TEST(JSONSchema_bundle_draft7, pre_embedded) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -314,7 +314,7 @@ TEST(JSONSchema_bundle_draft7, taken_definitions_entry) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -351,7 +351,7 @@ TEST(JSONSchema_bundle_draft7, recursive) {
     "$ref": "https://www.sourcemeta.com/recursive"
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -377,7 +377,7 @@ TEST(JSONSchema_bundle_draft7, recursive_empty_fragment) {
     "$ref": "https://www.sourcemeta.com/recursive-empty-fragment#"
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -402,7 +402,7 @@ TEST(JSONSchema_bundle_draft7, anonymous_no_dialect) {
     "$ref": "https://www.sourcemeta.com/anonymous"
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver,
                            "http://json-schema.org/draft-07/schema#");
 
@@ -425,7 +425,7 @@ TEST(JSONSchema_bundle_draft7, metaschema) {
     "type": "string"
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -458,7 +458,7 @@ TEST(JSONSchema_bundle_draft7, relative_base_uri_with_ref) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -483,7 +483,7 @@ TEST(JSONSchema_bundle_draft7, hyperschema_smoke) {
     ]
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   EXPECT_TRUE(document.is_object());
@@ -498,7 +498,7 @@ TEST(JSONSchema_bundle_draft7, hyperschema_1) {
     ]
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   EXPECT_TRUE(document.defines("definitions"));
@@ -521,7 +521,7 @@ TEST(JSONSchema_bundle_draft7, hyperschema_ref_metaschema) {
     ]
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   EXPECT_TRUE(document.defines("definitions"));

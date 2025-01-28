@@ -43,25 +43,16 @@ struct SchemaWalkerResult {
 ///
 /// For convenience, we provide the following default walkers:
 ///
-/// - sourcemeta::core::default_schema_walker
+/// - sourcemeta::core::schema_official_walker
 /// - sourcemeta::core::schema_walker_none
 using SchemaWalker = std::function<SchemaWalkerResult(
     std::string_view, const std::map<std::string, bool> &)>;
 
 /// @ingroup jsonschema
-/// A stub walker that doesn't walk
-SOURCEMETA_CORE_JSONSCHEMA_EXPORT
-inline auto schema_walker_none(std::string_view,
-                               const std::map<std::string, bool> &)
-    -> sourcemeta::core::SchemaWalkerResult {
-  return {SchemaKeywordType::Unknown, std::nullopt, {}};
-}
-
-/// @ingroup jsonschema
 /// A default schema walker with support for a wide range of drafs
 SOURCEMETA_CORE_JSONSCHEMA_EXPORT
-auto default_schema_walker(std::string_view keyword,
-                           const std::map<std::string, bool> &vocabularies)
+auto schema_official_walker(std::string_view keyword,
+                            const std::map<std::string, bool> &vocabularies)
     -> sourcemeta::core::SchemaWalkerResult;
 
 /// @ingroup jsonschema
@@ -105,7 +96,7 @@ struct SchemaIteratorEntry {
 ///
 /// for (const auto &entry :
 ///          sourcemeta::core::SchemaIterator{
-///          document, sourcemeta::core::default_schema_walker,
+///          document, sourcemeta::core::schema_official_walker,
 ///          sourcemeta::core::official_resolver}) {
 ///   sourcemeta::core::prettify(
 ///     sourcemeta::core::get(document, entry.pointer), std::cout);
@@ -172,7 +163,7 @@ private:
 ///
 /// for (const auto &entry :
 ///          sourcemeta::core::SchemaIteratorFlat{
-///          document, sourcemeta::core::default_schema_walker,
+///          document, sourcemeta::core::schema_official_walker,
 ///          sourcemeta::core::official_resolver}) {
 ///   sourcemeta::core::prettify(
 ///     sourcemeta::core::get(document, entry.pointer), std::cout);
@@ -235,12 +226,12 @@ private:
 ///
 /// assert(sourcemeta::core::schema_keyword_priority(
 ///   "prefixItems", vocabularies,
-///   sourcemeta::core::default_schema_walker) == 0);
+///   sourcemeta::core::schema_official_walker) == 0);
 ///
 /// // The "items" keyword must be evaluated after the "prefixItems" keyword
 /// assert(sourcemeta::core::schema_keyword_priority(
 ///   "items", vocabularies,
-///   sourcemeta::core::default_schema_walker) == 1);
+///   sourcemeta::core::schema_official_walker) == 1);
 /// ```
 auto SOURCEMETA_CORE_JSONSCHEMA_EXPORT schema_keyword_priority(
     std::string_view keyword, const std::map<std::string, bool> &vocabularies,
@@ -269,7 +260,7 @@ auto SOURCEMETA_CORE_JSONSCHEMA_EXPORT schema_keyword_priority(
 ///
 /// for (const auto &entry :
 ///          sourcemeta::core::SchemaKeywordIterator{
-///          document, sourcemeta::core::default_schema_walker,
+///          document, sourcemeta::core::schema_official_walker,
 ///          sourcemeta::core::official_resolver}) {
 ///   sourcemeta::core::stringify(entry.pointer, std::cout);
 ///   std::cout << "\n";

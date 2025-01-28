@@ -50,7 +50,7 @@ public:
         new_entries;
     for (const auto &[uri, schema] : this->registry) {
       sourcemeta::core::SchemaFrame frame;
-      frame.analyse(schema.first, sourcemeta::core::default_schema_walker,
+      frame.analyse(schema.first, sourcemeta::core::schema_official_walker,
                     sourcemeta::core::official_resolver, this->dialect, uri);
       for (const auto &[key, entry] : frame.locations()) {
         new_entries.insert(

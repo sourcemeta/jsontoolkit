@@ -58,7 +58,7 @@ TEST(JSONSchema_frame_2019_09, anonymous_with_nested_schema_resource) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
@@ -106,7 +106,7 @@ TEST(JSONSchema_frame_2019_09, empty_schema) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
@@ -146,7 +146,7 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 8);
@@ -206,7 +206,7 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 14);
@@ -295,7 +295,7 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 9);
@@ -373,7 +373,7 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 30);
@@ -527,7 +527,7 @@ TEST(JSONSchema_frame_2019_09, id_override) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
 }
@@ -541,7 +541,7 @@ TEST(JSONSchema_frame_2019_09, static_anchor_override) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
 }
@@ -553,7 +553,7 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_same) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver,
                 "https://json-schema.org/draft/2019-09/schema",
                 "https://www.sourcemeta.com/schema");
@@ -592,7 +592,7 @@ TEST(JSONSchema_frame_2019_09, anchor_top_level) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
@@ -650,7 +650,7 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver,
                 "https://json-schema.org/draft/2019-09/schema",
                 "https://www.example.com");
@@ -775,7 +775,7 @@ TEST(JSONSchema_frame_2019_09, ref_metaschema) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
@@ -818,7 +818,7 @@ TEST(JSONSchema_frame_2019_09, location_independent_identifier_anonymous) {
 
   sourcemeta::core::SchemaFrame frame;
 
-  EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
 }
@@ -831,7 +831,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_true_with_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
@@ -882,7 +882,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_false_with_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 4);
@@ -929,7 +929,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_true_without_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
@@ -984,7 +984,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_false_without_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
@@ -1030,7 +1030,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor_anonymous) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 4);
@@ -1073,7 +1073,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
@@ -1122,7 +1122,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false_anonymous) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
@@ -1170,7 +1170,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
@@ -1223,7 +1223,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true_anonymous) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
@@ -1277,7 +1277,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 7);
@@ -1339,7 +1339,7 @@ TEST(JSONSchema_frame_2019_09,
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 10);
@@ -1414,7 +1414,7 @@ TEST(JSONSchema_frame_2019_09,
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 11);
@@ -1495,7 +1495,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_nested_recursive_anchor_true) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 7);
@@ -1560,7 +1560,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_multiple_recursive_anchor_true) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 14);
@@ -1651,7 +1651,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_conflict) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
 }
@@ -1664,7 +1664,7 @@ TEST(JSONSchema_frame_2019_09, invalid_recursive_ref) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
 }
@@ -1680,7 +1680,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_on_relative_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 11);
@@ -1755,7 +1755,7 @@ TEST(JSONSchema_frame_2019_09, ref_with_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 7);
@@ -1816,7 +1816,7 @@ TEST(JSONSchema_frame_2019_09, ref_from_definitions) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 9);
@@ -1884,7 +1884,7 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_without_ref) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
@@ -1921,7 +1921,7 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_with_ref) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 10);
@@ -1973,7 +1973,7 @@ TEST(JSONSchema_frame_2019_09, relative_id_leading_slash) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);

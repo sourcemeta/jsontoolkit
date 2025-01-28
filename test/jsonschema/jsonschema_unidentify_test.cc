@@ -180,8 +180,9 @@ TEST(JSONSchema_unidentify, 2020_12) {
     }
   })JSON");
 
-  sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_2020_12);
+  sourcemeta::core::unidentify(document,
+                               sourcemeta::core::schema_official_walker,
+                               test_resolver_2020_12);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -212,10 +213,11 @@ TEST(JSONSchema_unidentify, 2020_12_bundle) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver_2020_12);
-  sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_2020_12);
+  sourcemeta::core::unidentify(document,
+                               sourcemeta::core::schema_official_walker,
+                               test_resolver_2020_12);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -259,10 +261,11 @@ TEST(JSONSchema_unidentify, 2020_12_bundle_boolean_subschema) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver_2020_12);
-  sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_2020_12);
+  sourcemeta::core::unidentify(document,
+                               sourcemeta::core::schema_official_walker,
+                               test_resolver_2020_12);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -280,10 +283,11 @@ TEST(JSONSchema_unidentify, 2020_12_bundle_metaschema) {
     "type": "string"
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver_2020_12);
-  sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_2020_12);
+  sourcemeta::core::unidentify(document,
+                               sourcemeta::core::schema_official_walker,
+                               test_resolver_2020_12);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "#/$defs/https%3A~1~1example.com~1meta~11.json",
@@ -317,8 +321,9 @@ TEST(JSONSchema_unidentify, 2019_09) {
     }
   })JSON");
 
-  sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_2019_09);
+  sourcemeta::core::unidentify(document,
+                               sourcemeta::core::schema_official_walker,
+                               test_resolver_2019_09);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -349,10 +354,11 @@ TEST(JSONSchema_unidentify, 2019_09_bundle) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver_2019_09);
-  sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_2019_09);
+  sourcemeta::core::unidentify(document,
+                               sourcemeta::core::schema_official_walker,
+                               test_resolver_2019_09);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -393,10 +399,11 @@ TEST(JSONSchema_unidentify, 2019_09_bundle_metaschema) {
     "type": "string"
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver_2019_09);
-  sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_2019_09);
+  sourcemeta::core::unidentify(document,
+                               sourcemeta::core::schema_official_walker,
+                               test_resolver_2019_09);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "#/$defs/https%3A~1~1example.com~1meta~11.json",
@@ -428,7 +435,7 @@ TEST(JSONSchema_unidentify, draft7) {
   })JSON");
 
   sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_draft7);
+      document, sourcemeta::core::schema_official_walker, test_resolver_draft7);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -453,10 +460,10 @@ TEST(JSONSchema_unidentify, draft7_bundle) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver_draft7);
   sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_draft7);
+      document, sourcemeta::core::schema_official_walker, test_resolver_draft7);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -486,10 +493,10 @@ TEST(JSONSchema_unidentify, draft7_bundle_metaschema) {
     "type": "string"
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver_draft7);
   sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_draft7);
+      document, sourcemeta::core::schema_official_walker, test_resolver_draft7);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "#/definitions/https%3A~1~1example.com~1meta~11.json",
@@ -519,7 +526,7 @@ TEST(JSONSchema_unidentify, draft6) {
   })JSON");
 
   sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_draft6);
+      document, sourcemeta::core::schema_official_walker, test_resolver_draft6);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-06/schema#",
@@ -544,10 +551,10 @@ TEST(JSONSchema_unidentify, draft6_bundle) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver_draft6);
   sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_draft6);
+      document, sourcemeta::core::schema_official_walker, test_resolver_draft6);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-06/schema#",
@@ -577,10 +584,10 @@ TEST(JSONSchema_unidentify, draft6_bundle_metaschema) {
     "type": "string"
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver_draft6);
   sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_draft6);
+      document, sourcemeta::core::schema_official_walker, test_resolver_draft6);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "#/definitions/https%3A~1~1example.com~1meta~11.json",
@@ -610,7 +617,7 @@ TEST(JSONSchema_unidentify, draft4) {
   })JSON");
 
   sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_draft4);
+      document, sourcemeta::core::schema_official_walker, test_resolver_draft4);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -635,10 +642,10 @@ TEST(JSONSchema_unidentify, draft4_bundle) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver_draft4);
   sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_draft4);
+      document, sourcemeta::core::schema_official_walker, test_resolver_draft4);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -668,10 +675,10 @@ TEST(JSONSchema_unidentify, draft4_bundle_metaschema) {
     "type": "string"
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver_draft4);
   sourcemeta::core::unidentify(
-      document, sourcemeta::core::default_schema_walker, test_resolver_draft4);
+      document, sourcemeta::core::schema_official_walker, test_resolver_draft4);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "#/definitions/https%3A~1~1example.com~1meta~11.json",

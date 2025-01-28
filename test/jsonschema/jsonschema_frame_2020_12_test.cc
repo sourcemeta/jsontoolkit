@@ -58,7 +58,7 @@ TEST(JSONSchema_frame_2020_12, anonymous_with_nested_schema_resource) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
@@ -106,7 +106,7 @@ TEST(JSONSchema_frame_2020_12, empty_schema) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
@@ -146,7 +146,7 @@ TEST(JSONSchema_frame_2020_12, one_level_applicators_without_identifiers) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 8);
@@ -206,7 +206,7 @@ TEST(JSONSchema_frame_2020_12, one_level_applicators_with_identifiers) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 14);
@@ -294,7 +294,7 @@ TEST(JSONSchema_frame_2020_12, subschema_absolute_identifier) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 9);
@@ -364,7 +364,7 @@ TEST(JSONSchema_frame_2020_12, nested_schemas) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 30);
@@ -518,7 +518,7 @@ TEST(JSONSchema_frame_2020_12, id_override) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
 }
@@ -532,7 +532,7 @@ TEST(JSONSchema_frame_2020_12, static_anchor_override) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
 }
@@ -544,7 +544,7 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_same) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver,
                 "https://json-schema.org/draft/2020-12/schema",
                 "https://www.sourcemeta.com/schema");
@@ -583,7 +583,7 @@ TEST(JSONSchema_frame_2020_12, anchor_top_level) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
@@ -641,7 +641,7 @@ TEST(JSONSchema_frame_2020_12, explicit_argument_id_different) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver,
                 "https://json-schema.org/draft/2020-12/schema",
                 "https://www.example.com");
@@ -790,7 +790,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.references().size(), 7);
@@ -850,7 +850,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_refs_with_no_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.references().size(), 7);
@@ -890,7 +890,7 @@ TEST(JSONSchema_frame_2020_12, ref_to_dynamic_anchor) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.references().size(), 2);
@@ -916,7 +916,7 @@ TEST(JSONSchema_frame_2020_12, different_dynamic_and_refs_in_same_object) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.references().size(), 3);
@@ -950,7 +950,7 @@ TEST(JSONSchema_frame_2020_12, same_dynamic_and_refs_in_same_object) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.references().size(), 3);
@@ -987,7 +987,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_anchor_with_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 21);
@@ -1108,7 +1108,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_anchor_without_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 7);
@@ -1169,7 +1169,7 @@ TEST(JSONSchema_frame_2020_12,
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 8);
@@ -1236,7 +1236,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_ref_to_single_dynamic_anchor_external) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 10);
@@ -1310,7 +1310,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_anchor_same_on_schema_resource) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
 }
@@ -1326,7 +1326,7 @@ TEST(JSONSchema_frame_2020_12, no_id_recursive_empty_pointer) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
@@ -1369,7 +1369,7 @@ TEST(JSONSchema_frame_2020_12, ref_metaschema) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
@@ -1412,7 +1412,7 @@ TEST(JSONSchema_frame_2020_12, location_independent_identifier_anonymous) {
 
   sourcemeta::core::SchemaFrame frame;
 
-  EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
 }
@@ -1428,7 +1428,7 @@ TEST(JSONSchema_frame_2020_12, ref_with_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 7);
@@ -1489,7 +1489,7 @@ TEST(JSONSchema_frame_2020_12, ref_from_definitions) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 9);
@@ -1557,7 +1557,7 @@ TEST(JSONSchema_frame_2020_12, relative_base_uri_without_ref) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
@@ -1594,7 +1594,7 @@ TEST(JSONSchema_frame_2020_12, relative_base_uri_with_ref) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 10);
@@ -1651,11 +1651,11 @@ TEST(JSONSchema_frame_2020_12, idempotent_with_refs) {
 
   sourcemeta::core::SchemaFrame frame;
 
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
@@ -1710,7 +1710,7 @@ TEST(JSONSchema_frame_2020_12, allof_refs) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.references().size(), 3);

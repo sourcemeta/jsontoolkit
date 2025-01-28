@@ -40,7 +40,7 @@ TEST(JSONSchema_frame_draft2, anonymous_with_nested_schema_resource) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
@@ -87,7 +87,7 @@ TEST(JSONSchema_frame_draft2, empty_schema) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
@@ -127,7 +127,7 @@ TEST(JSONSchema_frame_draft2, one_level_applicators_without_identifiers) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 8);
@@ -184,7 +184,7 @@ TEST(JSONSchema_frame_draft2, one_level_applicators_with_identifiers) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 9);
@@ -248,7 +248,7 @@ TEST(JSONSchema_frame_draft2, subschema_absolute_identifier) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 9);
@@ -309,7 +309,7 @@ TEST(JSONSchema_frame_draft2, id_override) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  EXPECT_THROW(frame.analyse(document, sourcemeta::core::default_schema_walker,
+  EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::official_resolver),
                sourcemeta::core::SchemaError);
 }
@@ -321,7 +321,7 @@ TEST(JSONSchema_frame_draft2, explicit_argument_id_same) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver,
                 "http://json-schema.org/draft-02/schema#",
                 "https://www.sourcemeta.com/schema");
@@ -367,7 +367,7 @@ TEST(JSONSchema_frame_draft2, explicit_argument_id_different) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver,
                 "http://json-schema.org/draft-02/schema#",
                 "https://www.example.com");
@@ -447,7 +447,7 @@ TEST(JSONSchema_frame_draft2, ref_metaschema) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(document, sourcemeta::core::default_schema_walker,
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);

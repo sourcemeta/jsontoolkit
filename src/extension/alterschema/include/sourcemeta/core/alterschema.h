@@ -77,7 +77,7 @@ enum class AlterSchemaCategory {
 ///   }
 /// })JSON");
 ///
-/// bundle.apply(schema, sourcemeta::core::default_schema_walker,
+/// bundle.apply(schema, sourcemeta::core::schema_official_walker,
 ///              sourcemeta::core::official_resolver);
 /// ```
 SOURCEMETA_CORE_ALTERSCHEMA_EXPORT

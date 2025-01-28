@@ -52,7 +52,7 @@ TEST(JSONSchema_bundle, across_dialects) {
     "items": { "$ref": "https://www.sourcemeta.com/test-2" }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
@@ -89,7 +89,7 @@ TEST(JSONSchema_bundle, across_dialects_const) {
   })JSON");
 
   const auto result = sourcemeta::core::bundle(
-      document, sourcemeta::core::default_schema_walker, test_resolver);
+      document, sourcemeta::core::schema_official_walker, test_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.example.com",
@@ -124,7 +124,7 @@ TEST(JSONSchema_bundle, with_default_dialect) {
     }
   })JSON");
 
-  sourcemeta::core::bundle(document, sourcemeta::core::default_schema_walker,
+  sourcemeta::core::bundle(document, sourcemeta::core::schema_official_walker,
                            test_resolver,
                            "https://json-schema.org/draft/2020-12/schema");
 
@@ -151,10 +151,10 @@ TEST(JSONSchema_bundle, without_default_dialect) {
     }
   })JSON");
 
-  EXPECT_THROW(sourcemeta::core::bundle(document,
-                                        sourcemeta::core::default_schema_walker,
-                                        test_resolver),
-               sourcemeta::core::SchemaError);
+  EXPECT_THROW(
+      sourcemeta::core::bundle(
+          document, sourcemeta::core::schema_official_walker, test_resolver),
+      sourcemeta::core::SchemaError);
 }
 
 TEST(JSONSchema_bundle, target_no_dialect) {
@@ -165,10 +165,10 @@ TEST(JSONSchema_bundle, target_no_dialect) {
     }
   })JSON");
 
-  EXPECT_THROW(sourcemeta::core::bundle(document,
-                                        sourcemeta::core::default_schema_walker,
-                                        test_resolver),
-               sourcemeta::core::SchemaResolutionError);
+  EXPECT_THROW(
+      sourcemeta::core::bundle(
+          document, sourcemeta::core::schema_official_walker, test_resolver),
+      sourcemeta::core::SchemaResolutionError);
 }
 
 TEST(JSONSchema_bundle, target_array) {
@@ -179,8 +179,8 @@ TEST(JSONSchema_bundle, target_array) {
     }
   })JSON");
 
-  EXPECT_THROW(sourcemeta::core::bundle(document,
-                                        sourcemeta::core::default_schema_walker,
-                                        test_resolver),
-               sourcemeta::core::SchemaResolutionError);
+  EXPECT_THROW(
+      sourcemeta::core::bundle(
+          document, sourcemeta::core::schema_official_walker, test_resolver),
+      sourcemeta::core::SchemaResolutionError);
 }
