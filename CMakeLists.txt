@@ -17,6 +17,8 @@ option(SOURCEMETA_CORE_DOCS "Build the Sourcemeta Core docs" OFF)
 option(SOURCEMETA_CORE_INSTALL "Install the Sourcemeta Core library" ON)
 option(SOURCEMETA_CORE_ADDRESS_SANITIZER "Build Sourcemeta Core with an address sanitizer" OFF)
 option(SOURCEMETA_CORE_UNDEFINED_SANITIZER "Build Sourcemeta Core with an undefined behavior sanitizer" OFF)
+option(SOURCEMETA_CORE_CONTRIB_GOOGLETEST "Build the GoogleTest library for downstream consumers" OFF)
+option(SOURCEMETA_CORE_CONTRIB_GOOGLEBENCHMARK "Build the GoogleBenchmark library for downstream consumers" OFF)
 
 include(Sourcemeta)
 
@@ -94,9 +96,17 @@ if(PROJECT_IS_TOP_LEVEL)
 endif()
 
 # Testing
+
+if(SOURCEMETA_CORE_CONTRIB_GOOGLETEST OR SOURCEMETA_CORE_TESTS)
+  find_package(GoogleTest REQUIRED)
+endif()
+
+if(SOURCEMETA_CORE_CONTRIB_GOOGLEBENCHMARK OR SOURCEMETA_CORE_BENCHMARK)
+  find_package(GoogleBenchmark REQUIRED)
+endif()
+
 if(SOURCEMETA_CORE_TESTS)
   enable_testing()
-  find_package(GoogleTest REQUIRED)
 
   if(SOURCEMETA_CORE_REGEX)
     add_subdirectory(test/regex)
@@ -137,9 +147,8 @@ if(SOURCEMETA_CORE_TESTS)
       add_subdirectory(test/packaging)
     endif()
   endif()
+endif()
 
-  if(SOURCEMETA_CORE_BENCHMARK)
-    find_package(GoogleBenchmark REQUIRED)
-    add_subdirectory(benchmark)
-  endif()
+if(SOURCEMETA_CORE_BENCHMARK)
+  add_subdirectory(benchmark)
 endif()
