@@ -15,9 +15,10 @@
 #include <sourcemeta/core/jsonschema_unevaluated.h>
 #include <sourcemeta/core/jsonschema_walker.h>
 
-#include <map>      // std::map
-#include <optional> // std::optional
-#include <string>   // std::string
+#include <functional> // std::function
+#include <map>        // std::map
+#include <optional>   // std::optional
+#include <string>     // std::string
 
 /// @defgroup jsonschema JSON Schema
 /// @brief A set of JSON Schema utilities across draft versions.
@@ -323,42 +324,6 @@ auto schema_format_compare(const JSON::String &left, const JSON::String &right)
 
 /// @ingroup jsonschema
 ///
-/// Try to turn every possible absolute reference in a schema into a relative
-/// one. For example:
-///
-/// ```cpp
-/// #include <sourcemeta/core/json.h>
-/// #include <sourcemeta/core/jsonschema.h>
-/// #include <cassert>
-///
-/// sourcemeta::core::JSON schema =
-///   sourcemeta::core::parse_json(R"JSON({
-///   "$id": "https://www.example.com/schema",
-///   "$schema": "https://json-schema.org/draft/2020-12/schema",
-///   "$ref": "https://www.example.com/another",
-/// })JSON");
-///
-/// sourcemeta::core::relativize(schema,
-///   sourcemeta::core::schema_official_walker,
-///   sourcemeta::core::official_resolver);
-///
-/// const sourcemeta::core::JSON expected =
-///   sourcemeta::core::parse_json(R"JSON({
-///   "$id": "https://www.example.com/schema",
-///   "$schema": "https://json-schema.org/draft/2020-12/schema",
-///   "$ref": "another",
-/// })JSON");
-///
-/// assert(schema == expected);
-/// ```
-SOURCEMETA_CORE_JSONSCHEMA_EXPORT
-auto relativize(
-    JSON &schema, const SchemaWalker &walker, const SchemaResolver &resolver,
-    const std::optional<std::string> &default_dialect = std::nullopt,
-    const std::optional<std::string> &default_id = std::nullopt) -> void;
-
-/// @ingroup jsonschema
-///
 /// Remove every identifer from a schema, rephrasing references (if any) as
 /// needed. For example:
 ///
@@ -390,6 +355,97 @@ SOURCEMETA_CORE_JSONSCHEMA_EXPORT
 auto unidentify(
     JSON &schema, const SchemaWalker &walker, const SchemaResolver &resolver,
     const std::optional<std::string> &default_dialect = std::nullopt) -> void;
+
+/// @ingroup jsonschema
+///
+/// Visit every reference in a schema. The arguments are as follows:
+///
+/// - The current subschema
+/// - The base URI of the current subschema
+/// - The reference vocabulary
+/// - The reference keyword name
+/// - The reference reference destination
+using SchemaVisitorReference = std::function<void(
+    JSON &, const URI &, const JSON::String &, const JSON::String &, URI &)>;
+
+/// @ingroup jsonschema
+///
+/// A reference visitor to try to turn every possible absolute reference in a
+/// schema into a relative one. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/core/json.h>
+/// #include <sourcemeta/core/jsonschema.h>
+/// #include <cassert>
+///
+/// sourcemeta::core::JSON schema =
+///   sourcemeta::core::parse_json(R"JSON({
+///   "$id": "https://www.example.com/schema",
+///   "$schema": "https://json-schema.org/draft/2020-12/schema",
+///   "$ref": "https://www.example.com/another",
+/// })JSON");
+///
+/// sourcemeta::core::reference_visit(schema,
+///   sourcemeta::core::schema_official_walker,
+///   sourcemeta::core::official_resolver,
+///   sourcemeta::core::reference_visitor_relativize);
+///
+/// const sourcemeta::core::JSON expected =
+///   sourcemeta::core::parse_json(R"JSON({
+///   "$id": "https://www.example.com/schema",
+///   "$schema": "https://json-schema.org/draft/2020-12/schema",
+///   "$ref": "another",
+/// })JSON");
+///
+/// assert(schema == expected);
+/// ```
+SOURCEMETA_CORE_JSONSCHEMA_EXPORT
+auto reference_visitor_relativize(JSON &subschema, const URI &base,
+                                  const JSON::String &vocabulary,
+                                  const JSON::String &keyword, URI &value)
+    -> void;
+
+/// @ingroup jsonschema
+///
+/// A utility function to loop over every reference in a schema, allowing
+/// modifications to their subschemas if desired. Note that the consumer is
+/// responsible for not making the schema invalid. For example:
+///
+/// ```cpp
+/// #include <sourcemeta/core/json.h>
+/// #include <sourcemeta/core/jsonschema.h>
+///
+/// sourcemeta::core::JSON schema =
+///   sourcemeta::core::parse_json(R"JSON({
+///   "$id": "https://www.example.com/schema",
+///   "$schema": "https://json-schema.org/draft/2020-12/schema",
+///   "$ref": "https://www.example.com/another",
+/// })JSON");
+///
+/// static auto visitor(JSON &subschema,
+///                     const URI &base,
+///                     const JSON::String &vocabulary,
+///                     const JSON::String &keyword,
+///                     URI &value) -> void {
+///   sourcemeta::core::prettify(subschema, std::cerr);
+///   std::cerr << "\n";
+///   std::cerr << base.recompose() << "\n";
+///   std::cerr << vocabulary << "\n";
+///   std::cerr << keyword << "\n";
+///   std::cerr << value.recompose() << "\n";
+/// }
+///
+/// sourcemeta::core::reference_visit(schema,
+///   sourcemeta::core::schema_official_walker,
+///   sourcemeta::core::official_resolver,
+///   visitor);
+/// ```
+SOURCEMETA_CORE_JSONSCHEMA_EXPORT
+auto reference_visit(
+    JSON &schema, const SchemaWalker &walker, const SchemaResolver &resolver,
+    const SchemaVisitorReference &callback,
+    const std::optional<std::string> &default_dialect = std::nullopt,
+    const std::optional<std::string> &default_id = std::nullopt) -> void;
 
 } // namespace sourcemeta::core
 
