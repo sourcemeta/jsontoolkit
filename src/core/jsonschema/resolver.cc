@@ -150,9 +150,10 @@ auto SchemaFlatFileResolver::operator()(std::string_view identifier) const
                                  *this, result->second.default_dialect);
     // Because we allow re-identification, we can get into issues unless we
     // always try to relativize references
-    sourcemeta::core::relativize(schema, schema_official_walker, *this,
-                                 result->second.default_dialect,
-                                 result->second.original_identifier);
+    sourcemeta::core::reference_visit(
+        schema, schema_official_walker, *this,
+        sourcemeta::core::reference_visitor_relativize,
+        result->second.default_dialect, result->second.original_identifier);
     sourcemeta::core::reidentify(schema, result->first, *this,
                                  result->second.default_dialect);
 
