@@ -252,6 +252,18 @@ TEST(JSONSchema_identify, loose_with_unresolvable_dialect) {
   EXPECT_EQ(id.value(), "https://example.com/my-schema");
 }
 
+TEST(JSONSchema_identify, loose_draft6_id) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "id": "https://example.com/my-schema"
+  })JSON");
+  std::optional<std::string> id{sourcemeta::core::identify(
+      document, sourcemeta::core::schema_official_resolver,
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
+  EXPECT_TRUE(id.has_value());
+  EXPECT_EQ(id.value(), "https://example.com/my-schema");
+}
+
 TEST(JSONSchema_identify, anonymize_with_unknown_base_dialect) {
   sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",

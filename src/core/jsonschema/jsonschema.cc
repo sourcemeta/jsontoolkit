@@ -105,6 +105,13 @@ auto sourcemeta::core::identify(
     const auto keyword{id_keyword(maybe_base_dialect.value())};
     if (schema.defines(keyword) && schema.at(keyword).is_string()) {
       return schema.at(keyword).to_string();
+    } else {
+      const auto fallback{id_keyword_guess(schema)};
+      if (fallback.has_value()) {
+        return schema.at(fallback.value()).to_string();
+      } else {
+        return std::nullopt;
+      }
     }
   }
 
