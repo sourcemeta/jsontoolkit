@@ -9,6 +9,8 @@
 #include <type_traits> // std::remove_reference_t
 #include <utility>     // std::move
 
+#include <iostream>
+
 auto sourcemeta::core::is_schema(const sourcemeta::core::JSON &schema) -> bool {
   return schema.is_object() || schema.is_boolean();
 }
@@ -96,7 +98,17 @@ auto sourcemeta::core::identify(
     return default_id;
   }
 
-  return identify(schema, maybe_base_dialect.value(), default_id);
+  const auto result{identify(schema, maybe_base_dialect.value(), default_id)};
+
+  // A last shot supporting identifiers alongside `$ref` in loose mode
+  if (!result.has_value() && strategy == SchemaIdentificationStrategy::Loose) {
+    const auto keyword{id_keyword(maybe_base_dialect.value())};
+    if (schema.defines(keyword) && schema.at(keyword).is_string()) {
+      return schema.at(keyword).to_string();
+    }
+  }
+
+  return result;
 }
 
 auto sourcemeta::core::identify(const JSON &schema,
@@ -108,6 +120,7 @@ auto sourcemeta::core::identify(const JSON &schema,
   }
 
   const auto keyword{id_keyword(base_dialect)};
+
   if (!schema.defines(keyword)) {
     return default_id;
   }

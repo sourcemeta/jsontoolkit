@@ -205,6 +205,41 @@ TEST(JSONSchema_identify, loose_with_resolvable_default_dialect) {
   EXPECT_EQ(id.value(), "http://example.com/my-schema");
 }
 
+TEST(JSONSchema_identify, strict_draft4_top_level_ref) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://example.com/my-schema",
+    "$ref": "#/definitions/foo",
+    "definitions": {
+      "foo": {
+        "type": "string"
+      }
+    }
+  })JSON");
+  std::optional<std::string> id{sourcemeta::core::identify(
+      document, sourcemeta::core::schema_official_resolver,
+      sourcemeta::core::SchemaIdentificationStrategy::Strict)};
+  EXPECT_FALSE(id.has_value());
+}
+
+TEST(JSONSchema_identify, loose_draft4_top_level_ref) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://example.com/my-schema",
+    "$ref": "#/definitions/foo",
+    "definitions": {
+      "foo": {
+        "type": "string"
+      }
+    }
+  })JSON");
+  std::optional<std::string> id{sourcemeta::core::identify(
+      document, sourcemeta::core::schema_official_resolver,
+      sourcemeta::core::SchemaIdentificationStrategy::Loose)};
+  EXPECT_TRUE(id.has_value());
+  EXPECT_EQ(id.value(), "http://example.com/my-schema");
+}
+
 TEST(JSONSchema_identify, loose_with_unresolvable_dialect) {
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://example.com/my-schema",
