@@ -61,7 +61,8 @@ TEST(JSONSchema_SchemaFlatFileResolver, single_schema_with_default_dialect) {
             expected);
 }
 
-TEST(JSONSchema_SchemaFlatFileResolver, single_schema_anonymous_with_default) {
+TEST(JSONSchema_SchemaFlatFileResolver,
+     single_schema_anonymous_with_default_id) {
   sourcemeta::core::SchemaFlatFileResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-anonymous.json"};
@@ -76,6 +77,31 @@ TEST(JSONSchema_SchemaFlatFileResolver, single_schema_anonymous_with_default) {
   EXPECT_EQ(identifier, "https://www.sourcemeta.com/test");
   EXPECT_TRUE(resolver("https://www.sourcemeta.com/test").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/test").value(), expected);
+}
+
+TEST(JSONSchema_SchemaFlatFileResolver, draft4_top_level_ref) {
+  sourcemeta::core::SchemaFlatFileResolver resolver;
+  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
+                         "draft4-top-level-ref.json"};
+
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "https://www.sourcemeta.com/draft4-top-level-ref.json",
+    "allOf": [ { "$ref": "#/definitions/foo" } ],
+    "definitions": {
+      "foo": {
+        "type": "string"
+      }
+    }
+  })JSON");
+
+  const auto &identifier{resolver.add(schema_path)};
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/draft4-top-level-ref.json");
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/draft4-top-level-ref.json")
+                  .has_value());
+  EXPECT_EQ(
+      resolver("https://www.sourcemeta.com/draft4-top-level-ref.json").value(),
+      expected);
 }
 
 TEST(JSONSchema_SchemaFlatFileResolver, single_schema_idempotent) {
