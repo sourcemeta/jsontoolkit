@@ -43,7 +43,7 @@ static auto test_resolver_2020_12(std::string_view identifier)
       "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
     })JSON");
   } else {
-    return sourcemeta::core::official_resolver(identifier);
+    return sourcemeta::core::schema_official_resolver(identifier);
   }
 }
 
@@ -87,7 +87,7 @@ static auto test_resolver_2019_09(std::string_view identifier)
       "$vocabulary": { "https://json-schema.org/draft/2019-09/vocab/core": true }
     })JSON");
   } else {
-    return sourcemeta::core::official_resolver(identifier);
+    return sourcemeta::core::schema_official_resolver(identifier);
   }
 }
 
@@ -112,7 +112,7 @@ static auto test_resolver_draft7(std::string_view identifier)
       "$id": "https://example.com/meta/2.json"
     })JSON");
   } else {
-    return sourcemeta::core::official_resolver(identifier);
+    return sourcemeta::core::schema_official_resolver(identifier);
   }
 }
 
@@ -137,7 +137,7 @@ static auto test_resolver_draft6(std::string_view identifier)
       "$id": "https://example.com/meta/2.json"
     })JSON");
   } else {
-    return sourcemeta::core::official_resolver(identifier);
+    return sourcemeta::core::schema_official_resolver(identifier);
   }
 }
 
@@ -162,7 +162,7 @@ static auto test_resolver_draft4(std::string_view identifier)
       "id": "https://example.com/meta/2.json"
     })JSON");
   } else {
-    return sourcemeta::core::official_resolver(identifier);
+    return sourcemeta::core::schema_official_resolver(identifier);
   }
 }
 

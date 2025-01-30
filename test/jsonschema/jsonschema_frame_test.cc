@@ -28,7 +28,7 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 21);
 
@@ -186,7 +186,7 @@ TEST(JSONSchema_frame, no_id) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 14);
 
@@ -272,7 +272,7 @@ TEST(JSONSchema_frame, no_id_with_default) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver,
+                sourcemeta::core::schema_official_resolver,
                 "https://json-schema.org/draft/2020-12/schema",
                 "https://www.sourcemeta.com/schema");
 
@@ -324,7 +324,7 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 12);
   EXPECT_FRAME_STATIC_RESOURCE(frame, "https://www.example.com",
@@ -414,7 +414,7 @@ TEST(JSONSchema_frame, uri_iterators) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   std::set<std::string> uris;
   for (const auto &entry : frame.locations()) {
@@ -460,7 +460,7 @@ TEST(JSONSchema_frame, no_refs) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.references().size(), 1);
 
@@ -492,7 +492,7 @@ TEST(JSONSchema_frame, refs_with_id) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_FRAME_DESTINATION_OF(frame, Static,
                               "https://www.sourcemeta.com/schema", 0,
@@ -556,7 +556,7 @@ TEST(JSONSchema_frame, refs_with_no_id) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_FRAME_DESTINATION_OF(frame, Static, "", 0, "/properties/foo/$ref")
   EXPECT_FRAME_DESTINATION_OF(frame, Static, "#baz", 0,
@@ -597,7 +597,7 @@ TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.references().size(), 1);
 
@@ -618,7 +618,7 @@ TEST(JSONSchema_frame, remote_refs) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.references().size(), 4);
   EXPECT_STATIC_REFERENCE(
@@ -642,6 +642,6 @@ TEST(JSONSchema_frame, no_dialect) {
 
   sourcemeta::core::SchemaFrame frame;
   EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
-                             sourcemeta::core::official_resolver),
+                             sourcemeta::core::schema_official_resolver),
                sourcemeta::core::SchemaError);
 }

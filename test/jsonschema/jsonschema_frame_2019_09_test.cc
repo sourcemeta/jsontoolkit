@@ -59,7 +59,7 @@ TEST(JSONSchema_frame_2019_09, anonymous_with_nested_schema_resource) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
 
@@ -107,7 +107,7 @@ TEST(JSONSchema_frame_2019_09, empty_schema) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
   EXPECT_FRAME_STATIC_2019_09_RESOURCE(
@@ -147,7 +147,7 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 8);
   EXPECT_FRAME_STATIC_2019_09_RESOURCE(
@@ -207,7 +207,7 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 14);
 
@@ -296,7 +296,7 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 9);
   EXPECT_FRAME_STATIC_2019_09_RESOURCE(
@@ -374,7 +374,7 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 30);
 
@@ -528,7 +528,7 @@ TEST(JSONSchema_frame_2019_09, id_override) {
 
   sourcemeta::core::SchemaFrame frame;
   EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
-                             sourcemeta::core::official_resolver),
+                             sourcemeta::core::schema_official_resolver),
                sourcemeta::core::SchemaError);
 }
 
@@ -542,7 +542,7 @@ TEST(JSONSchema_frame_2019_09, static_anchor_override) {
 
   sourcemeta::core::SchemaFrame frame;
   EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
-                             sourcemeta::core::official_resolver),
+                             sourcemeta::core::schema_official_resolver),
                sourcemeta::core::SchemaError);
 }
 
@@ -554,7 +554,7 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_same) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver,
+                sourcemeta::core::schema_official_resolver,
                 "https://json-schema.org/draft/2019-09/schema",
                 "https://www.sourcemeta.com/schema");
 
@@ -593,7 +593,7 @@ TEST(JSONSchema_frame_2019_09, anchor_top_level) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
 
@@ -651,7 +651,7 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver,
+                sourcemeta::core::schema_official_resolver,
                 "https://json-schema.org/draft/2019-09/schema",
                 "https://www.example.com");
 
@@ -776,7 +776,7 @@ TEST(JSONSchema_frame_2019_09, ref_metaschema) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
 
@@ -819,7 +819,7 @@ TEST(JSONSchema_frame_2019_09, location_independent_identifier_anonymous) {
   sourcemeta::core::SchemaFrame frame;
 
   EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
-                             sourcemeta::core::official_resolver),
+                             sourcemeta::core::schema_official_resolver),
                sourcemeta::core::SchemaError);
 }
 
@@ -832,7 +832,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_true_with_id) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
 
@@ -883,7 +883,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_false_with_id) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 4);
 
@@ -930,7 +930,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_true_without_id) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
 
@@ -985,7 +985,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_false_without_id) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
 
@@ -1031,7 +1031,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor_anonymous) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 4);
 
@@ -1074,7 +1074,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
 
@@ -1123,7 +1123,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false_anonymous) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 5);
 
@@ -1171,7 +1171,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
 
@@ -1224,7 +1224,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true_anonymous) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
 
@@ -1278,7 +1278,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 7);
 
@@ -1340,7 +1340,7 @@ TEST(JSONSchema_frame_2019_09,
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 10);
 
@@ -1415,7 +1415,7 @@ TEST(JSONSchema_frame_2019_09,
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 11);
 
@@ -1496,7 +1496,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_nested_recursive_anchor_true) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 7);
 
@@ -1561,7 +1561,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_multiple_recursive_anchor_true) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 14);
 
@@ -1652,7 +1652,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_conflict) {
 
   sourcemeta::core::SchemaFrame frame;
   EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
-                             sourcemeta::core::official_resolver),
+                             sourcemeta::core::schema_official_resolver),
                sourcemeta::core::SchemaError);
 }
 
@@ -1665,7 +1665,7 @@ TEST(JSONSchema_frame_2019_09, invalid_recursive_ref) {
 
   sourcemeta::core::SchemaFrame frame;
   EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
-                             sourcemeta::core::official_resolver),
+                             sourcemeta::core::schema_official_resolver),
                sourcemeta::core::SchemaError);
 }
 
@@ -1681,7 +1681,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_on_relative_id) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 11);
 
@@ -1756,7 +1756,7 @@ TEST(JSONSchema_frame_2019_09, ref_with_id) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 7);
 
@@ -1817,7 +1817,7 @@ TEST(JSONSchema_frame_2019_09, ref_from_definitions) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 9);
 
@@ -1885,7 +1885,7 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_without_ref) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
 
@@ -1922,7 +1922,7 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_with_ref) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 10);
 
@@ -1974,7 +1974,7 @@ TEST(JSONSchema_frame_2019_09, relative_id_leading_slash) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
   EXPECT_FRAME_STATIC_2019_09_RESOURCE(frame, "/base", "/base", "", "/base", "",

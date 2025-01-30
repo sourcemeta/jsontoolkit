@@ -17,7 +17,7 @@
   sourcemeta::core::add(bundle,                                                \
                         sourcemeta::core::AlterSchemaCategory::SyntaxSugar);   \
   bundle.apply(document, sourcemeta::core::schema_official_walker,             \
-               sourcemeta::core::official_resolver);
+               sourcemeta::core::schema_official_resolver);
 
 #define LINT_AND_FIX_FOR_ANALYSIS(document)                                    \
   sourcemeta::core::SchemaTransformer bundle;                                  \
@@ -32,6 +32,6 @@
   sourcemeta::core::add(bundle,                                                \
                         sourcemeta::core::AlterSchemaCategory::Desugar);       \
   bundle.apply(document, sourcemeta::core::schema_official_walker,             \
-               sourcemeta::core::official_resolver);
+               sourcemeta::core::schema_official_resolver);
 
 #endif

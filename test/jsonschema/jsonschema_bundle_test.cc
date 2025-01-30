@@ -41,7 +41,7 @@ static auto test_resolver(std::string_view identifier)
       "foo", "bar", "baz"
     ])JSON");
   } else {
-    return sourcemeta::core::official_resolver(identifier);
+    return sourcemeta::core::schema_official_resolver(identifier);
   }
 }
 

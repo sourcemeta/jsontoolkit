@@ -50,7 +50,7 @@ TEST(JSONSchema_frame_draft4, anonymous_with_nested_schema_resource) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 6);
 
@@ -97,7 +97,7 @@ TEST(JSONSchema_frame_draft4, empty_schema) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
   EXPECT_FRAME_STATIC_DRAFT4_RESOURCE(
@@ -137,7 +137,7 @@ TEST(JSONSchema_frame_draft4, one_level_applicators_without_identifiers) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 8);
   EXPECT_FRAME_STATIC_DRAFT4_RESOURCE(
@@ -194,7 +194,7 @@ TEST(JSONSchema_frame_draft4, one_level_applicators_with_identifiers) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 9);
   EXPECT_FRAME_STATIC_DRAFT4_RESOURCE(
@@ -258,7 +258,7 @@ TEST(JSONSchema_frame_draft4, subschema_absolute_identifier) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 9);
   EXPECT_FRAME_STATIC_DRAFT4_RESOURCE(
@@ -319,7 +319,7 @@ TEST(JSONSchema_frame_draft4, id_override) {
 
   sourcemeta::core::SchemaFrame frame;
   EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
-                             sourcemeta::core::official_resolver),
+                             sourcemeta::core::schema_official_resolver),
                sourcemeta::core::SchemaError);
 }
 
@@ -331,7 +331,7 @@ TEST(JSONSchema_frame_draft4, explicit_argument_id_same) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver,
+                sourcemeta::core::schema_official_resolver,
                 "http://json-schema.org/draft-04/schema#",
                 "https://www.sourcemeta.com/schema");
 
@@ -377,7 +377,7 @@ TEST(JSONSchema_frame_draft4, explicit_argument_id_different) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver,
+                sourcemeta::core::schema_official_resolver,
                 "http://json-schema.org/draft-04/schema#",
                 "https://www.example.com");
 
@@ -457,7 +457,7 @@ TEST(JSONSchema_frame_draft4, ref_metaschema) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
 
@@ -498,7 +498,7 @@ TEST(JSONSchema_frame_draft4, location_independent_identifier_anonymous) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 8);
 
@@ -563,7 +563,7 @@ TEST(JSONSchema_frame_draft4, ref_with_id) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 7);
 
@@ -613,7 +613,7 @@ TEST(JSONSchema_frame_draft4, relative_base_uri_without_ref) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 3);
 
@@ -650,7 +650,7 @@ TEST(JSONSchema_frame_draft4, relative_base_uri_with_ref) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(document, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
 
   EXPECT_EQ(frame.locations().size(), 10);
 
