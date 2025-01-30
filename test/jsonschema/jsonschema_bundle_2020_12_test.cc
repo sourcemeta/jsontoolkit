@@ -93,7 +93,7 @@ static auto test_resolver(std::string_view identifier)
       "$vocabulary": { "https://json-schema.org/draft/2020-12/vocab/core": true }
     })JSON");
   } else {
-    return sourcemeta::core::official_resolver(identifier);
+    return sourcemeta::core::schema_official_resolver(identifier);
   }
 }
 

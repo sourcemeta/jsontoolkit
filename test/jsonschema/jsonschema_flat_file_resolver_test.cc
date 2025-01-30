@@ -10,11 +10,11 @@ TEST(JSONSchema_SchemaFlatFileResolver, empty_no_fallback) {
 
 TEST(JSONSchema_SchemaFlatFileResolver, empty_with_fallback) {
   sourcemeta::core::SchemaFlatFileResolver resolver{
-      sourcemeta::core::official_resolver};
+      sourcemeta::core::schema_official_resolver};
   EXPECT_TRUE(
       resolver("https://json-schema.org/draft/2020-12/schema").has_value());
   EXPECT_EQ(resolver("https://json-schema.org/draft/2020-12/schema"),
-            sourcemeta::core::official_resolver(
+            sourcemeta::core::schema_official_resolver(
                 "https://json-schema.org/draft/2020-12/schema"));
 }
 

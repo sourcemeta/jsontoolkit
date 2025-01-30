@@ -22,7 +22,7 @@ TEST(JSONSchema_transformer, flat_document_no_applicators) {
   })JSON");
 
   bundle.apply(document, sourcemeta::core::schema_official_walker,
-               sourcemeta::core::official_resolver);
+               sourcemeta::core::schema_official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -44,7 +44,7 @@ TEST(JSONSchema_transformer, throw_if_no_dialect_invalid_default) {
   })JSON");
 
   EXPECT_THROW(bundle.apply(document, sourcemeta::core::schema_official_walker,
-                            sourcemeta::core::official_resolver,
+                            sourcemeta::core::schema_official_resolver,
                             sourcemeta::core::empty_pointer,
                             "https://example.com/invalid"),
                sourcemeta::core::SchemaResolutionError);
@@ -71,7 +71,7 @@ TEST(JSONSchema_transformer, with_default_dialect) {
   })JSON");
 
   bundle.apply(document, sourcemeta::core::schema_official_walker,
-               sourcemeta::core::official_resolver,
+               sourcemeta::core::schema_official_resolver,
                sourcemeta::core::empty_pointer,
                "https://json-schema.org/draft/2020-12/schema");
 
@@ -95,7 +95,7 @@ TEST(JSONSchema_transformer, with_explicit_default_dialect_same) {
   })JSON");
 
   bundle.apply(document, sourcemeta::core::schema_official_walker,
-               sourcemeta::core::official_resolver,
+               sourcemeta::core::schema_official_resolver,
                sourcemeta::core::empty_pointer,
                "https://json-schema.org/draft/2020-12/schema");
 
@@ -118,7 +118,7 @@ TEST(JSONSchema_transformer, throw_on_rules_called_twice) {
   })JSON");
 
   EXPECT_THROW(bundle.apply(document, sourcemeta::core::schema_official_walker,
-                            sourcemeta::core::official_resolver),
+                            sourcemeta::core::schema_official_resolver),
                std::runtime_error);
 }
 
@@ -134,7 +134,7 @@ TEST(JSONSchema_transformer, top_level_rule) {
   })JSON");
 
   bundle.apply(document, sourcemeta::core::schema_official_walker,
-               sourcemeta::core::official_resolver);
+               sourcemeta::core::schema_official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -164,7 +164,7 @@ TEST(JSONSchema_transformer, walker_2020_12) {
   })JSON");
 
   bundle.apply(document, sourcemeta::core::schema_official_walker,
-               sourcemeta::core::official_resolver);
+               sourcemeta::core::schema_official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -204,7 +204,7 @@ TEST(JSONSchema_transformer, mismatch_default_dialect) {
   })JSON");
 
   bundle.apply(document, sourcemeta::core::schema_official_walker,
-               sourcemeta::core::official_resolver,
+               sourcemeta::core::schema_official_resolver,
                sourcemeta::core::empty_pointer,
                "http://json-schema.org/draft-04/schema#");
 
@@ -246,7 +246,8 @@ TEST(JSONSchema_transformer, specific_subschema) {
   })JSON");
 
   bundle.apply(document, sourcemeta::core::schema_official_walker,
-               sourcemeta::core::official_resolver, {"properties", "bar"});
+               sourcemeta::core::schema_official_resolver,
+               {"properties", "bar"});
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -281,7 +282,7 @@ TEST(JSONSchema_transformer, rule_pointers) {
   })JSON");
 
   bundle.apply(document, sourcemeta::core::schema_official_walker,
-               sourcemeta::core::official_resolver);
+               sourcemeta::core::schema_official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -313,7 +314,7 @@ TEST(JSONSchema_transformer, multi_dialect_rules) {
   })JSON");
 
   bundle.apply(document, sourcemeta::core::schema_official_walker,
-               sourcemeta::core::official_resolver);
+               sourcemeta::core::schema_official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -351,7 +352,7 @@ TEST(JSONSchema_transformer, dialect_specific_rules) {
   })JSON");
 
   bundle.apply(document, sourcemeta::core::schema_official_walker,
-               sourcemeta::core::official_resolver);
+               sourcemeta::core::schema_official_resolver);
 
   const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
     "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -384,7 +385,7 @@ TEST(JSONSchema_transformer, check_top_level) {
       entries;
   const bool result = bundle.check(
       document, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver,
+      sourcemeta::core::schema_official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
       });
@@ -421,7 +422,7 @@ TEST(JSONSchema_transformer, check_subschema) {
       entries;
   const bool result = bundle.check(
       document, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver,
+      sourcemeta::core::schema_official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
       },
@@ -454,7 +455,7 @@ TEST(JSONSchema_transformer, check_no_match) {
       entries;
   const bool result = bundle.check(
       document, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver,
+      sourcemeta::core::schema_official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
       });
@@ -474,7 +475,7 @@ TEST(JSONSchema_transformer, check_empty) {
       entries;
   const bool result = bundle.check(
       document, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver,
+      sourcemeta::core::schema_official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
       });
@@ -495,7 +496,7 @@ TEST(JSONSchema_transformer, check_throw_if_no_dialect_invalid_default) {
   })JSON");
 
   EXPECT_THROW(bundle.check(document, sourcemeta::core::schema_official_walker,
-                            sourcemeta::core::official_resolver, nullptr,
+                            sourcemeta::core::schema_official_resolver, nullptr,
                             sourcemeta::core::empty_pointer,
                             "https://example.com/invalid"),
                sourcemeta::core::SchemaResolutionError);
@@ -519,7 +520,7 @@ TEST(JSONSchema_transformer, check_with_default_dialect) {
       entries;
   const bool result = bundle.check(
       document, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver,
+      sourcemeta::core::schema_official_resolver,
       [&entries](const auto &pointer, const auto &name, const auto &message) {
         entries.emplace_back(pointer, name, message);
       },

@@ -17,10 +17,10 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_1) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver)};
+      sourcemeta::core::schema_official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -49,10 +49,10 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_2) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver)};
+      sourcemeta::core::schema_official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -84,10 +84,10 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_3) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver)};
+      sourcemeta::core::schema_official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -122,10 +122,10 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_4) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver)};
+      sourcemeta::core::schema_official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -154,10 +154,10 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_5) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver)};
+      sourcemeta::core::schema_official_resolver)};
 
   EXPECT_EQ(result.size(), 2);
 
@@ -182,10 +182,10 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_6) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver)};
+      sourcemeta::core::schema_official_resolver)};
 
   EXPECT_EQ(result.size(), 2);
 
@@ -221,10 +221,10 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_7) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver)};
+      sourcemeta::core::schema_official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -262,10 +262,10 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_8) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver)};
+      sourcemeta::core::schema_official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -288,10 +288,10 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedItems_1) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver)};
+      sourcemeta::core::schema_official_resolver)};
 
   EXPECT_EQ(result.size(), 1);
 
@@ -316,10 +316,10 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedItems_2) {
 
   sourcemeta::core::SchemaFrame frame;
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
-                sourcemeta::core::official_resolver);
+                sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
-      sourcemeta::core::official_resolver)};
+      sourcemeta::core::schema_official_resolver)};
 
   EXPECT_EQ(result.size(), 2);
 

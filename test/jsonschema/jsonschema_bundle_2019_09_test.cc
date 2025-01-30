@@ -83,7 +83,7 @@ static auto test_resolver(std::string_view identifier)
       "$vocabulary": { "https://json-schema.org/draft/2019-09/vocab/core": true }
     })JSON");
   } else {
-    return sourcemeta::core::official_resolver(identifier);
+    return sourcemeta::core::schema_official_resolver(identifier);
   }
 }
 
@@ -554,7 +554,7 @@ TEST(JSONSchema_bundle_2019_09, hyperschema_1) {
 
 TEST(JSONSchema_bundle_2019_09, hyperschema_2) {
   sourcemeta::core::JSON document =
-      sourcemeta::core::official_resolver(
+      sourcemeta::core::schema_official_resolver(
           "https://json-schema.org/draft/2019-09/hyper-schema")
           .value();
 
