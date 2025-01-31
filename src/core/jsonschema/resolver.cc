@@ -1,5 +1,4 @@
 #include <sourcemeta/core/jsonschema.h>
-#include <sourcemeta/core/jsonschema_resolver.h>
 
 #include <algorithm> // std::transform
 #include <cassert>   // assert
