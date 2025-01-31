@@ -108,7 +108,8 @@ public:
   auto add(const std::filesystem::path &path,
            const std::optional<std::string> &default_dialect = std::nullopt,
            const std::optional<std::string> &default_id = std::nullopt,
-           const Reader &reader = sourcemeta::core::read_json)
+           const Reader &reader = read_json,
+           SchemaVisitorReference &&reference_visitor = nullptr)
       -> const std::string &;
 
   // Change the identifier of a registered schema
@@ -130,6 +131,7 @@ public:
     std::optional<std::string> default_dialect;
     std::string original_identifier;
     Reader reader;
+    SchemaVisitorReference reference_visitor;
   };
 
 private:
