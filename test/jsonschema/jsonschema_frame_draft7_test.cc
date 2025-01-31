@@ -125,6 +125,42 @@ TEST(JSONSchema_frame_draft7, empty_schema) {
       "http://json-schema.org/draft-07/schema", std::nullopt);
 }
 
+TEST(JSONSchema_frame_draft7, empty_schema_trailing_hash) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema#",
+    "$schema": "http://json-schema.org/draft-07/schema#"
+  })JSON");
+
+  sourcemeta::core::SchemaFrame frame;
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
+                sourcemeta::core::schema_official_resolver);
+
+  EXPECT_EQ(frame.locations().size(), 3);
+  EXPECT_FRAME_STATIC_DRAFT7_RESOURCE(
+      frame, "https://www.sourcemeta.com/schema",
+      "https://www.sourcemeta.com/schema", "",
+      "https://www.sourcemeta.com/schema", "", 0);
+
+  // JSON Pointers
+
+  EXPECT_FRAME_STATIC_DRAFT7_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/$id",
+      "https://www.sourcemeta.com/schema", "/$id",
+      "https://www.sourcemeta.com/schema", "/$id", 0);
+  EXPECT_FRAME_STATIC_DRAFT7_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/$schema",
+      "https://www.sourcemeta.com/schema", "/$schema",
+      "https://www.sourcemeta.com/schema", "/$schema", 0);
+
+  // References
+
+  EXPECT_EQ(frame.references().size(), 1);
+
+  EXPECT_STATIC_REFERENCE(
+      frame, "/$schema", "http://json-schema.org/draft-07/schema",
+      "http://json-schema.org/draft-07/schema", std::nullopt);
+}
+
 TEST(JSONSchema_frame_draft7, one_level_applicators_without_identifiers) {
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$id": "https://www.sourcemeta.com/schema",
