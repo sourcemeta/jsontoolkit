@@ -353,3 +353,32 @@ TEST(JSONSchema_relativize, recursive_ref) {
 
   EXPECT_EQ(schema, expected);
 }
+
+TEST(JSONSchema_relativize, camelcase_paths_are_sensitive) {
+  auto schema = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "https://sourcemeta.com/camelcase/no-id-absolute-ref.json",
+    "properties": {
+      "foo": {
+        "$ref": "https://sourcemeta.com/CamelCase/no-id.json"
+      }
+    }
+  })JSON");
+
+  sourcemeta::core::reference_visit(
+      schema, sourcemeta::core::schema_official_walker,
+      sourcemeta::core::schema_official_resolver,
+      sourcemeta::core::reference_visitor_relativize);
+
+  const auto expected = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "https://sourcemeta.com/camelcase/no-id-absolute-ref.json",
+    "properties": {
+      "foo": {
+        "$ref": "../CamelCase/no-id.json"
+      }
+    }
+  })JSON");
+
+  EXPECT_EQ(schema, expected);
+}
