@@ -344,3 +344,31 @@ TEST(JSONSchema_SchemaFlatFileResolver, with_absolute_references_reidentify) {
       resolver("https://www.example.com/2020-12-absolute-ref.json").value(),
       expected);
 }
+
+TEST(JSONSchema_SchemaFlatFileResolver, custom_reference_visitor) {
+  sourcemeta::core::SchemaFlatFileResolver resolver;
+  const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
+                         "2020-12-absolute-ref.json"};
+
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
+    "$id": "https://www.sourcemeta.com/2020-12-absolute-ref.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$ref": "MUTATED"
+  })JSON");
+
+  const auto &identifier{resolver.add(
+      schema_path, std::nullopt, std::nullopt, sourcemeta::core::read_json,
+      [](sourcemeta::core::JSON &schema, const sourcemeta::core::URI &,
+         const sourcemeta::core::JSON::String &,
+         const sourcemeta::core::JSON::String &keyword,
+         sourcemeta::core::URI &) {
+        schema.assign(keyword, sourcemeta::core::JSON{"MUTATED"});
+      })};
+
+  EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-absolute-ref.json");
+  EXPECT_TRUE(resolver("https://www.sourcemeta.com/2020-12-absolute-ref.json")
+                  .has_value());
+  EXPECT_EQ(
+      resolver("https://www.sourcemeta.com/2020-12-absolute-ref.json").value(),
+      expected);
+}
