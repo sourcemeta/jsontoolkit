@@ -123,6 +123,18 @@ TEST(URI_canonicalize, example_15) {
   EXPECT_EQ(uri.recompose(), "http://example.com/unreserved/~foo");
 }
 
+TEST(URI_canonicalize, example_16) {
+  sourcemeta::core::URI uri{"http://example.com/foo/"};
+  uri.canonicalize();
+  EXPECT_EQ(uri.recompose(), "http://example.com/foo/");
+}
+
+TEST(URI_canonicalize, example_17) {
+  sourcemeta::core::URI uri{"http://example.com/"};
+  uri.canonicalize();
+  EXPECT_EQ(uri.recompose(), "http://example.com/");
+}
+
 TEST(URI_canonicalize, empty_fragment) {
   sourcemeta::core::URI uri{"#"};
   uri.canonicalize();
