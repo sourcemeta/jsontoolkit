@@ -441,8 +441,26 @@ auto stringify(const PointerT &pointer,
   if constexpr (requires { typename PointerT::Wildcard; }) {
     for (const auto &token : pointer) {
       if (std::holds_alternative<typename PointerT::Wildcard>(token)) {
+        // TODO: Do it differently for different types of wildcards
         // Represent wildcards using an impossible JSON Pointer token
         stream.put(internal::token_pointer_slash<CharT>);
+        stream.put(internal::token_pointer_tilde<CharT>);
+
+        switch (std::get<typename PointerT::Wildcard>(token)) {
+          case PointerT::Wildcard::Property:
+            stream.put('P');
+            break;
+          case PointerT::Wildcard::Item:
+            stream.put('I');
+            break;
+          case PointerT::Wildcard::Key:
+            stream.put('K');
+            break;
+          default:
+            assert(false);
+            break;
+        }
+
         stream.put(internal::token_pointer_tilde<CharT>);
       } else {
         stringify_token<CharT, Traits, Allocator, typename PointerT::Token>(

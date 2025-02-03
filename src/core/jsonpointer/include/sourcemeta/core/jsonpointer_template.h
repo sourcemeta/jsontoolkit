@@ -5,6 +5,7 @@
 #include <sourcemeta/core/jsonpointer_token.h>
 
 #include <algorithm> // std::copy
+#include <cassert>   // assert
 #include <iterator>  // std::back_inserter
 #include <variant>   // std::variant
 #include <vector>    // std::vector
@@ -14,9 +15,8 @@ namespace sourcemeta::core {
 /// @ingroup jsonpointer
 template <typename PointerT> class GenericPointerTemplate {
 public:
-  struct Wildcard {
-    auto operator==(const Wildcard &) const noexcept -> bool = default;
-  };
+  /// The type of wildcard
+  enum class Wildcard { Property, Item, Key };
 
   using Token = typename PointerT::Token;
   using Container = std::vector<std::variant<Token, Wildcard>>;
@@ -95,9 +95,13 @@ public:
   /// #include <sourcemeta/core/jsonpointer.h>
   ///
   /// sourcemeta::core::PointerTemplate pointer;
-  /// pointer.emplace_back(sourcemeta::core::PointerTemplate::Wildcard{});
+  /// pointer.emplace_back(sourcemeta::core::PointerTemplate::Wildcard::Property);
   /// ```
   template <class... Args> auto emplace_back(Args &&...args) -> reference {
+    // It is a logical error to push a token after a key wildcard
+    assert(this->data.empty() ||
+           !std::holds_alternative<Wildcard>(this->data.back()) ||
+           std::get<Wildcard>(this->data.back()) != Wildcard::Key);
     return this->data.emplace_back(args...);
   }
 
@@ -112,6 +116,10 @@ public:
   /// result.push_back(pointer);
   /// ```
   auto push_back(const PointerT &other) -> void {
+    // It is a logical error to push a token after a key wildcard
+    assert(this->data.empty() ||
+           !std::holds_alternative<Wildcard>(this->data.back()) ||
+           std::get<Wildcard>(this->data.back()) != Wildcard::Key);
     this->data.reserve(this->data.size() + other.size());
     std::copy(other.cbegin(), other.cend(), std::back_inserter(this->data));
   }
