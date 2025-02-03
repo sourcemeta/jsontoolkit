@@ -18,8 +18,9 @@ public:
   /// The type of wildcard
   enum class Wildcard { Property, Item, Key };
 
+  using Regex = typename PointerT::Value::String;
   using Token = typename PointerT::Token;
-  using Container = std::vector<std::variant<Token, Wildcard>>;
+  using Container = std::vector<std::variant<Token, Wildcard, Regex>>;
 
   /// This constructor creates an empty JSON Pointer template. For example:
   ///

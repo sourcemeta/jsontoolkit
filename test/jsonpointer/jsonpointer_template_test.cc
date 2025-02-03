@@ -49,6 +49,36 @@ TEST(JSONPointer_template, equality_with_property_wildcard_false) {
   EXPECT_NE(left, right);
 }
 
+TEST(JSONPointer_template, equality_with_regex_wildcard_true) {
+  const sourcemeta::core::Pointer prefix{"foo", "bar"};
+  const sourcemeta::core::Pointer suffix{"baz"};
+
+  sourcemeta::core::PointerTemplate left{prefix};
+  left.emplace_back(sourcemeta::core::PointerTemplate::Regex{"^@"});
+  left.push_back(suffix);
+
+  sourcemeta::core::PointerTemplate right{prefix};
+  right.emplace_back(sourcemeta::core::PointerTemplate::Regex{"^@"});
+  right.push_back(suffix);
+
+  EXPECT_EQ(left, right);
+}
+
+TEST(JSONPointer_template, equality_with_regex_wildcard_false) {
+  const sourcemeta::core::Pointer prefix{"foo", "bar"};
+  const sourcemeta::core::Pointer suffix{"baz"};
+
+  sourcemeta::core::PointerTemplate left{prefix};
+  left.emplace_back(sourcemeta::core::PointerTemplate::Regex{"^@"});
+  left.push_back(suffix);
+
+  sourcemeta::core::PointerTemplate right{prefix};
+  right.push_back(suffix);
+  right.emplace_back(sourcemeta::core::PointerTemplate::Regex{"^@"});
+
+  EXPECT_NE(left, right);
+}
+
 TEST(JSONPointer_template, equality_with_item_wildcard_true) {
   const sourcemeta::core::Pointer prefix{"foo", "bar"};
   const sourcemeta::core::Pointer suffix{"baz"};
@@ -117,6 +147,21 @@ TEST(JSONPointer_template, stringify_multiple_property_wildcards) {
   sourcemeta::core::stringify(pointer, stream);
 
   EXPECT_EQ(stream.str(), "/foo/bar/~P~/baz/~P~");
+}
+
+TEST(JSONPointer_template, stringify_multiple_regex_wildcards) {
+  const sourcemeta::core::Pointer prefix{"foo", "bar"};
+  const sourcemeta::core::Pointer suffix{"baz"};
+
+  sourcemeta::core::PointerTemplate pointer{prefix};
+  pointer.emplace_back(sourcemeta::core::PointerTemplate::Regex{"^@"});
+  pointer.push_back(suffix);
+  pointer.emplace_back(sourcemeta::core::PointerTemplate::Regex{"[0-9]+"});
+
+  std::ostringstream stream;
+  sourcemeta::core::stringify(pointer, stream);
+
+  EXPECT_EQ(stream.str(), "/foo/bar/~R^@~/baz/~R[0-9]+~");
 }
 
 TEST(JSONPointer_template, stringify_multiple_item_wildcards) {
