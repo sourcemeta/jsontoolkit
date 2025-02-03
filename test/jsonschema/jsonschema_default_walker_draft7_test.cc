@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <sourcemeta/core/jsonschema.h>
 
+#include "jsonschema_test_utils.h"
+
 static const std::map<std::string, bool> VOCABULARIES_DRAFT7{
     {"http://json-schema.org/draft-07/schema#", true}};
 
@@ -868,4 +870,79 @@ TEST(JSONSchema_default_walker_draft7, schema_keyword_priority_unknown) {
   const auto &walker = sourcemeta::core::schema_official_walker;
   using namespace sourcemeta::core;
   EXPECT_EQ(schema_keyword_priority("foobar", vocabularies, walker), 1);
+}
+
+TEST(JSONSchema_default_walker_draft7, instance_locations) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "allOf": [ { "type": "string" }, { "minLength": 3 } ],
+    "anyOf": [ { "type": "string" } ],
+    "oneOf": [ { "type": "string" } ],
+    "if": { "const": "foo" },
+    "then": true,
+    "else": { "maxLength": 10 },
+    "not": { "const": "bar" },
+    "properties": {
+      "foo": { "type": "string" },
+      "bar": false
+    },
+    "additionalProperties": { "type": "number" },
+    "patternProperties": {
+      "^f": { "type": "integer" },
+      "x$": true
+    },
+    "dependencies": {
+      "foo": [ "bar" ],
+      "baz": { "type": "string" }
+    },
+    "propertyNames": { "minLength": 1 },
+    "contains": { "type": "number" },
+    "additionalItems": { "minimum": 2 },
+    "items": { "items": [ true, false ] },
+    "definitions": { "foo": true }
+  })JSON");
+
+  std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
+  for (const auto &entry : sourcemeta::core::SchemaIterator(
+           document, sourcemeta::core::schema_official_walker,
+           sourcemeta::core::schema_official_resolver)) {
+    entries.push_back(entry);
+  }
+
+  EXPECT_EQ(entries.size(), 22);
+
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 0, "", "");
+
+  // Applicators (any)
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 1, "/allOf/0", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 2, "/allOf/1", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 3, "/anyOf/0", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 4, "/oneOf/0", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 5, "/if", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 6, "/then", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 7, "/else", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 8, "/not", "");
+
+  // Applicators (object)
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 9, "/properties/foo", "/foo");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 10, "/properties/bar", "/bar");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 11, "/additionalProperties",
+                                      "/~P~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 12, "/patternProperties/^f",
+                                      "/~R^f~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 13, "/patternProperties/x$",
+                                      "/~Rx$~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 14, "/dependencies/baz", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 15, "/propertyNames", "/~K~");
+
+  // Applicators (array)
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 16, "/contains", "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 17, "/additionalItems", "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 18, "/items", "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 19, "/items/items/0", "/~I~/0");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 20, "/items/items/1", "/~I~/1");
+
+  // Core
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7_ORPHAN(entries, 21, "/definitions/foo",
+                                             "");
 }

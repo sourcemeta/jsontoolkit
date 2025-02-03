@@ -3,6 +3,8 @@
 
 #include <algorithm>
 
+#include "jsonschema_test_utils.h"
+
 static const std::map<std::string, bool> VOCABULARIES_2020_12_CORE{
     {"https://json-schema.org/draft/2020-12/vocab/core", true}};
 
@@ -1559,4 +1561,135 @@ TEST(JSONSchema_default_walker_2020_12, schema_keyword_priority_unknown) {
   const auto &walker = sourcemeta::core::schema_official_walker;
   using namespace sourcemeta::core;
   EXPECT_EQ(schema_keyword_priority("foobar", vocabularies, walker), 0);
+}
+
+TEST(JSONSchema_default_walker_2020_12, instance_locations) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "allOf": [ { "type": "string" }, { "minLength": 3 } ],
+    "anyOf": [ { "type": "string" } ],
+    "oneOf": [ { "type": "string" } ],
+    "if": { "const": "foo" },
+    "then": true,
+    "else": { "maxLength": 10 },
+    "not": { "const": "bar" },
+    "properties": {
+      "foo": { "type": "string" },
+      "bar": false
+    },
+    "additionalProperties": { "type": "number" },
+    "patternProperties": {
+      "^f": { "type": "integer" },
+      "x$": true
+    },
+    "dependentSchemas": {
+      "foo": { "minProperties": 1 },
+      "bar": { "maxProperties": 10 }
+    },
+    "propertyNames": { "minLength": 1 },
+    "contains": { "type": "number" },
+    "items": { "minimum": 2 },
+    "prefixItems": [ true, false ],
+    "unevaluatedProperties": { "type": "number" },
+    "unevaluatedItems": { "minimum": 2 },
+    "contentSchema": { "type": "string" },
+    "$defs": {
+      "foo": {
+        "properties": {
+          "bar": { "type": "string" }
+        }
+      }
+    },
+    "definitions": { "foo": true }
+  })JSON");
+
+  std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
+  for (const auto &entry : sourcemeta::core::SchemaIterator(
+           document, sourcemeta::core::schema_official_walker,
+           sourcemeta::core::schema_official_resolver)) {
+    entries.push_back(entry);
+  }
+
+  EXPECT_EQ(entries.size(), 27);
+
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 0, "", "");
+
+  // Applicator vocabulary (any)
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 1, "/allOf/0", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 2, "/allOf/1", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 3, "/anyOf/0", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 4, "/oneOf/0", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 5, "/if", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 6, "/then", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 7, "/else", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 8, "/not", "");
+
+  // Applicator vocabulary (object)
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 9, "/properties/foo", "/foo");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 10, "/properties/bar", "/bar");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 11, "/additionalProperties",
+                                       "/~P~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 12, "/patternProperties/^f",
+                                       "/~R^f~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 13, "/patternProperties/x$",
+                                       "/~Rx$~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 14, "/dependentSchemas/foo",
+                                       "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 15, "/dependentSchemas/bar",
+                                       "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 16, "/propertyNames", "/~K~");
+
+  // Applicator vocabulary (array)
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 17, "/contains", "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 18, "/items", "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 19, "/prefixItems/0", "/0");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 20, "/prefixItems/1", "/1");
+
+  // Unevaluated vocabulary
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 21, "/unevaluatedProperties",
+                                       "/~P~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 22, "/unevaluatedItems",
+                                       "/~I~");
+
+  // Content vocabulary
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 23, "/contentSchema", "");
+
+  // Core vocabulary
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(entries, 24, "/$defs/foo", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(
+      entries, 25, "/$defs/foo/properties/bar", "/bar");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(entries, 26, "/definitions/foo",
+                                              "");
+}
+
+TEST(JSONSchema_default_walker_2020_12, instance_locations_nested) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": {
+      "properties": {
+        "foo": {
+          "allOf": [
+            { "type": "string" }
+          ]
+        }
+      }
+    }
+  })JSON");
+
+  std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
+  for (const auto &entry : sourcemeta::core::SchemaIterator(
+           document, sourcemeta::core::schema_official_walker,
+           sourcemeta::core::schema_official_resolver)) {
+    entries.push_back(entry);
+  }
+
+  EXPECT_EQ(entries.size(), 4);
+
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 0, "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 1, "/additionalProperties",
+                                       "/~P~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(
+      entries, 2, "/additionalProperties/properties/foo", "/~P~/foo");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(
+      entries, 3, "/additionalProperties/properties/foo/allOf/0", "/~P~/foo");
 }

@@ -193,7 +193,11 @@ struct SchemaIteratorEntry {
   std::optional<std::string> dialect;
   std::map<std::string, bool> vocabularies;
   std::optional<std::string> base_dialect;
+  // TODO: Do we really need a full copy of the JSON value if the client
+  // can get it through the JSON Pointer if needed?
   JSON value;
+  PointerTemplate instance_location;
+  bool orphan;
 };
 
 } // namespace sourcemeta::core

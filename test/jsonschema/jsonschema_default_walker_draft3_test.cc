@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <sourcemeta/core/jsonschema.h>
 
+#include "jsonschema_test_utils.h"
+
 static const std::map<std::string, bool> VOCABULARIES_DRAFT3{
     {"http://json-schema.org/draft-03/schema#", true}};
 
@@ -606,4 +608,66 @@ TEST(JSONSchema_default_walker_draft3, schema_keyword_priority_unknown) {
   const auto &walker = sourcemeta::core::schema_official_walker;
   using namespace sourcemeta::core;
   EXPECT_EQ(schema_keyword_priority("foobar", vocabularies, walker), 1);
+}
+
+TEST(JSONSchema_default_walker_draft3, instance_locations) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "http://json-schema.org/draft-03/schema#",
+    "properties": {
+      "foo": { "type": "string" },
+      "bar": false
+    },
+    "additionalProperties": { "type": "number" },
+    "patternProperties": {
+      "^f": { "type": "integer" },
+      "x$": true
+    },
+    "dependencies": {
+      "foo": [ "bar" ],
+      "baz": { "type": "string" }
+    },
+    "additionalItems": { "minimum": 2 },
+    "items": { "items": [ true, false ] },
+    "type": [ "string", { "type": "number" }, { "type": "integer" } ],
+    "disallow": [ "boolean", { "type": "string" }, { "type": "integer" } ],
+    "extends": {
+      "extends": [ { "type": "string" } ]
+    }
+  })JSON");
+
+  std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
+  for (const auto &entry : sourcemeta::core::SchemaIterator(
+           document, sourcemeta::core::schema_official_walker,
+           sourcemeta::core::schema_official_resolver)) {
+    entries.push_back(entry);
+  }
+
+  EXPECT_EQ(entries.size(), 17);
+
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 0, "", "");
+
+  // Applicators (object)
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 1, "/properties/foo", "/foo");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 2, "/properties/bar", "/bar");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 3, "/additionalProperties",
+                                      "/~P~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 4, "/patternProperties/^f",
+                                      "/~R^f~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 5, "/patternProperties/x$",
+                                      "/~Rx$~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 6, "/dependencies/baz", "");
+
+  // Applicators (array)
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 7, "/additionalItems", "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 8, "/items", "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 9, "/items/items/0", "/~I~/0");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 10, "/items/items/1", "/~I~/1");
+
+  // Applicators (any)
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 11, "/type/1", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 12, "/type/2", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 13, "/disallow/1", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 14, "/disallow/2", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 15, "/extends", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 16, "/extends/extends/0", "");
 }
