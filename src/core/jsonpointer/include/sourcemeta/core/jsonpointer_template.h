@@ -125,6 +125,20 @@ public:
     std::copy(other.cbegin(), other.cend(), std::back_inserter(this->data));
   }
 
+  /// Remove the last token of a JSON Pointer template. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/core/jsonpointer.h>
+  ///
+  /// const sourcemeta::core::Pointer base{"bar", "baz"};
+  /// sourcemeta::core::PointerTemplate pointer{base};
+  /// pointer.pop_back();
+  /// ```
+  auto pop_back() -> void {
+    assert(!this->data.empty());
+    this->data.pop_back();
+  }
+
   /// Compare JSON Pointer template instances
   auto operator==(const GenericPointerTemplate<PointerT> &other) const noexcept
       -> bool {

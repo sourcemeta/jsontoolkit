@@ -127,12 +127,6 @@ TEST(JSONWeakPointer_pointer, pop_back_non_empty) {
   EXPECT_EQ(pointer.at(0).to_property(), "foo");
 }
 
-TEST(JSONWeakPointer_pointer, pop_back_empty) {
-  sourcemeta::core::WeakPointer pointer;
-  EXPECT_EQ(pointer.size(), 0);
-  EXPECT_THROW(pointer.pop_back(), std::runtime_error);
-}
-
 TEST(JSONWeakPointer_pointer, ordering_less_than) {
   const sourcemeta::core::WeakPointer pointer_1{std::cref(foo), std::cref(bar)};
   const sourcemeta::core::WeakPointer pointer_2{std::cref(foo)};

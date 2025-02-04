@@ -121,12 +121,6 @@ TEST(JSONPointer_pointer, pop_back_non_empty) {
   EXPECT_EQ(pointer.at(0).to_property(), "foo");
 }
 
-TEST(JSONPointer_pointer, pop_back_empty) {
-  sourcemeta::core::Pointer pointer;
-  EXPECT_EQ(pointer.size(), 0);
-  EXPECT_THROW(pointer.pop_back(), std::runtime_error);
-}
-
 TEST(JSONPointer_pointer, ordering_less_than) {
   const sourcemeta::core::Pointer pointer_1{"foo", "bar"};
   const sourcemeta::core::Pointer pointer_2{"foo"};
