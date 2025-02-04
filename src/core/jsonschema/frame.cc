@@ -733,7 +733,7 @@ auto find_adjacent_dependencies(const JSON::String &current, const JSON &schema,
       }
 
       // Static
-      case SchemaKeywordType::ApplicatorElementsInline:
+      case SchemaKeywordType::ApplicatorElementsInPlaceInline:
         for (std::size_t index = 0; index < property.second.size(); index++) {
           find_adjacent_dependencies(
               current, schema, frame, walker, resolver, keywords, root,
@@ -755,6 +755,8 @@ auto find_adjacent_dependencies(const JSON::String &current, const JSON &schema,
 
         break;
       case SchemaKeywordType::ApplicatorValueTraverseAnyItem:
+        [[fallthrough]];
+      case SchemaKeywordType::ApplicatorValueTraverseParent:
         [[fallthrough]];
       case SchemaKeywordType::ApplicatorValueInPlace:
         if (is_schema(property.second)) {
