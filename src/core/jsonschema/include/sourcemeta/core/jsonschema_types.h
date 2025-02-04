@@ -69,6 +69,10 @@ enum class SchemaKeywordType : std::uint8_t {
   /// The JSON Schema keyword is considered to be a comment without any
   /// additional meaning
   Comment,
+  /// The JSON Schema keyword is a reserved location that potentially
+  /// takes an object as argument, whose values are potentially
+  /// JSON Schema definitions
+  LocationMembers,
 
   /// The JSON Schema keyword is an applicator that potentially
   /// takes an object as argument, whose values are potentially
@@ -94,59 +98,50 @@ enum class SchemaKeywordType : std::uint8_t {
   /// The instance traverses to any item
   ApplicatorValueTraverseAnyItem,
   /// The JSON Schema keyword is an applicator that potentially
+  /// takes a JSON Schema definition as an argument
+  /// The instance traverses back to the parent
+  ApplicatorValueTraverseParent,
+  /// The JSON Schema keyword is an applicator that potentially
   /// takes an array of potentially JSON Schema definitions
   /// as an argument
   /// The instance traverses based on the element indexes
   ApplicatorElementsTraverseItem,
-
+  /// The JSON Schema keyword is an applicator that may take a JSON Schema
+  /// definition or an array of potentially JSON Schema definitions
+  /// as an argument
+  /// The instance traverses to any item or based on the element indexes
+  ApplicatorValueOrElementsTraverseAnyItemOrItem,
+  /// The JSON Schema keyword is an applicator that may take a JSON Schema
+  /// definition or an array of potentially JSON Schema definitions
+  /// as an argument without affecting the instance location.
+  /// The instance does not traverse
+  ApplicatorValueOrElementsInPlace,
   /// The JSON Schema keyword is an applicator that potentially
-  /// takes a JSON Schema definition as an argument
-  ApplicatorValue,
+  /// takes an object as argument, whose values are potentially
+  /// JSON Schema definitions without affecting the instance location.
+  /// The instance does not traverse
+  ApplicatorMembersInPlace,
   /// The JSON Schema keyword is an applicator that potentially
-  /// takes a JSON Schema definition as an argument but its evaluation follows
-  /// special rules
-  ApplicatorValueOther,
+  /// takes an array of potentially JSON Schema definitions
+  /// as an argument without affecting the instance location
+  /// The instance does not traverse
+  ApplicatorElementsInPlace,
   /// The JSON Schema keyword is an applicator that potentially
   /// takes a JSON Schema definition as an argument without affecting the
-  /// instance location
+  /// instance location.
+  /// The instance does not traverse
   ApplicatorValueInPlace,
   /// The JSON Schema keyword is an applicator that potentially
   /// takes an array of potentially JSON Schema definitions
-  /// as an argument
-  ApplicatorElements,
-  /// The JSON Schema keyword is an applicator that potentially
-  /// takes an array of potentially JSON Schema definitions
-  /// as an argument without affecting the instance location
-  ApplicatorElementsInPlace,
-  /// The JSON Schema keyword is an applicator that potentially
-  /// takes an array of potentially JSON Schema definitions
   /// as an argument without affecting the instance location and that can be
-  /// statically inlined
-  ApplicatorElementsInline,
+  /// statically inlined.
+  /// The instance does not traverse
+  ApplicatorElementsInPlaceInline,
   /// The JSON Schema keyword is an applicator that potentially
-  /// takes an object as argument, whose values are potentially
-  /// JSON Schema definitions
-  ApplicatorMembers,
-  /// The JSON Schema keyword is an applicator that potentially
-  /// takes an object as argument, whose values are potentially
-  /// JSON Schema definitions without affecting the instance location
-  ApplicatorMembersInPlace,
-  /// The JSON Schema keyword is an applicator that may take a JSON Schema
-  /// definition or an array of potentially JSON Schema definitions
-  /// as an argument
-  ApplicatorValueOrElements,
-  /// The JSON Schema keyword is an applicator that may take a JSON Schema
-  /// definition or an array of potentially JSON Schema definitions
-  /// as an argument without affecting the instance location
-  ApplicatorValueOrElementsInPlace,
-  /// The JSON Schema keyword is an applicator that may take an array of
-  /// potentially JSON Schema definitions or an object whose values are
-  /// potentially JSON Schema definitions as an argument
-  ApplicatorElementsOrMembers,
-  /// The JSON Schema keyword is a reserved location that potentially
-  /// takes an object as argument, whose values are potentially
-  /// JSON Schema definitions
-  LocationMembers,
+  /// takes a JSON Schema definition as an argument but its evaluation follows
+  /// special rules.
+  /// The instance does not traverse
+  ApplicatorValueInPlaceOther,
 };
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop

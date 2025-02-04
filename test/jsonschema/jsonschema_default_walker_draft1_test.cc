@@ -40,7 +40,8 @@ TEST(JSONSchema_default_walker_draft1, ref) {
 TEST(JSONSchema_default_walker_draft1, items) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("items", VOCABULARIES_DRAFT1)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueOrElements);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorValueOrElementsTraverseAnyItemOrItem);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-01/schema#");
@@ -73,7 +74,7 @@ TEST(JSONSchema_default_walker_draft1, additionalProperties) {
 TEST(JSONSchema_default_walker_draft1, type) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("type", VOCABULARIES_DRAFT1)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElements);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-01/schema#");
@@ -185,7 +186,7 @@ TEST(JSONSchema_default_walker_draft1, minItems) {
 TEST(JSONSchema_default_walker_draft1, requires) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("requires", VOCABULARIES_DRAFT1)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseParent);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-01/schema#");
@@ -413,7 +414,8 @@ TEST(JSONSchema_default_walker_draft1, hyperschema_items) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("items", VOCABULARIES_DRAFT1_HYPERSCHEMA)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueOrElements);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorValueOrElementsTraverseAnyItemOrItem);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-01/hyper-schema#");
@@ -448,7 +450,7 @@ TEST(JSONSchema_default_walker_draft1, hyperschema_type) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("type", VOCABULARIES_DRAFT1_HYPERSCHEMA)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElements);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-01/hyper-schema#");
@@ -549,7 +551,7 @@ TEST(JSONSchema_default_walker_draft1, hyperschema_requires) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("requires", VOCABULARIES_DRAFT1_HYPERSCHEMA)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseParent);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-01/hyper-schema#");

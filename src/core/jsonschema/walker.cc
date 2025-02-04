@@ -49,13 +49,29 @@ auto walk(sourcemeta::core::Pointer &pointer,
           ApplicatorValueTraverseAnyProperty:
         [[fallthrough]];
       case sourcemeta::core::SchemaKeywordType::
-          ApplicatorValueTraverseAnyPropertyKey:
-        [[fallthrough]];
-      case sourcemeta::core::SchemaKeywordType::ApplicatorValueTraverseAnyItem:
-        [[fallthrough]];
-      case sourcemeta::core::SchemaKeywordType::ApplicatorValue:
-        [[fallthrough]];
-      case sourcemeta::core::SchemaKeywordType::ApplicatorValueOther:
+          ApplicatorValueTraverseAnyPropertyKey: {
+        sourcemeta::core::Pointer new_pointer{pointer};
+        new_pointer.emplace_back(pair.first);
+        walk(new_pointer, subschemas, pair.second, walker, resolver,
+             new_dialect, type, level + 1);
+      } break;
+
+      case sourcemeta::core::SchemaKeywordType::
+          ApplicatorValueTraverseAnyItem: {
+        sourcemeta::core::Pointer new_pointer{pointer};
+        new_pointer.emplace_back(pair.first);
+        walk(new_pointer, subschemas, pair.second, walker, resolver,
+             new_dialect, type, level + 1);
+      } break;
+
+      case sourcemeta::core::SchemaKeywordType::ApplicatorValueTraverseParent: {
+        sourcemeta::core::Pointer new_pointer{pointer};
+        new_pointer.emplace_back(pair.first);
+        walk(new_pointer, subschemas, pair.second, walker, resolver,
+             new_dialect, type, level + 1);
+      } break;
+
+      case sourcemeta::core::SchemaKeywordType::ApplicatorValueInPlaceOther:
         [[fallthrough]];
       case sourcemeta::core::SchemaKeywordType::ApplicatorValueInPlace: {
         sourcemeta::core::Pointer new_pointer{pointer};
@@ -65,10 +81,19 @@ auto walk(sourcemeta::core::Pointer &pointer,
       } break;
 
       case sourcemeta::core::SchemaKeywordType::ApplicatorElementsTraverseItem:
-        [[fallthrough]];
-      case sourcemeta::core::SchemaKeywordType::ApplicatorElements:
-        [[fallthrough]];
-      case sourcemeta::core::SchemaKeywordType::ApplicatorElementsInline:
+        if (pair.second.is_array()) {
+          for (std::size_t index = 0; index < pair.second.size(); index++) {
+            sourcemeta::core::Pointer new_pointer{pointer};
+            new_pointer.emplace_back(pair.first);
+            new_pointer.emplace_back(index);
+            walk(new_pointer, subschemas, pair.second.at(index), walker,
+                 resolver, new_dialect, type, level + 1);
+          }
+        }
+
+        break;
+
+      case sourcemeta::core::SchemaKeywordType::ApplicatorElementsInPlaceInline:
         [[fallthrough]];
       case sourcemeta::core::SchemaKeywordType::ApplicatorElementsInPlace:
         if (pair.second.is_array()) {
@@ -85,14 +110,45 @@ auto walk(sourcemeta::core::Pointer &pointer,
 
       case sourcemeta::core::SchemaKeywordType::
           ApplicatorMembersTraversePropertyStatic:
-        [[fallthrough]];
+        if (pair.second.is_object()) {
+          for (auto &subpair : pair.second.as_object()) {
+            sourcemeta::core::Pointer new_pointer{pointer};
+            new_pointer.emplace_back(pair.first);
+            new_pointer.emplace_back(subpair.first);
+            walk(new_pointer, subschemas, subpair.second, walker, resolver,
+                 new_dialect, type, level + 1);
+          }
+        }
+
+        break;
+
       case sourcemeta::core::SchemaKeywordType::
           ApplicatorMembersTraversePropertyRegex:
-        [[fallthrough]];
-      case sourcemeta::core::SchemaKeywordType::ApplicatorMembers:
-        [[fallthrough]];
+        if (pair.second.is_object()) {
+          for (auto &subpair : pair.second.as_object()) {
+            sourcemeta::core::Pointer new_pointer{pointer};
+            new_pointer.emplace_back(pair.first);
+            new_pointer.emplace_back(subpair.first);
+            walk(new_pointer, subschemas, subpair.second, walker, resolver,
+                 new_dialect, type, level + 1);
+          }
+        }
+
+        break;
+
       case sourcemeta::core::SchemaKeywordType::ApplicatorMembersInPlace:
-        [[fallthrough]];
+        if (pair.second.is_object()) {
+          for (auto &subpair : pair.second.as_object()) {
+            sourcemeta::core::Pointer new_pointer{pointer};
+            new_pointer.emplace_back(pair.first);
+            new_pointer.emplace_back(subpair.first);
+            walk(new_pointer, subschemas, subpair.second, walker, resolver,
+                 new_dialect, type, level + 1);
+          }
+        }
+
+        break;
+
       case sourcemeta::core::SchemaKeywordType::LocationMembers:
         if (pair.second.is_object()) {
           for (auto &subpair : pair.second.as_object()) {
@@ -105,10 +161,9 @@ auto walk(sourcemeta::core::Pointer &pointer,
         }
 
         break;
-      case sourcemeta::core::SchemaKeywordType::ApplicatorValueOrElements:
-        [[fallthrough]];
+
       case sourcemeta::core::SchemaKeywordType::
-          ApplicatorValueOrElementsInPlace:
+          ApplicatorValueOrElementsTraverseAnyItemOrItem:
         if (pair.second.is_array()) {
           for (std::size_t index = 0; index < pair.second.size(); index++) {
             sourcemeta::core::Pointer new_pointer{pointer};
@@ -125,7 +180,9 @@ auto walk(sourcemeta::core::Pointer &pointer,
         }
 
         break;
-      case sourcemeta::core::SchemaKeywordType::ApplicatorElementsOrMembers:
+
+      case sourcemeta::core::SchemaKeywordType::
+          ApplicatorValueOrElementsInPlace:
         if (pair.second.is_array()) {
           for (std::size_t index = 0; index < pair.second.size(); index++) {
             sourcemeta::core::Pointer new_pointer{pointer};
@@ -134,14 +191,11 @@ auto walk(sourcemeta::core::Pointer &pointer,
             walk(new_pointer, subschemas, pair.second.at(index), walker,
                  resolver, new_dialect, type, level + 1);
           }
-        } else if (pair.second.is_object()) {
-          for (auto &subpair : pair.second.as_object()) {
-            sourcemeta::core::Pointer new_pointer{pointer};
-            new_pointer.emplace_back(pair.first);
-            new_pointer.emplace_back(subpair.first);
-            walk(new_pointer, subschemas, subpair.second, walker, resolver,
-                 new_dialect, type, level + 1);
-          }
+        } else {
+          sourcemeta::core::Pointer new_pointer{pointer};
+          new_pointer.emplace_back(pair.first);
+          walk(new_pointer, subschemas, pair.second, walker, resolver,
+               new_dialect, type, level + 1);
         }
 
         break;

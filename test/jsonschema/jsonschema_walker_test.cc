@@ -37,31 +37,29 @@ static auto test_walker(std::string_view keyword,
   if (vocabularies.find("https://sourcemeta.com/vocab/test-1") !=
       vocabularies.end()) {
     if (keyword == "schema") {
-      return {sourcemeta::core::SchemaKeywordType::ApplicatorValue,
+      return {sourcemeta::core::SchemaKeywordType::
+                  ApplicatorValueTraverseAnyProperty,
               "https://sourcemeta.com/vocab/test-1",
               {}};
     }
 
     if (keyword == "schemas") {
-      return {sourcemeta::core::SchemaKeywordType::ApplicatorElements,
-              "https://sourcemeta.com/vocab/test-1",
-              {}};
+      return {
+          sourcemeta::core::SchemaKeywordType::ApplicatorElementsTraverseItem,
+          "https://sourcemeta.com/vocab/test-1",
+          {}};
     }
 
     if (keyword == "schemaMap") {
-      return {sourcemeta::core::SchemaKeywordType::ApplicatorMembers,
+      return {sourcemeta::core::SchemaKeywordType::
+                  ApplicatorMembersTraversePropertyStatic,
               "https://sourcemeta.com/vocab/test-1",
               {}};
     }
 
     if (keyword == "schemaOrSchemas") {
-      return {sourcemeta::core::SchemaKeywordType::ApplicatorValueOrElements,
-              "https://sourcemeta.com/vocab/test-1",
-              {}};
-    }
-
-    if (keyword == "schemasOrMap") {
-      return {sourcemeta::core::SchemaKeywordType::ApplicatorElementsOrMembers,
+      return {sourcemeta::core::SchemaKeywordType::
+                  ApplicatorValueOrElementsTraverseAnyItemOrItem,
               "https://sourcemeta.com/vocab/test-1",
               {}};
     }
@@ -70,7 +68,8 @@ static auto test_walker(std::string_view keyword,
   if (vocabularies.find("https://sourcemeta.com/vocab/test-2") !=
       vocabularies.end()) {
     if (keyword == "custom") {
-      return {sourcemeta::core::SchemaKeywordType::ApplicatorValue,
+      return {sourcemeta::core::SchemaKeywordType::
+                  ApplicatorValueTraverseAnyProperty,
               "https://sourcemeta.com/vocab/test-2",
               {}};
     }
@@ -423,67 +422,6 @@ TEST(JSONSchema_walker, value_or_elements) {
             "https://json-schema.org/draft/2020-12/schema");
 }
 
-TEST(JSONSchema_walker, elements_or_members) {
-  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
-    "$schema": "https://sourcemeta.com/test-metaschema",
-    "schemasOrMap": [
-      {
-        "schemasOrMap": {
-          "foo": { "bar": 1 }
-        }
-      }
-    ]
-  })JSON");
-
-  std::vector<sourcemeta::core::JSON> subschemas;
-  std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
-  for (const auto &entry :
-       sourcemeta::core::SchemaIterator(document, test_walker, test_resolver)) {
-    subschemas.push_back(sourcemeta::core::get(document, entry.pointer));
-    entries.push_back(entry);
-  }
-
-  EXPECT_EQ(subschemas.size(), 3);
-  EXPECT_EQ(subschemas.at(0), sourcemeta::core::parse_json(R"JSON({
-    "$schema": "https://sourcemeta.com/test-metaschema",
-    "schemasOrMap": [
-      {
-        "schemasOrMap": {
-          "foo": { "bar": 1 }
-        }
-      }
-    ]
-  })JSON"));
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
-    "schemasOrMap": {
-      "foo": { "bar": 1 }
-    }
-  })JSON"));
-  EXPECT_EQ(subschemas.at(2), sourcemeta::core::parse_json(R"JSON({
-    "bar": 1
-  })JSON"));
-
-  EXPECT_EQ(entries.size(), 3);
-
-  EXPECT_EQ(entries.at(0).pointer, sourcemeta::core::Pointer{});
-  EXPECT_EQ(entries.at(0).dialect, "https://sourcemeta.com/test-metaschema");
-  EXPECT_EQ(entries.at(0).base_dialect,
-            "https://json-schema.org/draft/2020-12/schema");
-
-  EXPECT_EQ(entries.at(1).pointer,
-            sourcemeta::core::Pointer({"schemasOrMap", 0}));
-  EXPECT_EQ(entries.at(1).dialect, "https://sourcemeta.com/test-metaschema");
-  EXPECT_EQ(entries.at(1).base_dialect,
-            "https://json-schema.org/draft/2020-12/schema");
-
-  EXPECT_EQ(
-      entries.at(2).pointer,
-      sourcemeta::core::Pointer({"schemasOrMap", 0, "schemasOrMap", "foo"}));
-  EXPECT_EQ(entries.at(2).dialect, "https://sourcemeta.com/test-metaschema");
-  EXPECT_EQ(entries.at(2).base_dialect,
-            "https://json-schema.org/draft/2020-12/schema");
-}
-
 TEST(JSONSchema_walker, no_metaschema_and_no_default) {
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "schema": { "foo": 1 }
@@ -796,44 +734,6 @@ TEST(JSONSchema_walker, members_with_array) {
 
   EXPECT_EQ(entries.at(1).pointer,
             sourcemeta::core::Pointer({"schemaMap", "foo"}));
-  EXPECT_EQ(entries.at(1).dialect, "https://sourcemeta.com/test-metaschema");
-  EXPECT_EQ(entries.at(1).base_dialect,
-            "https://json-schema.org/draft/2020-12/schema");
-}
-
-TEST(JSONSchema_walker, elements_or_members_with_array_property) {
-  const std::string json{R"JSON({
-    "$schema": "https://sourcemeta.com/test-metaschema",
-    "schemasOrMap": {
-      "foo": { "test": 1 },
-      "bar": [ "baz" ]
-    }
-  })JSON"};
-
-  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(json);
-  std::vector<sourcemeta::core::JSON> subschemas;
-  std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
-  for (const auto &entry :
-       sourcemeta::core::SchemaIterator(document, test_walker, test_resolver)) {
-    subschemas.push_back(sourcemeta::core::get(document, entry.pointer));
-    entries.push_back(entry);
-  }
-
-  EXPECT_EQ(subschemas.size(), 2);
-  EXPECT_EQ(subschemas.at(0), document);
-  EXPECT_EQ(subschemas.at(1), sourcemeta::core::parse_json(R"JSON({
-    "test": 1
-  })JSON"));
-
-  EXPECT_EQ(entries.size(), 2);
-
-  EXPECT_EQ(entries.at(0).pointer, sourcemeta::core::Pointer{});
-  EXPECT_EQ(entries.at(0).dialect, "https://sourcemeta.com/test-metaschema");
-  EXPECT_EQ(entries.at(0).base_dialect,
-            "https://json-schema.org/draft/2020-12/schema");
-
-  EXPECT_EQ(entries.at(1).pointer,
-            sourcemeta::core::Pointer({"schemasOrMap", "foo"}));
   EXPECT_EQ(entries.at(1).dialect, "https://sourcemeta.com/test-metaschema");
   EXPECT_EQ(entries.at(1).base_dialect,
             "https://json-schema.org/draft/2020-12/schema");
