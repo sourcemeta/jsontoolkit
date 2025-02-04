@@ -134,6 +134,17 @@ TEST(JSONPointer_template, equality_with_key_wildcard_false) {
   EXPECT_NE(left, right);
 }
 
+TEST(JSONPointer_template, pop_back) {
+  const sourcemeta::core::Pointer base{"foo", "bar"};
+  sourcemeta::core::PointerTemplate pointer{base};
+  pointer.pop_back();
+
+  const sourcemeta::core::Pointer expected_base{"foo"};
+  const sourcemeta::core::PointerTemplate expected_pointer{expected_base};
+
+  EXPECT_EQ(pointer, expected_pointer);
+}
+
 TEST(JSONPointer_template, stringify_multiple_property_wildcards) {
   const sourcemeta::core::Pointer prefix{"foo", "bar"};
   const sourcemeta::core::Pointer suffix{"baz"};
