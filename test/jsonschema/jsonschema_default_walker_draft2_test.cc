@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <sourcemeta/core/jsonschema.h>
 
+#include "jsonschema_test_utils.h"
+
 static const std::map<std::string, bool> VOCABULARIES_DRAFT2{
     {"http://json-schema.org/draft-02/schema#", true}};
 
@@ -771,4 +773,53 @@ TEST(JSONSchema_default_walker_draft2, schema_keyword_priority_unknown) {
   const auto &walker = sourcemeta::core::schema_official_walker;
   using namespace sourcemeta::core;
   EXPECT_EQ(schema_keyword_priority("foobar", vocabularies, walker), 0);
+}
+
+TEST(JSONSchema_default_walker_draft2, instance_locations) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "http://json-schema.org/draft-02/schema#",
+    "properties": {
+      "foo": {
+        "type": "string",
+        "requires": { "type": "object" }
+      },
+      "bar": false
+    },
+    "additionalProperties": { "type": "number" },
+    "items": { "items": [ { "type": "string" }, { "type": "integer" } ] },
+    "type": [ "string", { "type": "number" }, { "type": "integer" } ],
+    "extends": {
+      "extends": [ { "type": "string" } ]
+    }
+  })JSON");
+
+  std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
+  for (const auto &entry : sourcemeta::core::SchemaIterator(
+           document, sourcemeta::core::schema_official_walker,
+           sourcemeta::core::schema_official_resolver)) {
+    entries.push_back(entry);
+  }
+
+  EXPECT_EQ(entries.size(), 12);
+
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 0, "", "");
+
+  // Applicators (object)
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 1, "/properties/foo", "/foo");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 2, "/properties/foo/requires",
+                                      "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 3, "/properties/bar", "/bar");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 4, "/additionalProperties",
+                                      "/~P~");
+
+  // Applicators (array)
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 5, "/items", "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 6, "/items/items/0", "/~I~/0");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 7, "/items/items/1", "/~I~/1");
+
+  // Applicators (any)
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 8, "/type/1", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 9, "/type/2", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 10, "/extends", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(entries, 11, "/extends/extends/0", "");
 }
