@@ -754,6 +754,8 @@ auto find_adjacent_dependencies(const JSON::String &current, const JSON &schema,
         }
 
         break;
+      case SchemaKeywordType::ApplicatorValueTraverseAnyItem:
+        [[fallthrough]];
       case SchemaKeywordType::ApplicatorValueInPlace:
         if (is_schema(property.second)) {
           find_adjacent_dependencies(

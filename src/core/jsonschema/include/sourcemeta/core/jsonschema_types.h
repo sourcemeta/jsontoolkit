@@ -69,6 +69,36 @@ enum class SchemaKeywordType : std::uint8_t {
   /// The JSON Schema keyword is considered to be a comment without any
   /// additional meaning
   Comment,
+
+  /// The JSON Schema keyword is an applicator that potentially
+  /// takes an object as argument, whose values are potentially
+  /// JSON Schema definitions.
+  /// The instance traverses based on the members as property names
+  ApplicatorMembersTraversePropertyStatic,
+  /// The JSON Schema keyword is an applicator that potentially
+  /// takes an object as argument, whose values are potentially
+  /// JSON Schema definitions.
+  /// The instance traverses based on the members as property regular
+  /// expressions
+  ApplicatorMembersTraversePropertyRegex,
+  /// The JSON Schema keyword is an applicator that potentially
+  /// takes a JSON Schema definition as an argument
+  /// The instance traverses to any property
+  ApplicatorValueTraverseAnyProperty,
+  /// The JSON Schema keyword is an applicator that potentially
+  /// takes a JSON Schema definition as an argument
+  /// The instance traverses to any property key
+  ApplicatorValueTraverseAnyPropertyKey,
+  /// The JSON Schema keyword is an applicator that potentially
+  /// takes a JSON Schema definition as an argument
+  /// The instance traverses to any item
+  ApplicatorValueTraverseAnyItem,
+  /// The JSON Schema keyword is an applicator that potentially
+  /// takes an array of potentially JSON Schema definitions
+  /// as an argument
+  /// The instance traverses based on the element indexes
+  ApplicatorElementsTraverseItem,
+
   /// The JSON Schema keyword is an applicator that potentially
   /// takes a JSON Schema definition as an argument
   ApplicatorValue,

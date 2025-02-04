@@ -45,6 +45,14 @@ auto walk(sourcemeta::core::Pointer &pointer,
 
   for (auto &pair : subschema.as_object()) {
     switch (walker(pair.first, vocabularies).type) {
+      case sourcemeta::core::SchemaKeywordType::
+          ApplicatorValueTraverseAnyProperty:
+        [[fallthrough]];
+      case sourcemeta::core::SchemaKeywordType::
+          ApplicatorValueTraverseAnyPropertyKey:
+        [[fallthrough]];
+      case sourcemeta::core::SchemaKeywordType::ApplicatorValueTraverseAnyItem:
+        [[fallthrough]];
       case sourcemeta::core::SchemaKeywordType::ApplicatorValue:
         [[fallthrough]];
       case sourcemeta::core::SchemaKeywordType::ApplicatorValueOther:
@@ -55,6 +63,9 @@ auto walk(sourcemeta::core::Pointer &pointer,
         walk(new_pointer, subschemas, pair.second, walker, resolver,
              new_dialect, type, level + 1);
       } break;
+
+      case sourcemeta::core::SchemaKeywordType::ApplicatorElementsTraverseItem:
+        [[fallthrough]];
       case sourcemeta::core::SchemaKeywordType::ApplicatorElements:
         [[fallthrough]];
       case sourcemeta::core::SchemaKeywordType::ApplicatorElementsInline:
@@ -71,6 +82,13 @@ auto walk(sourcemeta::core::Pointer &pointer,
         }
 
         break;
+
+      case sourcemeta::core::SchemaKeywordType::
+          ApplicatorMembersTraversePropertyStatic:
+        [[fallthrough]];
+      case sourcemeta::core::SchemaKeywordType::
+          ApplicatorMembersTraversePropertyRegex:
+        [[fallthrough]];
       case sourcemeta::core::SchemaKeywordType::ApplicatorMembers:
         [[fallthrough]];
       case sourcemeta::core::SchemaKeywordType::ApplicatorMembersInPlace:

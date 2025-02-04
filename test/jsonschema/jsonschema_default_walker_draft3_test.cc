@@ -65,7 +65,8 @@ TEST(JSONSchema_default_walker_draft3, additionalItems) {
 TEST(JSONSchema_default_walker_draft3, properties) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("properties", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembers);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorMembersTraversePropertyStatic);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-03/schema#");
@@ -77,7 +78,8 @@ TEST(JSONSchema_default_walker_draft3, patternProperties) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("patternProperties", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembers);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorMembersTraversePropertyRegex);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-03/schema#");
@@ -101,7 +103,7 @@ TEST(JSONSchema_default_walker_draft3, additionalProperties) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("additionalProperties", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValue);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyProperty);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-03/schema#");

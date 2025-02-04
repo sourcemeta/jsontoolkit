@@ -243,7 +243,7 @@ TEST(JSONSchema_default_walker_2019_09, applicator_contains_only) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("contains", VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyItem);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -260,7 +260,7 @@ TEST(JSONSchema_default_walker_2019_09, applicator_contains_with_validation) {
             VOCABULARIES_2019_09_VALIDATION.cend(),
             std::inserter(vocabularies, vocabularies.end()));
   const auto result{schema_official_walker("contains", vocabularies)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyItem);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -272,7 +272,8 @@ TEST(JSONSchema_default_walker_2019_09, applicator_properties) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("properties", VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembers);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorMembersTraversePropertyStatic);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -283,7 +284,8 @@ TEST(JSONSchema_default_walker_2019_09, applicator_patternProperties) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("patternProperties",
                                            VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembers);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorMembersTraversePropertyRegex);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -294,7 +296,7 @@ TEST(JSONSchema_default_walker_2019_09, applicator_additionalProperties) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("additionalProperties",
                                            VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValue);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyProperty);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -306,7 +308,8 @@ TEST(JSONSchema_default_walker_2019_09, applicator_propertyNames) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("propertyNames", VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlace);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorValueTraverseAnyPropertyKey);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -317,7 +320,7 @@ TEST(JSONSchema_default_walker_2019_09, applicator_unevaluatedItems) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("unevaluatedItems",
                                            VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValue);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyItem);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -329,7 +332,7 @@ TEST(JSONSchema_default_walker_2019_09, applicator_unevaluatedProperties) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("unevaluatedProperties",
                                            VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValue);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyProperty);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");

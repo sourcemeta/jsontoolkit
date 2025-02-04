@@ -50,7 +50,8 @@ TEST(JSONSchema_default_walker_draft0, items) {
 TEST(JSONSchema_default_walker_draft0, properties) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("properties", VOCABULARIES_DRAFT0)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembers);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorMembersTraversePropertyStatic);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-00/schema#");
@@ -61,7 +62,7 @@ TEST(JSONSchema_default_walker_draft0, additionalProperties) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("additionalProperties", VOCABULARIES_DRAFT0)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValue);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyProperty);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-00/schema#");
@@ -423,7 +424,8 @@ TEST(JSONSchema_default_walker_draft0, hyperschema_properties) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("properties", VOCABULARIES_DRAFT0_HYPERSCHEMA)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembers);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorMembersTraversePropertyStatic);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-00/hyper-schema#");
@@ -434,7 +436,7 @@ TEST(JSONSchema_default_walker_draft0, hyperschema_additionalProperties) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("additionalProperties",
                                            VOCABULARIES_DRAFT0_HYPERSCHEMA)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValue);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyProperty);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-00/hyper-schema#");
