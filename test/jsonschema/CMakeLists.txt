@@ -69,15 +69,15 @@ sourcemeta_googletest(NAMESPACE sourcemeta PROJECT core NAME jsonschema
     jsonschema_vocabulary_draft1_test.cc
     jsonschema_vocabulary_draft0_test.cc
     jsonschema_vocabulary_test.cc
-    jsonschema_default_walker_2020_12_test.cc
-    jsonschema_default_walker_2019_09_test.cc
-    jsonschema_default_walker_draft7_test.cc
-    jsonschema_default_walker_draft6_test.cc
-    jsonschema_default_walker_draft4_test.cc
-    jsonschema_default_walker_draft3_test.cc
-    jsonschema_default_walker_draft2_test.cc
-    jsonschema_default_walker_draft1_test.cc
-    jsonschema_default_walker_draft0_test.cc
+    jsonschema_official_walker_2020_12_test.cc
+    jsonschema_official_walker_2019_09_test.cc
+    jsonschema_official_walker_draft7_test.cc
+    jsonschema_official_walker_draft6_test.cc
+    jsonschema_official_walker_draft4_test.cc
+    jsonschema_official_walker_draft3_test.cc
+    jsonschema_official_walker_draft2_test.cc
+    jsonschema_official_walker_draft1_test.cc
+    jsonschema_official_walker_draft0_test.cc
     jsonschema_walker_test.cc
     jsonschema_error_test.cc
     jsonschema_keyword_iterator_test.cc
