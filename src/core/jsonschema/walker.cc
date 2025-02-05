@@ -34,8 +34,10 @@ auto walk(const sourcemeta::core::Pointer &pointer,
       resolver, base_dialect.value(), new_dialect)};
 
   if (type == SchemaWalkerType_t::Deep || level > 0) {
-    subschemas.push_back({pointer, new_dialect, vocabularies, base_dialect,
-                          subschema, instance_location, orphan});
+    sourcemeta::core::SchemaIteratorEntry entry{
+        pointer,   new_dialect,       vocabularies, base_dialect,
+        subschema, instance_location, orphan};
+    subschemas.push_back(std::move(entry));
   }
 
   // We can't recurse any further
@@ -265,13 +267,10 @@ sourcemeta::core::SchemaIterator::SchemaIterator(
   // not pass a default, then there is nothing we can do. We know
   // the current schema is a subschema, but cannot walk any further.
   if (!dialect.has_value()) {
-    this->subschemas.push_back({pointer,
-                                std::nullopt,
-                                {},
-                                std::nullopt,
-                                schema,
-                                instance_location,
-                                false});
+    sourcemeta::core::SchemaIteratorEntry entry{
+        pointer, std::nullopt,      {},   std::nullopt,
+        schema,  instance_location, false};
+    this->subschemas.push_back(std::move(entry));
   } else {
     walk(pointer, instance_location, this->subschemas, schema, walker, resolver,
          dialect.value(), SchemaWalkerType_t::Deep, 0, false);
@@ -315,13 +314,10 @@ sourcemeta::core::SchemaKeywordIterator::SchemaKeywordIterator(
   }
 
   for (const auto &entry : schema.as_object()) {
-    this->entries.push_back({{entry.first},
-                             dialect,
-                             vocabularies,
-                             base_dialect,
-                             entry.second,
-                             {},
-                             false});
+    sourcemeta::core::SchemaIteratorEntry subschema_entry{
+        {entry.first}, dialect, vocabularies, base_dialect,
+        entry.second,  {},      false};
+    this->entries.push_back(std::move(subschema_entry));
   }
 
   // Sort keywords based on priority for correct evaluation

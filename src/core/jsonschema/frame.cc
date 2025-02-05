@@ -262,7 +262,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
 
     // Schema identifier
     std::optional<std::string> id{sourcemeta::core::identify(
-        entry.value, entry.base_dialect.value(),
+        entry.subschema.get(), entry.base_dialect.value(),
         entry.pointer.empty() ? default_id : std::nullopt)};
 
     // Store information
@@ -278,7 +278,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
           supports_id_anchors(entry.common.base_dialect.value()) &&
           sourcemeta::core::URI{entry.id.value()}.is_fragment_only();
 
-      if ((!entry.common.value.defines("$ref") || !ref_overrides) &&
+      if ((!entry.common.subschema.get().defines("$ref") || !ref_overrides) &&
           // If we are dealing with a pre-2019-09 location independent
           // identifier, we ignore it as a traditional identifier and take care
           // of it as an anchor
@@ -323,7 +323,8 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
     }
 
     // Handle metaschema references
-    const auto maybe_metaschema{sourcemeta::core::dialect(entry.common.value)};
+    const auto maybe_metaschema{
+        sourcemeta::core::dialect(entry.common.subschema.get())};
     if (maybe_metaschema.has_value()) {
       sourcemeta::core::URI metaschema{maybe_metaschema.value()};
       const auto nearest_bases{
@@ -334,7 +335,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
 
       metaschema.canonicalize();
       const std::string destination{metaschema.recompose()};
-      assert(entry.common.value.defines("$schema"));
+      assert(entry.common.subschema.get().defines("$schema"));
       references.insert_or_assign(
           {SchemaReferenceType::Static,
            entry.common.pointer.concat({"$schema"})},
@@ -344,8 +345,8 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
     }
 
     // Handle schema anchors
-    for (const auto &[name, type] :
-         find_anchors(entry.common.value, entry.common.vocabularies)) {
+    for (const auto &[name, type] : find_anchors(entry.common.subschema.get(),
+                                                 entry.common.vocabularies)) {
       const auto bases{
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
 
@@ -490,12 +491,13 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
 
   // Resolve references after all framing was performed
   for (const auto &entry : subschema_entries) {
-    if (entry.common.value.is_object()) {
+    if (entry.common.subschema.get().is_object()) {
       const auto nearest_bases{
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
-      if (entry.common.value.defines("$ref")) {
-        assert(entry.common.value.at("$ref").is_string());
-        sourcemeta::core::URI ref{entry.common.value.at("$ref").to_string()};
+      if (entry.common.subschema.get().defines("$ref")) {
+        assert(entry.common.subschema.get().at("$ref").is_string());
+        sourcemeta::core::URI ref{
+            entry.common.subschema.get().at("$ref").to_string()};
         if (!nearest_bases.first.empty()) {
           ref.try_resolve_from(nearest_bases.first.front());
         }
@@ -511,9 +513,10 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
 
       if (entry.common.vocabularies.contains(
               "https://json-schema.org/draft/2019-09/vocab/core") &&
-          entry.common.value.defines("$recursiveRef")) {
-        assert(entry.common.value.at("$recursiveRef").is_string());
-        const auto &ref{entry.common.value.at("$recursiveRef").to_string()};
+          entry.common.subschema.get().defines("$recursiveRef")) {
+        assert(entry.common.subschema.get().at("$recursiveRef").is_string());
+        const auto &ref{
+            entry.common.subschema.get().at("$recursiveRef").to_string()};
 
         // The behavior of this keyword is defined only for the value "#".
         // Implementations MAY choose to consider other values to be errors.
@@ -542,10 +545,10 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
 
       if (entry.common.vocabularies.contains(
               "https://json-schema.org/draft/2020-12/vocab/core") &&
-          entry.common.value.defines("$dynamicRef")) {
-        assert(entry.common.value.at("$dynamicRef").is_string());
+          entry.common.subschema.get().defines("$dynamicRef")) {
+        assert(entry.common.subschema.get().at("$dynamicRef").is_string());
         sourcemeta::core::URI ref{
-            entry.common.value.at("$dynamicRef").to_string()};
+            entry.common.subschema.get().at("$dynamicRef").to_string()};
         if (!nearest_bases.first.empty()) {
           ref.resolve_from(nearest_bases.first.front());
         }

@@ -2,7 +2,7 @@
 #define SOURCEMETA_CORE_JSONSCHEMA_TYPES_H_
 
 #include <cstdint>     // std::uint8_t
-#include <functional>  // std::function
+#include <functional>  // std::function, std::reference_wrapper
 #include <map>         // std::map
 #include <optional>    // std::optional
 #include <set>         // std::set
@@ -193,9 +193,7 @@ struct SchemaIteratorEntry {
   std::optional<std::string> dialect;
   std::map<std::string, bool> vocabularies;
   std::optional<std::string> base_dialect;
-  // TODO: Do we really need a full copy of the JSON value if the client
-  // can get it through the JSON Pointer if needed?
-  JSON value;
+  std::reference_wrapper<const JSON> subschema;
   PointerTemplate relative_instance_location;
   bool orphan;
 };
