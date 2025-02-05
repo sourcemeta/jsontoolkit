@@ -9,7 +9,7 @@ static const std::map<std::string, bool> VOCABULARIES_DRAFT7{
 static const std::map<std::string, bool> VOCABULARIES_DRAFT7_HYPERSCHEMA{
     {"http://json-schema.org/draft-07/hyper-schema#", true}};
 
-TEST(JSONSchema_default_walker_draft7, schema) {
+TEST(JSONSchema_official_walker_draft7, schema) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("$schema", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Other);
@@ -20,7 +20,7 @@ TEST(JSONSchema_default_walker_draft7, schema) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, id) {
+TEST(JSONSchema_official_walker_draft7, id) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("$id", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Other);
@@ -31,7 +31,7 @@ TEST(JSONSchema_default_walker_draft7, id) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, ref) {
+TEST(JSONSchema_official_walker_draft7, ref) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("$ref", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Reference);
@@ -41,7 +41,7 @@ TEST(JSONSchema_default_walker_draft7, ref) {
   EXPECT_TRUE(result.dependencies.empty());
 }
 
-TEST(JSONSchema_default_walker_draft7, definitions) {
+TEST(JSONSchema_official_walker_draft7, definitions) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("definitions", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::LocationMembers);
@@ -52,7 +52,7 @@ TEST(JSONSchema_default_walker_draft7, definitions) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, comment) {
+TEST(JSONSchema_official_walker_draft7, comment) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("$comment", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Comment);
@@ -63,7 +63,7 @@ TEST(JSONSchema_default_walker_draft7, comment) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, allOf) {
+TEST(JSONSchema_official_walker_draft7, allOf) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("allOf", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlaceInline);
@@ -74,7 +74,7 @@ TEST(JSONSchema_default_walker_draft7, allOf) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, anyOf) {
+TEST(JSONSchema_official_walker_draft7, anyOf) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("anyOf", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
@@ -85,7 +85,7 @@ TEST(JSONSchema_default_walker_draft7, anyOf) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, oneOf) {
+TEST(JSONSchema_official_walker_draft7, oneOf) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("oneOf", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
@@ -96,7 +96,7 @@ TEST(JSONSchema_default_walker_draft7, oneOf) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, not) {
+TEST(JSONSchema_official_walker_draft7, not) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("not", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlaceOther);
@@ -107,7 +107,7 @@ TEST(JSONSchema_default_walker_draft7, not) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, if) {
+TEST(JSONSchema_official_walker_draft7, if) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("if", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlace);
@@ -118,7 +118,7 @@ TEST(JSONSchema_default_walker_draft7, if) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, then) {
+TEST(JSONSchema_official_walker_draft7, then) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("then", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlace);
@@ -129,7 +129,7 @@ TEST(JSONSchema_default_walker_draft7, then) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, else) {
+TEST(JSONSchema_official_walker_draft7, else) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("else", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlace);
@@ -140,7 +140,7 @@ TEST(JSONSchema_default_walker_draft7, else) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, items) {
+TEST(JSONSchema_official_walker_draft7, items) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("items", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type,
@@ -152,7 +152,7 @@ TEST(JSONSchema_default_walker_draft7, items) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, additionalItems) {
+TEST(JSONSchema_official_walker_draft7, additionalItems) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("additionalItems", VOCABULARIES_DRAFT7)};
@@ -164,7 +164,7 @@ TEST(JSONSchema_default_walker_draft7, additionalItems) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, contains) {
+TEST(JSONSchema_official_walker_draft7, contains) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("contains", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyItem);
@@ -175,7 +175,7 @@ TEST(JSONSchema_default_walker_draft7, contains) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, properties) {
+TEST(JSONSchema_official_walker_draft7, properties) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("properties", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type,
@@ -187,7 +187,7 @@ TEST(JSONSchema_default_walker_draft7, properties) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, patternProperties) {
+TEST(JSONSchema_official_walker_draft7, patternProperties) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("patternProperties", VOCABULARIES_DRAFT7)};
@@ -200,7 +200,7 @@ TEST(JSONSchema_default_walker_draft7, patternProperties) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, dependencies) {
+TEST(JSONSchema_official_walker_draft7, dependencies) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("dependencies", VOCABULARIES_DRAFT7)};
@@ -212,7 +212,7 @@ TEST(JSONSchema_default_walker_draft7, dependencies) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, additionalProperties) {
+TEST(JSONSchema_official_walker_draft7, additionalProperties) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("additionalProperties", VOCABULARIES_DRAFT7)};
@@ -224,7 +224,7 @@ TEST(JSONSchema_default_walker_draft7, additionalProperties) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, propertyNames) {
+TEST(JSONSchema_official_walker_draft7, propertyNames) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("propertyNames", VOCABULARIES_DRAFT7)};
@@ -237,7 +237,7 @@ TEST(JSONSchema_default_walker_draft7, propertyNames) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, type) {
+TEST(JSONSchema_official_walker_draft7, type) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("type", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -248,7 +248,7 @@ TEST(JSONSchema_default_walker_draft7, type) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, enum) {
+TEST(JSONSchema_official_walker_draft7, enum) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("enum", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -259,7 +259,7 @@ TEST(JSONSchema_default_walker_draft7, enum) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, const) {
+TEST(JSONSchema_official_walker_draft7, const) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("const", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -270,7 +270,7 @@ TEST(JSONSchema_default_walker_draft7, const) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, multipleOf) {
+TEST(JSONSchema_official_walker_draft7, multipleOf) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("multipleOf", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -281,7 +281,7 @@ TEST(JSONSchema_default_walker_draft7, multipleOf) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, maximum) {
+TEST(JSONSchema_official_walker_draft7, maximum) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("maximum", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -292,7 +292,7 @@ TEST(JSONSchema_default_walker_draft7, maximum) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, minimum) {
+TEST(JSONSchema_official_walker_draft7, minimum) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("minimum", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -303,7 +303,7 @@ TEST(JSONSchema_default_walker_draft7, minimum) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, exclusiveMaximum) {
+TEST(JSONSchema_official_walker_draft7, exclusiveMaximum) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("exclusiveMaximum", VOCABULARIES_DRAFT7)};
@@ -315,7 +315,7 @@ TEST(JSONSchema_default_walker_draft7, exclusiveMaximum) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, exclusiveMinimum) {
+TEST(JSONSchema_official_walker_draft7, exclusiveMinimum) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("exclusiveMinimum", VOCABULARIES_DRAFT7)};
@@ -327,7 +327,7 @@ TEST(JSONSchema_default_walker_draft7, exclusiveMinimum) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, maxLength) {
+TEST(JSONSchema_official_walker_draft7, maxLength) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("maxLength", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -338,7 +338,7 @@ TEST(JSONSchema_default_walker_draft7, maxLength) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, minLength) {
+TEST(JSONSchema_official_walker_draft7, minLength) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("minLength", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -349,7 +349,7 @@ TEST(JSONSchema_default_walker_draft7, minLength) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, pattern) {
+TEST(JSONSchema_official_walker_draft7, pattern) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("pattern", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -360,7 +360,7 @@ TEST(JSONSchema_default_walker_draft7, pattern) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, maxItems) {
+TEST(JSONSchema_official_walker_draft7, maxItems) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("maxItems", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -371,7 +371,7 @@ TEST(JSONSchema_default_walker_draft7, maxItems) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, minItems) {
+TEST(JSONSchema_official_walker_draft7, minItems) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("minItems", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -382,7 +382,7 @@ TEST(JSONSchema_default_walker_draft7, minItems) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, uniqueItems) {
+TEST(JSONSchema_official_walker_draft7, uniqueItems) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("uniqueItems", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -393,7 +393,7 @@ TEST(JSONSchema_default_walker_draft7, uniqueItems) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, maxProperties) {
+TEST(JSONSchema_official_walker_draft7, maxProperties) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("maxProperties", VOCABULARIES_DRAFT7)};
@@ -405,7 +405,7 @@ TEST(JSONSchema_default_walker_draft7, maxProperties) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, minProperties) {
+TEST(JSONSchema_official_walker_draft7, minProperties) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("minProperties", VOCABULARIES_DRAFT7)};
@@ -417,7 +417,7 @@ TEST(JSONSchema_default_walker_draft7, minProperties) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, required) {
+TEST(JSONSchema_official_walker_draft7, required) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("required", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Assertion);
@@ -428,7 +428,7 @@ TEST(JSONSchema_default_walker_draft7, required) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, format) {
+TEST(JSONSchema_official_walker_draft7, format) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("format", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Other);
@@ -439,7 +439,7 @@ TEST(JSONSchema_default_walker_draft7, format) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, contentEncoding) {
+TEST(JSONSchema_official_walker_draft7, contentEncoding) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("contentEncoding", VOCABULARIES_DRAFT7)};
@@ -451,7 +451,7 @@ TEST(JSONSchema_default_walker_draft7, contentEncoding) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, contentMediaType) {
+TEST(JSONSchema_official_walker_draft7, contentMediaType) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("contentMediaType", VOCABULARIES_DRAFT7)};
@@ -463,7 +463,7 @@ TEST(JSONSchema_default_walker_draft7, contentMediaType) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, title) {
+TEST(JSONSchema_official_walker_draft7, title) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("title", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Comment);
@@ -474,7 +474,7 @@ TEST(JSONSchema_default_walker_draft7, title) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, description) {
+TEST(JSONSchema_official_walker_draft7, description) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("description", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Comment);
@@ -485,7 +485,7 @@ TEST(JSONSchema_default_walker_draft7, description) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, default) {
+TEST(JSONSchema_official_walker_draft7, default) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("default", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Comment);
@@ -496,7 +496,7 @@ TEST(JSONSchema_default_walker_draft7, default) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, readOnly) {
+TEST(JSONSchema_official_walker_draft7, readOnly) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("readOnly", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Comment);
@@ -507,7 +507,7 @@ TEST(JSONSchema_default_walker_draft7, readOnly) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, writeOnly) {
+TEST(JSONSchema_official_walker_draft7, writeOnly) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("writeOnly", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Comment);
@@ -518,7 +518,7 @@ TEST(JSONSchema_default_walker_draft7, writeOnly) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, examples) {
+TEST(JSONSchema_official_walker_draft7, examples) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("examples", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Comment);
@@ -529,7 +529,7 @@ TEST(JSONSchema_default_walker_draft7, examples) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_links) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_links) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("links", VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -539,7 +539,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_links) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_base) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_base) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("base", VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -549,7 +549,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_base) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_anchor) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_anchor) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("anchor", VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -559,7 +559,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_anchor) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_anchorPointer) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_anchorPointer) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("anchorPointer", VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -569,7 +569,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_anchorPointer) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_rel) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_rel) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("rel", VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -579,7 +579,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_rel) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_href) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_href) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("href", VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -589,7 +589,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_href) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_templatePointers) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_templatePointers) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("templatePointers",
                                            VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -599,7 +599,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_templatePointers) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_templateRequired) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_templateRequired) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("templateRequired",
                                            VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -609,7 +609,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_templateRequired) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_targetMediaType) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_targetMediaType) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("targetMediaType",
                                            VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -619,7 +619,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_targetMediaType) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_targetHints) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_targetHints) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("targetHints", VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -629,7 +629,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_targetHints) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_submissionMediaType) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_submissionMediaType) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("submissionMediaType",
                                            VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -639,7 +639,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_submissionMediaType) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_hrefSchema) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_hrefSchema) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("hrefSchema", VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -650,7 +650,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_hrefSchema) {
   EXPECT_TRUE(result.dependencies.empty());
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_targetSchema) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_targetSchema) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("targetSchema", VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -661,7 +661,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_targetSchema) {
   EXPECT_TRUE(result.dependencies.empty());
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_headerSchema) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_headerSchema) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("headerSchema", VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -672,7 +672,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_headerSchema) {
   EXPECT_TRUE(result.dependencies.empty());
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_submissionSchema) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_submissionSchema) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("submissionSchema",
                                            VOCABULARIES_DRAFT7_HYPERSCHEMA)};
@@ -683,7 +683,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_submissionSchema) {
   EXPECT_TRUE(result.dependencies.empty());
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_links_without_hyperschema) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_links_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("links", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Unknown);
@@ -692,7 +692,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_links_without_hyperschema) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_base_without_hyperschema) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_base_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("base", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Unknown);
@@ -701,7 +701,8 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_base_without_hyperschema) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_anchor_without_hyperschema) {
+TEST(JSONSchema_official_walker_draft7,
+     hyperschema_anchor_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("anchor", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Unknown);
@@ -710,7 +711,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_anchor_without_hyperschema) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7,
+TEST(JSONSchema_official_walker_draft7,
      hyperschema_anchorPointer_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{
@@ -721,7 +722,7 @@ TEST(JSONSchema_default_walker_draft7,
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_rel_without_hyperschema) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_rel_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("rel", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Unknown);
@@ -730,7 +731,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_rel_without_hyperschema) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, hyperschema_href_without_hyperschema) {
+TEST(JSONSchema_official_walker_draft7, hyperschema_href_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("href", VOCABULARIES_DRAFT7)};
   EXPECT_EQ(result.type, SchemaKeywordType::Unknown);
@@ -739,7 +740,7 @@ TEST(JSONSchema_default_walker_draft7, hyperschema_href_without_hyperschema) {
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7,
+TEST(JSONSchema_official_walker_draft7,
      hyperschema_templatePointers_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{
@@ -750,7 +751,7 @@ TEST(JSONSchema_default_walker_draft7,
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7,
+TEST(JSONSchema_official_walker_draft7,
      hyperschema_templateRequired_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{
@@ -761,7 +762,7 @@ TEST(JSONSchema_default_walker_draft7,
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7,
+TEST(JSONSchema_official_walker_draft7,
      hyperschema_targetMediaType_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{
@@ -772,7 +773,7 @@ TEST(JSONSchema_default_walker_draft7,
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7,
+TEST(JSONSchema_official_walker_draft7,
      hyperschema_targetHints_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("targetHints", VOCABULARIES_DRAFT7)};
@@ -782,7 +783,7 @@ TEST(JSONSchema_default_walker_draft7,
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7,
+TEST(JSONSchema_official_walker_draft7,
      hyperschema_submissionMediaType_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{
@@ -793,7 +794,7 @@ TEST(JSONSchema_default_walker_draft7,
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7,
+TEST(JSONSchema_official_walker_draft7,
      hyperschema_hrefSchema_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("hrefSchema", VOCABULARIES_DRAFT7)};
@@ -803,7 +804,7 @@ TEST(JSONSchema_default_walker_draft7,
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7,
+TEST(JSONSchema_official_walker_draft7,
      hyperschema_targetSchema_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{
@@ -814,7 +815,7 @@ TEST(JSONSchema_default_walker_draft7,
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7,
+TEST(JSONSchema_official_walker_draft7,
      hyperschema_headerSchema_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{
@@ -825,7 +826,7 @@ TEST(JSONSchema_default_walker_draft7,
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7,
+TEST(JSONSchema_official_walker_draft7,
      hyperschema_submissionSchema_without_hyperschema) {
   using namespace sourcemeta::core;
   const auto result{
@@ -836,7 +837,7 @@ TEST(JSONSchema_default_walker_draft7,
   EXPECT_EQ(result.dependencies, expected);
 }
 
-TEST(JSONSchema_default_walker_draft7, schema_keyword_priority_array) {
+TEST(JSONSchema_official_walker_draft7, schema_keyword_priority_array) {
   const auto &vocabularies = VOCABULARIES_DRAFT7;
   const auto &walker = sourcemeta::core::schema_official_walker;
   using namespace sourcemeta::core;
@@ -845,7 +846,7 @@ TEST(JSONSchema_default_walker_draft7, schema_keyword_priority_array) {
             2);
 }
 
-TEST(JSONSchema_default_walker_draft7, schema_keyword_priority_object) {
+TEST(JSONSchema_official_walker_draft7, schema_keyword_priority_object) {
   const auto &vocabularies = VOCABULARIES_DRAFT7;
   const auto &walker = sourcemeta::core::schema_official_walker;
   using namespace sourcemeta::core;
@@ -856,7 +857,7 @@ TEST(JSONSchema_default_walker_draft7, schema_keyword_priority_object) {
       schema_keyword_priority("additionalProperties", vocabularies, walker), 3);
 }
 
-TEST(JSONSchema_default_walker_draft7, schema_keyword_priority_other) {
+TEST(JSONSchema_official_walker_draft7, schema_keyword_priority_other) {
   const auto &vocabularies = VOCABULARIES_DRAFT7;
   const auto &walker = sourcemeta::core::schema_official_walker;
   using namespace sourcemeta::core;
@@ -865,14 +866,14 @@ TEST(JSONSchema_default_walker_draft7, schema_keyword_priority_other) {
   EXPECT_EQ(schema_keyword_priority("else", vocabularies, walker), 2);
 }
 
-TEST(JSONSchema_default_walker_draft7, schema_keyword_priority_unknown) {
+TEST(JSONSchema_official_walker_draft7, schema_keyword_priority_unknown) {
   const auto &vocabularies = VOCABULARIES_DRAFT7;
   const auto &walker = sourcemeta::core::schema_official_walker;
   using namespace sourcemeta::core;
   EXPECT_EQ(schema_keyword_priority("foobar", vocabularies, walker), 1);
 }
 
-TEST(JSONSchema_default_walker_draft7, instance_locations) {
+TEST(JSONSchema_official_walker_draft7, instance_locations) {
   const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
     "$schema": "http://json-schema.org/draft-07/schema#",
     "allOf": [ { "type": "string" }, { "minLength": 3 } ],
