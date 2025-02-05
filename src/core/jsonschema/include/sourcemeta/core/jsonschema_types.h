@@ -194,7 +194,7 @@ struct SchemaIteratorEntry {
   std::map<std::string, bool> vocabularies;
   std::optional<std::string> base_dialect;
   std::reference_wrapper<const JSON> subschema;
-  PointerTemplate relative_instance_location;
+  PointerTemplate instance_location;
   bool orphan;
 };
 
