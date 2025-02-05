@@ -145,6 +145,13 @@ public:
     return this->data == other.data;
   }
 
+  /// Overload to support ordering of JSON Pointer templates. Typically for
+  /// sorting reasons.
+  auto operator<(const GenericPointerTemplate<PointerT> &other) const noexcept
+      -> bool {
+    return this->data < other.data;
+  }
+
 private:
   Container data;
 };

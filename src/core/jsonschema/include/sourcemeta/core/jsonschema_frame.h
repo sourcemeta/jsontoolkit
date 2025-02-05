@@ -145,7 +145,7 @@ public:
     Pointer relative_pointer;
     std::string dialect;
     std::string base_dialect;
-    PointerTemplate instance_location;
+    std::vector<PointerTemplate> instance_locations;
     std::vector<std::reference_wrapper<const References::key_type>>
         destination_of;
   };
