@@ -196,7 +196,7 @@ struct SchemaIteratorEntry {
   // TODO: Do we really need a full copy of the JSON value if the client
   // can get it through the JSON Pointer if needed?
   JSON value;
-  PointerTemplate instance_location;
+  PointerTemplate relative_instance_location;
   bool orphan;
 };
 
