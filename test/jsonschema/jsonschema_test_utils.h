@@ -44,7 +44,7 @@
   EXPECT_POINTER_TEMPLATE((frame)                                              \
                               .locations()                                     \
                               .at({(expected_type), (reference)})              \
-                              .relative_instance_location,                     \
+                              .instance_location,                              \
                           expected_instance_location);                         \
   EXPECT_EQ((frame)                                                            \
                 .locations()                                                   \
@@ -166,7 +166,7 @@
   EXPECT_POINTER_TEMPLATE((frame)                                              \
                               .locations()                                     \
                               .at({(expected_type), (reference)})              \
-                              .relative_instance_location,                     \
+                              .instance_location,                              \
                           expected_instance_location);                         \
   EXPECT_EQ((frame)                                                            \
                 .locations()                                                   \
@@ -345,7 +345,7 @@
   EXPECT_EQ(entries.at(index).dialect.value(), expected_dialect);              \
   EXPECT_EQ(entries.at(index).base_dialect.value(), expected_base_dialect);    \
   EXPECT_FALSE(entries.at(index).vocabularies.empty());                        \
-  EXPECT_POINTER_TEMPLATE(entries.at(index).relative_instance_location,        \
+  EXPECT_POINTER_TEMPLATE(entries.at(index).instance_location,                 \
                           expected_instance_location);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(                                  \
