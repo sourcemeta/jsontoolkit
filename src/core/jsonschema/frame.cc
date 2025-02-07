@@ -207,15 +207,6 @@ static auto mark_reference_origins_from(
     }
 
     for (auto &subentry : frame) {
-      // We only care about marking reference origins from/to resources and
-      // subschemas
-      if (subentry.second.type !=
-              sourcemeta::core::SchemaFrame::LocationType::Resource &&
-          subentry.second.type !=
-              sourcemeta::core::SchemaFrame::LocationType::Subschema) {
-        continue;
-      }
-
       if (subentry.second.pointer == match->second.pointer &&
           !has_equivalent_origin(frame, subentry.second.destination_of,
                                  entry)) {

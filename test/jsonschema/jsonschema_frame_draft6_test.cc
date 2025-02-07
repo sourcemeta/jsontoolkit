@@ -582,7 +582,7 @@ TEST(JSONSchema_frame_draft6, location_independent_identifier_anonymous) {
   EXPECT_ANONYMOUS_FRAME_STATIC_ANCHOR(
       frame, "#foo", "/definitions/foo",
       "http://json-schema.org/draft-06/schema#",
-      "http://json-schema.org/draft-06/schema#", {}, 0);
+      "http://json-schema.org/draft-06/schema#", {}, 1);
 
   // References
 
@@ -704,7 +704,7 @@ TEST(JSONSchema_frame_draft6, relative_base_uri_with_ref) {
   // Anchors
   EXPECT_FRAME_STATIC_DRAFT6_ANCHOR(frame, "common#foo", "common",
                                     "/definitions/foo", "common",
-                                    "/definitions/foo", {}, 0);
+                                    "/definitions/foo", {}, 1);
 
   // JSON Pointers
 
