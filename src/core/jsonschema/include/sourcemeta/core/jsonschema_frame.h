@@ -136,6 +136,9 @@ public:
 #pragma GCC diagnostic pop
 #endif
 
+  /// Determines a location entry
+  using LocationKey = std::pair<SchemaReferenceType, std::string>;
+
   /// A single frame in a JSON Schema reference frame
   struct LocationsEntry {
     LocationType type;
@@ -146,15 +149,13 @@ public:
     std::string dialect;
     std::string base_dialect;
     std::vector<PointerTemplate> instance_locations;
-    std::vector<std::reference_wrapper<const References::key_type>>
-        destination_of;
+    std::vector<std::reference_wrapper<const LocationKey>> destination_of;
   };
 
   /// A JSON Schema reference frame is a mapping of URIs to schema identifiers,
   /// JSON Pointers within the schema, and subschemas dialects. We call it
   /// reference frame as this mapping is essential for resolving references.
-  using Locations =
-      std::map<std::pair<SchemaReferenceType, std::string>, LocationsEntry>;
+  using Locations = std::map<LocationKey, LocationsEntry>;
 
   /// Analyse a given schema
   auto analyse(const JSON &schema, const SchemaWalker &walker,
