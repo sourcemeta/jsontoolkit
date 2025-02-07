@@ -422,6 +422,11 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
       const auto bases{
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
 
+      std::vector<sourcemeta::core::PointerTemplate> instance_locations;
+      if (!entry.common.orphan) {
+        instance_locations.push_back(entry.common.instance_location);
+      }
+
       if (bases.first.empty()) {
         const auto anchor_uri{sourcemeta::core::URI::from_fragment(name)};
         const auto relative_anchor_uri{anchor_uri.recompose()};
@@ -432,7 +437,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                 "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
                 entry.common.dialect.value(), entry.common.base_dialect.value(),
-                {entry.common.instance_location});
+                instance_locations);
         }
 
         if (type == AnchorType::Dynamic || type == AnchorType::All) {
@@ -441,7 +446,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                 "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
                 entry.common.dialect.value(), entry.common.base_dialect.value(),
-                {entry.common.instance_location});
+                instance_locations);
 
           // Register a dynamic anchor as a static anchor if possible too
           if (entry.common.vocabularies.contains(
@@ -451,8 +456,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                   root_id, "", entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
                   entry.common.dialect.value(),
-                  entry.common.base_dialect.value(),
-                  {entry.common.instance_location}, true);
+                  entry.common.base_dialect.value(), instance_locations, true);
           }
         }
       } else {
@@ -481,8 +485,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                   base_string, entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
                   entry.common.dialect.value(),
-                  entry.common.base_dialect.value(),
-                  {entry.common.instance_location});
+                  entry.common.base_dialect.value(), instance_locations);
           }
 
           if (type == AnchorType::Dynamic || type == AnchorType::All) {
@@ -491,8 +494,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                   base_string, entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
                   entry.common.dialect.value(),
-                  entry.common.base_dialect.value(),
-                  {entry.common.instance_location});
+                  entry.common.base_dialect.value(), instance_locations);
 
             // Register a dynamic anchor as a static anchor if possible too
             if (entry.common.vocabularies.contains(
@@ -502,8 +504,8 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                     base_string, entry.common.pointer,
                     entry.common.pointer.resolve_from(bases.second),
                     entry.common.dialect.value(),
-                    entry.common.base_dialect.value(),
-                    {entry.common.instance_location}, true);
+                    entry.common.base_dialect.value(), instance_locations,
+                    true);
             }
           }
 

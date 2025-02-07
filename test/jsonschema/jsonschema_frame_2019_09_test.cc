@@ -1981,7 +1981,7 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_with_ref) {
 
   // Anchors
   EXPECT_FRAME_STATIC_2019_09_ANCHOR(frame, "common#foo", "common",
-                                     "/$defs/foo", "common", "/$defs/foo", {""},
+                                     "/$defs/foo", "common", "/$defs/foo", {},
                                      0);
 
   // JSON Pointers
