@@ -201,3 +201,17 @@ TEST(JSONPointer_template, stringify_key_wildcard) {
 
   EXPECT_EQ(stream.str(), "/foo/bar/~K~");
 }
+
+TEST(JSONPointer_template, concat_move) {
+  const sourcemeta::core::Pointer pointer_left{"foo"};
+  const sourcemeta::core::Pointer pointer_right{"bar", "baz"};
+  const sourcemeta::core::Pointer pointer_expected{"foo", "bar", "baz"};
+
+  const sourcemeta::core::PointerTemplate left{pointer_left};
+  sourcemeta::core::PointerTemplate right{pointer_right};
+  const sourcemeta::core::PointerTemplate expected{pointer_expected};
+
+  const auto result{left.concat(std::move(right))};
+
+  EXPECT_EQ(result, expected);
+}
