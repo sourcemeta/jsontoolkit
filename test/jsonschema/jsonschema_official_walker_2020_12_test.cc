@@ -1698,3 +1698,29 @@ TEST(JSONSchema_official_walker_2020_12, instance_locations_nested) {
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(
       entries, 3, "/additionalProperties/properties/foo/allOf/0", "/~P~/foo");
 }
+
+TEST(JSONSchema_official_walker_2020_12, instance_locations_defs_with_ref) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "common",
+      "allOf": [ { "$ref": "#foo" } ],
+      "$defs": {
+        "foo": {
+          "$anchor": "foo"
+        }
+      }
+  })JSON");
+
+  std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
+  for (const auto &entry : sourcemeta::core::SchemaIterator(
+           document, sourcemeta::core::schema_official_walker,
+           sourcemeta::core::schema_official_resolver)) {
+    entries.push_back(entry);
+  }
+
+  EXPECT_EQ(entries.size(), 3);
+
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 0, "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 1, "/allOf/0", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(entries, 2, "/$defs/foo", "");
+}
