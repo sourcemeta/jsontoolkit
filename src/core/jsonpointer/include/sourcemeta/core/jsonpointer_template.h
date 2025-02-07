@@ -139,6 +139,34 @@ public:
     this->data.pop_back();
   }
 
+  /// Concatenate a JSON Pointer template with another JSON Pointer template,
+  /// getting a new pointer template as a result. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/core/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::core::Pointer pointer_left{"foo"};
+  /// const sourcemeta::core::Pointer pointer_right{"bar", "baz"};
+  /// const sourcemeta::core::Pointer pointer_expected{"foo", "bar", "baz"};
+  ///
+  /// const sourcemeta::core::PointerTemplate left{pointer_left};
+  /// const sourcemeta::core::PointerTemplate right{pointer_right};
+  /// const sourcemeta::core::PointerTemplate expected{pointer_expected};
+  ///
+  /// assert(left.concat(right) == expected);
+  /// ```
+  auto concat(const GenericPointerTemplate<PointerT> &&other) const
+      -> GenericPointerTemplate<PointerT> {
+    GenericPointerTemplate<PointerT> result{*this};
+    result.data.reserve(result.data.size() + other.data.size());
+    for (auto &&token : other) {
+      result.emplace_back(std::move(token));
+    }
+
+    return result;
+  }
+
   /// Compare JSON Pointer template instances
   auto operator==(const GenericPointerTemplate<PointerT> &other) const noexcept
       -> bool {
