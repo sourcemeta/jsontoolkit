@@ -1,6 +1,6 @@
 #include <sourcemeta/core/jsonschema.h>
 
-#include <algorithm>  // std::sort, std::all_of
+#include <algorithm>  // std::sort, std::all_of, std::none_of
 #include <cassert>    // assert
 #include <functional> // std::less
 #include <map>        // std::map
@@ -687,25 +687,31 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
     }
   }
 
-  for (const auto &reference : references) {
-    auto match{
-        frame.find({reference.first.first, reference.second.destination})};
-    if (match == frame.cend()) {
-      continue;
-    }
-
-    for (auto &entry : frame) {
-      if (entry.second.pointer != match->second.pointer ||
-          // Don't count the same origin twice
-          std::any_of(entry.second.destination_of.cbegin(),
-                      entry.second.destination_of.cend(),
-                      [&reference](const auto &destination) {
-                        return destination.get() == reference.first;
-                      })) {
+  for (const auto &entry : frame) {
+    for (const auto &reference : references) {
+      if (reference.first.second != entry.second.pointer) {
         continue;
       }
 
-      entry.second.destination_of.emplace_back(reference.first);
+      auto match{
+          frame.find({reference.first.first, reference.second.destination})};
+      if (match == frame.cend()) {
+        continue;
+      }
+
+      // We want to collect all possible locations that point to another
+      // location and not just the one the canonical one the reference points to
+      for (auto &subentry : frame) {
+        if (subentry.second.pointer == match->second.pointer &&
+            // Avoid duplicates
+            std::none_of(subentry.second.destination_of.cbegin(),
+                         subentry.second.destination_of.cend(),
+                         [&entry](const auto &destination) {
+                           return destination.get() == entry.first;
+                         })) {
+          subentry.second.destination_of.emplace_back(entry.first);
+        }
+      }
     }
   }
 }

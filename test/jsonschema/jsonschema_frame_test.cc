@@ -498,26 +498,32 @@ TEST(JSONSchema_frame, refs_with_id) {
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
-  EXPECT_FRAME_DESTINATION_OF(frame, Static,
-                              "https://www.sourcemeta.com/schema", 0,
-                              "/properties/foo/$ref")
-  EXPECT_FRAME_DESTINATION_OF(frame, Static,
-                              "https://www.sourcemeta.com/schema#baz", 0,
-                              "/properties/anchor/$ref")
-  EXPECT_FRAME_DESTINATION_OF(frame, Static,
-                              "https://www.sourcemeta.com/schema#baz", 1,
-                              "/properties/bar/$ref")
+  EXPECT_FRAME_DESTINATION_OF(
+      frame, Static, "https://www.sourcemeta.com/schema", 0,
+      "https://www.sourcemeta.com/schema#/properties/foo/$ref");
+  EXPECT_FRAME_DESTINATION_OF(
+      frame, Static, "https://www.sourcemeta.com/schema#baz", 0,
+      "https://www.sourcemeta.com/schema#/properties/anchor/$ref");
+  EXPECT_FRAME_DESTINATION_OF(
+      frame, Static, "https://www.sourcemeta.com/schema#baz", 1,
+      "https://www.sourcemeta.com/schema#/properties/bar/$ref");
   EXPECT_FRAME_DESTINATION_OF(
       frame, Static, "https://www.sourcemeta.com/schema#/properties/baz", 0,
-      "/properties/anchor/$ref")
+      "https://www.sourcemeta.com/schema#/properties/anchor/$ref");
   EXPECT_FRAME_DESTINATION_OF(
       frame, Static, "https://www.sourcemeta.com/schema#/properties/baz", 1,
-      "/properties/bar/$ref")
+      "https://www.sourcemeta.com/schema#/properties/bar/$ref");
+  EXPECT_FRAME_DESTINATION_OF(
+      frame, Static, "https://www.sourcemeta.com/test", 0,
+      "https://www.sourcemeta.com/schema#/properties/qux/$ref");
   EXPECT_FRAME_DESTINATION_OF(frame, Static, "https://www.sourcemeta.com/test",
-                              0, "/properties/qux/$ref")
+                              1, "https://www.sourcemeta.com/test#/$ref");
   EXPECT_FRAME_DESTINATION_OF(
       frame, Static, "https://www.sourcemeta.com/schema#/properties/qux", 0,
-      "/properties/qux/$ref")
+      "https://www.sourcemeta.com/schema#/properties/qux/$ref");
+  EXPECT_FRAME_DESTINATION_OF(
+      frame, Static, "https://www.sourcemeta.com/schema#/properties/qux", 1,
+      "https://www.sourcemeta.com/test#/$ref");
 
   EXPECT_EQ(frame.references().size(), 5);
   EXPECT_STATIC_REFERENCE(
@@ -562,18 +568,23 @@ TEST(JSONSchema_frame, refs_with_no_id) {
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
-  EXPECT_FRAME_DESTINATION_OF(frame, Static, "", 0, "/properties/foo/$ref")
+  EXPECT_FRAME_DESTINATION_OF(frame, Static, "", 0, "#/properties/foo/$ref");
   EXPECT_FRAME_DESTINATION_OF(frame, Static, "#baz", 0,
-                              "/properties/anchor/$ref")
-  EXPECT_FRAME_DESTINATION_OF(frame, Static, "#baz", 1, "/properties/bar/$ref")
+                              "#/properties/anchor/$ref");
+  EXPECT_FRAME_DESTINATION_OF(frame, Static, "#baz", 1,
+                              "#/properties/bar/$ref");
   EXPECT_FRAME_DESTINATION_OF(frame, Static, "#/properties/baz", 0,
-                              "/properties/anchor/$ref")
+                              "#/properties/anchor/$ref");
   EXPECT_FRAME_DESTINATION_OF(frame, Static, "#/properties/baz", 1,
-                              "/properties/bar/$ref")
+                              "#/properties/bar/$ref");
   EXPECT_FRAME_DESTINATION_OF(frame, Static, "https://www.example.com", 0,
-                              "/properties/qux/$ref")
+                              "#/properties/qux/$ref");
+  EXPECT_FRAME_DESTINATION_OF(frame, Static, "https://www.example.com", 1,
+                              "https://www.example.com#/$ref");
   EXPECT_FRAME_DESTINATION_OF(frame, Static, "#/properties/qux", 0,
-                              "/properties/qux/$ref")
+                              "#/properties/qux/$ref");
+  EXPECT_FRAME_DESTINATION_OF(frame, Static, "#/properties/qux", 1,
+                              "https://www.example.com#/$ref");
 
   EXPECT_EQ(frame.references().size(), 5);
   EXPECT_STATIC_REFERENCE(

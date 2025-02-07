@@ -308,15 +308,8 @@
                      expected_uri})                                            \
                 .destination_of.at(expected_index)                             \
                 .get()                                                         \
-                .first,                                                        \
-            sourcemeta::core::SchemaReferenceType::Static);                    \
-  EXPECT_EQ(frame.locations()                                                  \
-                .at({sourcemeta::core::SchemaReferenceType::expected_type,     \
-                     expected_uri})                                            \
-                .destination_of.at(expected_index)                             \
-                .get()                                                         \
                 .second,                                                       \
-            TO_POINTER(expected_origin));
+            expected_origin);
 
 #define EXPECT_UNEVALUATED_STATIC(keywords, expected_pointer,                  \
                                   expected_dependencies_size)                  \

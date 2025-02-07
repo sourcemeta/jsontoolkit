@@ -1396,7 +1396,7 @@ TEST(JSONSchema_frame_2019_09,
   EXPECT_ANONYMOUS_FRAME_STATIC_RESOURCE(
       frame, "https://example.com", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 1);
+      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 2);
 
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "", "", "https://json-schema.org/draft/2019-09/schema",
@@ -1408,7 +1408,7 @@ TEST(JSONSchema_frame_2019_09,
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/additionalItems", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 1);
+      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 2);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$id", "/additionalItems/$id",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1471,7 +1471,7 @@ TEST(JSONSchema_frame_2019_09,
   EXPECT_ANONYMOUS_FRAME_STATIC_RESOURCE(
       frame, "https://example.com", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 1);
+      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 2);
 
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "", "", "https://json-schema.org/draft/2019-09/schema",
@@ -1483,7 +1483,7 @@ TEST(JSONSchema_frame_2019_09,
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/additionalItems", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 1);
+      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 2);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$id", "/additionalItems/$id",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1519,7 +1519,7 @@ TEST(JSONSchema_frame_2019_09,
   EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
       frame, "https://example.com", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 1);
+      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 2);
 
   // References
 
@@ -1622,7 +1622,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_multiple_recursive_anchor_true) {
   EXPECT_FRAME_STATIC_2019_09_RESOURCE(
       frame, "https://www.sourcemeta.com/nested",
       "https://www.sourcemeta.com/schema", "/additionalItems",
-      "https://www.sourcemeta.com/nested", "", {"/~I~"}, 1);
+      "https://www.sourcemeta.com/nested", "", {"/~I~"}, 2);
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
@@ -1639,7 +1639,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_multiple_recursive_anchor_true) {
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/additionalItems",
       "https://www.sourcemeta.com/schema", "/additionalItems",
-      "https://www.sourcemeta.com/nested", "", {"/~I~"}, 1);
+      "https://www.sourcemeta.com/nested", "", {"/~I~"}, 2);
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/additionalItems/$id",
       "https://www.sourcemeta.com/schema", "/additionalItems/$id",
@@ -1676,7 +1676,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_multiple_recursive_anchor_true) {
   EXPECT_FRAME_DYNAMIC_2019_09_ANCHOR(
       frame, "https://www.sourcemeta.com/nested",
       "https://www.sourcemeta.com/schema", "/additionalItems",
-      "https://www.sourcemeta.com/nested", "", {"/~I~"}, 1);
+      "https://www.sourcemeta.com/nested", "", {"/~I~"}, 2);
 
   // References
 
