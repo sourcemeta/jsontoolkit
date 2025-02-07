@@ -1252,7 +1252,7 @@ TEST(JSONSchema_frame_2020_12,
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/$defs/test", "/$defs/test",
       "https://json-schema.org/draft/2020-12/schema",
-      "https://json-schema.org/draft/2020-12/schema", {}, 1);
+      "https://json-schema.org/draft/2020-12/schema", {""}, 1);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$defs/test/$dynamicAnchor", "/$defs/test/$dynamicAnchor",
       "https://json-schema.org/draft/2020-12/schema",
@@ -1319,7 +1319,7 @@ TEST(JSONSchema_frame_2020_12, dynamic_ref_to_single_dynamic_anchor_external) {
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/$defs/test", "/$defs/test",
       "https://json-schema.org/draft/2020-12/schema",
-      "https://json-schema.org/draft/2020-12/schema", {}, 1);
+      "https://json-schema.org/draft/2020-12/schema", {""}, 1);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$defs/test/$dynamicAnchor", "/$defs/test/$dynamicAnchor",
       "https://json-schema.org/draft/2020-12/schema",
@@ -1380,7 +1380,8 @@ TEST(JSONSchema_frame_2020_12, no_id_recursive_empty_pointer) {
 
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "", "", "https://json-schema.org/draft/2020-12/schema",
-      "https://json-schema.org/draft/2020-12/schema", {""}, 1);
+      "https://json-schema.org/draft/2020-12/schema",
+      POINTER_TEMPLATES("", "/foo"), 1);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2020-12/schema",
@@ -1506,7 +1507,7 @@ TEST(JSONSchema_frame_2020_12, ref_with_id) {
   EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/$defs/string",
       "https://www.sourcemeta.com/schema", "/$defs/string",
-      "https://www.sourcemeta.com/schema", "/$defs/string", {}, 1);
+      "https://www.sourcemeta.com/schema", "/$defs/string", {""}, 1);
   EXPECT_FRAME_STATIC_2020_12_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$defs/string/type",
       "https://www.sourcemeta.com/schema", "/$defs/string/type",
@@ -1567,7 +1568,7 @@ TEST(JSONSchema_frame_2020_12, ref_from_definitions) {
   EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/definitions/middle",
       "https://www.sourcemeta.com/schema", "/definitions/middle",
-      "https://www.sourcemeta.com/schema", "/definitions/middle", {}, 1);
+      "https://www.sourcemeta.com/schema", "/definitions/middle", {""}, 1);
   EXPECT_FRAME_STATIC_2020_12_POINTER(
       frame, "https://www.sourcemeta.com/schema#/definitions/middle/$ref",
       "https://www.sourcemeta.com/schema", "/definitions/middle/$ref",
@@ -1575,7 +1576,7 @@ TEST(JSONSchema_frame_2020_12, ref_from_definitions) {
   EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/definitions/string",
       "https://www.sourcemeta.com/schema", "/definitions/string",
-      "https://www.sourcemeta.com/schema", "/definitions/string", {}, 1);
+      "https://www.sourcemeta.com/schema", "/definitions/string", {""}, 1);
   EXPECT_FRAME_STATIC_2020_12_POINTER(
       frame, "https://www.sourcemeta.com/schema#/definitions/string/type",
       "https://www.sourcemeta.com/schema", "/definitions/string/type",
@@ -1672,7 +1673,7 @@ TEST(JSONSchema_frame_2020_12, relative_base_uri_with_ref) {
                                       "/$defs", "common", "/$defs", {}, 0);
   EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(frame, "common#/$defs/foo", "common",
                                         "/$defs/foo", "common", "/$defs/foo",
-                                        {}, 1);
+                                        {""}, 1);
   EXPECT_FRAME_STATIC_2020_12_POINTER(frame, "common#/$defs/foo/$anchor",
                                       "common", "/$defs/foo/$anchor", "common",
                                       "/$defs/foo/$anchor", {}, 0);
@@ -1735,7 +1736,7 @@ TEST(JSONSchema_frame_2020_12, idempotent_with_refs) {
   EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/$defs/string",
       "https://www.sourcemeta.com/schema", "/$defs/string",
-      "https://www.sourcemeta.com/schema", "/$defs/string", {}, 1);
+      "https://www.sourcemeta.com/schema", "/$defs/string", {""}, 1);
 
   // References
 
@@ -1774,4 +1775,75 @@ TEST(JSONSchema_frame_2020_12, allof_refs) {
       frame, "/allOf/1/$ref",
       "https://json-schema.org/draft/2020-12/meta/hyper-schema",
       "https://json-schema.org/draft/2020-12/meta/hyper-schema", std::nullopt);
+}
+
+TEST(JSONSchema_frame_2020_12, properties_with_refs) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$id": "https://www.sourcemeta.com/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": {
+        "type": "string"
+      },
+      "bar": {
+        "$ref": "#/properties/foo"
+      }
+    }
+  })JSON");
+
+  sourcemeta::core::SchemaFrame frame;
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
+                sourcemeta::core::schema_official_resolver);
+
+  EXPECT_EQ(frame.locations().size(), 8);
+
+  EXPECT_FRAME_STATIC_2020_12_RESOURCE(
+      frame, "https://www.sourcemeta.com/schema",
+      "https://www.sourcemeta.com/schema", "",
+      "https://www.sourcemeta.com/schema", "", {""}, 0);
+
+  // JSON Pointers
+
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/$id",
+      "https://www.sourcemeta.com/schema", "/$id",
+      "https://www.sourcemeta.com/schema", "/$id", {}, 0);
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/$schema",
+      "https://www.sourcemeta.com/schema", "/$schema",
+      "https://www.sourcemeta.com/schema", "/$schema", {}, 0);
+
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/properties",
+      "https://www.sourcemeta.com/schema", "/properties",
+      "https://www.sourcemeta.com/schema", "/properties", {}, 0);
+  EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
+      frame, "https://www.sourcemeta.com/schema#/properties/foo",
+      "https://www.sourcemeta.com/schema", "/properties/foo",
+      "https://www.sourcemeta.com/schema", "/properties/foo",
+      POINTER_TEMPLATES("/foo", "/bar"), 1);
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/properties/foo/type",
+      "https://www.sourcemeta.com/schema", "/properties/foo/type",
+      "https://www.sourcemeta.com/schema", "/properties/foo/type", {}, 0);
+  EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
+      frame, "https://www.sourcemeta.com/schema#/properties/bar",
+      "https://www.sourcemeta.com/schema", "/properties/bar",
+      "https://www.sourcemeta.com/schema", "/properties/bar", {"/bar"}, 0);
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/properties/bar/$ref",
+      "https://www.sourcemeta.com/schema", "/properties/bar/$ref",
+      "https://www.sourcemeta.com/schema", "/properties/bar/$ref", {}, 0);
+
+  // References
+
+  EXPECT_EQ(frame.references().size(), 2);
+
+  EXPECT_STATIC_REFERENCE(
+      frame, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
+  EXPECT_STATIC_REFERENCE(frame, "/properties/bar/$ref",
+                          "https://www.sourcemeta.com/schema#/properties/foo",
+                          "https://www.sourcemeta.com/schema",
+                          "/properties/foo");
 }
