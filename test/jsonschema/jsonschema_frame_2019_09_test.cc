@@ -1408,7 +1408,7 @@ TEST(JSONSchema_frame_2019_09,
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/additionalItems", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 0);
+      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 1);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$id", "/additionalItems/$id",
       "https://json-schema.org/draft/2019-09/schema",

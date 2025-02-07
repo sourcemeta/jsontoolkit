@@ -206,30 +206,20 @@ static auto mark_reference_origins_from(
       continue;
     }
 
-    if (match->second.type ==
-            sourcemeta::core::SchemaFrame::LocationType::Resource ||
-        match->second.type ==
-            sourcemeta::core::SchemaFrame::LocationType::Subschema) {
-      if (!has_equivalent_origin(frame, match->second.destination_of, entry)) {
-        match->second.destination_of.emplace_back(entry.first);
+    for (auto &subentry : frame) {
+      // We only care about marking reference origins from/to resources and
+      // subschemas
+      if (subentry.second.type !=
+              sourcemeta::core::SchemaFrame::LocationType::Resource &&
+          subentry.second.type !=
+              sourcemeta::core::SchemaFrame::LocationType::Subschema) {
+        continue;
       }
-    } else if (match->second.type ==
-               sourcemeta::core::SchemaFrame::LocationType::Anchor) {
-      for (auto &subentry : frame) {
-        // We only care about marking reference origins from/to resources and
-        // subschemas
-        if (subentry.second.type !=
-                sourcemeta::core::SchemaFrame::LocationType::Resource &&
-            subentry.second.type !=
-                sourcemeta::core::SchemaFrame::LocationType::Subschema) {
-          continue;
-        }
 
-        if (subentry.second.pointer == match->second.pointer &&
-            !has_equivalent_origin(frame, subentry.second.destination_of,
-                                   entry)) {
-          subentry.second.destination_of.emplace_back(entry.first);
-        }
+      if (subentry.second.pointer == match->second.pointer &&
+          !has_equivalent_origin(frame, subentry.second.destination_of,
+                                 entry)) {
+        subentry.second.destination_of.emplace_back(entry.first);
       }
     }
   }
