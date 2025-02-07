@@ -1,6 +1,6 @@
 #include <sourcemeta/core/jsonschema.h>
 
-#include <algorithm>  // std::sort, std::all_of
+#include <algorithm>  // std::sort, std::all_of, std::any_of
 #include <cassert>    // assert
 #include <functional> // std::less
 #include <map>        // std::map
@@ -170,6 +170,69 @@ static auto fragment_string(const sourcemeta::core::URI &uri)
   }
 
   return std::nullopt;
+}
+
+static auto has_equivalent_origin(
+    const sourcemeta::core::SchemaFrame::Locations &frame,
+    const std::vector<std::reference_wrapper<
+        const sourcemeta::core::SchemaFrame::LocationKey>> &destination_of,
+    const sourcemeta::core::SchemaFrame::Locations::value_type &entry) -> bool {
+  return std::any_of(destination_of.cbegin(), destination_of.cend(),
+                     [&entry, &frame](const auto &destination) {
+                       return destination.get() == entry.first ||
+                              frame.at(destination.get()).pointer ==
+                                  entry.second.pointer;
+                     });
+}
+
+static auto mark_reference_origins_from(
+    sourcemeta::core::SchemaFrame::Locations &frame,
+    const sourcemeta::core::SchemaFrame::References &references,
+    const sourcemeta::core::SchemaFrame::Locations::value_type &entry) -> void {
+  for (const auto &reference : references) {
+    assert(!reference.first.second.empty() &&
+           reference.first.second.back().is_property());
+    assert(reference.first.second.back().to_property() == "$schema" ||
+           reference.first.second.back().to_property() == "$ref" ||
+           reference.first.second.back().to_property() == "$recursiveRef" ||
+           reference.first.second.back().to_property() == "$dynamicRef");
+    if (reference.first.second.initial() != entry.second.pointer) {
+      continue;
+    }
+
+    auto match{
+        frame.find({reference.first.first, reference.second.destination})};
+    if (match == frame.cend()) {
+      continue;
+    }
+
+    if (match->second.type ==
+            sourcemeta::core::SchemaFrame::LocationType::Resource ||
+        match->second.type ==
+            sourcemeta::core::SchemaFrame::LocationType::Subschema) {
+      if (!has_equivalent_origin(frame, match->second.destination_of, entry)) {
+        match->second.destination_of.emplace_back(entry.first);
+      }
+    } else if (match->second.type ==
+               sourcemeta::core::SchemaFrame::LocationType::Anchor) {
+      for (auto &subentry : frame) {
+        // We only care about marking reference origins from/to resources and
+        // subschemas
+        if (subentry.second.type !=
+                sourcemeta::core::SchemaFrame::LocationType::Resource &&
+            subentry.second.type !=
+                sourcemeta::core::SchemaFrame::LocationType::Subschema) {
+          continue;
+        }
+
+        if (subentry.second.pointer == match->second.pointer &&
+            !has_equivalent_origin(frame, subentry.second.destination_of,
+                                   entry)) {
+          subentry.second.destination_of.emplace_back(entry.first);
+        }
+      }
+    }
+  }
 }
 
 static auto
@@ -687,26 +750,23 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
     }
   }
 
-  for (const auto &reference : references) {
-    auto match{
-        frame.find({reference.first.first, reference.second.destination})};
-    if (match == frame.cend()) {
+  // We only care about marking reference origins from/to resources and
+  // subschemas
+
+  for (const auto &entry : frame) {
+    if (entry.second.type != SchemaFrame::LocationType::Resource) {
       continue;
     }
 
-    for (auto &entry : frame) {
-      if (entry.second.pointer != match->second.pointer ||
-          // Don't count the same origin twice
-          std::any_of(entry.second.destination_of.cbegin(),
-                      entry.second.destination_of.cend(),
-                      [&reference](const auto &destination) {
-                        return destination.get() == reference.first;
-                      })) {
-        continue;
-      }
+    mark_reference_origins_from(frame, references, entry);
+  }
 
-      entry.second.destination_of.emplace_back(reference.first);
+  for (const auto &entry : frame) {
+    if (entry.second.type != SchemaFrame::LocationType::Subschema) {
+      continue;
     }
+
+    mark_reference_origins_from(frame, references, entry);
   }
 }
 

@@ -498,26 +498,17 @@ TEST(JSONSchema_frame, refs_with_id) {
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
-  EXPECT_FRAME_DESTINATION_OF(frame, Static,
-                              "https://www.sourcemeta.com/schema", 0,
-                              "/properties/foo/$ref")
-  EXPECT_FRAME_DESTINATION_OF(frame, Static,
-                              "https://www.sourcemeta.com/schema#baz", 0,
-                              "/properties/anchor/$ref")
-  EXPECT_FRAME_DESTINATION_OF(frame, Static,
-                              "https://www.sourcemeta.com/schema#baz", 1,
-                              "/properties/bar/$ref")
   EXPECT_FRAME_DESTINATION_OF(
-      frame, Static, "https://www.sourcemeta.com/schema#/properties/baz", 0,
-      "/properties/anchor/$ref")
+      frame, Static, "https://www.sourcemeta.com/schema#/properties/baz", 0, 2,
+      "https://www.sourcemeta.com/schema#/properties/anchor");
   EXPECT_FRAME_DESTINATION_OF(
-      frame, Static, "https://www.sourcemeta.com/schema#/properties/baz", 1,
-      "/properties/bar/$ref")
+      frame, Static, "https://www.sourcemeta.com/schema#/properties/baz", 1, 2,
+      "https://www.sourcemeta.com/schema#/properties/bar");
+  EXPECT_FRAME_DESTINATION_OF(
+      frame, Static, "https://www.sourcemeta.com/schema", 0, 1,
+      "https://www.sourcemeta.com/schema#/properties/foo");
   EXPECT_FRAME_DESTINATION_OF(frame, Static, "https://www.sourcemeta.com/test",
-                              0, "/properties/qux/$ref")
-  EXPECT_FRAME_DESTINATION_OF(
-      frame, Static, "https://www.sourcemeta.com/schema#/properties/qux", 0,
-      "/properties/qux/$ref")
+                              0, 1, "https://www.sourcemeta.com/test");
 
   EXPECT_EQ(frame.references().size(), 5);
   EXPECT_STATIC_REFERENCE(
@@ -562,18 +553,13 @@ TEST(JSONSchema_frame, refs_with_no_id) {
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
-  EXPECT_FRAME_DESTINATION_OF(frame, Static, "", 0, "/properties/foo/$ref")
-  EXPECT_FRAME_DESTINATION_OF(frame, Static, "#baz", 0,
-                              "/properties/anchor/$ref")
-  EXPECT_FRAME_DESTINATION_OF(frame, Static, "#baz", 1, "/properties/bar/$ref")
-  EXPECT_FRAME_DESTINATION_OF(frame, Static, "#/properties/baz", 0,
-                              "/properties/anchor/$ref")
-  EXPECT_FRAME_DESTINATION_OF(frame, Static, "#/properties/baz", 1,
-                              "/properties/bar/$ref")
-  EXPECT_FRAME_DESTINATION_OF(frame, Static, "https://www.example.com", 0,
-                              "/properties/qux/$ref")
-  EXPECT_FRAME_DESTINATION_OF(frame, Static, "#/properties/qux", 0,
-                              "/properties/qux/$ref")
+  EXPECT_FRAME_DESTINATION_OF(frame, Static, "#/properties/baz", 0, 2,
+                              "#/properties/anchor");
+  EXPECT_FRAME_DESTINATION_OF(frame, Static, "#/properties/baz", 1, 2,
+                              "#/properties/bar");
+  EXPECT_FRAME_DESTINATION_OF(frame, Static, "", 0, 1, "#/properties/foo");
+  EXPECT_FRAME_DESTINATION_OF(frame, Static, "https://www.example.com", 0, 1,
+                              "https://www.example.com");
 
   EXPECT_EQ(frame.references().size(), 5);
   EXPECT_STATIC_REFERENCE(
