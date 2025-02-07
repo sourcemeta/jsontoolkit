@@ -1301,7 +1301,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true_anonymous) {
 
   EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
       frame, "", "", "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {""}, 0);
+      "https://json-schema.org/draft/2019-09/schema", {""}, 1);
 
   // References
 
@@ -1362,7 +1362,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true) {
   EXPECT_FRAME_DYNAMIC_2019_09_ANCHOR(
       frame, "https://www.sourcemeta.com/schema",
       "https://www.sourcemeta.com/schema", "",
-      "https://www.sourcemeta.com/schema", "", {""}, 0);
+      "https://www.sourcemeta.com/schema", "", {""}, 1);
 
   // References
 
@@ -1519,7 +1519,7 @@ TEST(JSONSchema_frame_2019_09,
   EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
       frame, "https://example.com", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 0);
+      "https://json-schema.org/draft/2019-09/schema", {"/~I~"}, 1);
 
   // References
 
@@ -1583,7 +1583,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_nested_recursive_anchor_true) {
   EXPECT_FRAME_DYNAMIC_2019_09_ANCHOR(
       frame, "https://www.sourcemeta.com/schema",
       "https://www.sourcemeta.com/schema", "/additionalItems",
-      "https://www.sourcemeta.com/schema", "/additionalItems", {"/~I~"}, 0);
+      "https://www.sourcemeta.com/schema", "/additionalItems", {"/~I~"}, 1);
 
   // References
 
@@ -1676,7 +1676,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_multiple_recursive_anchor_true) {
   EXPECT_FRAME_DYNAMIC_2019_09_ANCHOR(
       frame, "https://www.sourcemeta.com/nested",
       "https://www.sourcemeta.com/schema", "/additionalItems",
-      "https://www.sourcemeta.com/nested", "", {"/~I~"}, 0);
+      "https://www.sourcemeta.com/nested", "", {"/~I~"}, 1);
 
   // References
 
@@ -1982,7 +1982,7 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_with_ref) {
   // Anchors
   EXPECT_FRAME_STATIC_2019_09_ANCHOR(frame, "common#foo", "common",
                                      "/$defs/foo", "common", "/$defs/foo", {},
-                                     0);
+                                     1);
 
   // JSON Pointers
 
