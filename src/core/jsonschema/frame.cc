@@ -804,6 +804,67 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode,
     traverse_origin_instance_locations(frame, entry.second, std::nullopt,
                                        entry.second.instance_locations);
   }
+
+  // Do another pass to rebase orphan schemas that have parents now after
+  // traversing origin instance locations
+  // TODO: This is horribly slow
+  for (const auto &subschema : subschemas) {
+    if (!subschema.second.orphan) {
+      continue;
+    }
+
+    // As orphan subschemas can't be at the top
+    assert(!subschema.first.empty());
+
+    // TODO: If we had a map, indexed by pointers, to find `instance_locations`
+    // and `destination_of` for a given schema, we wouldn't need to loop over
+    // locations every time here, plus we would also nicely deal with multiple
+    // names for the same location
+
+    for (const auto &entry : frame) {
+      // We only care about subschemas
+      if (entry.second.type != SchemaFrame::LocationType::Resource &&
+          entry.second.type != SchemaFrame::LocationType::Subschema) {
+        continue;
+      }
+
+      if (entry.second.pointer != subschema.first ||
+          entry.second.instance_locations.empty()) {
+        continue;
+      }
+
+      for (const auto &child :
+           SchemaIteratorFlat{get(schema, entry.second.pointer), walker,
+                              resolver, entry.second.dialect}) {
+        auto effective_pointer{entry.second.pointer};
+        effective_pointer.push_back(child.pointer);
+
+        for (auto &subentry : frame) {
+          if (subentry.second.type != SchemaFrame::LocationType::Resource &&
+              subentry.second.type != SchemaFrame::LocationType::Subschema) {
+            continue;
+          }
+
+          if (subentry.second.pointer == effective_pointer) {
+            const auto &child_schema{subschemas.at(subentry.second.pointer)};
+            for (const auto &instance_location :
+                 entry.second.instance_locations) {
+              auto copy = child_schema.instance_location;
+              auto new_instance_location{
+                  instance_location.concat(std::move(copy))};
+              if (std::find(subentry.second.instance_locations.cbegin(),
+                            subentry.second.instance_locations.cend(),
+                            new_instance_location) ==
+                  subentry.second.instance_locations.cend()) {
+                subentry.second.instance_locations.emplace_back(
+                    std::move(new_instance_location));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 namespace {
