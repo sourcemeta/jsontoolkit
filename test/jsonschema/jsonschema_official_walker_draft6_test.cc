@@ -759,3 +759,38 @@ TEST(JSONSchema_official_walker_draft6, instance_locations) {
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6_ORPHAN(entries, 18, "/definitions/foo",
                                              "");
 }
+
+TEST(JSONSchema_official_walker_draft6, definitions_subschemas) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+      "foo": {
+        "properties": {
+          "bar": {
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  })JSON");
+
+  std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
+  for (const auto &entry : sourcemeta::core::SchemaIterator(
+           document, sourcemeta::core::schema_official_walker,
+           sourcemeta::core::schema_official_resolver)) {
+    entries.push_back(entry);
+  }
+
+  EXPECT_EQ(entries.size(), 4);
+
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 0, "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6_ORPHAN(entries, 1, "/definitions/foo",
+                                             "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6_ORPHAN(
+      entries, 2, "/definitions/foo/properties/bar", "/bar");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6_ORPHAN(
+      entries, 3, "/definitions/foo/properties/bar/additionalProperties",
+      "/bar/~P~");
+}
