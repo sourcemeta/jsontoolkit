@@ -12,10 +12,13 @@ if(SOURCEMETA_CORE_JSONPOINTER)
   list(APPEND BENCHMARK_SOURCES jsonpointer.cc)
 endif()
 
+if(SOURCEMETA_CORE_JSONSCHEMA)
+  list(APPEND BENCHMARK_SOURCES jsonschema.cc)
+endif()
+
 if(BENCHMARK_SOURCES)
   sourcemeta_googlebenchmark(NAMESPACE sourcemeta PROJECT core
     SOURCES ${BENCHMARK_SOURCES})
-
   target_compile_definitions(sourcemeta_core_benchmark
     PRIVATE CURRENT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}")
 
@@ -32,6 +35,11 @@ if(BENCHMARK_SOURCES)
   if(SOURCEMETA_CORE_JSONPOINTER)
     target_link_libraries(sourcemeta_core_benchmark
       PRIVATE sourcemeta::core::jsonpointer)
+  endif()
+
+  if(SOURCEMETA_CORE_JSONSCHEMA)
+    target_link_libraries(sourcemeta_core_benchmark
+      PRIVATE sourcemeta::core::jsonschema)
   endif()
 
   add_custom_target(benchmark_all
