@@ -1591,3 +1591,36 @@ TEST(JSONSchema_official_walker_2019_09, instance_locations) {
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09_ORPHAN(entries, 27, "/definitions/foo",
                                               "");
 }
+
+TEST(JSONSchema_official_walker_2019_09, definitions_subschemas) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$defs": {
+      "foo": {
+        "properties": {
+          "bar": {
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  })JSON");
+
+  std::vector<sourcemeta::core::SchemaIteratorEntry> entries;
+  for (const auto &entry : sourcemeta::core::SchemaIterator(
+           document, sourcemeta::core::schema_official_walker,
+           sourcemeta::core::schema_official_resolver)) {
+    entries.push_back(entry);
+  }
+
+  EXPECT_EQ(entries.size(), 4);
+
+  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 0, "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09_ORPHAN(entries, 1, "/$defs/foo", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09_ORPHAN(
+      entries, 2, "/$defs/foo/properties/bar", "/bar");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09_ORPHAN(
+      entries, 3, "/$defs/foo/properties/bar/additionalProperties", "/bar/~P~");
+}
