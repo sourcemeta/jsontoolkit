@@ -47,7 +47,7 @@ namespace sourcemeta::core {
 ///   }
 /// })JSON");
 ///
-/// sourcemeta::core::SchemaSchemaFrame frame;
+/// sourcemeta::core::SchemaFrame frame;
 /// frame.analyse(document,
 ///   sourcemeta::core::schema_official_walker,
 ///   sourcemeta::core::schema_official_resolver);
@@ -246,7 +246,7 @@ using SchemaUnevaluatedEntries = std::map<std::string, SchemaUnevaluatedEntry>;
 ///   "unevaluatedProperties": false
 /// })JSON");
 ///
-/// sourcemeta::core::SchemaSchemaFrame frame;
+/// sourcemeta::core::SchemaFrame frame;
 /// frame.analyse(document,
 ///   sourcemeta::core::schema_official_walker,
 ///   sourcemeta::core::schema_official_resolver);
