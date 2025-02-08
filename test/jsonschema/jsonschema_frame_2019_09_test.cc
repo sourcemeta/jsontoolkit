@@ -1083,7 +1083,8 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor_anonymous) {
 
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "", "", "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {""}, 1);
+      "https://json-schema.org/draft/2019-09/schema",
+      POINTER_TEMPLATES("", "/~I~"), 1);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1124,10 +1125,11 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor) {
 
   EXPECT_EQ(frame.locations().size(), 5);
 
-  EXPECT_FRAME_STATIC_2019_09_RESOURCE(
-      frame, "https://www.sourcemeta.com/schema",
-      "https://www.sourcemeta.com/schema", "",
-      "https://www.sourcemeta.com/schema", "", {""}, 1);
+  EXPECT_FRAME_STATIC_2019_09_RESOURCE(frame,
+                                       "https://www.sourcemeta.com/schema",
+                                       "https://www.sourcemeta.com/schema", "",
+                                       "https://www.sourcemeta.com/schema", "",
+                                       POINTER_TEMPLATES("", "/~I~"), 1);
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
@@ -1176,7 +1178,8 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false_anonymous) {
 
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "", "", "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {""}, 1);
+      "https://json-schema.org/draft/2019-09/schema",
+      POINTER_TEMPLATES("", "/~I~"), 1);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1222,10 +1225,11 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false) {
 
   EXPECT_EQ(frame.locations().size(), 6);
 
-  EXPECT_FRAME_STATIC_2019_09_RESOURCE(
-      frame, "https://www.sourcemeta.com/schema",
-      "https://www.sourcemeta.com/schema", "",
-      "https://www.sourcemeta.com/schema", "", {""}, 1);
+  EXPECT_FRAME_STATIC_2019_09_RESOURCE(frame,
+                                       "https://www.sourcemeta.com/schema",
+                                       "https://www.sourcemeta.com/schema", "",
+                                       "https://www.sourcemeta.com/schema", "",
+                                       POINTER_TEMPLATES("", "/~I~"), 1);
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
@@ -1278,7 +1282,8 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true_anonymous) {
 
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "", "", "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {""}, 1);
+      "https://json-schema.org/draft/2019-09/schema",
+      POINTER_TEMPLATES("", "/~I~"), 1);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1330,10 +1335,11 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true) {
 
   EXPECT_EQ(frame.locations().size(), 7);
 
-  EXPECT_FRAME_STATIC_2019_09_RESOURCE(
-      frame, "https://www.sourcemeta.com/schema",
-      "https://www.sourcemeta.com/schema", "",
-      "https://www.sourcemeta.com/schema", "", {""}, 1);
+  EXPECT_FRAME_STATIC_2019_09_RESOURCE(frame,
+                                       "https://www.sourcemeta.com/schema",
+                                       "https://www.sourcemeta.com/schema", "",
+                                       "https://www.sourcemeta.com/schema", "",
+                                       POINTER_TEMPLATES("", "/~I~"), 1);
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
@@ -1836,7 +1842,7 @@ TEST(JSONSchema_frame_2019_09, ref_with_id) {
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/$defs/string",
       "https://www.sourcemeta.com/schema", "/$defs/string",
-      "https://www.sourcemeta.com/schema", "/$defs/string", {}, 1);
+      "https://www.sourcemeta.com/schema", "/$defs/string", {""}, 1);
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$defs/string/type",
       "https://www.sourcemeta.com/schema", "/$defs/string/type",
@@ -1897,7 +1903,7 @@ TEST(JSONSchema_frame_2019_09, ref_from_definitions) {
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/definitions/middle",
       "https://www.sourcemeta.com/schema", "/definitions/middle",
-      "https://www.sourcemeta.com/schema", "/definitions/middle", {}, 1);
+      "https://www.sourcemeta.com/schema", "/definitions/middle", {""}, 1);
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/definitions/middle/$ref",
       "https://www.sourcemeta.com/schema", "/definitions/middle/$ref",
@@ -1905,7 +1911,7 @@ TEST(JSONSchema_frame_2019_09, ref_from_definitions) {
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/definitions/string",
       "https://www.sourcemeta.com/schema", "/definitions/string",
-      "https://www.sourcemeta.com/schema", "/definitions/string", {}, 1);
+      "https://www.sourcemeta.com/schema", "/definitions/string", {""}, 1);
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/definitions/string/type",
       "https://www.sourcemeta.com/schema", "/definitions/string/type",
@@ -2002,7 +2008,7 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_with_ref) {
                                       "/$defs", "common", "/$defs", {}, 0);
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(frame, "common#/$defs/foo", "common",
                                         "/$defs/foo", "common", "/$defs/foo",
-                                        {}, 1);
+                                        {""}, 1);
   EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$defs/foo/$anchor",
                                       "common", "/$defs/foo/$anchor", "common",
                                       "/$defs/foo/$anchor", {}, 0);

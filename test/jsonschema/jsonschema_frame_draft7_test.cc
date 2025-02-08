@@ -632,7 +632,7 @@ TEST(JSONSchema_frame_draft7, ref_with_id) {
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/definitions/string", "/definitions/string",
       "http://json-schema.org/draft-07/schema#",
-      "http://json-schema.org/draft-07/schema#", {}, 1);
+      "http://json-schema.org/draft-07/schema#", {""}, 1);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/definitions/string/type", "/definitions/string/type",
       "http://json-schema.org/draft-07/schema#",
@@ -725,7 +725,7 @@ TEST(JSONSchema_frame_draft7, relative_base_uri_with_ref) {
                                      {}, 0);
   EXPECT_FRAME_STATIC_DRAFT7_SUBSCHEMA(frame, "common#/definitions/foo",
                                        "common", "/definitions/foo", "common",
-                                       "/definitions/foo", {}, 1);
+                                       "/definitions/foo", {""}, 1);
   EXPECT_FRAME_STATIC_DRAFT7_POINTER(frame, "common#/definitions/foo/$id",
                                      "common", "/definitions/foo/$id", "common",
                                      "/definitions/foo/$id", {}, 0);

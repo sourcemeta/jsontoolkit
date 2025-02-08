@@ -24,6 +24,8 @@
     }                                                                          \
   }
 
+#define POINTER_TEMPLATES(...) std::vector<std::string>({__VA_ARGS__})
+
 #define TO_POINTER(pointer_string)                                             \
   sourcemeta::core::to_pointer((pointer_string))
 

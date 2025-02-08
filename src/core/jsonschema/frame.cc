@@ -255,6 +255,39 @@ struct InternalEntry {
   const std::optional<std::string> id;
 };
 
+static auto traverse_instance_locations(
+    const sourcemeta::core::SchemaFrame::Locations &frame,
+    const sourcemeta::core::SchemaFrame::LocationsEntry &entry,
+    sourcemeta::core::PointerTemplate &&current,
+    std::vector<sourcemeta::core::PointerTemplate> &output,
+    const bool left = true) -> void {
+  // We only care about subschemas
+  if (entry.type != sourcemeta::core::SchemaFrame::LocationType::Resource &&
+      entry.type != sourcemeta::core::SchemaFrame::LocationType::Subschema) {
+    return;
+  }
+
+  if (entry.destination_of.empty() && !left &&
+      std::find(output.cbegin(), output.cend(), current) == output.cend()) {
+    output.push_back(std::move(current));
+    return;
+  }
+
+  for (const auto &origin : entry.destination_of) {
+    const auto &subentry{frame.at(origin.get())};
+    // Avoid recursing to itself, in the case of circular subschemas
+    if (subentry.pointer == entry.pointer) {
+      continue;
+    }
+
+    for (const auto &instance_location : subentry.instance_locations) {
+      traverse_instance_locations(frame, subentry,
+                                  instance_location.concat(std::move(current)),
+                                  output, false);
+    }
+  }
+}
+
 auto internal_analyse(const sourcemeta::core::JSON &schema,
                       sourcemeta::core::SchemaFrame::Locations &frame,
                       sourcemeta::core::SchemaFrame::References &references,
@@ -750,6 +783,12 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
     }
 
     mark_reference_origins_from(frame, references, entry);
+  }
+
+  // Calculate alternative unresolved instance locations
+  for (auto &entry : frame) {
+    traverse_instance_locations(frame, entry.second, {},
+                                entry.second.instance_locations);
   }
 }
 
