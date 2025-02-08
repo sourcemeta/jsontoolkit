@@ -1787,6 +1787,11 @@ TEST(JSONSchema_frame_2020_12, properties_with_refs) {
       },
       "bar": {
         "$ref": "#/properties/foo"
+      },
+      "baz": {
+        "items": {
+          "$ref": "#/properties/bar"
+        }
       }
     }
   })JSON");
@@ -1795,7 +1800,7 @@ TEST(JSONSchema_frame_2020_12, properties_with_refs) {
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
-  EXPECT_EQ(frame.locations().size(), 8);
+  EXPECT_EQ(frame.locations().size(), 11);
 
   EXPECT_FRAME_STATIC_2020_12_RESOURCE(
       frame, "https://www.sourcemeta.com/schema",
@@ -1821,23 +1826,39 @@ TEST(JSONSchema_frame_2020_12, properties_with_refs) {
       frame, "https://www.sourcemeta.com/schema#/properties/foo",
       "https://www.sourcemeta.com/schema", "/properties/foo",
       "https://www.sourcemeta.com/schema", "/properties/foo",
-      POINTER_TEMPLATES("/foo", "/bar"), 1);
+      POINTER_TEMPLATES("/foo", "/bar", "/baz/~I~"), 1);
   EXPECT_FRAME_STATIC_2020_12_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/foo/type",
       "https://www.sourcemeta.com/schema", "/properties/foo/type",
       "https://www.sourcemeta.com/schema", "/properties/foo/type", {}, 0);
+
   EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/properties/bar",
       "https://www.sourcemeta.com/schema", "/properties/bar",
-      "https://www.sourcemeta.com/schema", "/properties/bar", {"/bar"}, 0);
+      "https://www.sourcemeta.com/schema", "/properties/bar",
+      POINTER_TEMPLATES("/bar", "/baz/~I~"), 1);
   EXPECT_FRAME_STATIC_2020_12_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/bar/$ref",
       "https://www.sourcemeta.com/schema", "/properties/bar/$ref",
       "https://www.sourcemeta.com/schema", "/properties/bar/$ref", {}, 0);
 
+  EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
+      frame, "https://www.sourcemeta.com/schema#/properties/baz",
+      "https://www.sourcemeta.com/schema", "/properties/baz",
+      "https://www.sourcemeta.com/schema", "/properties/baz", {"/baz"}, 0);
+  EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
+      frame, "https://www.sourcemeta.com/schema#/properties/baz/items",
+      "https://www.sourcemeta.com/schema", "/properties/baz/items",
+      "https://www.sourcemeta.com/schema", "/properties/baz/items",
+      {"/baz/~I~"}, 0);
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/properties/baz/items/$ref",
+      "https://www.sourcemeta.com/schema", "/properties/baz/items/$ref",
+      "https://www.sourcemeta.com/schema", "/properties/baz/items/$ref", {}, 0);
+
   // References
 
-  EXPECT_EQ(frame.references().size(), 2);
+  EXPECT_EQ(frame.references().size(), 3);
 
   EXPECT_STATIC_REFERENCE(
       frame, "/$schema", "https://json-schema.org/draft/2020-12/schema",
@@ -1846,4 +1867,8 @@ TEST(JSONSchema_frame_2020_12, properties_with_refs) {
                           "https://www.sourcemeta.com/schema#/properties/foo",
                           "https://www.sourcemeta.com/schema",
                           "/properties/foo");
+  EXPECT_STATIC_REFERENCE(frame, "/properties/baz/items/$ref",
+                          "https://www.sourcemeta.com/schema#/properties/bar",
+                          "https://www.sourcemeta.com/schema",
+                          "/properties/bar");
 }
