@@ -148,6 +148,9 @@ public:
     Pointer relative_pointer;
     std::string dialect;
     std::string base_dialect;
+    // TODO: Support only populating these when needed, given
+    // how expensive they can be, by taking more options on the
+    // analyse method
     std::vector<PointerTemplate> instance_locations;
     std::vector<std::reference_wrapper<const LocationKey>> destination_of;
   };
