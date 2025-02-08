@@ -21,7 +21,7 @@ auto SchemaMapResolver::add(const JSON &schema,
   // Registering the top-level schema is not enough. We need to check
   // and register every embedded schema resource too
   SchemaFrame frame;
-  frame.analyse(schema, schema_official_walker, *this, default_dialect,
+  frame.inspect(schema, schema_official_walker, *this, default_dialect,
                 default_id);
 
   for (const auto &[key, entry] : frame.locations()) {

@@ -13,7 +13,7 @@ static void Schema_Frame_OMC_Full(benchmark::State &state) {
 
   for (auto _ : state) {
     sourcemeta::core::SchemaFrame frame;
-    frame.analyse(schema, sourcemeta::core::schema_official_walker,
+    frame.inspect(schema, sourcemeta::core::schema_official_walker,
                   sourcemeta::core::schema_official_resolver);
     benchmark::DoNotOptimize(frame);
   }

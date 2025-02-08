@@ -567,7 +567,7 @@ auto sourcemeta::core::reference_visit(
     const std::optional<std::string> &default_dialect,
     const std::optional<std::string> &default_id) -> void {
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(schema, walker, resolver, default_dialect, default_id);
+  frame.inspect(schema, walker, resolver, default_dialect, default_id);
   for (const auto &entry : frame.locations()) {
     if (entry.second.type !=
             sourcemeta::core::SchemaFrame::LocationType::Resource &&
@@ -645,7 +645,7 @@ auto sourcemeta::core::unidentify(
     const std::optional<std::string> &default_dialect) -> void {
   // (1) Re-frame before changing anything
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(schema, walker, resolver, default_dialect);
+  frame.inspect(schema, walker, resolver, default_dialect);
 
   // (2) Remove all identifiers and anchors
   for (const auto &entry : sourcemeta::core::SchemaIterator{

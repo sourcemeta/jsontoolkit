@@ -57,7 +57,7 @@ auto bundle_schema(sourcemeta::core::JSON &root, const std::string &container,
                    const sourcemeta::core::SchemaWalker &walker,
                    const sourcemeta::core::SchemaResolver &resolver,
                    const std::optional<std::string> &default_dialect) -> void {
-  frame.analyse(subschema, walker, resolver, default_dialect);
+  frame.inspect(subschema, walker, resolver, default_dialect);
   // Otherwise, given recursion, we would be modifying the
   // references list *while* looping on it
   const auto references_copy = frame.references();

@@ -16,7 +16,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_1) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(schema, sourcemeta::core::schema_official_walker,
+  frame.inspect(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
@@ -48,7 +48,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_2) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(schema, sourcemeta::core::schema_official_walker,
+  frame.inspect(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
@@ -96,7 +96,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_3) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(schema, sourcemeta::core::schema_official_walker,
+  frame.inspect(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
@@ -135,7 +135,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_4) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(schema, sourcemeta::core::schema_official_walker,
+  frame.inspect(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
@@ -166,7 +166,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_1) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(schema, sourcemeta::core::schema_official_walker,
+  frame.inspect(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
@@ -201,7 +201,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_2) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(schema, sourcemeta::core::schema_official_walker,
+  frame.inspect(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,
@@ -226,7 +226,7 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_3) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame;
-  frame.analyse(schema, sourcemeta::core::schema_official_walker,
+  frame.inspect(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
       schema, frame, sourcemeta::core::schema_official_walker,

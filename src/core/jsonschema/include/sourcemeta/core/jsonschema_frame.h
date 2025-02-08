@@ -48,7 +48,7 @@ namespace sourcemeta::core {
 /// })JSON");
 ///
 /// sourcemeta::core::SchemaFrame frame;
-/// frame.analyse(document,
+/// frame.inspect(document,
 ///   sourcemeta::core::schema_official_walker,
 ///   sourcemeta::core::schema_official_resolver);
 ///
@@ -150,7 +150,7 @@ public:
     std::string base_dialect;
     // TODO: Support only populating these when needed, given
     // how expensive they can be, by taking more options on the
-    // analyse method
+    // inspect method
     std::vector<PointerTemplate> instance_locations;
     std::vector<std::reference_wrapper<const LocationKey>> destination_of;
   };
@@ -160,17 +160,17 @@ public:
   /// reference frame as this mapping is essential for resolving references.
   using Locations = std::map<LocationKey, LocationsEntry>;
 
-  /// Analyse a given schema
-  auto analyse(const JSON &schema, const SchemaWalker &walker,
+  /// Inspect a given schema
+  auto inspect(const JSON &schema, const SchemaWalker &walker,
                const SchemaResolver &resolver,
                const std::optional<std::string> &default_dialect = std::nullopt,
                const std::optional<std::string> &default_id = std::nullopt)
       -> void;
 
-  /// Access the analysed schema locations
+  /// Access the inspected schema locations
   auto locations() const noexcept -> const Locations &;
 
-  /// Access the analysed schema references
+  /// Access the inspected schema references
   auto references() const noexcept -> const References &;
 
   /// Get the vocabularies associated with a location entry
@@ -250,7 +250,7 @@ using SchemaUnevaluatedEntries = std::map<std::string, SchemaUnevaluatedEntry>;
 /// })JSON");
 ///
 /// sourcemeta::core::SchemaFrame frame;
-/// frame.analyse(document,
+/// frame.inspect(document,
 ///   sourcemeta::core::schema_official_walker,
 ///   sourcemeta::core::schema_official_resolver);
 /// const auto result{sourcemeta::core::unevaluated(

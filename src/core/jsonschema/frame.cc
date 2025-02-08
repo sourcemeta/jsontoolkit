@@ -918,7 +918,7 @@ auto find_adjacent_dependencies(const JSON::String &current, const JSON &schema,
 
 namespace sourcemeta::core {
 
-auto SchemaFrame::analyse(const JSON &schema, const SchemaWalker &walker,
+auto SchemaFrame::inspect(const JSON &schema, const SchemaWalker &walker,
                           const SchemaResolver &resolver,
                           const std::optional<std::string> &default_dialect,
                           const std::optional<std::string> &default_id)
