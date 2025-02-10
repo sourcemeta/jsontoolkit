@@ -189,6 +189,7 @@ using SchemaWalker = std::function<SchemaWalkerResult(
 /// @ingroup jsonschema
 /// An entry of a schema iterator.
 struct SchemaIteratorEntry {
+  std::optional<Pointer> parent;
   Pointer pointer;
   std::optional<std::string> dialect;
   std::map<std::string, bool> vocabularies;

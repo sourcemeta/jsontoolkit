@@ -1617,61 +1617,63 @@ TEST(JSONSchema_official_walker_2020_12, instance_locations) {
 
   EXPECT_EQ(entries.size(), 27);
 
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 0, "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 0, "", std::nullopt, "", "");
 
   // Applicator vocabulary (any)
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 1, "/allOf/0", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 2, "/allOf/1", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 3, "/anyOf/0", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 4, "/oneOf/0", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 5, "/if", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 6, "/then", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 7, "/else", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 8, "/not", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 1, "/allOf/0", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 2, "/allOf/1", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 3, "/anyOf/0", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 4, "/oneOf/0", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 5, "/if", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 6, "/then", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 7, "/else", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 8, "/not", "", "", "");
 
   // Applicator vocabulary (object)
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 9, "/properties/foo", "/foo",
-                                       "/foo");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 10, "/properties/bar", "/bar",
-                                       "/bar");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 11, "/additionalProperties",
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 9, "/properties/foo", "",
+                                       "/foo", "/foo");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 10, "/properties/bar", "",
+                                       "/bar", "/bar");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 11, "/additionalProperties", "",
                                        "/~P~", "/~P~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 12, "/patternProperties/^f",
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 12, "/patternProperties/^f", "",
                                        "/~R^f~", "/~R^f~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 13, "/patternProperties/x$",
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 13, "/patternProperties/x$", "",
                                        "/~Rx$~", "/~Rx$~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 14, "/dependentSchemas/foo", "",
-                                       "");
+                                       "", "");
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 15, "/dependentSchemas/bar", "",
-                                       "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 16, "/propertyNames", "/~K~",
-                                       "/~K~");
+                                       "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 16, "/propertyNames", "",
+                                       "/~K~", "/~K~");
 
   // Applicator vocabulary (array)
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 17, "/contains", "/~I~",
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 17, "/contains", "", "/~I~",
                                        "/~I~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 18, "/items", "/~I~", "/~I~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 19, "/prefixItems/0", "/0",
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 18, "/items", "", "/~I~",
+                                       "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 19, "/prefixItems/0", "", "/0",
                                        "/0");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 20, "/prefixItems/1", "/1",
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 20, "/prefixItems/1", "", "/1",
                                        "/1");
 
   // Unevaluated vocabulary
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 21, "/unevaluatedProperties",
-                                       "/~P~", "/~P~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 22, "/unevaluatedItems", "/~I~",
-                                       "/~I~");
+                                       "", "/~P~", "/~P~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 22, "/unevaluatedItems", "",
+                                       "/~I~", "/~I~");
 
   // Content vocabulary
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 23, "/contentSchema", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 23, "/contentSchema", "", "",
+                                       "");
 
   // Core vocabulary
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(entries, 24, "/$defs/foo", "",
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(entries, 24, "/$defs/foo", "", "",
                                               "");
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(
-      entries, 25, "/$defs/foo/properties/bar", "/bar", "/bar");
+      entries, 25, "/$defs/foo/properties/bar", "/$defs/foo", "/bar", "/bar");
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(entries, 26, "/definitions/foo",
-                                              "", "");
+                                              "", "", "");
 }
 
 TEST(JSONSchema_official_walker_2020_12, instance_locations_nested) {
@@ -1697,14 +1699,15 @@ TEST(JSONSchema_official_walker_2020_12, instance_locations_nested) {
 
   EXPECT_EQ(entries.size(), 4);
 
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 0, "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 1, "/additionalProperties",
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 0, "", std::nullopt, "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 1, "/additionalProperties", "",
                                        "/~P~", "/~P~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(
-      entries, 2, "/additionalProperties/properties/foo", "/~P~/foo", "/foo");
+      entries, 2, "/additionalProperties/properties/foo",
+      "/additionalProperties", "/~P~/foo", "/foo");
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(
-      entries, 3, "/additionalProperties/properties/foo/allOf/0", "/~P~/foo",
-      "");
+      entries, 3, "/additionalProperties/properties/foo/allOf/0",
+      "/additionalProperties/properties/foo", "/~P~/foo", "");
 }
 
 TEST(JSONSchema_official_walker_2020_12, instance_locations_defs_with_ref) {
@@ -1728,9 +1731,10 @@ TEST(JSONSchema_official_walker_2020_12, instance_locations_defs_with_ref) {
 
   EXPECT_EQ(entries.size(), 3);
 
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 0, "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 1, "/allOf/0", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(entries, 2, "/$defs/foo", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 0, "", std::nullopt, "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 1, "/allOf/0", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(entries, 2, "/$defs/foo", "", "",
+                                              "");
 }
 
 TEST(JSONSchema_official_walker_2020_12, definitions_subschemas) {
@@ -1758,11 +1762,12 @@ TEST(JSONSchema_official_walker_2020_12, definitions_subschemas) {
 
   EXPECT_EQ(entries.size(), 4);
 
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 0, "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(entries, 1, "/$defs/foo", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 0, "", std::nullopt, "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(entries, 1, "/$defs/foo", "", "",
+                                              "");
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(
-      entries, 2, "/$defs/foo/properties/bar", "/bar", "/bar");
+      entries, 2, "/$defs/foo/properties/bar", "/$defs/foo", "/bar", "/bar");
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(
-      entries, 3, "/$defs/foo/properties/bar/additionalProperties", "/bar/~P~",
-      "/~P~");
+      entries, 3, "/$defs/foo/properties/bar/additionalProperties",
+      "/$defs/foo/properties/bar", "/bar/~P~", "/~P~");
 }
