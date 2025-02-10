@@ -226,6 +226,7 @@ store(sourcemeta::core::SchemaFrame::Locations &frame,
       const sourcemeta::core::Pointer &pointer_from_base,
       const std::string &dialect, const std::string &base_dialect,
       const std::vector<sourcemeta::core::PointerTemplate> &instance_locations,
+      const std::optional<sourcemeta::core::Pointer> &parent,
       const bool ignore_if_present = false) -> void {
   assert(std::set<sourcemeta::core::PointerTemplate>(
              instance_locations.cbegin(), instance_locations.cend())
@@ -233,7 +234,8 @@ store(sourcemeta::core::SchemaFrame::Locations &frame,
   const auto canonical{sourcemeta::core::URI{uri}.canonicalize().recompose()};
   const auto inserted{frame
                           .insert({{type, canonical},
-                                   {entry_type,
+                                   {parent,
+                                    entry_type,
                                     root_id,
                                     base_id,
                                     pointer_from_root,
@@ -284,6 +286,12 @@ static auto traverse_instance_locations(
   }
 }
 
+struct CacheSubschema {
+  const sourcemeta::core::PointerTemplate instance_location;
+  const bool orphan;
+  const std::optional<sourcemeta::core::Pointer> parent;
+};
+
 auto internal_analyse(const sourcemeta::core::JSON &schema,
                       sourcemeta::core::SchemaFrame::Locations &frame,
                       sourcemeta::core::SchemaFrame::References &references,
@@ -294,8 +302,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
   using namespace sourcemeta::core;
 
   std::vector<InternalEntry> subschema_entries;
-  std::map<Pointer, std::pair<sourcemeta::core::PointerTemplate, bool>>
-      subschemas;
+  std::map<Pointer, CacheSubschema> subschemas;
   std::map<sourcemeta::core::Pointer, std::vector<std::string>> base_uris;
   std::map<sourcemeta::core::Pointer, std::vector<std::string>> base_dialects;
 
@@ -326,7 +333,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
           SchemaFrame::LocationType::Resource, default_id.value(),
           root_id.value(), root_id.value(), sourcemeta::core::empty_pointer,
           sourcemeta::core::empty_pointer, root_dialect.value(),
-          root_base_dialect.value(), {{}});
+          root_base_dialect.value(), {{}}, std::nullopt);
     base_uris.insert({sourcemeta::core::empty_pointer, {default_id.value()}});
   }
 
@@ -346,9 +353,9 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
 
     // Store information
     subschema_entries.emplace_back(InternalEntry{entry, std::move(id)});
-    subschemas.emplace(entry.pointer,
-                       std::pair<sourcemeta::core::PointerTemplate, bool>{
-                           entry.instance_location, entry.orphan});
+    subschemas.emplace(
+        entry.pointer,
+        CacheSubschema{entry.instance_location, entry.orphan, entry.parent});
   }
 
   for (const auto &entry : subschema_entries) {
@@ -393,7 +400,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                     new_id, entry.common.pointer,
                     sourcemeta::core::empty_pointer,
                     entry.common.dialect.value(),
-                    entry.common.base_dialect.value(), {});
+                    entry.common.base_dialect.value(), {}, entry.common.parent);
             } else {
               store(frame, SchemaReferenceType::Static,
                     SchemaFrame::LocationType::Resource, new_id, root_id,
@@ -401,7 +408,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                     sourcemeta::core::empty_pointer,
                     entry.common.dialect.value(),
                     entry.common.base_dialect.value(),
-                    {entry.common.instance_location});
+                    {entry.common.instance_location}, entry.common.parent);
             }
           }
 
@@ -457,7 +464,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                 "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
                 entry.common.dialect.value(), entry.common.base_dialect.value(),
-                instance_locations);
+                instance_locations, entry.common.parent);
         }
 
         if (type == AnchorType::Dynamic || type == AnchorType::All) {
@@ -466,7 +473,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                 "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
                 entry.common.dialect.value(), entry.common.base_dialect.value(),
-                instance_locations);
+                instance_locations, entry.common.parent);
 
           // Register a dynamic anchor as a static anchor if possible too
           if (entry.common.vocabularies.contains(
@@ -476,7 +483,8 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                   root_id, "", entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
                   entry.common.dialect.value(),
-                  entry.common.base_dialect.value(), instance_locations, true);
+                  entry.common.base_dialect.value(), instance_locations,
+                  entry.common.parent, true);
           }
         }
       } else {
@@ -505,7 +513,8 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                   base_string, entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
                   entry.common.dialect.value(),
-                  entry.common.base_dialect.value(), instance_locations);
+                  entry.common.base_dialect.value(), instance_locations,
+                  entry.common.parent);
           }
 
           if (type == AnchorType::Dynamic || type == AnchorType::All) {
@@ -514,7 +523,8 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                   base_string, entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
                   entry.common.dialect.value(),
-                  entry.common.base_dialect.value(), instance_locations);
+                  entry.common.base_dialect.value(), instance_locations,
+                  entry.common.parent);
 
             // Register a dynamic anchor as a static anchor if possible too
             if (entry.common.vocabularies.contains(
@@ -525,7 +535,7 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
                     entry.common.pointer.resolve_from(bases.second),
                     entry.common.dialect.value(),
                     entry.common.base_dialect.value(), instance_locations,
-                    true);
+                    entry.common.parent, true);
             }
           }
 
@@ -573,26 +583,30 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
         const auto subschema{subschemas.find(pointer)};
         if (subschema != subschemas.cend()) {
           // Handle orphan schemas
-          if (subschema->second.second) {
+          if (subschema->second.orphan) {
             store(frame, SchemaReferenceType::Static,
                   SchemaFrame::LocationType::Subschema, result, root_id,
                   current_base, pointer,
                   pointer.resolve_from(nearest_bases.second),
-                  dialects.first.front(), current_base_dialect, {});
+                  dialects.first.front(), current_base_dialect, {},
+                  subschema->second.parent);
           } else {
             store(frame, SchemaReferenceType::Static,
                   SchemaFrame::LocationType::Subschema, result, root_id,
                   current_base, pointer,
                   pointer.resolve_from(nearest_bases.second),
                   dialects.first.front(), current_base_dialect,
-                  {subschema->second.first});
+                  {subschema->second.instance_location},
+                  subschema->second.parent);
           }
         } else {
           store(frame, SchemaReferenceType::Static,
                 SchemaFrame::LocationType::Pointer, result, root_id,
                 current_base, pointer,
                 pointer.resolve_from(nearest_bases.second),
-                dialects.first.front(), current_base_dialect, {});
+                dialects.first.front(), current_base_dialect, {},
+                // TODO: Get real parent
+                std::nullopt);
         }
       }
     }
