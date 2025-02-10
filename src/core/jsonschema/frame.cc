@@ -288,6 +288,7 @@ static auto traverse_instance_locations(
 
 struct CacheSubschema {
   const sourcemeta::core::PointerTemplate instance_location;
+  const sourcemeta::core::PointerTemplate relative_instance_location;
   const bool orphan;
   const std::optional<sourcemeta::core::Pointer> parent;
 };
@@ -353,9 +354,10 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
 
     // Store information
     subschema_entries.emplace_back(InternalEntry{entry, std::move(id)});
-    subschemas.emplace(
-        entry.pointer,
-        CacheSubschema{entry.instance_location, entry.orphan, entry.parent});
+    subschemas.emplace(entry.pointer,
+                       CacheSubschema{entry.instance_location,
+                                      entry.relative_instance_location,
+                                      entry.orphan, entry.parent});
   }
 
   for (const auto &entry : subschema_entries) {
