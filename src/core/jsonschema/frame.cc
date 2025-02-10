@@ -257,7 +257,7 @@ struct InternalEntry {
   const std::optional<std::string> id;
 };
 
-static auto traverse_instance_locations(
+static auto traverse_origin_instance_locations(
     const sourcemeta::core::SchemaFrame::Locations &frame,
     const sourcemeta::core::SchemaFrame::LocationsEntry &entry,
     const std::optional<sourcemeta::core::PointerTemplate> &current,
@@ -281,7 +281,8 @@ static auto traverse_instance_locations(
     }
 
     for (const auto &instance_location : subentry.instance_locations) {
-      traverse_instance_locations(frame, subentry, instance_location, output);
+      traverse_origin_instance_locations(frame, subentry, instance_location,
+                                         output);
     }
   }
 }
@@ -799,8 +800,8 @@ auto internal_analyse(const sourcemeta::core::JSON &schema,
 
   // Calculate alternative unresolved instance locations
   for (auto &entry : frame) {
-    traverse_instance_locations(frame, entry.second, std::nullopt,
-                                entry.second.instance_locations);
+    traverse_origin_instance_locations(frame, entry.second, std::nullopt,
+                                       entry.second.instance_locations);
   }
 }
 
