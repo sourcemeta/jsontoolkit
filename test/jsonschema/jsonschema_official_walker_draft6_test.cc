@@ -727,37 +727,43 @@ TEST(JSONSchema_official_walker_draft6, instance_locations) {
 
   EXPECT_EQ(entries.size(), 19);
 
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 0, "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 0, "", "", "");
 
   // Applicators (any)
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 1, "/allOf/0", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 2, "/allOf/1", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 3, "/anyOf/0", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 4, "/oneOf/0", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 5, "/not", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 1, "/allOf/0", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 2, "/allOf/1", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 3, "/anyOf/0", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 4, "/oneOf/0", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 5, "/not", "", "");
 
   // Applicators (object)
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 6, "/properties/foo", "/foo");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 7, "/properties/bar", "/bar");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 6, "/properties/foo", "/foo",
+                                      "/foo");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 7, "/properties/bar", "/bar",
+                                      "/bar");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 8, "/additionalProperties",
-                                      "/~P~");
+                                      "/~P~", "/~P~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 9, "/patternProperties/^f",
-                                      "/~R^f~");
+                                      "/~R^f~", "/~R^f~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 10, "/patternProperties/x$",
-                                      "/~Rx$~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 11, "/dependencies/baz", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 12, "/propertyNames", "/~K~");
+                                      "/~Rx$~", "/~Rx$~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 11, "/dependencies/baz", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 12, "/propertyNames", "/~K~",
+                                      "/~K~");
 
   // Applicators (array)
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 13, "/contains", "/~I~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 14, "/additionalItems", "/~I~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 15, "/items", "/~I~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 16, "/items/items/0", "/~I~/0");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 17, "/items/items/1", "/~I~/1");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 13, "/contains", "/~I~", "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 14, "/additionalItems", "/~I~",
+                                      "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 15, "/items", "/~I~", "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 16, "/items/items/0", "/~I~/0",
+                                      "/0");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 17, "/items/items/1", "/~I~/1",
+                                      "/1");
 
   // Core
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6_ORPHAN(entries, 18, "/definitions/foo",
-                                             "");
+                                             "", "");
 }
 
 TEST(JSONSchema_official_walker_draft6, definitions_subschemas) {
@@ -785,12 +791,12 @@ TEST(JSONSchema_official_walker_draft6, definitions_subschemas) {
 
   EXPECT_EQ(entries.size(), 4);
 
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 0, "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6_ORPHAN(entries, 1, "/definitions/foo",
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 0, "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6_ORPHAN(entries, 1, "/definitions/foo", "",
                                              "");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6_ORPHAN(
-      entries, 2, "/definitions/foo/properties/bar", "/bar");
+      entries, 2, "/definitions/foo/properties/bar", "/bar", "/bar");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6_ORPHAN(
       entries, 3, "/definitions/foo/properties/bar/additionalProperties",
-      "/bar/~P~");
+      "/bar/~P~", "/~P~");
 }

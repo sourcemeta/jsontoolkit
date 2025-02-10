@@ -31,6 +31,21 @@ public:
   /// ```
   GenericPointerTemplate() : data{} {}
 
+  /// This constructor is the preferred way of creating a pointer template.
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/core/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::core::PointerTemplate pointer{
+  ///   "foo",
+  ///   sourcemeta::core::PointerTemplate::Wildcard::Property};
+  /// ```
+  GenericPointerTemplate(
+      std::initializer_list<typename Container::value_type> tokens)
+      : data{std::move(tokens)} {}
+
   /// This constructor creates a JSON Pointer template from an existing JSON
   /// Pointer. For example:
   ///

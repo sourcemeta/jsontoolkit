@@ -645,30 +645,36 @@ TEST(JSONSchema_official_walker_draft3, instance_locations) {
 
   EXPECT_EQ(entries.size(), 17);
 
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 0, "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 0, "", "", "");
 
   // Applicators (object)
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 1, "/properties/foo", "/foo");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 2, "/properties/bar", "/bar");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 1, "/properties/foo", "/foo",
+                                      "/foo");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 2, "/properties/bar", "/bar",
+                                      "/bar");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 3, "/additionalProperties",
-                                      "/~P~");
+                                      "/~P~", "/~P~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 4, "/patternProperties/^f",
-                                      "/~R^f~");
+                                      "/~R^f~", "/~R^f~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 5, "/patternProperties/x$",
-                                      "/~Rx$~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 6, "/dependencies/baz", "");
+                                      "/~Rx$~", "/~Rx$~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 6, "/dependencies/baz", "", "");
 
   // Applicators (array)
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 7, "/additionalItems", "/~I~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 8, "/items", "/~I~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 9, "/items/items/0", "/~I~/0");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 10, "/items/items/1", "/~I~/1");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 7, "/additionalItems", "/~I~",
+                                      "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 8, "/items", "/~I~", "/~I~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 9, "/items/items/0", "/~I~/0",
+                                      "/0");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 10, "/items/items/1", "/~I~/1",
+                                      "/1");
 
   // Applicators (any)
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 11, "/type/1", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 12, "/type/2", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 13, "/disallow/1", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 14, "/disallow/2", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 15, "/extends", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 16, "/extends/extends/0", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 11, "/type/1", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 12, "/type/2", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 13, "/disallow/1", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 14, "/disallow/2", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 15, "/extends", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 16, "/extends/extends/0", "",
+                                      "");
 }
