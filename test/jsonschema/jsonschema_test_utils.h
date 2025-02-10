@@ -6,6 +6,15 @@
 #include <tuple>
 #include <vector>
 
+#define EXPECT_OPTIONAL_POINTER(optional_value, expected_optional)             \
+  if (std::optional<std::string>{expected_optional}.has_value()) {             \
+    EXPECT_TRUE((optional_value).has_value());                                 \
+    EXPECT_EQ(sourcemeta::core::to_string((optional_value).value()),           \
+              std::optional<std::string>{expected_optional}.value());          \
+  } else {                                                                     \
+    EXPECT_FALSE((optional_value).has_value());                                \
+  }
+
 #define EXPECT_POINTER_TEMPLATE(pointer, expected)                             \
   {                                                                            \
     std::ostringstream stream;                                                 \
@@ -33,7 +42,7 @@
                      expected_pointer, expected_dialect,                       \
                      expected_base_dialect, expected_base,                     \
                      expected_relative_pointer, expected_instance_locations,   \
-                     expected_destination_of_size)                             \
+                     expected_destination_of_size, expected_parent)            \
   EXPECT_TRUE((frame).locations().contains({(expected_type), (reference)}));   \
   EXPECT_TRUE((frame)                                                          \
                   .locations()                                                 \
@@ -63,26 +72,31 @@
                 .locations()                                                   \
                 .at({(expected_type), (reference)})                            \
                 .destination_of.size(),                                        \
-            expected_destination_of_size);
+            expected_destination_of_size);                                     \
+  EXPECT_OPTIONAL_POINTER(                                                     \
+      (frame).locations().at({(expected_type), (reference)}).parent,           \
+      expected_parent);
 
-#define EXPECT_FRAME_STATIC(                                                   \
-    frame, reference, root_id, expected_pointer, expected_dialect,             \
-    expected_base_dialect, expected_base, expected_relative_pointer,           \
-    expected_instance_locations, expected_destination_of_size)                 \
+#define EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,       \
+                            expected_dialect, expected_base_dialect,           \
+                            expected_base, expected_relative_pointer,          \
+                            expected_instance_locations,                       \
+                            expected_destination_of_size, expected_parent)     \
   EXPECT_FRAME(frame, sourcemeta::core::SchemaReferenceType::Static,           \
                reference, root_id, expected_pointer, expected_dialect,         \
                expected_base_dialect, expected_base,                           \
                expected_relative_pointer, expected_instance_locations,         \
-               expected_destination_of_size)
+               expected_destination_of_size, expected_parent)
 
 #define EXPECT_FRAME_STATIC_RESOURCE(                                          \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
     expected_base_dialect, expected_base, expected_relative_pointer,           \
-    expected_instance_locations, expected_destination_of_size)                 \
+    expected_instance_locations, expected_destination_of_size,                 \
+    expected_parent)                                                           \
   EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,             \
                       expected_dialect, expected_base_dialect, expected_base,  \
                       expected_relative_pointer, expected_instance_locations,  \
-                      expected_destination_of_size)                            \
+                      expected_destination_of_size, expected_parent)           \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .locations()                                                         \
@@ -93,11 +107,12 @@
 #define EXPECT_FRAME_STATIC_POINTER(                                           \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
     expected_base_dialect, expected_base, expected_relative_pointer,           \
-    expected_instance_locations, expected_destination_of_size)                 \
+    expected_instance_locations, expected_destination_of_size,                 \
+    expected_parent)                                                           \
   EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,             \
                       expected_dialect, expected_base_dialect, expected_base,  \
                       expected_relative_pointer, expected_instance_locations,  \
-                      expected_destination_of_size)                            \
+                      expected_destination_of_size, expected_parent)           \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .locations()                                                         \
@@ -108,11 +123,12 @@
 #define EXPECT_FRAME_STATIC_SUBSCHEMA(                                         \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
     expected_base_dialect, expected_base, expected_relative_pointer,           \
-    expected_instance_locations, expected_destination_of_size)                 \
+    expected_instance_locations, expected_destination_of_size,                 \
+    expected_parent)                                                           \
   EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,             \
                       expected_dialect, expected_base_dialect, expected_base,  \
                       expected_relative_pointer, expected_instance_locations,  \
-                      expected_destination_of_size)                            \
+                      expected_destination_of_size, expected_parent)           \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .locations()                                                         \
@@ -123,11 +139,12 @@
 #define EXPECT_FRAME_STATIC_ANCHOR(                                            \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
     expected_base_dialect, expected_base, expected_relative_pointer,           \
-    expected_instance_locations, expected_destination_of_size)                 \
+    expected_instance_locations, expected_destination_of_size,                 \
+    expected_parent)                                                           \
   EXPECT_FRAME_STATIC(frame, reference, root_id, expected_pointer,             \
                       expected_dialect, expected_base_dialect, expected_base,  \
                       expected_relative_pointer, expected_instance_locations,  \
-                      expected_destination_of_size)                            \
+                      expected_destination_of_size, expected_parent)           \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .locations()                                                         \
@@ -138,11 +155,12 @@
 #define EXPECT_FRAME_DYNAMIC_ANCHOR(                                           \
     frame, reference, root_id, expected_pointer, expected_dialect,             \
     expected_base_dialect, expected_base, expected_relative_pointer,           \
-    expected_instance_locations, expected_destination_of_size)                 \
+    expected_instance_locations, expected_destination_of_size,                 \
+    expected_parent)                                                           \
   EXPECT_FRAME_DYNAMIC(frame, reference, root_id, expected_pointer,            \
                        expected_dialect, expected_base_dialect, expected_base, \
                        expected_relative_pointer, expected_instance_locations, \
-                       expected_destination_of_size)                           \
+                       expected_destination_of_size, expected_parent)          \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .locations()                                                         \
@@ -150,20 +168,21 @@
           .type,                                                               \
       sourcemeta::core::SchemaFrame::LocationType::Anchor);
 
-#define EXPECT_FRAME_DYNAMIC(                                                  \
-    frame, reference, root_id, expected_pointer, expected_dialect,             \
-    expected_base_dialect, expected_base, expected_relative_pointer,           \
-    expected_instance_locations, expected_destination_of_size)                 \
+#define EXPECT_FRAME_DYNAMIC(frame, reference, root_id, expected_pointer,      \
+                             expected_dialect, expected_base_dialect,          \
+                             expected_base, expected_relative_pointer,         \
+                             expected_instance_locations,                      \
+                             expected_destination_of_size, expected_parent)    \
   EXPECT_FRAME(frame, sourcemeta::core::SchemaReferenceType::Dynamic,          \
                reference, root_id, expected_pointer, expected_dialect,         \
                expected_base_dialect, expected_base,                           \
                expected_relative_pointer, expected_instance_locations,         \
-               expected_destination_of_size)
+               expected_destination_of_size, expected_parent)
 
 #define __EXPECT_ANONYMOUS_FRAME(                                              \
     frame, expected_type, reference, expected_pointer, expected_dialect,       \
     expected_base_dialect, expected_instance_locations,                        \
-    expected_destination_of_size)                                              \
+    expected_destination_of_size, expected_parent)                             \
   EXPECT_TRUE((frame).locations().contains({(expected_type), (reference)}));   \
   EXPECT_FALSE((frame)                                                         \
                    .locations()                                                \
@@ -185,25 +204,30 @@
                 .locations()                                                   \
                 .at({(expected_type), (reference)})                            \
                 .destination_of.size(),                                        \
-            (expected_destination_of_size));
+            (expected_destination_of_size));                                   \
+  EXPECT_OPTIONAL_POINTER(                                                     \
+      (frame).locations().at({(expected_type), (reference)}).parent,           \
+      expected_parent);
 
-#define EXPECT_ANONYMOUS_FRAME_STATIC(frame, reference, expected_pointer,      \
-                                      expected_dialect, expected_base_dialect, \
-                                      expected_instance_locations,             \
-                                      expected_destination_of_size)            \
-  __EXPECT_ANONYMOUS_FRAME(                                                    \
-      frame, sourcemeta::core::SchemaReferenceType::Static, reference,         \
-      expected_pointer, expected_dialect, expected_base_dialect,               \
-      expected_instance_locations, expected_destination_of_size)
+#define EXPECT_ANONYMOUS_FRAME_STATIC(                                         \
+    frame, reference, expected_pointer, expected_dialect,                      \
+    expected_base_dialect, expected_instance_locations,                        \
+    expected_destination_of_size, expected_parent)                             \
+  __EXPECT_ANONYMOUS_FRAME(frame,                                              \
+                           sourcemeta::core::SchemaReferenceType::Static,      \
+                           reference, expected_pointer, expected_dialect,      \
+                           expected_base_dialect, expected_instance_locations, \
+                           expected_destination_of_size, expected_parent)
 
 #define EXPECT_ANONYMOUS_FRAME_STATIC_RESOURCE(                                \
     frame, reference, expected_pointer, expected_dialect,                      \
     expected_base_dialect, expected_instance_locations,                        \
-    expected_destination_of_size)                                              \
-  __EXPECT_ANONYMOUS_FRAME(                                                    \
-      frame, sourcemeta::core::SchemaReferenceType::Static, reference,         \
-      expected_pointer, expected_dialect, expected_base_dialect,               \
-      expected_instance_locations, expected_destination_of_size)               \
+    expected_destination_of_size, expected_parent)                             \
+  __EXPECT_ANONYMOUS_FRAME(frame,                                              \
+                           sourcemeta::core::SchemaReferenceType::Static,      \
+                           reference, expected_pointer, expected_dialect,      \
+                           expected_base_dialect, expected_instance_locations, \
+                           expected_destination_of_size, expected_parent)      \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .locations()                                                         \
@@ -214,11 +238,12 @@
 #define EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(                                 \
     frame, reference, expected_pointer, expected_dialect,                      \
     expected_base_dialect, expected_instance_locations,                        \
-    expected_destination_of_size)                                              \
-  __EXPECT_ANONYMOUS_FRAME(                                                    \
-      frame, sourcemeta::core::SchemaReferenceType::Static, reference,         \
-      expected_pointer, expected_dialect, expected_base_dialect,               \
-      expected_instance_locations, expected_destination_of_size)               \
+    expected_destination_of_size, expected_parent)                             \
+  __EXPECT_ANONYMOUS_FRAME(frame,                                              \
+                           sourcemeta::core::SchemaReferenceType::Static,      \
+                           reference, expected_pointer, expected_dialect,      \
+                           expected_base_dialect, expected_instance_locations, \
+                           expected_destination_of_size, expected_parent)      \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .locations()                                                         \
@@ -229,11 +254,12 @@
 #define EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(                               \
     frame, reference, expected_pointer, expected_dialect,                      \
     expected_base_dialect, expected_instance_locations,                        \
-    expected_destination_of_size)                                              \
-  __EXPECT_ANONYMOUS_FRAME(                                                    \
-      frame, sourcemeta::core::SchemaReferenceType::Static, reference,         \
-      expected_pointer, expected_dialect, expected_base_dialect,               \
-      expected_instance_locations, expected_destination_of_size)               \
+    expected_destination_of_size, expected_parent)                             \
+  __EXPECT_ANONYMOUS_FRAME(frame,                                              \
+                           sourcemeta::core::SchemaReferenceType::Static,      \
+                           reference, expected_pointer, expected_dialect,      \
+                           expected_base_dialect, expected_instance_locations, \
+                           expected_destination_of_size, expected_parent)      \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .locations()                                                         \
@@ -244,11 +270,12 @@
 #define EXPECT_ANONYMOUS_FRAME_STATIC_ANCHOR(                                  \
     frame, reference, expected_pointer, expected_dialect,                      \
     expected_base_dialect, expected_instance_locations,                        \
-    expected_destination_of_size)                                              \
-  __EXPECT_ANONYMOUS_FRAME(                                                    \
-      frame, sourcemeta::core::SchemaReferenceType::Static, reference,         \
-      expected_pointer, expected_dialect, expected_base_dialect,               \
-      expected_instance_locations, expected_destination_of_size)               \
+    expected_destination_of_size, expected_parent)                             \
+  __EXPECT_ANONYMOUS_FRAME(frame,                                              \
+                           sourcemeta::core::SchemaReferenceType::Static,      \
+                           reference, expected_pointer, expected_dialect,      \
+                           expected_base_dialect, expected_instance_locations, \
+                           expected_destination_of_size, expected_parent)      \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .locations()                                                         \
@@ -259,11 +286,12 @@
 #define EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(                                 \
     frame, reference, expected_pointer, expected_dialect,                      \
     expected_base_dialect, expected_instance_locations,                        \
-    expected_destination_of_size)                                              \
-  __EXPECT_ANONYMOUS_FRAME(                                                    \
-      frame, sourcemeta::core::SchemaReferenceType::Dynamic, reference,        \
-      expected_pointer, expected_dialect, expected_base_dialect,               \
-      expected_instance_locations, expected_destination_of_size)               \
+    expected_destination_of_size, expected_parent)                             \
+  __EXPECT_ANONYMOUS_FRAME(frame,                                              \
+                           sourcemeta::core::SchemaReferenceType::Dynamic,     \
+                           reference, expected_pointer, expected_dialect,      \
+                           expected_base_dialect, expected_instance_locations, \
+                           expected_destination_of_size, expected_parent)      \
   EXPECT_EQ(                                                                   \
       (frame)                                                                  \
           .locations()                                                         \
@@ -353,17 +381,7 @@
     expected_relative_instance_location)                                       \
   EXPECT_EQ(sourcemeta::core::to_string(entries.at(index).pointer),            \
             expected_schema_location);                                         \
-  {                                                                            \
-    const std::optional<std::string> expected_parent_location_optional{        \
-        expected_parent_location};                                             \
-    if (expected_parent_location_optional.has_value()) {                       \
-      EXPECT_TRUE(entries.at(index).parent.has_value());                       \
-      EXPECT_EQ(sourcemeta::core::to_string(entries.at(index).parent.value()), \
-                expected_parent_location_optional.value());                    \
-    } else {                                                                   \
-      EXPECT_FALSE(entries.at(index).parent.has_value());                      \
-    }                                                                          \
-  }                                                                            \
+  EXPECT_OPTIONAL_POINTER(entries.at(index).parent, expected_parent_location); \
   EXPECT_TRUE(entries.at(index).dialect.has_value());                          \
   EXPECT_TRUE(entries.at(index).base_dialect.has_value());                     \
   EXPECT_EQ(entries.at(index).dialect.value(), expected_dialect);              \

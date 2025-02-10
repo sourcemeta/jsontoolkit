@@ -141,6 +141,7 @@ public:
 
   /// A single frame in a JSON Schema reference frame
   struct LocationsEntry {
+    std::optional<Pointer> parent;
     LocationType type;
     std::optional<std::string> root;
     std::string base;
