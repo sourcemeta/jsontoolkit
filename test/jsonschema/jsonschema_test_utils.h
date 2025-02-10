@@ -348,11 +348,22 @@
           .dynamic_dependencies.contains(TO_POINTER(expected_destination)));
 
 #define __EXPECT_OFFICIAL_WALKER_ENTRY(                                        \
-    entries, index, expected_schema_location, expected_dialect,                \
-    expected_base_dialect, expected_instance_location,                         \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_dialect, expected_base_dialect, expected_instance_location,       \
     expected_relative_instance_location)                                       \
   EXPECT_EQ(sourcemeta::core::to_string(entries.at(index).pointer),            \
             expected_schema_location);                                         \
+  {                                                                            \
+    const std::optional<std::string> expected_parent_location_optional{        \
+        expected_parent_location};                                             \
+    if (expected_parent_location_optional.has_value()) {                       \
+      EXPECT_TRUE(entries.at(index).parent.has_value());                       \
+      EXPECT_EQ(sourcemeta::core::to_string(entries.at(index).parent.value()), \
+                expected_parent_location_optional.value());                    \
+    } else {                                                                   \
+      EXPECT_FALSE(entries.at(index).parent.has_value());                      \
+    }                                                                          \
+  }                                                                            \
   EXPECT_TRUE(entries.at(index).dialect.has_value());                          \
   EXPECT_TRUE(entries.at(index).base_dialect.has_value());                     \
   EXPECT_EQ(entries.at(index).dialect.value(), expected_dialect);              \
@@ -364,180 +375,180 @@
                           expected_relative_instance_location);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(                                  \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
   __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
-      entries, index, expected_schema_location,                                \
+      entries, index, expected_schema_location, expected_parent_location,      \
       "https://json-schema.org/draft/2020-12/schema",                          \
       "https://json-schema.org/draft/2020-12/schema",                          \
       expected_instance_location, expected_relative_instance_location);        \
   EXPECT_FALSE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_2020_12_ORPHAN(                           \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
   __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
-      entries, index, expected_schema_location,                                \
+      entries, index, expected_schema_location, expected_parent_location,      \
       "https://json-schema.org/draft/2020-12/schema",                          \
       "https://json-schema.org/draft/2020-12/schema",                          \
       expected_instance_location, expected_relative_instance_location);        \
   EXPECT_TRUE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(                                  \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
   __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
-      entries, index, expected_schema_location,                                \
+      entries, index, expected_schema_location, expected_parent_location,      \
       "https://json-schema.org/draft/2019-09/schema",                          \
       "https://json-schema.org/draft/2019-09/schema",                          \
       expected_instance_location, expected_relative_instance_location);        \
   EXPECT_FALSE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_2019_09_ORPHAN(                           \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
   __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
-      entries, index, expected_schema_location,                                \
+      entries, index, expected_schema_location, expected_parent_location,      \
       "https://json-schema.org/draft/2019-09/schema",                          \
       "https://json-schema.org/draft/2019-09/schema",                          \
       expected_instance_location, expected_relative_instance_location);        \
   EXPECT_TRUE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(                                   \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
-  __EXPECT_OFFICIAL_WALKER_ENTRY(entries, index, expected_schema_location,     \
-                                 "http://json-schema.org/draft-07/schema#",    \
-                                 "http://json-schema.org/draft-07/schema#",    \
-                                 expected_instance_location,                   \
-                                 expected_relative_instance_location);         \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
+  __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
+      entries, index, expected_schema_location, expected_parent_location,      \
+      "http://json-schema.org/draft-07/schema#",                               \
+      "http://json-schema.org/draft-07/schema#", expected_instance_location,   \
+      expected_relative_instance_location);                                    \
   EXPECT_FALSE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7_ORPHAN(                            \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
-  __EXPECT_OFFICIAL_WALKER_ENTRY(entries, index, expected_schema_location,     \
-                                 "http://json-schema.org/draft-07/schema#",    \
-                                 "http://json-schema.org/draft-07/schema#",    \
-                                 expected_instance_location,                   \
-                                 expected_relative_instance_location);         \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
+  __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
+      entries, index, expected_schema_location, expected_parent_location,      \
+      "http://json-schema.org/draft-07/schema#",                               \
+      "http://json-schema.org/draft-07/schema#", expected_instance_location,   \
+      expected_relative_instance_location);                                    \
   EXPECT_TRUE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(                                   \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
-  __EXPECT_OFFICIAL_WALKER_ENTRY(entries, index, expected_schema_location,     \
-                                 "http://json-schema.org/draft-06/schema#",    \
-                                 "http://json-schema.org/draft-06/schema#",    \
-                                 expected_instance_location,                   \
-                                 expected_relative_instance_location);         \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
+  __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
+      entries, index, expected_schema_location, expected_parent_location,      \
+      "http://json-schema.org/draft-06/schema#",                               \
+      "http://json-schema.org/draft-06/schema#", expected_instance_location,   \
+      expected_relative_instance_location);                                    \
   EXPECT_FALSE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6_ORPHAN(                            \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
-  __EXPECT_OFFICIAL_WALKER_ENTRY(entries, index, expected_schema_location,     \
-                                 "http://json-schema.org/draft-06/schema#",    \
-                                 "http://json-schema.org/draft-06/schema#",    \
-                                 expected_instance_location,                   \
-                                 expected_relative_instance_location);         \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
+  __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
+      entries, index, expected_schema_location, expected_parent_location,      \
+      "http://json-schema.org/draft-06/schema#",                               \
+      "http://json-schema.org/draft-06/schema#", expected_instance_location,   \
+      expected_relative_instance_location);                                    \
   EXPECT_TRUE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(                                   \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
-  __EXPECT_OFFICIAL_WALKER_ENTRY(entries, index, expected_schema_location,     \
-                                 "http://json-schema.org/draft-04/schema#",    \
-                                 "http://json-schema.org/draft-04/schema#",    \
-                                 expected_instance_location,                   \
-                                 expected_relative_instance_location);         \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
+  __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
+      entries, index, expected_schema_location, expected_parent_location,      \
+      "http://json-schema.org/draft-04/schema#",                               \
+      "http://json-schema.org/draft-04/schema#", expected_instance_location,   \
+      expected_relative_instance_location);                                    \
   EXPECT_FALSE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4_ORPHAN(                            \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
-  __EXPECT_OFFICIAL_WALKER_ENTRY(entries, index, expected_schema_location,     \
-                                 "http://json-schema.org/draft-04/schema#",    \
-                                 "http://json-schema.org/draft-04/schema#",    \
-                                 expected_instance_location,                   \
-                                 expected_relative_instance_location);         \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
+  __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
+      entries, index, expected_schema_location, expected_parent_location,      \
+      "http://json-schema.org/draft-04/schema#",                               \
+      "http://json-schema.org/draft-04/schema#", expected_instance_location,   \
+      expected_relative_instance_location);                                    \
   EXPECT_TRUE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(                                   \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
-  __EXPECT_OFFICIAL_WALKER_ENTRY(entries, index, expected_schema_location,     \
-                                 "http://json-schema.org/draft-03/schema#",    \
-                                 "http://json-schema.org/draft-03/schema#",    \
-                                 expected_instance_location,                   \
-                                 expected_relative_instance_location);         \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
+  __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
+      entries, index, expected_schema_location, expected_parent_location,      \
+      "http://json-schema.org/draft-03/schema#",                               \
+      "http://json-schema.org/draft-03/schema#", expected_instance_location,   \
+      expected_relative_instance_location);                                    \
   EXPECT_FALSE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3_ORPHAN(                            \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
-  __EXPECT_OFFICIAL_WALKER_ENTRY(entries, index, expected_schema_location,     \
-                                 "http://json-schema.org/draft-03/schema#",    \
-                                 "http://json-schema.org/draft-03/schema#",    \
-                                 expected_instance_location,                   \
-                                 expected_relative_instance_location);         \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
+  __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
+      entries, index, expected_schema_location, expected_parent_location,      \
+      "http://json-schema.org/draft-03/schema#",                               \
+      "http://json-schema.org/draft-03/schema#", expected_instance_location,   \
+      expected_relative_instance_location);                                    \
   EXPECT_TRUE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2(                                   \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
   __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
-      entries, index, expected_schema_location,                                \
+      entries, index, expected_schema_location, expected_parent_location,      \
       "http://json-schema.org/draft-02/schema#",                               \
       "http://json-schema.org/draft-02/hyper-schema#",                         \
       expected_instance_location, expected_relative_instance_location);        \
   EXPECT_FALSE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT2_ORPHAN(                            \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
   __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
-      entries, index, expected_schema_location,                                \
+      entries, index, expected_schema_location, expected_parent_location,      \
       "http://json-schema.org/draft-02/schema#",                               \
       "http://json-schema.org/draft-02/hyper-schema#",                         \
       expected_instance_location, expected_relative_instance_location);        \
   EXPECT_TRUE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT1(                                   \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
   __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
-      entries, index, expected_schema_location,                                \
+      entries, index, expected_schema_location, expected_parent_location,      \
       "http://json-schema.org/draft-01/schema#",                               \
       "http://json-schema.org/draft-01/hyper-schema#",                         \
       expected_instance_location, expected_relative_instance_location);        \
   EXPECT_FALSE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT1_ORPHAN(                            \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
   __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
-      entries, index, expected_schema_location,                                \
+      entries, index, expected_schema_location, expected_parent_location,      \
       "http://json-schema.org/draft-01/schema#",                               \
       "http://json-schema.org/draft-01/hyper-schema#",                         \
       expected_instance_location, expected_relative_instance_location);        \
   EXPECT_TRUE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT0(                                   \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
   __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
-      entries, index, expected_schema_location,                                \
+      entries, index, expected_schema_location, expected_parent_location,      \
       "http://json-schema.org/draft-00/schema#",                               \
       "http://json-schema.org/draft-00/hyper-schema#",                         \
       expected_instance_location, expected_relative_instance_location);        \
   EXPECT_FALSE(entries.at(index).orphan);
 
 #define EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT0_ORPHAN(                            \
-    entries, index, expected_schema_location, expected_instance_location,      \
-    expected_relative_instance_location)                                       \
+    entries, index, expected_schema_location, expected_parent_location,        \
+    expected_instance_location, expected_relative_instance_location)           \
   __EXPECT_OFFICIAL_WALKER_ENTRY(                                              \
-      entries, index, expected_schema_location,                                \
+      entries, index, expected_schema_location, expected_parent_location,      \
       "http://json-schema.org/draft-00/schema#",                               \
       "http://json-schema.org/draft-00/hyper-schema#",                         \
       expected_instance_location, expected_relative_instance_location);        \
