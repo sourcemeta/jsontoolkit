@@ -374,16 +374,13 @@ static auto repopulate_instance_locations(
   }
 }
 
-auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
-                      const sourcemeta::core::JSON &schema,
-                      sourcemeta::core::SchemaFrame::Locations &frame,
-                      sourcemeta::core::SchemaFrame::References &references,
-                      const sourcemeta::core::SchemaWalker &walker,
-                      const sourcemeta::core::SchemaResolver &resolver,
-                      const std::optional<std::string> &default_dialect,
-                      const std::optional<std::string> &default_id) -> void {
-  using namespace sourcemeta::core;
+namespace sourcemeta::core {
 
+auto SchemaFrame::analyse(const JSON &schema, const SchemaWalker &walker,
+                          const SchemaResolver &resolver,
+                          const std::optional<std::string> &default_dialect,
+                          const std::optional<std::string> &default_id)
+    -> void {
   std::vector<InternalEntry> subschema_entries;
   std::map<Pointer, CacheSubschema> subschemas;
   std::map<sourcemeta::core::Pointer, std::vector<std::string>> base_uris;
@@ -412,14 +409,14 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                                        default_id.has_value() &&
                                        root_id.value() != default_id.value()};
   if (has_explicit_different_id) {
-    if (mode == SchemaFrame::Mode::Instances) {
-      store(frame, SchemaReferenceType::Static,
+    if (this->mode_ == SchemaFrame::Mode::Instances) {
+      store(this->locations_, SchemaReferenceType::Static,
             SchemaFrame::LocationType::Resource, default_id.value(),
             root_id.value(), root_id.value(), sourcemeta::core::empty_pointer,
             sourcemeta::core::empty_pointer, root_dialect.value(),
             root_base_dialect.value(), {{}}, std::nullopt);
     } else {
-      store(frame, SchemaReferenceType::Static,
+      store(this->locations_, SchemaReferenceType::Static,
             SchemaFrame::LocationType::Resource, default_id.value(),
             root_id.value(), root_id.value(), sourcemeta::core::empty_pointer,
             sourcemeta::core::empty_pointer, root_dialect.value(),
@@ -485,17 +482,18 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
           const std::string new_id{maybe_relative.recompose()};
 
           if (!maybe_relative_is_absolute ||
-              !frame.contains({SchemaReferenceType::Static, new_id})) {
+              !this->locations_.contains(
+                  {SchemaReferenceType::Static, new_id})) {
             assert(entry.common.base_dialect.has_value());
             if (entry.common.orphan) {
-              store(frame, SchemaReferenceType::Static,
+              store(this->locations_, SchemaReferenceType::Static,
                     SchemaFrame::LocationType::Resource, new_id, root_id,
                     new_id, entry.common.pointer,
                     sourcemeta::core::empty_pointer,
                     entry.common.dialect.value(),
                     entry.common.base_dialect.value(), {}, entry.common.parent);
-            } else if (mode == SchemaFrame::Mode::Instances) {
-              store(frame, SchemaReferenceType::Static,
+            } else if (this->mode_ == SchemaFrame::Mode::Instances) {
+              store(this->locations_, SchemaReferenceType::Static,
                     SchemaFrame::LocationType::Resource, new_id, root_id,
                     new_id, entry.common.pointer,
                     sourcemeta::core::empty_pointer,
@@ -503,7 +501,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                     entry.common.base_dialect.value(),
                     {entry.common.instance_location}, entry.common.parent);
             } else {
-              store(frame, SchemaReferenceType::Static,
+              store(this->locations_, SchemaReferenceType::Static,
                     SchemaFrame::LocationType::Resource, new_id, root_id,
                     new_id, entry.common.pointer,
                     sourcemeta::core::empty_pointer,
@@ -521,7 +519,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
       }
     }
 
-    if (mode != SchemaFrame::Mode::Locations) {
+    if (this->mode_ != SchemaFrame::Mode::Locations) {
       // Handle metaschema references
       const auto maybe_metaschema{
           sourcemeta::core::dialect(entry.common.subschema.get())};
@@ -536,12 +534,12 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
         metaschema.canonicalize();
         const std::string destination{metaschema.recompose()};
         assert(entry.common.subschema.get().defines("$schema"));
-        references.insert_or_assign({SchemaReferenceType::Static,
-                                     entry.common.pointer.concat({"$schema"})},
-                                    SchemaFrame::ReferencesEntry{
-                                        destination,
-                                        metaschema.recompose_without_fragment(),
-                                        fragment_string(metaschema)});
+        this->references_.insert_or_assign(
+            {SchemaReferenceType::Static,
+             entry.common.pointer.concat({"$schema"})},
+            SchemaFrame::ReferencesEntry{
+                destination, metaschema.recompose_without_fragment(),
+                fragment_string(metaschema)});
       }
     }
 
@@ -552,7 +550,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
 
       std::vector<sourcemeta::core::PointerTemplate> instance_locations;
-      if (!entry.common.orphan && mode == SchemaFrame::Mode::Instances) {
+      if (!entry.common.orphan && this->mode_ == SchemaFrame::Mode::Instances) {
         instance_locations.push_back(entry.common.instance_location);
       }
 
@@ -561,7 +559,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
         const auto relative_anchor_uri{anchor_uri.recompose()};
 
         if (type == AnchorType::Static || type == AnchorType::All) {
-          store(frame, SchemaReferenceType::Static,
+          store(this->locations_, SchemaReferenceType::Static,
                 SchemaFrame::LocationType::Anchor, relative_anchor_uri, root_id,
                 "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
@@ -570,7 +568,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
         }
 
         if (type == AnchorType::Dynamic || type == AnchorType::All) {
-          store(frame, SchemaReferenceType::Dynamic,
+          store(this->locations_, SchemaReferenceType::Dynamic,
                 SchemaFrame::LocationType::Anchor, relative_anchor_uri, root_id,
                 "", entry.common.pointer,
                 entry.common.pointer.resolve_from(bases.second),
@@ -580,7 +578,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
           // Register a dynamic anchor as a static anchor if possible too
           if (entry.common.vocabularies.contains(
                   "https://json-schema.org/draft/2020-12/vocab/core")) {
-            store(frame, SchemaReferenceType::Static,
+            store(this->locations_, SchemaReferenceType::Static,
                   SchemaFrame::LocationType::Anchor, relative_anchor_uri,
                   root_id, "", entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
@@ -604,23 +602,24 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                                     .canonicalize()
                                     .recompose()};
 
-          if (!is_first &&
-              frame.contains({SchemaReferenceType::Static, anchor_uri})) {
+          if (!is_first && this->locations_.contains(
+                               {SchemaReferenceType::Static, anchor_uri})) {
             continue;
           }
 
           if (type == AnchorType::Static || type == AnchorType::All) {
-            store(frame, sourcemeta::core::SchemaReferenceType::Static,
-                  SchemaFrame::LocationType::Anchor, anchor_uri, root_id,
-                  base_string, entry.common.pointer,
-                  entry.common.pointer.resolve_from(bases.second),
-                  entry.common.dialect.value(),
-                  entry.common.base_dialect.value(), instance_locations,
-                  entry.common.parent);
+            store(
+                this->locations_, sourcemeta::core::SchemaReferenceType::Static,
+                SchemaFrame::LocationType::Anchor, anchor_uri, root_id,
+                base_string, entry.common.pointer,
+                entry.common.pointer.resolve_from(bases.second),
+                entry.common.dialect.value(), entry.common.base_dialect.value(),
+                instance_locations, entry.common.parent);
           }
 
           if (type == AnchorType::Dynamic || type == AnchorType::All) {
-            store(frame, sourcemeta::core::SchemaReferenceType::Dynamic,
+            store(this->locations_,
+                  sourcemeta::core::SchemaReferenceType::Dynamic,
                   SchemaFrame::LocationType::Anchor, anchor_uri, root_id,
                   base_string, entry.common.pointer,
                   entry.common.pointer.resolve_from(bases.second),
@@ -631,7 +630,8 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
             // Register a dynamic anchor as a static anchor if possible too
             if (entry.common.vocabularies.contains(
                     "https://json-schema.org/draft/2020-12/vocab/core")) {
-              store(frame, sourcemeta::core::SchemaReferenceType::Static,
+              store(this->locations_,
+                    sourcemeta::core::SchemaReferenceType::Static,
                     SchemaFrame::LocationType::Anchor, anchor_uri, root_id,
                     base_string, entry.common.pointer,
                     entry.common.pointer.resolve_from(bases.second),
@@ -671,29 +671,29 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
       relative_pointer_uri.canonicalize();
       const auto result{relative_pointer_uri.recompose()};
 
-      if (!frame.contains({SchemaReferenceType::Static, result})) {
+      if (!this->locations_.contains({SchemaReferenceType::Static, result})) {
         const auto nearest_bases{
             find_nearest_bases(base_uris, pointer, base.first)};
         assert(!nearest_bases.first.empty());
         const auto &current_base{nearest_bases.first.front()};
         const auto maybe_base_entry{
-            frame.find({SchemaReferenceType::Static, current_base})};
+            this->locations_.find({SchemaReferenceType::Static, current_base})};
         const auto current_base_dialect{
-            maybe_base_entry == frame.cend()
+            maybe_base_entry == this->locations_.cend()
                 ? root_base_dialect.value()
                 : maybe_base_entry->second.base_dialect};
         const auto subschema{subschemas.find(pointer)};
         if (subschema != subschemas.cend()) {
           // Handle orphan schemas
           if (subschema->second.orphan) {
-            store(frame, SchemaReferenceType::Static,
+            store(this->locations_, SchemaReferenceType::Static,
                   SchemaFrame::LocationType::Subschema, result, root_id,
                   current_base, pointer,
                   pointer.resolve_from(nearest_bases.second),
                   dialects.first.front(), current_base_dialect, {},
                   subschema->second.parent);
-          } else if (mode == SchemaFrame::Mode::Instances) {
-            store(frame, SchemaReferenceType::Static,
+          } else if (this->mode_ == SchemaFrame::Mode::Instances) {
+            store(this->locations_, SchemaReferenceType::Static,
                   SchemaFrame::LocationType::Subschema, result, root_id,
                   current_base, pointer,
                   pointer.resolve_from(nearest_bases.second),
@@ -701,7 +701,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                   {subschema->second.instance_location},
                   subschema->second.parent);
           } else {
-            store(frame, SchemaReferenceType::Static,
+            store(this->locations_, SchemaReferenceType::Static,
                   SchemaFrame::LocationType::Subschema, result, root_id,
                   current_base, pointer,
                   pointer.resolve_from(nearest_bases.second),
@@ -709,7 +709,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                   subschema->second.parent);
           }
         } else {
-          store(frame, SchemaReferenceType::Static,
+          store(this->locations_, SchemaReferenceType::Static,
                 SchemaFrame::LocationType::Pointer, result, root_id,
                 current_base, pointer,
                 pointer.resolve_from(nearest_bases.second),
@@ -721,7 +721,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
     }
   }
 
-  if (mode == SchemaFrame::Mode::Locations) {
+  if (this->mode_ == SchemaFrame::Mode::Locations) {
     return;
   }
 
@@ -739,7 +739,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
         }
 
         ref.canonicalize();
-        references.insert_or_assign(
+        this->references_.insert_or_assign(
             {SchemaReferenceType::Static,
              entry.common.pointer.concat({"$ref"})},
             SchemaFrame::ReferencesEntry{ref.recompose(),
@@ -766,13 +766,13 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
 
         auto anchor_uri_string{
             nearest_bases.first.empty() ? "" : nearest_bases.first.front()};
-        const auto recursive_anchor{
-            frame.find({SchemaReferenceType::Dynamic, anchor_uri_string})};
-        const auto reference_type{recursive_anchor == frame.end()
+        const auto recursive_anchor{this->locations_.find(
+            {SchemaReferenceType::Dynamic, anchor_uri_string})};
+        const auto reference_type{recursive_anchor == this->locations_.end()
                                       ? SchemaReferenceType::Static
                                       : SchemaReferenceType::Dynamic};
         const sourcemeta::core::URI anchor_uri{std::move(anchor_uri_string)};
-        references.insert_or_assign(
+        this->references_.insert_or_assign(
             {reference_type, entry.common.pointer.concat({"$recursiveRef"})},
             SchemaFrame::ReferencesEntry{
                 anchor_uri.recompose(), anchor_uri.recompose_without_fragment(),
@@ -798,14 +798,14 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
 
         const auto has_fragment{ref.fragment().has_value()};
         const auto maybe_static_frame{
-            frame.find({SchemaReferenceType::Static, ref_string})};
+            this->locations_.find({SchemaReferenceType::Static, ref_string})};
         const auto maybe_dynamic_frame{
-            frame.find({SchemaReferenceType::Dynamic, ref_string})};
-        const auto behaves_as_static{!has_fragment ||
-                                     (has_fragment &&
-                                      maybe_static_frame != frame.end() &&
-                                      maybe_dynamic_frame == frame.end())};
-        references.insert_or_assign(
+            this->locations_.find({SchemaReferenceType::Dynamic, ref_string})};
+        const auto behaves_as_static{
+            !has_fragment ||
+            (has_fragment && maybe_static_frame != this->locations_.end() &&
+             maybe_dynamic_frame == this->locations_.end())};
+        this->references_.insert_or_assign(
             {behaves_as_static ? SchemaReferenceType::Static
                                : SchemaReferenceType::Dynamic,
              entry.common.pointer.concat({"$dynamicRef"})},
@@ -818,22 +818,23 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
 
   // A schema is standalone if all references can be resolved within itself
   const bool standalone{std::all_of(
-      references.cbegin(), references.cend(), [&frame](const auto &reference) {
+      this->references_.cbegin(), this->references_.cend(),
+      [&](const auto &reference) {
         assert(!reference.first.second.empty());
         assert(reference.first.second.back().is_property());
         // TODO: This check might need to be more elaborate given
         // https://github.com/sourcemeta/core/issues/1390
         return reference.first.second.back().to_property() == "$schema" ||
-               frame.contains({SchemaReferenceType::Static,
-                               reference.second.destination}) ||
-               frame.contains({SchemaReferenceType::Dynamic,
-                               reference.second.destination});
+               this->locations_.contains({SchemaReferenceType::Static,
+                                          reference.second.destination}) ||
+               this->locations_.contains({SchemaReferenceType::Dynamic,
+                                          reference.second.destination});
       })};
 
   if (standalone) {
     // Find all dynamic anchors
     std::map<std::string, std::vector<std::string>> dynamic_anchors;
-    for (const auto &entry : frame) {
+    for (const auto &entry : this->locations_) {
       if (entry.first.first != SchemaReferenceType::Dynamic ||
           entry.second.type != SchemaFrame::LocationType::Anchor) {
         continue;
@@ -853,7 +854,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
     // is a static reference in disguise
     std::vector<SchemaFrame::References::key_type> to_delete;
     std::vector<SchemaFrame::References::value_type> to_insert;
-    for (const auto &reference : references) {
+    for (const auto &reference : this->references_) {
       if (reference.first.first != SchemaReferenceType::Dynamic ||
           !reference.second.fragment.has_value()) {
         continue;
@@ -881,29 +882,122 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
     // Because we can't mutate a map as we are traversing it
 
     for (const auto &key : to_delete) {
-      references.erase(key);
+      this->references_.erase(key);
     }
 
     for (auto &&entry : to_insert) {
-      references.emplace(std::move(entry));
+      this->references_.emplace(std::move(entry));
     }
   }
 
-  if (mode == sourcemeta::core::SchemaFrame::Mode::Instances) {
+  if (this->mode_ == sourcemeta::core::SchemaFrame::Mode::Instances) {
     // Calculate alternative unresolved instance locations
-    for (auto &entry : frame) {
-      traverse_origin_instance_locations(references, frame, entry.second,
-                                         std::nullopt,
+    for (auto &entry : this->locations_) {
+      traverse_origin_instance_locations(this->references_, this->locations_,
+                                         entry.second, std::nullopt,
                                          entry.second.instance_locations);
     }
 
     // This is guaranteed to be top-down
     for (auto &entry : subschemas) {
-      repopulate_instance_locations(subschemas, frame, entry.first,
+      repopulate_instance_locations(subschemas, this->locations_, entry.first,
                                     entry.second, entry.first, std::nullopt);
     }
   }
 }
+
+auto SchemaFrame::locations() const noexcept -> const Locations & {
+  return this->locations_;
+}
+
+auto SchemaFrame::references() const noexcept -> const References & {
+  return this->references_;
+}
+
+auto SchemaFrame::vocabularies(const Location &location,
+                               const SchemaResolver &resolver) const
+    -> std::map<std::string, bool> {
+  return sourcemeta::core::vocabularies(resolver, location.base_dialect,
+                                        location.dialect);
+}
+
+auto SchemaFrame::uri(const Location &location,
+                      const Pointer &relative_schema_location) const
+    -> std::string {
+  return to_uri(location.relative_pointer.concat(relative_schema_location),
+                location.base)
+      .recompose();
+}
+
+auto SchemaFrame::traverse(const Location &location,
+                           const Pointer &relative_schema_location) const
+    -> const Location & {
+  const auto new_uri{this->uri(location, relative_schema_location)};
+  const auto static_match{
+      this->locations_.find({SchemaReferenceType::Static, new_uri})};
+  if (static_match != this->locations_.cend()) {
+    return static_match->second;
+  }
+
+  const auto dynamic_match{
+      this->locations_.find({SchemaReferenceType::Dynamic, new_uri})};
+  assert(dynamic_match != this->locations_.cend());
+  return dynamic_match->second;
+}
+
+auto SchemaFrame::traverse(const std::string &uri) const
+    -> std::optional<std::reference_wrapper<const Location>> {
+  const auto static_result{
+      this->locations_.find({SchemaReferenceType::Static, uri})};
+  if (static_result != this->locations_.cend()) {
+    return static_result->second;
+  }
+
+  const auto dynamic_result{
+      this->locations_.find({SchemaReferenceType::Dynamic, uri})};
+  if (dynamic_result != this->locations_.cend()) {
+    return dynamic_result->second;
+  }
+
+  return std::nullopt;
+}
+
+auto SchemaFrame::dereference(const Location &location,
+                              const Pointer &relative_schema_location) const
+    -> std::pair<SchemaReferenceType,
+                 std::optional<std::reference_wrapper<const Location>>> {
+  const auto effective_location{
+      location.pointer.concat({relative_schema_location})};
+  const auto maybe_reference_entry{this->references_.find(
+      {SchemaReferenceType::Static, effective_location})};
+  if (maybe_reference_entry == this->references_.cend()) {
+    // If static dereferencing failed but we know the reference
+    // is dynamic, then report so, but without a location, as by
+    // definition we can't know the destination until at runtime
+    if (this->references_.contains(
+            {SchemaReferenceType::Dynamic, effective_location})) {
+      return {SchemaReferenceType::Dynamic, std::nullopt};
+    }
+
+    return {SchemaReferenceType::Static, std::nullopt};
+  }
+
+  const auto destination{
+      this->locations_.find({SchemaReferenceType::Static,
+                             maybe_reference_entry->second.destination})};
+  assert(destination != this->locations_.cend());
+  return {SchemaReferenceType::Static, destination->second};
+}
+
+auto SchemaFrame::instance_locations(const Location &location) const -> const
+    typename Instances::mapped_type & {
+  return location.instance_locations;
+}
+
+} // namespace sourcemeta::core
+
+// TODO: Rephrase all this logic on top of framing by keeping track of all
+// keyword inter-dependencies?
 
 namespace {
 using namespace sourcemeta::core;
@@ -1031,103 +1125,6 @@ auto find_adjacent_dependencies(
 } // namespace
 
 namespace sourcemeta::core {
-
-auto SchemaFrame::analyse(const JSON &schema, const SchemaWalker &walker,
-                          const SchemaResolver &resolver,
-                          const std::optional<std::string> &default_dialect,
-                          const std::optional<std::string> &default_id)
-    -> void {
-  internal_analyse(this->mode_, schema, this->locations_, this->references_,
-                   walker, resolver, default_dialect, default_id);
-}
-
-auto SchemaFrame::locations() const noexcept -> const Locations & {
-  return this->locations_;
-}
-
-auto SchemaFrame::references() const noexcept -> const References & {
-  return this->references_;
-}
-
-auto SchemaFrame::vocabularies(const Location &location,
-                               const SchemaResolver &resolver) const
-    -> std::map<std::string, bool> {
-  return sourcemeta::core::vocabularies(resolver, location.base_dialect,
-                                        location.dialect);
-}
-
-auto SchemaFrame::uri(const Location &location,
-                      const Pointer &relative_schema_location) const
-    -> std::string {
-  return to_uri(location.relative_pointer.concat(relative_schema_location),
-                location.base)
-      .recompose();
-}
-
-auto SchemaFrame::traverse(const Location &location,
-                           const Pointer &relative_schema_location) const
-    -> const Location & {
-  const auto new_uri{this->uri(location, relative_schema_location)};
-  const auto static_match{
-      this->locations_.find({SchemaReferenceType::Static, new_uri})};
-  if (static_match != this->locations_.cend()) {
-    return static_match->second;
-  }
-
-  const auto dynamic_match{
-      this->locations_.find({SchemaReferenceType::Dynamic, new_uri})};
-  assert(dynamic_match != this->locations_.cend());
-  return dynamic_match->second;
-}
-
-auto SchemaFrame::traverse(const std::string &uri) const
-    -> std::optional<std::reference_wrapper<const Location>> {
-  const auto static_result{
-      this->locations_.find({SchemaReferenceType::Static, uri})};
-  if (static_result != this->locations_.cend()) {
-    return static_result->second;
-  }
-
-  const auto dynamic_result{
-      this->locations_.find({SchemaReferenceType::Dynamic, uri})};
-  if (dynamic_result != this->locations_.cend()) {
-    return dynamic_result->second;
-  }
-
-  return std::nullopt;
-}
-
-auto SchemaFrame::dereference(const Location &location,
-                              const Pointer &relative_schema_location) const
-    -> std::pair<SchemaReferenceType,
-                 std::optional<std::reference_wrapper<const Location>>> {
-  const auto effective_location{
-      location.pointer.concat({relative_schema_location})};
-  const auto maybe_reference_entry{this->references_.find(
-      {SchemaReferenceType::Static, effective_location})};
-  if (maybe_reference_entry == this->references_.cend()) {
-    // If static dereferencing failed but we know the reference
-    // is dynamic, then report so, but without a location, as by
-    // definition we can't know the destination until at runtime
-    if (this->references_.contains(
-            {SchemaReferenceType::Dynamic, effective_location})) {
-      return {SchemaReferenceType::Dynamic, std::nullopt};
-    }
-
-    return {SchemaReferenceType::Static, std::nullopt};
-  }
-
-  const auto destination{
-      this->locations_.find({SchemaReferenceType::Static,
-                             maybe_reference_entry->second.destination})};
-  assert(destination != this->locations_.cend());
-  return {SchemaReferenceType::Static, destination->second};
-}
-
-auto SchemaFrame::instance_locations(const Location &location) const -> const
-    typename Instances::mapped_type & {
-  return location.instance_locations;
-}
 
 auto unevaluated(const JSON &schema, const SchemaFrame &frame,
                  const SchemaWalker &walker, const SchemaResolver &resolver)
