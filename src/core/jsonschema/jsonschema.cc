@@ -567,7 +567,7 @@ auto sourcemeta::core::reference_visit(
     const std::optional<std::string> &default_dialect,
     const std::optional<std::string> &default_id) -> void {
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::References};
+      sourcemeta::core::SchemaFrame::Mode::Locations};
   frame.analyse(schema, walker, resolver, default_dialect, default_id);
   for (const auto &entry : frame.locations()) {
     if (entry.second.type !=

@@ -523,26 +523,28 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
       }
     }
 
-    // Handle metaschema references
-    const auto maybe_metaschema{
-        sourcemeta::core::dialect(entry.common.subschema.get())};
-    if (maybe_metaschema.has_value()) {
-      sourcemeta::core::URI metaschema{maybe_metaschema.value()};
-      const auto nearest_bases{
-          find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
-      if (!nearest_bases.first.empty()) {
-        metaschema.try_resolve_from(nearest_bases.first.front());
-      }
+    if (mode != SchemaFrame::Mode::Locations) {
+      // Handle metaschema references
+      const auto maybe_metaschema{
+          sourcemeta::core::dialect(entry.common.subschema.get())};
+      if (maybe_metaschema.has_value()) {
+        sourcemeta::core::URI metaschema{maybe_metaschema.value()};
+        const auto nearest_bases{
+            find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
+        if (!nearest_bases.first.empty()) {
+          metaschema.try_resolve_from(nearest_bases.first.front());
+        }
 
-      metaschema.canonicalize();
-      const std::string destination{metaschema.recompose()};
-      assert(entry.common.subschema.get().defines("$schema"));
-      references.insert_or_assign(
-          {SchemaReferenceType::Static,
-           entry.common.pointer.concat({"$schema"})},
-          SchemaFrame::ReferencesEntry{destination,
-                                       metaschema.recompose_without_fragment(),
-                                       fragment_string(metaschema)});
+        metaschema.canonicalize();
+        const std::string destination{metaschema.recompose()};
+        assert(entry.common.subschema.get().defines("$schema"));
+        references.insert_or_assign({SchemaReferenceType::Static,
+                                     entry.common.pointer.concat({"$schema"})},
+                                    SchemaFrame::ReferencesEntry{
+                                        destination,
+                                        metaschema.recompose_without_fragment(),
+                                        fragment_string(metaschema)});
+      }
     }
 
     // Handle schema anchors
@@ -719,6 +721,10 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
         }
       }
     }
+  }
+
+  if (mode == SchemaFrame::Mode::Locations) {
+    return;
   }
 
   // Resolve references after all framing was performed
