@@ -1329,7 +1329,8 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true_anonymous) {
 
   EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
       frame, "", "", "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {""}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema",
+      POINTER_TEMPLATES("", "/~I~"), std::nullopt);
 
   // References
 
@@ -1393,7 +1394,8 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true) {
   EXPECT_FRAME_DYNAMIC_2019_09_ANCHOR(
       frame, "https://www.sourcemeta.com/schema",
       "https://www.sourcemeta.com/schema", "",
-      "https://www.sourcemeta.com/schema", "", {""}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "", POINTER_TEMPLATES("", "/~I~"),
+      std::nullopt);
 
   // References
 
@@ -2031,7 +2033,7 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_with_ref) {
 
   // Anchors
   EXPECT_FRAME_STATIC_2019_09_ANCHOR(frame, "common#foo", "common",
-                                     "/$defs/foo", "common", "/$defs/foo", {},
+                                     "/$defs/foo", "common", "/$defs/foo", {""},
                                      "");
 
   // JSON Pointers

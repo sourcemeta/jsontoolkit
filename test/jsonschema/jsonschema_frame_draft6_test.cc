@@ -712,7 +712,7 @@ TEST(JSONSchema_frame_draft6, relative_base_uri_with_ref) {
   // Anchors
   EXPECT_FRAME_STATIC_DRAFT6_ANCHOR(frame, "common#foo", "common",
                                     "/definitions/foo", "common",
-                                    "/definitions/foo", {}, "");
+                                    "/definitions/foo", {""}, "");
 
   // JSON Pointers
 

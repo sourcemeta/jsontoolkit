@@ -154,7 +154,6 @@ public:
     Pointer relative_pointer;
     std::string dialect;
     std::string base_dialect;
-    std::vector<PointerTemplate> instance_locations;
   };
 
   /// A JSON Schema reference frame is a mapping of URIs to schema identifiers,
@@ -219,6 +218,7 @@ private:
 #endif
   Locations locations_;
   References references_;
+  Instances instances_;
 #if defined(_MSC_VER)
 #pragma warning(default : 4251 4275)
 #endif

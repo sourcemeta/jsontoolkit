@@ -1243,11 +1243,11 @@ TEST(JSONSchema_frame_2020_12,
   EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
       frame, "#test", "/$defs/test",
       "https://json-schema.org/draft/2020-12/schema",
-      "https://json-schema.org/draft/2020-12/schema", {}, "");
+      "https://json-schema.org/draft/2020-12/schema", {""}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_ANCHOR(
       frame, "#test", "/$defs/test",
       "https://json-schema.org/draft/2020-12/schema",
-      "https://json-schema.org/draft/2020-12/schema", {}, "");
+      "https://json-schema.org/draft/2020-12/schema", {""}, "");
 
   // Static frames
 
@@ -1311,11 +1311,11 @@ TEST(JSONSchema_frame_2020_12, dynamic_ref_to_single_dynamic_anchor_external) {
   EXPECT_ANONYMOUS_FRAME_DYNAMIC_ANCHOR(
       frame, "#test", "/$defs/test",
       "https://json-schema.org/draft/2020-12/schema",
-      "https://json-schema.org/draft/2020-12/schema", {}, "");
+      "https://json-schema.org/draft/2020-12/schema", {""}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_ANCHOR(
       frame, "#test", "/$defs/test",
       "https://json-schema.org/draft/2020-12/schema",
-      "https://json-schema.org/draft/2020-12/schema", {}, "");
+      "https://json-schema.org/draft/2020-12/schema", {""}, "");
 
   // Static frames
 
@@ -1682,7 +1682,7 @@ TEST(JSONSchema_frame_2020_12, relative_base_uri_with_ref) {
 
   // Anchors
   EXPECT_FRAME_STATIC_2020_12_ANCHOR(frame, "common#foo", "common",
-                                     "/$defs/foo", "common", "/$defs/foo", {},
+                                     "/$defs/foo", "common", "/$defs/foo", {""},
                                      "");
 
   // JSON Pointers
