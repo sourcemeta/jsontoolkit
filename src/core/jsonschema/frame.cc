@@ -258,6 +258,7 @@ struct InternalEntry {
 };
 
 static auto traverse_origin_instance_locations(
+    const sourcemeta::core::SchemaFrame::References &references,
     const sourcemeta::core::SchemaFrame::Locations &frame,
     const sourcemeta::core::SchemaFrame::Location &entry,
     const std::optional<sourcemeta::core::PointerTemplate> &current,
@@ -273,16 +274,56 @@ static auto traverse_origin_instance_locations(
     output.push_back(current.value());
   }
 
-  for (const auto &origin : entry.destination_of) {
-    const auto &subentry{frame.at(origin.get())};
-    // Avoid recursing to itself, in the case of circular subschemas
-    if (subentry.pointer == entry.pointer) {
+  // TODO: This whole algorithm gets simpler if let Pointer locations
+  // point to parents, as we can get the Pointer location from a reference
+
+  for (const auto &reference : references) {
+    if (reference.first.second.back().to_property() == "$schema") {
       continue;
     }
 
-    for (const auto &instance_location : subentry.instance_locations) {
-      traverse_origin_instance_locations(frame, subentry, instance_location,
-                                         output);
+    // Ignore if this is not a reference pointing to us
+    if (frame.contains({sourcemeta::core::SchemaReferenceType::Static,
+                        reference.second.destination})) {
+      if (frame
+              .at({sourcemeta::core::SchemaReferenceType::Static,
+                   reference.second.destination})
+              .pointer != entry.pointer) {
+        continue;
+      }
+    } else if (frame.contains({sourcemeta::core::SchemaReferenceType::Dynamic,
+                               reference.second.destination})) {
+      if (frame
+              .at({sourcemeta::core::SchemaReferenceType::Dynamic,
+                   reference.second.destination})
+              .pointer != entry.pointer) {
+        continue;
+      }
+    } else {
+      continue;
+    }
+
+    for (const auto &location : frame) {
+      if (location.second.type !=
+              sourcemeta::core::SchemaFrame::LocationType::Resource &&
+          location.second.type !=
+              sourcemeta::core::SchemaFrame::LocationType::Subschema) {
+        continue;
+      }
+
+      if (location.second.pointer != reference.first.second.initial()) {
+        continue;
+      }
+
+      // Avoid recursing to itself, in the case of circular subschemas
+      if (location.second.pointer == entry.pointer) {
+        continue;
+      }
+
+      for (const auto &instance_location : location.second.instance_locations) {
+        traverse_origin_instance_locations(references, frame, location.second,
+                                           instance_location, output);
+      }
     }
   }
 }
@@ -913,7 +954,8 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
 
     // Calculate alternative unresolved instance locations
     for (auto &entry : frame) {
-      traverse_origin_instance_locations(frame, entry.second, std::nullopt,
+      traverse_origin_instance_locations(references, frame, entry.second,
+                                         std::nullopt,
                                          entry.second.instance_locations);
     }
 

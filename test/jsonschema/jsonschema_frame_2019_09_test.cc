@@ -1599,7 +1599,8 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_nested_recursive_anchor_true) {
   EXPECT_FRAME_STATIC_2019_09_RESOURCE(
       frame, "https://www.sourcemeta.com/schema",
       "https://www.sourcemeta.com/schema", "",
-      "https://www.sourcemeta.com/schema", "", {""}, 0, std::nullopt);
+      "https://www.sourcemeta.com/schema", "", POINTER_TEMPLATES("", "/~I~"), 0,
+      std::nullopt);
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
