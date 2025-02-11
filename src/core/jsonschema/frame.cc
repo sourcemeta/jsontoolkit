@@ -294,7 +294,89 @@ struct CacheSubschema {
   const std::optional<sourcemeta::core::Pointer> parent;
 };
 
-auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode,
+// TODO: The fact this lookup algorithm is O(N) is the main
+// performance problem of framing
+static auto find_subschema_by_pointer(
+    const sourcemeta::core::SchemaFrame::Locations &locations,
+    const sourcemeta::core::Pointer &pointer)
+    -> std::optional<std::reference_wrapper<
+        const sourcemeta::core::SchemaFrame::LocationsEntry>> {
+  for (const auto &location : locations) {
+    if (location.second.type !=
+            sourcemeta::core::SchemaFrame::LocationType::Resource &&
+        location.second.type !=
+            sourcemeta::core::SchemaFrame::LocationType::Subschema) {
+      continue;
+    }
+
+    if (location.second.pointer == pointer) {
+      return location.second;
+    }
+  }
+
+  return std::nullopt;
+}
+
+static auto repopulate_instance_locations(
+    const std::map<sourcemeta::core::Pointer, CacheSubschema> &cache,
+    sourcemeta::core::SchemaFrame::Locations &locations,
+    const sourcemeta::core::Pointer &, const CacheSubschema &cache_entry,
+    // This is the output
+    const sourcemeta::core::Pointer &output,
+    const std::optional<sourcemeta::core::PointerTemplate> &accumulator)
+    -> void {
+  if (cache_entry.orphan
+      // TODO: Implement an .empty() method
+      && cache_entry.instance_location == sourcemeta::core::PointerTemplate{}) {
+    return;
+  } else if (cache_entry.parent.has_value()) {
+    const auto parent_location{
+        find_subschema_by_pointer(locations, cache_entry.parent.value())};
+    assert(parent_location.has_value());
+    for (const auto &parent_instance_location :
+         parent_location.value().get().instance_locations) {
+      // Guard against overly unrolling recursive schemas
+      if (parent_instance_location == cache_entry.instance_location) {
+        continue;
+      }
+
+      auto new_accumulator = cache_entry.relative_instance_location;
+      if (accumulator.has_value()) {
+        for (const auto &token : accumulator.value()) {
+          new_accumulator.emplace_back(token);
+        }
+      }
+
+      auto result = parent_instance_location;
+      for (const auto &token : new_accumulator) {
+        result.emplace_back(token);
+      }
+
+      // TODO: Look for the output locations once before calling this function
+      for (auto &location : locations) {
+        if (location.second.type !=
+                sourcemeta::core::SchemaFrame::LocationType::Resource &&
+            location.second.type !=
+                sourcemeta::core::SchemaFrame::LocationType::Subschema) {
+          continue;
+        }
+
+        if (location.second.pointer == output &&
+            std::find(location.second.instance_locations.cbegin(),
+                      location.second.instance_locations.cend(),
+                      result) == location.second.instance_locations.cend()) {
+          location.second.instance_locations.push_back(result);
+        }
+      }
+
+      repopulate_instance_locations(
+          cache, locations, cache_entry.parent.value(),
+          cache.at(cache_entry.parent.value()), output, new_accumulator);
+    }
+  }
+}
+
+auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                       const sourcemeta::core::JSON &schema,
                       sourcemeta::core::SchemaFrame::Locations &frame,
                       sourcemeta::core::SchemaFrame::References &references,
@@ -780,29 +862,37 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode,
     }
   }
 
-  // We only care about marking reference origins from/to resources and
-  // subschemas
+  if (mode == sourcemeta::core::SchemaFrame::Mode::Full) {
+    // We only care about marking reference origins from/to resources and
+    // subschemas
 
-  for (const auto &entry : frame) {
-    if (entry.second.type != SchemaFrame::LocationType::Resource) {
-      continue;
+    for (const auto &entry : frame) {
+      if (entry.second.type != SchemaFrame::LocationType::Resource) {
+        continue;
+      }
+
+      mark_reference_origins_from(frame, references, entry);
     }
 
-    mark_reference_origins_from(frame, references, entry);
-  }
+    for (const auto &entry : frame) {
+      if (entry.second.type != SchemaFrame::LocationType::Subschema) {
+        continue;
+      }
 
-  for (const auto &entry : frame) {
-    if (entry.second.type != SchemaFrame::LocationType::Subschema) {
-      continue;
+      mark_reference_origins_from(frame, references, entry);
     }
 
-    mark_reference_origins_from(frame, references, entry);
-  }
+    // Calculate alternative unresolved instance locations
+    for (auto &entry : frame) {
+      traverse_origin_instance_locations(frame, entry.second, std::nullopt,
+                                         entry.second.instance_locations);
+    }
 
-  // Calculate alternative unresolved instance locations
-  for (auto &entry : frame) {
-    traverse_origin_instance_locations(frame, entry.second, std::nullopt,
-                                       entry.second.instance_locations);
+    // This is guaranteed to be top-down
+    for (auto &entry : subschemas) {
+      repopulate_instance_locations(subschemas, frame, entry.first,
+                                    entry.second, entry.first, std::nullopt);
+    }
   }
 }
 
