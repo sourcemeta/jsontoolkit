@@ -172,50 +172,6 @@ static auto fragment_string(const sourcemeta::core::URI &uri)
   return std::nullopt;
 }
 
-static auto has_equivalent_origin(
-    const sourcemeta::core::SchemaFrame::Locations &frame,
-    const std::vector<std::reference_wrapper<
-        const sourcemeta::core::SchemaFrame::LocationKey>> &destination_of,
-    const sourcemeta::core::SchemaFrame::Locations::value_type &entry) -> bool {
-  return std::any_of(destination_of.cbegin(), destination_of.cend(),
-                     [&entry, &frame](const auto &destination) {
-                       return destination.get() == entry.first ||
-                              frame.at(destination.get()).pointer ==
-                                  entry.second.pointer;
-                     });
-}
-
-static auto mark_reference_origins_from(
-    sourcemeta::core::SchemaFrame::Locations &frame,
-    const sourcemeta::core::SchemaFrame::References &references,
-    const sourcemeta::core::SchemaFrame::Locations::value_type &entry) -> void {
-  for (const auto &reference : references) {
-    assert(!reference.first.second.empty() &&
-           reference.first.second.back().is_property());
-    assert(reference.first.second.back().to_property() == "$schema" ||
-           reference.first.second.back().to_property() == "$ref" ||
-           reference.first.second.back().to_property() == "$recursiveRef" ||
-           reference.first.second.back().to_property() == "$dynamicRef");
-    if (reference.first.second.initial() != entry.second.pointer) {
-      continue;
-    }
-
-    auto match{
-        frame.find({reference.first.first, reference.second.destination})};
-    if (match == frame.cend()) {
-      continue;
-    }
-
-    for (auto &subentry : frame) {
-      if (subentry.second.pointer == match->second.pointer &&
-          !has_equivalent_origin(frame, subentry.second.destination_of,
-                                 entry)) {
-        subentry.second.destination_of.emplace_back(entry.first);
-      }
-    }
-  }
-}
-
 static auto
 store(sourcemeta::core::SchemaFrame::Locations &frame,
       const sourcemeta::core::SchemaReferenceType type,
@@ -234,16 +190,17 @@ store(sourcemeta::core::SchemaFrame::Locations &frame,
   const auto canonical{sourcemeta::core::URI{uri}.canonicalize().recompose()};
   const auto inserted{frame
                           .insert({{type, canonical},
-                                   {parent,
-                                    entry_type,
-                                    root_id,
-                                    base_id,
-                                    pointer_from_root,
-                                    pointer_from_base,
-                                    dialect,
-                                    base_dialect,
-                                    instance_locations,
-                                    {}}})
+                                   {
+                                       parent,
+                                       entry_type,
+                                       root_id,
+                                       base_id,
+                                       pointer_from_root,
+                                       pointer_from_base,
+                                       dialect,
+                                       base_dialect,
+                                       instance_locations,
+                                   }})
                           .second};
   if (!ignore_if_present && !inserted) {
     std::ostringstream error;
@@ -933,25 +890,6 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
   }
 
   if (mode == sourcemeta::core::SchemaFrame::Mode::Instances) {
-    // We only care about marking reference origins from/to resources and
-    // subschemas
-
-    for (const auto &entry : frame) {
-      if (entry.second.type != SchemaFrame::LocationType::Resource) {
-        continue;
-      }
-
-      mark_reference_origins_from(frame, references, entry);
-    }
-
-    for (const auto &entry : frame) {
-      if (entry.second.type != SchemaFrame::LocationType::Subschema) {
-        continue;
-      }
-
-      mark_reference_origins_from(frame, references, entry);
-    }
-
     // Calculate alternative unresolved instance locations
     for (auto &entry : frame) {
       traverse_origin_instance_locations(references, frame, entry.second,
