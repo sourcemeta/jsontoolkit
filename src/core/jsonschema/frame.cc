@@ -1124,6 +1124,11 @@ auto SchemaFrame::dereference(const Location &location,
   return {SchemaReferenceType::Static, destination->second};
 }
 
+auto SchemaFrame::instance_locations(const Location &location) const -> const
+    typename Instances::mapped_type & {
+  return location.instance_locations;
+}
+
 auto unevaluated(const JSON &schema, const SchemaFrame &frame,
                  const SchemaWalker &walker, const SchemaResolver &resolver)
     -> SchemaUnevaluatedEntries {

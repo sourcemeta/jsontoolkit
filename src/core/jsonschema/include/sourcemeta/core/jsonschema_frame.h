@@ -163,6 +163,9 @@ public:
   using Locations =
       std::map<std::pair<SchemaReferenceType, std::string>, Location>;
 
+  /// A set of unresolved instance locations
+  using Instances = std::map<Pointer, std::vector<PointerTemplate>>;
+
   /// Analyse a given schema
   auto analyse(const JSON &schema, const SchemaWalker &walker,
                const SchemaResolver &resolver,
@@ -201,6 +204,10 @@ public:
               const Pointer &relative_schema_location = empty_pointer) const
       -> std::pair<SchemaReferenceType,
                    std::optional<std::reference_wrapper<const Location>>>;
+
+  /// Get the unresolved instance locations associated with a location entry
+  auto instance_locations(const Location &location) const -> const
+      typename Instances::mapped_type &;
 
 private:
   Mode mode_;

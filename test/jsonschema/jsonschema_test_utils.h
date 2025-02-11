@@ -62,10 +62,8 @@
   EXPECT_EQ(                                                                   \
       (frame).locations().at({(expected_type), (reference)}).relative_pointer, \
       TO_POINTER(expected_relative_pointer));                                  \
-  EXPECT_POINTER_TEMPLATES((frame)                                             \
-                               .locations()                                    \
-                               .at({(expected_type), (reference)})             \
-                               .instance_locations,                            \
+  EXPECT_POINTER_TEMPLATES((frame).instance_locations((frame).locations().at(  \
+                               {(expected_type), (reference)})),               \
                            expected_instance_locations);                       \
   EXPECT_OPTIONAL_POINTER(                                                     \
       (frame).locations().at({(expected_type), (reference)}).parent,           \
@@ -181,10 +179,8 @@
   EXPECT_EQ(                                                                   \
       (frame).locations().at({(expected_type), (reference)}).base_dialect,     \
       (expected_base_dialect));                                                \
-  EXPECT_POINTER_TEMPLATES((frame)                                             \
-                               .locations()                                    \
-                               .at({(expected_type), (reference)})             \
-                               .instance_locations,                            \
+  EXPECT_POINTER_TEMPLATES((frame).instance_locations((frame).locations().at(  \
+                               {(expected_type), (reference)})),               \
                            expected_instance_locations);                       \
   EXPECT_OPTIONAL_POINTER(                                                     \
       (frame).locations().at({(expected_type), (reference)}).parent,           \
