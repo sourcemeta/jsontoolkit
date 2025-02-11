@@ -147,8 +147,8 @@ public:
   /// Determines a location entry
   using LocationKey = std::pair<SchemaReferenceType, std::string>;
 
-  /// A single frame in a JSON Schema reference frame
-  struct LocationsEntry {
+  /// A location entry
+  struct Location {
     std::optional<Pointer> parent;
     LocationType type;
     std::optional<std::string> root;
@@ -157,9 +157,6 @@ public:
     Pointer relative_pointer;
     std::string dialect;
     std::string base_dialect;
-    // TODO: Support only populating these when needed, given
-    // how expensive they can be, by taking more options on the
-    // analyse method
     std::vector<PointerTemplate> instance_locations;
     std::vector<std::reference_wrapper<const LocationKey>> destination_of;
   };
@@ -167,7 +164,7 @@ public:
   /// A JSON Schema reference frame is a mapping of URIs to schema identifiers,
   /// JSON Pointers within the schema, and subschemas dialects. We call it
   /// reference frame as this mapping is essential for resolving references.
-  using Locations = std::map<LocationKey, LocationsEntry>;
+  using Locations = std::map<LocationKey, Location>;
 
   /// Analyse a given schema
   auto analyse(const JSON &schema, const SchemaWalker &walker,
@@ -183,30 +180,30 @@ public:
   auto references() const noexcept -> const References &;
 
   /// Get the vocabularies associated with a location entry
-  auto vocabularies(const LocationsEntry &location,
+  auto vocabularies(const Location &location,
                     const SchemaResolver &resolver) const
       -> std::map<std::string, bool>;
 
   /// Get the URI associated with a location entry
-  auto uri(const LocationsEntry &location,
+  auto uri(const Location &location,
            const Pointer &relative_schema_location = empty_pointer) const
       -> std::string;
 
   /// Get the location associated by traversing a pointer from another location
-  auto traverse(const LocationsEntry &location,
+  auto traverse(const Location &location,
                 const Pointer &relative_schema_location) const
-      -> const LocationsEntry &;
+      -> const Location &;
 
   /// Get the location associated with a given URI
   auto traverse(const std::string &uri) const
-      -> std::optional<std::reference_wrapper<const LocationsEntry>>;
+      -> std::optional<std::reference_wrapper<const Location>>;
 
   /// Try to dereference a reference location into its destination location
   auto
-  dereference(const LocationsEntry &location,
+  dereference(const Location &location,
               const Pointer &relative_schema_location = empty_pointer) const
       -> std::pair<SchemaReferenceType,
-                   std::optional<std::reference_wrapper<const LocationsEntry>>>;
+                   std::optional<std::reference_wrapper<const Location>>>;
 
 private:
   Mode mode_;

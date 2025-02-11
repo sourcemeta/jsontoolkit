@@ -259,7 +259,7 @@ struct InternalEntry {
 
 static auto traverse_origin_instance_locations(
     const sourcemeta::core::SchemaFrame::Locations &frame,
-    const sourcemeta::core::SchemaFrame::LocationsEntry &entry,
+    const sourcemeta::core::SchemaFrame::Location &entry,
     const std::optional<sourcemeta::core::PointerTemplate> &current,
     std::vector<sourcemeta::core::PointerTemplate> &output) -> void {
   // We only care about subschemas
@@ -299,8 +299,8 @@ struct CacheSubschema {
 static auto find_subschema_by_pointer(
     const sourcemeta::core::SchemaFrame::Locations &locations,
     const sourcemeta::core::Pointer &pointer)
-    -> std::optional<std::reference_wrapper<
-        const sourcemeta::core::SchemaFrame::LocationsEntry>> {
+    -> std::optional<
+        std::reference_wrapper<const sourcemeta::core::SchemaFrame::Location>> {
   for (const auto &location : locations) {
     if (location.second.type !=
             sourcemeta::core::SchemaFrame::LocationType::Resource &&
@@ -924,15 +924,12 @@ using namespace sourcemeta::core;
 
 // TODO: Extract all of this into a public utility to traverse
 // adjacent subschemas
-auto find_adjacent_dependencies(const JSON::String &current, const JSON &schema,
-                                const SchemaFrame &frame,
-                                const SchemaWalker &walker,
-                                const SchemaResolver &resolver,
-                                const std::set<JSON::String> &keywords,
-                                const SchemaFrame::LocationsEntry &root,
-                                const SchemaFrame::LocationsEntry &entry,
-                                const bool is_static,
-                                SchemaUnevaluatedEntry &result) -> void {
+auto find_adjacent_dependencies(
+    const JSON::String &current, const JSON &schema, const SchemaFrame &frame,
+    const SchemaWalker &walker, const SchemaResolver &resolver,
+    const std::set<JSON::String> &keywords, const SchemaFrame::Location &root,
+    const SchemaFrame::Location &entry, const bool is_static,
+    SchemaUnevaluatedEntry &result) -> void {
   const auto &subschema{get(schema, entry.pointer)};
   if (!subschema.is_object()) {
     return;
@@ -1066,14 +1063,14 @@ auto SchemaFrame::references() const noexcept -> const References & {
   return this->references_;
 }
 
-auto SchemaFrame::vocabularies(const LocationsEntry &location,
+auto SchemaFrame::vocabularies(const Location &location,
                                const SchemaResolver &resolver) const
     -> std::map<std::string, bool> {
   return sourcemeta::core::vocabularies(resolver, location.base_dialect,
                                         location.dialect);
 }
 
-auto SchemaFrame::uri(const LocationsEntry &location,
+auto SchemaFrame::uri(const Location &location,
                       const Pointer &relative_schema_location) const
     -> std::string {
   return to_uri(location.relative_pointer.concat(relative_schema_location),
@@ -1081,9 +1078,9 @@ auto SchemaFrame::uri(const LocationsEntry &location,
       .recompose();
 }
 
-auto SchemaFrame::traverse(const LocationsEntry &location,
+auto SchemaFrame::traverse(const Location &location,
                            const Pointer &relative_schema_location) const
-    -> const LocationsEntry & {
+    -> const Location & {
   const auto new_uri{this->uri(location, relative_schema_location)};
   const auto static_match{
       this->locations_.find({SchemaReferenceType::Static, new_uri})};
@@ -1098,7 +1095,7 @@ auto SchemaFrame::traverse(const LocationsEntry &location,
 }
 
 auto SchemaFrame::traverse(const std::string &uri) const
-    -> std::optional<std::reference_wrapper<const LocationsEntry>> {
+    -> std::optional<std::reference_wrapper<const Location>> {
   const auto static_result{
       this->locations_.find({SchemaReferenceType::Static, uri})};
   if (static_result != this->locations_.cend()) {
@@ -1114,10 +1111,10 @@ auto SchemaFrame::traverse(const std::string &uri) const
   return std::nullopt;
 }
 
-auto SchemaFrame::dereference(const LocationsEntry &location,
+auto SchemaFrame::dereference(const Location &location,
                               const Pointer &relative_schema_location) const
     -> std::pair<SchemaReferenceType,
-                 std::optional<std::reference_wrapper<const LocationsEntry>>> {
+                 std::optional<std::reference_wrapper<const Location>>> {
   const auto effective_location{
       location.pointer.concat({relative_schema_location})};
   const auto maybe_reference_entry{this->references_.find(
