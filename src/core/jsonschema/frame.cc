@@ -414,7 +414,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                                        default_id.has_value() &&
                                        root_id.value() != default_id.value()};
   if (has_explicit_different_id) {
-    if (mode == SchemaFrame::Mode::Full) {
+    if (mode == SchemaFrame::Mode::Instances) {
       store(frame, SchemaReferenceType::Static,
             SchemaFrame::LocationType::Resource, default_id.value(),
             root_id.value(), root_id.value(), sourcemeta::core::empty_pointer,
@@ -496,7 +496,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                     sourcemeta::core::empty_pointer,
                     entry.common.dialect.value(),
                     entry.common.base_dialect.value(), {}, entry.common.parent);
-            } else if (mode == SchemaFrame::Mode::Full) {
+            } else if (mode == SchemaFrame::Mode::Instances) {
               store(frame, SchemaReferenceType::Static,
                     SchemaFrame::LocationType::Resource, new_id, root_id,
                     new_id, entry.common.pointer,
@@ -552,7 +552,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
 
       std::vector<sourcemeta::core::PointerTemplate> instance_locations;
-      if (!entry.common.orphan && mode == SchemaFrame::Mode::Full) {
+      if (!entry.common.orphan && mode == SchemaFrame::Mode::Instances) {
         instance_locations.push_back(entry.common.instance_location);
       }
 
@@ -692,7 +692,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                   pointer.resolve_from(nearest_bases.second),
                   dialects.first.front(), current_base_dialect, {},
                   subschema->second.parent);
-          } else if (mode == SchemaFrame::Mode::Full) {
+          } else if (mode == SchemaFrame::Mode::Instances) {
             store(frame, SchemaReferenceType::Static,
                   SchemaFrame::LocationType::Subschema, result, root_id,
                   current_base, pointer,
@@ -885,7 +885,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
     }
   }
 
-  if (mode == sourcemeta::core::SchemaFrame::Mode::Full) {
+  if (mode == sourcemeta::core::SchemaFrame::Mode::Instances) {
     // We only care about marking reference origins from/to resources and
     // subschemas
 

@@ -6,14 +6,14 @@
 #include <sourcemeta/core/json.h>
 #include <sourcemeta/core/jsonschema.h>
 
-static void Schema_Frame_OMC_Full(benchmark::State &state) {
+static void Schema_Frame_OMC_Instances(benchmark::State &state) {
   const auto schema{
       sourcemeta::core::read_json(std::filesystem::path{CURRENT_DIRECTORY} /
                                   "schemas" / "2019_09_omc_json_v2.json")};
 
   for (auto _ : state) {
     sourcemeta::core::SchemaFrame frame{
-        sourcemeta::core::SchemaFrame::Mode::Full};
+        sourcemeta::core::SchemaFrame::Mode::Instances};
     frame.analyse(schema, sourcemeta::core::schema_official_walker,
                   sourcemeta::core::schema_official_resolver);
     benchmark::DoNotOptimize(frame);
@@ -47,6 +47,6 @@ static void Schema_Bundle_Meta_2020_12(benchmark::State &state) {
   }
 }
 
-BENCHMARK(Schema_Frame_OMC_Full);
+BENCHMARK(Schema_Frame_OMC_Instances);
 BENCHMARK(Schema_Frame_OMC_References);
 BENCHMARK(Schema_Bundle_Meta_2020_12);

@@ -48,7 +48,7 @@ namespace sourcemeta::core {
 /// })JSON");
 ///
 /// sourcemeta::core::SchemaFrame
-///   frame{sourcemeta::core::SchemaFrame::Mode::Full};
+///   frame{sourcemeta::core::SchemaFrame::Mode::References};
 ///
 /// frame.analyse(document,
 ///   sourcemeta::core::schema_official_walker,
@@ -105,7 +105,7 @@ class SOURCEMETA_CORE_JSONSCHEMA_EXPORT SchemaFrame {
 public:
   /// The mode of framing. More extensive analysis can be compute and memory
   /// intensive
-  enum class Mode { References, Full };
+  enum class Mode { References, Instances };
 
   SchemaFrame(const Mode mode) : mode_{mode} {}
 
@@ -260,7 +260,7 @@ using SchemaUnevaluatedEntries = std::map<std::string, SchemaUnevaluatedEntry>;
 /// })JSON");
 ///
 /// sourcemeta::core::SchemaFrame
-///   frame{sourcemeta::core::SchemaFrame::Mode::Full};
+///   frame{sourcemeta::core::SchemaFrame::Mode::References};
 ///
 /// frame.analyse(document,
 ///   sourcemeta::core::schema_official_walker,

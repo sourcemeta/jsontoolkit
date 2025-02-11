@@ -27,7 +27,7 @@ TEST(JSONSchema_frame, nested_schemas_mixing_dialects) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -190,7 +190,7 @@ TEST(JSONSchema_frame, no_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -277,7 +277,7 @@ TEST(JSONSchema_frame, no_id_with_default) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver,
                 "https://json-schema.org/draft/2020-12/schema",
@@ -331,7 +331,7 @@ TEST(JSONSchema_frame, anchor_on_absolute_subid) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -423,7 +423,7 @@ TEST(JSONSchema_frame, uri_iterators) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -470,7 +470,7 @@ TEST(JSONSchema_frame, no_refs) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -503,7 +503,7 @@ TEST(JSONSchema_frame, refs_with_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -559,7 +559,7 @@ TEST(JSONSchema_frame, refs_with_no_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -596,7 +596,7 @@ TEST(JSONSchema_frame, no_dynamic_ref_on_old_drafts) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -618,7 +618,7 @@ TEST(JSONSchema_frame, remote_refs) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -643,7 +643,7 @@ TEST(JSONSchema_frame, no_dialect) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::schema_official_resolver),
                sourcemeta::core::SchemaError);
