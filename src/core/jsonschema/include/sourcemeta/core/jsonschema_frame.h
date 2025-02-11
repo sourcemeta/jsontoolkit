@@ -47,7 +47,9 @@ namespace sourcemeta::core {
 ///   }
 /// })JSON");
 ///
-/// sourcemeta::core::SchemaFrame frame;
+/// sourcemeta::core::SchemaFrame
+///   frame{sourcemeta::core::SchemaFrame::Mode::Full};
+///
 /// frame.analyse(document,
 ///   sourcemeta::core::schema_official_walker,
 ///   sourcemeta::core::schema_official_resolver);
@@ -101,6 +103,12 @@ namespace sourcemeta::core {
 /// ```
 class SOURCEMETA_CORE_JSONSCHEMA_EXPORT SchemaFrame {
 public:
+  /// The mode of framing. More extensive analysis can be compute and memory
+  /// intensive
+  enum class Mode { Full };
+
+  SchemaFrame(const Mode mode) : mode_{mode} {}
+
   /// A single entry in a JSON Schema reference map
   struct ReferencesEntry {
     std::string destination;
@@ -201,6 +209,7 @@ public:
                    std::optional<std::reference_wrapper<const LocationsEntry>>>;
 
 private:
+  Mode mode_;
 // Exporting symbols that depends on the standard C++ library is considered
 // safe.
 // https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4275?view=msvc-170&redirectedfrom=MSDN
@@ -250,7 +259,9 @@ using SchemaUnevaluatedEntries = std::map<std::string, SchemaUnevaluatedEntry>;
 ///   "unevaluatedProperties": false
 /// })JSON");
 ///
-/// sourcemeta::core::SchemaFrame frame;
+/// sourcemeta::core::SchemaFrame
+///   frame{sourcemeta::core::SchemaFrame::Mode::Full};
+///
 /// frame.analyse(document,
 ///   sourcemeta::core::schema_official_walker,
 ///   sourcemeta::core::schema_official_resolver);

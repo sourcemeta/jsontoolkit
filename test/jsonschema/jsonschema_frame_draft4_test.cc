@@ -56,7 +56,8 @@ TEST(JSONSchema_frame_draft4, anonymous_with_nested_schema_resource) {
     "additionalProperties": { "id": "https://example.com" }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -103,7 +104,8 @@ TEST(JSONSchema_frame_draft4, empty_schema) {
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -139,7 +141,8 @@ TEST(JSONSchema_frame_draft4, empty_schema_trailing_hash) {
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -179,7 +182,8 @@ TEST(JSONSchema_frame_draft4, one_level_applicators_without_identifiers) {
     }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -237,7 +241,8 @@ TEST(JSONSchema_frame_draft4, one_level_applicators_with_identifiers) {
     "items": { "id": "../foo", "type": "string" }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -301,7 +306,8 @@ TEST(JSONSchema_frame_draft4, subschema_absolute_identifier) {
      }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -362,7 +368,8 @@ TEST(JSONSchema_frame_draft4, id_override) {
     "items": { "id": "schema" }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::schema_official_resolver),
                sourcemeta::core::SchemaError);
@@ -374,7 +381,8 @@ TEST(JSONSchema_frame_draft4, explicit_argument_id_same) {
     "$schema": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver,
                 "http://json-schema.org/draft-04/schema#",
@@ -420,7 +428,8 @@ TEST(JSONSchema_frame_draft4, explicit_argument_id_different) {
     }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver,
                 "http://json-schema.org/draft-04/schema#",
@@ -500,7 +509,8 @@ TEST(JSONSchema_frame_draft4, ref_metaschema) {
     "$ref": "http://json-schema.org/draft-04/schema#"
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -541,7 +551,8 @@ TEST(JSONSchema_frame_draft4, location_independent_identifier_anonymous) {
     }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -606,7 +617,8 @@ TEST(JSONSchema_frame_draft4, ref_with_id) {
     }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -656,7 +668,8 @@ TEST(JSONSchema_frame_draft4, relative_base_uri_without_ref) {
     "id": "common"
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -694,7 +707,8 @@ TEST(JSONSchema_frame_draft4, relative_base_uri_with_ref) {
     }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 

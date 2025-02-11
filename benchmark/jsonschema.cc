@@ -12,7 +12,8 @@ static void Schema_Frame_OMC_Full(benchmark::State &state) {
                                   "schemas" / "2019_09_omc_json_v2.json")};
 
   for (auto _ : state) {
-    sourcemeta::core::SchemaFrame frame;
+    sourcemeta::core::SchemaFrame frame{
+        sourcemeta::core::SchemaFrame::Mode::Full};
     frame.analyse(schema, sourcemeta::core::schema_official_walker,
                   sourcemeta::core::schema_official_resolver);
     benchmark::DoNotOptimize(frame);

@@ -49,7 +49,8 @@ public:
     std::map<std::string, std::pair<sourcemeta::core::JSON, std::string>>
         new_entries;
     for (const auto &[uri, schema] : this->registry) {
-      sourcemeta::core::SchemaFrame frame;
+      sourcemeta::core::SchemaFrame frame{
+          sourcemeta::core::SchemaFrame::Mode::Full};
       frame.analyse(schema.first, sourcemeta::core::schema_official_walker,
                     sourcemeta::core::schema_official_resolver, this->dialect,
                     uri);

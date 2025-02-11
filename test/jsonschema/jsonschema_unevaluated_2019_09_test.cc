@@ -15,7 +15,8 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_1) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -47,7 +48,8 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_2) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -95,7 +97,8 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_3) {
     }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -134,7 +137,8 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedProperties_4) {
     ]
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -165,7 +169,8 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_1) {
     "unevaluatedItems": false
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -200,7 +205,8 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_2) {
     }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -225,7 +231,8 @@ TEST(JSONSchema_unevaluated_2019_09, unevaluatedItems_3) {
     "unevaluatedItems": {"type": "string"}
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(

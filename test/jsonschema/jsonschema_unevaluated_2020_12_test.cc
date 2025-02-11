@@ -15,7 +15,8 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_1) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -47,7 +48,8 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_2) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -82,7 +84,8 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_3) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -120,7 +123,8 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_4) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -152,7 +156,8 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_5) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -180,7 +185,8 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_6) {
     "unevaluatedProperties": false
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -219,7 +225,8 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_7) {
     }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -260,7 +267,8 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_8) {
     }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -286,7 +294,8 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedItems_1) {
     "unevaluatedItems": false
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -314,7 +323,8 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedItems_2) {
     "unevaluatedItems": false
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(

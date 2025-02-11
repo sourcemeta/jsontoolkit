@@ -294,7 +294,8 @@ struct CacheSubschema {
   const std::optional<sourcemeta::core::Pointer> parent;
 };
 
-auto internal_analyse(const sourcemeta::core::JSON &schema,
+auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode,
+                      const sourcemeta::core::JSON &schema,
                       sourcemeta::core::SchemaFrame::Locations &frame,
                       sourcemeta::core::SchemaFrame::References &references,
                       const sourcemeta::core::SchemaWalker &walker,
@@ -940,8 +941,8 @@ auto SchemaFrame::analyse(const JSON &schema, const SchemaWalker &walker,
                           const std::optional<std::string> &default_dialect,
                           const std::optional<std::string> &default_id)
     -> void {
-  internal_analyse(schema, this->locations_, this->references_, walker,
-                   resolver, default_dialect, default_id);
+  internal_analyse(this->mode_, schema, this->locations_, this->references_,
+                   walker, resolver, default_dialect, default_id);
 }
 
 auto SchemaFrame::locations() const noexcept -> const Locations & {
