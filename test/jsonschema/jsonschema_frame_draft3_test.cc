@@ -46,7 +46,7 @@ TEST(JSONSchema_frame_draft3, anonymous_with_nested_schema_resource) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -94,7 +94,7 @@ TEST(JSONSchema_frame_draft3, empty_schema) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -131,7 +131,7 @@ TEST(JSONSchema_frame_draft3, empty_schema_trailing_slash) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -172,7 +172,7 @@ TEST(JSONSchema_frame_draft3, one_level_applicators_without_identifiers) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -231,7 +231,7 @@ TEST(JSONSchema_frame_draft3, one_level_applicators_with_identifiers) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -296,7 +296,7 @@ TEST(JSONSchema_frame_draft3, subschema_absolute_identifier) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -358,7 +358,7 @@ TEST(JSONSchema_frame_draft3, id_override) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   EXPECT_THROW(frame.analyse(document, sourcemeta::core::schema_official_walker,
                              sourcemeta::core::schema_official_resolver),
                sourcemeta::core::SchemaError);
@@ -371,7 +371,7 @@ TEST(JSONSchema_frame_draft3, explicit_argument_id_same) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver,
                 "http://json-schema.org/draft-03/schema#",
@@ -418,7 +418,7 @@ TEST(JSONSchema_frame_draft3, explicit_argument_id_different) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver,
                 "http://json-schema.org/draft-03/schema#",
@@ -499,7 +499,7 @@ TEST(JSONSchema_frame_draft3, ref_metaschema) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -535,7 +535,7 @@ TEST(JSONSchema_frame_draft3, ref_with_id) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 

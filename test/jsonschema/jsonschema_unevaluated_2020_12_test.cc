@@ -16,7 +16,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_1) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -49,7 +49,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_2) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -85,7 +85,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_3) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -124,7 +124,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_4) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -157,7 +157,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_5) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -186,7 +186,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_6) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -226,7 +226,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_7) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -268,7 +268,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedProperties_8) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -295,7 +295,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedItems_1) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
@@ -324,7 +324,7 @@ TEST(JSONSchema_unevaluated_2020_12, unevaluatedItems_2) {
   })JSON");
 
   sourcemeta::core::SchemaFrame frame{
-      sourcemeta::core::SchemaFrame::Mode::Full};
+      sourcemeta::core::SchemaFrame::Mode::Instances};
   frame.analyse(schema, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
   const auto result{sourcemeta::core::unevaluated(
