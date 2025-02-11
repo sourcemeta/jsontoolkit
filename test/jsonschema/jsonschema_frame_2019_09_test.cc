@@ -75,14 +75,15 @@ TEST(JSONSchema_frame_2019_09, anonymous_with_nested_schema_resource) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "https://example.com#/$id", "/additionalProperties/$id",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {},
+      "/additionalProperties");
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "", "", "https://json-schema.org/draft/2019-09/schema",
       "https://json-schema.org/draft/2019-09/schema", {""}, std::nullopt);
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/additionalProperties", "/additionalProperties",
       "https://json-schema.org/draft/2019-09/schema",
@@ -90,7 +91,8 @@ TEST(JSONSchema_frame_2019_09, anonymous_with_nested_schema_resource) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalProperties/$id", "/additionalProperties/$id",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {},
+      "/additionalProperties");
 
   // References
 
@@ -123,11 +125,11 @@ TEST(JSONSchema_frame_2019_09, empty_schema) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
 
   // References
 
@@ -160,11 +162,11 @@ TEST(JSONSchema_frame_2019_09, empty_schema_trailing_hash) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
 
   // References
 
@@ -201,11 +203,11 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/items",
       "https://www.sourcemeta.com/schema", "/items",
@@ -213,11 +215,11 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/items/type",
       "https://www.sourcemeta.com/schema", "/items/type",
-      "https://www.sourcemeta.com/schema", "/items/type", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/items/type", {}, "/items");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties",
       "https://www.sourcemeta.com/schema", "/properties",
-      "https://www.sourcemeta.com/schema", "/properties", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/properties", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/properties/foo",
       "https://www.sourcemeta.com/schema", "/properties/foo",
@@ -226,7 +228,7 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_without_identifiers) {
       frame, "https://www.sourcemeta.com/schema#/properties/foo/type",
       "https://www.sourcemeta.com/schema", "/properties/foo/type",
       "https://www.sourcemeta.com/schema", "/properties/foo/type", {},
-      std::nullopt);
+      "/properties/foo");
 
   // References
 
@@ -275,11 +277,11 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/test/qux#/$id",
       "https://www.sourcemeta.com/test/qux", "/$id",
-      "https://www.sourcemeta.com/test/qux", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/test/qux", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/test/qux#/$schema",
       "https://www.sourcemeta.com/test/qux", "/$schema",
-      "https://www.sourcemeta.com/test/qux", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/test/qux", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/test/qux#/items",
       "https://www.sourcemeta.com/test/qux", "/items",
@@ -287,15 +289,15 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/test/qux#/items/$id",
       "https://www.sourcemeta.com/test/qux", "/items/$id",
-      "https://www.sourcemeta.com/foo", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/$id", {}, "/items");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/test/qux#/items/type",
       "https://www.sourcemeta.com/test/qux", "/items/type",
-      "https://www.sourcemeta.com/foo", "/type", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/type", {}, "/items");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/test/qux#/properties",
       "https://www.sourcemeta.com/test/qux", "/properties",
-      "https://www.sourcemeta.com/test/qux", "/properties", {}, std::nullopt);
+      "https://www.sourcemeta.com/test/qux", "/properties", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/test/qux#/properties/foo",
       "https://www.sourcemeta.com/test/qux", "/properties/foo",
@@ -304,21 +306,21 @@ TEST(JSONSchema_frame_2019_09, one_level_applicators_with_identifiers) {
       frame, "https://www.sourcemeta.com/test/qux#/properties/foo/$anchor",
       "https://www.sourcemeta.com/test/qux", "/properties/foo/$anchor",
       "https://www.sourcemeta.com/test/qux", "/properties/foo/$anchor", {},
-      std::nullopt);
+      "/properties/foo");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/test/qux#/properties/foo/type",
       "https://www.sourcemeta.com/test/qux", "/properties/foo/type",
       "https://www.sourcemeta.com/test/qux", "/properties/foo/type", {},
-      std::nullopt);
+      "/properties/foo");
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/foo#/$id",
       "https://www.sourcemeta.com/test/qux", "/items/$id",
-      "https://www.sourcemeta.com/foo", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/$id", {}, "/items");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/foo#/type",
       "https://www.sourcemeta.com/test/qux", "/items/type",
-      "https://www.sourcemeta.com/foo", "/type", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/type", {}, "/items");
 
   // References
 
@@ -359,11 +361,11 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/items",
       "https://www.sourcemeta.com/schema", "/items",
@@ -371,19 +373,19 @@ TEST(JSONSchema_frame_2019_09, subschema_absolute_identifier) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/items/$id",
       "https://www.sourcemeta.com/schema", "/items/$id",
-      "https://www.sourcemeta.com/foo", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/$id", {}, "/items");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/items/type",
       "https://www.sourcemeta.com/schema", "/items/type",
-      "https://www.sourcemeta.com/foo", "/type", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/type", {}, "/items");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/foo#/$id",
       "https://www.sourcemeta.com/schema", "/items/$id",
-      "https://www.sourcemeta.com/foo", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/$id", {}, "/items");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/foo#/type",
       "https://www.sourcemeta.com/schema", "/items/type",
-      "https://www.sourcemeta.com/foo", "/type", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/type", {}, "/items");
 
   // References
 
@@ -460,15 +462,15 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties",
       "https://www.sourcemeta.com/schema", "/properties",
-      "https://www.sourcemeta.com/schema", "/properties", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/properties", {}, "");
 
   // foo
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
@@ -478,11 +480,11 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/foo/$id",
       "https://www.sourcemeta.com/schema", "/properties/foo/$id",
-      "https://www.sourcemeta.com/foo", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/$id", {}, "/properties/foo");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/foo/$anchor",
       "https://www.sourcemeta.com/schema", "/properties/foo/$anchor",
-      "https://www.sourcemeta.com/foo", "/$anchor", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/$anchor", {}, "/properties/foo");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/properties/foo/items",
       "https://www.sourcemeta.com/schema", "/properties/foo/items",
@@ -490,16 +492,16 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/foo/items/$id",
       "https://www.sourcemeta.com/schema", "/properties/foo/items/$id",
-      "https://www.sourcemeta.com/qux", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/qux", "/$id", {}, "/properties/foo/items");
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/foo#/$id",
       "https://www.sourcemeta.com/schema", "/properties/foo/$id",
-      "https://www.sourcemeta.com/foo", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/$id", {}, "/properties/foo");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/foo#/$anchor",
       "https://www.sourcemeta.com/schema", "/properties/foo/$anchor",
-      "https://www.sourcemeta.com/foo", "/$anchor", {}, std::nullopt);
+      "https://www.sourcemeta.com/foo", "/$anchor", {}, "/properties/foo");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/foo#/items",
       "https://www.sourcemeta.com/schema", "/properties/foo/items",
@@ -507,11 +509,11 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/foo#/items/$id",
       "https://www.sourcemeta.com/schema", "/properties/foo/items/$id",
-      "https://www.sourcemeta.com/qux", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/qux", "/$id", {}, "/properties/foo/items");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/qux#/$id",
       "https://www.sourcemeta.com/schema", "/properties/foo/items/$id",
-      "https://www.sourcemeta.com/qux", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/qux", "/$id", {}, "/properties/foo/items");
 
   // bar
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
@@ -521,11 +523,11 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/bar/$id",
       "https://www.sourcemeta.com/schema", "/properties/bar/$id",
-      "https://www.sourcemeta.com/bar", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/bar", "/$id", {}, "/properties/bar");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/bar#/$id",
       "https://www.sourcemeta.com/schema", "/properties/bar/$id",
-      "https://www.sourcemeta.com/bar", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/bar", "/$id", {}, "/properties/bar");
 
   // baz
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
@@ -535,7 +537,7 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/baz/$id",
       "https://www.sourcemeta.com/schema", "/properties/baz/$id",
-      "https://www.sourcemeta.com/baz", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/baz", "/$id", {}, "/properties/baz");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/properties/baz/items",
       "https://www.sourcemeta.com/schema", "/properties/baz/items",
@@ -544,12 +546,13 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/baz/items/$anchor",
       "https://www.sourcemeta.com/schema", "/properties/baz/items/$anchor",
-      "https://www.sourcemeta.com/baz", "/items/$anchor", {}, std::nullopt);
+      "https://www.sourcemeta.com/baz", "/items/$anchor", {},
+      "/properties/baz/items");
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/baz#/$id",
       "https://www.sourcemeta.com/schema", "/properties/baz/$id",
-      "https://www.sourcemeta.com/baz", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/baz", "/$id", {}, "/properties/baz");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/baz#/items",
       "https://www.sourcemeta.com/schema", "/properties/baz/items",
@@ -558,7 +561,8 @@ TEST(JSONSchema_frame_2019_09, nested_schemas) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/baz#/items/$anchor",
       "https://www.sourcemeta.com/schema", "/properties/baz/items/$anchor",
-      "https://www.sourcemeta.com/baz", "/items/$anchor", {}, std::nullopt);
+      "https://www.sourcemeta.com/baz", "/items/$anchor", {},
+      "/properties/baz/items");
 
   // References
 
@@ -622,11 +626,11 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_same) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
 
   // References
 
@@ -658,15 +662,15 @@ TEST(JSONSchema_frame_2019_09, anchor_top_level) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$anchor",
       "https://www.sourcemeta.com/schema", "/$anchor",
-      "https://www.sourcemeta.com/schema", "/$anchor", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$anchor", {}, "");
 
   // Anchors
 
@@ -757,11 +761,11 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id", "https://www.example.com",
-      "/$id", {}, std::nullopt);
+      "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.example.com", "/$schema", {}, std::nullopt);
+      "https://www.example.com", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/items",
       "https://www.sourcemeta.com/schema", "/items", "https://www.example.com",
@@ -769,11 +773,11 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/items/$anchor",
       "https://www.sourcemeta.com/schema", "/items/$anchor",
-      "https://www.example.com", "/items/$anchor", {}, std::nullopt);
+      "https://www.example.com", "/items/$anchor", {}, "/items");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties",
       "https://www.sourcemeta.com/schema", "/properties",
-      "https://www.example.com", "/properties", {}, std::nullopt);
+      "https://www.example.com", "/properties", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/properties/one",
       "https://www.sourcemeta.com/schema", "/properties/one",
@@ -781,11 +785,11 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/one/$id",
       "https://www.sourcemeta.com/schema", "/properties/one/$id",
-      "https://www.example.com/test", "/$id", {}, std::nullopt);
+      "https://www.example.com/test", "/$id", {}, "/properties/one");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/one/$anchor",
       "https://www.sourcemeta.com/schema", "/properties/one/$anchor",
-      "https://www.example.com/test", "/$anchor", {}, std::nullopt);
+      "https://www.example.com/test", "/$anchor", {}, "/properties/one");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/properties/two",
       "https://www.sourcemeta.com/schema", "/properties/two",
@@ -793,26 +797,27 @@ TEST(JSONSchema_frame_2019_09, explicit_argument_id_different) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/two/$id",
       "https://www.sourcemeta.com/schema", "/properties/two/$id",
-      "https://www.test.com", "/$id", {}, std::nullopt);
+      "https://www.test.com", "/$id", {}, "/properties/two");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/properties/two/$anchor",
       "https://www.sourcemeta.com/schema", "/properties/two/$anchor",
-      "https://www.test.com", "/$anchor", {}, std::nullopt);
+      "https://www.test.com", "/$anchor", {}, "/properties/two");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/test#/$id",
       "https://www.sourcemeta.com/schema", "/properties/one/$id",
-      "https://www.example.com/test", "/$id", {}, std::nullopt);
+      "https://www.example.com/test", "/$id", {}, "/properties/one");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/test#/$anchor",
       "https://www.sourcemeta.com/schema", "/properties/one/$anchor",
-      "https://www.example.com/test", "/$anchor", {}, std::nullopt);
+      "https://www.example.com/test", "/$anchor", {}, "/properties/one");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.test.com#/$id", "https://www.sourcemeta.com/schema",
-      "/properties/two/$id", "https://www.test.com", "/$id", {}, std::nullopt);
+      "/properties/two/$id", "https://www.test.com", "/$id", {},
+      "/properties/two");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.test.com#/$anchor",
       "https://www.sourcemeta.com/schema", "/properties/two/$anchor",
-      "https://www.test.com", "/$anchor", {}, std::nullopt);
+      "https://www.test.com", "/$anchor", {}, "/properties/two");
 
   // References
 
@@ -842,10 +847,10 @@ TEST(JSONSchema_frame_2019_09, ref_metaschema) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$ref", "/$ref", "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
 
   // References
 
@@ -913,16 +918,15 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_true_with_id) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$recursiveAnchor",
       "https://www.sourcemeta.com/schema", "/$recursiveAnchor",
-      "https://www.sourcemeta.com/schema", "/$recursiveAnchor", {},
-      std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$recursiveAnchor", {}, "");
 
   // References
 
@@ -959,16 +963,15 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_false_with_id) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$recursiveAnchor",
       "https://www.sourcemeta.com/schema", "/$recursiveAnchor",
-      "https://www.sourcemeta.com/schema", "/$recursiveAnchor", {},
-      std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$recursiveAnchor", {}, "");
 
   // References
 
@@ -1011,11 +1014,11 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_true_without_id) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/properties", "/properties",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/properties/foo", "/properties/foo",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1024,7 +1027,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_true_without_id) {
       frame, "#/properties/foo/$recursiveAnchor",
       "/properties/foo/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/properties/foo");
 
   // References
 
@@ -1060,11 +1063,11 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_false_without_id) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/properties", "/properties",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/properties/foo", "/properties/foo",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1073,7 +1076,7 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_false_without_id) {
       frame, "#/properties/foo/$recursiveAnchor",
       "/properties/foo/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/properties/foo");
 
   // References
 
@@ -1106,7 +1109,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor_anonymous) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/additionalItems", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1115,7 +1118,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor_anonymous) {
       frame, "#/additionalItems/$recursiveRef",
       "/additionalItems/$recursiveRef",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
 
   // References
 
@@ -1153,11 +1156,11 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/additionalItems",
       "https://www.sourcemeta.com/schema", "/additionalItems",
@@ -1166,7 +1169,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_no_recursive_anchor) {
       frame, "https://www.sourcemeta.com/schema#/additionalItems/$recursiveRef",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveRef",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveRef", {},
-      std::nullopt);
+      "/additionalItems");
 
   // References
 
@@ -1203,11 +1206,11 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false_anonymous) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$recursiveAnchor", "/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/additionalItems", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1216,7 +1219,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false_anonymous) {
       frame, "#/additionalItems/$recursiveRef",
       "/additionalItems/$recursiveRef",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
 
   // References
 
@@ -1255,16 +1258,15 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$recursiveAnchor",
       "https://www.sourcemeta.com/schema", "/$recursiveAnchor",
-      "https://www.sourcemeta.com/schema", "/$recursiveAnchor", {},
-      std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$recursiveAnchor", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/additionalItems",
       "https://www.sourcemeta.com/schema", "/additionalItems",
@@ -1273,7 +1275,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_false) {
       frame, "https://www.sourcemeta.com/schema#/additionalItems/$recursiveRef",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveRef",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveRef", {},
-      std::nullopt);
+      "/additionalItems");
 
   // References
 
@@ -1310,11 +1312,11 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true_anonymous) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$recursiveAnchor", "/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/additionalItems", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1323,7 +1325,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true_anonymous) {
       frame, "#/additionalItems/$recursiveRef",
       "/additionalItems/$recursiveRef",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
 
   // Anchors
 
@@ -1369,16 +1371,15 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$recursiveAnchor",
       "https://www.sourcemeta.com/schema", "/$recursiveAnchor",
-      "https://www.sourcemeta.com/schema", "/$recursiveAnchor", {},
-      std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$recursiveAnchor", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/additionalItems",
       "https://www.sourcemeta.com/schema", "/additionalItems",
@@ -1387,7 +1388,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_recursive_anchor_true) {
       frame, "https://www.sourcemeta.com/schema#/additionalItems/$recursiveRef",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveRef",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveRef", {},
-      std::nullopt);
+      "/additionalItems");
 
   // Anchors
 
@@ -1438,7 +1439,7 @@ TEST(JSONSchema_frame_2019_09,
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/additionalItems", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1446,32 +1447,32 @@ TEST(JSONSchema_frame_2019_09,
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$id", "/additionalItems/$id",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$recursiveAnchor",
       "/additionalItems/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$recursiveRef",
       "/additionalItems/$recursiveRef",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
 
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "https://example.com#/$id", "/additionalItems/$id",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "https://example.com#/$recursiveAnchor",
       "/additionalItems/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "https://example.com#/$recursiveRef",
       "/additionalItems/$recursiveRef",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
 
   // References
 
@@ -1514,7 +1515,7 @@ TEST(JSONSchema_frame_2019_09,
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/additionalItems", "/additionalItems",
       "https://json-schema.org/draft/2019-09/schema",
@@ -1522,32 +1523,32 @@ TEST(JSONSchema_frame_2019_09,
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$id", "/additionalItems/$id",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$recursiveAnchor",
       "/additionalItems/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$recursiveRef",
       "/additionalItems/$recursiveRef",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
 
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "https://example.com#/$id", "/additionalItems/$id",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "https://example.com#/$recursiveAnchor",
       "/additionalItems/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "https://example.com#/$recursiveRef",
       "/additionalItems/$recursiveRef",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
 
   // Anchors
 
@@ -1594,17 +1595,17 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_nested_recursive_anchor_true) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame,
       "https://www.sourcemeta.com/schema#/additionalItems/$recursiveAnchor",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveAnchor",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveAnchor",
-      {}, std::nullopt);
+      {}, "/additionalItems");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/additionalItems",
       "https://www.sourcemeta.com/schema", "/additionalItems",
@@ -1613,7 +1614,7 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_nested_recursive_anchor_true) {
       frame, "https://www.sourcemeta.com/schema#/additionalItems/$recursiveRef",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveRef",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveRef", {},
-      std::nullopt);
+      "/additionalItems");
 
   // Anchors
 
@@ -1665,16 +1666,15 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_multiple_recursive_anchor_true) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$recursiveAnchor",
       "https://www.sourcemeta.com/schema", "/$recursiveAnchor",
-      "https://www.sourcemeta.com/schema", "/$recursiveAnchor", {},
-      std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$recursiveAnchor", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/additionalItems",
       "https://www.sourcemeta.com/schema", "/additionalItems",
@@ -1682,31 +1682,33 @@ TEST(JSONSchema_frame_2019_09, recursive_ref_multiple_recursive_anchor_true) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/additionalItems/$id",
       "https://www.sourcemeta.com/schema", "/additionalItems/$id",
-      "https://www.sourcemeta.com/nested", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/nested", "/$id", {}, "/additionalItems");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame,
       "https://www.sourcemeta.com/schema#/additionalItems/$recursiveAnchor",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveAnchor",
       "https://www.sourcemeta.com/nested", "/$recursiveAnchor", {},
-      std::nullopt);
+      "/additionalItems");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/additionalItems/$recursiveRef",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveRef",
-      "https://www.sourcemeta.com/nested", "/$recursiveRef", {}, std::nullopt);
+      "https://www.sourcemeta.com/nested", "/$recursiveRef", {},
+      "/additionalItems");
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/nested#/$id",
       "https://www.sourcemeta.com/schema", "/additionalItems/$id",
-      "https://www.sourcemeta.com/nested", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/nested", "/$id", {}, "/additionalItems");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/nested#/$recursiveAnchor",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveAnchor",
       "https://www.sourcemeta.com/nested", "/$recursiveAnchor", {},
-      std::nullopt);
+      "/additionalItems");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/nested#/$recursiveRef",
       "https://www.sourcemeta.com/schema", "/additionalItems/$recursiveRef",
-      "https://www.sourcemeta.com/nested", "/$recursiveRef", {}, std::nullopt);
+      "https://www.sourcemeta.com/nested", "/$recursiveRef", {},
+      "/additionalItems");
 
   // Anchors
 
@@ -1795,11 +1797,11 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_on_relative_id) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$schema", "/$schema",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/$recursiveAnchor", "/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "");
 
   EXPECT_ANONYMOUS_FRAME_STATIC_SUBSCHEMA(
       frame, "#/additionalItems", "/additionalItems",
@@ -1808,16 +1810,16 @@ TEST(JSONSchema_frame_2019_09, recursive_anchor_on_relative_id) {
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$id", "/additionalItems/$id",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "#/additionalItems/$recursiveAnchor",
       "/additionalItems/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
   EXPECT_ANONYMOUS_FRAME_STATIC_POINTER(
       frame, "middle#/$recursiveAnchor", "/additionalItems/$recursiveAnchor",
       "https://json-schema.org/draft/2019-09/schema",
-      "https://json-schema.org/draft/2019-09/schema", {}, std::nullopt);
+      "https://json-schema.org/draft/2019-09/schema", {}, "/additionalItems");
 
   // Anchors
 
@@ -1865,19 +1867,19 @@ TEST(JSONSchema_frame_2019_09, ref_with_id) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$ref",
       "https://www.sourcemeta.com/schema", "/$ref",
-      "https://www.sourcemeta.com/schema", "/$ref", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$ref", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$defs",
       "https://www.sourcemeta.com/schema", "/$defs",
-      "https://www.sourcemeta.com/schema", "/$defs", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$defs", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/$defs/string",
       "https://www.sourcemeta.com/schema", "/$defs/string",
@@ -1886,7 +1888,7 @@ TEST(JSONSchema_frame_2019_09, ref_with_id) {
       frame, "https://www.sourcemeta.com/schema#/$defs/string/type",
       "https://www.sourcemeta.com/schema", "/$defs/string/type",
       "https://www.sourcemeta.com/schema", "/$defs/string/type", {},
-      std::nullopt);
+      "/$defs/string");
 
   // References
 
@@ -1928,19 +1930,19 @@ TEST(JSONSchema_frame_2019_09, ref_from_definitions) {
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$id",
       "https://www.sourcemeta.com/schema", "/$id",
-      "https://www.sourcemeta.com/schema", "/$id", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$schema",
       "https://www.sourcemeta.com/schema", "/$schema",
-      "https://www.sourcemeta.com/schema", "/$schema", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/$ref",
       "https://www.sourcemeta.com/schema", "/$ref",
-      "https://www.sourcemeta.com/schema", "/$ref", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/$ref", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(
       frame, "https://www.sourcemeta.com/schema#/definitions",
       "https://www.sourcemeta.com/schema", "/definitions",
-      "https://www.sourcemeta.com/schema", "/definitions", {}, std::nullopt);
+      "https://www.sourcemeta.com/schema", "/definitions", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/definitions/middle",
       "https://www.sourcemeta.com/schema", "/definitions/middle",
@@ -1949,7 +1951,7 @@ TEST(JSONSchema_frame_2019_09, ref_from_definitions) {
       frame, "https://www.sourcemeta.com/schema#/definitions/middle/$ref",
       "https://www.sourcemeta.com/schema", "/definitions/middle/$ref",
       "https://www.sourcemeta.com/schema", "/definitions/middle/$ref", {},
-      std::nullopt);
+      "/definitions/middle");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(
       frame, "https://www.sourcemeta.com/schema#/definitions/string",
       "https://www.sourcemeta.com/schema", "/definitions/string",
@@ -1958,7 +1960,7 @@ TEST(JSONSchema_frame_2019_09, ref_from_definitions) {
       frame, "https://www.sourcemeta.com/schema#/definitions/string/type",
       "https://www.sourcemeta.com/schema", "/definitions/string/type",
       "https://www.sourcemeta.com/schema", "/definitions/string/type", {},
-      std::nullopt);
+      "/definitions/string");
 
   // References
 
@@ -1995,10 +1997,9 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_without_ref) {
   // JSON Pointers
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$schema", "common",
-                                      "/$schema", "common", "/$schema", {},
-                                      std::nullopt);
+                                      "/$schema", "common", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$id", "common", "/$id",
-                                      "common", "/$id", {}, std::nullopt);
+                                      "common", "/$id", {}, "");
 
   // References
 
@@ -2039,28 +2040,25 @@ TEST(JSONSchema_frame_2019_09, relative_base_uri_with_ref) {
   // JSON Pointers
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$schema", "common",
-                                      "/$schema", "common", "/$schema", {},
-                                      std::nullopt);
+                                      "/$schema", "common", "/$schema", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$id", "common", "/$id",
-                                      "common", "/$id", {}, std::nullopt);
+                                      "common", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/allOf", "common",
-                                      "/allOf", "common", "/allOf", {},
-                                      std::nullopt);
+                                      "/allOf", "common", "/allOf", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(frame, "common#/allOf/0", "common",
                                         "/allOf/0", "common", "/allOf/0", {""},
                                         "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/allOf/0/$ref", "common",
                                       "/allOf/0/$ref", "common",
-                                      "/allOf/0/$ref", {}, std::nullopt);
+                                      "/allOf/0/$ref", {}, "/allOf/0");
   EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$defs", "common",
-                                      "/$defs", "common", "/$defs", {},
-                                      std::nullopt);
+                                      "/$defs", "common", "/$defs", {}, "");
   EXPECT_FRAME_STATIC_2019_09_SUBSCHEMA(frame, "common#/$defs/foo", "common",
                                         "/$defs/foo", "common", "/$defs/foo",
                                         {""}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "common#/$defs/foo/$anchor",
                                       "common", "/$defs/foo/$anchor", "common",
-                                      "/$defs/foo/$anchor", {}, std::nullopt);
+                                      "/$defs/foo/$anchor", {}, "/$defs/foo");
 
   // References
 
@@ -2091,10 +2089,9 @@ TEST(JSONSchema_frame_2019_09, relative_id_leading_slash) {
   // JSON Pointers
 
   EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "/base#/$id", "/base", "/$id",
-                                      "/base", "/$id", {}, std::nullopt);
+                                      "/base", "/$id", {}, "");
   EXPECT_FRAME_STATIC_2019_09_POINTER(frame, "/base#/$schema", "/base",
-                                      "/$schema", "/base", "/$schema", {},
-                                      std::nullopt);
+                                      "/$schema", "/base", "/$schema", {}, "");
 
   // References
 

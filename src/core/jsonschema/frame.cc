@@ -228,9 +228,6 @@ static auto traverse_origin_instance_locations(
     destination.push_back(current.value());
   }
 
-  // TODO: This whole algorithm gets simpler if let Pointer locations
-  // point to parents, as we can get the Pointer location from a reference
-
   for (const auto &reference : references) {
     if (reference.first.second.back().to_property() == "$schema") {
       continue;
@@ -258,13 +255,15 @@ static auto traverse_origin_instance_locations(
     }
 
     for (const auto &location : frame) {
+      // TODO: Simplify this logic given that Pointers now have parents. We can
+      // stop looking for .initial(), and if the location is not a subschema or
+      // resource, we just get the parent
       if (location.second.type !=
               sourcemeta::core::SchemaFrame::LocationType::Resource &&
           location.second.type !=
               sourcemeta::core::SchemaFrame::LocationType::Subschema) {
         continue;
       }
-
       if (location.second.pointer != reference.first.second.initial()) {
         continue;
       }
@@ -715,8 +714,7 @@ auto SchemaFrame::analyse(const JSON &schema, const SchemaWalker &walker,
                 current_base, pointer,
                 pointer.resolve_from(nearest_bases.second),
                 dialects.first.front(), current_base_dialect, {},
-                // TODO: Get real parent
-                std::nullopt);
+                dialects.second);
         }
       }
     }
@@ -900,6 +898,8 @@ auto SchemaFrame::analyse(const JSON &schema, const SchemaWalker &walker,
     }
 
     // This is guaranteed to be top-down
+    // TODO: Looping over the subschemas array means we never fix-up
+    // instance locations for anchors
     for (auto &entry : subschemas) {
       repopulate_instance_locations(
           this->instances_, subschemas, this->locations_, entry.first,
