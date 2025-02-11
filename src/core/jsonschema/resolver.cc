@@ -93,21 +93,23 @@ auto SchemaFlatFileResolver::add(
     const std::filesystem::path &path,
     const std::optional<std::string> &default_dialect,
     const std::optional<std::string> &default_id, const Reader &reader,
-    SchemaVisitorReference &&reference_visitor) -> const std::string & {
+    SchemaVisitorReference reference_visitor) -> const std::string & {
+
   const auto canonical{std::filesystem::weakly_canonical(path)};
   const auto schema{reader(canonical)};
   assert(sourcemeta::core::is_schema(schema));
+
   const auto identifier{sourcemeta::core::identify(
       schema, *this, SchemaIdentificationStrategy::Loose, default_dialect,
       default_id)};
+
   if (!identifier.has_value() && !default_id.has_value()) {
     std::ostringstream error;
     error << "Cannot identify schema: " << canonical.string();
     throw SchemaError(error.str());
   }
 
-  // Filesystems behave differently with regards to casing. To unify
-  // them, assume they are case-insensitive.
+  // Normalize identifier (case-insensitive comparison)
   const auto effective_identifier{to_lowercase(
       default_id.has_value() ? identifier.value_or(default_id.value())
                              : identifier.value())};
@@ -117,6 +119,7 @@ auto SchemaFlatFileResolver::add(
       Entry{canonical, default_dialect, effective_identifier, reader,
             reference_visitor ? std::move(reference_visitor)
                               : reference_visitor_relativize})};
+
   if (!result.second && result.first->second.path != canonical) {
     std::ostringstream error;
     error << "Cannot register the same identifier twice: "

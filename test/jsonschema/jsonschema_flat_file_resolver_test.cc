@@ -27,21 +27,24 @@ TEST(JSONSchema_SchemaFlatFileResolver, single_schema) {
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
-            sourcemeta::core::read_json(schema_path));
+            sourcemeta::core::read_json(schema_path, nullptr));
 }
 
 TEST(JSONSchema_SchemaFlatFileResolver, single_schema_custom_reader) {
   sourcemeta::core::SchemaFlatFileResolver resolver;
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} / "2020-12-id"};
+
   const auto &identifier{resolver.add(
       schema_path, std::nullopt, std::nullopt, [](const auto &path) {
-        return sourcemeta::core::read_json(path.string() + ".json");
+        return sourcemeta::core::read_json(path.string() + ".json", nullptr);
       })};
+
   EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
-  EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
-            sourcemeta::core::read_json(schema_path.string() + ".json"));
+  EXPECT_EQ(
+      resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
+      sourcemeta::core::read_json(schema_path.string() + ".json", nullptr));
 }
 
 TEST(JSONSchema_SchemaFlatFileResolver, single_schema_with_default_dialect) {
@@ -119,8 +122,9 @@ TEST(JSONSchema_SchemaFlatFileResolver, single_schema_idempotent) {
 
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
+
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
-            sourcemeta::core::read_json(schema_path));
+            sourcemeta::core::read_json(schema_path, nullptr));
 }
 
 TEST(JSONSchema_SchemaFlatFileResolver, duplicate_ids) {
@@ -146,9 +150,11 @@ TEST(JSONSchema_SchemaFlatFileResolver, no_embedded_resource) {
 
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-embedded.json").has_value());
+
   EXPECT_EQ(
       resolver("https://www.sourcemeta.com/2020-12-embedded.json").value(),
-      sourcemeta::core::read_json(schema_path));
+      sourcemeta::core::read_json(schema_path, nullptr));
+
   EXPECT_FALSE(resolver("https://www.sourcemeta.com/string").has_value());
 }
 
@@ -175,14 +181,16 @@ TEST(JSONSchema_SchemaFlatFileResolver, metaschema_out_of_order) {
 
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-meta-1.json").has_value());
+
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-meta-1.json").value(),
             sourcemeta::core::read_json(metaschema_path));
 
   EXPECT_TRUE(resolver("https://www.sourcemeta.com/2020-12-meta-1-schema.json")
                   .has_value());
+
   EXPECT_EQ(
       resolver("https://www.sourcemeta.com/2020-12-meta-1-schema.json").value(),
-      sourcemeta::core::read_json(schema_path));
+      sourcemeta::core::read_json(schema_path, nullptr));
 }
 
 TEST(JSONSchema_SchemaFlatFileResolver, iterators) {
@@ -212,11 +220,13 @@ TEST(JSONSchema_SchemaFlatFileResolver, reidentify) {
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id.json"};
   const auto &identifier{resolver.add(schema_path)};
+
   EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-id.json").has_value());
+
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-id.json").value(),
-            sourcemeta::core::read_json(schema_path));
+            sourcemeta::core::read_json(schema_path, nullptr));
 
   resolver.reidentify("https://www.sourcemeta.com/2020-12-id.json",
                       "https://example.com");
@@ -258,15 +268,19 @@ TEST(JSONSchema_SchemaFlatFileResolver, case_insensitive_lookup) {
   const auto schema_path{std::filesystem::path{SCHEMAS_PATH} /
                          "2020-12-id.json"};
   const auto &identifier{resolver.add(schema_path)};
+
   EXPECT_EQ(identifier, "https://www.sourcemeta.com/2020-12-id.json");
   EXPECT_TRUE(
       resolver("https://www.sourcemeta.com/2020-12-Id.json").has_value());
+
   EXPECT_EQ(resolver("https://www.sourcemeta.com/2020-12-Id.json").value(),
-            sourcemeta::core::read_json(schema_path));
+            sourcemeta::core::read_json(schema_path, nullptr));
+
   EXPECT_TRUE(
       resolver("https://WwW.SOURCEmeta.com/2020-12-Id.json").has_value());
+
   EXPECT_EQ(resolver("https://WwW.SOURCEmeta.com/2020-12-Id.json").value(),
-            sourcemeta::core::read_json(schema_path));
+            sourcemeta::core::read_json(schema_path, nullptr));
 }
 
 TEST(JSONSchema_SchemaFlatFileResolver, case_insensitive_insert) {
@@ -314,9 +328,10 @@ TEST(JSONSchema_SchemaFlatFileResolver, with_recursive_ref) {
             "https://www.sourcemeta.com/2019-09-recursive-ref.json");
   EXPECT_TRUE(resolver("https://www.sourcemeta.com/2019-09-recursive-ref.json")
                   .has_value());
+
   EXPECT_EQ(
       resolver("https://www.sourcemeta.com/2019-09-recursive-ref.json").value(),
-      expected);
+      sourcemeta::core::read_json(schema_path, nullptr));
 }
 
 TEST(JSONSchema_SchemaFlatFileResolver, with_absolute_references_reidentify) {
@@ -357,7 +372,10 @@ TEST(JSONSchema_SchemaFlatFileResolver, custom_reference_visitor) {
   })JSON");
 
   const auto &identifier{resolver.add(
-      schema_path, std::nullopt, std::nullopt, sourcemeta::core::read_json,
+      schema_path, std::nullopt, std::nullopt,
+      [](const std::filesystem::path &p) {
+        return sourcemeta::core::read_json(p, nullptr);
+      },
       [](sourcemeta::core::JSON &schema, const sourcemeta::core::URI &,
          const sourcemeta::core::JSON::String &,
          const sourcemeta::core::JSON::String &keyword,
