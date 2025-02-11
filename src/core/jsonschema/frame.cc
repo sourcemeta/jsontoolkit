@@ -414,11 +414,20 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                                        default_id.has_value() &&
                                        root_id.value() != default_id.value()};
   if (has_explicit_different_id) {
-    store(frame, SchemaReferenceType::Static,
-          SchemaFrame::LocationType::Resource, default_id.value(),
-          root_id.value(), root_id.value(), sourcemeta::core::empty_pointer,
-          sourcemeta::core::empty_pointer, root_dialect.value(),
-          root_base_dialect.value(), {{}}, std::nullopt);
+    if (mode == SchemaFrame::Mode::Full) {
+      store(frame, SchemaReferenceType::Static,
+            SchemaFrame::LocationType::Resource, default_id.value(),
+            root_id.value(), root_id.value(), sourcemeta::core::empty_pointer,
+            sourcemeta::core::empty_pointer, root_dialect.value(),
+            root_base_dialect.value(), {{}}, std::nullopt);
+    } else {
+      store(frame, SchemaReferenceType::Static,
+            SchemaFrame::LocationType::Resource, default_id.value(),
+            root_id.value(), root_id.value(), sourcemeta::core::empty_pointer,
+            sourcemeta::core::empty_pointer, root_dialect.value(),
+            root_base_dialect.value(), {}, std::nullopt);
+    }
+
     base_uris.insert({sourcemeta::core::empty_pointer, {default_id.value()}});
   }
 
@@ -487,7 +496,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                     sourcemeta::core::empty_pointer,
                     entry.common.dialect.value(),
                     entry.common.base_dialect.value(), {}, entry.common.parent);
-            } else {
+            } else if (mode == SchemaFrame::Mode::Full) {
               store(frame, SchemaReferenceType::Static,
                     SchemaFrame::LocationType::Resource, new_id, root_id,
                     new_id, entry.common.pointer,
@@ -495,6 +504,13 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                     entry.common.dialect.value(),
                     entry.common.base_dialect.value(),
                     {entry.common.instance_location}, entry.common.parent);
+            } else {
+              store(frame, SchemaReferenceType::Static,
+                    SchemaFrame::LocationType::Resource, new_id, root_id,
+                    new_id, entry.common.pointer,
+                    sourcemeta::core::empty_pointer,
+                    entry.common.dialect.value(),
+                    entry.common.base_dialect.value(), {}, entry.common.parent);
             }
           }
 
@@ -536,7 +552,7 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
           find_nearest_bases(base_uris, entry.common.pointer, entry.id)};
 
       std::vector<sourcemeta::core::PointerTemplate> instance_locations;
-      if (!entry.common.orphan) {
+      if (!entry.common.orphan && mode == SchemaFrame::Mode::Full) {
         instance_locations.push_back(entry.common.instance_location);
       }
 
@@ -676,13 +692,20 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
                   pointer.resolve_from(nearest_bases.second),
                   dialects.first.front(), current_base_dialect, {},
                   subschema->second.parent);
-          } else {
+          } else if (mode == SchemaFrame::Mode::Full) {
             store(frame, SchemaReferenceType::Static,
                   SchemaFrame::LocationType::Subschema, result, root_id,
                   current_base, pointer,
                   pointer.resolve_from(nearest_bases.second),
                   dialects.first.front(), current_base_dialect,
                   {subschema->second.instance_location},
+                  subschema->second.parent);
+          } else {
+            store(frame, SchemaReferenceType::Static,
+                  SchemaFrame::LocationType::Subschema, result, root_id,
+                  current_base, pointer,
+                  pointer.resolve_from(nearest_bases.second),
+                  dialects.first.front(), current_base_dialect, {},
                   subschema->second.parent);
           }
         } else {
