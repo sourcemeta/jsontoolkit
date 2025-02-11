@@ -10,8 +10,6 @@
 #include <utility>    // std::pair, std::move
 #include <vector>     // std::vector
 
-#include <iostream> // TODO DEBUG
-
 enum class AnchorType : std::uint8_t { Static, Dynamic, All };
 
 static auto find_anchors(const sourcemeta::core::JSON &schema,
@@ -322,61 +320,25 @@ static auto find_subschema_by_pointer(
 static auto repopulate_instance_locations(
     const std::map<sourcemeta::core::Pointer, CacheSubschema> &cache,
     sourcemeta::core::SchemaFrame::Locations &locations,
-#ifndef NDEBUG
-    const sourcemeta::core::Pointer &pointer,
-#else
-    const sourcemeta::core::Pointer &,
-#endif
-    const CacheSubschema &cache_entry,
+    const sourcemeta::core::Pointer &, const CacheSubschema &cache_entry,
     // This is the output
     const sourcemeta::core::Pointer &output,
     const std::optional<sourcemeta::core::PointerTemplate> &accumulator)
     -> void {
-#ifndef NDEBUG
-  std::cerr << "\n=== REPOPULATING: ";
-  sourcemeta::core::stringify(pointer, std::cerr);
-  std::cerr << "\n";
-  std::cerr << "  RELATIVE INSTANCE LOCATION: ";
-  sourcemeta::core::stringify(cache_entry.relative_instance_location,
-                              std::cerr);
-  std::cerr << "\n";
-
-  std::cerr << "  @@@@@@@ ANALYZING...\n";
-#endif
-
   if (cache_entry.orphan
       // TODO: Implement an .empty() method
       && cache_entry.instance_location == sourcemeta::core::PointerTemplate{}) {
-#ifndef NDEBUG
-    std::cerr << "  TOP LEVEL ORPHAN, NOTHING TO PUSH\n";
-#endif
+    return;
   } else if (cache_entry.parent.has_value()) {
-#ifndef NDEBUG
-    std::cerr << "  FOUND PARENT: ";
-    sourcemeta::core::stringify(cache_entry.parent.value(), std::cerr);
-    std::cerr << "\n";
-#endif
-
     const auto parent_location{
         find_subschema_by_pointer(locations, cache_entry.parent.value())};
     assert(parent_location.has_value());
-#ifndef NDEBUG
-    std::cerr << "  @@ NUMBER OF PARENT INSTANCE LOCATIONS: "
-              << parent_location.value().get().instance_locations.size()
-              << "\n";
-#endif
     for (const auto &parent_instance_location :
          parent_location.value().get().instance_locations) {
       // Guard against overly unrolling recursive schemas
       if (parent_instance_location == cache_entry.instance_location) {
         continue;
       }
-
-#ifndef NDEBUG
-      std::cerr << "     PARENT INSTANCE LOCATION: ";
-      sourcemeta::core::stringify(parent_instance_location, std::cerr);
-      std::cerr << "\n";
-#endif
 
       auto new_accumulator = cache_entry.relative_instance_location;
       if (accumulator.has_value()) {
@@ -403,31 +365,14 @@ static auto repopulate_instance_locations(
             std::find(location.second.instance_locations.cbegin(),
                       location.second.instance_locations.cend(),
                       result) == location.second.instance_locations.cend()) {
-#ifndef NDEBUG
-          std::cerr << "     PUSHING NEW INSTANCE LOCATION: ";
-          sourcemeta::core::stringify(result, std::cerr);
-          std::cerr << "\n        TO LOCATION AT: " << location.first.second
-                    << "\n";
-#endif
           location.second.instance_locations.push_back(result);
         }
       }
-
-#ifndef NDEBUG
-      std::cerr << "     NEW RELATIVE ACCUMULATOR: ";
-      sourcemeta::core::stringify(new_accumulator, std::cerr);
-      std::cerr << "\n";
-#endif
 
       repopulate_instance_locations(
           cache, locations, cache_entry.parent.value(),
           cache.at(cache_entry.parent.value()), output, new_accumulator);
     }
-
-  } else {
-#ifndef NDEBUG
-    std::cerr << "  NO PARENT, IGNORING\n";
-#endif
   }
 }
 
