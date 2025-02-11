@@ -10,6 +10,8 @@
 #include <utility>    // std::pair, std::move
 #include <vector>     // std::vector
 
+#include <iostream> // TODO DEBUG
+
 enum class AnchorType : std::uint8_t { Static, Dynamic, All };
 
 static auto find_anchors(const sourcemeta::core::JSON &schema,
@@ -294,8 +296,142 @@ struct CacheSubschema {
   const std::optional<sourcemeta::core::Pointer> parent;
 };
 
-auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode,
-                      const sourcemeta::core::JSON &schema,
+// TODO: The fact this lookup algorithm is O(N) is the main
+// performance problem of framing
+static auto find_subschema_by_pointer(
+    const sourcemeta::core::SchemaFrame::Locations &locations,
+    const sourcemeta::core::Pointer &pointer)
+    -> std::optional<std::reference_wrapper<
+        const sourcemeta::core::SchemaFrame::LocationsEntry>> {
+  for (const auto &location : locations) {
+    if (location.second.type !=
+            sourcemeta::core::SchemaFrame::LocationType::Resource &&
+        location.second.type !=
+            sourcemeta::core::SchemaFrame::LocationType::Subschema) {
+      continue;
+    }
+
+    if (location.second.pointer == pointer) {
+      return location.second;
+    }
+  }
+
+  return std::nullopt;
+}
+
+static auto repopulate_instance_locations(
+    const std::map<sourcemeta::core::Pointer, CacheSubschema> &cache,
+    sourcemeta::core::SchemaFrame::Locations &locations,
+#ifndef NDEBUG
+    const sourcemeta::core::Pointer &pointer,
+#else
+    const sourcemeta::core::Pointer &,
+#endif
+    const CacheSubschema &cache_entry,
+    // This is the output
+    const sourcemeta::core::Pointer &output,
+    const std::optional<sourcemeta::core::PointerTemplate> &accumulator)
+    -> void {
+#ifndef NDEBUG
+  std::cerr << "\n=== REPOPULATING: ";
+  sourcemeta::core::stringify(pointer, std::cerr);
+  std::cerr << "\n";
+  std::cerr << "  RELATIVE INSTANCE LOCATION: ";
+  sourcemeta::core::stringify(cache_entry.relative_instance_location,
+                              std::cerr);
+  std::cerr << "\n";
+
+  std::cerr << "  @@@@@@@ ANALYZING...\n";
+#endif
+
+  if (cache_entry.orphan
+      // TODO: Implement an .empty() method
+      && cache_entry.instance_location == sourcemeta::core::PointerTemplate{}) {
+#ifndef NDEBUG
+    std::cerr << "  TOP LEVEL ORPHAN, NOTHING TO PUSH\n";
+#endif
+  } else if (cache_entry.parent.has_value()) {
+#ifndef NDEBUG
+    std::cerr << "  FOUND PARENT: ";
+    sourcemeta::core::stringify(cache_entry.parent.value(), std::cerr);
+    std::cerr << "\n";
+#endif
+
+    const auto parent_location{
+        find_subschema_by_pointer(locations, cache_entry.parent.value())};
+    assert(parent_location.has_value());
+#ifndef NDEBUG
+    std::cerr << "  @@ NUMBER OF PARENT INSTANCE LOCATIONS: "
+              << parent_location.value().get().instance_locations.size()
+              << "\n";
+#endif
+    for (const auto &parent_instance_location :
+         parent_location.value().get().instance_locations) {
+      // Guard against overly unrolling recursive schemas
+      if (parent_instance_location == cache_entry.instance_location) {
+        continue;
+      }
+
+#ifndef NDEBUG
+      std::cerr << "     PARENT INSTANCE LOCATION: ";
+      sourcemeta::core::stringify(parent_instance_location, std::cerr);
+      std::cerr << "\n";
+#endif
+
+      auto new_accumulator = cache_entry.relative_instance_location;
+      if (accumulator.has_value()) {
+        for (const auto &token : accumulator.value()) {
+          new_accumulator.emplace_back(token);
+        }
+      }
+
+      auto result = parent_instance_location;
+      for (const auto &token : new_accumulator) {
+        result.emplace_back(token);
+      }
+
+      // TODO: Look for the output locations once before calling this function
+      for (auto &location : locations) {
+        if (location.second.type !=
+                sourcemeta::core::SchemaFrame::LocationType::Resource &&
+            location.second.type !=
+                sourcemeta::core::SchemaFrame::LocationType::Subschema) {
+          continue;
+        }
+
+        if (location.second.pointer == output &&
+            std::find(location.second.instance_locations.cbegin(),
+                      location.second.instance_locations.cend(),
+                      result) == location.second.instance_locations.cend()) {
+#ifndef NDEBUG
+          std::cerr << "     PUSHING NEW INSTANCE LOCATION: ";
+          sourcemeta::core::stringify(result, std::cerr);
+          std::cerr << "\n        TO LOCATION AT: " << location.first.second
+                    << "\n";
+#endif
+          location.second.instance_locations.push_back(result);
+        }
+      }
+
+#ifndef NDEBUG
+      std::cerr << "     NEW RELATIVE ACCUMULATOR: ";
+      sourcemeta::core::stringify(new_accumulator, std::cerr);
+      std::cerr << "\n";
+#endif
+
+      repopulate_instance_locations(
+          cache, locations, cache_entry.parent.value(),
+          cache.at(cache_entry.parent.value()), output, new_accumulator);
+    }
+
+  } else {
+#ifndef NDEBUG
+    std::cerr << "  NO PARENT, IGNORING\n";
+#endif
+  }
+}
+
+auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode, const sourcemeta::core::JSON &schema,
                       sourcemeta::core::SchemaFrame::Locations &frame,
                       sourcemeta::core::SchemaFrame::References &references,
                       const sourcemeta::core::SchemaWalker &walker,
@@ -805,65 +941,10 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode,
                                        entry.second.instance_locations);
   }
 
-  // Do another pass to rebase orphan schemas that have parents now after
-  // traversing origin instance locations
-  // TODO: This is horribly slow
-  for (const auto &subschema : subschemas) {
-    if (!subschema.second.orphan) {
-      continue;
-    }
-
-    // As orphan subschemas can't be at the top
-    assert(!subschema.first.empty());
-
-    // TODO: If we had a map, indexed by pointers, to find `instance_locations`
-    // and `destination_of` for a given schema, we wouldn't need to loop over
-    // locations every time here, plus we would also nicely deal with multiple
-    // names for the same location
-
-    for (const auto &entry : frame) {
-      // We only care about subschemas
-      if (entry.second.type != SchemaFrame::LocationType::Resource &&
-          entry.second.type != SchemaFrame::LocationType::Subschema) {
-        continue;
-      }
-
-      if (entry.second.pointer != subschema.first ||
-          entry.second.instance_locations.empty()) {
-        continue;
-      }
-
-      for (const auto &child :
-           SchemaIteratorFlat{get(schema, entry.second.pointer), walker,
-                              resolver, entry.second.dialect}) {
-        auto effective_pointer{entry.second.pointer};
-        effective_pointer.push_back(child.pointer);
-
-        for (auto &subentry : frame) {
-          if (subentry.second.type != SchemaFrame::LocationType::Resource &&
-              subentry.second.type != SchemaFrame::LocationType::Subschema) {
-            continue;
-          }
-
-          if (subentry.second.pointer == effective_pointer) {
-            const auto &child_schema{subschemas.at(subentry.second.pointer)};
-            for (const auto &instance_location :
-                 entry.second.instance_locations) {
-              auto copy = child_schema.instance_location;
-              auto new_instance_location{
-                  instance_location.concat(std::move(copy))};
-              if (std::find(subentry.second.instance_locations.cbegin(),
-                            subentry.second.instance_locations.cend(),
-                            new_instance_location) ==
-                  subentry.second.instance_locations.cend()) {
-                subentry.second.instance_locations.emplace_back(
-                    std::move(new_instance_location));
-              }
-            }
-          }
-        }
-      }
-    }
+  // This is guaranteed to be top-down
+  for (auto &entry : subschemas) {
+    repopulate_instance_locations(subschemas, frame, entry.first, entry.second,
+                                  entry.first, std::nullopt);
   }
 }
 
