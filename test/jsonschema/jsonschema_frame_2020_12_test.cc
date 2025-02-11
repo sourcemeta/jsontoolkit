@@ -1949,7 +1949,8 @@ TEST(JSONSchema_frame_2020_12, property_ref_defs) {
     }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
@@ -2057,7 +2058,8 @@ TEST(JSONSchema_frame_2020_12, property_cross_ref) {
     }
   })JSON");
 
-  sourcemeta::core::SchemaFrame frame;
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Full};
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 

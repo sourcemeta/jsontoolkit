@@ -376,7 +376,8 @@ static auto repopulate_instance_locations(
   }
 }
 
-auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode, const sourcemeta::core::JSON &schema,
+auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode mode,
+                      const sourcemeta::core::JSON &schema,
                       sourcemeta::core::SchemaFrame::Locations &frame,
                       sourcemeta::core::SchemaFrame::References &references,
                       const sourcemeta::core::SchemaWalker &walker,
@@ -861,35 +862,37 @@ auto internal_analyse(const sourcemeta::core::SchemaFrame::Mode, const sourcemet
     }
   }
 
-  // We only care about marking reference origins from/to resources and
-  // subschemas
+  if (mode == sourcemeta::core::SchemaFrame::Mode::Full) {
+    // We only care about marking reference origins from/to resources and
+    // subschemas
 
-  for (const auto &entry : frame) {
-    if (entry.second.type != SchemaFrame::LocationType::Resource) {
-      continue;
+    for (const auto &entry : frame) {
+      if (entry.second.type != SchemaFrame::LocationType::Resource) {
+        continue;
+      }
+
+      mark_reference_origins_from(frame, references, entry);
     }
 
-    mark_reference_origins_from(frame, references, entry);
-  }
+    for (const auto &entry : frame) {
+      if (entry.second.type != SchemaFrame::LocationType::Subschema) {
+        continue;
+      }
 
-  for (const auto &entry : frame) {
-    if (entry.second.type != SchemaFrame::LocationType::Subschema) {
-      continue;
+      mark_reference_origins_from(frame, references, entry);
     }
 
-    mark_reference_origins_from(frame, references, entry);
-  }
+    // Calculate alternative unresolved instance locations
+    for (auto &entry : frame) {
+      traverse_origin_instance_locations(frame, entry.second, std::nullopt,
+                                         entry.second.instance_locations);
+    }
 
-  // Calculate alternative unresolved instance locations
-  for (auto &entry : frame) {
-    traverse_origin_instance_locations(frame, entry.second, std::nullopt,
-                                       entry.second.instance_locations);
-  }
-
-  // This is guaranteed to be top-down
-  for (auto &entry : subschemas) {
-    repopulate_instance_locations(subschemas, frame, entry.first, entry.second,
-                                  entry.first, std::nullopt);
+    // This is guaranteed to be top-down
+    for (auto &entry : subschemas) {
+      repopulate_instance_locations(subschemas, frame, entry.first,
+                                    entry.second, entry.first, std::nullopt);
+    }
   }
 }
 
