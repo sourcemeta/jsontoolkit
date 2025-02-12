@@ -165,7 +165,7 @@ TEST(JSONSchema_official_walker_2019_09, applicator_not) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("not", VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlaceOther);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlaceNegate);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");

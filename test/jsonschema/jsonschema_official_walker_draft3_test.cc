@@ -318,7 +318,8 @@ TEST(JSONSchema_official_walker_draft3, divisibleBy) {
 TEST(JSONSchema_official_walker_draft3, disallow) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("disallow", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlaceSome);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorElementsInPlaceSomeNegate);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-03/schema#");

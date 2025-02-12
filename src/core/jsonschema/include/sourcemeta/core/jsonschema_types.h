@@ -137,6 +137,12 @@ enum class SchemaKeywordType : std::uint8_t {
   /// elements apply.
   ApplicatorElementsInPlaceSome,
   /// The JSON Schema keyword is an applicator that potentially
+  /// takes an array of potentially JSON Schema definitions
+  /// as an argument without affecting the instance location
+  /// The instance does not traverse, and only some of the
+  /// elements apply in negated form.
+  ApplicatorElementsInPlaceSomeNegate,
+  /// The JSON Schema keyword is an applicator that potentially
   /// takes a JSON Schema definition as an argument without affecting the
   /// instance location.
   /// The instance does not traverse, and only applies some of the times.
@@ -146,6 +152,11 @@ enum class SchemaKeywordType : std::uint8_t {
   /// special rules.
   /// The instance does not traverse
   ApplicatorValueInPlaceOther,
+  /// The JSON Schema keyword is an applicator that potentially
+  /// takes a JSON Schema definition as an argument but the instance is expected
+  /// to not validate against it.
+  /// The instance does not traverse
+  ApplicatorValueInPlaceNegate,
 };
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop

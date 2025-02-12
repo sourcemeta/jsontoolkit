@@ -173,7 +173,7 @@ TEST(JSONSchema_official_walker_2020_12, applicator_not) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("not", VOCABULARIES_2020_12_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlaceOther);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlaceNegate);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2020-12/vocab/applicator");
