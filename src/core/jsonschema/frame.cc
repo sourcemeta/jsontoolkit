@@ -223,7 +223,9 @@ static auto traverse_origin_instance_locations(
   }
 
   // Here, we want to get all the pointers of the subschemas that reference the
-  // current desired location
+  // current desired location.
+  // TODO: This is currently very slow, as we need to loop on every reference
+  // to brute force whether it points to the desired entry or not
 
   for (const auto &reference : frame.references()) {
     const auto subschema_pointer{reference.first.second.initial()};
@@ -856,12 +858,16 @@ auto SchemaFrame::analyse(const JSON &schema, const SchemaWalker &walker,
     }
 
     // This is guaranteed to be top-down
-    // TODO: Looping over the subschemas array means we never fix-up
-    // instance locations for anchors
-    for (auto &entry : subschemas) {
-      repopulate_instance_locations(
-          *this, this->instances_, subschemas, entry.first, entry.second,
-          this->instances_[entry.first], std::nullopt);
+    for (auto &entry : this->locations_) {
+      if (entry.second.type == SchemaFrame::LocationType::Pointer) {
+        continue;
+      }
+
+      const auto subschema{subschemas.find(entry.second.pointer)};
+      repopulate_instance_locations(*this, this->instances_, subschemas,
+                                    subschema->first, subschema->second,
+                                    this->instances_[entry.second.pointer],
+                                    std::nullopt);
     }
   }
 }
