@@ -254,11 +254,13 @@ static auto repopulate_instance_locations(
     sourcemeta::core::SchemaFrame::Instances::mapped_type &destination,
     const std::optional<sourcemeta::core::PointerTemplate> &accumulator)
     -> void {
-  if (cache_entry.orphan
-      // TODO: Implement an .empty() method
-      && cache_entry.instance_location == sourcemeta::core::PointerTemplate{}) {
+  if (cache_entry.orphan && cache_entry.instance_location.empty()) {
     return;
-  } else if (cache_entry.parent.has_value()) {
+  } else if (cache_entry.parent.has_value() &&
+             // Don't consider bases from the root subschema, as if that
+             // subschema has any instance location other than "", then it
+             // indicates a recursive reference
+             !cache_entry.parent.value().empty()) {
     const auto match{instances.find(cache_entry.parent.value())};
     if (match == instances.cend()) {
       return;

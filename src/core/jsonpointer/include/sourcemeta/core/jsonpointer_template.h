@@ -115,7 +115,7 @@ public:
   /// ```
   template <class... Args> auto emplace_back(Args &&...args) -> reference {
     // It is a logical error to push a token after a key wildcard
-    assert(this->data.empty() ||
+    assert(this->empty() ||
            !std::holds_alternative<Wildcard>(this->data.back()) ||
            std::get<Wildcard>(this->data.back()) != Wildcard::Key);
     return this->data.emplace_back(args...);
@@ -133,7 +133,7 @@ public:
   /// ```
   auto push_back(const PointerT &other) -> void {
     // It is a logical error to push a token after a key wildcard
-    assert(this->data.empty() ||
+    assert(this->empty() ||
            !std::holds_alternative<Wildcard>(this->data.back()) ||
            std::get<Wildcard>(this->data.back()) != Wildcard::Key);
     this->data.reserve(this->data.size() + other.size());
@@ -150,7 +150,7 @@ public:
   /// pointer.pop_back();
   /// ```
   auto pop_back() -> void {
-    assert(!this->data.empty());
+    assert(!this->empty());
     this->data.pop_back();
   }
 
@@ -180,6 +180,20 @@ public:
     }
 
     return result;
+  }
+
+  /// Check if a JSON Pointer template is empty.
+  /// For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/core/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::core::PointerTemplate empty_pointer;
+  /// assert(empty_pointer.empty());
+  /// ```
+  [[nodiscard]] auto empty() const noexcept -> bool {
+    return this->data.empty();
   }
 
   /// Compare JSON Pointer template instances
