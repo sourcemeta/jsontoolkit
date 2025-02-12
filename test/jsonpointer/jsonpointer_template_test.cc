@@ -134,32 +134,32 @@ TEST(JSONPointer_template, equality_with_key_wildcard_false) {
   EXPECT_NE(left, right);
 }
 
-TEST(JSONPointer_template, equality_with_conditional_wildcard_true) {
+TEST(JSONPointer_template, equality_with_condition_wildcard_true) {
   const sourcemeta::core::Pointer prefix{"foo", "bar"};
   const sourcemeta::core::Pointer suffix{"baz"};
 
   sourcemeta::core::PointerTemplate left{prefix};
-  left.emplace_back(sourcemeta::core::PointerTemplate::Conditional{});
+  left.emplace_back(sourcemeta::core::PointerTemplate::Condition{});
   left.push_back(suffix);
 
   sourcemeta::core::PointerTemplate right{prefix};
-  right.emplace_back(sourcemeta::core::PointerTemplate::Conditional{});
+  right.emplace_back(sourcemeta::core::PointerTemplate::Condition{});
   right.push_back(suffix);
 
   EXPECT_EQ(left, right);
 }
 
-TEST(JSONPointer_template, equality_with_conditional_wildcard_false) {
+TEST(JSONPointer_template, equality_with_condition_wildcard_false) {
   const sourcemeta::core::Pointer prefix{"foo", "bar"};
   const sourcemeta::core::Pointer suffix{"baz"};
 
   sourcemeta::core::PointerTemplate left{prefix};
-  left.emplace_back(sourcemeta::core::PointerTemplate::Conditional{});
+  left.emplace_back(sourcemeta::core::PointerTemplate::Condition{});
   left.push_back(suffix);
 
   sourcemeta::core::PointerTemplate right{prefix};
   right.push_back(suffix);
-  right.emplace_back(sourcemeta::core::PointerTemplate::Conditional{});
+  right.emplace_back(sourcemeta::core::PointerTemplate::Condition{});
 
   EXPECT_NE(left, right);
 }
@@ -232,11 +232,11 @@ TEST(JSONPointer_template, stringify_key_wildcard) {
   EXPECT_EQ(stream.str(), "/foo/bar/~K~");
 }
 
-TEST(JSONPointer_template, stringify_conditional) {
+TEST(JSONPointer_template, stringify_condition) {
   const sourcemeta::core::Pointer prefix{"foo", "bar"};
 
   sourcemeta::core::PointerTemplate pointer{prefix};
-  pointer.emplace_back(sourcemeta::core::PointerTemplate::Conditional{});
+  pointer.emplace_back(sourcemeta::core::PointerTemplate::Condition{});
 
   std::ostringstream stream;
   sourcemeta::core::stringify(pointer, stream);
