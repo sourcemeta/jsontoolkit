@@ -52,14 +52,17 @@ auto walk(const std::optional<sourcemeta::core::Pointer> &parent,
   for (auto &pair : subschema.as_object()) {
     switch (walker(pair.first, vocabularies).type) {
       case sourcemeta::core::SchemaKeywordType::
-          ApplicatorValueTraverseAnyProperty: {
+          ApplicatorValueTraverseSomeProperty: {
         sourcemeta::core::Pointer new_pointer{pointer};
         new_pointer.emplace_back(pair.first);
         auto new_instance_location{instance_location};
         new_instance_location.emplace_back(
+            sourcemeta::core::PointerTemplate::Conditional{});
+        new_instance_location.emplace_back(
             sourcemeta::core::PointerTemplate::Wildcard::Property);
         walk(pointer, new_pointer, new_instance_location,
-             {sourcemeta::core::PointerTemplate::Wildcard::Property},
+             {sourcemeta::core::PointerTemplate::Conditional{},
+              sourcemeta::core::PointerTemplate::Wildcard::Property},
              subschemas, pair.second, walker, resolver, new_dialect, type,
              level + 1, orphan);
       } break;
@@ -90,6 +93,22 @@ auto walk(const std::optional<sourcemeta::core::Pointer> &parent,
              orphan);
       } break;
 
+      case sourcemeta::core::SchemaKeywordType::
+          ApplicatorValueTraverseSomeItem: {
+        sourcemeta::core::Pointer new_pointer{pointer};
+        new_pointer.emplace_back(pair.first);
+        auto new_instance_location{instance_location};
+        new_instance_location.emplace_back(
+            sourcemeta::core::PointerTemplate::Conditional{});
+        new_instance_location.emplace_back(
+            sourcemeta::core::PointerTemplate::Wildcard::Item);
+        walk(pointer, new_pointer, new_instance_location,
+             {sourcemeta::core::PointerTemplate::Conditional{},
+              sourcemeta::core::PointerTemplate::Wildcard::Item},
+             subschemas, pair.second, walker, resolver, new_dialect, type,
+             level + 1, orphan);
+      } break;
+
       case sourcemeta::core::SchemaKeywordType::ApplicatorValueTraverseParent: {
         sourcemeta::core::Pointer new_pointer{pointer};
         new_pointer.emplace_back(pair.first);
@@ -100,12 +119,22 @@ auto walk(const std::optional<sourcemeta::core::Pointer> &parent,
              orphan);
       } break;
 
-      case sourcemeta::core::SchemaKeywordType::ApplicatorValueInPlaceOther:
-        [[fallthrough]];
-      case sourcemeta::core::SchemaKeywordType::ApplicatorValueInPlace: {
+      case sourcemeta::core::SchemaKeywordType::ApplicatorValueInPlaceOther: {
         sourcemeta::core::Pointer new_pointer{pointer};
         new_pointer.emplace_back(pair.first);
         walk(pointer, new_pointer, instance_location, {}, subschemas,
+             pair.second, walker, resolver, new_dialect, type, level + 1,
+             orphan);
+      } break;
+
+      case sourcemeta::core::SchemaKeywordType::ApplicatorValueInPlaceMaybe: {
+        sourcemeta::core::Pointer new_pointer{pointer};
+        new_pointer.emplace_back(pair.first);
+        auto new_instance_location{instance_location};
+        new_instance_location.emplace_back(
+            sourcemeta::core::PointerTemplate::Conditional{});
+        walk(pointer, new_pointer, new_instance_location,
+             {sourcemeta::core::PointerTemplate::Conditional{}}, subschemas,
              pair.second, walker, resolver, new_dialect, type, level + 1,
              orphan);
       } break;
@@ -126,8 +155,6 @@ auto walk(const std::optional<sourcemeta::core::Pointer> &parent,
 
         break;
 
-      case sourcemeta::core::SchemaKeywordType::ApplicatorElementsInPlaceInline:
-        [[fallthrough]];
       case sourcemeta::core::SchemaKeywordType::ApplicatorElementsInPlace:
         if (pair.second.is_array()) {
           for (std::size_t index = 0; index < pair.second.size(); index++) {
@@ -135,6 +162,24 @@ auto walk(const std::optional<sourcemeta::core::Pointer> &parent,
             new_pointer.emplace_back(pair.first);
             new_pointer.emplace_back(index);
             walk(pointer, new_pointer, instance_location, {}, subschemas,
+                 pair.second.at(index), walker, resolver, new_dialect, type,
+                 level + 1, orphan);
+          }
+        }
+
+        break;
+
+      case sourcemeta::core::SchemaKeywordType::ApplicatorElementsInPlaceSome:
+        if (pair.second.is_array()) {
+          for (std::size_t index = 0; index < pair.second.size(); index++) {
+            sourcemeta::core::Pointer new_pointer{pointer};
+            new_pointer.emplace_back(pair.first);
+            new_pointer.emplace_back(index);
+            auto new_instance_location{instance_location};
+            new_instance_location.emplace_back(
+                sourcemeta::core::PointerTemplate::Conditional{});
+            walk(pointer, new_pointer, new_instance_location,
+                 {sourcemeta::core::PointerTemplate::Conditional{}}, subschemas,
                  pair.second.at(index), walker, resolver, new_dialect, type,
                  level + 1, orphan);
           }
@@ -176,13 +221,17 @@ auto walk(const std::optional<sourcemeta::core::Pointer> &parent,
 
         break;
 
-      case sourcemeta::core::SchemaKeywordType::ApplicatorMembersInPlace:
+      case sourcemeta::core::SchemaKeywordType::ApplicatorMembersInPlaceSome:
         if (pair.second.is_object()) {
           for (auto &subpair : pair.second.as_object()) {
             sourcemeta::core::Pointer new_pointer{pointer};
             new_pointer.emplace_back(pair.first);
             new_pointer.emplace_back(subpair.first);
-            walk(pointer, new_pointer, instance_location, {}, subschemas,
+            auto new_instance_location{instance_location};
+            new_instance_location.emplace_back(
+                sourcemeta::core::PointerTemplate::Conditional{});
+            walk(pointer, new_pointer, new_instance_location,
+                 {sourcemeta::core::PointerTemplate::Conditional{}}, subschemas,
                  subpair.second, walker, resolver, new_dialect, type, level + 1,
                  orphan);
           }

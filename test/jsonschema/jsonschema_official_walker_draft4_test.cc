@@ -55,7 +55,7 @@ TEST(JSONSchema_official_walker_draft4, definitions) {
 TEST(JSONSchema_official_walker_draft4, allOf) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("allOf", VOCABULARIES_DRAFT4)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlaceInline);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-04/schema#");
@@ -66,7 +66,7 @@ TEST(JSONSchema_official_walker_draft4, allOf) {
 TEST(JSONSchema_official_walker_draft4, anyOf) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("anyOf", VOCABULARIES_DRAFT4)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlaceSome);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-04/schema#");
@@ -77,7 +77,7 @@ TEST(JSONSchema_official_walker_draft4, anyOf) {
 TEST(JSONSchema_official_walker_draft4, oneOf) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("oneOf", VOCABULARIES_DRAFT4)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlaceSome);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-04/schema#");
@@ -112,7 +112,7 @@ TEST(JSONSchema_official_walker_draft4, additionalItems) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("additionalItems", VOCABULARIES_DRAFT4)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyItem);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseSomeItem);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-04/schema#");
@@ -149,7 +149,7 @@ TEST(JSONSchema_official_walker_draft4, dependencies) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("dependencies", VOCABULARIES_DRAFT4)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembersInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembersInPlaceSome);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-04/schema#");
@@ -161,7 +161,8 @@ TEST(JSONSchema_official_walker_draft4, additionalProperties) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("additionalProperties", VOCABULARIES_DRAFT4)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyProperty);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorValueTraverseSomeProperty);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-04/schema#");
@@ -678,8 +679,10 @@ TEST(JSONSchema_official_walker_draft4, instance_locations) {
   // Applicators (any)
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 1, "/allOf/0", "", "", "");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 2, "/allOf/1", "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 3, "/anyOf/0", "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 4, "/oneOf/0", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 3, "/anyOf/0", "", "/~?~",
+                                      "/~?~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 4, "/oneOf/0", "", "/~?~",
+                                      "/~?~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 5, "/not", "", "", "");
 
   // Applicators (object)
@@ -688,17 +691,17 @@ TEST(JSONSchema_official_walker_draft4, instance_locations) {
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 7, "/properties/bar", "", "/bar",
                                       "/bar");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 8, "/additionalProperties", "",
-                                      "/~P~", "/~P~");
+                                      "/~?~/~P~", "/~?~/~P~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 9, "/patternProperties/^f", "",
                                       "/~R^f~", "/~R^f~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 10, "/patternProperties/x$", "",
                                       "/~Rx$~", "/~Rx$~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 11, "/dependencies/baz", "", "",
-                                      "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 11, "/dependencies/baz", "",
+                                      "/~?~", "/~?~");
 
   // Applicators (array)
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 12, "/additionalItems", "",
-                                      "/~I~", "/~I~");
+                                      "/~?~/~I~", "/~?~/~I~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 13, "/items", "", "/~I~",
                                       "/~I~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4(entries, 14, "/items/items/0", "/items",
@@ -744,5 +747,5 @@ TEST(JSONSchema_official_walker_draft4, definitions_subschemas) {
       "/bar");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT4_ORPHAN(
       entries, 3, "/definitions/foo/properties/bar/additionalProperties",
-      "/definitions/foo/properties/bar", "/bar/~P~", "/~P~");
+      "/definitions/foo/properties/bar", "/bar/~?~/~P~", "/~?~/~P~");
 }

@@ -132,7 +132,7 @@ TEST(JSONSchema_official_walker_2019_09, applicator_allOf) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("allOf", VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlaceInline);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -143,7 +143,7 @@ TEST(JSONSchema_official_walker_2019_09, applicator_anyOf) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("anyOf", VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlaceSome);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -154,7 +154,7 @@ TEST(JSONSchema_official_walker_2019_09, applicator_oneOf) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("oneOf", VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlaceSome);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -176,7 +176,7 @@ TEST(JSONSchema_official_walker_2019_09, applicator_if) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("if", VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlaceMaybe);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -187,7 +187,7 @@ TEST(JSONSchema_official_walker_2019_09, applicator_then) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("then", VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlaceMaybe);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -199,7 +199,7 @@ TEST(JSONSchema_official_walker_2019_09, applicator_else) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("else", VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlaceMaybe);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -211,7 +211,7 @@ TEST(JSONSchema_official_walker_2019_09, applicator_dependentSchemas) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("dependentSchemas",
                                            VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembersInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembersInPlaceSome);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -234,7 +234,7 @@ TEST(JSONSchema_official_walker_2019_09, applicator_additionalItems) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("additionalItems",
                                            VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyItem);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseSomeItem);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -299,7 +299,8 @@ TEST(JSONSchema_official_walker_2019_09, applicator_additionalProperties) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("additionalProperties",
                                            VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyProperty);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorValueTraverseSomeProperty);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -323,7 +324,7 @@ TEST(JSONSchema_official_walker_2019_09, applicator_unevaluatedItems) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("unevaluatedItems",
                                            VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyItem);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseSomeItem);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -335,7 +336,8 @@ TEST(JSONSchema_official_walker_2019_09, applicator_unevaluatedProperties) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("unevaluatedProperties",
                                            VOCABULARIES_2019_09_APPLICATOR)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyProperty);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorValueTraverseSomeProperty);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "https://json-schema.org/draft/2019-09/vocab/applicator");
@@ -1546,11 +1548,13 @@ TEST(JSONSchema_official_walker_2019_09, instance_locations) {
   // Applicator vocabulary (any)
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 1, "/allOf/0", "", "", "");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 2, "/allOf/1", "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 3, "/anyOf/0", "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 4, "/oneOf/0", "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 5, "/if", "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 6, "/then", "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 7, "/else", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 3, "/anyOf/0", "", "/~?~",
+                                       "/~?~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 4, "/oneOf/0", "", "/~?~",
+                                       "/~?~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 5, "/if", "", "/~?~", "/~?~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 6, "/then", "", "/~?~", "/~?~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 7, "/else", "", "/~?~", "/~?~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 8, "/not", "", "", "");
 
   // Applicator vocabulary (object)
@@ -1559,15 +1563,15 @@ TEST(JSONSchema_official_walker_2019_09, instance_locations) {
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 10, "/properties/bar", "",
                                        "/bar", "/bar");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 11, "/additionalProperties", "",
-                                       "/~P~", "/~P~");
+                                       "/~?~/~P~", "/~?~/~P~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 12, "/patternProperties/^f", "",
                                        "/~R^f~", "/~R^f~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 13, "/patternProperties/x$", "",
                                        "/~Rx$~", "/~Rx$~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 14, "/dependentSchemas/foo", "",
-                                       "", "");
+                                       "/~?~", "/~?~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 15, "/dependentSchemas/bar", "",
-                                       "", "");
+                                       "/~?~", "/~?~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 16, "/propertyNames", "",
                                        "/~K~", "/~K~");
 
@@ -1575,7 +1579,7 @@ TEST(JSONSchema_official_walker_2019_09, instance_locations) {
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 17, "/contains", "", "/~I~",
                                        "/~I~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 18, "/additionalItems", "",
-                                       "/~I~", "/~I~");
+                                       "/~?~/~I~", "/~?~/~I~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 19, "/items", "", "/~I~",
                                        "/~I~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 20, "/items/items/0", "/items",
@@ -1585,9 +1589,9 @@ TEST(JSONSchema_official_walker_2019_09, instance_locations) {
 
   // Unevaluated applicators
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 22, "/unevaluatedProperties",
-                                       "", "/~P~", "/~P~");
+                                       "", "/~?~/~P~", "/~?~/~P~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 23, "/unevaluatedItems", "",
-                                       "/~I~", "/~I~");
+                                       "/~?~/~I~", "/~?~/~I~");
 
   // Content vocabulary
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09(entries, 24, "/contentSchema", "", "",
@@ -1634,5 +1638,5 @@ TEST(JSONSchema_official_walker_2019_09, definitions_subschemas) {
       entries, 2, "/$defs/foo/properties/bar", "/$defs/foo", "/bar", "/bar");
   EXPECT_OFFICIAL_WALKER_ENTRY_2019_09_ORPHAN(
       entries, 3, "/$defs/foo/properties/bar/additionalProperties",
-      "/$defs/foo/properties/bar", "/bar/~P~", "/~P~");
+      "/$defs/foo/properties/bar", "/bar/~?~/~P~", "/~?~/~P~");
 }

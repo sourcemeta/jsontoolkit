@@ -57,7 +57,7 @@ TEST(JSONSchema_official_walker_draft3, additionalItems) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("additionalItems", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyItem);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseSomeItem);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-03/schema#");
@@ -94,7 +94,7 @@ TEST(JSONSchema_official_walker_draft3, dependencies) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("dependencies", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembersInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorMembersInPlaceSome);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-03/schema#");
@@ -106,7 +106,8 @@ TEST(JSONSchema_official_walker_draft3, additionalProperties) {
   using namespace sourcemeta::core;
   const auto result{
       schema_official_walker("additionalProperties", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueTraverseAnyProperty);
+  EXPECT_EQ(result.type,
+            SchemaKeywordType::ApplicatorValueTraverseSomeProperty);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-03/schema#");
@@ -117,7 +118,7 @@ TEST(JSONSchema_official_walker_draft3, additionalProperties) {
 TEST(JSONSchema_official_walker_draft3, type) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("type", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlaceSome);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-03/schema#");
@@ -317,7 +318,7 @@ TEST(JSONSchema_official_walker_draft3, divisibleBy) {
 TEST(JSONSchema_official_walker_draft3, disallow) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("disallow", VOCABULARIES_DRAFT3)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlace);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorElementsInPlaceSome);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-03/schema#");
@@ -653,17 +654,17 @@ TEST(JSONSchema_official_walker_draft3, instance_locations) {
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 2, "/properties/bar", "", "/bar",
                                       "/bar");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 3, "/additionalProperties", "",
-                                      "/~P~", "/~P~");
+                                      "/~?~/~P~", "/~?~/~P~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 4, "/patternProperties/^f", "",
                                       "/~R^f~", "/~R^f~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 5, "/patternProperties/x$", "",
                                       "/~Rx$~", "/~Rx$~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 6, "/dependencies/baz", "", "",
-                                      "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 6, "/dependencies/baz", "",
+                                      "/~?~", "/~?~");
 
   // Applicators (array)
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 7, "/additionalItems", "",
-                                      "/~I~", "/~I~");
+                                      "/~?~/~I~", "/~?~/~I~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 8, "/items", "", "/~I~", "/~I~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 9, "/items/items/0", "/items",
                                       "/~I~/0", "/0");
@@ -671,10 +672,14 @@ TEST(JSONSchema_official_walker_draft3, instance_locations) {
                                       "/~I~/1", "/1");
 
   // Applicators (any)
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 11, "/type/1", "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 12, "/type/2", "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 13, "/disallow/1", "", "", "");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 14, "/disallow/2", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 11, "/type/1", "", "/~?~",
+                                      "/~?~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 12, "/type/2", "", "/~?~",
+                                      "/~?~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 13, "/disallow/1", "", "/~?~",
+                                      "/~?~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 14, "/disallow/2", "", "/~?~",
+                                      "/~?~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 15, "/extends", "", "", "");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 16, "/extends/extends/0",
                                       "/extends", "", "");

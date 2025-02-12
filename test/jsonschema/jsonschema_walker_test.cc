@@ -38,7 +38,7 @@ static auto test_walker(std::string_view keyword,
       vocabularies.end()) {
     if (keyword == "schema") {
       return {sourcemeta::core::SchemaKeywordType::
-                  ApplicatorValueTraverseAnyProperty,
+                  ApplicatorValueTraverseSomeProperty,
               "https://sourcemeta.com/vocab/test-1",
               {}};
     }
@@ -69,7 +69,7 @@ static auto test_walker(std::string_view keyword,
       vocabularies.end()) {
     if (keyword == "custom") {
       return {sourcemeta::core::SchemaKeywordType::
-                  ApplicatorValueTraverseAnyProperty,
+                  ApplicatorValueTraverseSomeProperty,
               "https://sourcemeta.com/vocab/test-2",
               {}};
     }
