@@ -47,7 +47,7 @@ auto sourcemeta::core::schema_official_walker(
   WALK(HTTPS_BASE "2020-12/vocab/applicator", "else",
        ApplicatorValueInPlaceMaybe, "if")
   WALK(HTTPS_BASE "2020-12/vocab/applicator", "not",
-       ApplicatorValueInPlaceOther)
+       ApplicatorValueInPlaceNegate)
   // For the purpose of compiler optimizations
   WALK_MAYBE_DEPENDENT(HTTPS_BASE "2020-12/vocab/applicator", "properties",
                        ApplicatorMembersTraversePropertyStatic,
@@ -138,7 +138,7 @@ auto sourcemeta::core::schema_official_walker(
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "else",
        ApplicatorValueInPlaceMaybe, "if")
   WALK(HTTPS_BASE "2019-09/vocab/applicator", "not",
-       ApplicatorValueInPlaceOther)
+       ApplicatorValueInPlaceNegate)
   // For the purpose of compiler optimizations
   WALK_MAYBE_DEPENDENT(HTTPS_BASE "2019-09/vocab/applicator", "properties",
                        ApplicatorMembersTraversePropertyStatic,
@@ -286,7 +286,7 @@ auto sourcemeta::core::schema_official_walker(
   WALK_ANY(HTTP_BASE "draft-07/schema#", HTTP_BASE "draft-07/hyper-schema#",
            "oneOf", ApplicatorElementsInPlaceSome, "$ref")
   WALK_ANY(HTTP_BASE "draft-07/schema#", HTTP_BASE "draft-07/hyper-schema#",
-           "not", ApplicatorValueInPlaceOther, "$ref")
+           "not", ApplicatorValueInPlaceNegate, "$ref")
   WALK_ANY(HTTP_BASE "draft-07/schema#", HTTP_BASE "draft-07/hyper-schema#",
            "format", Other, "$ref")
   WALK_ANY(HTTP_BASE "draft-07/schema#", HTTP_BASE "draft-07/hyper-schema#",
@@ -398,7 +398,7 @@ auto sourcemeta::core::schema_official_walker(
   WALK_ANY(HTTP_BASE "draft-06/schema#", HTTP_BASE "draft-06/hyper-schema#",
            "oneOf", ApplicatorElementsInPlaceSome, "$ref")
   WALK_ANY(HTTP_BASE "draft-06/schema#", HTTP_BASE "draft-06/hyper-schema#",
-           "not", ApplicatorValueInPlaceOther, "$ref")
+           "not", ApplicatorValueInPlaceNegate, "$ref")
   WALK_ANY(HTTP_BASE "draft-06/schema#", HTTP_BASE "draft-06/hyper-schema#",
            "format", Other, "$ref")
   WALK_ANY(HTTP_BASE "draft-06/schema#", HTTP_BASE "draft-06/hyper-schema#",
@@ -499,7 +499,7 @@ auto sourcemeta::core::schema_official_walker(
   WALK_ANY(HTTP_BASE "draft-04/schema#", HTTP_BASE "draft-04/hyper-schema#",
            "oneOf", ApplicatorElementsInPlaceSome, "$ref")
   WALK_ANY(HTTP_BASE "draft-04/schema#", HTTP_BASE "draft-04/hyper-schema#",
-           "not", ApplicatorValueInPlaceOther, "$ref")
+           "not", ApplicatorValueInPlaceNegate, "$ref")
   WALK_ANY(HTTP_BASE "draft-04/schema#", HTTP_BASE "draft-04/hyper-schema#",
            "format", Other, "$ref")
   WALK_ANY(HTTP_BASE "draft-04/schema#", HTTP_BASE "draft-04/hyper-schema#",
@@ -533,8 +533,8 @@ auto sourcemeta::core::schema_official_walker(
        ApplicatorValueOrElementsInPlace, "$ref")
   WALK(HTTP_BASE "draft-03/schema#", "type", ApplicatorElementsInPlaceSome,
        "$ref")
-  WALK(HTTP_BASE "draft-03/schema#", "disallow", ApplicatorElementsInPlaceSome,
-       "$ref")
+  WALK(HTTP_BASE "draft-03/schema#", "disallow",
+       ApplicatorElementsInPlaceSomeNegate, "$ref")
   WALK(HTTP_BASE "draft-03/schema#", "properties",
        ApplicatorMembersTraversePropertyStatic, "$ref")
   WALK(HTTP_BASE "draft-03/schema#", "patternProperties",

@@ -99,7 +99,7 @@ TEST(JSONSchema_official_walker_draft7, oneOf) {
 TEST(JSONSchema_official_walker_draft7, not) {
   using namespace sourcemeta::core;
   const auto result{schema_official_walker("not", VOCABULARIES_DRAFT7)};
-  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlaceOther);
+  EXPECT_EQ(result.type, SchemaKeywordType::ApplicatorValueInPlaceNegate);
   EXPECT_TRUE(result.vocabulary.has_value());
   EXPECT_EQ(result.vocabulary.value(),
             "http://json-schema.org/draft-07/schema#");

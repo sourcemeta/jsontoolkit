@@ -127,6 +127,14 @@ auto walk(const std::optional<sourcemeta::core::Pointer> &parent,
              orphan);
       } break;
 
+      case sourcemeta::core::SchemaKeywordType::ApplicatorValueInPlaceNegate: {
+        sourcemeta::core::Pointer new_pointer{pointer};
+        new_pointer.emplace_back(pair.first);
+        walk(pointer, new_pointer, instance_location, {}, subschemas,
+             pair.second, walker, resolver, new_dialect, type, level + 1,
+             orphan);
+      } break;
+
       case sourcemeta::core::SchemaKeywordType::ApplicatorValueInPlaceMaybe: {
         sourcemeta::core::Pointer new_pointer{pointer};
         new_pointer.emplace_back(pair.first);
@@ -170,6 +178,25 @@ auto walk(const std::optional<sourcemeta::core::Pointer> &parent,
         break;
 
       case sourcemeta::core::SchemaKeywordType::ApplicatorElementsInPlaceSome:
+        if (pair.second.is_array()) {
+          for (std::size_t index = 0; index < pair.second.size(); index++) {
+            sourcemeta::core::Pointer new_pointer{pointer};
+            new_pointer.emplace_back(pair.first);
+            new_pointer.emplace_back(index);
+            auto new_instance_location{instance_location};
+            new_instance_location.emplace_back(
+                sourcemeta::core::PointerTemplate::Conditional{});
+            walk(pointer, new_pointer, new_instance_location,
+                 {sourcemeta::core::PointerTemplate::Conditional{}}, subschemas,
+                 pair.second.at(index), walker, resolver, new_dialect, type,
+                 level + 1, orphan);
+          }
+        }
+
+        break;
+
+      case sourcemeta::core::SchemaKeywordType::
+          ApplicatorElementsInPlaceSomeNegate:
         if (pair.second.is_array()) {
           for (std::size_t index = 0; index < pair.second.size(); index++) {
             sourcemeta::core::Pointer new_pointer{pointer};
