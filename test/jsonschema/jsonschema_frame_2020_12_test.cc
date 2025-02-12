@@ -2042,6 +2042,7 @@ TEST(JSONSchema_frame_2020_12, property_cross_ref) {
       },
       "bar": {
         "items": {
+          "$anchor": "foo",
           "additionalProperties": true
         }
       }
@@ -2053,7 +2054,7 @@ TEST(JSONSchema_frame_2020_12, property_cross_ref) {
   frame.analyse(document, sourcemeta::core::schema_official_walker,
                 sourcemeta::core::schema_official_resolver);
 
-  EXPECT_EQ(frame.locations().size(), 9);
+  EXPECT_EQ(frame.locations().size(), 11);
 
   EXPECT_FRAME_STATIC_2020_12_RESOURCE(
       frame, "https://www.sourcemeta.com/schema",
@@ -2094,6 +2095,11 @@ TEST(JSONSchema_frame_2020_12, property_cross_ref) {
       "https://www.sourcemeta.com/schema", "/properties/bar/items",
       "https://www.sourcemeta.com/schema", "/properties/bar/items",
       POINTER_TEMPLATES("/bar/~I~", "/foo/~I~"), "/properties/bar");
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.sourcemeta.com/schema#/properties/bar/items/$anchor",
+      "https://www.sourcemeta.com/schema", "/properties/bar/items/$anchor",
+      "https://www.sourcemeta.com/schema", "/properties/bar/items/$anchor", {},
+      "/properties/bar/items");
   EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
       frame,
       "https://www.sourcemeta.com/schema#/properties/bar/items/"
@@ -2104,6 +2110,12 @@ TEST(JSONSchema_frame_2020_12, property_cross_ref) {
       "/properties/bar/items/additionalProperties",
       POINTER_TEMPLATES("/bar/~I~/~P~", "/foo/~I~/~P~"),
       "/properties/bar/items");
+
+  EXPECT_FRAME_STATIC_2020_12_ANCHOR(
+      frame, "https://www.sourcemeta.com/schema#foo",
+      "https://www.sourcemeta.com/schema", "/properties/bar/items",
+      "https://www.sourcemeta.com/schema", "/properties/bar/items",
+      POINTER_TEMPLATES("/bar/~I~", "/foo/~I~"), "/properties/bar");
 
   // References
 
