@@ -2129,3 +2129,123 @@ TEST(JSONSchema_frame_2020_12, property_cross_ref) {
                           "https://www.sourcemeta.com/schema",
                           "/properties/bar");
 }
+
+TEST(JSONSchema_frame_2020_12, dynamic_ref_multiple_targets) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$id": "https://www.example.com",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$dynamicAnchor": "test",
+    "properties": {
+      "foo": {
+        "$id": "foo",
+        "$dynamicAnchor": "test"
+      },
+      "bar": {
+        "$dynamicRef": "#test"
+      }
+    }
+  })JSON");
+
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::Instances};
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
+                sourcemeta::core::schema_official_resolver);
+
+  EXPECT_EQ(frame.locations().size(), 17);
+
+  EXPECT_FRAME_STATIC_2020_12_RESOURCE(
+      frame, "https://www.example.com", "https://www.example.com", "",
+      "https://www.example.com", "", POINTER_TEMPLATES("", "/bar"),
+      std::nullopt);
+
+  // TODO: Instance locations here are wrong
+  // EXPECT_FRAME_STATIC_2020_12_RESOURCE(
+  // frame, "https://www.example.com/foo", "https://www.example.com",
+  // "/properties/foo", "https://www.example.com/foo", "",
+  // POINTER_TEMPLATES("/foo", "/bar"), "");
+
+  // Subschemas
+
+  // TODO: Instance locations here are wrong
+  // EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
+  // frame, "https://www.example.com#/properties/foo",
+  // "https://www.example.com", "/properties/foo",
+  // "https://www.example.com/foo", "", POINTER_TEMPLATES("/foo", "/bar"), "");
+  EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
+      frame, "https://www.example.com#/properties/bar",
+      "https://www.example.com", "/properties/bar", "https://www.example.com",
+      "/properties/bar", {"/bar"}, "");
+
+  // JSON Pointers
+
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.example.com#/$id", "https://www.example.com", "/$id",
+      "https://www.example.com", "/$id", {}, "");
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.example.com#/$schema", "https://www.example.com",
+      "/$schema", "https://www.example.com", "/$schema", {}, "");
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.example.com#/$dynamicAnchor",
+      "https://www.example.com", "/$dynamicAnchor", "https://www.example.com",
+      "/$dynamicAnchor", {}, "");
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.example.com#/properties", "https://www.example.com",
+      "/properties", "https://www.example.com", "/properties", {}, "");
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.example.com#/properties/foo/$id",
+      "https://www.example.com", "/properties/foo/$id",
+      "https://www.example.com/foo", "/$id", {}, "/properties/foo");
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.example.com#/properties/foo/$dynamicAnchor",
+      "https://www.example.com", "/properties/foo/$dynamicAnchor",
+      "https://www.example.com/foo", "/$dynamicAnchor", {}, "/properties/foo");
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.example.com#/properties/bar/$dynamicRef",
+      "https://www.example.com", "/properties/bar/$dynamicRef",
+      "https://www.example.com", "/properties/bar/$dynamicRef", {},
+      "/properties/bar");
+
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.example.com/foo#/$id", "https://www.example.com",
+      "/properties/foo/$id", "https://www.example.com/foo", "/$id", {},
+      "/properties/foo");
+  EXPECT_FRAME_STATIC_2020_12_POINTER(
+      frame, "https://www.example.com/foo#/$dynamicAnchor",
+      "https://www.example.com", "/properties/foo/$dynamicAnchor",
+      "https://www.example.com/foo", "/$dynamicAnchor", {}, "/properties/foo");
+
+  // Anchors
+
+  EXPECT_FRAME_STATIC_2020_12_ANCHOR(
+      frame, "https://www.example.com#test", "https://www.example.com", "",
+      "https://www.example.com", "", POINTER_TEMPLATES("", "/bar"),
+      std::nullopt);
+
+  // TODO: Instance locations here are wrong
+  // EXPECT_FRAME_STATIC_2020_12_ANCHOR(
+  // frame, "https://www.example.com/foo#test", "https://www.example.com",
+  // "/properties/foo", "https://www.example.com/foo", "",
+  // POINTER_TEMPLATES("/foo", "/bar"), "");
+
+  EXPECT_FRAME_DYNAMIC_2020_12_ANCHOR(
+      frame, "https://www.example.com#test", "https://www.example.com", "",
+      "https://www.example.com", "", POINTER_TEMPLATES("", "/bar"),
+      std::nullopt);
+
+  // TODO: Instance locations here are wrong
+  // EXPECT_FRAME_DYNAMIC_2020_12_ANCHOR(
+  // frame, "https://www.example.com/foo#test", "https://www.example.com",
+  // "/properties/foo", "https://www.example.com/foo", "",
+  // POINTER_TEMPLATES("/foo", "/bar"), "");
+
+  // References
+
+  EXPECT_EQ(frame.references().size(), 2);
+
+  EXPECT_STATIC_REFERENCE(
+      frame, "/$schema", "https://json-schema.org/draft/2020-12/schema",
+      "https://json-schema.org/draft/2020-12/schema", std::nullopt);
+  EXPECT_DYNAMIC_REFERENCE(frame, "/properties/bar/$dynamicRef",
+                           "https://www.example.com#test",
+                           "https://www.example.com", "test");
+}
