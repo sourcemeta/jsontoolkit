@@ -170,6 +170,7 @@ public:
   using Locations =
       std::map<std::pair<SchemaReferenceType, std::string>, Location>;
 
+  // TODO: Turn the mapped value into a proper set
   /// A set of unresolved instance locations
   using Instances = std::map<Pointer, std::vector<PointerTemplate>>;
 
@@ -215,6 +216,10 @@ public:
   /// Get the unresolved instance locations associated with a location entry
   auto instance_locations(const Location &location) const -> const
       typename Instances::mapped_type &;
+
+  /// Find all references to a given location pointer
+  auto references_to(const Pointer &pointer) const -> std::vector<
+      std::reference_wrapper<const typename References::value_type>>;
 
 private:
   Mode mode_;
