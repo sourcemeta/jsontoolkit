@@ -677,10 +677,10 @@ TEST(JSONSchema_official_walker_draft3, instance_locations) {
                                       "/~?~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 12, "/type/2", "", "/~?~",
                                       "/~?~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 13, "/disallow/1", "", "/~?~",
-                                      "/~?~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 14, "/disallow/2", "", "/~?~",
-                                      "/~?~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 13, "/disallow/1", "",
+                                      "/~?~/~!~", "/~?~/~!~");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 14, "/disallow/2", "",
+                                      "/~?~/~!~", "/~?~/~!~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 15, "/extends", "", "", "");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT3(entries, 16, "/extends/extends/0",
                                       "/extends", "", "");

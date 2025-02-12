@@ -130,7 +130,11 @@ auto walk(const std::optional<sourcemeta::core::Pointer> &parent,
       case sourcemeta::core::SchemaKeywordType::ApplicatorValueInPlaceNegate: {
         sourcemeta::core::Pointer new_pointer{pointer};
         new_pointer.emplace_back(pair.first);
-        walk(pointer, new_pointer, instance_location, {}, subschemas,
+        auto new_instance_location{instance_location};
+        new_instance_location.emplace_back(
+            sourcemeta::core::PointerTemplate::Negation{});
+        walk(pointer, new_pointer, new_instance_location,
+             {sourcemeta::core::PointerTemplate::Negation{}}, subschemas,
              pair.second, walker, resolver, new_dialect, type, level + 1,
              orphan);
       } break;
@@ -204,11 +208,14 @@ auto walk(const std::optional<sourcemeta::core::Pointer> &parent,
             new_pointer.emplace_back(index);
             auto new_instance_location{instance_location};
             new_instance_location.emplace_back(
-                sourcemeta::core::PointerTemplate::Conditional{});
+                sourcemeta::core::PointerTemplate::Condition{});
+            new_instance_location.emplace_back(
+                sourcemeta::core::PointerTemplate::Negation{});
             walk(pointer, new_pointer, new_instance_location,
-                 {sourcemeta::core::PointerTemplate::Conditional{}}, subschemas,
-                 pair.second.at(index), walker, resolver, new_dialect, type,
-                 level + 1, orphan);
+                 {sourcemeta::core::PointerTemplate::Condition{},
+                  sourcemeta::core::PointerTemplate::Negation{}},
+                 subschemas, pair.second.at(index), walker, resolver,
+                 new_dialect, type, level + 1, orphan);
           }
         }
 

@@ -474,6 +474,11 @@ auto stringify(const PointerT &pointer,
         stream.put(internal::token_pointer_tilde<CharT>);
         stream.put('?');
         stream.put(internal::token_pointer_tilde<CharT>);
+      } else if (std::holds_alternative<typename PointerT::Negation>(token)) {
+        stream.put(internal::token_pointer_slash<CharT>);
+        stream.put(internal::token_pointer_tilde<CharT>);
+        stream.put('!');
+        stream.put(internal::token_pointer_tilde<CharT>);
       } else {
         stringify_token<CharT, Traits, Allocator, typename PointerT::Token>(
             std::get<typename PointerT::Token>(token), stream,

@@ -20,10 +20,14 @@ public:
     auto operator==(const Condition &) const noexcept -> bool = default;
     auto operator<(const Condition &) const noexcept -> bool { return false; }
   };
+  struct Negation {
+    auto operator==(const Negation &) const noexcept -> bool = default;
+    auto operator<(const Negation &) const noexcept -> bool { return false; }
+  };
   using Regex = typename PointerT::Value::String;
   using Token = typename PointerT::Token;
   using Container =
-      std::vector<std::variant<Wildcard, Condition, Regex, Token>>;
+      std::vector<std::variant<Wildcard, Condition, Negation, Regex, Token>>;
 
   /// This constructor creates an empty JSON Pointer template. For example:
   ///
