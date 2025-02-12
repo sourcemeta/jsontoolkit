@@ -112,7 +112,9 @@ public:
   /// A single entry in a JSON Schema reference map
   struct ReferencesEntry {
     std::string destination;
+    // TODO: This string can be a `string_view` over the `destination`
     std::optional<std::string> base;
+    // TODO: This string can be a `string_view` over the `destination`
     std::optional<std::string> fragment;
   };
 
@@ -137,6 +139,7 @@ public:
   enum class LocationType : std::uint8_t {
     Resource,
     Anchor,
+    // TODO: Distinguish between a Pointer and a Keyword
     Pointer,
     Subschema
   };
@@ -146,16 +149,21 @@ public:
 
   /// A location entry
   struct Location {
+    // TODO: Turn this into a weak pointer
     std::optional<Pointer> parent;
     LocationType type;
     std::optional<std::string> root;
     std::string base;
+    // TODO: Turn this into a weak pointer
     Pointer pointer;
+    // TODO: Turn this into a weak pointer
     Pointer relative_pointer;
     std::string dialect;
     std::string base_dialect;
   };
 
+  // TODO: Indexing locations by reference type is wrong. We can index by just
+  // URI, and introduce a new `DynamicAnchor` location type
   /// A JSON Schema reference frame is a mapping of URIs to schema identifiers,
   /// JSON Pointers within the schema, and subschemas dialects. We call it
   /// reference frame as this mapping is essential for resolving references.

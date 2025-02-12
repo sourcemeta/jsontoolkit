@@ -210,76 +210,58 @@ struct InternalEntry {
 };
 
 static auto traverse_origin_instance_locations(
-    const sourcemeta::core::SchemaFrame::References &references,
-    const sourcemeta::core::SchemaFrame::Locations &frame,
+    const sourcemeta::core::SchemaFrame &frame,
     const sourcemeta::core::SchemaFrame::Instances &instances,
-    const sourcemeta::core::SchemaFrame::Location &entry,
-    const std::optional<sourcemeta::core::PointerTemplate> &current,
+    const sourcemeta::core::Pointer &current,
+    const std::optional<sourcemeta::core::PointerTemplate> &accumulator,
     sourcemeta::core::SchemaFrame::Instances::mapped_type &destination)
     -> void {
-  // We only care about subschemas
-  if (entry.type != sourcemeta::core::SchemaFrame::LocationType::Resource &&
-      entry.type != sourcemeta::core::SchemaFrame::LocationType::Subschema) {
-    return;
+  if (accumulator.has_value() &&
+      std::find(destination.cbegin(), destination.cend(),
+                accumulator.value()) == destination.cend()) {
+    destination.push_back(accumulator.value());
   }
 
-  if (current.has_value() && std::find(destination.cbegin(), destination.cend(),
-                                       current.value()) == destination.cend()) {
-    destination.push_back(current.value());
-  }
-
-  for (const auto &reference : references) {
+  for (const auto &reference : frame.references()) {
     if (reference.first.second.back().to_property() == "$schema") {
       continue;
     }
 
+    const auto subschema_pointer{reference.first.second.initial()};
+
+    // Avoid recursing to itself, in the case of circular subschemas
+    if (subschema_pointer == current) {
+      continue;
+    }
+
     // Ignore if this is not a reference pointing to us
-    if (frame.contains({sourcemeta::core::SchemaReferenceType::Static,
-                        reference.second.destination})) {
-      if (frame
+    if (frame.locations().contains(
+            {sourcemeta::core::SchemaReferenceType::Static,
+             reference.second.destination})) {
+      if (frame.locations()
               .at({sourcemeta::core::SchemaReferenceType::Static,
                    reference.second.destination})
-              .pointer != entry.pointer) {
+              .pointer != current) {
         continue;
       }
-    } else if (frame.contains({sourcemeta::core::SchemaReferenceType::Dynamic,
-                               reference.second.destination})) {
-      if (frame
+    } else if (frame.locations().contains(
+                   {sourcemeta::core::SchemaReferenceType::Dynamic,
+                    reference.second.destination})) {
+      if (frame.locations()
               .at({sourcemeta::core::SchemaReferenceType::Dynamic,
                    reference.second.destination})
-              .pointer != entry.pointer) {
+              .pointer != current) {
         continue;
       }
     } else {
       continue;
     }
 
-    for (const auto &location : frame) {
-      // TODO: Simplify this logic given that Pointers now have parents. We can
-      // stop looking for .initial(), and if the location is not a subschema or
-      // resource, we just get the parent
-      if (location.second.type !=
-              sourcemeta::core::SchemaFrame::LocationType::Resource &&
-          location.second.type !=
-              sourcemeta::core::SchemaFrame::LocationType::Subschema) {
-        continue;
-      }
-      if (location.second.pointer != reference.first.second.initial()) {
-        continue;
-      }
-
-      // Avoid recursing to itself, in the case of circular subschemas
-      if (location.second.pointer == entry.pointer) {
-        continue;
-      }
-
-      const auto match{instances.find(location.second.pointer)};
-      if (match != instances.cend()) {
-        for (const auto &instance_location : match->second) {
-          traverse_origin_instance_locations(references, frame, instances,
-                                             location.second, instance_location,
-                                             destination);
-        }
+    const auto match{instances.find(subschema_pointer)};
+    if (match != instances.cend()) {
+      for (const auto &instance_location : match->second) {
+        traverse_origin_instance_locations(frame, instances, subschema_pointer,
+                                           instance_location, destination);
       }
     }
   }
@@ -292,33 +274,10 @@ struct CacheSubschema {
   const std::optional<sourcemeta::core::Pointer> parent;
 };
 
-// TODO: The fact this lookup algorithm is O(N) is the main
-// performance problem of framing
-static auto find_subschema_by_pointer(
-    const sourcemeta::core::SchemaFrame::Locations &locations,
-    const sourcemeta::core::Pointer &pointer)
-    -> std::optional<
-        std::reference_wrapper<const sourcemeta::core::SchemaFrame::Location>> {
-  for (const auto &location : locations) {
-    if (location.second.type !=
-            sourcemeta::core::SchemaFrame::LocationType::Resource &&
-        location.second.type !=
-            sourcemeta::core::SchemaFrame::LocationType::Subschema) {
-      continue;
-    }
-
-    if (location.second.pointer == pointer) {
-      return location.second;
-    }
-  }
-
-  return std::nullopt;
-}
-
 static auto repopulate_instance_locations(
-    sourcemeta::core::SchemaFrame::Instances &instances,
+    const sourcemeta::core::SchemaFrame &frame,
+    const sourcemeta::core::SchemaFrame::Instances &instances,
     const std::map<sourcemeta::core::Pointer, CacheSubschema> &cache,
-    sourcemeta::core::SchemaFrame::Locations &locations,
     const sourcemeta::core::Pointer &, const CacheSubschema &cache_entry,
     sourcemeta::core::SchemaFrame::Instances::mapped_type &destination,
     const std::optional<sourcemeta::core::PointerTemplate> &accumulator)
@@ -328,11 +287,7 @@ static auto repopulate_instance_locations(
       && cache_entry.instance_location == sourcemeta::core::PointerTemplate{}) {
     return;
   } else if (cache_entry.parent.has_value()) {
-    const auto parent_location{
-        find_subschema_by_pointer(locations, cache_entry.parent.value())};
-    assert(parent_location.has_value());
-
-    const auto match{instances.find(parent_location.value().get().pointer)};
+    const auto match{instances.find(cache_entry.parent.value())};
     if (match == instances.cend()) {
       return;
     }
@@ -361,7 +316,7 @@ static auto repopulate_instance_locations(
       }
 
       repopulate_instance_locations(
-          instances, cache, locations, cache_entry.parent.value(),
+          frame, instances, cache, cache_entry.parent.value(),
           cache.at(cache_entry.parent.value()), destination, new_accumulator);
     }
   }
@@ -893,8 +848,8 @@ auto SchemaFrame::analyse(const JSON &schema, const SchemaWalker &walker,
     // Calculate alternative unresolved instance locations
     for (auto &entry : this->locations_) {
       traverse_origin_instance_locations(
-          this->references_, this->locations_, this->instances_, entry.second,
-          std::nullopt, this->instances_[entry.second.pointer]);
+          *this, this->instances_, entry.second.pointer, std::nullopt,
+          this->instances_[entry.second.pointer]);
     }
 
     // This is guaranteed to be top-down
@@ -902,8 +857,8 @@ auto SchemaFrame::analyse(const JSON &schema, const SchemaWalker &walker,
     // instance locations for anchors
     for (auto &entry : subschemas) {
       repopulate_instance_locations(
-          this->instances_, subschemas, this->locations_, entry.first,
-          entry.second, this->instances_[entry.first], std::nullopt);
+          *this, this->instances_, subschemas, entry.first, entry.second,
+          this->instances_[entry.first], std::nullopt);
     }
   }
 }
