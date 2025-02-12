@@ -15,12 +15,15 @@ namespace sourcemeta::core {
 /// @ingroup jsonpointer
 template <typename PointerT> class GenericPointerTemplate {
 public:
-  /// The type of wildcard
   enum class Wildcard { Property, Item, Key };
-
+  struct Conditional {
+    auto operator==(const Conditional &) const noexcept -> bool = default;
+    auto operator<(const Conditional &) const noexcept -> bool { return false; }
+  };
   using Regex = typename PointerT::Value::String;
   using Token = typename PointerT::Token;
-  using Container = std::vector<std::variant<Token, Wildcard, Regex>>;
+  using Container =
+      std::vector<std::variant<Wildcard, Conditional, Regex, Token>>;
 
   /// This constructor creates an empty JSON Pointer template. For example:
   ///
