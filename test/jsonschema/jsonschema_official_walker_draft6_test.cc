@@ -737,7 +737,7 @@ TEST(JSONSchema_official_walker_draft6, instance_locations) {
                                       "/~?~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 4, "/oneOf/0", "", "/~?~",
                                       "/~?~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 5, "/not", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 5, "/not", "", "/~!~", "/~!~");
 
   // Applicators (object)
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT6(entries, 6, "/properties/foo", "", "/foo",

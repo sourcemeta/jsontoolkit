@@ -925,7 +925,7 @@ TEST(JSONSchema_official_walker_draft7, instance_locations) {
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 5, "/if", "", "/~?~", "/~?~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 6, "/then", "", "/~?~", "/~?~");
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 7, "/else", "", "/~?~", "/~?~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 8, "/not", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 8, "/not", "", "/~!~", "/~!~");
 
   // Applicators (object)
   EXPECT_OFFICIAL_WALKER_ENTRY_DRAFT7(entries, 9, "/properties/foo", "", "/foo",

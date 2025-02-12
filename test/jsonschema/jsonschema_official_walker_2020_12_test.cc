@@ -1632,7 +1632,7 @@ TEST(JSONSchema_official_walker_2020_12, instance_locations) {
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 5, "/if", "", "/~?~", "/~?~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 6, "/then", "", "/~?~", "/~?~");
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 7, "/else", "", "/~?~", "/~?~");
-  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 8, "/not", "", "", "");
+  EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 8, "/not", "", "/~!~", "/~!~");
 
   // Applicator vocabulary (object)
   EXPECT_OFFICIAL_WALKER_ENTRY_2020_12(entries, 9, "/properties/foo", "",
