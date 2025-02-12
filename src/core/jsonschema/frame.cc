@@ -937,19 +937,36 @@ auto SchemaFrame::instance_locations(const Location &location) const -> const
   return match->second;
 }
 
-// TODO: This is currently very slow, as we need to loop on every reference
-// to brute force whether it points to the desired entry or not
 auto SchemaFrame::references_to(const Pointer &pointer) const -> std::vector<
     std::reference_wrapper<const typename References::value_type>> {
   std::vector<std::reference_wrapper<const typename References::value_type>>
       result;
+
+  // TODO: This is currently very slow, as we need to loop on every reference
+  // to brute force whether it points to the desired entry or not
   for (const auto &reference : this->references_) {
-    // TODO: Handle dynamic references by attempting to find all possible
-    // targets
-    const auto match{this->locations_.find(
-        {SchemaReferenceType::Static, reference.second.destination})};
-    if (match != this->locations_.cend() && match->second.pointer == pointer) {
-      result.emplace_back(reference);
+    assert(!reference.first.second.empty());
+    assert(reference.first.second.back().is_property());
+
+    if (reference.first.first == SchemaReferenceType::Static) {
+      const auto match{this->locations_.find(
+          {reference.first.first, reference.second.destination})};
+      if (match != this->locations_.cend() &&
+          match->second.pointer == pointer) {
+        result.emplace_back(reference);
+      }
+    } else {
+      for (const auto &location : this->locations_) {
+        if (location.second.type == LocationType::Anchor &&
+            location.first.first == SchemaReferenceType::Dynamic &&
+            location.second.pointer == pointer) {
+          if (!reference.second.fragment.has_value() ||
+              URI{location.first.second}.fragment().value_or("") ==
+                  reference.second.fragment.value()) {
+            result.emplace_back(reference);
+          }
+        }
+      }
     }
   }
 
