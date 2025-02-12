@@ -110,8 +110,9 @@ public:
       const std::optional<std::string> &default_dialect = std::nullopt,
       const std::optional<std::string> &default_id = std::nullopt,
       const Reader &reader =
-          [](const std::filesystem::path &p) { return read_json(p, nullptr); },
-      SchemaVisitorReference reference_visitor = {}) -> const std::string &;
+          [](const std::filesystem::path &path) { return read_json(path); },
+      SchemaVisitorReference &&reference_visitor = nullptr)
+      -> const std::string &;
 
   // Change the identifier of a registered schema
   auto reidentify(const std::string &schema, const std::string &new_identifier)
