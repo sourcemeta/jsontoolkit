@@ -10,6 +10,8 @@
 #include <utility>    // std::pair, std::move
 #include <vector>     // std::vector
 
+#include <iostream> // TODO DEBUG
+
 enum class AnchorType : std::uint8_t { Static, Dynamic, All };
 
 static auto find_anchors(const sourcemeta::core::JSON &schema,
@@ -941,15 +943,93 @@ auto SchemaFrame::instance_locations(const Location &location) const -> const
 // to brute force whether it points to the desired entry or not
 auto SchemaFrame::references_to(const Pointer &pointer) const -> std::vector<
     std::reference_wrapper<const typename References::value_type>> {
+  std::cerr << "REFERENCES TO: ";
+  sourcemeta::core::stringify(pointer, std::cerr);
+  std::cerr << "\n";
+
   std::vector<std::reference_wrapper<const typename References::value_type>>
       result;
   for (const auto &reference : this->references_) {
-    // TODO: Handle dynamic references by attempting to find all possible
-    // targets
-    const auto match{this->locations_.find(
-        {SchemaReferenceType::Static, reference.second.destination})};
-    if (match != this->locations_.cend() && match->second.pointer == pointer) {
-      result.emplace_back(reference);
+    assert(!reference.first.second.empty());
+    assert(reference.first.second.back().is_property());
+
+    std::cerr << "   CONSIDERING REFERENCE TO: " << reference.second.destination
+              << "\n";
+
+    if (reference.first.first == SchemaReferenceType::Static) {
+      const auto match{this->locations_.find(
+          {reference.first.first, reference.second.destination})};
+      if (match != this->locations_.cend() &&
+          match->second.pointer == pointer) {
+        std::cerr << "      @@@ (STATIC) PUSHING: ";
+        sourcemeta::core::stringify(reference.first.second, std::cerr);
+        std::cerr << "\n";
+        result.emplace_back(reference);
+      }
+    } else if (reference.second.fragment.has_value()) {
+      const auto &anchor{reference.second.fragment.value()};
+      std::cerr << "      DYNAMIC SEARCH FOR ANCHOR: " << anchor << "\n";
+
+      for (const auto &location : this->locations_) {
+        if (location.second.type != LocationType::Anchor) {
+          continue;
+        }
+
+        if (location.first.first != SchemaReferenceType::Dynamic) {
+          continue;
+        }
+
+        if (location.second.pointer != pointer) {
+          continue;
+        }
+
+        std::cerr << "         CONSIDERING ANCHOR: " << location.first.second
+                  << "\n";
+
+        if (URI{location.first.second}.fragment().value_or("") != anchor) {
+          continue;
+        }
+
+        std::cerr << "         POINTER: ";
+        sourcemeta::core::stringify(location.second.pointer, std::cerr);
+        std::cerr << "\n";
+
+        result.emplace_back(reference);
+      }
+    } else if (reference.first.second.back().to_property() == "$recursiveRef") {
+      std::cerr << "      RECURSIVE SEARCH\n";
+
+      for (const auto &location : this->locations_) {
+        if (location.second.type != LocationType::Anchor) {
+          continue;
+        }
+
+        if (location.first.first != SchemaReferenceType::Dynamic) {
+          continue;
+        }
+
+        if (location.second.pointer != pointer) {
+          continue;
+        }
+
+        std::cerr << "         CONSIDERING ANCHOR: " << location.first.second
+                  << "\n";
+
+        result.emplace_back(reference);
+      }
+    } else {
+      sourcemeta::core::stringify(reference.first.second, std::cerr);
+      std::cerr << "\n";
+
+      const auto match{this->locations_.find(
+          {reference.first.first, reference.second.destination})};
+      if (match != this->locations_.cend() &&
+          match->second.pointer == pointer) {
+        std::cerr << "      @@@ (STATIC) PUSHING: ";
+        sourcemeta::core::stringify(reference.first.second, std::cerr);
+        std::cerr << "\n";
+        result.emplace_back(reference);
+      }
     }
   }
 

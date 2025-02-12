@@ -795,3 +795,119 @@ TEST(JSONSchema_frame, mode_locations) {
 
   EXPECT_EQ(frame.references().size(), 0);
 }
+
+TEST(JSONSchema_frame, references_to_1) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$id": "https://example.com",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "foo": {
+        "$id": "foo",
+        "$dynamicAnchor": "test"
+      },
+      "bar": {
+        "$id": "bar",
+        "$dynamicAnchor": "test"
+      },
+      "baz": {
+        "$id": "baz",
+        "$anchor": "test"
+      }
+    },
+    "$defs": {
+      "bookending": {
+        "$dynamicAnchor": "test"
+      },
+      "static": {
+        "$ref": "#test"
+      },
+      "dynamic": {
+        "$dynamicRef": "#test"
+      },
+      "dynamic-non-anchor": {
+        "$dynamicRef": "baz"
+      }
+    }
+  })JSON");
+
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::References};
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
+                sourcemeta::core::schema_official_resolver);
+
+  const auto foo{frame.references_to({"properties", "foo"})};
+  EXPECT_EQ(foo.size(), 1);
+  EXPECT_REFERENCE_TO(foo, 0, Dynamic, "/$defs/dynamic/$dynamicRef");
+
+  const auto bar{frame.references_to({"properties", "bar"})};
+  EXPECT_EQ(bar.size(), 1);
+  EXPECT_REFERENCE_TO(bar, 0, Dynamic, "/$defs/dynamic/$dynamicRef");
+
+  const auto baz{frame.references_to({"properties", "baz"})};
+  EXPECT_EQ(baz.size(), 1);
+  EXPECT_REFERENCE_TO(baz, 0, Static, "/$defs/dynamic-non-anchor/$dynamicRef");
+
+  const auto bookending{frame.references_to({"$defs", "bookending"})};
+  EXPECT_EQ(bookending.size(), 2);
+  EXPECT_REFERENCE_TO(bookending, 0, Static, "/$defs/static/$ref");
+  EXPECT_REFERENCE_TO(bookending, 1, Dynamic, "/$defs/dynamic/$dynamicRef");
+}
+
+TEST(JSONSchema_frame, references_to_2) {
+  const sourcemeta::core::JSON document = sourcemeta::core::parse_json(R"JSON({
+    "$id": "https://example.com",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "properties": {
+      "foo": {
+        "$id": "foo",
+        "$recursiveAnchor": true
+      },
+      "bar": {
+        "$id": "bar",
+        "$recursiveAnchor": true
+      },
+      "baz": {
+        "$id": "baz",
+        "$anchor": "test"
+      },
+      "qux": {
+        "$id": "qux",
+        "$recursiveAnchor": false
+      }
+    },
+    "$defs": {
+      "bookending": {
+        "$recursiveAnchor": true
+      },
+      "static": {
+        "$ref": "#test"
+      },
+      "dynamic": {
+        "$recursiveRef": "#"
+      }
+    }
+  })JSON");
+
+  sourcemeta::core::SchemaFrame frame{
+      sourcemeta::core::SchemaFrame::Mode::References};
+  frame.analyse(document, sourcemeta::core::schema_official_walker,
+                sourcemeta::core::schema_official_resolver);
+
+  const auto foo{frame.references_to({"properties", "foo"})};
+  EXPECT_EQ(foo.size(), 1);
+  EXPECT_REFERENCE_TO(foo, 0, Dynamic, "/$defs/dynamic/$recursiveRef");
+
+  const auto bar{frame.references_to({"properties", "bar"})};
+  EXPECT_EQ(bar.size(), 1);
+  EXPECT_REFERENCE_TO(bar, 0, Dynamic, "/$defs/dynamic/$recursiveRef");
+
+  const auto baz{frame.references_to({"properties", "baz"})};
+  EXPECT_EQ(baz.size(), 0);
+
+  const auto qux{frame.references_to({"properties", "qux"})};
+  EXPECT_EQ(qux.size(), 0);
+
+  const auto bookending{frame.references_to({"$defs", "bookending"})};
+  EXPECT_EQ(bookending.size(), 1);
+  EXPECT_REFERENCE_TO(bookending, 0, Dynamic, "/$defs/dynamic/$recursiveRef");
+}

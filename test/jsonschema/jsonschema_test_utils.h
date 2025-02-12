@@ -521,4 +521,11 @@
       expected_instance_location, expected_relative_instance_location);        \
   EXPECT_TRUE(entries.at(index).orphan);
 
+#define EXPECT_REFERENCE_TO(result, index, type, origin)                       \
+  EXPECT_EQ((result).at((index)).get().first.first,                            \
+            sourcemeta::core::SchemaReferenceType::type);                      \
+  EXPECT_EQ(                                                                   \
+      sourcemeta::core::to_string((result).at((index)).get().first.second),    \
+      (origin));
+
 #endif
