@@ -258,15 +258,6 @@ TEST(JSON_parse_callback, object_empty_arrays) {
   EXPECT_TRACE(5, Post, Object, 4, 1, sourcemeta::core::parse_json(input));
 }
 
-TEST(JSON_parse_callback, read_json_stub_valid) {
-  const auto input{std::filesystem::path{TEST_DIRECTORY} / "stub_valid.json"};
-  READ_WITH_TRACES(document, input, 4);
-  EXPECT_TRACE(0, Pre, Object, 1, 1, sourcemeta::core::JSON{nullptr});
-  EXPECT_TRACE(1, Pre, Integer, 1, 10, sourcemeta::core::JSON{"foo"});
-  EXPECT_TRACE(2, Post, Integer, 1, 10, sourcemeta::core::JSON{1});
-  EXPECT_TRACE(3, Post, Object, 1, 12, sourcemeta::core::read_json(input));
-}
-
 TEST(JSON_parse_callback, object_empty_objects) {
   const auto input{"{\n  \"foo\": {},\n  \"bar\": {}\n}"};
   PARSE_WITH_TRACES(document, input, 6);
@@ -298,4 +289,13 @@ TEST(JSON_parse_callback, complex_1) {
   EXPECT_TRACE(6, Post, Object, 6, 3,
                sourcemeta::core::parse_json(input).at(0));
   EXPECT_TRACE(7, Post, Array, 7, 1, sourcemeta::core::parse_json(input));
+}
+
+TEST(JSON_parse_callback, read_json_stub_valid) {
+  const auto input{std::filesystem::path{TEST_DIRECTORY} / "stub_valid.json"};
+  READ_WITH_TRACES(document, input, 4);
+  EXPECT_TRACE(0, Pre, Object, 1, 1, sourcemeta::core::JSON{nullptr});
+  EXPECT_TRACE(1, Pre, Integer, 1, 10, sourcemeta::core::JSON{"foo"});
+  EXPECT_TRACE(2, Post, Integer, 1, 10, sourcemeta::core::JSON{1});
+  EXPECT_TRACE(3, Post, Object, 1, 12, sourcemeta::core::read_json(input));
 }
