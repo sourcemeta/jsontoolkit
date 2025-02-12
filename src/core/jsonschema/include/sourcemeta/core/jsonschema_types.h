@@ -87,8 +87,8 @@ enum class SchemaKeywordType : std::uint8_t {
   ApplicatorMembersTraversePropertyRegex,
   /// The JSON Schema keyword is an applicator that potentially
   /// takes a JSON Schema definition as an argument
-  /// The instance traverses to any property
-  ApplicatorValueTraverseAnyProperty,
+  /// The instance traverses to some of the properties
+  ApplicatorValueTraverseSomeProperty,
   /// The JSON Schema keyword is an applicator that potentially
   /// takes a JSON Schema definition as an argument
   /// The instance traverses to any property key
@@ -97,6 +97,10 @@ enum class SchemaKeywordType : std::uint8_t {
   /// takes a JSON Schema definition as an argument
   /// The instance traverses to any item
   ApplicatorValueTraverseAnyItem,
+  /// The JSON Schema keyword is an applicator that potentially
+  /// takes a JSON Schema definition as an argument
+  /// The instance traverses to some of the items
+  ApplicatorValueTraverseSomeItem,
   /// The JSON Schema keyword is an applicator that potentially
   /// takes a JSON Schema definition as an argument
   /// The instance traverses back to the parent
@@ -120,23 +124,23 @@ enum class SchemaKeywordType : std::uint8_t {
   /// takes an object as argument, whose values are potentially
   /// JSON Schema definitions without affecting the instance location.
   /// The instance does not traverse
-  ApplicatorMembersInPlace,
+  ApplicatorMembersInPlaceSome,
   /// The JSON Schema keyword is an applicator that potentially
   /// takes an array of potentially JSON Schema definitions
-  /// as an argument without affecting the instance location
+  /// as an argument without affecting the instance location.
   /// The instance does not traverse
   ApplicatorElementsInPlace,
   /// The JSON Schema keyword is an applicator that potentially
+  /// takes an array of potentially JSON Schema definitions
+  /// as an argument without affecting the instance location
+  /// The instance does not traverse, and only some of the
+  /// elements apply.
+  ApplicatorElementsInPlaceSome,
+  /// The JSON Schema keyword is an applicator that potentially
   /// takes a JSON Schema definition as an argument without affecting the
   /// instance location.
-  /// The instance does not traverse
-  ApplicatorValueInPlace,
-  /// The JSON Schema keyword is an applicator that potentially
-  /// takes an array of potentially JSON Schema definitions
-  /// as an argument without affecting the instance location and that can be
-  /// statically inlined.
-  /// The instance does not traverse
-  ApplicatorElementsInPlaceInline,
+  /// The instance does not traverse, and only applies some of the times.
+  ApplicatorValueInPlaceMaybe,
   /// The JSON Schema keyword is an applicator that potentially
   /// takes a JSON Schema definition as an argument but its evaluation follows
   /// special rules.

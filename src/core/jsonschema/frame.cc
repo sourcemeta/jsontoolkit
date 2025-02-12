@@ -1037,7 +1037,7 @@ auto find_adjacent_dependencies(
       }
 
       // Static
-      case SchemaKeywordType::ApplicatorElementsInPlaceInline:
+      case SchemaKeywordType::ApplicatorElementsInPlace:
         for (std::size_t index = 0; index < property.second.size(); index++) {
           find_adjacent_dependencies(
               current, schema, frame, walker, resolver, keywords, root,
@@ -1048,7 +1048,7 @@ auto find_adjacent_dependencies(
         break;
 
       // Dynamic
-      case SchemaKeywordType::ApplicatorElementsInPlace:
+      case SchemaKeywordType::ApplicatorElementsInPlaceSome:
         if (property.second.is_array()) {
           for (std::size_t index = 0; index < property.second.size(); index++) {
             find_adjacent_dependencies(
@@ -1062,7 +1062,7 @@ auto find_adjacent_dependencies(
         [[fallthrough]];
       case SchemaKeywordType::ApplicatorValueTraverseParent:
         [[fallthrough]];
-      case SchemaKeywordType::ApplicatorValueInPlace:
+      case SchemaKeywordType::ApplicatorValueInPlaceMaybe:
         if (is_schema(property.second)) {
           find_adjacent_dependencies(
               current, schema, frame, walker, resolver, keywords, root,
@@ -1084,7 +1084,7 @@ auto find_adjacent_dependencies(
         }
 
         break;
-      case SchemaKeywordType::ApplicatorMembersInPlace:
+      case SchemaKeywordType::ApplicatorMembersInPlaceSome:
         if (property.second.is_object()) {
           for (const auto &pair : property.second.as_object()) {
             find_adjacent_dependencies(
