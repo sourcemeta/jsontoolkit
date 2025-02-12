@@ -244,6 +244,35 @@ TEST(JSON_parse_callback, object_empty_arrays) {
   EXPECT_TRACE(5, Post, Object, 4, 1, sourcemeta::core::parse_json(input));
 }
 
+TEST(JSON_read_callback, file_boolean_true) {
+  const auto path = std::filesystem::temp_directory_path() /
+                    "read_json_callback_true_test.json";
+  {
+    std::ofstream file{path};
+    ASSERT_TRUE(file.good());
+    file << "true";
+  }
+  std::vector<std::tuple<sourcemeta::core::JSON::ParsePhase,
+                         sourcemeta::core::JSON::Type, std::uint64_t,
+                         std::uint64_t, sourcemeta::core::JSON>>
+      traces;
+  const auto document = sourcemeta::core::read_json(
+      path,
+      [&](const sourcemeta::core::JSON::ParsePhase phase,
+          const sourcemeta::core::JSON::Type type, const std::uint64_t line,
+          const std::uint64_t column, const sourcemeta::core::JSON &value) {
+        traces.emplace_back(phase, type, line, column, value);
+      });
+  std::filesystem::remove(path);
+  EXPECT_EQ(document, sourcemeta::core::JSON(true));
+  ASSERT_EQ(traces.size(), 2u);
+  EXPECT_EQ(std::get<0>(traces[0]), sourcemeta::core::JSON::ParsePhase::Pre);
+  EXPECT_EQ(std::get<1>(traces[0]), sourcemeta::core::JSON::Type::Boolean);
+  EXPECT_EQ(std::get<0>(traces[1]), sourcemeta::core::JSON::ParsePhase::Post);
+  EXPECT_EQ(std::get<1>(traces[1]), sourcemeta::core::JSON::Type::Boolean);
+  EXPECT_EQ(std::get<4>(traces[1]), sourcemeta::core::JSON(true));
+}
+
 TEST(JSON_parse_callback, object_empty_objects) {
   const auto input{"{\n  \"foo\": {},\n  \"bar\": {}\n}"};
   PARSE_WITH_TRACES(document, input, 6);
