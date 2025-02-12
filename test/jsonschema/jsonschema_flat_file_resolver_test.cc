@@ -357,7 +357,10 @@ TEST(JSONSchema_SchemaFlatFileResolver, custom_reference_visitor) {
   })JSON");
 
   const auto &identifier{resolver.add(
-      schema_path, std::nullopt, std::nullopt, sourcemeta::core::read_json,
+      schema_path, std::nullopt, std::nullopt,
+      [](const std::filesystem::path &path) {
+        return sourcemeta::core::read_json(path);
+      },
       [](sourcemeta::core::JSON &schema, const sourcemeta::core::URI &,
          const sourcemeta::core::JSON::String &,
          const sourcemeta::core::JSON::String &keyword,

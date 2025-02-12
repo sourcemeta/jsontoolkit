@@ -20,6 +20,20 @@
       })};                                                                     \
   EXPECT_EQ(traces.size(), expected_size)
 
+#define READ_WITH_TRACES(result, input, expected_size)                         \
+  std::vector<std::tuple<sourcemeta::core::JSON::ParsePhase,                   \
+                         sourcemeta::core::JSON::Type, std::uint64_t,          \
+                         std::uint64_t, sourcemeta::core::JSON>>               \
+      traces;                                                                  \
+  const auto result{sourcemeta::core::read_json(                               \
+      input, [&traces](const sourcemeta::core::JSON::ParsePhase phase,         \
+                       const sourcemeta::core::JSON::Type type,                \
+                       const std::uint64_t line, const std::uint64_t column,   \
+                       const sourcemeta::core::JSON &value) {                  \
+        traces.emplace_back(phase, type, line, column, value);                 \
+      })};                                                                     \
+  EXPECT_EQ(traces.size(), expected_size)
+
 #define EXPECT_TRACE(index, expected_phase, expected_type, expected_line,      \
                      expected_column, expected_value)                          \
   EXPECT_EQ(std::get<0>(traces.at(index)),                                     \
@@ -275,4 +289,13 @@ TEST(JSON_parse_callback, complex_1) {
   EXPECT_TRACE(6, Post, Object, 6, 3,
                sourcemeta::core::parse_json(input).at(0));
   EXPECT_TRACE(7, Post, Array, 7, 1, sourcemeta::core::parse_json(input));
+}
+
+TEST(JSON_parse_callback, read_json_stub_valid) {
+  const auto input{std::filesystem::path{TEST_DIRECTORY} / "stub_valid.json"};
+  READ_WITH_TRACES(document, input, 4);
+  EXPECT_TRACE(0, Pre, Object, 1, 1, sourcemeta::core::JSON{nullptr});
+  EXPECT_TRACE(1, Pre, Integer, 1, 10, sourcemeta::core::JSON{"foo"});
+  EXPECT_TRACE(2, Post, Integer, 1, 10, sourcemeta::core::JSON{1});
+  EXPECT_TRACE(3, Post, Object, 1, 12, sourcemeta::core::read_json(input));
 }
