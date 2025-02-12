@@ -222,11 +222,10 @@ static auto traverse_origin_instance_locations(
     destination.push_back(accumulator.value());
   }
 
-  for (const auto &reference : frame.references()) {
-    if (reference.first.second.back().to_property() == "$schema") {
-      continue;
-    }
+  // Here, we want to get all the pointers of the subschemas that reference the
+  // current desired location
 
+  for (const auto &reference : frame.references()) {
     const auto subschema_pointer{reference.first.second.initial()};
 
     // Avoid recursing to itself, in the case of circular subschemas
@@ -847,6 +846,10 @@ auto SchemaFrame::analyse(const JSON &schema, const SchemaWalker &walker,
   if (this->mode_ == sourcemeta::core::SchemaFrame::Mode::Instances) {
     // Calculate alternative unresolved instance locations
     for (auto &entry : this->locations_) {
+      if (entry.second.type == SchemaFrame::LocationType::Pointer) {
+        continue;
+      }
+
       traverse_origin_instance_locations(
           *this, this->instances_, entry.second.pointer, std::nullopt,
           this->instances_[entry.second.pointer]);
