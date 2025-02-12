@@ -134,6 +134,36 @@ TEST(JSONPointer_template, equality_with_key_wildcard_false) {
   EXPECT_NE(left, right);
 }
 
+TEST(JSONPointer_template, equality_with_conditional_wildcard_true) {
+  const sourcemeta::core::Pointer prefix{"foo", "bar"};
+  const sourcemeta::core::Pointer suffix{"baz"};
+
+  sourcemeta::core::PointerTemplate left{prefix};
+  left.emplace_back(sourcemeta::core::PointerTemplate::Conditional{});
+  left.push_back(suffix);
+
+  sourcemeta::core::PointerTemplate right{prefix};
+  right.emplace_back(sourcemeta::core::PointerTemplate::Conditional{});
+  right.push_back(suffix);
+
+  EXPECT_EQ(left, right);
+}
+
+TEST(JSONPointer_template, equality_with_conditional_wildcard_false) {
+  const sourcemeta::core::Pointer prefix{"foo", "bar"};
+  const sourcemeta::core::Pointer suffix{"baz"};
+
+  sourcemeta::core::PointerTemplate left{prefix};
+  left.emplace_back(sourcemeta::core::PointerTemplate::Conditional{});
+  left.push_back(suffix);
+
+  sourcemeta::core::PointerTemplate right{prefix};
+  right.push_back(suffix);
+  right.emplace_back(sourcemeta::core::PointerTemplate::Conditional{});
+
+  EXPECT_NE(left, right);
+}
+
 TEST(JSONPointer_template, pop_back) {
   const sourcemeta::core::Pointer base{"foo", "bar"};
   sourcemeta::core::PointerTemplate pointer{base};
@@ -200,6 +230,18 @@ TEST(JSONPointer_template, stringify_key_wildcard) {
   sourcemeta::core::stringify(pointer, stream);
 
   EXPECT_EQ(stream.str(), "/foo/bar/~K~");
+}
+
+TEST(JSONPointer_template, stringify_conditional) {
+  const sourcemeta::core::Pointer prefix{"foo", "bar"};
+
+  sourcemeta::core::PointerTemplate pointer{prefix};
+  pointer.emplace_back(sourcemeta::core::PointerTemplate::Conditional{});
+
+  std::ostringstream stream;
+  sourcemeta::core::stringify(pointer, stream);
+
+  EXPECT_EQ(stream.str(), "/foo/bar/~?~");
 }
 
 TEST(JSONPointer_template, concat_move) {
