@@ -2213,7 +2213,10 @@ TEST(JSONSchema_frame_2020_12, dynamic_ref_multiple_targets) {
 
   // Anchors
 
-  // TODO: Static variants should not cover dynamic cases
+  // Note that instance locations here are weird, given that instance locations
+  // operate solely on pointers, independently on the location type. So these
+  // locations have those instance locations, even though they don't originate
+  // from static anchors
   EXPECT_FRAME_STATIC_2020_12_ANCHOR(
       frame, "https://www.example.com#test", "https://www.example.com", "",
       "https://www.example.com", "", POINTER_TEMPLATES("", "/bar"),
