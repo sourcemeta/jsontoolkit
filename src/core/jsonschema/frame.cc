@@ -222,39 +222,10 @@ static auto traverse_origin_instance_locations(
     destination.push_back(accumulator.value());
   }
 
-  // Here, we want to get all the pointers of the subschemas that reference the
-  // current desired location.
-  // TODO: This is currently very slow, as we need to loop on every reference
-  // to brute force whether it points to the desired entry or not
-
-  for (const auto &reference : frame.references()) {
-    const auto subschema_pointer{reference.first.second.initial()};
-
+  for (const auto &reference : frame.references_to(current)) {
+    const auto subschema_pointer{reference.get().first.second.initial()};
     // Avoid recursing to itself, in the case of circular subschemas
     if (subschema_pointer == current) {
-      continue;
-    }
-
-    // Ignore if this is not a reference pointing to us
-    if (frame.locations().contains(
-            {sourcemeta::core::SchemaReferenceType::Static,
-             reference.second.destination})) {
-      if (frame.locations()
-              .at({sourcemeta::core::SchemaReferenceType::Static,
-                   reference.second.destination})
-              .pointer != current) {
-        continue;
-      }
-    } else if (frame.locations().contains(
-                   {sourcemeta::core::SchemaReferenceType::Dynamic,
-                    reference.second.destination})) {
-      if (frame.locations()
-              .at({sourcemeta::core::SchemaReferenceType::Dynamic,
-                   reference.second.destination})
-              .pointer != current) {
-        continue;
-      }
-    } else {
       continue;
     }
 
@@ -964,6 +935,25 @@ auto SchemaFrame::instance_locations(const Location &location) const -> const
   }
 
   return match->second;
+}
+
+// TODO: This is currently very slow, as we need to loop on every reference
+// to brute force whether it points to the desired entry or not
+auto SchemaFrame::references_to(const Pointer &pointer) const -> std::vector<
+    std::reference_wrapper<const typename References::value_type>> {
+  std::vector<std::reference_wrapper<const typename References::value_type>>
+      result;
+  for (const auto &reference : this->references_) {
+    // TODO: Handle dynamic references by attempting to find all possible
+    // targets
+    const auto match{this->locations_.find(
+        {SchemaReferenceType::Static, reference.second.destination})};
+    if (match != this->locations_.cend() && match->second.pointer == pointer) {
+      result.emplace_back(reference);
+    }
+  }
+
+  return result;
 }
 
 } // namespace sourcemeta::core
