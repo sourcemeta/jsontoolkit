@@ -215,3 +215,14 @@ TEST(JSONPointer_template, concat_move) {
 
   EXPECT_EQ(result, expected);
 }
+
+TEST(JSONPointer_template, empty_true) {
+  const sourcemeta::core::PointerTemplate pointer;
+  EXPECT_TRUE(pointer.empty());
+}
+
+TEST(JSONPointer_template, empty_false) {
+  const sourcemeta::core::Pointer base{"foo"};
+  const sourcemeta::core::PointerTemplate pointer{base};
+  EXPECT_FALSE(pointer.empty());
+}

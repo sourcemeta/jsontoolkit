@@ -2157,20 +2157,17 @@ TEST(JSONSchema_frame_2020_12, dynamic_ref_multiple_targets) {
       frame, "https://www.example.com", "https://www.example.com", "",
       "https://www.example.com", "", POINTER_TEMPLATES("", "/bar"),
       std::nullopt);
-
-  // TODO: Instance locations here are wrong
-  // EXPECT_FRAME_STATIC_2020_12_RESOURCE(
-  // frame, "https://www.example.com/foo", "https://www.example.com",
-  // "/properties/foo", "https://www.example.com/foo", "",
-  // POINTER_TEMPLATES("/foo", "/bar"), "");
+  EXPECT_FRAME_STATIC_2020_12_RESOURCE(
+      frame, "https://www.example.com/foo", "https://www.example.com",
+      "/properties/foo", "https://www.example.com/foo", "",
+      POINTER_TEMPLATES("/foo", "/bar"), "");
 
   // Subschemas
 
-  // TODO: Instance locations here are wrong
-  // EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
-  // frame, "https://www.example.com#/properties/foo",
-  // "https://www.example.com", "/properties/foo",
-  // "https://www.example.com/foo", "", POINTER_TEMPLATES("/foo", "/bar"), "");
+  EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
+      frame, "https://www.example.com#/properties/foo",
+      "https://www.example.com", "/properties/foo",
+      "https://www.example.com/foo", "", POINTER_TEMPLATES("/foo", "/bar"), "");
   EXPECT_FRAME_STATIC_2020_12_SUBSCHEMA(
       frame, "https://www.example.com#/properties/bar",
       "https://www.example.com", "/properties/bar", "https://www.example.com",
@@ -2216,27 +2213,24 @@ TEST(JSONSchema_frame_2020_12, dynamic_ref_multiple_targets) {
 
   // Anchors
 
+  // TODO: Static variants should not cover dynamic cases
   EXPECT_FRAME_STATIC_2020_12_ANCHOR(
       frame, "https://www.example.com#test", "https://www.example.com", "",
       "https://www.example.com", "", POINTER_TEMPLATES("", "/bar"),
       std::nullopt);
-
-  // TODO: Instance locations here are wrong
-  // EXPECT_FRAME_STATIC_2020_12_ANCHOR(
-  // frame, "https://www.example.com/foo#test", "https://www.example.com",
-  // "/properties/foo", "https://www.example.com/foo", "",
-  // POINTER_TEMPLATES("/foo", "/bar"), "");
+  EXPECT_FRAME_STATIC_2020_12_ANCHOR(
+      frame, "https://www.example.com/foo#test", "https://www.example.com",
+      "/properties/foo", "https://www.example.com/foo", "",
+      POINTER_TEMPLATES("/foo", "/bar"), "");
 
   EXPECT_FRAME_DYNAMIC_2020_12_ANCHOR(
       frame, "https://www.example.com#test", "https://www.example.com", "",
       "https://www.example.com", "", POINTER_TEMPLATES("", "/bar"),
       std::nullopt);
-
-  // TODO: Instance locations here are wrong
-  // EXPECT_FRAME_DYNAMIC_2020_12_ANCHOR(
-  // frame, "https://www.example.com/foo#test", "https://www.example.com",
-  // "/properties/foo", "https://www.example.com/foo", "",
-  // POINTER_TEMPLATES("/foo", "/bar"), "");
+  EXPECT_FRAME_DYNAMIC_2020_12_ANCHOR(
+      frame, "https://www.example.com/foo#test", "https://www.example.com",
+      "/properties/foo", "https://www.example.com/foo", "",
+      POINTER_TEMPLATES("/foo", "/bar"), "");
 
   // References
 
