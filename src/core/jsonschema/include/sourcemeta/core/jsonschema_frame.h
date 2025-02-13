@@ -16,6 +16,7 @@
 #include <functional>    // std::reference_wrapper
 #include <map>           // std::map
 #include <optional>      // std::optional
+#include <ostream>       // std::ostream
 #include <string>        // std::string
 #include <tuple>         // std::tuple
 #include <unordered_set> // std::set
@@ -239,6 +240,12 @@ private:
 #pragma warning(default : 4251 4275)
 #endif
 };
+
+/// @ingroup jsonschema
+/// Pretty print the contents of a schema frame
+SOURCEMETA_CORE_JSONSCHEMA_EXPORT
+auto operator<<(std::ostream &stream, const SchemaFrame &frame)
+    -> std::ostream &;
 
 // TODO: Eventually generalize this to detecting cross-keyword dependencies as
 // part of framing
