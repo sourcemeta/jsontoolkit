@@ -1107,6 +1107,12 @@ auto find_adjacent_dependencies(
 
 namespace sourcemeta::core {
 
+// TODO: Refactor this entire function using `SchemaFrame`'s new `Instances`
+// mode. We can loop over every subschema that defines `unevaluatedProperties`
+// or `unevaluatedItems`, find all other subschemas with the same unresolved
+// instance location (static dependency) or conditional equivalent unresolved
+// instance location (dynamic dependency) and see if those ones define any of
+// the dependent keywords.
 auto unevaluated(const JSON &schema, const SchemaFrame &frame,
                  const SchemaWalker &walker, const SchemaResolver &resolver)
     -> SchemaUnevaluatedEntries {
