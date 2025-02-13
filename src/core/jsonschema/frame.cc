@@ -298,6 +298,101 @@ static auto repopulate_instance_locations(
 
 namespace sourcemeta::core {
 
+auto SchemaFrame::to_json() const -> JSON {
+  auto root{JSON::make_object()};
+
+  root.assign("locations", JSON::make_array());
+  for (const auto &location : this->locations_) {
+    auto entry{JSON::make_object()};
+    entry.assign("referenceType",
+                 JSON{location.first.first == SchemaReferenceType::Static
+                          ? "static"
+                          : "dynamic"});
+    entry.assign("uri", JSON{location.first.second});
+
+    if (location.second.parent.has_value()) {
+      entry.assign("parent", JSON{to_string(location.second.parent.value())});
+    } else {
+      entry.assign("parent", JSON{nullptr});
+    }
+
+    switch (location.second.type) {
+      case LocationType::Resource:
+        entry.assign("type", JSON{"resource"});
+        break;
+      case LocationType::Anchor:
+        entry.assign("type", JSON{"anchor"});
+        break;
+      case LocationType::Pointer:
+        entry.assign("type", JSON{"pointer"});
+        break;
+      case LocationType::Subschema:
+        entry.assign("type", JSON{"subschema"});
+        break;
+      default:
+        assert(false);
+    }
+
+    if (location.second.root.has_value()) {
+      entry.assign("root", JSON{location.second.root.value()});
+    } else {
+      entry.assign("root", JSON{nullptr});
+    }
+
+    entry.assign("base", JSON{location.second.base});
+    entry.assign("pointer", JSON{to_string(location.second.pointer)});
+    entry.assign("relativePointer",
+                 JSON{to_string(location.second.relative_pointer)});
+    entry.assign("dialect", JSON{location.second.dialect});
+    entry.assign("baseDialect", JSON{location.second.base_dialect});
+    root.at("locations").push_back(std::move(entry));
+  }
+
+  root.assign("references", JSON::make_array());
+  for (const auto &reference : this->references_) {
+    auto entry{JSON::make_object()};
+    entry.assign("type",
+                 JSON{reference.first.first == SchemaReferenceType::Static
+                          ? "static"
+                          : "dynamic"});
+    entry.assign("origin", JSON{to_string(reference.first.second)});
+    entry.assign("destination", JSON{reference.second.destination});
+
+    if (reference.second.base.has_value()) {
+      entry.assign("base", JSON{reference.second.base.value()});
+    } else {
+      entry.assign("base", JSON{nullptr});
+    }
+
+    if (reference.second.fragment.has_value()) {
+      entry.assign("fragment", JSON{reference.second.fragment.value()});
+    } else {
+      entry.assign("fragment", JSON{nullptr});
+    }
+
+    root.at("references").push_back(std::move(entry));
+  }
+
+  root.assign("instances", JSON::make_object());
+  for (const auto &instance : this->instances_) {
+    if (instance.second.empty()) {
+      continue;
+    }
+
+    auto entry{JSON::make_array()};
+    for (const auto &pointer : instance.second) {
+      // TODO: Overload .to_string() for PointerTemplate
+      std::ostringstream result;
+      sourcemeta::core::stringify(pointer, result);
+      entry.push_back(JSON{result.str()});
+    }
+
+    root.at("instances").assign(to_string(instance.first), std::move(entry));
+  }
+
+  return root;
+}
+
 auto SchemaFrame::analyse(const JSON &schema, const SchemaWalker &walker,
                           const SchemaResolver &resolver,
                           const std::optional<std::string> &default_dialect,

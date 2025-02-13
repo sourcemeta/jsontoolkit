@@ -174,6 +174,9 @@ public:
   /// A set of unresolved instance locations
   using Instances = std::map<Pointer, std::vector<PointerTemplate>>;
 
+  /// Export the frame entries as JSON
+  auto to_json() const -> JSON;
+
   /// Analyse a given schema
   auto analyse(const JSON &schema, const SchemaWalker &walker,
                const SchemaResolver &resolver,
