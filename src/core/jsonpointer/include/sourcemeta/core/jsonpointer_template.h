@@ -4,12 +4,11 @@
 #include <sourcemeta/core/jsonpointer_pointer.h>
 #include <sourcemeta/core/jsonpointer_token.h>
 
-#include <algorithm>  // std::copy, std::equal
-#include <cassert>    // assert
-#include <functional> // std::reference_wrapper
-#include <iterator>   // std::back_inserter
-#include <variant>    // std::variant, std::holds_alternative
-#include <vector>     // std::vector
+#include <algorithm> // std::copy
+#include <cassert>   // assert
+#include <iterator>  // std::back_inserter
+#include <variant>   // std::variant, std::holds_alternative
+#include <vector>    // std::vector
 
 namespace sourcemeta::core {
 
@@ -223,28 +222,35 @@ public:
   [[nodiscard]] auto
   conditional_of(const GenericPointerTemplate<PointerT> &other) const noexcept
       -> bool {
-    std::vector<std::reference_wrapper<const typename Container::value_type>>
-        this_filter;
-    std::vector<std::reference_wrapper<const typename Container::value_type>>
-        that_filter;
+    auto iterator_this = this->data.cbegin();
+    auto iterator_that = other.data.cbegin();
 
-    for (const auto &token : this->data) {
-      if (!std::holds_alternative<Condition>(token)) {
-        this_filter.emplace_back(token);
+    while (iterator_this != this->data.cend() &&
+           iterator_that != other.data.cend()) {
+      while (iterator_this != this->data.cend() &&
+             std::holds_alternative<Condition>(*iterator_this)) {
+        iterator_this += 1;
+      }
+
+      while (iterator_that != other.data.cend() &&
+             std::holds_alternative<Condition>(*iterator_that)) {
+        iterator_that += 1;
+      }
+
+      if (iterator_this == this->data.cend() ||
+          iterator_that == other.data.cend()) {
+        return iterator_this == this->data.cend() &&
+               iterator_that == other.data.cend();
+      } else if (*iterator_this != *iterator_that) {
+        return false;
+      } else {
+        iterator_this += 1;
+        iterator_that += 1;
       }
     }
 
-    for (const auto &token : other.data) {
-      if (!std::holds_alternative<Condition>(token)) {
-        that_filter.emplace_back(token);
-      }
-    }
-
-    return std::equal(this_filter.cbegin(), this_filter.cend(),
-                      that_filter.cbegin(), that_filter.cend(),
-                      [](const auto &left, const auto &right) {
-                        return left.get() == right.get();
-                      });
+    return iterator_this == this->data.cend() &&
+           iterator_that == other.data.cend();
   }
 
   /// Compare JSON Pointer template instances
