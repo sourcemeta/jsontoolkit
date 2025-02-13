@@ -310,3 +310,158 @@ TEST(JSONPointer_template, empty_false) {
   const sourcemeta::core::PointerTemplate pointer{base};
   EXPECT_FALSE(pointer.empty());
 }
+
+TEST(JSONPointer_template, conditional_of_empty) {
+  const sourcemeta::core::PointerTemplate left;
+  const sourcemeta::core::PointerTemplate right;
+  EXPECT_TRUE(left.conditional_of(right));
+  EXPECT_TRUE(right.conditional_of(left));
+}
+
+TEST(JSONPointer_template, conditional_of_equal_no_conditional_one) {
+  const sourcemeta::core::PointerTemplate left{
+      sourcemeta::core::Pointer::Token{"foo"}};
+  const sourcemeta::core::PointerTemplate right{
+      sourcemeta::core::Pointer::Token{"foo"}};
+  EXPECT_TRUE(left.conditional_of(right));
+  EXPECT_TRUE(right.conditional_of(left));
+}
+
+TEST(JSONPointer_template, conditional_of_equal_no_conditional_many) {
+  const sourcemeta::core::PointerTemplate left{
+      sourcemeta::core::Pointer::Token{"foo"},
+      sourcemeta::core::Pointer::Token{0},
+      sourcemeta::core::Pointer::Token{"bar"}};
+  const sourcemeta::core::PointerTemplate right{
+      sourcemeta::core::Pointer::Token{"foo"},
+      sourcemeta::core::Pointer::Token{0},
+      sourcemeta::core::Pointer::Token{"bar"}};
+
+  EXPECT_TRUE(left.conditional_of(right));
+  EXPECT_TRUE(right.conditional_of(left));
+}
+
+TEST(JSONPointer_template, conditional_of_not_equal_no_conditional_one) {
+  const sourcemeta::core::PointerTemplate left{
+      sourcemeta::core::Pointer::Token{"foo"}};
+  const sourcemeta::core::PointerTemplate right{
+      sourcemeta::core::Pointer::Token{"fo"}};
+  EXPECT_FALSE(left.conditional_of(right));
+  EXPECT_FALSE(right.conditional_of(left));
+}
+
+TEST(JSONPointer_template, conditional_of_not_equal_no_conditional_many) {
+  const sourcemeta::core::PointerTemplate left{
+      sourcemeta::core::Pointer::Token{"foo"},
+      sourcemeta::core::Pointer::Token{0},
+      sourcemeta::core::Pointer::Token{"bar"}};
+  const sourcemeta::core::PointerTemplate right{
+      sourcemeta::core::Pointer::Token{"foo"},
+      sourcemeta::core::Pointer::Token{0},
+      sourcemeta::core::Pointer::Token{"ba"}};
+
+  EXPECT_FALSE(left.conditional_of(right));
+  EXPECT_FALSE(right.conditional_of(left));
+}
+
+TEST(JSONPointer_template, conditional_of_equal_conditional_one) {
+  const sourcemeta::core::PointerTemplate left{
+      sourcemeta::core::PointerTemplate::Condition{}};
+  const sourcemeta::core::PointerTemplate right{
+      sourcemeta::core::PointerTemplate::Condition{}};
+  EXPECT_TRUE(left.conditional_of(right));
+  EXPECT_TRUE(right.conditional_of(left));
+}
+
+TEST(JSONPointer_template, conditional_of_equal_conditional_many) {
+  const sourcemeta::core::PointerTemplate left{
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{}};
+  const sourcemeta::core::PointerTemplate right{
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{}};
+
+  EXPECT_TRUE(left.conditional_of(right));
+  EXPECT_TRUE(right.conditional_of(left));
+}
+
+TEST(JSONPointer_template, conditional_of_equal_conditional_different) {
+  const sourcemeta::core::PointerTemplate left{
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{}};
+  const sourcemeta::core::PointerTemplate right{
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{}};
+
+  EXPECT_TRUE(left.conditional_of(right));
+  EXPECT_TRUE(right.conditional_of(left));
+}
+
+TEST(JSONPointer_template, conditional_of_equal_mix_1) {
+  const sourcemeta::core::PointerTemplate left{
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Wildcard{},
+      sourcemeta::core::PointerTemplate::Negation{},
+      sourcemeta::core::Pointer::Token{"foo"},
+      sourcemeta::core::Pointer::Token{0},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{}};
+
+  const sourcemeta::core::PointerTemplate right{
+      sourcemeta::core::PointerTemplate::Wildcard{},
+      sourcemeta::core::PointerTemplate::Negation{},
+      sourcemeta::core::Pointer::Token{"foo"},
+      sourcemeta::core::Pointer::Token{0},
+      sourcemeta::core::PointerTemplate::Condition{}};
+
+  EXPECT_TRUE(left.conditional_of(right));
+  EXPECT_TRUE(right.conditional_of(left));
+}
+
+TEST(JSONPointer_template, conditional_of_equal_mix_2) {
+  const sourcemeta::core::PointerTemplate left{
+      sourcemeta::core::Pointer::Token{0},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Wildcard{},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Negation{},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{}};
+
+  const sourcemeta::core::PointerTemplate right{
+      sourcemeta::core::Pointer::Token{0},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Wildcard{},
+      sourcemeta::core::PointerTemplate::Negation{},
+      sourcemeta::core::PointerTemplate::Condition{}};
+
+  EXPECT_TRUE(left.conditional_of(right));
+  EXPECT_TRUE(right.conditional_of(left));
+}
+
+TEST(JSONPointer_template, conditional_of_not_equal_mix_1) {
+  const sourcemeta::core::PointerTemplate left{
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Wildcard{},
+      sourcemeta::core::PointerTemplate::Negation{},
+      sourcemeta::core::Pointer::Token{0},
+      sourcemeta::core::Pointer::Token{"foo"},
+      sourcemeta::core::PointerTemplate::Condition{},
+      sourcemeta::core::PointerTemplate::Condition{}};
+
+  const sourcemeta::core::PointerTemplate right{
+      sourcemeta::core::PointerTemplate::Wildcard{},
+      sourcemeta::core::PointerTemplate::Negation{},
+      sourcemeta::core::Pointer::Token{"foo"},
+      sourcemeta::core::Pointer::Token{0},
+      sourcemeta::core::PointerTemplate::Condition{}};
+
+  EXPECT_FALSE(left.conditional_of(right));
+  EXPECT_FALSE(right.conditional_of(left));
+}

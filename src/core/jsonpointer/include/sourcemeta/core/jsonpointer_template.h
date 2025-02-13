@@ -4,11 +4,12 @@
 #include <sourcemeta/core/jsonpointer_pointer.h>
 #include <sourcemeta/core/jsonpointer_token.h>
 
-#include <algorithm> // std::copy
-#include <cassert>   // assert
-#include <iterator>  // std::back_inserter
-#include <variant>   // std::variant
-#include <vector>    // std::vector
+#include <algorithm>  // std::copy, std::equal
+#include <cassert>    // assert
+#include <functional> // std::reference_wrapper
+#include <iterator>   // std::back_inserter
+#include <variant>    // std::variant, std::holds_alternative
+#include <vector>     // std::vector
 
 namespace sourcemeta::core {
 
@@ -201,6 +202,49 @@ public:
   /// ```
   [[nodiscard]] auto empty() const noexcept -> bool {
     return this->data.empty();
+  }
+
+  /// Check if a JSON Pointer template is equal to another JSON Pointer template
+  /// when not taking into account condition tokens. For example:
+  ///
+  /// ```cpp
+  /// #include <sourcemeta/core/jsonpointer.h>
+  /// #include <cassert>
+  ///
+  /// const sourcemeta::core::PointerTemplate left{
+  ///     sourcemeta::core::PointerTemplate::Condition{},
+  ///     sourcemeta::core::Pointer::Token{"foo"}};
+  /// const sourcemeta::core::PointerTemplate right{
+  ///     sourcemeta::core::Pointer::Token{"foo"}};
+  ///
+  /// assert(left.conditional_of(right));
+  /// assert(right.conditional_of(left));
+  /// ```
+  [[nodiscard]] auto
+  conditional_of(const GenericPointerTemplate<PointerT> &other) const noexcept
+      -> bool {
+    std::vector<std::reference_wrapper<const typename Container::value_type>>
+        this_filter;
+    std::vector<std::reference_wrapper<const typename Container::value_type>>
+        that_filter;
+
+    for (const auto &token : this->data) {
+      if (!std::holds_alternative<Condition>(token)) {
+        this_filter.emplace_back(token);
+      }
+    }
+
+    for (const auto &token : other.data) {
+      if (!std::holds_alternative<Condition>(token)) {
+        that_filter.emplace_back(token);
+      }
+    }
+
+    return std::equal(this_filter.cbegin(), this_filter.cend(),
+                      that_filter.cbegin(), that_filter.cend(),
+                      [](const auto &left, const auto &right) {
+                        return left.get() == right.get();
+                      });
   }
 
   /// Compare JSON Pointer template instances
