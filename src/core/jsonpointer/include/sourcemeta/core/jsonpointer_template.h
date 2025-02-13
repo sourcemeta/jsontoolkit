@@ -121,10 +121,6 @@ public:
   /// pointer.emplace_back(sourcemeta::core::PointerTemplate::Wildcard::Property);
   /// ```
   template <class... Args> auto emplace_back(Args &&...args) -> reference {
-    // It is a logical error to push a token after a key wildcard
-    assert(this->empty() ||
-           !std::holds_alternative<Wildcard>(this->data.back()) ||
-           std::get<Wildcard>(this->data.back()) != Wildcard::Key);
     return this->data.emplace_back(args...);
   }
 
@@ -139,10 +135,6 @@ public:
   /// result.push_back(pointer);
   /// ```
   auto push_back(const PointerT &other) -> void {
-    // It is a logical error to push a token after a key wildcard
-    assert(this->empty() ||
-           !std::holds_alternative<Wildcard>(this->data.back()) ||
-           std::get<Wildcard>(this->data.back()) != Wildcard::Key);
     this->data.reserve(this->data.size() + other.size());
     std::copy(other.cbegin(), other.cend(), std::back_inserter(this->data));
   }
