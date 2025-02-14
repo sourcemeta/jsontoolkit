@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <sstream>
+
 #include <sourcemeta/core/json.h>
 #include <sourcemeta/core/yaml.h>
 
@@ -80,4 +82,17 @@ TEST(YAML_parse, file_not_exists) {
   EXPECT_THROW(sourcemeta::core::read_yaml(std::filesystem::path{STUBS_PATH} /
                                            "not_exists.yaml"),
                std::filesystem::filesystem_error);
+}
+
+TEST(YAML_parse, istringstream) {
+  std::istringstream stream{"hello: world\nfoo: 1\nbar: true"};
+  const auto result{sourcemeta::core::parse_yaml(stream)};
+
+  const sourcemeta::core::JSON expected = sourcemeta::core::parse_json(R"JSON({
+    "hello": "world",
+    "foo": 1,
+    "bar": true
+  })JSON");
+
+  EXPECT_EQ(result, expected);
 }
