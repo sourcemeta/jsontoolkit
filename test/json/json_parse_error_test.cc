@@ -1,20 +1,35 @@
-#include <exception>
 #include <gtest/gtest.h>
+
+#include <exception>
 #include <sstream>
 
 #include <sourcemeta/core/json.h>
 
-#define EXPECT_PARSE_ERROR(input, expected_line, expected_column)              \
+#define __EXPECT_PARSE_ERROR(input, expected_line, expected_column,            \
+                             expected_error, expected_message)                 \
   try {                                                                        \
     sourcemeta::core::parse_json((input));                                     \
     FAIL() << "The parse function was expected to throw";                      \
-  } catch (const sourcemeta::core::JSONParseError &error) {                    \
+  } catch (const sourcemeta::core::expected_error &error) {                    \
     EXPECT_EQ(error.line(), expected_line);                                    \
     EXPECT_EQ(error.column(), expected_column);                                \
+    EXPECT_STREQ(error.what(), expected_message);                              \
     SUCCEED();                                                                 \
   } catch (const std::exception &) {                                           \
-    FAIL() << "The parse function was expected to throw a parse error";        \
+    FAIL()                                                                     \
+        << "The parse function was expected to throw the desired parse error"; \
   }
+
+#define EXPECT_PARSE_ERROR(input, expected_line, expected_column)              \
+  __EXPECT_PARSE_ERROR(input, expected_line, expected_column, JSONParseError,  \
+                       "Failed to parse the JSON document");
+
+#define EXPECT_PARSE_ERROR_INTEGER_LIMIT(input, expected_line,                 \
+                                         expected_column)                      \
+  __EXPECT_PARSE_ERROR(input, expected_line, expected_column,                  \
+                       JSONParseIntegerLimitError,                             \
+                       "The JSON value is not representable by the IETF RFC "  \
+                       "8259 interoperable signed integer range");
 
 TEST(JSON_parse_error, boolean_true_invalid) {
   std::istringstream input{"trrue"};
@@ -513,6 +528,16 @@ TEST(JSON_parse_error, integer_negative_with_leading_zero) {
   EXPECT_PARSE_ERROR(input, 1, 3);
 }
 
+TEST(JSON_parse_error, integer_slightly_over_64_bit_positive_limit) {
+  std::istringstream input{"9223372036854776000"};
+  EXPECT_PARSE_ERROR_INTEGER_LIMIT(input, 1, 1);
+}
+
+TEST(JSON_parse_error, integer_slightly_over_64_bit_positive_limit_in_object) {
+  std::istringstream input{"{\"foo\":9223372036854776000}"};
+  EXPECT_PARSE_ERROR_INTEGER_LIMIT(input, 1, 8);
+}
+
 TEST(JSON_parse_error, integer_negative_with_leading_zero_and_space) {
   std::istringstream input{"[-0 5]"};
   EXPECT_PARSE_ERROR(input, 1, 5);
@@ -638,6 +663,24 @@ TEST(JSON_parse_error, read_json_invalid) {
               std::filesystem::path{TEST_DIRECTORY} / "stub_invalid.json");
     EXPECT_EQ(error.line(), 3);
     EXPECT_EQ(error.column(), 9);
+    EXPECT_STREQ(error.what(), "Failed to parse the JSON document");
+  } catch (...) {
+    FAIL() << "The parse function was expected to throw a file parse error";
+  }
+}
+
+TEST(JSON_parse_error, read_json_invalid_bigint) {
+  try {
+    sourcemeta::core::read_json(std::filesystem::path{TEST_DIRECTORY} /
+                                "stub_bigint.json");
+  } catch (const sourcemeta::core::JSONFileParseError &error) {
+    EXPECT_EQ(error.path(),
+              std::filesystem::path{TEST_DIRECTORY} / "stub_bigint.json");
+    EXPECT_EQ(error.line(), 1);
+    EXPECT_EQ(error.column(), 1);
+    EXPECT_STREQ(error.what(),
+                 "The JSON value is not representable by the IETF RFC 8259 "
+                 "interoperable signed integer range");
   } catch (...) {
     FAIL() << "The parse function was expected to throw a file parse error";
   }
